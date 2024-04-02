@@ -45,7 +45,8 @@ https://drive.google.com/file/d/1JMak5vJLC6F3kHxrnGV-AmQYBoHUWnRw/view?usp=drive
 
 ```bash
 ./vendor/bin/sail up -d ## 서버 실행 (localhost)
-./vendor/bin/sail php artisan migrate:fresh --seed ## 디비 설치 및 테스트 데이터 설치 (개발중 언제든지)
+./vendor/bin/sail php artisan migrate:fresh --seed ## 디비 새로 마이그레이션 및 테스트 데이터 설치 (개발중 언제든지)
+# ./vendor/bin/sail php artisan migrate ## 디비 마이그레이션
 # ./vendor/bin/sail php artisan db:seed ## 임시 데이터 삽입
 ./vendor/bin/sail  artisan storage:link ## 파일 링크
 ```
