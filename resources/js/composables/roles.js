@@ -45,6 +45,7 @@ export default function useRoles() {
                 rolePermissionList.value = response.data.data;
             })
     }
+
     const storeRole = async (role) => {
         if (isLoading.value) return;
 
