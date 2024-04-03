@@ -3,13 +3,14 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\BidController;
+use App\Http\Controllers\Api\LibController;
 use App\Http\Controllers\Api\LikeController;
-use App\Http\Controllers\Api\ReviewController;
-use App\Http\Controllers\Api\AuctionController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\ReviewController;
 
+use App\Http\Controllers\Api\AuctionController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PermissionController;
@@ -21,7 +22,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 // Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.reset');
 
 Route::post('users', [UserController::class, 'store']);   // 회원가입은 인증없이
-
+Route::post('users/test', [UserController::class, 'test']);   // 회원가입은 인증없이
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Route::put('auctions/statusUpdate/{id}', [AuctionController::class, 'statusUpdate']);
 
@@ -40,6 +41,9 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::apiResource('categories', CategoryController::class);
     Route::apiResource('roles', RoleController::class);
     Route::apiResource('permissions', PermissionController::class);
+
+    Route::get('lib/fields/{table}', [LibController::class, 'fields']);
+    Route::get('lib/enums/{table}', [LibController::class, 'enums']);
 
     // Route::get('role-list', [RoleController::class, 'getList']);
     // Route::get('role-permissions/{id}', [PermissionController::class, 'getRolePermissions']);

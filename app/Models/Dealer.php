@@ -50,6 +50,12 @@ class Dealer extends Model implements HasMedia
         'introduce' => 'introduce',
     ];
 
+    // public $enums = [
+    //     'status' => [
+
+    //     ],
+    // ];
+
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');

@@ -22,6 +22,18 @@ class Auction extends Model implements HasMedia
 
     public $guarded = [];
 
+    public $enums = [
+        'status' => [
+            'cancel' => '취소',
+            'done'   => '경매완료',
+            'chosen' => '선택완료',
+            'wait'   => '선택대기',
+            'ing'    => '경매진행',
+            'diag'   => '진단대기',
+            'ask'    => '신청완료',
+        ],
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);

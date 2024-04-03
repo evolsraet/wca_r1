@@ -36,14 +36,23 @@ class UserService
                 $data['status'] = 'ok';
             }
 
-            // dd($data);
 
+            // dd([gettype($data), $data, $request->file()]);
             $item = User::create($data);
+
             // 하위 모델
             if ($request->input('user.role') == 'dealer') {
                 $dealerData = $request->input('dealer');
                 $dealerData['user_id'] = $item->id;
                 $item->dealer()->create($dealerData);
+            }
+
+            $model = new User;
+            $file_result = [];
+            foreach ($model->files as $key => $row) {
+                if ($request->hasFile($key)) {
+                    $file_result[] = $item->addMediaFromRequest($key)->preservingOriginal()->toMediaCollection($key);
+                }
             }
 
             // 가능한 권한
@@ -56,7 +65,13 @@ class UserService
             }
 
             DB::commit();
-            return response()->api(new UserResource($item));
+
+            return response()->api(
+                (new UserResource($item))
+                    ->additional([
+                        'file_data' => $file_result
+                    ])
+            );
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
@@ -65,6 +80,7 @@ class UserService
 
     public function update($id, Request $request)
     {
+
         DB::beginTransaction();
 
         try {
@@ -79,6 +95,14 @@ class UserService
 
             if ($data) {
                 $item->update($data);
+            }
+
+            $model = new User;
+            $file_result = [];
+            foreach ($model->files as $key => $row) {
+                if ($request->hasFile($key)) {
+                    $file_result[] = $item->addMediaFromRequest($key)->preservingOriginal()->toMediaCollection($key);
+                }
             }
 
             if ($item->hasRole('dealer') && $request->input('dealer')) {
@@ -129,14 +153,25 @@ class UserService
             throw $e;
         }
 
-        return response()->api(new UserResource($item));
+        return response()->api(
+            (new UserResource($item))
+                ->additional([
+                    'file_data' => $file_result
+                ])
+        );
+
+        // return response()->api(new UserResource($item));
     }
 
     public function beforeData($data)
     {
+        if (gettype($data) == 'string') {
+            $data = json_decode($data, true);
+        }
         // 관리자 전용 수정
         if (!auth()->check() or !auth()->user()->hasPermissionTo('act.admin')) {
-            unset($data['status']);
+            if (isset($data['status']))
+                unset($data['status']);
         }
         // fillable 로 대체
         // unset($data['role']);

@@ -12,6 +12,7 @@ trait CrudTrait
 {
     public $modelClass = null;
     public $resourceClass = null;
+    public $files = [];
 
     // 동적 모델 및 리소스 클래스 초기화
     public function defaultCrudTrait($modelName)
@@ -186,6 +187,7 @@ trait CrudTrait
                 $item->$key = $value;
                 // }
             }
+
 
             $this->middleProcess(__FUNCTION__, request(), $item);
             $item->save(); // 상위 객체 저장

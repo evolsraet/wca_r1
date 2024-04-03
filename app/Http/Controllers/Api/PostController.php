@@ -85,7 +85,7 @@ class PostController extends Controller
 
     public function update(Post $post, StorePostRequest $request)
     {
-        $this->authorize('role.user');
+        // $this->authorize('role.user');
         if ($post->user_id !== auth()->id() && !auth()->user()->hasPermissionTo('post-all')) {
             return response()->json(['status' => 405, 'success' => false, 'message' => 'You can only edit your own posts']);
         } else {

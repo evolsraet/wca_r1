@@ -60,7 +60,7 @@ class AuthenticatedSessionController extends Controller
 
         if ($request->wantsJson()) {
             // return response()->json(['data' => $request->user(), 'token' => $token]);
-            return response()->api(['user' => $request->user(), 'token' => $token]);
+            return response()->api([$request->user(), 'token' => $token]);
         }
 
         return redirect()->intended(RouteServiceProvider::HOME);

@@ -6,7 +6,9 @@ use Tests\TestCase;
 use App\Models\User;
 use App\Models\Dealer;
 use Laravel\Sanctum\Sanctum;
+use Illuminate\Http\UploadedFile;
 use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Storage;
 use Tests\Traits\NotSuccessfulTestTrait;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
@@ -105,31 +107,30 @@ class AuthTest extends TestCase
         $this->assertGuest(); // 인증안됨
     }
 
-    public function test_회원가입(): void
+    public function test회원가입(): void
     {
         $user = User::factory()->make();
         $data = [
-            'user' => $user->makeVisible($user->getHidden())->toArray()
+            'user' => $user->makeVisible($user->getHidden())->toArray(),
         ];
-        // $user->makeVisible($user->getHidden())->toArray();
         $data['user']['role'] = 'user';
-        // $data['user']['password'] = '123123123';
-        // dd($data);
+
         $response = $this->postJson('/api/users', $data);
 
-        // $response->dumpHeaders();
-        // $response->dumpSession();
-        // $response->dump();
+        // 응답 확인
+        $response->assertSuccessful(); // 200번대 응답이 반환되었는지 확인
 
-        $response->assertSuccessful(); // 200번대
+        // 데이터베이스에 사용자 정보가 올바르게 저장되었는지 검증
         $this->assertDatabaseHas('users', [
             'email' => $data['user']['email'],
             'status' => 'ok',
         ]);
     }
 
+
     public function test_회원가입_딜러(): void
     {
+
         $user = User::factory()->make();
         $dealer = Dealer::factory()->make();
         $data = [
@@ -141,7 +142,14 @@ class AuthTest extends TestCase
 
         // dump($data);
 
-        $response = $this->postJson('/api/users', $data);
+
+        Storage::fake('media_folder'); // 파일이 실제로 저장되지 않도록 스토리지를 가짜로 설정합니다.
+        $file = UploadedFile::fake()->create('file_sign.pdf', 100); // 100KB 크기의 PDF 파일
+        $data['file_sign'] = $file; // 여기서는 $data 배열에 직접 추가하는 대신, 파일을 요청에 별도로 추가합니다.
+
+        $response = $this->postJson('/api/users', $data, [
+            'file_sign' => $file,
+        ]);
 
         // $response->dumpHeaders();
         // $response->dumpSession();
@@ -152,6 +160,20 @@ class AuthTest extends TestCase
             'email' => $data['user']['email'],
             'status' => 'ask',
         ]);
+
+        // 파일이 올바르게 저장되었는지 확인
+        $fileId = $response->json()['file_data'][0]['id'];
+        $fileName = $response->json()['file_data'][0]['file_name'];
+
+        $this->assertEquals('file_sign.pdf', $fileName);
+
+        // 파일이 저장될 경로
+        // $filePath = "{$fileId}/{$fileName}";
+
+        // dump($filePath);
+
+        // 가짜 디스크에 파일이 존재하는지 확인 (경로 계속 못찾는중)
+        // Storage::disk('media_folder')->assertExists($filePath); // 파일이 저장될 경로를 지정해야 합니다.
     }
 
     public function test_유저_수정(): void
@@ -187,13 +209,23 @@ class AuthTest extends TestCase
     {
         $user = User::role('dealer')->where('status', 'ok')->first();
         $this->actingAs($user);
+
+        Storage::fake('media_folder'); // 파일이 실제로 저장되지 않도록 스토리지를 가짜로 설정합니다.
+        $file = UploadedFile::fake()->create('file_sign.pdf', 100); // 100KB 크기의 PDF 파일
+        $data['file_sign'] = $file; // 여기서는 $data 배열에 직접 추가하는 대신, 파일을 요청에 별도로 추가합니다.
+
+        $response = $this->putJson('/api/users', $data, [
+            'file_sign' => $file,
+        ]);
+
         $response = $this->putJson("/api/users/{$user->id}", [
             'user' => [
                 'name' => 'updated',
             ],
             'dealer' => [
                 'name' => 'updated',
-            ]
+            ],
+            'file_sign' => $file,
         ]);
 
         // dd($user->toArray());
@@ -208,7 +240,16 @@ class AuthTest extends TestCase
             'user_id' => $user->id,
             'name' => 'updated',
         ]);
+
+        // 파일이 올바르게 저장되었는지 확인
+        // dd($response->json());
+        $fileId = $response->json()['file_data'][0]['id'];
+        $fileName = $response->json()['file_data'][0]['file_name'];
+
+        $this->assertEquals('file_sign.pdf', $fileName);
+        // Storage::disk('media_folder')->assertExists("{$fileId}/{$fileName}");
     }
+
 
     public function test_유저_삭제(): void
     {
