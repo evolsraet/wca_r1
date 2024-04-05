@@ -36,6 +36,30 @@ class UserService
                 $data['status'] = 'ok';
             }
 
+            // Validator 인스턴스 생성
+            $validator = Validator::make($request->all(), [
+                'user.name' => 'required|max:255',
+                'user.email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'user.phone' => 'required',
+                'user.password' => ['required', 'string', 'min:8', 'confirmed'],
+            ]);
+
+            // 유효성 검사 실패 시
+            if ($validator->fails()) {
+                $errors = $validator->errors();
+
+                // 접두사를 제거한 에러 메시지 생성
+                $customErrors = [];
+                foreach ($errors->getMessages() as $field => $message) {
+                    $fieldWithoutPrefix = preg_replace('/^user\./', '', $field); // 'user.' 접두사 제거
+                    $customErrors[$fieldWithoutPrefix] = $message;
+                }
+
+                // ($data = null, $message = null, $status = 'ok', $code = 200, $additional = []) {
+                // 커스텀 에러 메시지로 응답 생성 또는 뷰에 에러 전달
+                return response()->api(null, null, 'fail', 422, ['errors' => $customErrors]);
+                // (['errors' => $customErrors], 422);
+            }
 
             // dd([gettype($data), $data, $request->file()]);
             $item = User::create($data);
