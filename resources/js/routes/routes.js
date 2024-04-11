@@ -59,7 +59,7 @@ export default [
                 component: () => import('../views/category/posts.vue'),
             },
             {
-                path: '/userindex',
+                path: '',
                 name: 'user.index',
                 component: () => import('../views/user/index.vue'),
             },
