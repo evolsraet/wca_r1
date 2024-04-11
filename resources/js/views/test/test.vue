@@ -49,7 +49,7 @@
                 <div class="review-content">
                     <div class="apply-top text-start">
                         <h3 class="review-title">다른 사람들의 이용후기에요</h3>
-                        <a href="/reviewtest" class="btn-apply">전체보기 <img src="../../../img/Icon-right.png" class="ms-2" alt="설명"></a>
+                        <a href="/reviewtest" class="btn-apply">전체보기 <img src="../../img/Icon-right.png" class="ms-2" alt="설명"></a>
                     </div>
                     <div class="row row-cols-1 row-cols-md-2 g-4">
                         <div class="col">
@@ -128,7 +128,7 @@
                         <form @submit.prevent="submitLogin">
                             <div class="">
                                 <div class="my-3 text-left">
-                                    <router-link :to="{ path: '/' }" class="register-link text-muted ms-2">{{ $t('이미 위카 회원이신가요?') }}</router-link>
+                                    <router-link :to="{ path: '/maintest' }" class="register-link text-muted ms-2">{{ $t('이미 위카 회원이신가요?') }}</router-link>
                                 </div>
                                 <!-- 이메일 입력 -->
                                 <div class="mb-3">
@@ -171,7 +171,7 @@
                                 </div>
                             </div>
                             <div class="register-link mt-5 text-center">
-                                <router-link :to="{ path: '/register' }" class="register-link">{{ $t('회원가입하기') }}</router-link>
+                                <router-link :to="{ path: '/registertest1' }" class="register-link">{{ $t('회원가입하기') }}</router-link>
                             </div>
                             <div class="text-muted mt-4 text-center">
                                 <p class="fs-6">

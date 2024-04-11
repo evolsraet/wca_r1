@@ -40,7 +40,9 @@ export default [
                 path: '/',
                 name: 'home',
                 component: () => import('../views/home/index.vue'),
+
             },
+            
             {
                 path: 'posts',
                 name: 'public-posts.index',
@@ -55,6 +57,11 @@ export default [
                 path: 'category/:id',
                 name: 'category-posts.index',
                 component: () => import('../views/category/posts.vue'),
+            },
+            {
+                path: '/userindex',
+                name: 'user.index',
+                component: () => import('../views/user/index.vue'),
             },
             {
                 path: 'login',
