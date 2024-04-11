@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <div class="registration-container">
                             <div class="text-left">
-                        <p class="mb-4 fw-bold">회원 정보를 입력해주세요</p>
+                        <p class="mb-4 fw-bold">회원 정보를 입력해주세요123</p>
                             </div>
                             <div class="form-body">
                                 <form @submit.prevent="submitRegister">
