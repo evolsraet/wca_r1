@@ -41,6 +41,7 @@ export default function useAuth() {
         email: "",
         password: "",
         password_confirmation: "",
+        dealer: null,
     });
 
     const submitLogin = async () => {
@@ -52,6 +53,7 @@ export default function useAuth() {
         await axios
             .post("/login", loginForm)
             .then(async (response) => {
+                const userData = response.data.data.user
                 await store.dispatch("auth/getUser");
                 await loginUser();
                 swal({
@@ -60,7 +62,13 @@ export default function useAuth() {
                     showConfirmButton: false,
                     timer: 1500,
                 });
-                await router.push({ name: "admin.index" });
+                if (userData.roles.includes('admin')) {
+                    await router.push({ name: "admin.index" });
+                } else if (userData.roles.includes('dealer')) {
+                    await router.push({ name: "user.index" }); 
+                } else {
+                    await router.push({ name: "user.index" }); 
+                }
             })
             .catch((error) => {
                 console.log(error);
@@ -78,6 +86,20 @@ export default function useAuth() {
 
         processing.value = true;
         validationErrors.value = {};
+
+        let payload = {
+            name: registerForm.name,
+            email: registerForm.email,
+            password: registerForm.password,
+            password_confirmation: registerForm.password_confirmation,
+            dealer: registerForm.dealer, 
+        };
+        console(name);
+        if (registerForm.dealer) {
+            payload.roles = ['dealer']; 
+        } else {
+            payload.roles = ['user'];
+        }
 
         await axios
             .post("/register", registerForm)

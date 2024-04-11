@@ -1,0 +1,558 @@
+/*----------------------------
+    공통 - 메인 , 로그인
+-----------------------------*/
+
+.container-fluid {
+    padding-left: 0;
+    padding-right: 0;
+}
+.login-card {
+    border-radius: 20px;
+    padding: 10px;
+    display: flex;
+    justify-content: center
+}
+.login-card .card-body{
+    flex: 0 0 auto !important;
+}
+.login-card .card-body > *:not(:first-child) {
+    margin-top: 3rem;
+}
+
+.card{
+    box-shadow: 0 0 6px 0 rgba(27, 50, 142, 0.2) !important;
+}
+
+.login-card .form-control,
+.login-card .btn {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.login-card::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #dbdbdb;
+}
+
+.d-grid {
+    margin-left: -16px;
+    margin-right: -16px;
+}
+
+.review-content .card:hover{
+    box-shadow: 0 0 14px 4px rgba(27, 50, 142, 0.2) !important;
+    transition: box-shadow 0.5s ease;
+}
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 250px;
+    background: #fff;
+    box-shadow: -2px 0 5px rgba(0, 0, 0, .3);
+    padding: 20px;
+    transform: translateX(100%);
+    transition: transform .3s ease-in-out;
+}
+
+.sidebar-enter-active,
+.sidebar-leave-active {
+    transition: transform .3s ease-in-out;
+}
+
+.sidebar-enter,
+.sidebar-leave-to {
+    transform: translateX(100%);
+}
+
+.main-content {
+    transition: margin-right .3s ease-in-out;
+    padding-top: 56px;
+}
+
+.main-content[style] {
+    margin-right: 250px;
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1;
+}
+
+
+/*   text-style  */
+
+.bold-link {
+    font-weight: bold;
+}
+
+.text-muted {
+    color: #c8c8c8 !important;
+}
+
+.fw-bold {
+    font-weight: bold !important;
+}
+
+.custom-highlight {
+    background: linear-gradient(transparent 50%, #ffe7eb 50%);
+}
+
+.btn-lg {
+    font-size: 1rem !important;
+}
+
+
+/* 소셜 로그인 or 로그인 */
+.navbar-brand {
+    background-image: url('../img/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    height: 50px;
+    width: 100px;
+}
+
+.page-container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.main-content {
+    flex: 1;
+}
+
+.navbar>.container-fluid {
+    display: flex;
+    flex-wrap: inherit;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.logo {
+    height: 65px;
+}
+
+.navbar-light .navbar-toggler {
+    color: rgba(0, 0, 0, .55);
+    border-color: rgba(0, 0, 0, 0);
+}
+
+.google,
+.naver,
+.kakao {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-size: cover;
+    overflow: hidden;
+    text-indent: 100%;
+    white-space: nowrap;
+    font-size: 0;
+}
+
+.google:hover,
+.naver:hover,
+.kakao:hover {
+    border-radius: 50%;
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.25);
+    transition: box-shadow 0.5s ease;
+}
+
+.google {
+    background: url('../img/google_ico.png') no-repeat center center;
+    background-size: contain;
+    width: 45px;
+    height: 45px;
+}
+
+.naver {
+    background: url('../img/naver_ico.png') no-repeat center center;
+    background-size: contain;
+    width: 45px;
+    height: 45px;
+}
+
+.kakao {
+    background: url('../img/kakao_ico.png') no-repeat center center;
+    background-size: contain;
+    width: 45px;
+    height: 45px;
+}
+
+.login-v2-area {
+    display: flex;
+    justify-content: center;
+    list-style: none;
+    padding: 10px;
+}
+
+.login-v2-area li {
+    margin: 0 10px;
+}
+
+.login-v2 {
+    margin-top: 0px;
+    text-align: center;
+    z-index: 1;
+}
+
+.login-v2 h3 span {
+    font-size: 16px;
+    font-family: "Noto Sans Medium";
+    letter-spacing: -0.8px;
+    vertical-align: top;
+}
+
+.login-v2 h3 {
+    position: relative;
+    z-index: 2;
+    height: 19px;
+    line-height: 19px;
+    margin: 0;
+    text-align: center;
+    border-bottom: none;
+}
+
+.login-v2 h3:before {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: 0;
+    right: auto;
+    display: block;
+    width: 90px;
+    height: 1px;
+    background: #D9D9D9;
+}
+
+.login-v2 h3:after {
+    content: "";
+    position: absolute;
+    top: 10px;
+    left: auto;
+    right: 0;
+    display: block;
+    width: 90px;
+    height: 1px;
+    background: #D9D9D9;
+}
+
+.login-login-card p {
+    font-size: 13px !important;
+}
+
+.register-link {
+    color: rgb(173, 173, 173);
+    text-decoration: underline;
+}
+
+.register-link:hover {
+    color: rgb(136, 136, 136);
+}
+@media all and (max-width:1250px){
+    .video_type01{
+        width: 70%;
+    }
+    .login-v2 h3:after{
+        width: 50px;
+    }
+    .login-v2 h3::before{
+        width: 50px;
+    }
+}
+@media all and (max-width:900px){
+    .video_type01 {
+        width: 50%;
+    }
+}
+
+/* 모바일_1, 모바일_2 */
+
+@media all and (max-width:640px){
+    .video_type01 {
+        display: none;
+    }
+    a.text-muted.spacing {
+        margin: 0px;
+    }
+    .regiest-content .banner{
+        display: none;
+    }
+    .layout-container .banner{
+        display: none;
+    }
+    .regiest-content .review-content{
+        display: none;
+    }
+    .review-content .row {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: scroll;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none; 
+      }
+    
+      .review-content .row::-webkit-scrollbar {
+        display: none;
+      }
+
+    .review-content .col {
+        flex: 0 0 auto; 
+        width: 50%;
+        max-width: none; 
+    }
+    .login-v2 h3:before{
+        width: 70px;
+    }
+
+    .login-v2 h3:after{
+        width: 70px;
+    }
+    .web-video-container{
+        display: none;
+    }
+}
+ 
+.btn-apply img {
+    transition: transform .3s;
+    }
+    .btn-apply:hover img {
+    transform: translateX(8px); 
+    }
+@media (max-width: 340px) {
+    .app-specific-size {
+        display: block;
+    }
+}
+
+
+@media (min-width: 341px) and (max-width: 640px) {
+    .app-specific-size {
+        display: block;
+    }
+}
+.login-card {
+    transition: all 0.3s ease-in-out;
+}
+
+.app-specific-size {
+    display: none;
+}
+
+.layout-container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+}
+
+.btn-apply {
+    color: #aaaebe !important;
+}
+
+.banner {
+    grid-column: 1 / -1;
+}
+
+.main-content {
+    background: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+
+.login {
+    background: #f9f9f9;
+    padding: 20px;
+    border: 1px solid #ddd;
+}
+
+/* review style */
+.all-view::after {
+    background-image: url('../img/Icon-right.png');
+    width: 13px;
+    height: 13px;
+}
+
+.layout-container {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 2fr 1fr;
+    gap: 40px;
+}
+
+.btn-apply {
+    color: #aaaebe;
+}
+
+.btn-apply i {
+    transition: all .3s;
+}
+
+.btn-apply img {
+    transition: transform .3s;
+}
+
+.btn-apply:hover img {
+    transform: translateX(8px);
+}
+.spacing {
+    margin: 10px;
+}
+.car-imges {
+    width: 100%;
+    height: 116px;
+    background-image: url('/resources/img/car.png');
+    background-size: cover;
+}
+
+.apply-top {
+    display: flex;
+    margin-bottom: 30px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.apply-top .tit {
+    margin-right: 10px;
+    font-weight: 800;
+    font-size: 18px;
+}
+
+.review-title {
+    font-size: 20px;
+    font-weight: bold;
+    font-stretch: normal;
+    text-align: left;
+}
+.filled-star {
+    background-image: url('/resources/img/filled_star.png');
+}
+
+.empty-star {
+    background-image: url('/resources/img/emp_star.png');
+}
+
+.card-body>*:first-child {
+    margin-top: 0.25rem;
+}
+
+.card-body>*:not(:first-child) {
+    margin-top: 0.25rem;
+}
+
+.card-body>*:last-child {
+    margin-bottom: 0.25rem;
+}
+
+.card-body>*:not(:first-child) {
+    margin-top: 0.5rem;
+}
+
+.rating .star {
+    display: inline-block;
+    width: 20px;
+    height: 19px;
+    margin-right: 6px;
+    background-size: contain;
+}
+.card-body input{
+    font-size: 20px;
+}
+@media (max-width: 340px) {
+    .app-specific-size {
+        display: block;
+    }
+}
+
+
+@media (min-width: 341px) and (max-width: 640px) {
+    .app-specific-size {
+        display: block;
+    }
+}
+
+@media (max-width: 640px) {
+    .layout-container {
+     display: inline;
+    }
+    .banner,
+    .main-content,
+    .login {
+        grid-column: 1;
+    }
+    .login-card{
+        --bs-gutter-x: none !important; 
+    }
+}
+@media (max-width: 640px) {
+    .layout-container {
+        grid-template-columns: 1fr;
+        gap: 20px !important;
+    }
+
+    .review-content {
+        overflow-x: hidden;
+        padding: 0.5rem;
+    }
+
+    .review-content>.row {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    .review-content>.row>.col {
+        flex: 0 0 auto;
+        width: 90%;
+    }
+    .offcanvas{
+        max-width: 75% !important;
+    }
+
+    .banner,
+    .main-content,
+    .login {
+        grid-column: 1;
+    }
+
+    .btn-apply {
+        margin-right: 0.5rem !important;
+    }
+    .container{
+        --bs-gutter-x: none;
+    }
+}
+
+
+@media (min-width: 992px) and (max-width: 768px){
+    .card {
+        max-height: 750px !important;
+    }
+}
+.carousel-inner{
+    grid-column: 1 / -1;
+    background-color: #f5f5f6;
+    text-align: center;
+    height: 370px;
+    max-height: 370px;
+}
+.carousel-item img {
+    height: 370px;
+    object-fit: cover; 
+    object-position: center; 
+}
