@@ -23,6 +23,8 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 
 Route::post('users', [UserController::class, 'store']);   // 회원가입은 인증없이
 Route::post('users/test', [UserController::class, 'test']);   // 회원가입은 인증없이
+Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Route::put('auctions/statusUpdate/{id}', [AuctionController::class, 'statusUpdate']);
 
