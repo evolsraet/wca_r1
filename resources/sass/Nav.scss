@@ -1,0 +1,226 @@
+.navbar-toggler {
+    display: block !important;
+}
+
+.nav-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: end;
+    padding: 0.5rem;
+    height: 60px;
+}
+
+.btn-close {
+    width: 25px;
+    height: 25px;
+}
+
+.toggle-nav-content {
+    padding: 20px;
+    display: block;
+    overflow-y: hidden;
+    height: calc(95vh - 60px); 
+    margin-top: 60px; 
+    width: 342px;
+}
+.navbar-collapse.show {
+    width: 342px !important;
+}
+.middle-content{
+    margin-top: 8rem !important;
+    border-bottom: 2px solid #e3e3e3;
+}
+/* MOBILE_2 */
+@media all and (max-width:640px){
+.nav-gray-box {
+    font-size: 18px;
+}
+.toggle-nav-content {
+    width: 300px;
+}
+.navbar-collapse.show {
+    width:320px !important;
+}
+}
+
+.my-member{
+    display: flex;
+}
+.menu-item {
+    display: flex;
+    align-items: center; 
+    justify-content: space-between; 
+    padding: 10px;
+    margin-top: 30px;
+    font-size: 17px;
+    font-weight: 500;
+    color: black;
+}
+
+.menu-item:hover .right-icon {
+    transform: translateX(5px);
+}
+
+.menu-text {
+    margin-right: auto;
+}
+.recent-new{
+    position: relative; 
+}
+.settings-icon {
+    width: 27px;
+    height: 20px;
+    background-image: url('../img/Icon-settings.png');
+    margin-right: 20px; 
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+
+}
+.right-icon {
+    width: 25px;
+    height: 15px;
+    background-image: url('../img/Icon-red-right.png');
+    margin-left: auto; 
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+    transition: transform 0.3s ease; 
+}
+.logout-icon{
+    width: 27px;
+    height: 20px;
+    background-image: url('../img/Icon-logout.png');
+    margin-right: 20px; 
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+
+}
+.icon-tag{
+    width: 27px;
+    height: 20px;
+    background-image: url('../img/Icon-tag.png');
+    margin-right: 20px; 
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+
+}
+.icon-awsome{
+    width: 27px;
+    height: 20px;
+    background-image: url('../img/Icon-awesome-car.png');
+    margin-right: 20px; 
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+
+}
+.icon-side{
+    width: 27px;
+    height: 20px;
+    background-image: url('../img/Icon-awesome-car-side.png');
+    margin-right: 20px; 
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+
+}
+.icon-document{
+    width: 30px;
+    height: 30px;
+    background-image: url('../img/document.png');
+    margin-right: 20px; 
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+
+}
+.icon-dash{
+    width: 27px;
+    height: 20px;
+    background-image: url('../img/icon-dash.png');
+    margin-right: 20px; 
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+
+}
+
+
+.right-icon:hover {
+    transform: translateX(5px);
+}
+@media all and (max-width:640px){
+.toggle-nav-content {
+    overflow-y: auto;
+}
+}
+.nav-font {
+    font-size: 18px;
+    font-weight: 500;
+}
+
+#navbarSupportedContent {
+    position: fixed;
+    top: 0;
+    right: 0;
+    height: 100%;
+    width: 0; 
+    overflow-x: hidden;
+    transition: width 0.3s;
+    background-color: white;
+    box-shadow: 0 6px 12px rgb(0 0 0 / 28%);
+    z-index: 1020;
+}
+
+.logout{
+    font-size: 12px;
+    margin-top: 5px;
+    font-weight: bold;
+}
+.nav-header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: end;
+    padding: 0.5rem;
+    height: 60px;
+}
+
+.btn-close {
+    font-size: 1.5rem; 
+    border: none;
+    cursor: pointer;
+}
+
+.toggle-nav-content {
+    padding: 20px;
+    display: block;
+    overflow-y: auto;
+    height: calc(95vh - 60px); 
+    margin-top: 60px; 
+    width: 342px;
+}
+.navbar-collapse.show {
+    width: 342px !important;
+}
+.middle-content{
+    margin-top: 6rem !important;
+}
+/* MOBILE_2 */
+@media all and (max-width:640px){
+.nav-gray-box {
+    font-size: 18px;
+}
+.toggle-nav-content {
+    width: 300px;
+}
+.navbar-collapse.show {
+    width:320px !important;
+}
+}

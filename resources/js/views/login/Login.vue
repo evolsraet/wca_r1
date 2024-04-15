@@ -1,5 +1,5 @@
 <template>
-    <div class="container pt-5">
+    <div class="container">
         <!-- 회원가입 권장 섹션 -->
         <div class="regiest-content">
             <div class="my-5 app-specific-size">
@@ -128,11 +128,11 @@
                         <form @submit.prevent="submitLogin">
                             <div class="">
                                 <div class="my-3 text-left">
-                                    <router-link :to="{ path: '/' }" class="register-link text-muted ms-2">{{ $t('이미 위카 회원이신가요?') }}</router-link>
+                                    <router-link :to="{ path: '/' }" class="register-link text-muted ms-2">이미 위카 회원이신가요?</router-link>
                                 </div>
                                 <!-- 이메일 입력 -->
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">{{$t("email")}}</label>
+                                    <label for="email" class="form-label">email</label>
                                     <input v-model="loginForm.email" id="email" type="email" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="이메일을 입력해주세요.">
                                     <!-- 유효성 검사 오류 메시지 -->
                                     <div class="text-danger mt-1">
@@ -166,12 +166,12 @@
                                 <!-- 로그인 버튼 -->
                                 <div class="flex items-center justify-end my-4">
                                     <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
-                                        {{ $t('login') }}
+                                        login
                                     </button>
                                 </div>
                             </div>
                             <div class="register-link mt-5 text-center">
-                                <router-link :to="{ path: '/register' }" class="register-link">{{ $t('회원가입하기') }}</router-link>
+                                <router-link :to="{ path: '/register' }" class="register-link">회원가입하기</router-link>
                             </div>
                             <div class="text-muted mt-4 text-center">
                                 <p class="fs-6">

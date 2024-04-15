@@ -29,6 +29,23 @@ function guest(to, from, next) {
         next()
     }
 }
+function requireRole(role) {
+    return function (to, from, next) {
+        let isLogin = !!store.state.auth.authenticated;
+        let hasRole = store.state.auth.user && store.state.auth.user.roles.includes(role);
+
+        if (isLogin && hasRole) {
+            next();
+        } else {
+            next('/login');  
+        }
+    };
+}
+
+const requireUser = requireRole('user');
+const requireDealer = requireRole('dealer');
+const requireAdmin = requireRole('admin');
+
 
 export default [
     {
@@ -42,11 +59,15 @@ export default [
                 component: () => import('../views/home/index.vue'),
 
             },
-            
             {
                 path: 'posts',
                 name: 'public-posts.index',
                 component: () => import('../views/posts/index.vue'),
+            },
+            {
+                path: '/auction',
+                name: 'autction.index',
+                component: () => import('../views/auction/index.vue'),
             },
             {
                 path: 'posts/:id',
@@ -59,9 +80,25 @@ export default [
                 component: () => import('../views/category/posts.vue'),
             },
             {
-                path: '/userindex',
+                path: '/',
                 name: 'user.index',
+                beforeEnter: requireUser, 
                 component: () => import('../views/user/index.vue'),
+                meta: { requiresRole: 'user' } 
+            },
+            {
+                path: '/mainview',
+                name: 'dealer.main',
+                component: () => import('../views/dealer/main.vue'),
+                beforeEnter: requireDealer,
+                meta: { requiresRole: 'dealer' }, 
+            },
+            {
+                path: '/dealer',
+                name: 'dealer.index2',
+                component: () => import('../views/dealer/dealer.vue'),
+                beforeEnter: requireDealer,
+                meta: { requiresRole: 'dealer' }, 
             },
             {
                 path: 'login',
@@ -206,4 +243,5 @@ export default [
         name: 'NotFound',
         component: () => import("../views/errors/404.vue"),
     },
+    
 ];
