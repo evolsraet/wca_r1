@@ -30,7 +30,7 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 
     Route::apiResource('auctions', AuctionController::class);
     Route::apiResource('bids', BidController::class);
-    // Route::apiResource('reviews', ReviewController::class);
+    Route::apiResource('reviews', ReviewController::class);
     // Route::apiResource('likes', LikeController::class);
 
     Route::get('users/me', [UserController::class, 'me']);   // 본인가져오기

@@ -39,6 +39,20 @@ class UserController extends Controller
         return $this->service->store($request);
     }
 
+    /**
+     * @lrd:start
+     * # 가능 파일
+     * # 'file_user_photo' => '사진',
+     * # 'file_user_biz'   => '사업자등록증',
+     * # 'file_user_sign'  => '매도용인감증명',
+     * # 'file_user_cert'  => '매매업체 대표증 / 종사원증',
+     * @lrd:end
+     */
+    public function store(Request $request)
+    {
+        return $this->service->store($request);
+    }
+
     public function me(Request $request)
     {
         $user = $request->user();

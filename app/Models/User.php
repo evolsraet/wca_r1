@@ -66,10 +66,10 @@ class User extends Authenticatable implements HasMedia
     ];
 
     public $files = [
-        'file_photo' => '사진',
-        'file_biz'   => '사업자등록증',
-        'file_sign'  => '매도용인감증명',
-        'file_cert'  => '매매업체 대표증 / 종사원증',
+        'file_user_photo' => '사진',
+        'file_user_biz'   => '사업자등록증',
+        'file_user_sign'  => '매도용인감증명',
+        'file_user_cert'  => '매매업체 대표증 / 종사원증',
     ];
 
     public $enums = [
@@ -141,6 +141,11 @@ class User extends Authenticatable implements HasMedia
     public function dealer()
     {
         return $this->hasOne(Dealer::class);
+    }
+
+    public function review()
+    {
+        return $this->hasMany(Review::class);
     }
 
     public function auction()

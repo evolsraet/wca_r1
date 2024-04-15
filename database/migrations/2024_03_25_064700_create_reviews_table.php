@@ -17,6 +17,8 @@ class CreateReviewsTable extends Migration
             $table->text('content')->nullable();
             // Unique index for composite key
             $table->unique(['auction_id', 'user_id', 'dealer_id'], 'composite_index');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -31,34 +31,23 @@ class UserService
             $data = $request->input('user');
             $data = $this->beforeData($data);
 
-            // 본인회원가입 - 사용자일경우
-            if (!auth()->check() && $request->input('user.role') == 'user') {
-                $data['status'] = 'ok';
-            }
-
             // Validator 인스턴스 생성
-            $validator = Validator::make($request->all(), [
-                'user.name' => 'required|max:255',
-                'user.email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'user.phone' => 'required',
-                'user.password' => ['required', 'string', 'min:8', 'confirmed'],
+            $validator = Validator::make($request->input('user'), [
+                'name' => 'required|max:255',
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'phone' => 'required',
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
 
             // 유효성 검사 실패 시
             if ($validator->fails()) {
-                $errors = $validator->errors();
+                return response()->api(null, null, 'fail', 422, ['errors' => $validator->errors()]);
+            }
 
-                // 접두사를 제거한 에러 메시지 생성
-                $customErrors = [];
-                foreach ($errors->getMessages() as $field => $message) {
-                    $fieldWithoutPrefix = preg_replace('/^user\./', '', $field); // 'user.' 접두사 제거
-                    $customErrors[$fieldWithoutPrefix] = $message;
-                }
 
-                // ($data = null, $message = null, $status = 'ok', $code = 200, $additional = []) {
-                // 커스텀 에러 메시지로 응답 생성 또는 뷰에 에러 전달
-                return response()->api(null, null, 'fail', 422, ['errors' => $customErrors]);
-                // (['errors' => $customErrors], 422);
+            // 본인회원가입 - 사용자일경우
+            if (!auth()->check() && $request->input('user.role') == 'user') {
+                $data['status'] = 'ok';
             }
 
             // dd([gettype($data), $data, $request->file()]);
@@ -151,7 +140,9 @@ class UserService
                         'introduce' => 'required',
                     ]);
 
+                    // 유효성 검사 실패 시
                     if ($validator->fails()) {
+                        return response()->api(null, null, 'fail', 422, ['errors' => $validator->errors()]);
                     }
 
                     // 새 Dealer 생성
@@ -197,6 +188,9 @@ class UserService
             if (isset($data['status']))
                 unset($data['status']);
         }
+
+        if (isset($data['password_confirmation']))
+            unset($data['password_confirmation']);
         // fillable 로 대체
         // unset($data['role']);
         // unset($data['dealer']);

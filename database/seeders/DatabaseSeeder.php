@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         $this->call(DealerSeeder::class);
         $this->call(AuctionSeeder::class);
         $this->call(BidSeeder::class);
+        $this->call(ReviewSeeder::class);
         // $this->call(PostSeeder::class);
 
         //        $this->call(RoleSeeder::class);

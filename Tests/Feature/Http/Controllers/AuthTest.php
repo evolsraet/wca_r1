@@ -114,6 +114,7 @@ class AuthTest extends TestCase
             'user' => $user->makeVisible($user->getHidden())->toArray(),
         ];
         $data['user']['role'] = 'user';
+        $data['user']['password_confirmation'] = $data['user']['password'];
 
         $response = $this->postJson('/api/users', $data);
 
@@ -137,6 +138,7 @@ class AuthTest extends TestCase
             'user' => $user->makeVisible($user->getHidden())->toArray()
         ];
         $data['user']['role'] = 'dealer';
+        $data['user']['password_confirmation'] = $data['user']['password'];
         $data['dealer'] = $dealer->makeVisible($dealer->getHidden())->toArray();
         unset($data['dealer']['user_id']);
 
@@ -144,11 +146,11 @@ class AuthTest extends TestCase
 
 
         Storage::fake('media_folder'); // 파일이 실제로 저장되지 않도록 스토리지를 가짜로 설정합니다.
-        $file = UploadedFile::fake()->create('file_sign.pdf', 100); // 100KB 크기의 PDF 파일
-        $data['file_sign'] = $file; // 여기서는 $data 배열에 직접 추가하는 대신, 파일을 요청에 별도로 추가합니다.
+        $file = UploadedFile::fake()->create('file_user_sign.pdf', 100); // 100KB 크기의 PDF 파일
+        $data['file_user_sign'] = $file; // 여기서는 $data 배열에 직접 추가하는 대신, 파일을 요청에 별도로 추가합니다.
 
         $response = $this->postJson('/api/users', $data, [
-            'file_sign' => $file,
+            'file_user_sign' => $file,
         ]);
 
         // $response->dumpHeaders();
@@ -165,7 +167,7 @@ class AuthTest extends TestCase
         $fileId = $response->json()['file_data'][0]['id'];
         $fileName = $response->json()['file_data'][0]['file_name'];
 
-        $this->assertEquals('file_sign.pdf', $fileName);
+        $this->assertEquals('file_user_sign.pdf', $fileName);
 
         // 파일이 저장될 경로
         // $filePath = "{$fileId}/{$fileName}";
@@ -211,11 +213,11 @@ class AuthTest extends TestCase
         $this->actingAs($user);
 
         Storage::fake('media_folder'); // 파일이 실제로 저장되지 않도록 스토리지를 가짜로 설정합니다.
-        $file = UploadedFile::fake()->create('file_sign.pdf', 100); // 100KB 크기의 PDF 파일
-        $data['file_sign'] = $file; // 여기서는 $data 배열에 직접 추가하는 대신, 파일을 요청에 별도로 추가합니다.
+        $file = UploadedFile::fake()->create('file_user_sign.pdf', 100); // 100KB 크기의 PDF 파일
+        $data['file_user_sign'] = $file; // 여기서는 $data 배열에 직접 추가하는 대신, 파일을 요청에 별도로 추가합니다.
 
         $response = $this->putJson('/api/users', $data, [
-            'file_sign' => $file,
+            'file_user_sign' => $file,
         ]);
 
         $response = $this->putJson("/api/users/{$user->id}", [
@@ -225,7 +227,7 @@ class AuthTest extends TestCase
             'dealer' => [
                 'name' => 'updated',
             ],
-            'file_sign' => $file,
+            'file_user_sign' => $file,
         ]);
 
         // dd($user->toArray());
@@ -246,7 +248,7 @@ class AuthTest extends TestCase
         $fileId = $response->json()['file_data'][0]['id'];
         $fileName = $response->json()['file_data'][0]['file_name'];
 
-        $this->assertEquals('file_sign.pdf', $fileName);
+        $this->assertEquals('file_user_sign.pdf', $fileName);
         // Storage::disk('media_folder')->assertExists("{$fileId}/{$fileName}");
     }
 
