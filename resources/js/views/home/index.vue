@@ -52,7 +52,7 @@
                     </button>
                     </div>
                 </div>
-                <div class="review-content my-5">
+                <div class="review-content">
                     <div class="apply-top text-start">
                         <h3 class="review-title">다른 사람들의 이용후기에요</h3>
                         <a href="" class="btn-apply">전체보기 <img src="../../../img/Icon-right.png" class="ms-2" alt="설명"></a>

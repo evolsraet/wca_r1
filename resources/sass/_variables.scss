@@ -7,4 +7,112 @@ $font-size-base: 0.9rem;
 $line-height-base: 1.6;
 
 // Bootstrap 5
-$primary: rgb(174, 5, 5);
+/* 전역적 컬러 스타일*/
+$primary: #da3138;
+$primary-sub: #fbeaea;
+
+$sub-color01: #4263EA;
+$sub-color02: #EBEFFD;
+
+
+.tc-red{
+    color:$primary;
+}
+
+/* Text color */
+.tc-light-gray{
+    color:#aaaebe !important;
+}
+
+/* box 스타일 */
+.blue-box {
+    display: inline-block;
+    width: 55px;
+    height: 25px;
+    margin-right: 10px;
+    border-radius: 15px;
+    background-color:#4264ea3d !important;
+    color: blue !important;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: center;
+    font-weight: 500;
+    padding: 0 !important;
+}
+
+.gray-box {
+    display: inline-block;
+    width: 55px;
+    height: 25px;
+    margin-right: 10px;
+    border-radius: 10px;
+    background: #e5e7eb !important;
+    color: #aaaebe !important;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: center;
+    padding: 0 !important;
+}
+
+.auc-gray {
+    display: inline-block;
+    width: 85px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 20px;
+    background: #aaaebe !important;
+    color: #ffffff !important;
+    font-size: 15px;
+    text-align: center;
+    padding: 0 !important;
+    line-height: 27px;
+}
+
+.auc-blue {
+    display: inline-block;
+    width: 85px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 20px;
+    background-color:blue !important;
+    color: rgb(255, 255, 255) !important;
+    font-size: 15px;
+    text-align: center;
+    padding: 0 !important;
+    line-height: 27px;
+}
+
+.auc-black {
+    display: inline-block;
+    width: 85px;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 20px;
+    background: #000000 !important;
+    color: #ffffff !important;
+    font-size: 15px;
+    text-align: center;
+    padding: 0 !important;
+    line-height: 27px;
+}
+.nav-gray-box{
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    text-align: center;
+    height: 50px;
+    line-height: 10px;
+    padding: 20px;
+    font-weight: 500;
+}
+
+.recent-new::before {
+    content: ""; 
+    position: absolute;
+    right: -10px;
+    top: -3px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #f24200;
+}
+

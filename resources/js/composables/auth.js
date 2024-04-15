@@ -65,9 +65,9 @@ export default function useAuth() {
                 if (userData.roles.includes('admin')) {
                     await router.push({ name: "admin.index" });
                 } else if (userData.roles.includes('dealer')) {
-                    await router.push({ name: "user.index" }); 
+                    await router.push({ name: "dealer.index2" }); 
                 } else {
-                    await router.push({ name: "user.index" }); 
+                    await router.push({ name: "autction.index" }); 
                 }
             })
             .catch((error) => {
@@ -223,6 +223,23 @@ export default function useAuth() {
             ability.update(rules);
         });
     };
+    
+    /* 입찰 데이터 ::get */ 
+    const getBids = async () => {
+
+        processing.value = true;
+        let bidsData = null; 
+        try {
+            const response = await axios.get("/api/bids");
+            bidsData = response.data.data; 
+        } catch (error) {
+            console.error('Error fetching bids:', error);
+        } finally {
+            processing.value = false;
+            return bidsData; 
+        }
+    };
+
 
     return {
         loginForm,
@@ -235,6 +252,7 @@ export default function useAuth() {
         submitRegister,
         submitForgotPassword,
         submitResetPassword,
+        getBids,
         user,
         getUser,
         logout,
