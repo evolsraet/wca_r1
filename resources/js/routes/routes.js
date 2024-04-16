@@ -87,8 +87,8 @@ export default [
                 meta: { requiresRole: 'user' } 
             },
             {
-                path: '/mainview',
-                name: 'dealer.main',
+                path: '/',
+                name: 'dealer.index',
                 component: () => import('../views/dealer/main.vue'),
                 beforeEnter: requireDealer,
                 meta: { requiresRole: 'dealer' }, 
