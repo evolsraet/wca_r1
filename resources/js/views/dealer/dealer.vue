@@ -24,7 +24,7 @@
                     </div>
                     <div class="container my-5">
                     <div class="row">
-                        <div class="col-md-3 mb-4" v-for="bid in bids" :key="bid.id">
+                        <div class="col-md-3 mb-4" v-for="bid in bidsData" :key="bid.id">
                             <div class="card my-auction">
                                 <input class="toggle-heart" type="checkbox" checked/>
                                     <label class="heart-toggle" ></label>
@@ -47,14 +47,13 @@
 
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import useAuth from "@/composables/auth";
+import { onMounted } from 'vue';
+import useBid from "@/composables/bids";
 
-const { getBids } = useAuth();
-const bids = ref([]); 
+const { bidsData, getBids } = useBid();
 
 onMounted(async () => {
-    bids.value = await getBids();
+  await getBids();
 });
 </script>
 

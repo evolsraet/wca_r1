@@ -20,7 +20,7 @@ export default function useBid() {
         const count = {};
         if (bidsData.value) {
             bidsData.value.forEach(bid => {
-                const userId = bid.user_id;
+                const userId = bid.user_id;// 
                 if (count[userId]) {
                     count[userId]++;
                 } else {

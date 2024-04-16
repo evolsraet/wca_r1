@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container nav-font">
-            <router-link to="/" class="navbar-brand"></router-link>
+            <router-link :to="homePath" class="navbar-brand"></router-link>
             <!-- 사용자 별 toggle-navbar  -->
             <!-- dealer navbar-->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -88,7 +88,7 @@
                     </template>
                     <!-- 로그인 시 -->
                     <ul v-if="user?.name" class="navbar-nav mt-lg-0 ms-auto">
-                        <li class="my-member"><img src="../../img/car.png" alt="Profile Image" style="width: 36px; height: 36px; border-radius: 50%;object-fit: cover;"><a class="nav-link" href="#">{{ user.name }}</a></li>
+                        <li class="my-member"><img src="../../img/myprofile_ex.png" class="nav-profile" alt="Profile Image"><a class="nav-link" href="#">{{ user.name }}</a></li>
                         <li><a class="nav-link tc-light-gray logout" href="javascript:void(0)" @click="logout">로그아웃</a></li>
                     </ul>
                 </ul>
@@ -109,5 +109,16 @@ const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
+
 const { logout } = useAuth();
+
+const homePath = computed(() => {
+    if (isDealer.value) {
+        return { name: 'dealer.index' }; 
+    } else if (isUser.value) {
+        return { name: 'user.index' }; 
+    } else {
+        return { name: 'home' };
+    }
+});
 </script>
