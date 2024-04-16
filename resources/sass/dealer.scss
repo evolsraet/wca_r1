@@ -397,21 +397,37 @@
     gap: 40px;
 }
 
+
 .btn-apply {
-    color: #aaaebe;
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px;
+    text-decoration: none;
+    color: #000;
+    cursor: pointer; /* 버튼에 마우스 포인터 추가 */
+  }
+  
+  .btn-apply::after {
+    content: "";
+    display: block;
+    width: 14px;
+    height: 14px;
+    margin-top: 2px;
+    background-image: url(http://localhost:5173/resources/img/Icon-right.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 15px;
+    transition: transform 0.3s ease;
 }
+  
+  .btn-apply:hover::after {
+    transform: translateX(5px); 
+  }
+  
+  
 
-.btn-apply i {
-    transition: all .3s;
-}
 
-.btn-apply img {
-    transition: transform .3s;
-}
-
-.btn-apply:hover img {
-    transform: translateX(8px);
-}
 .spacing {
     margin: 10px;
 }

@@ -224,21 +224,6 @@ export default function useAuth() {
         });
     };
     
-    /* 입찰 데이터 ::get */ 
-    const getBids = async () => {
-
-        processing.value = true;
-        let bidsData = null; 
-        try {
-            const response = await axios.get("/api/bids");
-            bidsData = response.data.data; 
-        } catch (error) {
-            console.error('Error fetching bids:', error);
-        } finally {
-            processing.value = false;
-            return bidsData; 
-        }
-    };
 
 
     return {
@@ -252,7 +237,6 @@ export default function useAuth() {
         submitRegister,
         submitForgotPassword,
         submitResetPassword,
-        getBids,
         user,
         getUser,
         logout,
