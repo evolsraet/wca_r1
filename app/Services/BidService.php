@@ -44,15 +44,18 @@ class BidService
                 });
             }
         } elseif ($method == 'store') {
-            // 사용자 아이디 지정
+            if (!auth()->user()->hasPermissionTo('act.user'))
+                throw new \Exception('권한이 없습니다.');
+
+            // 기본값 아이디 지정
             $result->user_id = auth()->user()->id;
             $result->status = 'ask';
-            // 경매 검증
-            $auction = Auction::find($result->auction_id);
-            if ($auction) {
-                if ($auction->status != 'ing')
-                    throw new \Exception('신청가능한 경매가 아닙니다.');
-            }
+            // 경매 검증 - 삽입에 auction_id 는 없다
+            // $auction = Auction::find($result->auction_id);
+            // if ($auction) {
+            //     if ($auction->status != 'ing')
+            //         throw new \Exception('신청가능한 경매가 아닙니다.');
+            // }
         } elseif ($method == 'update') {
             $this->modifyOnlyMe($result);
             unset($result->user_id);

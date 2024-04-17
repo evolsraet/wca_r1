@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Bid;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AuctionResource extends JsonResource
@@ -27,6 +28,11 @@ class AuctionResource extends JsonResource
             if (str_ends_with($key, '_at') && $value !== null) {
                 $parentArray[$key] = $this->$key->toDatetimeString();
             }
+        }
+
+        // 상위 5개 입찰건
+        if ($parentArray['status'] != 'ask') {
+            $addArray['top_bids'] = Bid::where('auction_id', $parentArray['id'])->limit(5)->get();
         }
 
         return array_merge($parentArray, $addArray);
