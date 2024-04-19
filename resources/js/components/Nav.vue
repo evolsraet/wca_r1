@@ -1,7 +1,7 @@
 <template>
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container nav-font">
-            <router-link :to="homePath" class="navbar-brand"></router-link>
+            <router-link :to="{ name: 'home' }" class="navbar-brand"></router-link>
             <!-- 사용자 별 toggle-navbar  -->
             <!-- dealer navbar-->
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -107,7 +107,7 @@
                         <router-link :to="{ name: 'public-posts.index'}"  class="nav-link">내차팔기</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{ name: 'public-posts.index'}" class="nav-link">이용후기</router-link>
+                        <router-link :to="{ name: 'user.review'}" class="nav-link">이용후기</router-link>
                     </li>
                     <!-- 게스트 일때 -->
                     <template v-if="!user?.name">
