@@ -85,8 +85,8 @@ export default [
                 component: () => import('../views/category/posts.vue'),
             },
             {
-                path: '/',
-                name: 'user.index',
+                path: '/review',
+                name: 'user.review',
                 beforeEnter: requireUser, 
                 component: () => import('../views/user/index.vue'),
                 meta: { requiresRole: 'user' } 
