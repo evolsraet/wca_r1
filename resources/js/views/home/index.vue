@@ -55,7 +55,7 @@
                 <div class="review-content">
                     <div class="apply-top text-start">
                         <h3 class="review-title">다른 사람들의 이용후기에요</h3>
-                        <a href="" class="btn-apply">전체보기</a>
+                        <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
                     </div>
                     <div class="row row-cols-1 row-cols-md-2 g-4">
                         <div class="col">

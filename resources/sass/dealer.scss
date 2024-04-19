@@ -1,7 +1,7 @@
 /*----------------------------
     공통 - 메인 , 로그인
 -----------------------------*/
-.video {
+video {
 	max-width: 80% !important;
 	height: auto !important;
 	margin: auto !important;
@@ -1062,7 +1062,7 @@
     height: 42px;
     line-height: 40px;
     border-radius: 26px;
-    width: 100%;
+    width: 100% !important;
     border: none; 
     outline: none; 
 }
@@ -1324,7 +1324,7 @@
 }
 
 .sub-nav .nav-container .nav-item {
-    padding-right: 20px;
+    padding-right: 18px;
     padding-left: 20px;
     color: #aaaebe;
 }

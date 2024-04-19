@@ -5,8 +5,8 @@
             <div class="nav-container mt-3">
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav">
-                        <a class="nav-item nav-link active" href="#">전체</a>
-                        <a class="nav-item nav-link" href="#">관심 차량<span class="interest mx-1">4</span></a>
+                        <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
+                        <a class="nav-item nav-link" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-1">4</span></a>
                     </div>
                 </nav>
             </div>
@@ -428,13 +428,35 @@
                 </div>
                 <!-- 내 경매 관리 / 경매 전체 -->
 
-                <div class="container my-4">
+                <div class="container my-4" v-if="currentTab === 'allInfo'">
                     <div class="row">
                         <!-- if. 경매 ing 있을때 -->
                         <div class="col-6 col-md-4 mb-4" v-for="auction in filteredAuctions" :key="auction.user_id">
                             <div class="card my-auction">
                                 <input class="toggle-heart" type="checkbox" checked />
                                 <label class="heart-toggle"></label>
+                                <div class="card-img-top-placeholder"></div>
+                                <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
+                                <div  v-if="auction.status  === 'ing'"class="progress">
+                                    <div class="progress-bar" role="progressbar"></div>
+                                </div>
+                                <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
+                                <div v-if="auction.status === 'wait'" class="wait-selection">선택 대기</div>
+                                <div v-if="auction.status === 'chosen'" class="dealer-select">딜러 선택</div>
+                                <div v-if="auction.status === 'diag'" class="time-remaining">진단 평가</div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
+                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="container my-4" v-if="currentTab === 'interInfo'">
+                    <div class="row">
+                        <!-- if. 경매 ing 있을때 -->
+                        <div class="col-6 col-md-4 mb-4" v-for="auction in filteredAuctions" :key="auction.user_id">
+                            <div class="card my-auction">
                                 <div class="card-img-top-placeholder"></div>
                                 <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
                                 <div  v-if="auction.status  === 'ing'"class="progress">
@@ -608,11 +630,15 @@ import { ref, computed, onMounted } from 'vue';
 import useAuctions from "@/composables/auctions";
 import { useStore } from 'vuex';
 import FilterModal from '@/views/modal/filter.vue'; 
-
+const currentTab = ref('allInfo');
 const { auctionsData, pagination, getAuctions } = useAuctions();
 const currentPage = ref(1);
 const store = useStore();
 const showModal = ref(false);
+
+const setCurrentTab = (tab) => {
+    currentTab.value = tab;
+};
 
 function toggleModal() {
   showModal.value = !showModal.value; 
