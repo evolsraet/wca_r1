@@ -3,9 +3,10 @@
         <div class="regiest-content">
             <div class="layout-container">
                 <!-- 딜러 프로필 요약 정보 -->
-                <div class="banner">
+                <div class="banner-top ">
+                    <div class="top-info">현재 진행중인 경매<p class="tc-red"> 1 </p> 건</div>
                     <div class="styled-div">
-                        <div class="profile">
+                        <div class="profile dealer-mp">
                             <div class="dealer-info">
                                 <img src="../../../img/myprofile_ex.png" alt="Profile Image" class="main-profile">
                                 <div class="deal-info">
@@ -15,6 +16,7 @@
                                     <p class="no-bidding mt-3"><span>입찰 불가</span></p>
                                 </div>
                             </div>
+                            <div class="footer mob-info"><p class="tc-light-gray" style=" margin-top: 14px;">입찰가능 유효시간 2024.03.20</p></div>
                             <div class="auction-info">
                                 <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">0</span>건 있습니다</p>
                                 <div style="display: flex;align-items: flex-end;">
@@ -23,7 +25,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="activity-info bold-18-font">
+                        <div class="activity-info bold-18-font ">
                             <div class="item">
                                 <p><span class="tc-red">100</span> 건</p>
                                 <p class="interest-icon tc-light-gray normal-16-font">관심</p>
@@ -43,8 +45,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="review-content">
-                    <div class="apply-top text-start">
+                <div class="content">
+                    <div class="enter-view text-start mb-2" >
                         <h3 class="review-title">공지사항</h3>
                         <a href="/reviewtest" class="btn-apply">전체보기</a>
                     </div>
@@ -59,18 +61,18 @@
                             <tr class="tr-recent-new">
                                 <td class="tc-light-gray note-date">2024-03-21</td>
                                 <td>
-                                    <span class="text-with-marker">2024 설 연휴 영업시간 안내</span>
+                                    <span>2024 설 연휴 영업시간 안내</span>
                                 </td>
                             </tr>
                             <tr>
                                 <td class="tc-light-gray note-date">2024-03-21</td>
                                 <td>
-                                    <span class="text-with-marker">신규 딜러가입 일시 중단 안내</span>
+                                    <span>신규 딜러가입 일시 중단 안내</span>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
-                    <div class="apply-top text-start mt-5">
+                    <div class="enter-view text-start mt-5 mb-2">
                         <h3 class="review-title">클레임 현황</h3>
                         <a href="/reviewtest" class="btn-apply">전체보기</a>
                     </div>
@@ -90,34 +92,34 @@
                                 <td>24-03-15</td>
                                 <td><span class="blue-box list-num">475192</span></td>
                                 <td>접수</td>
-                                <td class="tc-light-gray">상세</td>
+                                <td class="tc-light-gray"><a href="#" class="btn-apply">상세</a></td>
                             </tr>
                             <tr>
                                 <td>2</td>
                                 <td>24-03-15</td>
                                 <td><span class="blue-box list-num">475192</span></td>
                                 <td><span class="gray-bl-box">처리중</span></td>
-                                <td class="tc-light-gray">상세</td>
+                                <td class="tc-light-gray"><a href="#" class="btn-apply">상세</a></td>
                             </tr>
                             <tr>
                                 <td>3</td>
                                 <td>24-03-15</td>
                                 <td><span class="blue-box list-num">475192</span></td>
                                 <td><span class="red-box">완료</span></td>
-                                <td class="tc-light-gray">상세</td>
+                                <td class="tc-light-gray"><a href="#" class="btn-apply">상세</a></td>
                             </tr>
                             <tr>
                                 <td>4</td>
                                 <td>24-03-15</td>
                                 <td><span class="blue-box list-num">475192</span></td>
                                 <td><span class="gray-bl-box">처리중</span></td>
-                                <td class="tc-light-gray">상세</td>
+                                <td class="tc-light-gray"><a href="#" class="btn-apply">상세</a></td>
                             </tr>
 
                         </tbody>
                     </table>
                 </div>
-                <div class="card completed-card border-0">
+                <div class="card completed-card border-0" :style="cardStyle" @click="toggleCard">
                     <div class="card-body">
                         <div class="enter-view mt-3">
                             <h5>선택 완료 차량</h5>
@@ -158,267 +160,20 @@
     </div>
 </template>
 <script setup>
-    import {onMounted,computed} from 'vue';
-    import useBid from "@/composables/bids";
-    import {useStore} from 'vuex';
+import { ref, onMounted, computed } from 'vue';
+import useBid from "@/composables/bids";
+import { useStore } from 'vuex';
 
-    const store = useStore();
-    const {
-        bidsData,
-        bidsCountByUser,
-        getBids,
-        viewBids
-    } = useBid();
-    const user = computed(() => store.state.auth.user);
+const store = useStore();
+const isExpanded = ref(false);
+const toggleCard = () => {
+    isExpanded.value = !isExpanded.value;
+};
 
+const { bidsData, bidsCountByUser, getBids, viewBids } = useBid();
+const user = computed(() => store.state.auth.user);
 
-    onMounted(async () => {
-        await getBids();
-    });
+onMounted(async () => {
+    await getBids();
+});
 </script>
-<style>
-    .activity-info {
-        display: flex;
-        justify-content: space-around;
-        align-items: center;
-        width: 70%;
-        height: 100px;
-        margin: 19px auto;
-        border-radius: 6px;
-        background-color: #ffffff;
-    }
-
-    .activity-info .item {
-        flex: 1;
-        text-align: center;
-        min-width: 0;
-    }
-
-    .activity-info .item:not(:last-child) {
-        border-right: 1px solid #cccccc;
-
-    }
-
-    .activity-info p {
-        padding: 2px;
-    }
-
-    .main-profile {
-        width: 120px;
-        height: 120px;
-        border-radius: 6px;
-        object-fit: cover;
-        margin-right: 20px;
-    }
-
-    .styled-div {
-        width: 100%;
-        height: 320px;
-        margin-top: 57px;
-        border-radius: 6px;
-        background-color: #f5f5f6;
-    }
-
-    .profile {
-        display: flex;
-        align-items: center;
-        justify-content: space-around;
-        padding-top: 50px;
-        align-items: center;
-    }
-
-    .profile img {
-        width: 120px;
-        height: 120px;
-        margin-right: 20px;
-        border-radius: 6px;
-    }
-
-    .auction-info {
-        text-align: end;
-    }
-
-    .dealer-info {
-        display: flex;
-    }
-
-    .restar::before {
-        content: "";
-        display: inline-block;
-        width: 16px;
-        height: 14px;
-        background-image: url('../../../img/icon-profile-star.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        margin-right: 5px;
-    }
-
-    .deal-info>p:not(:first-child) {
-        margin-top: 5px;
-    }
-
-    .car-image {
-        background-image: url('../../../img/car-objects.png');
-        width: 92px;
-        height: 92px;
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-    }
-
-    .interest-icon::before {
-        content: "";
-        display: inline-block;
-        width: 16px;
-        height: 13px;
-        background-image: url('../../../img/interest-icon.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        margin-right: 5px;
-    }
-
-    .purchase-icon::before {
-        content: "";
-        display: inline-block;
-        width: 16px;
-        height: 13px;
-        background-image: url('../../../img/purchase-icon.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        margin-right: 5px;
-    }
-
-    .suc-bid-icon::before {
-        content: "";
-        display: inline-block;
-        width: 16px;
-        height: 13px;
-        background-image: url('../../../img/suc-bid-icon.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        margin-right: 5px;
-    }
-
-    .bid-icon::before {
-        content: "";
-        display: inline-block;
-        width: 16px;
-        height: 13px;
-        background-image: url('../../../img/Icon-gray-tag.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-        margin-right: 5px;
-    }
-
-    .text-with-marker {
-        position: relative;
-        display: inline-flex;
-        align-items: center;
-        padding-right: 20px;
-    }
-
-    .text-with-marker::after {
-        content: "";
-        position: absolute;
-        right: 13px;
-        top: 2px;
-        transform: translate(100%, -50%);
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background-color: #f24200;
-    }
-
-    .note-date {
-        width: 15%;
-    }
-
-    .tr-style th {
-        border-top: none !important;
-        border-radius: 6px;
-        background-color: #f5f5f678;
-    }
-
-    .list-num {
-        margin-right: 0px !important;
-    }
-
-    .process {
-        color: black !important;
-    }
-
-    .complete-car {
-        display: flex;
-        flex-direction: column;
-    }
-
-    .completed-card {
-        border-radius: 20px;
-        padding: 20px;
-    }
-
-    .completed-card::before {
-        content: "";
-        position: absolute;
-        top: 20px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 80px;
-        height: 3px;
-        background-color: #dbdbdb;
-    }
-
-    .enter-view {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-
-    .none-complete {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        height: 210px;
-        background-color: #f5f5f6;
-    }
-
-    .none-complete span {
-        position: relative;
-        z-index: 2;
-    }
-
-    .none-complete span::before {
-        content: '';
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        width: 91px;
-        height: 91px;
-        background-image: url('../../../img/electric-car.png');
-        background-size: contain;
-        background-repeat: no-repeat;
-        z-index: 1;
-    }
-
-    .pass-red::after {
-        content: "";
-        display: inline-block;
-        height: 9px;
-        inline-size: 13px;
-        background-image: url('../../../img/Icon-red-right.png');
-        background-repeat: no-repeat;
-        background-size: contain;
-        background-position: center;
-    }
-
-    .border-rad {
-        border-radius: 6px;
-    }
-</style>

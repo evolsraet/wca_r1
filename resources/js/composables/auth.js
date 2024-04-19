@@ -65,9 +65,9 @@ export default function useAuth() {
                 if (userData.roles.includes('admin')) {
                     await router.push({ name: "admin.index" });
                 } else if (userData.roles.includes('dealer')) {
-                    await router.push({ name: "dealer.main" }); 
+                    await router.push({ name: "dealer.index" }); 
                 } else {
-                    await router.push({ name: "autction.index" }); 
+                    await router.push({ name: "login" }); 
                 }
             })
             .catch((error) => {

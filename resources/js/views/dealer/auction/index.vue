@@ -12,16 +12,8 @@
             </div>
         </div>
     </div>
-    <!-- 슬라이드업 메뉴 트리거 버튼 및 컨테이너 -->
-    <div class="review-button-container" :style="{ height: menuHeight }" @click="toggleMenuHeight">
-        <div class="icon-container" v-show="isExpanded" ></div>
-        <router-link :to="{ name: 'home' }" tag="button" class="black-btn" v-show="!isExpanded" :disabled="isExpanded">딜러 선택이 가능해요!<span class="btn-apply-ty02">바로가기</span></router-link>
-       <!--if.경매 완료건이 있을때-->
-       <router-link :to="{ name: 'home' }" tag="button" class="review-btn" v-show="!isExpanded && hasCompletedAuctions" :disabled="isExpanded">후기 남기기</router-link>        <!--else. 경매완료 건이 없을때-->
-       <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded">후기 남기기</div>
-    </div>
     <div class="container my-3 auction-content">
-        <div class="row content-main mt-5">
+        <div class="row mt-5">
             <!-- 사이드바 -->
             <div class="sider-content col-md-3 mov-info02">
                 <div class="side-content">
@@ -430,29 +422,124 @@
 
                 <div class="container my-4">
                     <div class="row">
-                        <!-- if. 경매 ing 있을때 -->
-                        <div class="col-6 col-md-4 mb-4" v-for="auction in filteredAuctions" :key="auction.user_id">
+                        <!-- if. 경매 시간이 남아 있을때 -->
+                        <div class="col-6 col-md-4 mb-4">
                             <div class="card my-auction">
                                 <input class="toggle-heart" type="checkbox" checked />
                                 <label class="heart-toggle"></label>
                                 <div class="card-img-top-placeholder"></div>
-                                <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
-                                <div  v-if="auction.status  === 'ing'"class="progress">
+                                <div class="participate-badge">참여</div>
+                                <div class="time-remaining">39분 남음</div>
+                                <div class="progress">
                                     <div class="progress-bar" role="progressbar"></div>
                                 </div>
-                                <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
-                                <div v-if="auction.status === 'wait'" class="wait-selection">선택 대기</div>
-                                <div v-if="auction.status === 'chosen'" class="dealer-select">딜러 선택</div>
-                                <div v-if="auction.status === 'diag'" class="time-remaining">진단 평가</div>
                                 <div class="card-body">
-                                    <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
+                                    <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
+                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- if. 경매 완료 되었을때 -->
+                        <div class="col-6 col-md-4 mb-4">
+                            <div class="card my-auction">
+                                <input class="toggle-heart" type="checkbox" checked />
+                                <label class="heart-toggle"></label>
+                                <div class="card-img-top-placeholder"></div>
+                                <div class="time-remaining">39분 남음</div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><span class="blue-box">보험3건</span>12 삼 4567</h5>
+                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- if. 선택 대기 일때-->
+                        <div class="col-6 col-md-4 mb-4">
+                            <div class="card my-auction">
+                                <input class="toggle-heart" type="checkbox" />
+                                <label class="heart-toggle"></label>
+                                <div class="card-img-top-placeholder"></div>
+                                <div class="participate-badge">참여</div>
+                                <div class="wait-selection">선택 대기</div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
+                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 mb-4">
+                            <div class="card my-auction">
+                                <input class="toggle-heart" type="checkbox" checked />
+                                <label class="heart-toggle"></label>
+                                <div class="card-img-top-placeholder"></div>
+                                <div class="time-remaining">39분 남음</div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
+                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 mb-4">
+                            <div class="card my-auction">
+                                <input class="toggle-heart" type="checkbox" checked />
+                                <label class="heart-toggle"></label>
+                                <div class="card-img-top-placeholder"></div>
+                                <div class="time-remaining">39분 남음</div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
+                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 mb-4">
+                            <div class="card my-auction">
+                                <input class="toggle-heart" type="checkbox" />
+                                <label class="heart-toggle"></label>
+                                <div class="card-img-top-placeholder"></div>
+                                <div class="time-remaining">39분 남음</div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
+                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 mb-4">
+                            <div class="card my-auction">
+                                <input class="toggle-heart" type="checkbox" />
+                                <label class="heart-toggle"></label>
+                                <div class="card-img-top-placeholder"></div>
+                                <div class="time-remaining">39분 남음</div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><span class="blue-box">보험3건</span>12 삼 4567</h5>
+                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 mb-4">
+                            <div class="card my-auction">
+                                <input class="toggle-heart" type="checkbox" />
+                                <label class="heart-toggle"></label>
+                                <div class="card-img-top-placeholder"></div>
+                                <div class="time-remaining">39분 남음</div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
+                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-6 col-md-4 mb-4">
+                            <div class="card my-auction">
+                                <input class="toggle-heart" type="checkbox" />
+                                <label class="heart-toggle"></label>
+                                <div class="card-img-top-placeholder"></div>
+                                <div class="time-remaining">39분 남음</div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
                                     <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            <!--
                 <div class="container mt-5 mov-info02">
                     <table class="table custom-border">
                         <tbody class="auction-table">
@@ -523,122 +610,46 @@
                         </tbody>
                     </table>
                 </div>
-                -->
                 <!-- Pagination -->
                 <nav>
                     <ul class="pagination justify-content-center">
-                        <li class="page-item" :class="{ disabled: !pagination.prev }">
-                            <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
+                        <li class="page-item">
+                            <a class="page-link prev-style"></a>
                         </li>
-                        <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }"><a class="page-link" @click="loadPage(n)">{{ n }}</a></li>
-                        <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                            <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
+                        <li class="page-item"><a class="page-link" href="#">1</a></li>
+                        <li class="page-item"><a class="page-link" href="#">2</a></li>
+                        <li class="page-item"><a class="page-link" href="#">3</a></li>
+                        <li class="page-item next-prev">
+                            <a class="page-link next-style"></a>
                         </li>
                     </ul>
                 </nav>
-                <div class="filter-content">
-                <!-- 페이지의 나머지 내용 -->
-                <button @click="toggleModal" class="animCircle filter-button" :style="buttonStyle"> 필터</button>
-                <FilterModal v-if="showModal" @close="handleClose"/>
-                </div>  
             </div>
         </div>
     </div>
 </template>
+
+
 <script>
-export default {
-  data() {
-    return {
-      isExpanded: false,
-      scrollY: 0,
-      buttonStyle: {
-        opacity: 1
-      },
-      scrollTimeout: null,
-      selectedYear: new Date().getFullYear(), 
-      years: [] 
+    export default {
+        data() {
+            return {
+                selectedYear: new Date().getFullYear(),
+                years: [],
+            };
+        },
+        created() {
+            this.years = this.generateYearRange(1990, new Date().getFullYear());
+        },
+        methods: {
+            generateYearRange(start, end) {
+                const years = [];
+                for (let year = start; year <= end; year++) {
+                    years.push(year);
+                }
+                return years;
+            },
+        },
     };
-  },
-
-  computed: {
-    menuHeight() {
-      return this.isExpanded ? '0px' : '115px';
-    }
-  },
-
-  created() {
-    window.addEventListener('scroll', this.handleScroll);
-    this.years = this.generateYearRange(1990, new Date().getFullYear()); 
-  },
-
-  methods: {
-    toggleMenuHeight() { //하단 메뉴
-      this.isExpanded = !this.isExpanded;
-    },
-    submitReview() { 
-      this.toggleMenuHeight();
-    },
-    handleScroll() { //필터 스크롤 css
-      clearTimeout(this.scrollTimeout);
-      this.buttonStyle.opacity = 0.5;
-
-      this.scrollTimeout = setTimeout(() => {
-        this.buttonStyle.opacity = 1;
-      }, 150);
-    },
-    generateYearRange(start, end) { 
-      const years = [];
-      for (let year = start; year <= end; year++) {
-        years.push(year);
-      }
-      return years;
-    }
-  },
-
-  beforeDestroy() {
-    window.removeEventListener('scroll', this.handleScroll);
-    clearTimeout(this.scrollTimeout);
-  }
-};
-
-</script>
-
-<script setup>
-import { ref, computed, onMounted } from 'vue';
-import useAuctions from "@/composables/auctions";
-import { useStore } from 'vuex';
-import FilterModal from '@/views/modal/filter.vue'; 
-
-const { auctionsData, pagination, getAuctions } = useAuctions();
-const currentPage = ref(1);
-const store = useStore();
-const showModal = ref(false);
-
-function toggleModal() {
-  showModal.value = !showModal.value; 
-}
-
-function handleClose() {
-  showModal.value = false;
-}
-// 경매 완료건이 있는지 확인하는 계산된 속성
-const hasCompletedAuctions = computed(() => {
-   return auctionsData.value.some(auction => auction.status === 'done');
-});
-
-const filteredAuctions = computed(() => {
-  return auctionsData.value.filter(auction =>
-    auction && ['ing', 'done', 'wait', 'chosen', 'diag'].includes(auction.status)
-  );
-});
-
-function loadPage(page) {
-  if (page < 1 || page > pagination.value.last_page) return;
-  currentPage.value = page;
-  getAuctions(page);
-}
-
-onMounted(async () => {
-  await getAuctions(currentPage.value);
-});
+    
 </script>

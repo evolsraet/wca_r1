@@ -70,6 +70,11 @@ export default [
                 component: () => import('../views/auction/index.vue'),
             },
             {
+                path: '/auction',
+                name: 'dealer.autction.index',
+                component: () => import('../views/dealer/auction/index.vue'),
+            },
+            {
                 path: 'posts/:id',
                 name: 'public-posts.details',
                 component: () => import('../views/posts/details.vue'),
@@ -87,9 +92,16 @@ export default [
                 meta: { requiresRole: 'user' } 
             },
             {
-                path: '/',
+                path: '/main',
                 name: 'dealer.index',
                 component: () => import('../views/dealer/main.vue'),
+                beforeEnter: requireDealer,
+                meta: { requiresRole: 'dealer' }, 
+            },
+            {
+                path: '/profile',
+                name: 'dealer.profile',
+                component: () => import('../views/dealer/profile/index.vue'),
                 beforeEnter: requireDealer,
                 meta: { requiresRole: 'dealer' }, 
             },
