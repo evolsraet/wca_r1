@@ -9,10 +9,13 @@ $line-height-base: 1.6;
 // Bootstrap 5
 /* 전역적 컬러 스타일*/
 $primary: #da3138;
-$primary-sub: #fbeaea;
+$primary-sub: #fae8e8;
+$primary-sub02:#fbeaea;
 
+$sub-color:#ff837a;
 $sub-color01: #4263EA;
 $sub-color02: #EBEFFD;
+
 
 .bold-20-font{
     font-size: 20px;
@@ -30,6 +33,55 @@ $sub-color02: #EBEFFD;
     font-size: 14px;
     font-weight:normal;
 }
+.review-btn {
+    display: block; 
+    width: 100%; 
+    height: 38px; 
+    color: $primary;
+    background-color: #fff; 
+    border: 1px solid $primary;
+    border-radius: 6px;
+    padding: 0 15px;
+    line-height: 38px; 
+    text-align: center; 
+    cursor: pointer;
+    margin-top: 12px;
+
+    &:hover {
+      background-color: darken($primary-sub, 5%); 
+      border-color: darken($primary, 10%); 
+    }
+  }
+  .review-none {
+    display: block;
+    width: 100%;
+    height: 38px;
+    color: #aaaebe;
+    background-color: #fff;
+    border: 1px solid #aaaebe;
+    border-radius: 6px;
+    padding: 0 15px;
+    line-height: 38px;
+    text-align: center;
+    margin-top: 12px;
+}
+
+.pagination {
+    .page-link {
+      background-color: #ffffff !important;   
+      border-color: $primary-sub;         
+  
+      &:hover {
+        background-color:$primary-sub !important;     
+        color: #fff;              
+      }
+  
+      &.active {
+        background-color:$primary-sub !important;   
+        border-color:$primary-sub !important;     
+      }
+    }
+  }
 /* Text color */
 .tc-red{
     color:$primary;
@@ -147,6 +199,7 @@ $sub-color02: #EBEFFD;
     padding: 20px;
     font-weight: 500;
 }
+
 .gray-bl-box {
     display: inline-block;
     width: 55px;
@@ -164,7 +217,7 @@ $sub-color02: #EBEFFD;
 .no-bidding{
     color: #fff;
     height: 30px;
-    padding: 3px 11px;
+    padding: 4px 14px;
     border-radius: 6px;
     background-color: #aaaebe;
 }
@@ -181,3 +234,53 @@ $sub-color02: #EBEFFD;
     background-color: #f24200;
 }
 
+.tc-wh{
+    color: #fff !important;
+}
+.animCircle::before {
+    content: '';
+    display: block;
+    position: absolute;
+    border-radius: 16px;
+    top: 0;
+    left: 0;
+    z-index: -1;
+    width: 72px;
+    height: 30px;
+    background-image: linear-gradient(150deg, $primary-sub02, $primary-sub 25%, sub-color02 50%, $primary 75%, $primary);
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.25s ease-in-out;
+    animation: social-button-beat 1.5s ease-out infinite;
+}
+.animCircle::after {
+    content: '';
+    display: block;
+    position: absolute;
+    border-radius: 16px;
+    top: 0;
+    left: 0;
+    width: 72px;
+    height: 30px;
+    z-index: -1;
+    background-image: linear-gradient(150deg, $sub-color, $sub-color , $primary 50%, $primary 75%, $primary);
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: all 0.25s ease-in-out;
+    animation: social-button-beat 1.5s ease-out 0.4s infinite;
+}
+@keyframes social-button-beat {
+    0% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    70% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+    100% {
+        opacity: 0;
+    }
+}

@@ -49,7 +49,7 @@
                 <div class="review-content">
                     <div class="apply-top text-start">
                         <h3 class="review-title">다른 사람들의 이용후기에요</h3>
-                        <a href="/reviewtest" class="btn-apply">전체보기 <img src="../../../img/Icon-right.png" class="ms-2" alt="설명"></a>
+                        <a href="/reviewtest" class="btn-apply">전체보기</a>
                     </div>
                     <div class="row row-cols-1 row-cols-md-2 g-4">
                         <div class="col">

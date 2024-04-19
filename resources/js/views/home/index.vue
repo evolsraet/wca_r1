@@ -9,7 +9,7 @@
                 <p class="bold-link ms-2">내 차 판매, <mark class="custom-highlight">위카</mark>에서 도와드릴게요!</p>
             </div> -->
                 <div class="video-container">
-                    <video width="100%" autoplay loop muted>
+                    <video autoplay loop muted>
                         <source src="../../../img/video/mainvideo.mp4" type="video/mp4">
                     </video>
                 </div>
@@ -55,7 +55,7 @@
                 <div class="review-content">
                     <div class="apply-top text-start">
                         <h3 class="review-title">다른 사람들의 이용후기에요</h3>
-                        <a href="" class="btn-apply">전체보기 <img src="../../../img/Icon-right.png" class="ms-2" alt="설명"></a>
+                        <a href="" class="btn-apply">전체보기</a>
                     </div>
                     <div class="row row-cols-1 row-cols-md-2 g-4">
                         <div class="col">
@@ -146,12 +146,11 @@
                             </div>
                             <!-- 로그인 버튼 -->
                             <div class="flex items-center justify-end my-2">
-                                <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
-                                    {{ $t('내 차 조회') }}
+                                <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">내 차 조회
                                 </button>
                             </div>
                             <div class="flex items-center justify-end my-2">
-                                <router-link :to="{ path: '/login' }" class="btn btn-outline-primary">{{ $t('로그인') }}</router-link>
+                                <router-link :to="{ path: '/login' }" v-if="user?.name" class="btn btn-outline-primary">로그인</router-link>
                             </div>
                             <div class="text-muted mt-4 text-center">
                                 <p class="fs-6">
