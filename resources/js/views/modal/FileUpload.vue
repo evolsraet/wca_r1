@@ -74,22 +74,38 @@
                                 <li class="menu-item">증권</li>
                             </ul>
                             <div class="grid bank-selection">
-                                <div class="bank-item" data-bank="하나" @click="selectBank('하나')">하나</div>
-                                <div class="bank-item" data-bank="국민" @click="selectBank('국민')">국민</div>
-                                <div class="bank-item" data-bank="우리" @click="selectBank('우리')">우리</div>
-                                <div class="bank-item" data-bank="신한" @click="selectBank('신한')">신한</div>
-                                <div class="bank-item" data-bank="기업" @click="selectBank('기업')">기업</div>
-                                <div class="bank-item" data-bank="대구" @click="selectBank('대구')">대구</div>
+                            <div class="bank-item" data-bank="하나" @click="selectBank('하나')">
+                                <img src="../../../img/bank-img/hana-logo.png" alt="하나은행">
+                                <span>하나</span>
+                            </div>
+                            <div class="bank-item" data-bank="국민" @click="selectBank('국민')">
+                                <img src="../../../img/bank-img/kb-logo.png" alt="국민은행">
+                                <span>국민</span>
+                            </div>
+                            <div class="bank-item" data-bank="우리" @click="selectBank('우리')">
+                                <img src="../../../img/bank-img/woori-logo.png" alt="우리은행">
+                                <span>우리</span>
+                            </div>
+                            <div class="bank-item" data-bank="신한" @click="selectBank('신한')">
+                                <img src="../../../img/bank-img/shinhan-logo.png" alt="신한은행">
+                                <span>신한</span>
+                            </div>
+                            <div class="bank-item" data-bank="기업" @click="selectBank('기업')">
+                                <img src="../../../img/bank-img/ibk-logo.png" alt="기업은행">
+                                <span>기업</span>
+                            </div>
+                            <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
+                                <img src="../../../img/bank-img/daegu-logo.png" alt="대구은행">
+                                <span>대구</span>
                             </div>
                         </div>
                     </div>
                 </div>
-
-
-                    <div class="flex items-center justify-end my-5">
-                    <router-link :to="{ path: '/selldt' }" class="btn primary-btn normal-16-font mt-5">경매 신청하기</router-link></div>
                 </div>
-                </div>
+            </div>
+            <div class="flex items-center justify-end my-5">
+            <router-link :to="{ path: '/selldt' }" class="btn primary-btn normal-16-font mt-5">경매 신청하기</router-link></div>
+        </div>
             </div>
         </div>
     </section>
@@ -111,7 +127,8 @@ function handleBankLabelClick() {
 }
 function selectBank(bankName) {
     selectedBank.value = bankName; 
-    console.log(bankName + ' 선택됨');
+    console.log(bankName);
+    showDetails.value = false;
 }
 
 function closeDetailContent() {
@@ -122,16 +139,13 @@ function closeDetailContent() {
 
 function toggleDetailContent() {
     if (!isActive.value) {
-        // 스크롤을 최상단으로 이동
         if (modalBody.value) {
-            modalBody.value.scrollTop = 0; // 스크롤 최상단으로 이동
+            modalBody.value.scrollTop = 0; 
         }
-        // 스크롤 이동 후 isActive를 변경하여 스크롤 제한 적용
         nextTick(() => {
             isActive.value = true;
         });
     } else {
-        // 상태를 먼저 변경한 후 스크롤 잠금 해제
         isActive.value = false; 
     }
 }
@@ -206,15 +220,47 @@ export default {
 }
 </script>
 <style>
+.grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+}
+.bank-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    text-align: center;
+    padding: 10px;
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    transition: transform 0.3s;
+}
+
+.bank-item:hover {
+    transform: scale(1.05); 
+}
+
+.bank-item img {
+    width: 50px; /* 이미지 크기 조정 */
+    height: 50px;
+    margin-bottom: 5px; /* 이미지와 텍스트 간격 */
+}
+
+.bank-item span {
+    font-size: 14px;
+    color: #333;
+}
 
 
 
 
 
 .show-content {
-    visibility: hidden; /* 초기 상태는 보이지 않음 */
-    opacity: 0;         /* 투명하게 설정 */
-    transition: visibility 0s linear 0.5s, opacity 0.5s linear; /* transition을 적용 */
+    visibility: hidden; 
+    opacity: 0;      
+    transition: visibility 0s linear 0.5s, opacity 0.5s linear; 
 }
 
 .show-content.active {
@@ -363,7 +409,6 @@ export default {
 @media (min-width: 769px) and (max-width: 1024px) {
     .detail-content02 {
         top: auto;
-    height: -webkit-fill-available;
 }
     .detail-content02.active {
         top: calc(600px - 250px);

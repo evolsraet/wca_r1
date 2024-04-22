@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="main-contenter mt-4">
-            <h5>경매 할 차량을 등록해볼까요?</h5>
+            <h5 class="top-title">경매 할 차량을 등록해볼까요?</h5>
         </div>
         <div class="form-body mt-5">
             <form @submit.prevent="auctionEntry">
@@ -59,6 +59,7 @@
                 </button>
                 <FilterModal v-if="showModal" @close="handleClose"/>
                 <div class="flex items-center justify-end mt-5">
+                <!-- 임시의 라우터 실제 폼작성 제출후 처리-->
                  <router-link :to="{ path: '/selldt2' }" class="btn primary-btn normal-16-font">경매 신청하기</router-link>
                 </div>
             </form>
