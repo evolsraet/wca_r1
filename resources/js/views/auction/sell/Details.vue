@@ -6,7 +6,7 @@
         <div class="introduce-action">
         <img src="../../../../img/auction-detil.png" alt="Auction Detail" class="auction-detail-img">
         </div>
-        <div class="flex items-center justify-end mt-5">
+        <div class="button-media flex items-center justify-end mb-3">
              <router-link :to="{ path: '/selldt2' }" class="btn primary-btn">다음</router-link>
         </div>
     </div>

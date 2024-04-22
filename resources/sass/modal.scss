@@ -384,6 +384,7 @@ button.btn {
     transition: transform 0.3s ease;
 }
 
+
 .btn-apply-ty02:hover::after {
     transform: translateX(5px); 
   }
@@ -523,10 +524,26 @@ transition: background-color 0.3s;
   width: 100%;
   background: gray;
 }
-
+.button-media{
+  margin: auto;
+  display: flex;
+  justify-content: center;
+  max-width: 450px;
+  min-width: 300px;
+}
 .introduce-action{
   padding: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
+.introduce-action img {
+  max-width: 100%;
+  max-height: 700px;
+  height: auto; 
+  width: auto; 
+}
+
 .top-title{
   font-weight: 500;
   font-size: 20px;
