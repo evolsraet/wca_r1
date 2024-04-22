@@ -46,7 +46,7 @@ const requireUser = requireRole('user');
 const requireDealer = requireRole('dealer');
 const requireAdmin = requireRole('admin');
 
-
+//url 추후에 리네임 
 export default [
     {
         path: '/',
@@ -57,6 +57,12 @@ export default [
                 path: '/',
                 name: 'home',
                 component: () => import('../views/home/index.vue'),
+
+            },
+            {
+                path: '/detilsview',
+                name: 'sell.detils',
+                component: () => import('../views/auction/Details/details.vue'),
 
             },
             {

@@ -4,37 +4,37 @@
             <h5>차량 정보 조회 되었어요</h5>
             <ul class="machine-inform-title">
                 <li class="tc-light-gray">차량번호</li>
-                <li class="info-num">12 삼 4567</li>
+                <li class="info-num">{{ carDetails.no }}</li>
                 <li class="car-icon"></li>
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">제조사</li>
-                <li class="sub-title">현대</li>
+                <li class="sub-title"></li>
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">모델</li>
-                <li class="sub-title">쏘나타</li>
+                <li class="sub-title">{{ carDetails.model }}</li>
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">세부모델</li>
-                <li class="sub-title">쏘나타 하이브리드 (DN8)</li>
+                <li class="sub-title">{{ carDetails.modelSub }}</li>
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">등급</li>
-                <li class="sub-title">프리미엄</li>
+                <li class="sub-title">{{ carDetails.grade }}</li>
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">세부등급</li>
-                <li class="sub-title">패밀리</li>
+                <li class="sub-title">{{ carDetails.gradeSub }}</li>
             </ul>
             <ul class="machine-inform-title">
                 <li class="tc-light-gray">최초등록일</li>
-                <li class="info-num">2022년 2월 3일</li>
+                <li class="info-num"></li>
                 <li class="car-aside-icon"></li>
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">년식</li>
-                <li class="sub-title">20년형</li>
+                <li class="sub-title">{{ carDetails.year }}</li>
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">차량유형</li>
@@ -47,11 +47,11 @@
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">연료</li>
-                <li class="sub-title">가솔린+전기</li>
+                <li class="sub-title">{{ carDetails.fuel }}</li>
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">미션</li>
-                <li class="sub-title">오토미션</li>
+                <li class="sub-title">{{ carDetails.mission }}</li>
             </ul>
             <ul class="machine-inform-title">
                 <li class="tc-light-gray">용도변경이력</li>
@@ -70,7 +70,7 @@
         <div class="detail-content mt-5" :class="{ 'active': isActive }" @click="toggleDetailContent">
                 <div class="top-content wd-100">
                     <p class="tc-light-gray bold-18-font">현재 시세 <span class="normal-14-font">(무사고 기준)</span></p>
-                    <span class="tc-red bold-18-font">- 만원</span>
+                    <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
                 </div>
                 <div class="middle">
                 <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span></p>
@@ -92,13 +92,28 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { computed } from 'vue';
+import { useRoute } from 'vue-router';
 
 const isActive = ref(false); 
+const route = useRoute();
+const carDetails = ref({});
+
+onMounted(() => {
+  const storedData = localStorage.getItem('carDetails');
+  if (storedData) {
+    carDetails.value = JSON.parse(storedData);
+  } else {
+    console.log('No car details found in local storage.');
+  }
+});
 
 function toggleDetailContent() {
     isActive.value = !isActive.value;  
 }
+
+
 </script>
 
 <style>
@@ -212,7 +227,6 @@ function toggleDetailContent() {
     width: 100%;
     bottom: -190px;
     left: 0;
-    height: max-content;
     transition: 0.5s;
     padding: 5px 20px;
     box-sizing: border-box;

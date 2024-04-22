@@ -131,12 +131,12 @@
                 <div class="card login-card border-0" :class="{ 'expanded': expanded }" @click="expandCard">
                     <div class="card-body">
                         <!-- 조회 폼 -->
-                        <form @submit.prevent="submitLogin">
+                        <form @submit.prevent="submitCarInfo">
                             <div>
-                                <input type="text" class="form-control border-0 border-bottom my-4" placeholder="소유자가 누구인가요?" v-model="username">
+                                <input type="text" class="form-control border-0 border-bottom my-4" placeholder="소유자가 누구인가요?" v-model="carInfoForm.owner">
                             </div>
                             <div>
-                                <input type="text" class="form-control border-0 border-bottom mb-4" placeholder="차량 번호를 입력해주세요." v-model="carNumber">
+                                <input type="text" class="form-control border-0 border-bottom mb-4" placeholder="차량 번호를 입력해주세요." v-model="carInfoForm.no">
                             </div>
                             <!--영상-->
                             <div class="web-video-container video-container my-4">
@@ -144,13 +144,13 @@
                                     <source src="../../../img/video/mainvideo.mp4" type="video/mp4">
                                 </video>
                             </div>
-                            <!-- 로그인 버튼 -->
+                          
                             <div class="flex items-center justify-end my-2">
                                 <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">내 차 조회
                                 </button>
                             </div>
-                            <div class="flex items-center justify-end my-2">
-                                <router-link :to="{ path: '/login' }" v-if="user?.name" class="btn btn-outline-primary">로그인</router-link>
+                            <div class="flex items-center justify-end my-2" v-if="user?.name">
+                                <router-link :to="{ path: '/login' }" class="btn btn-outline-primary">로그인</router-link>
                             </div>
                             <div class="text-muted mt-4 text-center">
                                 <p class="fs-6">
@@ -168,22 +168,15 @@
 </template>
 
 <script setup>
-     import {
-        useReview
-    } from '@/composables/review';
-    import useAuth from '@/composables/auth'
 
-    const {
-        loginForm,
-        validationErrors,
-        processing,
-        submitLogin
-    } = useAuth(); 
+import { useReview } from '@/composables/review';
+import useAuth from '@/composables/auth';
+import useAuctions from '@/composables/auctions';
 
-    const {
-        rating,
-        setRating
-    } = useReview();
+const { loginForm, validationErrors: loginErrors, processing: loginProcessing, submitLogin } = useAuth();
+const { carInfoForm, submitCarInfo, processing: auctionProcessing, validationErrors: auctionErrors } = useAuctions();
+const { rating, setRating } = useReview();
+
 </script>
 
 <style scoped>
