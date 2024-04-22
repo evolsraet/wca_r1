@@ -30,7 +30,7 @@
             <ul class="machine-inform-title">
                 <li class="tc-light-gray">최초등록일</li>
                 <li class="info-num">2022년 2월 3일</li>
-                <li class="car-icon"></li>
+                <li class="car-aside-icon"></li>
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">년식</li>
@@ -43,7 +43,7 @@
             <ul class="machine-inform-title">
                 <li class="tc-light-gray">배기량</li>
                 <li class="info-num">2000cc</li>
-                <li class="car-icon"></li>
+                <li class="gasoline-icon"></li>
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">연료</li>
@@ -56,7 +56,7 @@
             <ul class="machine-inform-title">
                 <li class="tc-light-gray">용도변경이력</li>
                 <li class="info-num">-</li>
-                <li class="car-icon"></li>
+                <li class="clean-icon"></li>
             </ul>
             <ul class="machine-inform">
                 <li class="tc-light-gray">튜닝이력</li>
@@ -86,7 +86,7 @@
                     </div>
                 </div>
                 <div class="flex items-center justify-end my-5">
-                 <router-link :to="{ path: '/login' }" class="btn primary-btn ">경매 신청하기</router-link></div>
+                 <router-link :to="{ path: '/selldt' }" class="btn primary-btn ">경매 신청하기</router-link></div>
             </div>
     </div>
 </template>
@@ -299,8 +299,8 @@ function toggleDetailContent() {
     flex: 1;
 }
 
-.machine-inform-title li.car-icon{
-    flex: 0 0 20px;
+.machine-inform-title li.clean-icon{
+    flex: 0 0 30px;
     height: 20px;
     background-image: url('../../../../img/clean.png');
     background-repeat: no-repeat;
@@ -309,6 +309,47 @@ function toggleDetailContent() {
     background-color: #fff;
     margin-left: auto; 
 }
+
+.machine-inform-title li.gasoline-icon{
+    flex: 0 0 30px;
+    height: 20px;
+    background-image: url('../../../../img/gasoline-pump.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    background-color: #fff;
+    margin-left: auto; 
+}
+
+
+
+.machine-inform-title li.car-aside-icon{
+    flex: 0 0 30px;
+    height: 20px;
+    background-image: url('../../../../img/Icon-block-car-side.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    background-color: #fff;
+    margin-left: auto; 
+}
+
+
+
+
+.machine-inform-title li.car-icon{
+    flex: 0 0 30px;
+    height: 20px;
+    background-image: url('../../../../img/Icon-black-car.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    background-color: #fff;
+    margin-left: auto; 
+}
+
+
+
 
 .machine-inform-title li.info-num, .machine-inform li.sub-title {
     flex: 1.5; 
