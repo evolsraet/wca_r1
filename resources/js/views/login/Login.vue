@@ -191,7 +191,7 @@
     import {
         useReview
     } from '@/composables/review';
-    import useAuth from '@/composables/auth' //인증관련 컴포저블
+    import useAuth from '@/composables/auth' //인증관련 컴포저블2
 
     const {
         loginForm,
