@@ -140,7 +140,7 @@
                             </div>
                             <!--영상-->
                             <div class="web-video-container video-container my-4">
-                                <video width="100%" autoplay loop muted>
+                                <video autoplay loop muted>
                                     <source src="../../../img/video/mainvideo.mp4" type="video/mp4">
                                 </video>
                             </div>

@@ -60,6 +60,24 @@ export default [
 
             },
             {
+                path: '/sell',
+                name: 'sell',
+                component: () => import('../views/auction/sell/index.vue'),
+
+            },
+            {
+                path: '/selldt',
+                name: 'selldt',
+                component: () => import('../views/auction/sell/Details.vue'),
+
+            },
+            {
+                path: '/selldt2',
+                name: 'selldt2',
+                component: () => import('../views/auction/sell/AuctionEntry.vue'),
+
+            },
+            {
                 path: 'posts',
                 name: 'public-posts.index',
                 component: () => import('../views/posts/index.vue'),
@@ -88,7 +106,7 @@ export default [
                 path: '/review',
                 name: 'user.review',
                 beforeEnter: requireUser, 
-                component: () => import('../views/user/index.vue'),
+                component: () => import('../views/user/review.vue'),
                 meta: { requiresRole: 'user' } 
             },
             {
