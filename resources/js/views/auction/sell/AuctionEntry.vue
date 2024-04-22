@@ -59,7 +59,7 @@
                 </button>
                 <FilterModal v-if="showModal" @close="handleClose"/>
                 <div class="flex items-center justify-end mt-5">
-                <!-- 임시의 라우터 실제 폼작성 제출후 처리-->
+                <!-- 임시의 라우터 실제 폼작성 제출후 처리 t-->
                  <router-link :to="{ path: '/selldt2' }" class="btn primary-btn normal-16-font">경매 신청하기</router-link>
                 </div>
             </form>
