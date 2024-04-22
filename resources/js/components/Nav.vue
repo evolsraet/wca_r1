@@ -101,7 +101,7 @@
                         <div class="top-content mt-2">
                             <span class="login-prompt">로그인하면 <br>더 다양한 정보를 <br>얻을 수 있어요.</span>
                             <div class="button-area">
-                                <button class="btn btn-danger shadow wd-100">로그인</button>
+                                <a class="btn btn-danger shadow wd-100" href="/login">로그인</a>
                             </div>
                             <div class="register-linker tc-light-gray">
                                 <span>아이디가 없으신가요?</span>
@@ -113,18 +113,18 @@
                                 </div>
                             </div>
                             <div class="footer-content">
-                                <router-link :to="{ name: 'dealer.profile' }" class="menu-item">
-                                    <div class="icon settings-icon"></div>
+                                <router-link :to="{ name: 'selldt' }" class="menu-item">
+                                    <div class="icon icon-nav-car"></div>
                                     <span class="menu-text">내 차 팔기</span>
                                     <div class="icon right-icon"></div>
                                 </router-link>
                                 <router-link :to="{ name: 'dealer.profile' }" class="menu-item">
-                                    <div class="icon settings-icon"></div>
+                                    <div class="icon icon-ratings"></div>
                                     <span class="menu-text">이용후기</span>
                                     <div class="icon right-icon"></div>
                                 </router-link>
                                 <router-link :to="{ name: 'dealer.profile' }" class="menu-item">
-                                    <div class="icon logout-icon"></div>
+                                    <div class="icon icon-nav-bulb"></div>
                                     <span class="menu-text">서비스 소개</span>
                                     <div class="icon right-icon"></div>
                                 </router-link>
@@ -137,10 +137,10 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mt-2 mt-lg-0 gap-3 ms-auto">
                     <li class="nav-item">
-                        <router-link to="/sell" class="nav-link" aria-current="page">내차조회</router-link>
+                        <router-link to="/" class="nav-link" aria-current="page">내차조회</router-link>
                     </li>
                     <li class="nav-item">
-                        <router-link :to="{ name: 'public-posts.index'}" class="nav-link">내차팔기</router-link>
+                        <router-link :to="{ name: 'selldt'}" class="nav-link">내차팔기</router-link>
                     </li>
                     <li class="nav-item">
                         <router-link :to="{ name: 'user.review'}" class="nav-link">이용후기</router-link>

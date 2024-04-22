@@ -1888,3 +1888,285 @@ video {
     align-items: center;
     margin: 0px !important;
 }
+
+
+/*--------------------
+    내차 조회 정보
+------------------- */
+.tooltip-toggle {
+    cursor: pointer;
+    position: relative;
+    width: 20px;
+    height: 20px;
+    background-image: url('../img/tooltip-toggle.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    display: inline-block;
+    margin-left: 10px;
+    vertical-align: text-bottom;
+
+  &::before,
+  &::after {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  &::before {
+    content: attr(aria-label);
+    top: -77px;
+    left: 80px;
+    transform: translateX(-50%);
+    background-color: #fffcd4;
+    color: #ffcb00;
+    text-align: center;
+    border-radius: 6px;
+    border: 1px solid #ffcb00;
+    padding: 8px;
+    width: auto;
+    min-width: 210px;
+}
+
+  &::after {
+    content: '';
+    top: -16px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 8px solid #fee585;
+  }
+
+  &:hover::before,
+  &:hover::after,
+  &:focus::before,
+  &:focus::after {
+    opacity: 1; 
+  }
+}
+
+
+
+
+.tooltip-toggle .link{
+    text-decoration : underline !important;
+}
+.none-complete-ty02 span::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 91px;
+    height: 91px;
+    background-image: url('../img/electric-car.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+.none-complete-ty02 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 160px;
+    background-color: #f5f5f6;
+}
+.detail-content .active {
+    bottom: 0px;
+}
+.middle{
+    display: flex;
+    margin-top: 35px;
+    justify-content: space-between;
+}
+.detail-content .top-content{
+    display: flex;
+    margin-top: 35px;
+    height: 50px;
+    background-color: #ebedf1;
+    border-radius: 6px;
+    justify-content: space-between;
+    padding: 13px;
+}
+
+.detail-content {
+    background-color: #f8f9fa;
+    box-shadow: 0px -7px 16px 0px rgba(212, 212, 212, 0.53);
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    position: absolute;
+    width: 100%;
+    bottom: -190px;
+    left: 0;
+    transition: 0.5s;
+    padding: 5px 20px;
+    box-sizing: border-box;
+    top: auto; 
+}
+.detail-content::before {
+    content: "";
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #dbdbdb;
+}
+.detail-content:hover {
+    bottom: 0px;
+}
+
+@media (max-width: 400px) {
+    .detail-content {
+        top: 640px;
+        
+    }
+    
+    .detail-content.active {
+        top: calc(640px - 250px);
+    }
+}
+
+
+@media (min-width: 401px) and (max-width: 768px) {
+    .detail-content {
+        top: 640px;
+    }
+    
+    .detail-content.active {
+        top: calc(640px - 250px);
+        height: auto;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+    .detail-content {
+        top: 600px;
+    }
+    
+    .detail-content.active {
+        top: calc(600px - 250px);
+        height: auto;
+    }
+}
+
+@media (min-width: 1025px) {
+    .detail-content {
+        top: 600px;
+    }
+    
+    .detail-content.active {
+        top: calc(600px - 250px);
+        height: auto;
+    }
+}
+
+
+.machine-inform-title {
+    list-style: none; 
+    padding: 0; 
+    margin-top: 30px;
+    display: flex;
+    justify-content: flex-start;
+}
+.machine-inform {
+    list-style: none; 
+    padding: 0; 
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-start;
+}
+.sub-title {
+    margin-right: 20px;
+}
+.machine-inform-title li, .machine-inform li {
+    flex: 1;
+}
+
+.machine-inform-title li.clean-icon{
+    flex: 0 0 30px;
+    height: 20px;
+    background-image: url('../img/clean.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    background-color: #fff;
+    margin-left: auto; 
+}
+
+.machine-inform-title li.gasoline-icon{
+    flex: 0 0 30px;
+    height: 20px;
+    background-image: url('../img/gasoline-pump.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    background-color: #fff;
+    margin-left: auto; 
+}
+
+
+
+.machine-inform-title li.car-aside-icon{
+    flex: 0 0 30px;
+    height: 20px;
+    background-image: url('../img/Icon-block-car-side.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    background-color: #fff;
+    margin-left: auto; 
+}
+
+
+
+
+.machine-inform-title li.car-icon{
+    flex: 0 0 30px;
+    height: 20px;
+    background-image: url('../img/Icon-black-car.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    background-color: #fff;
+    margin-left: auto; 
+}
+
+.machine-inform-title li.info-num, .machine-inform li.sub-title {
+    flex: 1.5; 
+}
+
+.icon-ratings{
+    width: 37px;
+    height: 37px;
+    background-image: url('../img/rating.png');
+    margin-right: 20px; 
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+
+}
+.icon-nav-bulb{
+    width: 30px;
+    height: 30px;
+    background-image: url('../img/Icon-md-bulb.png');
+    margin-right: 20px; 
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+
+}
+.icon-nav-car{
+    width: 30px;
+    height: 30px;
+    background-image: url('../img/Icon-awesome-car-side-Black.png');
+    margin-right: 20px; 
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+
+}
