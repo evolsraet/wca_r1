@@ -368,7 +368,7 @@ button.btn {
     padding: 10px;
     text-decoration: none;
     color: #ffffff;
-    cursor: pointer; /* 버튼에 마우스 포인터 추가 */
+    cursor: pointer; 
   }
   
   .btn-apply-ty02::after {
@@ -388,3 +388,198 @@ button.btn {
     transform: translateX(5px); 
   }
   
+  .modal-body-ty02{
+    position: relative;
+    flex: 1 0.5 auto;
+    padding: var(--bs-modal-padding);
+    overflow-y: auto;
+}
+.modal-dialog-ty03 {
+    height: 98%;
+    width: 95%;
+    margin: 14px !important;
+    padding: 0px !important;
+}
+
+/*--------------
+File upload.vue 
+---------------*/
+
+#bank-selection {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 16px;
+  width: 300px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.detail-content02 .menu {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.detail-content02 .menu-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.detail-content02 .close-button {
+  cursor: pointer;
+  font-size: 24px;
+}
+
+.detail-content02 .grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px; 
+  padding: 10px;
+}
+
+.bank-selection .bank-item {
+display: flex;
+justify-content: center;
+align-items: center;
+width: auto;
+margin: 10px;  
+padding: 10px;
+box-sizing: border-box; 
+border: 1px solid #ccc; 
+border-radius: 5px; 
+cursor: pointer;
+transition: background-color 0.3s; 
+}
+
+.bank-selection .bank-item:hover {
+  background: #eaeaea;
+}
+
+.bank-selection .bank-item:active {
+  background: #ddd; 
+  border-color: #007bff; 
+}
+
+
+.bank-selection .bank-item {
+  padding: 8px;
+  background: #f7f7f7;
+  text-align: center;
+  border-radius: 8px;
+  border: 2px solid transparent; 
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  cursor: pointer;
+}
+
+.bank-selection .bank-item:hover {
+  background: #eaeaea;
+}
+
+.bank-selection .bank-item:active {
+  background: #ddd; 
+  border-color: #007bff; 
+}
+
+
+
+.detail-content02 .title{
+  display: flex;
+  justify-content: center;
+  line-height: 64px;
+}
+
+.detail-content02 .menu {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 16px;
+  border-bottom: 2px solid #ebebeb;
+  width: 100%;
+}
+.detail-content02 .menu-item {
+  padding: 10px 28px;
+  cursor: pointer;
+  position: relative;
+  text-align: center;
+}
+
+.detail-content02 .menu-item.active,.detail-content02 .menu-item:hover {
+  border-bottom: 3px solid darkgrey;
+  border-radius: 2px;
+}
+
+.detail-content02 .menu-item::after {
+  content: '';
+  display: block;
+  margin: auto;
+  height: 3px;
+  width: 0%;
+  background: transparent;
+  transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+.detail-content02 .menu-item:hover::after, .detail-content02 .menu-item.active::after {
+  width: 100%;
+  background: gray;
+}
+
+.introduce-action{
+  padding: 40px;
+}
+.top-title{
+  font-weight: 500;
+  font-size: 20px;
+  font-stretch: normal;
+  line-height: 1.56;
+}
+
+/*----------------
+  경매 신청 완료
+------------------*/
+
+
+.modal .alert-modal-type02 {
+  background: rgb(95 95 95 / 50%);
+}
+.modal-content-ty03 {
+position: absolute;
+  top: 42%;
+  left: 50%;
+  min-height: auto;
+  padding: 0;
+  text-align: center;
+  background: #fff;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+  overflow: unset;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  pointer-events: auto;
+  background-color: #fff;
+  background-clip: padding-box;
+  border: 1px solid rgba(0, 0, 0, .2);
+  border-radius: .3rem;
+  outline: 0;
+}
+.modal-dialog-ty04 {
+  max-width: 390px;
+  width: 390px;
+  height: 100%;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 500px){
+.modal-dialog-ty04  {
+  max-width: 340px;
+  width: 340px;
+}
+}
+@media screen and (max-width: 400px){
+.modal-dialog-ty04  {
+  max-width: 320px;
+  width: 320px;
+}
+}
