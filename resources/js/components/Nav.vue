@@ -137,7 +137,7 @@
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mt-2 mt-lg-0 gap-3 ms-auto">
                     <li class="nav-item">
-                        <router-link to="/" class="nav-link" aria-current="page">내차조회</router-link>
+                        <router-link to="/sell" class="nav-link" aria-current="page">내차조회</router-link>
                     </li>
                     <li class="nav-item">
                         <router-link :to="{ name: 'public-posts.index'}" class="nav-link">내차팔기</router-link>

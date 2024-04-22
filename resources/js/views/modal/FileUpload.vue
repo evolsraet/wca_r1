@@ -1,8 +1,8 @@
 <template>
     <section class="modal modal-section type-confirm alert-modal-type02" :style="{ display: showModal ? 'block' : 'none' }">
-        <div class="modal-dialog-ty03">
+        <div class="modal-dialog-ty02">
             <div class="modal-content shadow">
-                <div class="modal-body-ty02" :class="{ 'no-scroll': isActive && showDetails }" ref="modalBody">
+                <div class="modal-body" :class="{ 'no-scroll': isActive && showDetails }" ref="modalBody">
 
                     <div class="content">
                         <div class="nav-header">
@@ -61,6 +61,7 @@
                         <div class="form-group mt-4">
                             <label for="carNumber">은행</label>
                             <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly>
+                            <input type="text" placeholder="계좌번호" :class="{'block': accountDetails}" class="account-num">
                         </div>
                         <div class="show-content" :class="{ 'active': showDetails }">
                             <div class="detail-content02 mt-5 p-0" :class="{ 'active': isActive }" @click="toggleDetailContent">
@@ -104,7 +105,8 @@
                 </div>
             </div>
             <div class="flex items-center justify-end my-5">
-            <router-link :to="{ path: '/selldt' }" class="btn primary-btn normal-16-font mt-5">경매 신청하기</router-link></div>
+           <!-- 임시 닫기-->
+            <p class="btn primary-btn normal-16-font mt-5" @click="handleCloseClick">파일 첨부</p></div>
         </div>
             </div>
         </div>
@@ -117,6 +119,7 @@ const isActive = ref(false);
 const showModal = ref(true);
 const modalBody = ref(null);
 const selectedBank = ref('');
+const accountDetails = ref(false);
 
 function handleCloseClick() {
     showModal.value = false;
@@ -129,6 +132,8 @@ function selectBank(bankName) {
     selectedBank.value = bankName; 
     console.log(bankName);
     showDetails.value = false;
+    accountDetails.value = true;
+    isActive.value = false;
 }
 
 function closeDetailContent() {
@@ -220,6 +225,12 @@ export default {
 }
 </script>
 <style>
+.account-num{
+    display: none;
+}
+.block{
+    display: block !important;
+}
 .grid {
     display: flex;
     flex-wrap: wrap;
@@ -243,9 +254,9 @@ export default {
 }
 
 .bank-item img {
-    width: 50px; /* 이미지 크기 조정 */
+    width: 50px; 
     height: 50px;
-    margin-bottom: 5px; /* 이미지와 텍스트 간격 */
+    margin-bottom: 5px; 
 }
 
 .bank-item span {
@@ -264,9 +275,9 @@ export default {
 }
 
 .show-content.active {
-    visibility: visible; /* 활성 상태에서는 보이게 */
-    opacity: 1;           /* 불투명하게 */
-    transition: opacity 0.5s linear; /* transition을 적용 */
+    visibility: visible; 
+    opacity: 1;  
+    transition: opacity 0.5s linear; 
 }
 
 .tooltip-toggle {
