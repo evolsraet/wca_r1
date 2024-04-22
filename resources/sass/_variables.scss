@@ -12,26 +12,40 @@ $primary: #da3138;
 $primary-sub: #fae8e8;
 $primary-sub02:#fbeaea;
 
+$primary-hover:#b92a30;
+
 $sub-color:#ff837a;
 $sub-color01: #4263EA;
 $sub-color02: #EBEFFD;
 
 
 .bold-20-font{
-    font-size: 20px;
-    font-weight: bold;
+    font-size: 20px !important;
+    font-weight: bold !important;
 }
 .bold-18-font{
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 18px !important;
+    font-weight: bold !important;
 }
 .normal-16-font{
-    font-size: 16px;
-    font-weight:normal;
+    font-size: 16px !important;
+    font-weight:normal !important;
 }
 .normal-14-font{
-    font-size: 14px;
-    font-weight:normal;
+    font-size: 14px !important;
+    font-weight:normal !important;
+}
+.primary-btn {
+    width: 100%;
+    color: #fff !important;
+    background-color: #da3138 !important;
+    height: 44px;
+    line-height: 30px !important;
+    box-shadow: 0 5px 8px rgb(0 0 0 / 26%);
+}
+.primary-btn:hover{
+    background-color: $primary-hover;
+    border-color: $primary-hover;
 }
 .review-btn {
     display: block; 
@@ -64,6 +78,9 @@ $sub-color02: #EBEFFD;
     line-height: 38px;
     text-align: center;
     margin-top: 12px;
+}
+.btn-primary {
+    box-shadow: 0 3px 12px 0 rgba(117, 18, 22, 0.2);
 }
 
 .pagination {
@@ -271,6 +288,9 @@ $sub-color02: #EBEFFD;
     transition: all 0.25s ease-in-out;
     animation: social-button-beat 1.5s ease-out 0.4s infinite;
 }
+.wd-100{
+    width: 100% !important;
+}
 @keyframes social-button-beat {
     0% {
         opacity: 0.3;
@@ -283,4 +303,16 @@ $sub-color02: #EBEFFD;
     100% {
         opacity: 0;
     }
+}
+@keyframes title {
+0% {
+    opacity: 0;
+    -webkit-transform: translateX(5px);
+    transform: translateX(5px);
+}
+100% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+}
 }
