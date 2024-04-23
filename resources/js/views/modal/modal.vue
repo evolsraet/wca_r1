@@ -46,6 +46,27 @@
     </section>-->
     <!-- modal step02 END -->
 
+    <!-- modal step03 Start : 입찰 완료 팝업 -->
+
+<!--
+ <section class="modal modal-section type-confirm alert-modal-type02" :style="{ display: showModal ? 'block' : 'none' }">
+        
+    <div class="modal-dialog-ty04">
+            <div class="modal-content-ty03 shadow">
+        <div class="modal-body">
+          <div class="content p-0 mt-0">  
+            <div class="enroll_box" style="position: relative;">
+              <p class="overlay_text_cancle">입찰이 완료되었습니다.</p>
+            </div>
+            <div class="btn-group">
+              <button class="btn btn_ok btn-dark shadow">확인</button>
+            </div>
+          </div>
+        </div>
+         </div>
+        </div>
+    </section>-->
+    <!-- modal step02 END -->
 
 <script>
 
