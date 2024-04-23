@@ -554,7 +554,9 @@ transition: background-color 0.3s;
 /*----------------
   경매 신청 완료
 ------------------*/
-
+.modal{
+  display: block !important;
+}
 
 .modal .alert-modal-type02 {
   background: rgb(95 95 95 / 50%);

@@ -74,7 +74,7 @@
                 </div>
                 <div class="middle">
                 <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span></p>
-                <router-link :to="{ name: 'autction.index' }" class="tc-red link">정보갱신하기</router-link>
+                <router-link :to="{ name: 'sell.update-info' }" class="tc-red link">정보갱신하기</router-link>
                 </div>
                 <div class="none-info">
                 <div class="complete-car">

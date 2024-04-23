@@ -51,6 +51,8 @@ export default function useAuctions() {
 
     
     return {
+        useAuctions,
+        getAuctions,
         auctionsData,
         pagination,
         carInfoForm,

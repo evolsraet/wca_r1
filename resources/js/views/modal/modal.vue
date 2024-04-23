@@ -1,23 +1,25 @@
 <template>
-<section class="modal modal-section type-confirm alert-modal-type02" :style="{ display: showModal ? 'block' : 'none' }">
-  
-  <div class="modal-dialog-ty04">
-          <div class="modal-content-ty03 shadow">
-      <div class="modal-body">
-        <div class="content p-0 mt-0">  
-          <div class="enroll_box" style="position: relative;">
-            <img src="../../../img/modal/car-objects-blur.png" alt="자동차 이미지" width="160" height="160">
-            <p class="overlay_text">경매 신청이 완료 되었습니다</p>
-          </div>
-          <p class="menu_msg mb-4">진단평가 완료까지 조금만 기다려주세요!</p> 
-          <div class="btn-group">
-              <button class="btn btn-danger btn-lg shadow btn_ok">확인</button>
+    <transition name="fade" mode="out-in">
+    <section class="modal modal-section type-confirm alert-modal-type02">
+      <div class="modal-dialog-ty04">
+        <div class="modal-content-ty03 shadow">
+          <div class="modal-body">
+            <div class="content p-0 mt-0">  
+              <div class="enroll_box" style="position: relative;">
+                <img src="../../../img/modal/car-objects-blur.png" alt="자동차 이미지" width="160" height="160">
+                <p class="overlay_text">경매 신청이 완료 되었습니다</p>
+              </div>
+              <p class="menu_msg mb-4">진단평가 완료까지 조금만 기다려주세요!</p> 
+              <div class="btn-group">
+                <router-link :to="{ name: 'autction.index' }" class="btn btn-danger btn-lg shadow btn_ok">확인</router-link>
+              </div>
             </div>
-        </div>
-      </div>
+          </div>
         </div>
       </div>
     </section>
+  </transition>
+</template>
 
     <!-- modal step02 Start : 경매 취소 팝업 -->
 
@@ -43,21 +45,25 @@
         </div>
     </section>-->
     <!-- modal step02 END -->
-    
-    </template>
+
 
 <script>
-export default {
-  data() {
-    return {
-      showModal: true
-    };
-  },
-  methods: {
-    handleCloseClick() {
-      this.showModal = false;
-      this.$emit('close'); 
-    }
-  }
-}
+
 </script>
+
+<style scoped>
+
+/* 트랜지션 효과 */
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s, transform 0.5s;
+  transition-timing-function: ease;
+}
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+  transform: translateY(20px); /* Y축으로 조금 아래에서 올라오는 효과 */
+}
+.fade-enter-to, .fade-leave-from {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>

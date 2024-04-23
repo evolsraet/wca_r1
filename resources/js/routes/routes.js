@@ -59,7 +59,7 @@ export default [
                 component: () => import('../views/home/index.vue'),
 
             },
-            {
+            { //sell : 판매 
                 path: '/detilsview',
                 name: 'sell.detils',
                 component: () => import('../views/auction/Details/details.vue'),
@@ -81,6 +81,12 @@ export default [
                 path: '/selldt2',
                 name: 'selldt2',
                 component: () => import('../views/auction/sell/AuctionEntry.vue'),
+
+            },
+            {
+                path: '/',
+                name: 'sell.update-info',
+                component: () => import('../views/auction/sell/Update.vue'),
 
             },
             {
