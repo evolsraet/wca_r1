@@ -149,7 +149,7 @@
                                 <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">내 차 조회
                                 </button>
                             </div>
-                            <div class="flex items-center justify-end my-2" v-if="user?.name">
+                            <div class="flex items-center justify-end my-2" v-if="!user?.name">
                                 <router-link :to="{ path: '/login' }" class="btn btn-outline-primary">로그인</router-link>
                             </div>
                             <div class="text-muted mt-4 text-center">
@@ -168,10 +168,15 @@
 </template>
 
 <script setup>
-
+import { useStore } from "vuex";
+import { computed } from "vue"
 import { useReview } from '@/composables/review';
 import useAuth from '@/composables/auth';
 import useAuctions from '@/composables/auctions';
+
+
+const store = useStore();
+const user = computed(() => store.getters['auth/user']);
 
 const { loginForm, validationErrors: loginErrors, processing: loginProcessing, submitLogin } = useAuth();
 const { carInfoForm, submitCarInfo, processing: auctionProcessing, validationErrors: auctionErrors } = useAuctions();
