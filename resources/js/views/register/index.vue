@@ -12,13 +12,17 @@
                     <div class="card-body">
                         <div class="registration-container">
                             <div class="text-left">
-                        <p class="mb-4 fw-bold">회원 정보를 입력해주세요13</p>
+                        <p class="mb-4 fw-bold">회원 정보를 입력해주세요</p>
                             </div>
                             <div class="form-body">
                                 <form @submit.prevent="submitRegister">
                                     <div class="form-group">
+                                        <label for="name">이름</label>
+                                        <input v-model="registerForm.name" id="name" type="name" class="form-control" placeholder="이름">
+                                    </div>
+                                    <div class="form-group">
                                         <label for="email">이메일</label>
-                                        <input type="email" id="email" v-model="registerForm.email" @input="checkEmail" :class="{'error-border': emailError}" placeholder="example@email.com">
+                                        <input type="email" v-model="registerForm.email" @input="checkEmail" id="email" class="form-control" placeholder="example@demo.com">
                                         <div class="text-danger mt-1">
                                         <div v-for="message in validationErrors?.email">
                                             {{ message }}
@@ -27,16 +31,11 @@
                                     </div>
                                     <div class="form-group">
                                         <label for="password">비밀번호</label>
-                                        <input type="password" id="password" v-model="registerForm.password" @input="checkPassword" :class="{'error-border': passwordinputError}" placeholder="6~8자리 숫자,영어,특수문자 혼합">
-                                        <div class="text-left password-error" v-if="passwordinputError">비밀번호는 6~8자리의 숫자, 영문자, 특수문자를 혼합해야 합니다.</div>
+                                        <input v-model="registerForm.password" id="password" type="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합">
                                     </div>
                                     <div class="form-group password-confirmation">
                                         <label for="password-confirm">비밀번호 확인</label>
-                                        <input type="password" id="password-confirm" v-model="registerForm.password_confirmation" @input="checkPassword" :class="{'error-border': passwordError, 'correct-border': passwordCorrect}" placeholder="비밀번호를 다시 입력해주세요">
-                                        <i class="fas fa-times error-icon" v-if="passwordError"></i>
-                                        <i class="fas fa-check correct-icon" v-if="passwordCorrect"></i>
-                                        <div class="text-left password-error" v-if="passwordError">비밀번호를 확인해주세요</div>
-                                        <div class="text-left password-correct" v-if="passwordCorrect">비밀번호를 확인</div>
+                                        <input v-model="registerForm.password_confirmation" id="password_confirmation" type="password" class="form-control" placeholder="비밀번호를 다시 입력해주세요">
                                     </div>
                                     <div class="text-center">
                                         <div class="form-group dealer-check">
@@ -53,7 +52,7 @@
 
                                         <!-- 딜러 체크 -->
                                         <transition name="slide-fade">
-                                            <div v-if="isDealer" class="hidden-content mt-4">
+                                            <div v-if="registerForm.dealer" class="hidden-content mt-4">
                                                 <div class="form-group">
                                                     <label for="dealerPhoto">사진 (본인 확인용)</label>
                                                     <button type="button" class="btn btn-fileupload" @click="openUploadPage">
@@ -63,33 +62,34 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealerName">이름</label>
-                                                    <input type="text" id="dealerName" v-model="dealerName" @input="checkName" :class="{'nameError-border': nameError}" placeholder="홍길동">
+                                                    <input type="text" id="dealerName" v-model="registerForm.dealerName" placeholder="홍길동">
                                                     <div class="password-error" v-if="nameError">이름을 정확히 입력해 주세요.</div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealerContact">연락처</label>
-                                                    <input type="tel" id="dealerContact" v-model="dealerContact" @input="checkContact" :class="{'contactError-border': contactError}" placeholder="'-'없이 숫자만 입력">
+                                                    <input type="tel" id="dealerContact" v-model="dealerContact" @input="checkContact" placeholder="'-'없이 숫자만 입력">
                                                     <div class="password-error" v-if="contactError">연락처를 정확히 입력해 주세요.</div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealerBirthDate">생년월일</label>
-                                                    <input type="date" id="dealerBirthDate" v-model="dealerBirthDate" @input="checkBirthDate" :class="{'birthDateError-border': birthDateError}" placeholder="1990-12-30">
+                                                    <input type="date" id="dealerBirthDate" v-model="dealerBirthDate" @input="checkBirthDate" placeholder="1990-12-30">
                                                     <div class="password-error" v-if="birthDateError">생년월일을 정확히 입력해 주세요.</div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealer">소속상사</label>
-                                                    <input type="text" id="dealerName" v-model="dealerName" @input="checkName" :class="{'nameError-border': nameError}" placeholder="상사명(상사 정식 명칭)">
+                                                    <input type="text" id="dealerName"  v-model="registerForm.dealerCompany" placeholder="상사명(상사 정식 명칭)">
                                                     <div class="password-error" v-if="nameError">이름을 정확히 입력해 주세요.</div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealerName">소속상사 직책</label>
-                                                    <input type="text" id="dealerName" v-model="dealerName" @input="checkName" :class="{'nameError-border': nameError}" placeholder="사원">
+                                                    <input type="text" id="dealerName" v-model="registerForm.dealerCompanyDuty" placeholder="사원">
                                                     <div class="password-error" v-if="nameError">이름을 정확히 입력해 주세요.</div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealeradress">소속상사 주소</label>
-                                                    <input type="text" id="dealeradress" placeholder="주소" class="searchadress">
-                                                    <input type="text" id="dealeradress" placeholder="상세주소">
+                                                    <input type="text" v-model="registerForm.dealerCompanyPost" placeholder="post">
+                                                    <input type="text" v-model="registerForm.dealercompany_addr1" placeholder="주소" class="searchadress">
+                                                    <input type="text" v-model="registerForm.dealercompany_addr2" placeholder="상세주소">
                                                     <div class="password-error" v-if="nameError">이름을 정확히 입력해 주세요.</div>
                                                 </div>
                                                 <div class="form-group">
@@ -104,188 +104,37 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="deliveryAdress">인수차량 도착지 주소</label>
-                                                    <input type="text" class="{'nameError-border': nameError}" placeholder="주소">
-                                                    <input type="text" class="{'nameError-border': nameError}" placeholder="상세주소">
+                                                    <input type="text" v-model="registerForm.dealerReceivePost" placeholder="post">
+                                                    <input type="text" v-model="registerForm.dealerReceiveAddr1" placeholder="주소">
+                                                    <input type="text" v-model="registerForm.dealerReceiveAddr2" placeholder="상세주소">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="introduce">소개</label>
-                                                    <textarea id="description" v-model="description" rows="4" class="form-control no-resize mt-2" placeholder="소개를 입력해주세요."></textarea>
-                                                    <div class="password-error" v-if="nameError">이름을 정확히 입력해 주세요.</div>
+                                                    <textarea v-model="registerForm.introduce" rows="4" class="form-control no-resize mt-2" placeholder="소개를 입력해주세요."></textarea>
                                                 </div>
                                             </div>
                                         </transition>
                                     </div>
                              <!-- Buttons -->
                                     <div class="flex items-center justify-end mt-4">
-                                        <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
-                                            {{ $t('약관 동의 및 회원가입') }}
-                                        </button>
+                                        <button type="submit" class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
+                                            약관 동의 및 회원가입
+                                            </button>
                                     </div>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="overlay" v-if="isSidebarOpen" @click="isSidebarOpen = false"></div>
             </div>
         </div>
     </div>
 </template>
-
 <script setup>
 
-import useAuth from '@/composables/auth'
+import useAuth from '@/composables/auth';
 
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
-
-</script>
-
-<script>
-    export default {
-        data() {
-            return {
-                userEmail: '', //공통 : 이메일
-                userPassword: '', //공통 : 비밀번호
-                confirmPassword: '', //공통 : 비밀번호 확인
-                dealerName: '', //딜러 : 이름    //사진첨부는일단 보류?
-                dealerContact: '', //딜러 : 연락처
-                dealerBirthDate: '', //딜러 : 생년월일 
-                isDealer: false,
-                isSidebarOpen: false,
-                passwordCorrect: false,
-                passwordError: false,
-                emailError: false,
-                passwordinputError: false,
-                nameError: false,
-                contactError: false,
-                birthDateError: false,
-                photoError: false,
-            };
-        },
-        methods: {
-            // 비밀번호 유효성검사.
-            checkPassword() {
-                const passwordRegex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*\W).{6,8}$/;
-
-                if (this.userPassword) {
-                    if (!passwordRegex.test(this.userPassword)) {
-                        this.passwordinputError = true;
-                        return;
-                    }
-                }
-                if (this.userPassword && this.confirmPassword) {
-                    if (this.userPassword === this.confirmPassword) {
-                        this.passwordCorrect = true;
-                    } else {
-                        this.passwordError = true;
-                    }
-                } else if (!this.confirmPassword) {
-                    this.passwordError = true;
-                }
-            },
-            // 이메일 유효성 검사.
-            checkEmail() {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                if (!emailRegex.test(this.userEmail)) {
-                    this.emailError = true;
-                } else {
-                    this.emailError = false;
-                }
-            },
-            // 딜러 유효성 검사
-            checkName() {
-                const nameRegex = /^[가-힣a-zA-Z]+$/;
-                if (!this.dealerName.trim() || !nameRegex.test(this.dealerName)) {
-                    this.nameError = true;
-                } else {
-                    this.nameError = false;
-                }
-            },
-
-            checkContact() {
-                const phoneRegex = /^\d{10,11}$/;
-                if (!phoneRegex.test(this.dealerContact)) {
-                    this.contactError = true;
-                } else {
-                    this.contactError = false;
-                }
-            },
-
-            checkBirthDate() {
-                const birthDateRegex = /^\d{4}-\d{2}-\d{2}$/;
-                if (!birthDateRegex.test(this.dealerBirthDate)) {
-                    this.birthDateError = true;
-                    return;
-                } else {
-                    this.birthDateError = false;
-                }
-
-                const birthDate = new Date(this.dealerBirthDate);
-                const today = new Date();
-                let age = today.getFullYear() - birthDate.getFullYear();
-                const m = today.getMonth() - birthDate.getMonth();
-
-                if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-                    age--;
-                }
-
-                if (age < 18) {
-                    this.birthDateError = true;
-                } else {
-                    this.birthDateError = false;
-                }
-
-            },
-            //회원가입 데이터 폼 제출
-            submitLoginForm() {
-                this.checkPassword();
-                this.checkEmail();
-
-                if (this.isDealer) {
-                    this.checkName();
-                    this.checkContact();
-                    this.checkBirthDate();
-                    if (this.nameError || this.contactError || this.birthDateError) {
-                        console.log("폼 제출에 문제가 있습니다: 유효성 검사 실패");
-                        return;
-                    }
-                }
-                if (this.emailError || this.passwordinputError || this.passwordError) {
-                    console.log("폼 제출에 문제가있서요 : 유효성 검사 실패");
-                    return;
-                }
-
-
-                let saveData = {
-                    userEmail: this.userEmail,
-                    userPassword: this.userPassword,
-                    userRole: this.isDealer ? '딜러' : '일반 사용자',
-                };
-
-                if (this.isDealer) {
-                    saveData.dealerDetails = {
-                        name: this.dealerName,
-                        contact: this.dealerContact,
-                        birthDate: this.dealerBirthDate,
-                    };
-                }
-                console.log("데이터:", saveData);
-
-                this.$router.push('/home');
-            },
-        },
-        mounted() {
-            document.body.style.backgroundColor = "#f7f8fb";
-        },
-
-        beforeRouteLeave(to, from, next) {
-            document.body.style.backgroundColor = "#ffffff";
-            next();
-        },
-        created() {
-            console.log('컴포넌트 생성');
-        },
-    };
 </script>
 
 <style scoped>
@@ -410,7 +259,7 @@ const { registerForm, validationErrors, processing, submitRegister } = useAuth()
         display: flex;
         justify-content: flex-end;
         gap: 20px;
-        margin-top: 60px;
+        margin-top: 2rem;
         padding: 10px;
     }
 

@@ -43,7 +43,6 @@ export default function useAuth() {
         password_confirmation: "",
         dealer: null,
     });
-
     const submitLogin = async () => {
         if (processing.value) return;
 
@@ -55,6 +54,7 @@ export default function useAuth() {
             .then(async (response) => {
                 const userData = response.data.data.user
                 await store.dispatch("auth/getUser");
+                await store.dispatch("auth/getAbilities");
                 await loginUser();
                 swal({
                     icon: "success",
@@ -63,11 +63,11 @@ export default function useAuth() {
                     timer: 1500,
                 });
                 if (userData.roles.includes('admin')) {
-                    await router.push({ name: "admin.index" });
+                   // await router.push({ name: "admin.index" });
                 } else if (userData.roles.includes('dealer')) {
-                    await router.push({ name: "dealer.index" }); 
+                    router.push({ name: "dealer.index" }); 
                 } else {
-                    await router.push({ name: "login" }); 
+                    // await router.push({ name: "home" }); 
                 }
             })
             .catch((error) => {
@@ -94,7 +94,7 @@ export default function useAuth() {
             password_confirmation: registerForm.password_confirmation,
             dealer: registerForm.dealer, 
         };
-        console(name);
+         console.log(registerForm.dealer);
         if (registerForm.dealer) {
             payload.roles = ['dealer']; 
         } else {
@@ -102,7 +102,7 @@ export default function useAuth() {
         }
 
         await axios
-            .post("/register", registerForm)
+            .post("/api/users", registerForm)
             .then(async (response) => {
                 // await store.dispatch('auth/getUser')
                 // await loginUser()
@@ -181,6 +181,7 @@ export default function useAuth() {
     const getUser = async () => {
         if (store.getters["auth/authenticated"]) {
             await store.dispatch("auth/getUser");
+            await store.dispatch("auth/getAbilities");
             await loginUser();
         }
     };
@@ -221,6 +222,9 @@ export default function useAuth() {
             can(permissions);
 
             ability.update(rules);
+
+
+            //store.state.auth.user.act = permissions;
         });
     };
     

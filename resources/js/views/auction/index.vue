@@ -1,3 +1,10 @@
+<!--
+TODO:
+- 관심 차량 숫자 표기
+- 페이지 네이션 처리
+- 옵션:최신등록순, 가격낮은순 처리
+-->
+
 <template>
     <!-- 서브 네비게이션 바 -->
     <div class="sub-nav row">
@@ -6,18 +13,19 @@
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav">
                         <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-1">4</span></a>
+                        <a class="nav-item nav-link" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-1">4</span></a><!-- 관심 차량 숫자표기 -->
                     </div>
                 </nav>
             </div>
         </div>
     </div>
     <!-- 슬라이드업 메뉴 트리거 버튼 및 컨테이너 -->
-    <div class="review-button-container" :style="{ height: menuHeight }" @click="toggleMenuHeight">
+    <div v-if="isUser" class="review-button-container" :style="{ height: menuHeight }" @click="toggleMenuHeight">
         <div class="icon-container" v-show="isExpanded" ></div>
         <router-link :to="{ name: 'home' }" tag="button" class="black-btn" v-show="!isExpanded" :disabled="isExpanded">딜러 선택이 가능해요!<span class="btn-apply-ty02">바로가기</span></router-link>
        <!--if.경매 완료건이 있을때-->
-       <router-link :to="{ name: 'home' }" tag="button" class="review-btn" v-show="!isExpanded && hasCompletedAuctions" :disabled="isExpanded">후기 남기기</router-link>        <!--else. 경매완료 건이 없을때-->
+       <router-link :to="{ name: 'home' }" tag="button" class="review-btn" v-show="!isExpanded && hasCompletedAuctions" :disabled="isExpanded">후기 남기기</router-link>      
+         <!--else. 경매완료 건이 없을때-->
        <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded">후기 남기기</div>
     </div>
     <div class="container my-3 auction-content">
@@ -27,6 +35,7 @@
                 <div class="side-content">
                     <h5>제조사 모델</h5>
                     <div class="mt-4">
+                        <div class="demo"></div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="manufacturer" id="hyundai" value="hyundai" checked>
                             <label class="form-check-label" for="hyundai">현대 <span class="text-secondary mx-2">(1,356)</span></label>
@@ -405,14 +414,14 @@
                 <div class="container mb-3">
                     <div class="registration-content">
                         <div class="text-start status-selector">
-                            <input type="radio" name="status" value="all" id="all" hidden checked>
-                            <label for="all" class="mx-2">전체</label>
+                        <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
+                        <label for="all" class="mx-2">전체</label>
 
-                            <input type="radio" name="status" value="ongoing" id="ongoing" hidden>
-                            <label for="ongoing">진행중</label>
+                        <input type="radio" name="status" value="ing" id="ongoing" hidden @change="setFilter('ing')">
+                        <label for="ongoing">진행중</label>
 
-                            <input type="radio" name="status" value="completed" id="completed" hidden>
-                            <label for="completed" class="mx-2">완료</label>
+                        <input type="radio" name="status" value="done" id="completed" hidden @change="setFilter('done')">
+                        <label for="completed" class="mx-2">완료</label>
                         </div>
 
                         <div class="text-end select-option">
@@ -628,34 +637,46 @@ export default {
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import useAuctions from "@/composables/auctions";
-import { useStore } from 'vuex';
+import useRoles from '@/composables/roles';
 import FilterModal from '@/views/modal/filter.vue'; 
+
+const currentStatus = ref('all'); 
+const { role, getRole } = useRoles();
 const currentTab = ref('allInfo');
 const { auctionsData, pagination, getAuctions } = useAuctions();
 const currentPage = ref(1);
-const store = useStore();
 const showModal = ref(false);
+const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length);
+
 
 const setCurrentTab = (tab) => {
     currentTab.value = tab;
 };
 
+const isUser = ref(false);
+
 function toggleModal() {
   showModal.value = !showModal.value; 
+}
+
+function setFilter(status) {
+  currentStatus.value = status;
 }
 
 function handleClose() {
   showModal.value = false;
 }
+
 // 경매 완료건이 있는지 확인하는 계산된 속성
 const hasCompletedAuctions = computed(() => {
    return auctionsData.value.some(auction => auction.status === 'done');
 });
 
 const filteredAuctions = computed(() => {
-  return auctionsData.value.filter(auction =>
-    auction && ['ing', 'done', 'wait', 'chosen', 'diag'].includes(auction.status)
-  );
+  if (currentStatus.value === 'all') {
+    return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag'].includes(auction.status));
+  }
+  return auctionsData.value.filter(auction => auction.status === currentStatus.value);
 });
 
 function loadPage(page) {
@@ -665,6 +686,9 @@ function loadPage(page) {
 }
 
 onMounted(async () => {
+  if (role.value.name === 'user') {
+    isUser.value = true;
+  }
   await getAuctions(currentPage.value);
 });
 </script>

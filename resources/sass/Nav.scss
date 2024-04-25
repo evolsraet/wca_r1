@@ -212,14 +212,16 @@
 .toggle-nav-content {
     padding: 20px;
     display: block;
-    overflow-y: auto;
-    height: calc(95vh - 60px); 
-    margin-top: 60px; 
+
+    height: 100%; 
+    margin-top: 60px;
     width: 342px;
 }
+
 .navbar-collapse.show {
     width: 342px !important;
 }
+
 .middle-content{
     margin-top: 6rem !important;
 }

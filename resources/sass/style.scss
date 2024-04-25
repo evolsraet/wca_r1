@@ -107,6 +107,24 @@ video {
 /*--------------------------
     딜러 메인(홈)
 ----------------------------*/
+@media (max-width: 991px){
+.layout-container02 {
+    grid-template-columns: none !important;
+    display: flex !important;
+    gap: 6rem !important;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+}
+@media (max-width: 640px){
+.layout-container02 {
+    display: flex !important;
+    gap: 4rem !important;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+}
+
 .activity-info {
     display: flex;
     justify-content: space-around;
@@ -267,7 +285,7 @@ video {
 }
 
 .note-date {
-    width: 15%;
+    width: 18%;
 }
 
 .tr-style th {
@@ -762,7 +780,7 @@ video {
     display: none;
 }
 
-.layout-container {
+.layout-container02 {
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: 2fr 1fr;
@@ -1653,7 +1671,7 @@ video {
         display: flex;
         margin-bottom: 30px;
         justify-content: space-between;
-        align-items: center;
+        align-items: flex-end;
         flex-direction: row;
         flex-wrap: nowrap;
         padding: 0px;
@@ -1675,6 +1693,29 @@ video {
     }
 }
 
+@media (max-width: 375px){
+    .btn-apply {
+        font-size: 12px;
+    }
+    .btn-apply {
+        position: relative;
+        display: inline-flex;
+        align-items: center;
+        padding: 0px;
+        line-height: 32px;
+        text-decoration: none;
+        color: #000;
+        cursor: pointer;
+    }
+    .btn-apply::after {
+
+        width: 10px;
+        height: 10px;
+    }
+    h3.review-title{
+        font-size: 15px;
+    }
+}
 @media (max-width: 767px){
 .auction-content .row {
     justify-content: left !important;

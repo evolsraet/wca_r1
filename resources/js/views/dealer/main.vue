@@ -1,7 +1,7 @@
 <template>
     <div class="container">
         <div class="regiest-content">
-            <div class="layout-container">
+            <div class="layout-container02">
                 <!-- 딜러 프로필 요약 정보 -->
                 <div class="banner-top ">
                     <div class="top-info">현재 진행중인 경매<p class="tc-red"> 1 </p> 건</div>
@@ -123,7 +123,7 @@
                     <div class="card-body">
                         <div class="enter-view mt-3">
                             <h5>선택 완료 차량</h5>
-                            <router-link :to="{ name: 'dealer.index2'}" class="btn-apply">전체보기</router-link>
+                            <p class="btn-apply" @click="alertNoVehicle">전체보기</p>
                         </div>
                         <span class="tc-light-gray">24시간 내 응대해 주세요!</span>
                         <!-- 차량이 존재 할 경우-->
@@ -164,6 +164,7 @@ import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
 import { useStore } from 'vuex';
 
+
 const store = useStore();
 const isExpanded = ref(false);
 const toggleCard = () => {
@@ -172,6 +173,16 @@ const toggleCard = () => {
 
 const { bidsData, bidsCountByUser, getBids, viewBids } = useBid();
 const user = computed(() => store.state.auth.user);
+
+
+const alertNoVehicle = (event) => {
+    event.preventDefault();
+    if (viewBids.value.length === 0) {
+        alert("선택 완료된 차량이 없습니다.");
+    } else {
+        router.push({ name: 'dealer.index2' });
+    }
+};
 
 onMounted(async () => {
     await getBids();

@@ -3,6 +3,7 @@
         <div class="main-contenter">
             <div class="review">
                 <div class="review-content mov-review my-5">
+                    <div class="proceeding"></div>
                     <h3 class="review-title">이용후기 관리</h3>
                     <div class="tab-nav my-4">
                         <ul>
@@ -11,6 +12,7 @@
                         </ul>
                         <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
+                <!-- 작성한 이용후기-->  
                     <div class="row row-cols-1 row-cols-md-4 g-3">
                         <div class="col" v-for="review in reviews" :key="review.id">
                             <div class="card">
@@ -30,6 +32,27 @@
                             </div>
                         </div>
                     </div>
+                <!-- 작성 가능한 이용후기-->  
+                    <div class="row row-cols-1 row-cols-md-4 g-3">
+                        <div class="col" v-for="review in reviews" :key="review.id">
+                            <div class="card">
+                                <div class="car-imges">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ review.title }}</h5>
+                                    <div class="rating">
+                                        <div v-for="index in 5" :key="index" class="star" :class="{ 'filled-star': index <= review.rating, 'empty-star': index > review.rating }"></div>
+                                    </div>
+                                    <div class="d-sm-flex justify-content-between text-muted">
+                                        <span class="deilname">담당 딜러 {{ review.dealer }}</span>
+                                        <span class="date">{{ review.date }}</span>
+                                    </div>
+                                    <p class="card-text">{{ review.content }}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>

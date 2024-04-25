@@ -1,3 +1,4 @@
+TODO: 
 <template>
     <transition name="fade" mode="out-in">
     <section class="modal modal-section type-confirm alert-modal-type02">
@@ -74,14 +75,14 @@
 
 <style scoped>
 
-/* 트랜지션 효과 */
+
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s, transform 0.5s;
   transition-timing-function: ease;
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
-  transform: translateY(20px); /* Y축으로 조금 아래에서 올라오는 효과 */
+  transform: translateY(20px); 
 }
 .fade-enter-to, .fade-leave-from {
   opacity: 1;

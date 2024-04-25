@@ -509,7 +509,7 @@ transition: background-color 0.3s;
   border-bottom: 3px solid darkgrey;
   border-radius: 2px;
 }
-
+/*
 .detail-content02 .menu-item::after {
   content: '';
   display: block;
@@ -518,7 +518,7 @@ transition: background-color 0.3s;
   width: 0%;
   background: transparent;
   transition: width 0.5s ease, background-color 0.5s ease;
-}
+}*/
 
 .detail-content02 .menu-item:hover::after, .detail-content02 .menu-item.active::after {
   width: 100%;

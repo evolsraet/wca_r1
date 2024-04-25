@@ -214,8 +214,8 @@
 }
 .styled-div {
     width: 100%;
-    height: 320px;
-    margin-top: 57px;
+    height: 200px;
+
     border-radius: 6px;
     background-color: #f5f5f6;
 }

@@ -2,7 +2,7 @@
     <div class="container">
         <!-- 회원가입 권장 섹션 -->
         <div class="regiest-content">
-            <div class="my-5 app-specific-size">
+            <div class="p-4 app-specific-size">
                 <div class="text-center">
                     <h2 class="my-4 fw-bold">회원가입시 판매가 빨라져요</h2>
                     <p class="bold-link text-muted">소셜 로그인 및 이메일로 가입 할 수 있어요.</p>
@@ -49,7 +49,7 @@
                 <div class="review-content">
                     <div class="apply-top text-start">
                         <h3 class="review-title">다른 사람들의 이용후기에요</h3>
-                        <a href="/reviewtest" class="btn-apply">전체보기</a>
+                        <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">전체보기</router-link>
                     </div>
                     <div class="row row-cols-1 row-cols-md-2 g-4">
                         <div class="col">
@@ -175,10 +175,11 @@
                             </div>
                             <div class="text-muted mt-4 text-center">
                                 <p class="fs-6">
-                                    <a href="/copywrite" class="text-muted spacing">카피라이트</a> |
-                                    <a href="/privacy-policy" class="text-muted spacing">개인정보 처리방침</a> |
-                                    <a href="/terms" class="text-muted spacing">이용약관</a>
+                                    <span @click="openModal('copywrite')" class="link-style">카피라이트</span> |
+                                    <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
+                                    <span @click="openModal('terms')" class="link-style">이용약관</span>
                                 </p>
+                                <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
                             </div>
                         </form>
                     </div>
@@ -188,20 +189,23 @@
     </div>
 </template>
 <script setup>
-    import {
-        useReview
-    } from '@/composables/review';
-    import useAuth from '@/composables/auth' //인증관련 컴포저블2
+import { ref } from 'vue';
+import LawGid from '@/views/modal/LawGid.vue'; 
+import { useReview } from '@/composables/review';
+import useAuth from '@/composables/auth';
 
-    const {
-        loginForm,
-        validationErrors,
-        processing,
-        submitLogin
-    } = useAuth(); //로그인양식데이터, 유효성 검사오류,로그인상태처리, 로구인 함수 할당
+const isModalOpen = ref(false);
+const modalContent = ref('');
 
-    const {
-        rating,
-        setRating
-    } = useReview();
+const openModal = (type) => {
+  modalContent.value = type;
+  isModalOpen.value = true;
+};
+
+const closeModal = () => {
+  isModalOpen.value = false;
+};
+
+const { loginForm, validationErrors, processing, submitLogin } = useAuth();
+const { rating, setRating } = useReview();
 </script>

@@ -21,6 +21,16 @@ export default {
         SET_USER(state, value) {
             state.user = value;
         },
+        SET_USER_ACT(state, value) {
+            state.user.act = value;
+            console.log(state.user);
+            console.log(state.user);
+            console.log(state.user);
+            console.log(state.user);
+            console.log(state.user);
+            console.log(state.user);
+            
+        },
     },
     actions: {
         login({ commit }) {
@@ -48,15 +58,28 @@ export default {
                     //     commit('SET_USER', {})
                     //     commit('SET_AUTHENTICATED', false)
                     // }
+
                 })
                 .catch(({ res }) => {
                     commit("SET_USER", {});
                     commit("SET_AUTHENTICATED", false);
                 });
         },
+        getAbilities({ commit }) {
+            return axios
+                .get("/api/users/abilities")
+                .then(({ data }) => {
+                    commit("SET_USER_ACT", data.data);
+                    console.log(then);
+                })
+                .catch(({ res }) => {
+                   
+                });
+        },
         logout({ commit }) {
             commit("SET_USER", {});
             commit("SET_AUTHENTICATED", false);
+            console.log(then);
             router.push({ name: "auth.login" });
         },
     },

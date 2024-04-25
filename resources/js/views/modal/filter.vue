@@ -10,6 +10,7 @@
                     <button type="button" class="btn-close" @click="handleCloseClick">
                     </button>
                 </div>
+                <div class="demo"></div>
               <h5>필터</h5>
               <div v-for="(items, category) in categories" :key="category" class="facturer mt-3">
                 <h5 class="tc-light-gray">{{category}}</h5>

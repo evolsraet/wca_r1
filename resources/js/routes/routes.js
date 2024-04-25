@@ -1,3 +1,7 @@
+/**
+ * TODO:딜러 권한 부여서 메인으로 안남어가는 현상(auth.js 로그인 부분과 충돌)
+ * 
+ */
 import Cookies from 'js-cookie'
 import store from "../store";
 
@@ -11,7 +15,8 @@ const PostsEdit  = ()  => import('../views/admin/posts/Edit.vue');
 function requireLogin(to, from, next) {
     let isLogin = false;
     isLogin = !!store.state.auth.authenticated;
-
+    console.log(1111);
+    console.log(store.state.auth.user);
     if (isLogin) {
         next()
     } else {
@@ -41,10 +46,33 @@ function requireRole(role) {
         }
     };
 }
+function testnext(pass) {
+    return function (to, from, next) {
+        if(pass != null && pass && pass != undefined ) {
+            const isLogin = store.state.auth.authenticated && store.state.auth.user;
+            if(!isLogin) {
+                next('/login');
+            } else {
+                const userActs = store.state.auth.user.act;
+                console.log(userActs);
+                let isOk = false;
+                userActs.forEach(element => {
+                    if(pass.includes(element)) {
+                        isOk = true;
+                        console.log('ok : ' + element);
+                    } else {
+                        console.log('no : ' + element);
+                    }
+                });
+                if(isOk) next();
+                else next('/');
+            }
+        } else {
+            next();
+        }
 
-const requireUser = requireRole('user');
-const requireDealer = requireRole('dealer');
-const requireAdmin = requireRole('admin');
+    };
+}
 
 //url 추후에 리네임 
 export default [
@@ -63,31 +91,31 @@ export default [
                 path: '/detilsview',
                 name: 'sell.detils',
                 component: () => import('../views/auction/Details/details.vue'),
-
+                beforeEnter: testnext(['act.super','act.admin','act.user']),
             },
             {
                 path: '/sell',
                 name: 'sell',
                 component: () => import('../views/auction/sell/index.vue'),
-
+                beforeEnter: guest, 
             },
             {
                 path: '/selldt',
                 name: 'selldt',
                 component: () => import('../views/auction/sell/Details.vue'),
-
+                beforeEnter: testnext(['act.super','act.admin','act.user']),
             },
             {
                 path: '/selldt2',
                 name: 'selldt2',
                 component: () => import('../views/auction/sell/AuctionEntry.vue'),
-
+                beforeEnter: testnext(['act.super','act.admin','act.user']),
             },
             {
-                path: '/',
+                path: '/updateinfo',
                 name: 'sell.update-info',
                 component: () => import('../views/auction/sell/Update.vue'),
-
+                beforeEnter: testnext(['act.super','act.admin','act.user']),
             },
             {
                 path: 'posts',
@@ -98,11 +126,15 @@ export default [
                 path: '/auction',
                 name: 'autction.index',
                 component: () => import('../views/auction/index.vue'),
+                beforeEnter: testnext(['act.super','act.admin','act.dealer','act.user']),
+              
             },
             {
-                path: '/auction',
-                name: 'dealer.autction.index',
+                path: '/dealerbid',
+                name: 'dealer.bid',
                 component: () => import('../views/dealer/auction/index.vue'),
+                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
+              
             },
             {
                 path: 'posts/:id',
@@ -117,30 +149,54 @@ export default [
             {
                 path: '/review',
                 name: 'user.review',
-                beforeEnter: requireUser, 
                 component: () => import('../views/user/review.vue'),
-                meta: { requiresRole: 'user' } 
+                beforeEnter: testnext(['act.super','act.admin','act.user']),
             },
             {
-                path: '/main',
+                path: '/allreview',
+                name: 'index.allreview',
+                component: () => import('../views/user/allreview.vue'),
+            },
+            {
+                path: '/introduce',
+                name: 'index.introduce',
+                component: () => import('../views/home/intro.vue'),
+            },
+            
+            {
+                path: '/dealer',
                 name: 'dealer.index',
                 component: () => import('../views/dealer/main.vue'),
-                beforeEnter: requireDealer,
-                meta: { requiresRole: 'dealer' }, 
+                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
             },
             {
                 path: '/profile',
                 name: 'dealer.profile',
                 component: () => import('../views/dealer/profile/index.vue'),
-                beforeEnter: requireDealer,
-                meta: { requiresRole: 'dealer' }, 
+                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
             },
             {
-                path: '/dealer',
+                path: '/dealerbid',
                 name: 'dealer.index2',
                 component: () => import('../views/dealer/dealer.vue'),
-                beforeEnter: requireDealer,
-                meta: { requiresRole: 'dealer' }, 
+            },
+            {
+                path: '/bidhistory',
+                name: 'dealer.bidList',
+                component: () => import('../views/dealer/history/bidList.vue'),
+                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
+            },
+            {
+                path: '/notices',
+                name: 'index.notices',
+                component: () => import('../views/notices/Notices.vue'),
+                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
+            },
+            {
+                path: '/claim',
+                name: 'index.claim',
+                component: () => import('../views/notices/claim.vue'),
+                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
             },
             {
                 path: 'login',

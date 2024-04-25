@@ -1,4 +1,11 @@
+<!--
+    TODO: 상태 Ui만 진행
+    -페이지네이션
+    -전체정보 가져오기
+    -선택후 입찰화면
+-->
 <template>
+    <div class="proceeding"></div>
     <!-- 서브 네비게이션 바 -->
     <div class="sub-nav row">
         <div class="col-12">
@@ -624,6 +631,11 @@
                         </li>
                     </ul>
                 </nav>
+                <div class="filter-content">
+                <!-- 페이지의 나머지 내용 -->
+                <button @click="toggleModal" class="animCircle filter-button" :style="buttonStyle"> 필터</button>
+                <FilterModal v-if="showModal" @close="handleClose"/>
+                </div>  
             </div>
         </div>
     </div>
@@ -652,4 +664,40 @@
         },
     };
     
+</script>
+
+
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import useAuctions from "@/composables/auctions";
+import useRoles from '@/composables/roles';
+import FilterModal from '@/views/modal/filter.vue'; 
+
+const currentStatus = ref('all'); 
+const { role, getRole } = useRoles();
+const currentTab = ref('allInfo');
+const { auctionsData, pagination, getAuctions } = useAuctions();
+const currentPage = ref(1);
+const showModal = ref(false);
+
+const isUser = ref(false);
+
+function toggleModal() {
+  showModal.value = !showModal.value; 
+}
+
+function setFilter(status) {
+  currentStatus.value = status;
+}
+
+function handleClose() {
+  showModal.value = false;
+}
+
+onMounted(async () => {
+  if (role.value.name === 'user') {
+    isUser.value = true;
+  }
+  await getAuctions(currentPage.value);
+});
 </script>
