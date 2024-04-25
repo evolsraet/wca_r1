@@ -107,7 +107,7 @@
                         <div class="top-content mt-2">
                             <span class="login-prompt">로그인하면 <br>더 다양한 정보를 <br>얻을 수 있어요.</span>
                             <div class="button-area">
-                                <a class="btn btn-danger shadow wd-100" href="/login">로그인</a>
+                                <a class="btn btn-danger shadow wd-100 tc-wh" href="/login">로그인</a>
                             </div>
                             <div class="register-linker tc-light-gray">
                                 <span>아이디가 없으신가요?</span>
@@ -216,6 +216,7 @@ import { computed } from "vue";
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));

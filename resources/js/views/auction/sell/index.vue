@@ -104,7 +104,7 @@
                 </div>
             </div>
             <div class="flex items-center justify-end my-5">
-                <router-link :to="{ path: '/selldt' }" class="btn primary-disable">경매 신청하기</router-link></div>
+                <router-link :to="{ path: '/selldt' }" class="btn primary-disable" @click="applyAuction">경매 신청하기</router-link></div>
             </div>
             </div>
         </div>
@@ -121,7 +121,7 @@ const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 
 const isActive = ref(false); 
-const route = useRoute();
+const router = useRoute();
 const carDetails = ref({});
 
 
@@ -139,5 +139,7 @@ function toggleDetailContent() {
     isActive.value = !isActive.value;  
 }
 
-
+const applyAuction = () => {
+  alert('로그인이 필요한 서비스입니다.');
+}
 </script>
