@@ -2057,14 +2057,9 @@ video {
     height: 3px;
     background-color: #dbdbdb;
 }
-.detail-content:hover {
-    bottom: 0px;
-}
-
-@media (max-width: 400px) {
+@media (max-width: 400px){
     .detail-content {
-        top: 640px;
-        
+        top: 700px;
     }
     
     .detail-content.active {

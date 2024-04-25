@@ -19,6 +19,11 @@
                                     <div class="form-group">
                                         <label for="name">이름</label>
                                         <input v-model="registerForm.name" id="name" type="name" class="form-control" placeholder="이름">
+                                        <div class="text-danger mt-1">
+                                        <div v-for="message in validationErrors?.email">
+                                            {{ message }}
+                                        </div>
+                                    </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="email">이메일</label>
@@ -32,10 +37,20 @@
                                     <div class="form-group">
                                         <label for="password">비밀번호</label>
                                         <input v-model="registerForm.password" id="password" type="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합">
+                                        <div class="text-danger mt-1">
+                                        <div v-for="message in validationErrors?.email">
+                                            {{ message }}
+                                        </div>
+                                    </div>
                                     </div>
                                     <div class="form-group password-confirmation">
                                         <label for="password-confirm">비밀번호 확인</label>
                                         <input v-model="registerForm.password_confirmation" id="password_confirmation" type="password" class="form-control" placeholder="비밀번호를 다시 입력해주세요">
+                                        <div class="text-danger mt-1">
+                                        <div v-for="message in validationErrors?.email">
+                                            {{ message }}
+                                        </div>
+                                    </div>
                                     </div>
                                     <div class="text-center">
                                         <div class="form-group dealer-check">

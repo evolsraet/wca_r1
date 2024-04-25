@@ -72,6 +72,7 @@
                     <p class="tc-light-gray bold-18-font">현재 시세 <span class="normal-14-font">(무사고 기준)</span></p>
                     <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
                 </div>
+            <div v-if="user?.name">
                 <div class="middle">
                 <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span></p>
                 <router-link :to="{ name: 'sell.update-info' }" class="tc-red link">정보갱신하기</router-link>
@@ -87,18 +88,43 @@
                 </div>
                 <div class="flex items-center justify-end my-5">
                  <router-link :to="{ path: '/selldt' }" class="btn primary-btn ">경매 신청하기</router-link></div>
+                </div>
+            <div v-if="!user?.name">
+            <div class="middle">
+            <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="로그인을 하면 자세한 정보를 볼수있어요." tabindex="0"></span></p>
+            <p class="tc-light-gray link">정보갱신하기</p>
             </div>
-    </div>
+            <div class="none-info">
+            <div class="complete-car">
+                    <div class="card my-auction mt-3">
+                        <div class="none-complete-ty02">
+                            <span class="tc-light-gray">로그인을 하면 경매 신청이 가능해요.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex items-center justify-end my-5">
+                <router-link :to="{ path: '/selldt' }" class="btn primary-disable">경매 신청하기</router-link></div>
+            </div>
+            </div>
+        </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import { computed } from 'vue';
+import useAuth from "@/composables/auth";
+import { ref, onMounted,computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { useStore } from "vuex";
+
+
+const store = useStore();
+const user = computed(() => store.getters["auth/user"]);
 
 const isActive = ref(false); 
 const route = useRoute();
 const carDetails = ref({});
+
+
 
 onMounted(() => {
   const storedData = localStorage.getItem('carDetails');

@@ -46,25 +46,25 @@ function requireRole(role) {
         }
     };
 }
-function testnext(pass) {
+function requireAct(act) {
     return function (to, from, next) {
-        if(pass != null && pass && pass != undefined ) {
+        if(act != null && act && act != undefined ) {
             const isLogin = store.state.auth.authenticated && store.state.auth.user;
             if(!isLogin) {
                 next('/login');
             } else {
                 const userActs = store.state.auth.user.act;
                 console.log(userActs);
-                let isOk = false;
+                let canProceed = false;
                 userActs.forEach(element => {
-                    if(pass.includes(element)) {
-                        isOk = true;
-                        console.log('ok : ' + element);
+                    if(act.includes(element)) {
+                        canProceed = true;
+                       // console.log('canProceed : ' + element);
                     } else {
-                        console.log('no : ' + element);
+                       // console.log('notProceed : ' + element);
                     }
                 });
-                if(isOk) next();
+                if(canProceed) next();
                 else next('/');
             }
         } else {
@@ -91,7 +91,7 @@ export default [
                 path: '/detilsview',
                 name: 'sell.detils',
                 component: () => import('../views/auction/Details/details.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
             {
                 path: '/sell',
@@ -103,19 +103,19 @@ export default [
                 path: '/selldt',
                 name: 'selldt',
                 component: () => import('../views/auction/sell/Details.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
             {
                 path: '/selldt2',
                 name: 'selldt2',
                 component: () => import('../views/auction/sell/AuctionEntry.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
             {
                 path: '/updateinfo',
                 name: 'sell.update-info',
                 component: () => import('../views/auction/sell/Update.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
             {
                 path: 'posts',
@@ -126,14 +126,14 @@ export default [
                 path: '/auction',
                 name: 'autction.index',
                 component: () => import('../views/auction/index.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.dealer','act.user']),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
               
             },
             {
                 path: '/dealerbid',
-                name: 'dealer.bid',
+                name: 'autction.dealer.bid',
                 component: () => import('../views/dealer/auction/index.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
               
             },
             {
@@ -150,7 +150,7 @@ export default [
                 path: '/review',
                 name: 'user.review',
                 component: () => import('../views/user/review.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
             {
                 path: '/allreview',
@@ -167,13 +167,13 @@ export default [
                 path: '/dealer',
                 name: 'dealer.index',
                 component: () => import('../views/dealer/main.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
                 path: '/profile',
                 name: 'dealer.profile',
                 component: () => import('../views/dealer/profile/index.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
                 path: '/dealerbid',
@@ -184,19 +184,19 @@ export default [
                 path: '/bidhistory',
                 name: 'dealer.bidList',
                 component: () => import('../views/dealer/history/bidList.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
                 path: '/notices',
                 name: 'index.notices',
                 component: () => import('../views/notices/Notices.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
                 path: '/claim',
                 name: 'index.claim',
                 component: () => import('../views/notices/claim.vue'),
-                beforeEnter: testnext(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
                 path: 'login',

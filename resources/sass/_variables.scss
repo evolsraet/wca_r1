@@ -18,6 +18,8 @@ $sub-color:#ff837a;
 $sub-color01: #4263EA;
 $sub-color02: #EBEFFD;
 
+$disabled-primary:#ebb3b5;
+
 
 .bold-20-font{
     font-size: 1.25em; 
@@ -39,11 +41,21 @@ $sub-color02: #EBEFFD;
 .primary-btn {
     width: 100%;
     color: #fff !important;
-    background-color: #da3138 !important;
+    background-color: $primary !important;
     height: 44px;
     line-height: 30px !important;
     box-shadow: 0 5px 8px rgb(0 0 0 / 26%);
 }
+
+.primary-disable{
+    width: 100%;
+    color: #fff !important;
+    background-color: $disabled-primary !important;
+    height: 44px;
+    line-height: 30px !important;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.26);
+}
+
 .primary-btn:hover{
     background-color: $primary-hover;
     border-color: $primary-hover;

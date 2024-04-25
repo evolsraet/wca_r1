@@ -87,7 +87,7 @@ export default function useAuth() {
         processing.value = true;
         validationErrors.value = {};
 
-        let payload = {
+       let payload = {
             name: registerForm.name,
             email: registerForm.email,
             password: registerForm.password,
@@ -95,17 +95,19 @@ export default function useAuth() {
             dealer: registerForm.dealer, 
         };
          console.log(registerForm.dealer);
-        if (registerForm.dealer) {
-            payload.roles = ['dealer']; 
-        } else {
-            payload.roles = ['user'];
-        }
-
+         if (registerForm.dealer) {
+             payload.roles = ['dealer']; 
+            } else {
+                payload.roles = ['user'];
+            } 
+            console.log("roles:", payload);
+            console.log("resgite:",registerForm)
         await axios
-            .post("/api/users", registerForm)
+            .post("/api/users", payload)
             .then(async (response) => {
-                // await store.dispatch('auth/getUser')
-                // await loginUser()
+                await store.dispatch('auth/getUser')
+                await loginUser()
+                console.log("roles:", payload);
                 swal({
                     icon: "success",
                     title: "Registration successfully",
