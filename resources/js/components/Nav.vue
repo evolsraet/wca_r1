@@ -31,7 +31,7 @@
                                 <div class="icon right-icon"></div>
                             </a>
                         </div>
-                        <router-link :to="{ name: 'dealer.bid' }" class="menu-item mb-3" @click="toggleNavbar">
+                        <router-link :to="{ name: 'autction.dealerbid' }" class="menu-item mb-3" @click="toggleNavbar">
                             <div class="icon icon-tag"></div>
                             <span class="menu-text recent-new">입찰하기</span>
                             <div class="icon right-icon"></div>
@@ -178,7 +178,7 @@
                     <!-- 딜러 일때 -->
                     <template v-else-if="isDealer">
                         <li class="nav-item">
-                            <router-link :to="{ name: 'dealer.bid'}" class="nav-link" to="/register" >입찰하기</router-link>
+                            <router-link :to="{ name: 'autction.dealerbid'}" class="nav-link" to="/register" >입찰하기</router-link>
                         </li>
                         <li class="nav-item">
                             <router-link :to="{ name: 'autction.index'}" class="nav-link">내 매물관리</router-link>
