@@ -39,6 +39,8 @@ class UserService
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
 
+            dd($data);
+
             // 유효성 검사 실패 시
             if ($validator->fails()) {
                 return response()->api(null, null, 'fail', 422, ['errors' => $validator->errors()]);
@@ -189,8 +191,9 @@ class UserService
                 unset($data['status']);
         }
 
-        if (isset($data['password_confirmation']))
-            unset($data['password_confirmation']);
+        // if (isset($data['password_confirmation']))
+        //     unset($data['password_confirmation']);
+
         // fillable 로 대체
         // unset($data['role']);
         // unset($data['dealer']);
