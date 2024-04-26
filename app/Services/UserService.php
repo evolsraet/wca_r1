@@ -106,6 +106,7 @@ class UserService
             $this->modifyAuth($item);
 
             $data = $request->input('user');
+            $data = $this->toJson($data);
             $data = $this->beforeData($data);
 
             if ($data) {
