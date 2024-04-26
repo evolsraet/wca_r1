@@ -15,6 +15,8 @@ class AuctionService
     {
         // CrudTrait
         $this->defaultCrudTrait('auction');
+
+        // IP제한
     }
 
     // public function store(Request $request)

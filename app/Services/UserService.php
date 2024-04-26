@@ -32,7 +32,7 @@ class UserService
             $data = $this->beforeData($data);
 
             // Validator 인스턴스 생성
-            $validator = Validator::make($request->input('user'), [
+            $validator = Validator::make($data, [
                 'name' => 'required|max:255',
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'phone' => 'required',

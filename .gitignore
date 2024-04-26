@@ -20,3 +20,4 @@ yarn.lock
 /storage/media-library/temp
 /storage/app/public/
 /public/media/
+.DS_Store
