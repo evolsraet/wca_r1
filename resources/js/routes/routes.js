@@ -87,9 +87,9 @@ export default [
                 component: () => import('../views/home/index.vue'),
 
             },
-            { //sell : 판매 
-                path: '/detilsview',
-                name: 'sell.detils',
+            { 
+                path: '/auction',
+                name: 'AuctionDetail',
                 component: () => import('../views/auction/Details/details.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },

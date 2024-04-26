@@ -440,7 +440,7 @@ TODO:
                 <div class="container my-4" v-if="currentTab === 'allInfo'">
                     <div class="row">
                         <!-- if. 경매 ing 있을때 -->
-                        <div class="col-6 col-md-4 mb-4" v-for="auction in filteredAuctions" :key="auction.user_id">
+                        <div class="col-6 col-md-4 mb-4" v-for="auction in filteredAuctions" :key="auction.user_id"  @click="navigateToDetail(auction.id)">
                             <div class="card my-auction">
                                 <input class="toggle-heart" type="checkbox" checked />
                                 <label class="heart-toggle"></label>
@@ -639,7 +639,11 @@ import { ref, computed, onMounted } from 'vue';
 import useAuctions from "@/composables/auctions";
 import useRoles from '@/composables/roles';
 import FilterModal from '@/views/modal/filter.vue'; 
+import { useRouter } from 'vue-router';
 
+
+
+const router = useRouter();
 const currentStatus = ref('all'); 
 const { role, getRole } = useRoles();
 const currentTab = ref('allInfo');
@@ -684,7 +688,9 @@ function loadPage(page) {
   currentPage.value = page;
   getAuctions(page);
 }
-
+function navigateToDetail(auctionId) {
+    router.push({ name: 'AuctionDetail', params: { id: auctionId } });
+}
 onMounted(async () => {
   if (role.value.name === 'user') {
     isUser.value = true;
