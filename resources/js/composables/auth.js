@@ -39,10 +39,12 @@ export default function useAuth() {
     const registerForm = reactive({
         name: "",
         email: "",
+        phone:"",
         password: "",
         password_confirmation: "",
         dealer: null,
-    });
+    })
+
     const submitLogin = async () => {
         if (processing.value) return;
 
@@ -87,27 +89,40 @@ export default function useAuth() {
         processing.value = true;
         validationErrors.value = {};
 
-       let payload = {
-            name: registerForm.name,
-            email: registerForm.email,
-            password: registerForm.password,
-            password_confirmation: registerForm.password_confirmation,
-            dealer: registerForm.dealer, 
+    let payload = {
+            user: {
+                name: registerForm.name,
+                email: registerForm.email,
+                phone: registerForm.phone,
+                password: registerForm.password,
+                password_confirmation: registerForm.password_confirmation,
+            }
         };
-         console.log(registerForm.dealer);
-         if (registerForm.dealer) {
-             payload.roles = ['dealer']; 
-            } else {
-                payload.roles = ['user'];
-            } 
+        if (registerForm.dealer) {
+            payload.dealer ={
+                name: registerForm.dealerName,
+                phone: registerForm.dealerContact,
+                birthday: registerForm.dealerBirthDate,
+                company: registerForm.dealerCompany,
+                company_duty: registerForm.dealerCompanyDuty,
+                company_post: registerForm.dealerCompanyPost,
+                company_addr1: registerForm.dealercompany_addr1,
+                company_addr2: registerForm.dealercompany_addr2,
+                receive_post: registerForm.dealerReceivePost,
+                receive_addr1: registerForm.dealerReceiveAddr1,
+                receive_addr2: registerForm.dealerReceiveAddr2,
+                introduce: registerForm.introduce,
+            }
+            payload.user.role = 'dealer'; 
+        } else {
+            payload.user.role = 'user';
+        } 
             console.log("roles:", payload);
-            console.log("resgite:",registerForm)
+            console.log("resgite:",registerForm);
+        
         await axios
             .post("/api/users", payload)
-            .then(async (response) => {
-                await store.dispatch('auth/getUser')
-                await loginUser()
-                console.log("roles:", payload);
+            .then(async(response) => {
                 swal({
                     icon: "success",
                     title: "Registration successfully",
@@ -117,6 +132,7 @@ export default function useAuth() {
                 await router.push({ name: "auth.login" });
             })
             .catch((error) => {
+                console.log(error);
                 if (error.response?.data) {
                     validationErrors.value = error.response.data.errors;
                 }

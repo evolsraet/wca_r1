@@ -87,9 +87,9 @@ export default [
                 component: () => import('../views/home/index.vue'),
 
             },
-            { //sell : 판매 
-                path: '/detilsview',
-                name: 'sell.detils',
+            { 
+                path: '/auction',
+                name: 'AuctionDetail',
                 component: () => import('../views/auction/Details/details.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
@@ -131,7 +131,7 @@ export default [
             },
             {
                 path: '/dealerbid',
-                name: 'autction.dealer.bid',
+                name: 'autction.dealerbid',
                 component: () => import('../views/dealer/auction/index.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
               
@@ -176,9 +176,10 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
-                path: '/dealerbid',
+                path: '/dealer2',
                 name: 'dealer.index2',
                 component: () => import('../views/dealer/dealer.vue'),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
                 path: '/bidhistory',

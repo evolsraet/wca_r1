@@ -20,7 +20,7 @@
                                         <label for="name">이름</label>
                                         <input v-model="registerForm.name" id="name" type="name" class="form-control" placeholder="이름">
                                         <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.email">
+                                        <div v-for="message in validationErrors?.name">
                                             {{ message }}
                                         </div>
                                     </div>
@@ -35,10 +35,19 @@
                                     </div>
                                     </div>
                                     <div class="form-group">
+                                        <label for="phone">전화번호</label>
+                                        <input type="phone" v-model="registerForm.phone" id="phone" class="form-control" placeholder="">
+                                        <div class="text-danger mt-1">
+                                        <div v-for="message in validationErrors?.phone">
+                                            {{ message }}
+                                        </div>
+                                    </div>
+                                    </div>
+                                    <div class="form-group">
                                         <label for="password">비밀번호</label>
                                         <input v-model="registerForm.password" id="password" type="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합">
                                         <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.email">
+                                        <div v-for="message in validationErrors?.password">
                                             {{ message }}
                                         </div>
                                     </div>
@@ -47,7 +56,7 @@
                                         <label for="password-confirm">비밀번호 확인</label>
                                         <input v-model="registerForm.password_confirmation" id="password_confirmation" type="password" class="form-control" placeholder="비밀번호를 다시 입력해주세요">
                                         <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.email">
+                                        <div v-for="message in validationErrors?.password_confirmation">
                                             {{ message }}
                                         </div>
                                     </div>
@@ -70,35 +79,31 @@
                                             <div v-if="registerForm.dealer" class="hidden-content mt-4">
                                                 <div class="form-group">
                                                     <label for="dealerPhoto">사진 (본인 확인용)</label>
-                                                    <button type="button" class="btn btn-fileupload" @click="openUploadPage">
-                                                        <img src="../../../img/Icon-upload.png" class="me-2 " alt="설명">파일 첨부
+                                                    <img id="imagePreview" style="max-width: 50%; display: none;">
+                                                    <button type="button" class="btn btn-fileupload" @click="triggerFileUpload">
+                                                        <img src="../../../img/Icon-upload.png" class="me-2" alt="Upload Icon">파일 첨부
                                                     </button>
-                                                    <div class="password-error" v-if="photoError">사진을 업로드해 주세요.</div>
+                                                    <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealerName">이름</label>
                                                     <input type="text" id="dealerName" v-model="registerForm.dealerName" placeholder="홍길동">
-                                                    <div class="password-error" v-if="nameError">이름을 정확히 입력해 주세요.</div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealerContact">연락처</label>
-                                                    <input type="tel" id="dealerContact" v-model="dealerContact" @input="checkContact" placeholder="'-'없이 숫자만 입력">
-                                                    <div class="password-error" v-if="contactError">연락처를 정확히 입력해 주세요.</div>
+                                                    <input type="tel" id="dealerContact" v-model="registerForm.dealerContact" @input="checkContact" placeholder="'-'없이 숫자만 입력">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealerBirthDate">생년월일</label>
-                                                    <input type="date" id="dealerBirthDate" v-model="dealerBirthDate" @input="checkBirthDate" placeholder="1990-12-30">
-                                                    <div class="password-error" v-if="birthDateError">생년월일을 정확히 입력해 주세요.</div>
+                                                    <input type="date" id="dealerBirthDate" v-model="registerForm.dealerBirthDate" @input="checkBirthDate" placeholder="1990-12-30">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealer">소속상사</label>
                                                     <input type="text" id="dealerName"  v-model="registerForm.dealerCompany" placeholder="상사명(상사 정식 명칭)">
-                                                    <div class="password-error" v-if="nameError">이름을 정확히 입력해 주세요.</div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealerName">소속상사 직책</label>
                                                     <input type="text" id="dealerName" v-model="registerForm.dealerCompanyDuty" placeholder="사원">
-                                                    <div class="password-error" v-if="nameError">이름을 정확히 입력해 주세요.</div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealeradress">소속상사 주소</label>
@@ -130,11 +135,11 @@
                                             </div>
                                         </transition>
                                     </div>
-                             <!-- Buttons -->
+                                <!-- Buttons -->
                                     <div class="flex items-center justify-end mt-4">
                                         <button type="submit" class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
                                             약관 동의 및 회원가입
-                                            </button>
+                                        </button>
                                     </div>
                                 </form>
                             </div>
@@ -146,11 +151,36 @@
     </div>
 </template>
 <script setup>
-
+import { ref } from 'vue';
 import useAuth from '@/composables/auth';
-
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
+const fileInputRef = ref(null);
+function triggerFileUpload() {
+    if (fileInputRef.value) {
+        fileInputRef.value.click();
+    } else {
+        console.error("파일을 찾을수 없습니다.");
+    }
+}
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        registerForm.file_user_photo = file;
+        console.log("File:", file.name);
+
+
+        /*const reader = new FileReader();
+        reader.onload = function(e) {
+            const imagePreview = document.getElementById('imagePreview');
+            imagePreview.src = e.target.result;
+            imagePreview.style.display = 'block'; 
+        };
+        reader.readAsDataURL(file);*/
+    }
+}
+
 </script>
+
 
 <style scoped>
     .seal-info {
