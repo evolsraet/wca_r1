@@ -29,7 +29,7 @@ class UserService
         DB::beginTransaction();
         try {
             $data = $request->input('user');
-            $data = $this->beforeData($data);
+            $data = $this->toJson($data);
 
             // Validator 인스턴스 생성
             $validator = Validator::make($data, [
@@ -39,6 +39,7 @@ class UserService
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
 
+            $data = $this->beforeData($data);
 
             // 유효성 검사 실패 시
             if ($validator->fails()) {
@@ -179,19 +180,25 @@ class UserService
         // return response()->api(new UserResource($item));
     }
 
-    public function beforeData($data)
+    public function toJson($data)
     {
         if (gettype($data) == 'string') {
             $data = json_decode($data, true);
         }
+
+        return $data;
+    }
+
+    public function beforeData($data)
+    {
         // 관리자 전용 수정
         if (!auth()->check() or !auth()->user()->hasPermissionTo('act.admin')) {
             if (isset($data['status']))
                 unset($data['status']);
         }
 
-        // if (isset($data['password_confirmation']))
-        //     unset($data['password_confirmation']);
+        if (isset($data['password_confirmation']))
+            unset($data['password_confirmation']);
 
         // fillable 로 대체
         // unset($data['role']);
