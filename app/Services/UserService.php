@@ -39,7 +39,6 @@ class UserService
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ]);
 
-            dd($data);
 
             // 유효성 검사 실패 시
             if ($validator->fails()) {
