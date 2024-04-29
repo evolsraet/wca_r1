@@ -32,11 +32,14 @@ export default function useUsers() {
     }
 
     const getUser = async (id) => {
-        axios.get('/api/users/' + id)
-            .then(response => {
-                user.value = response.data.data;
-            })
+        try {
+            const response = await axios.get('/api/users/' + id);
+            return response.data.data;
+        } catch (error) {
+            throw error;
+        }
     }
+    
 
     const storeUser = async (user) => {
         if (isLoading.value) return;

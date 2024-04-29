@@ -38,6 +38,12 @@ $disabled-primary:#ebb3b5;
     font-weight: normal;
 }
 
+/* 이미지 흑백 처리 필터 */
+.grayscale_img {
+    filter: grayscale(70%);
+}
+
+/* 버튼 스타일 */
 .primary-btn {
     width: 100%;
     color: #fff !important;

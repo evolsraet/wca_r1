@@ -444,7 +444,7 @@ TODO:
                             <div class="card my-auction">
                                 <input class="toggle-heart" type="checkbox" checked />
                                 <label class="heart-toggle"></label>
-                                <div class="card-img-top-placeholder"></div>
+                                <div :class="{ 'grayscale_img': auction.status === 'done' }" class="card-img-top-placeholder"></div>
                                 <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
                                 <div  v-if="auction.status  === 'ing'"class="progress">
                                     <div class="progress-bar" role="progressbar"></div>

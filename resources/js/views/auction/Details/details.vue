@@ -1,6 +1,6 @@
 <template>
     <!--
-        TODO: 사용자: 매물상세2 선택 부분Ui ,딜러 매물상세 추가, 추가, ui확인때문에 바꿔놓은 반복문 원복
+        TODO: 사용자: 매물상세2 딜러 체크후 모달창 추가 , ui확인때문에 바꿔놓은 반복문 원복 
     -->
     <div class="container-fluid"  v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
@@ -11,7 +11,8 @@
                     <div class="card my-auction">
                         <input class="toggle-heart" type="checkbox" checked />
                         <label class="heart-toggle"></label>
-                        <div class="card-img-top-ty01"></div>
+                        <div :class="{ 'grayscale_img': auctionDetail.status === 'done' }" class="card-img-top-ty01"></div>
+                        <div v-if="auctionDetail.status === 'done'" class="time-remaining">경매 완료</div>
                         <div class="card-body">
                             <div class="enter-view align-items-baseline ">
                                 <p class="card-title fs-5"><span class="blue-box">무사고</span>현대 쏘나타(DN8)</p>
@@ -30,6 +31,9 @@
     <div class="bold-18-font">
         <div v-if="auctionDetail.status === 'wait'">
             <p class="auction-deadline">경매 마감일<span> {{ auctionDetail.final_at }}</span></p>
+        </div>
+        <div v-else-if="auctionDetail.status === 'done'">
+            <p class="auction-deadline">낙찰가 {{ selectedDealer.price }} 만원</p>
         </div>
         <div v-else>
             <p class="auction-deadline">경매 마감되었어요</p>
@@ -292,7 +296,7 @@
         <table>
             <tbody>
                 <!-- 시안: 딜러 사진 , (순위)+딜러명 , 딜러소속  임시 데이터:순위, 딜러아이디, 가격 ,날짜-->
-                <tr v-for="(bid, index) in sortedTopBids" :key="bid.id">
+                <tr v-for="(bid, index) in sortedTopBids" :key="bid.user_id">
                     <td class="w-25"><img src="../../../../img/myprofile_ex.png" alt="딜러 사진" class="align-text-top"></td>
                 <td class="d-flex flex-column align-items-center w-75">
                     <div :class="[(index === 0 ? 'red-box' : index < 3 ? 'blue-box' : 'gray-box'), 'rounded-pill', 'me-0']">
@@ -303,8 +307,8 @@
               <!--  <td class="tc-light-gray align-bottom">파트너 대전 본점</td>-->
                 <td class="tc-light-gray align-bottom">{{ bid.price }}원</td>
                 <td class="align-middle w-25">
-                    <input type="checkbox" :id="'checkbox-' + bid.id" class="custom-checkbox-input"  @change="selectDealer(bid, $event)">
-                    <label :for="'checkbox-' + bid.id" class="custom-checkbox-label"></label>
+                    <input type="checkbox" :id="'checkbox-' + bid.user_id" class="custom-checkbox-input"  @change="selectDealer(bid, $event)">
+                    <label :for="'checkbox-' + bid.user_id" class="custom-checkbox-label"></label>
                 </td>
                 </tr>
             </tbody>
@@ -333,47 +337,85 @@
             </div>
         </div>
     </div>
-    <p class="auction-deadline">낙찰가 <span class="tc-red"> {{ selectedDealer.price }}원 </span></p>
+    <p class="auction-deadline">낙찰가 <span class="tc-red"> {{ selectedDealer.price }} 만원</span></p>
+    <p class="tc-red text-start mt-2">※ 3일 후 자동으로 경매완료 처리됩니다. </p>
         <div class="btn-group mt-3 mb-2">
             <button type="button" class="btn btn-outline-dark" @click="cancelSelection">경매취소</button>
-            <button type="button" class="btn btn-dark" @click="completeAuction">경매 완료</button>
+            <button type="button" class="btn btn-danger" @click="completeAuction">경매 완료</button>
+        </div>
+        
+        <h5 class="mt-5 text-start">내가 선택한 딜러</h5>
+        <div class="select-content my-4">
+            <img src="../../../../img/myprofile_ex.png" alt="딜러 사진" width="100px">
+            <div class="text-container">
+                <h4 class="amount fw-semibold">{{ selectedDealer.price }} 만원</h4>
+                <p class="info">{{ selectedDealer.userData.dealer.name }} | {{ selectedDealer.userData.dealer.company }}</p>
+            </div>
+        </div>
+
+        <div class="p-4 rounded text-body-emphasis bg-body-secondary">
+            <div class="info-item m-0">
+                <div  class="phone"></div>
+                <p>010-1234-1234</p>
+            </div>
+            <div class="info-item m-0">
+            <div class="location"></div >
+            <p>
+                <span>{{ selectedDealer.userData.dealer.company_addr1 }},{{ selectedDealer.userData.dealer.company_addr2 }}</span>
+            </p>
+            </div>
+            <div class="info-item m-0">
+            <p class="text-start">{{ selectedDealer.userData.dealer.introduce || '소개 정보 없음' }}</p>
+            </div>
         </div>
     </div>
         <!-- 경매 완료 -->
         <div v-if="auctionDetail.status === 'done'" @click.stop="">
-        <p class="text-center"> 거래는 어떠셨나요?</p>
-        <button type="button" class="btn btn-danger">거래후기 남기기</button>
+        <h5 class="text-center p-4"> 거래는 어떠셨나요?</h5>
+        <router-link :to="{ name: 'user.review' }" type="button" class="tc-wh btn btn-danger w-100">후기 남기기</router-link>
     </div>
     </div>
+
+     <!-- 바텀 시트 shwo-->
+    <button  class="animCircle scroll-button" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
+
  </div>
     <!-- bottom sheet END-->
 
 </div>
 </template>
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-
+import { ref, computed, onMounted, onUnmounted } from 'vue';
+import useUsers from "@/composables/users";
 import { useRoute } from 'vue-router';
 import useAuctions from "@/composables/auctions";
 
+const scrollButtonVisible = ref(false);
 const selectedDealer = ref(null);
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
+const scrollButtonStyle = ref({ display:'none'});
 
 const auctionDetail = ref(null); //상세 경매
 const route = useRoute();
 const { getAuctions, auctionsData, submitCarInfo } = useAuctions();
+const { getUser } = useUsers();
 const carDetails = ref({}); //상세 경매(차 정보)
 
 // 상위 5개의 입찰을 추출하고 정렬
 const sortedTopBids = computed(() => {
     return auctionDetail.value?.top_bids?.sort((a, b) => b.price - a.price).slice(0, 5) || []; //.slice(0, 5) : 총 5 개만 뷰에 보여짐 , 가격 비교하여 가장 높은가격순
 });
+
+
+
 function toggleSheet() { //바텀 시트 토글시 스타일 변경
     if (showBottomSheet.value) {
         bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
+        scrollButtonStyle.value = {display:'block'};
     } else {
         bottomSheetStyle.value = { position: 'fixed', bottom: '0px' };
+        scrollButtonStyle.value = {display:'none'};
     }
     showBottomSheet.value = !showBottomSheet.value;
 }
@@ -381,6 +423,7 @@ function toggleSheet() { //바텀 시트 토글시 스타일 변경
 onMounted(async () => {
     await getAuctions();
     findAuctionDetail();
+    window.addEventListener('scroll', checkScroll);
     const storedData = localStorage.getItem('carDetails');
   if (storedData) {
     carDetails.value = JSON.parse(storedData);
@@ -400,16 +443,27 @@ const findAuctionDetail = () => {
     }
 };
 
-//딜러 선택 시
+// 딜러 선택 시
 function selectDealer(bid, event) {
     if (event.target.checked) {
-        selectedDealer.value = bid;
-        auctionDetail = false; 
+        event.target.checked = true;
+        const confirmed = confirm("선택한 딜러를 확정하시겠습니까?"); //임시 => 시안은 팝업창
+        
+        if (confirmed) {
+            getUser(bid.user_id).then(userData => {
+                selectedDealer.value = Object.assign({}, bid, { userData: userData });
+                console.log(userData);
+            }).catch(error => {
+                console.error("Error fetching user data:", error);
+            });
+        } else {
+            event.target.checked = false; // 사용자가 취소를 누르면 체크박스 해제
+        }
     } else {
-        selectedDealer.value = null;
+        selectedDealer.value = null;  // 체크박스 해제 시 selectedDealer 초기화
     }
-    console.log("select dealer: ", selectedDealer.value);
 }
+
 //딜러 선택 후 경매 취소
 function cancelSelection() {
     selectedDealer.value = null;  
@@ -418,6 +472,22 @@ function cancelSelection() {
 function completeAuction() {
     auctionDetail.value.status = 'done';  
 }
+
+function checkScroll() {
+  const scrollY = window.scrollY;
+  const windowHeight = document.documentElement.clientHeight;
+  const totalHeight = document.documentElement.scrollHeight;
+
+  if (scrollY + windowHeight >= totalHeight) {
+    scrollButtonVisible.value = false;
+  } else {
+    scrollButtonVisible.value = true;
+  }
+}
+
+onUnmounted(() => {
+  window.removeEventListener('scroll', checkScroll);
+});
 
 </script>
 
@@ -435,17 +505,66 @@ function completeAuction() {
   }
 </style>    
 
-<style>
+<style scoped>
+.select-content {
+    display: flex;
+    align-items: stretch;
+}
+.scroll-button {
+    width: 30px;
+    height: 43px;
+    border-radius: 50%;
+    box-shadow: 0 3px 6px 0 rgba(27, 50, 142, 0.2);
+    background-color: #fff;
+    border: none;
+    color: #000;
+    font-size: 14px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    padding: 4px 10px 5px 34px;
+    position: fixed;
+    bottom: 0;
+    transform: translate(-50%, -50%);
+    right: 0px;
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    background-position: 10px center;
+    z-index: 40;
+}
+
+
+.text-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    flex: 1;
+    align-items: flex-start;
+}
+
+.select-content.amount, .select-content.info {
+    flex: 1; 
+    display: flex;
+    align-items: center;
+}
+
+
+
+
+
+
 .custom-checkbox-input {
-    display: none; /* Hide the default checkbox */
+    display: none;
 }
 
 .custom-checkbox-label {
     position: relative;
     cursor: pointer;
     display: inline-block;
-    width: 20px; /* Width of the square */
-    height: 20px; /* Height of the square */
+    width: 20px; 
+    height: 20px; 
 }
 
 .custom-checkbox-label:before {
@@ -455,38 +574,37 @@ function completeAuction() {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: #fff; /* Background color when not checked */
-    border: 2px solid #ccc; /* Border color */
+    background-color: #fff; 
+    border: 2px solid #ccc; 
     box-sizing: border-box;
-    transition: background-color 0.2s, border-color 0.2s; /* Smooth transition for color change */
+    transition: background-color 0.2s, border-color 0.2s;
 }
 
 .custom-checkbox-label:after {
-    content: '✔'; /* Unicode character for the checkmark */
+    content: '✔'; 
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    color: #fff; /* Color of the checkmark */
-    font-size: 14px; /* Size of the checkmark */
-    opacity: 0; /* Hide by default */
-    transition: opacity 0.2s; /* Transition for appearing effect */
+    color: #fff; 
+    font-size: 14px; 
+    opacity: 0; 
+    transition: opacity 0.2s; 
 }
 
 .custom-checkbox-input:checked + .custom-checkbox-label:before {
-    background-color: red; /* Background color when checked */
-    border-color: red; /* Border color when checked */
+    background-color: red; 
+    border-color: red; 
 }
-
 .custom-checkbox-input:checked + .custom-checkbox-label:after {
-    opacity: 1; /* Show the checkmark when checked */
+    opacity: 1; 
 }
 
 
 
 
 .select-dealer{
-    max-height: 100px;
+    max-height: 220px;
 
 }
 .select-dealer tr{

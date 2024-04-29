@@ -98,7 +98,6 @@ export default [
                 path: '/sell',
                 name: 'sell',
                 component: () => import('../views/auction/sell/index.vue'),
-                beforeEnter: guest, 
             },
             {
                 path: '/selldt',
