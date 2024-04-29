@@ -124,14 +124,12 @@ const isActive = ref(false);
 const router = useRoute();
 const carDetails = ref({});
 
-
-
 onMounted(() => {
   const storedData = localStorage.getItem('carDetails');
   if (storedData) {
     carDetails.value = JSON.parse(storedData);
   } else {
-    console.log('No car details found in local storage.');
+    console.log('No car details');
   }
 });
 

@@ -689,6 +689,7 @@ function loadPage(page) {
   getAuctions(page);
 }
 function navigateToDetail(auctionId) {
+    console.log("디테일 :", auctionId);
     router.push({ name: 'AuctionDetail', params: { id: auctionId } });
 }
 onMounted(async () => {

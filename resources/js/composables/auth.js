@@ -65,11 +65,11 @@ export default function useAuth() {
                     timer: 1500,
                 });
                 if (userData.roles.includes('admin')) {
-                   // await router.push({ name: "admin.index" });
+                   router.push({ name: "admin.index" });
                 } else if (userData.roles.includes('dealer')) {
                     router.push({ name: "dealer.index" }); 
                 } else {
-                    // await router.push({ name: "home" }); 
+                    router.push({ name: "home" }); 
                 }
             })
             .catch((error) => {
@@ -117,11 +117,30 @@ export default function useAuth() {
         } else {
             payload.user.role = 'user';
         } 
-            console.log("roles:", payload);
-            console.log("resgite:",registerForm);
         
+        const formData = new FormData();
+        formData.append('user',JSON.stringify(payload.user));
+        formData.append('dealer',JSON.stringify(payload.dealer));
+
+        if(registerForm.file_user_photo){
+            formData.append('file_user_photo', registerForm.file_user_photo);
+        }
+        if(registerForm.file_user_biz){
+            formData.append('file_user_biz', registerForm.file_user_biz);
+        }
+        if(registerForm.file_user_cert){
+            formData.append('file_user_cert', registerForm.file_user_cert);
+        }
+        if(registerForm.file_user_sign){
+            formData.append('file_user_sign', registerForm.file_user_sign);
+        }
+
         await axios
-            .post("/api/users", payload)
+            .post("/api/users", formData,{
+                headers:{ 
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
             .then(async(response) => {
                 swal({
                     icon: "success",

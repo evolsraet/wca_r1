@@ -24,7 +24,20 @@ export default function useAuctions() {
             console.error('Error fetching auctions:', error);
         }
     };
-    
+
+// 경매 ID를 이용해 경매 상세 정보를 가져오는 함수
+const getAuctionById = async (id) => {
+    try {
+        // API 경로에서 {auction} 부분을 실제 ID로 치환하여 요청
+        const response = await axios.get(`/api/auctions/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching auction by ID:', error);
+        throw error; // 에러를 다시 던져서 호출 측에서 처리할 수 있게 함
+    }
+};
+
+
     const submitCarInfo = async () => {
         if (processing.value) return;
         processing.value = true;
@@ -51,6 +64,7 @@ export default function useAuctions() {
 
     
     return {
+        getAuctionById,
         useAuctions,
         getAuctions,
         auctionsData,
