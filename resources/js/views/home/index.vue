@@ -27,7 +27,7 @@ TODO:이용후기,슬라이드 배너 추가
                         <div class="carousel-item active">
                         <img src="http://placehold.it/1920X720" class="d-block w-100" alt="...">
                         <div class="carousel-caption d-none d-md-block">
-                            <h5>슬라이드 배너 step 1</h5>
+                            <h5>슬라이드 배너 step 2</h5>
                         </div>
                         </div>
                         <div class="carousel-item">
