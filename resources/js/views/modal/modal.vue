@@ -68,23 +68,3 @@ TODO:
         </div>
     </section>-->
     <!-- modal step02 END -->
-
-<script>
-
-</script>
-
-<style scoped>
-
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s, transform 0.5s;
-  transition-timing-function: ease;
-}
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-  transform: translateY(20px); 
-}
-.fade-enter-to, .fade-leave-from {
-  opacity: 1;
-  transform: translateY(0);
-}
-</style>

@@ -91,13 +91,13 @@ export default [
                 path: '/auction/:id',
                 name: 'AuctionDetail',
                 component: () => import('../views/auction/Details/details.vue'),
-                props: true,
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
             },        
             {
                 path: '/sell',
                 name: 'sell',
                 component: () => import('../views/auction/sell/index.vue'),
+
             },
             {
                 path: '/selldt',

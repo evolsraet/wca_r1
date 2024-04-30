@@ -285,9 +285,10 @@
         <p class="auction-deadline">딜러를 선택해주세요.</p>
         <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
         <div class="btn-group mt-3 mb-2">
-            <button @click="showModal = true" type="button" class="btn btn-outline-dark">경매취소</button>
-            <Modal :isVisible="showModal" @close="showModal = false"/>
+            <button @click="auctionModal.value = true" type="button" class="btn btn-outline-dark">경매취소</button>
+            <Modal :isVisible="auctionModal"/>
             <button type="button" class="btn btn-dark">재경매</button>
+
         </div>
         <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>
         <div class="content mt-3 text-start">
@@ -392,7 +393,7 @@ import { useRoute } from 'vue-router';
 import useAuctions from "@/composables/auctions";
 import Modal from '@/views/modal/auction/auctionModal.vue'; 
 
-const showModal = ref(false);
+const auctionModal = ref(false);
 const scrollButtonVisible = ref(false);
 const selectedDealer = ref(null);
 const showBottomSheet = ref(true); //바텀 시트
@@ -409,7 +410,10 @@ const carDetails = ref({}); //상세 경매(차 정보)
 const sortedTopBids = computed(() => {
     return auctionDetail.value?.top_bids?.sort((a, b) => b.price - a.price).slice(0, 5) || []; //.slice(0, 5) : 총 5 개만 뷰에 보여짐 , 가격 비교하여 가장 높은가격순
 });
-
+function toggleModal(state) {
+  console.log(`Setting auctionModal to ${state}`);
+  auctionModal.value = state;
+}
 
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {
@@ -480,7 +484,6 @@ function cancelSelection() {
 function completeAuction() {
     auctionDetail.value.status = 'done';  
 }
-
 function checkScroll() {
   const scrollY = window.scrollY;
   const windowHeight = document.documentElement.clientHeight;

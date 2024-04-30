@@ -651,7 +651,7 @@ const { auctionsData, pagination, getAuctions } = useAuctions();
 const currentPage = ref(1);
 const showModal = ref(false);
 const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length);
-
+const auctionModal = ref(false);
 
 const setCurrentTab = (tab) => {
     currentTab.value = tab;
