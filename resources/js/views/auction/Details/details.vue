@@ -285,7 +285,8 @@
         <p class="auction-deadline">딜러를 선택해주세요.</p>
         <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
         <div class="btn-group mt-3 mb-2">
-            <button type="button" class="btn btn-outline-dark">경매취소</button>
+            <button @click="showModal = true" type="button" class="btn btn-outline-dark">경매취소</button>
+            <Modal :isVisible="showModal" @close="showModal = false"/>
             <button type="button" class="btn btn-dark">재경매</button>
         </div>
         <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>
@@ -389,7 +390,9 @@ import { ref, computed, onMounted, onUnmounted } from 'vue';
 import useUsers from "@/composables/users";
 import { useRoute } from 'vue-router';
 import useAuctions from "@/composables/auctions";
+import Modal from '@/views/modal/auction/auctionModal.vue'; 
 
+const showModal = ref(false);
 const scrollButtonVisible = ref(false);
 const selectedDealer = ref(null);
 const showBottomSheet = ref(true); //바텀 시트
@@ -408,17 +411,22 @@ const sortedTopBids = computed(() => {
 });
 
 
-
-function toggleSheet() { //바텀 시트 토글시 스타일 변경
+//바텀 시트 토글시 스타일변경
+function toggleSheet() {
+    const bottomSheet = document.querySelector('.bottom-sheet');
+    
     if (showBottomSheet.value) {
+        bottomSheet.classList.add('modified');
         bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
-        scrollButtonStyle.value = {display:'block'};
+        scrollButtonStyle.value = { display: 'block' };
     } else {
+        bottomSheet.classList.remove('modified');
         bottomSheetStyle.value = { position: 'fixed', bottom: '0px' };
-        scrollButtonStyle.value = {display:'none'};
+        scrollButtonStyle.value = { display: 'none' };
     }
     showBottomSheet.value = !showBottomSheet.value;
 }
+
 // 모든 경매 데이터를 불러오는 함수 호출
 onMounted(async () => {
     await getAuctions();
@@ -506,6 +514,12 @@ onUnmounted(() => {
 </style>    
 
 <style scoped>
+
+.bottom-sheet.modified::before {
+    transform: translate(-50%, 10px);
+    top:unset;
+}
+
 .select-content {
     display: flex;
     align-items: stretch;

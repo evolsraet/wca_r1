@@ -8,7 +8,7 @@ TODO:
             <div class="content p-0 mt-0">  
               <div class="enroll_box" style="position: relative;">
                 <img src="../../../img/modal/car-objects-blur.png" alt="자동차 이미지" width="160" height="160">
-                <p class="overlay_text">경매 신청이 완료 되었습니다</p>
+                <p class="overlay_text tc-wh">경매 신청이 완료 되었습니다</p>
               </div>
               <p class="menu_msg mb-4">진단평가 완료까지 조금만 기다려주세요!</p> 
               <div class="btn-group">
@@ -74,7 +74,6 @@ TODO:
 </script>
 
 <style scoped>
-
 
 .fade-enter-active, .fade-leave-active {
   transition: opacity 0.5s, transform 0.5s;
