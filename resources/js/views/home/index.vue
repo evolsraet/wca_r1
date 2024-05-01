@@ -165,7 +165,7 @@ TODO:이용후기,슬라이드 배너 추가
                     </div>
                 </div>
             </div>
-        </div>
+       </div>
     </div>
 </template>
 

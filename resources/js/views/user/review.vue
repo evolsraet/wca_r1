@@ -7,52 +7,57 @@
                     <h3 class="review-title">이용후기 관리</h3>
                     <div class="tab-nav my-4">
                         <ul>
-                            <li class="col-4"><a href="/mngreivew" class="active" title="작성 가능한 이용후기">작성한 이용후기(3)</a></li>
-                            <li class="col-4"><a href="/mngreivewud" title="작성한 이용후기">작성 가능한 이용 후기(2)</a></li>
+                            <li class="col-4"><a href="#" @click="setActiveTab('available')" :class="{ 'active': activeTab === 'available' }" title="작성한 이용후기">작성 가능한 이용 후기(2)</a></li>
+                            <li class="col-4"><a href="#" @click="setActiveTab('written')" :class="{ 'active': activeTab === 'written' }" title="작성 가능한 이용후기">작성한 이용후기(3)</a></li>
                         </ul>
                         <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
-                <!-- 작성한 이용후기-->  
-                    <div class="row row-cols-1 row-cols-md-4 g-3">
-                        <div class="col" v-for="review in reviews" :key="review.id">
-                            <div class="card">
-                                <div class="car-imges">
+                    <!-- 작성가능한 이용후기-->  
+                    <div class="review-card" v-if="activeTab === 'available'">
+                        <div class="review-image">
+                            <p class="review-date">3.18 (월)</p>
+                            <img src="../../../img/car_example.png" alt="현대 쏘나타 (DN8)">
+                        </div>
+                        <div class="review-info">
+                            <div class="popup-menu" v-show="isMenuVisible">
+                                    <ul>
+                                        <li><button @click="editReview" class="tc-blue">수정</button></li>
+                                        <li><button @click="deleteReview" class="tc-red">삭제</button></li>
+                                    </ul>
                                 </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ review.title }}</h5>
-                                    <div class="rating">
-                                        <div v-for="index in 5" :key="index" class="star" :class="{ 'filled-star': index <= review.rating, 'empty-star': index > review.rating }"></div>
-                                    </div>
-                                    <div class="d-sm-flex justify-content-between text-muted">
-                                        <span class="deilname">담당 딜러 {{ review.dealer }}</span>
-                                        <span class="date">{{ review.date }}</span>
-                                    </div>
-                                    <p class="card-text">{{ review.content }}</p>
-                                </div>
-                            </div>
+                            <h3 class="review-title">현대 쏘나타 (DN8)</h3>
+                            <p>12 삼 4567 | 딜러명</p>
+                            <div class="justify-content-between flex align-items-center">
+                            <p class="review-price">1,000 만원</p>
+                            <router-link :to="{ name: 'home' }" class="btn-review">후기작성</router-link>
                         </div>
                     </div>
-                <!-- 작성 가능한 이용후기-->  
-                    <div class="row row-cols-1 row-cols-md-4 g-3">
-                        <div class="col" v-for="review in reviews" :key="review.id">
-                            <div class="card">
-                                <div class="car-imges">
+                </div>
+                <!-- 작성한 이용후기-->
+                    <div class="review-card02"  v-if="activeTab === 'written'">
+                        <div class="review-image02">
+                            <p class="review-date">3.18 (월)</p>
+                            <img src="../../../img/car_example.png" alt="현대 쏘나타 (DN8)">
+                        </div>
+                        <div class="review-info02">
+                            <p class="more-view" @click="toggleMenu">moreview</p>
+                            <div class="popup-menu" v-show="isMenuVisible">
+                                    <ul>
+                                        <li><button @click="editReview" class="tc-blue">수정</button></li>
+                                        <li><button @click="deleteReview" class="tc-red">삭제</button></li>
+                                    </ul>
                                 </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ review.title }}</h5>
-                                    <div class="rating">
-                                        <div v-for="index in 5" :key="index" class="star" :class="{ 'filled-star': index <= review.rating, 'empty-star': index > review.rating }"></div>
-                                    </div>
-                                    <div class="d-sm-flex justify-content-between text-muted">
-                                        <span class="deilname">담당 딜러 {{ review.dealer }}</span>
-                                        <span class="date">{{ review.date }}</span>
-                                    </div>
-                                    <p class="card-text">{{ review.content }}</p>
-                                </div>
+                            <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
+                            <p >현대 소나타 (DN8)</p>
+                            <p class="tc-red">1,000 만원</p>
                             </div>
+                            <div class="rating">
+                                <div v-for="index in rating" :key="'filled-' + index" class="star filled-star"></div>
+                                <div v-for="index in 5 - rating" :key="'empty-' + index" class="star empty-star"></div>
+                             </div>
+                            <p>차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.</p>
                         </div>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -60,159 +65,194 @@
 </template>
 
 <script setup>
-    import {
-        ref
-    } from 'vue';
+import { RouterLink } from 'vue-router';
+import { ref } from 'vue';
+import { useReview } from '@/composables/review';
+const { rating, setRating } = useReview();
+const activeTab = ref('available');
+const isMenuVisible = ref(false);
+function toggleMenu() {
+    isMenuVisible.value = !isMenuVisible.value;
+}
+// ... 더보기 누르면 나오는 탭
+function setActiveTab(tab) {
+    if (activeTab.value !== tab) { // 탭이 실제로 변경될 때만 메뉴를 숨김
+        isMenuVisible.value = false;
+    }
+    activeTab.value = tab;
+}
+function editReview() {
+    alert("수정하시겠습니까?");
+}
 
-    const baseReview = {
-        id: 1,
-        image: 'path/to/image1.jpg',
-        title: '현대 소나타 (DN8)',
-        rating: 4,
-        dealer: '홍길동님',
-        date: '2024-03-18',
-        content: '차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.'
-    };
-
-    const createReviews = (baseReview, count) => {
-        return Array.from({
-            length: count
-        }, (_, index) => ({
-            ...baseReview,
-            id: baseReview.id + index,
-            image: `path/to/image${index + 1}.jpg`,
-            title: `${baseReview.title} #${index + 1}`,
-        }));
-    };
-
-    const reviews = ref(createReviews(baseReview, 12));
+function deleteReview() {
+    alert("삭제되었습니다");
+}
 </script>
 <style>
-    .review {
-        margin-top: 60px;
-    }
+.popup-menu {
+    position: absolute;
+    text-align: center;
+    right: 35px;
+    top: 20px;
+    background-color: white;
+    border: 1px solid #d3d3d3;
+    box-shadow: 0px 2px 5px rgba(0,0,0,0.2);
+    z-index: 100;
+    width: 130px;
+    border-radius: 6px;
+    transform: translateY(-20px); 
+    transition: opacity 0.3s ease, transform 0.3s ease; 
+}
+.review-image02{
+    padding: 10px;
+}
+.review-image02 img {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-right: 1px solid #ddd;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 6px;
+}
+.review-info02 {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    padding: 10px;
+}
+.btn-review:hover::after {
+    transform: translateX(5px);
+}
+.btn-review::after {
+    content: "";
+    display: block;
+    width: 14px;
+    height: 14px;
+    margin-top: 2px;
+    background-image: url('../../../img/Icon-red-right.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    margin-left: 15px;
+    transition: transform 0.3s ease;
+}
 
-    .tab-nav ul li a {
-        display: block;
-        position: relative;
-        width: 100%;
-        padding: 10px 77px;
-        font-size: 18px;
-        color: #afafaf;
-        white-space: nowrap;
-    }
+.popup-menu ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
 
-    .tab-nav ul li a.active::after {
-        content: '';
-        position: absolute;
-        left: 0;
-        bottom: 0;
-        width: 100%;
-        height: 2px;
-        background-color: #ff4b4b;
-    }
+.popup-menu li button {
+    display: block;
+    padding: 8px 12px;
+    width: 100%;
+    text-align: center;
+    border: none;
+    background: none;
+    cursor: pointer;
+}
 
-    .tab-nav ul li a.active {
-        font-weight: bold;
-        color: #041231;
-    }
+.popup-menu li button:hover {
+    background-color: #f5f5f5;
+}
 
-    .tab-nav {
-        border-bottom: 1px solid #afafaf;
-        margin-bottom: 40px;
-    }
 
-    .tab-nav ul li {
-        display: table-cell;
-        text-align: center;
-    }
 
-    .col-4 {
-        width: 25% !important;
-    }
+.more-view {
+    position: absolute; 
+    top: 10px; 
+    right: 10px;
+    display: inline-block; 
+    width: 20px; 
+    height: 20px; 
+    background-image: url('../../../img/moreview.png');
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+    font-size: 0;
+    cursor: pointer;
+}
 
-    .search-type {
-        position: relative;
-        display: flex;
-        align-items: center;
-    }
+.flex{
+    display: flex;
+}
+.review-card {
+    position: relative; 
+    display: flex;
+    background-color: white;
+    border-bottom: 2px solid #ddd;
+    overflow: hidden;
+    margin: 10px;
+    align-items: center;
+    padding-bottom: 20px;
+    gap: 20px;
+}
+.review-card02{
+    position: relative;
+    background-color: white;
+    border-bottom: 2px solid #ddd;
+    overflow: hidden;
+    margin: 10px;
+    align-items: center;
+    padding-bottom: 20px;
+    gap: 20px;
+    flex-direction: column;
+}
+.more-view {
+    position: absolute; /* 절대 위치 설정 */
+    top: 10px; /* 상단에서 10px */
+    right: 10px; /* 오른쪽에서 10px */
+    display: inline-block; 
+    width: 20px; 
+    height: 20px; 
+    background-image: url('../../../img/moreview.png');
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+    font-size: 0; /* 텍스트 숨김 */
+    cursor: pointer;
+}
 
-    .search-type input {
-        background-color: #f5f5f5;
-        margin-top: 0;
-        padding: 0 40px 0 20px;
-        height: 42px;
-        line-height: 40px;
-        border-radius: 26px;
-        width: 300px;
-        border: none;
-        outline: none;
-    }
 
-    .search-type .search-btn {
-        cursor: pointer;
-        position: absolute;
-        right: 5px;
-        top: 1px;
-        width: 40px;
-        height: 40px;
-        border: none;
-        background-color: transparent;
-        background-image: url('../../img/search.png');
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 20px 20px;
-        font-size: 0;
-    }
+.review-image img {
+    width: 150px;
+    height: 150px;
+    display: block;
+    border-right: 1px solid #ddd;
+    object-fit: cover; 
+    object-position: center; 
+    border-radius: 6px;
+}
 
-    @media (max-width: 760px) {
-        .tab-nav ul li a {
-            padding: 10px 10px;
-            font-size: 14px;
-        }
+.review-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 10px;
+    margin-top: 20px;
+}
 
-    }
+.review-date, .review-description, .review-price {
+    margin: 5px 0;
+}
 
-    @media (max-width: 640px) {
-        .mov-review>.row {
-            display: flex;
-            flex-direction: column;
-            align-content: center;
-            flex-wrap: wrap !important;
-            gap: 20px;
-        }
+.review-title {
+    margin: 5px 0;
+    font-size: 1.2em;
+    color: #333;
+}
 
-        .search-type {
-            margin-left: 13px;
-            width: 94%;
-        }
+.btn-review {
+    position: relative;
+    color: red !important;
+    border: none;
+    cursor: pointer;
+    display: inline-flex;
+    line-height: 20px;
+}
 
-        .review-title {
-            margin-left: 17px;
-        }
-
-        .apply-top {
-            display: flex;
-            margin-bottom: 30px;
-            justify-content: flex-end;
-            align-items: flex-start;
-            flex-direction: column-reverse;
-            flex-wrap: nowrap;
-            padding: 0px;
-            gap: 20px;
-            margin-left: 10px;
-        }
-
-        .my-5 {
-            margin-top: 1rem !important;
-        }
-
-        .search-type input {
-            width: 100% !important;
-        }
-
-        .review {
-            margin-top: 10px;
-        }
-    }
 </style>
