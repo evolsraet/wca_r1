@@ -59,6 +59,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="delete-message" :class="{ 'show': deleteMessageVisible }">
+                삭제되었습니다.
+            </div>
             </div>
         </div>
     </div>
@@ -68,8 +71,10 @@
 import { RouterLink } from 'vue-router';
 import { ref } from 'vue';
 import { useReview } from '@/composables/review';
-const { rating, setRating } = useReview();
-const activeTab = ref('available');
+
+const { rating, setRating } = useReview(); // 리뷰 별점
+const activeTab = ref('available'); //nav 탭 바
+const showDeleteConfirmation = ref(false); // "삭제되었습니다," 띄우기
 const isMenuVisible = ref(false);
 function toggleMenu() {
     isMenuVisible.value = !isMenuVisible.value;
@@ -86,9 +91,38 @@ function editReview() {
 }
 
 function deleteReview() {
-    alert("삭제되었습니다");
+    if (confirm("삭제하시겠습니까?")) {
+        showDeleteMessage();
+    }
+}
+const deleteMessageVisible = ref(false);
+//삭제후 메시지 띄우기
+function showDeleteMessage() {
+    deleteMessageVisible.value = true;
+    setTimeout(() => deleteMessageVisible.value = false, 3000);
 }
 </script>
+<style scoped>
+.delete-message {
+    position: fixed;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    border-radius: 6px;
+    text-align: center;
+    padding: 10px;
+    font-size: 16px;
+    transition: transform 0.5s ease-in-out;
+    transform: translateY(150%);
+    z-index: 9999;
+}
+
+.delete-message.show {
+    transform: translateY(0);
+}
+</style>
 <style>
 .popup-menu {
     position: absolute;
