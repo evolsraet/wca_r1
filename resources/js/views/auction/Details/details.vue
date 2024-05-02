@@ -518,57 +518,6 @@ onUnmounted(() => {
 
 <style scoped>
 
-.bottom-sheet.modified::before {
-    transform: translate(-50%, 10px);
-    top:unset;
-}
-
-.select-content {
-    display: flex;
-    align-items: stretch;
-}
-.scroll-button {
-    width: 30px;
-    height: 43px;
-    border-radius: 50%;
-    box-shadow: 0 3px 6px 0 rgba(27, 50, 142, 0.2);
-    background-color: #fff;
-    border: none;
-    color: #000;
-    font-size: 14px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    padding: 4px 10px 5px 34px;
-    position: fixed;
-    bottom: 0;
-    transform: translate(-50%, -50%);
-    right: 0px;
-    background-repeat: no-repeat;
-    background-size: 20px 20px;
-    background-position: 10px center;
-    z-index: 40;
-}
-
-
-.text-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
-    flex: 1;
-    align-items: flex-start;
-}
-
-.select-content.amount, .select-content.info {
-    flex: 1; 
-    display: flex;
-    align-items: center;
-}
-
-
-
 
 
 
@@ -639,32 +588,6 @@ input[type="checkbox"] {
 }
 
 
-    .bottom-sheet {
-        position: fixed;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        background-color: white; 
-        box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
-        transition: bottom 0.5s ease-in-out;
-        z-index: 1000; 
-        border-top-right-radius: 20px;
-        border-top-left-radius: 20px;
-    }
-    .bottom-sheet::before {
-    content: "";
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80px;
-    height: 3px;
-    background-color: #dbdbdb;
-}
-    .sheet-content {
-        padding: 20px;
-        text-align: center;
-    }
     .card-img-top-ty01 {
         width: 100%;
         height: 160px;

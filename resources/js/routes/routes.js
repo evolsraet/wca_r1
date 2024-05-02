@@ -147,15 +147,21 @@ export default [
                 component: () => import('../views/category/posts.vue'),
             },
             {
-                path: '/review',
+                path: '/list-do',
                 name: 'user.review',
-                component: () => import('../views/user/review.vue'),
+                component: () => import('../views/bbs/review.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
             {
-                path: '/allreview',
+                path: '/view-do',
+                name: 'user.create-review',
+                component: () => import('../views/bbs/Create.vue'),
+                beforeEnter: requireAct(['act.super','act.admin','act.user']),
+            },
+            {
+                path: '/alllist-do',
                 name: 'index.allreview',
-                component: () => import('../views/user/allreview.vue'),
+                component: () => import('../views/bbs/allreview.vue'),
             },
             {
                 path: '/introduce',

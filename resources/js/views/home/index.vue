@@ -65,8 +65,26 @@ TODO:이용후기,슬라이드 배너 추가
                                 <div class="card-body">
                                     <h5 class="card-title">현대 소나타 (DN8)</h5>
                                     <div class="rating">
-                                        <div v-for="index in rating" :key="'filled-' + index" class="star filled-star"></div>
-                                        <div v-for="index in 5 - rating" :key="'empty-' + index" class="star empty-star"></div>
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
                                     </div>
                                     <div class="d-sm-flex justify-content-between text-muted">
                                         <span class="deilname">담당 딜러 홍길동님</span>
@@ -82,8 +100,26 @@ TODO:이용후기,슬라이드 배너 추가
                                 <div class="card-body">
                                     <h5 class="card-title">현대 소나타 (DN8)</h5>
                                     <div class="rating">
-                                        <div v-for="index in rating" :key="'filled-' + index" class="star filled-star"></div>
-                                        <div v-for="index in 5 - rating" :key="'empty-' + index" class="star empty-star"></div>
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
                                     </div>
                                     <div class="d-sm-flex justify-content-between text-muted">
                                         <span class="deilname">담당 딜러 홍길동님</span>
@@ -99,8 +135,26 @@ TODO:이용후기,슬라이드 배너 추가
                                 <div class="card-body">
                                     <h5 class="card-title">현대 소나타 (DN8)</h5>
                                     <div class="rating">
-                                        <div v-for="index in rating" :key="'filled-' + index" class="star filled-star"></div>
-                                        <div v-for="index in 5 - rating" :key="'empty-' + index" class="star empty-star"></div>
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
                                     </div>
                                     <div class="d-sm-flex justify-content-between text-muted">
                                         <span class="deilname">담당 딜러 홍길동님</span>
@@ -116,8 +170,26 @@ TODO:이용후기,슬라이드 배너 추가
                                 <div class="card-body">
                                     <h5 class="card-title">현대 소나타 (DN8)</h5>
                                     <div class="rating">
-                                        <div v-for="index in rating" :key="'filled-' + index" class="star filled-star"></div>
-                                        <div v-for="index in 5 - rating" :key="'empty-' + index" class="star empty-star"></div>
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
                                     </div>
                                     <div class="d-sm-flex justify-content-between text-muted">
                                         <span class="deilname">담당 딜러 홍길동님</span>
@@ -171,11 +243,11 @@ TODO:이용후기,슬라이드 배너 추가
 
 <script setup>
 import { useStore } from "vuex";
-import { computed,ref } from "vue"
-import { useReview } from '@/composables/review';
+import { computed,ref,onMounted } from "vue"
 import useAuth from '@/composables/auth';
 import useAuctions from '@/composables/auctions';
 import LawGid from '@/views/modal/LawGid.vue'; 
+
 
 const isModalOpen = ref(false);
 const modalContent = ref('');
@@ -185,7 +257,6 @@ const user = computed(() => store.getters['auth/user']);
 
 const { loginForm, validationErrors: loginErrors, processing: loginProcessing, submitLogin } = useAuth();
 const { carInfoForm, submitCarInfo, processing: auctionProcessing, validationErrors: auctionErrors } = useAuctions();
-const { rating, setRating } = useReview();
 
 
 const openModal = (type) => {
@@ -198,3 +269,10 @@ const closeModal = () => {
 };
 
 </script>
+
+<style scoped>
+.rating__label .star-icon {
+    width: 30px;
+    height: 30px;
+}
+</style>

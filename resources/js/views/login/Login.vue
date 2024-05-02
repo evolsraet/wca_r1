@@ -58,8 +58,26 @@
                                 <div class="card-body">
                                     <h5 class="card-title">현대 소나타 (DN8)</h5>
                                     <div class="rating">
-                                        <div v-for="index in rating" :key="'filled-' + index" class="star filled-star"></div>
-                                        <div v-for="index in 5 - rating" :key="'empty-' + index" class="star empty-star"></div>
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
                                     </div>
                                     <div class="d-sm-flex justify-content-between text-muted">
                                         <span class="deilname">담당 딜러 홍길동님</span>
@@ -75,8 +93,26 @@
                                 <div class="card-body">
                                     <h5 class="card-title">현대 소나타 (DN8)</h5>
                                     <div class="rating">
-                                        <div v-for="index in rating" :key="'filled-' + index" class="star filled-star"></div>
-                                        <div v-for="index in 5 - rating" :key="'empty-' + index" class="star empty-star"></div>
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
                                     </div>
                                     <div class="d-sm-flex justify-content-between text-muted">
                                         <span class="deilname">담당 딜러 홍길동님</span>
@@ -92,8 +128,26 @@
                                 <div class="card-body">
                                     <h5 class="card-title">현대 소나타 (DN8)</h5>
                                     <div class="rating">
-                                        <div v-for="index in rating" :key="'filled-' + index" class="star filled-star"></div>
-                                        <div v-for="index in 5 - rating" :key="'empty-' + index" class="star empty-star"></div>
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
                                     </div>
                                     <div class="d-sm-flex justify-content-between text-muted">
                                         <span class="deilname">담당 딜러 홍길동님</span>
@@ -109,9 +163,28 @@
                                 <div class="card-body">
                                     <h5 class="card-title">현대 소나타 (DN8)</h5>
                                     <div class="rating">
-                                        <div v-for="index in rating" :key="'filled-' + index" class="star filled-star"></div>
-                                        <div v-for="index in 5 - rating" :key="'empty-' + index" class="star empty-star"></div>
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
                                     </div>
+
                                     <div class="d-sm-flex justify-content-between text-muted">
                                         <span class="deilname">담당 딜러 홍길동님</span>
                                         <span class="date">2024-03-18</span>
@@ -191,7 +264,7 @@
 <script setup>
 import { ref } from 'vue';
 import LawGid from '@/views/modal/LawGid.vue'; 
-import { useReview } from '@/composables/review';
+import { initReviewSystem } from '@/composables/review';
 import useAuth from '@/composables/auth';
 
 const isModalOpen = ref(false);
@@ -207,5 +280,13 @@ const closeModal = () => {
 };
 
 const { loginForm, validationErrors, processing, submitLogin } = useAuth();
-const { rating, setRating } = useReview();
+
 </script>
+
+
+<style scoped>
+.rating__label .star-icon {
+    width: 30px;
+    height: 30px;
+}
+</style>

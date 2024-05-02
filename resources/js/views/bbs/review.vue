@@ -1,4 +1,5 @@
 <template>
+    <!-- all view랑 reciew-->
     <div class="container">
         <div class="main-contenter">
             <div class="review">
@@ -12,7 +13,7 @@
                         </ul>
                         <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
-                    <!-- 작성가능한 이용후기-->  
+                    <!-- 작성가능한 이용후기-->
                     <div class="review-card" v-if="activeTab === 'available'">
                         <div class="review-image">
                             <p class="review-date">3.18 (월)</p>
@@ -20,21 +21,21 @@
                         </div>
                         <div class="review-info">
                             <div class="popup-menu" v-show="isMenuVisible">
-                                    <ul>
-                                        <li><button @click="editReview" class="tc-blue">수정</button></li>
-                                        <li><button @click="deleteReview" class="tc-red">삭제</button></li>
-                                    </ul>
-                                </div>
+                                <ul>
+                                    <li><button @click="editReview" class="tc-blue">수정</button></li>
+                                    <li><button @click="deleteReview" class="tc-red">삭제</button></li>
+                                </ul>
+                            </div>
                             <h3 class="review-title">현대 쏘나타 (DN8)</h3>
-                            <p>12 삼 4567 | 딜러명</p>
+                            <p class="tc-light-gray">12 삼 4567 | 딜러명</p>
                             <div class="justify-content-between flex align-items-center">
-                            <p class="review-price">1,000 만원</p>
-                            <router-link :to="{ name: 'home' }" class="btn-review">후기작성</router-link>
+                                <p class="tc-light-gray review-price">1,000 만원</p>
+                                <router-link :to="{ name: 'user.create-review' }" class="btn-review">후기작성</router-link>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- 작성한 이용후기-->
-                    <div class="review-card02"  v-if="activeTab === 'written'">
+                    <!-- 작성한 이용후기-->
+                    <div class="review-card02" v-if="activeTab === 'written'">
                         <div class="review-image02">
                             <p class="review-date">3.18 (월)</p>
                             <img src="../../../img/car_example.png" alt="현대 쏘나타 (DN8)">
@@ -42,26 +43,44 @@
                         <div class="review-info02">
                             <p class="more-view" @click="toggleMenu">moreview</p>
                             <div class="popup-menu" v-show="isMenuVisible">
-                                    <ul>
-                                        <li><button @click="editReview" class="tc-blue">수정</button></li>
-                                        <li><button @click="deleteReview" class="tc-red">삭제</button></li>
-                                    </ul>
-                                </div>
+                                <ul>
+                                    <li><button @click="editReview" class="tc-blue">수정</button></li>
+                                    <li><button @click="deleteReview" class="tc-red">삭제</button></li>
+                                </ul>
+                            </div>
                             <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
-                            <p >현대 소나타 (DN8)</p>
-                            <p class="tc-red">1,000 만원</p>
+                                <p>현대 소나타 (DN8)</p>
+                                <p class="tc-red">1,000 만원</p>
                             </div>
                             <div class="rating">
-                                <div v-for="index in rating" :key="'filled-' + index" class="star filled-star"></div>
-                                <div v-for="index in 5 - rating" :key="'empty-' + index" class="star empty-star"></div>
-                             </div>
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                    </div>
                             <p>차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.</p>
                         </div>
                     </div>
                 </div>
                 <div class="delete-message" :class="{ 'show': deleteMessageVisible }">
-                삭제되었습니다.
-            </div>
+                    삭제되었습니다.
+                </div>
             </div>
         </div>
     </div>
@@ -70,9 +89,8 @@
 <script setup>
 import { RouterLink } from 'vue-router';
 import { ref } from 'vue';
-import { useReview } from '@/composables/review';
 
-const { rating, setRating } = useReview(); // 리뷰 별점
+
 const activeTab = ref('available'); //nav 탭 바
 const showDeleteConfirmation = ref(false); // "삭제되었습니다," 띄우기
 const isMenuVisible = ref(false);
@@ -102,26 +120,13 @@ function showDeleteMessage() {
     setTimeout(() => deleteMessageVisible.value = false, 3000);
 }
 </script>
+
 <style scoped>
-.delete-message {
-    position: fixed;
-    bottom: 20px;
-    left: 0;
-    right: 0;
-    background-color: rgba(0, 0, 0, 0.7);
-    color: white;
-    border-radius: 6px;
-    text-align: center;
-    padding: 10px;
-    font-size: 16px;
-    transition: transform 0.5s ease-in-out;
-    transform: translateY(150%);
-    z-index: 9999;
+.rating__label .star-icon {
+    width: 30px;
+    height: 30px;
 }
 
-.delete-message.show {
-    transform: translateY(0);
-}
 </style>
 <style>
 .popup-menu {
@@ -143,13 +148,14 @@ function showDeleteMessage() {
 }
 .review-image02 img {
     width: 100%;
-    height: auto;
+    height: 11rem;
     display: block;
     border-right: 1px solid #ddd;
     object-fit: cover;
     object-position: center;
     border-radius: 6px;
 }
+
 .review-info02 {
     flex-grow: 1;
     display: flex;
@@ -192,101 +198,4 @@ function showDeleteMessage() {
 .popup-menu li button:hover {
     background-color: #f5f5f5;
 }
-
-
-
-.more-view {
-    position: absolute; 
-    top: 10px; 
-    right: 10px;
-    display: inline-block; 
-    width: 20px; 
-    height: 20px; 
-    background-image: url('../../../img/moreview.png');
-    background-size: cover;
-    background-position: center; 
-    background-repeat: no-repeat; 
-    font-size: 0;
-    cursor: pointer;
-}
-
-.flex{
-    display: flex;
-}
-.review-card {
-    position: relative; 
-    display: flex;
-    background-color: white;
-    border-bottom: 2px solid #ddd;
-    overflow: hidden;
-    margin: 10px;
-    align-items: center;
-    padding-bottom: 20px;
-    gap: 20px;
-}
-.review-card02{
-    position: relative;
-    background-color: white;
-    border-bottom: 2px solid #ddd;
-    overflow: hidden;
-    margin: 10px;
-    align-items: center;
-    padding-bottom: 20px;
-    gap: 20px;
-    flex-direction: column;
-}
-.more-view {
-    position: absolute; /* 절대 위치 설정 */
-    top: 10px; /* 상단에서 10px */
-    right: 10px; /* 오른쪽에서 10px */
-    display: inline-block; 
-    width: 20px; 
-    height: 20px; 
-    background-image: url('../../../img/moreview.png');
-    background-size: cover;
-    background-position: center; 
-    background-repeat: no-repeat; 
-    font-size: 0; /* 텍스트 숨김 */
-    cursor: pointer;
-}
-
-
-.review-image img {
-    width: 150px;
-    height: 150px;
-    display: block;
-    border-right: 1px solid #ddd;
-    object-fit: cover; 
-    object-position: center; 
-    border-radius: 6px;
-}
-
-.review-info {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    gap: 10px;
-    margin-top: 20px;
-}
-
-.review-date, .review-description, .review-price {
-    margin: 5px 0;
-}
-
-.review-title {
-    margin: 5px 0;
-    font-size: 1.2em;
-    color: #333;
-}
-
-.btn-review {
-    position: relative;
-    color: red !important;
-    border: none;
-    cursor: pointer;
-    display: inline-flex;
-    line-height: 20px;
-}
-
 </style>

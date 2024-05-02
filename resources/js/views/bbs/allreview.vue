@@ -19,7 +19,32 @@
                                 <div class="card-body">
                                     <h5 class="card-title">{{ review.title }}</h5>
                                     <div class="rating">
-                                        <div v-for="index in 5" :key="index" class="star" :class="{ 'filled-star': index <= review.rating, 'empty-star': index > review.rating }"></div>
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                            <span class="rating-description">그저 그래요</span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                            <span class="rating-description">괜찮아요</span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                            <span class="rating-description">좋아요</span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                            <span class="rating-description">만족해요</span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                            <span class="rating-description">최고에요!</span>
+                                        </label>
+                                        <span class="d-flex mx-2 rating-score tc-red"></span>
                                     </div>
                                     <div class="d-sm-flex justify-content-between text-muted">
                                         <span class="deilname">담당 딜러 {{ review.dealer }}</span>
@@ -44,7 +69,6 @@ const baseReview = {
     id: 1,
     image: 'path/to/image1.jpg',
     title: '현대 소나타 (DN8)',
-    rating: 4,
     dealer: '홍길동님',
     date: '2024-03-18',
     content: '차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.'
