@@ -55,19 +55,19 @@
                             <div class="rating">
                                         <label class="rating__label rating__label--full" for="star1">
                                             <input type="radio" id="star1" class="rating__input" name="rating" value="">
-                                            <span class="star-icon"></span>
+                                            <span class="star-icon filled"></span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star2">
                                             <input type="radio" id="star2" class="rating__input" name="rating" value="">
-                                            <span class="star-icon"></span>
+                                            <span class="star-icon filled"></span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star3">
                                             <input type="radio" id="star3" class="rating__input" name="rating" value="">
-                                            <span class="star-icon"></span>
+                                            <span class="star-icon filled"></span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star4">
                                             <input type="radio" id="star4" class="rating__input" name="rating" value="">
-                                            <span class="star-icon"></span>
+                                            <span class="star-icon filled"></span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star5">
                                             <input type="radio" id="star5" class="rating__input" name="rating" value="">
@@ -126,7 +126,11 @@ function showDeleteMessage() {
     width: 30px;
     height: 30px;
 }
-
+@media (max-width: 360px) {
+    .flex{
+    display: block !important;
+}
+}
 </style>
 <style>
 .popup-menu {

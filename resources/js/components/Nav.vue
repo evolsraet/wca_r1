@@ -83,11 +83,11 @@
                                 <span class="menu-text">내 매물관리</span>
                                 <div class="icon right-icon"></div>
                             </router-link >
-                            <router-link :to="{ name: 'user.review' }" class="menu-item" @click="toggleNavbar">
-                                    <div class="icon icon-ratings"></div>
-                                    <span class="menu-text">이용후기</span>
-                                    <div class="icon right-icon"></div>
-                                </router-link>
+                            <router-link :to="{ name: 'user.review' }" class="menu-item mt-0 mb-4" @click="toggleNavbar">
+                                <div class="icon icon-ratings"></div>
+                                <span class="menu-text">이용후기</span>
+                                <div class="icon right-icon"></div>
+                            </router-link>
                         </div>
                         <div class="footer-content">
                             <p class="tc-light-gray fs-6">계정</p>

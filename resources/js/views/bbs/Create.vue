@@ -8,7 +8,7 @@
                     <div class="left-container">
                         <div class="container-img mov-info02">
                             <div class="left-img">
-                                <img src="../../../../img/car_example2.png" alt="전체 이미지">
+                                <img src="../../../img/car_example2.png" alt="전체 이미지">
                             </div>
                             <div class="right-img web-text">
                                 <div class="detail detail1"></div>
@@ -51,15 +51,15 @@
                             <div class="right-container">
                         <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
                         <div class="sheet-content">
-                            <div class="mt-3">
+                            <div class="mt-3"  @click.stop="">
                                 
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
                                     <div class="rating">
                                         <label class="rating__label rating__label--full" for="star1">
                                             <input type="radio" id="star1" class="rating__input" name="rating" value="">
-                                            <span class="star-icon"></span>
-                                            <span class="rating-description">그저 그래요</span>
+                                            <span class="star-icon ms-2"></span>
+                                            <span class="rating-description">그저그래요</span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star2">
                                             <input type="radio" id="star2" class="rating__input" name="rating" value="">
@@ -87,7 +87,7 @@
                                 <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요."></textarea>
 
                                 <div class="btn-group mt-3">
-                                    <button class="btn btn-danger"> 작성 완료 </button>
+                                    <button class="btn btn-danger" @click="completeWriting"> 작성 완료 </button>
                                 </div>
                             </div>
                         </div>
@@ -98,14 +98,14 @@
 
 </template>
 <script setup>
-import { RouterLink } from 'vue-router';
 import { ref } from 'vue';
-import { onMounted } from 'vue';
-import { initReviewSystem } from '@/composables/review';
+import { useRouter } from 'vue-router'; 
+import { onMounted } from 'vue'; 
+import { initReviewSystem } from '@/composables/review'; // 별점 js
 
-const isMenuVisible = ref(false);
+const router = useRouter();
 const showBottomSheet = ref(true); //바텀 시트
-const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
+const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); //바텀 시트 스타일
 
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {
@@ -113,15 +113,30 @@ function toggleSheet() {
     
     if (showBottomSheet.value) {
         bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
-        scrollButtonStyle.value = { display: 'block' };
     } else {
         bottomSheetStyle.value = { position: 'fixed', bottom: '0px' };
-        scrollButtonStyle.value = { display: 'none' };
     }
     showBottomSheet.value = !showBottomSheet.value;
 }
 
+const completeWriting = () => {
+  alert('작성이 완료되었습니다.');
+  router.push({ name: 'index.allreview' });
+};
+
 onMounted(() => {
-    initReviewSystem();
+    initReviewSystem(); // 별점 컴포넌트 마운트
 });
 </script>
+<style scoped>
+.bottom-sheet::before {
+    content: "";
+    position: absolute;
+    margin-top: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background-color: #dbdbdb;
+}
+</style>

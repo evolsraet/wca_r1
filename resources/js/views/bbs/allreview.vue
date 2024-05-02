@@ -11,114 +11,239 @@
                             <button type="button" class="search-btn">검색</button>
                         </div>
                     </div>
-                    <div class="row row-cols-1 row-cols-md-4 g-3">
-                        <div class="col" v-for="review in reviews" :key="review.id">
+                    <div :class="rowClass">
+                        <div class="col">
                             <div class="card">
                                 <div class="car-imges">
                                 </div>
                                 <div class="card-body">
-                                    <h5 class="card-title">{{ review.title }}</h5>
+                                    <h5 class="card-title">현대 소나타 (DN8)</h5>
                                     <div class="rating">
                                         <label class="rating__label rating__label--full" for="star1">
                                             <input type="radio" id="star1" class="rating__input" name="rating" value="">
-                                            <span class="star-icon"></span>
-                                            <span class="rating-description">그저 그래요</span>
+                                            <span class="star-icon filled"></span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star2">
                                             <input type="radio" id="star2" class="rating__input" name="rating" value="">
                                             <span class="star-icon"></span>
-                                            <span class="rating-description">괜찮아요</span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star3">
                                             <input type="radio" id="star3" class="rating__input" name="rating" value="">
                                             <span class="star-icon"></span>
-                                            <span class="rating-description">좋아요</span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star4">
                                             <input type="radio" id="star4" class="rating__input" name="rating" value="">
                                             <span class="star-icon"></span>
-                                            <span class="rating-description">만족해요</span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star5">
                                             <input type="radio" id="star5" class="rating__input" name="rating" value="">
                                             <span class="star-icon"></span>
-                                            <span class="rating-description">최고에요!</span>
                                         </label>
                                         <span class="d-flex mx-2 rating-score tc-red"></span>
                                     </div>
                                     <div class="d-sm-flex justify-content-between text-muted">
-                                        <span class="deilname">담당 딜러 {{ review.dealer }}</span>
-                                        <span class="date">{{ review.date }}</span>
+                                        <span class="deilname">담당 딜러 홍길동님</span>
+                                        <span class="date">2024-03-18</span>
                                     </div>
-                                    <p class="card-text">{{ review.content }}</p>
+                                    <p class="card-text">차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <div class="car-imges">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">현대 소나타 (DN8)</h5>
+                                    <div class="rating">
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <span class="d-flex mx-2 rating-score tc-red"></span>
+                                    </div>
+                                    <div class="d-sm-flex justify-content-between text-muted">
+                                        <span class="deilname">담당 딜러 홍길동님</span>
+                                        <span class="date">2024-03-18</span>
+                                    </div>
+                                    <p class="card-text">차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <div class="car-imges">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">현대 소나타 (DN8)</h5>
+                                    <div class="rating">
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <span class="d-flex mx-2 rating-score tc-red"></span>
+                                    </div>
+                                    <div class="d-sm-flex justify-content-between text-muted">
+                                        <span class="deilname">담당 딜러 홍길동님</span>
+                                        <span class="date">2024-03-18</span>
+                                    </div>
+                                    <p class="card-text">차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <div class="car-imges">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">현대 소나타 (DN8)</h5>
+                                    <div class="rating">
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <span class="d-flex mx-2 rating-score tc-red"></span>
+                                    </div>
+                                    <div class="d-sm-flex justify-content-between text-muted">
+                                        <span class="deilname">담당 딜러 홍길동님</span>
+                                        <span class="date">2024-03-18</span>
+                                    </div>
+                                    <p class="card-text">차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="card">
+                                <div class="car-imges">
+                                </div>
+                                <div class="card-body">
+                                    <h5 class="card-title">현대 소나타 (DN8)</h5>
+                                    <div class="rating">
+                                        <label class="rating__label rating__label--full" for="star1">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star2">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <span class="star-icon filled"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star3">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star4">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <label class="rating__label rating__label--full" for="star5">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <span class="star-icon"></span>
+                                        </label>
+                                        <span class="d-flex mx-2 rating-score tc-red"></span>
+                                    </div>
+                                    <div class="d-sm-flex justify-content-between text-muted">
+                                        <span class="deilname">담당 딜러 홍길동님</span>
+                                        <span class="date">2024-03-18</span>
+                                    </div>
+                                    <p class="card-text">차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
+            <!-- Pagination -->
+               <nav>
+                   <ul class="pagination justify-content-center">
+                       <li class="page-item">
+                           <a class="page-link prev-style" ></a>
+                       </li>
+                       <li  class="page-item"><a class="page-link" >1</a></li>
+                       <li class="page-item next-prev" >
+                           <a class="page-link next-style" ></a>
+                       </li>
+                   </ul>
+               </nav>
+       </div>
     </div>
 </template>
-
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 
+const rowClass = ref('row row-cols-1');
 
-const baseReview = {
-    id: 1,
-    image: 'path/to/image1.jpg',
-    title: '현대 소나타 (DN8)',
-    dealer: '홍길동님',
-    date: '2024-03-18',
-    content: '차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.'
+const updateRowClass = () => {
+  if (window.innerWidth <= 1200) {
+    rowClass.value = 'row row-cols-1 row-cols-md-3 g-3';
+  } else {
+    rowClass.value = 'row row-cols-1 row-cols-md-4 g-3';
+  }
 };
 
-const createReviews = (baseReview, count) => {
-    return Array.from({ length: count }, (_, index) => ({
-        ...baseReview,
-        id: baseReview.id + index,
-        image: `path/to/image${index + 1}.jpg`,
-        title: `${baseReview.title} #${index + 1}`,
-    }));
-};
+onMounted(() => {
+  updateRowClass();
+  window.addEventListener('resize', updateRowClass);
+});
 
-const reviews = ref(createReviews(baseReview, 12));
+onUnmounted(() => {
+  window.removeEventListener('resize', updateRowClass);
+});
 </script>
-<style>
-.search-type {
-    position: relative; 
-    display: flex;
-    align-items: center; 
+
+<style scoped>
+.rating__label .star-icon {
+    width: 30px;
+    height: 30px;
 }
 
-.search-type input {
-    background-color: #f5f5f5;
-    margin-top: 0;
-    padding: 0 40px 0 20px;
-    height: 42px;
-    line-height: 40px;
-    border-radius: 26px;
-    width: 300px;
-    border: none; 
-    outline: none; 
-}
-
-.search-type .search-btn {
-    cursor: pointer; 
-    position: absolute;
-    right: 5px; 
-    top: 1px; 
-    width: 40px; 
-    height: 40px; 
-    border: none; 
-    background-color: transparent; 
-    background-image: url('../../../img/search.png');
-    background-repeat: no-repeat;
-    background-position: center; 
-    background-size: 20px 20px;
-    font-size: 0; 
-}
 @media (max-width: 640px){
 .mov-review  > .row {
     display: flex;
@@ -151,5 +276,11 @@ const reviews = ref(createReviews(baseReview, 12));
 .search-type input{
     width: 100% !important;
 }
+}
+
+@media (max-width: 991px) and (min-width: 768px){
+    .container{
+     max-width: none !important;
+    }    
 }
 </style>
