@@ -1,9 +1,11 @@
+
 <template>
     <!--
         TODO: 사용자: 매물상세2 딜러 체크후 모달창 추가 , ui확인때문에 바꿔놓은 반복문 원복 
     -->
     <div class="container-fluid"  v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
+        <div v-if="!showReauctionView">
             <div class="container my-4">
                 <div>
                 <div class="mb-4">
@@ -27,7 +29,7 @@
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
     <div class="bold-18-font">
         <div v-if="auctionDetail.status === 'wait'">
             <p class="auction-deadline">경매 마감일<span> {{ auctionDetail.final_at }}</span></p>
@@ -285,10 +287,9 @@
         <p class="auction-deadline">딜러를 선택해주세요.</p>
         <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
         <div class="btn-group mt-3 mb-2">
-            <button @click="auctionModal.value = true" type="button" class="btn btn-outline-dark">경매취소</button>
-            <Modal :isVisible="auctionModal"/>
-            <button type="button" class="btn btn-dark">재경매</button>
-
+            <button @click="cancelAuction" type="button" class="btn btn-outline-dark">경매취소</button>
+            <Modal v-if="auctionModal" :isVisible="auctionModal"/>
+            <button type="button" class="btn btn-dark" @click="toggleView">재경매</button>
         </div>
         <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>
         <div class="content mt-3 text-start">
@@ -374,31 +375,98 @@
         <!-- 경매 완료 -->
         <div v-if="auctionDetail.status === 'done'" @click.stop="">
         <h5 class="text-center p-4"> 거래는 어떠셨나요?</h5>
-        <router-link :to="{ name: 'user.review' }" type="button" class="tc-wh btn btn-danger w-100">후기 남기기</router-link>
+        <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-danger w-100">후기 남기기</router-link>
     </div>
     </div>
 
      <!-- 바텀 시트 shwo-->
     <button  class="animCircle scroll-button" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
-
- </div>
-    <!-- bottom sheet END-->
-
 </div>
+</div>
+<!-- 재경매 버튼 눌렀을 때 view -->
+<div class="container my-4" v-if="showReauctionView">
+        <div class="p-4">
+                    <h5 class="mb-2 ">재 경매를 진행합니다</h5>
+                    <div class="card my-auction">
+                        <div :class="{ 'grayscale_img': auctionDetail.status === 'done' }" class="card-img-top-ty01"></div>
+                        <div v-if="auctionDetail.status === 'done'" class="time-remaining">경매 완료</div>
+                        <div class="card-body">
+                            <div class="enter-view align-items-baseline ">
+                                <p class="card-title fs-5"><span class="blue-box">무사고</span>현대 쏘나타(DN8)</p>
+                            </div>
+                            <div class="enter-view">
+                                <p class="card-text tc-light-gray fs-5">{{ auctionDetail.car_no }}</p>
+                                <a href="#"><span class="red-box-type02 pass-red">위카 진단평가</span></a>
+                            </div>
+                        </div>
+                        <div>
+                        </div>
+                    </div>
+                    <div class="container">
+                <ul class="machine-inform-title">
+                    <li class="tc-light-gray">차량번호</li>
+                    <li class="info-num">{{ carDetails.no }}</li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">모델</li>
+                    <li class="sub-title">{{ carDetails.model }}</li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">현재 시세</li>
+                    <li class="sub-title">{{ carDetails.priceNow }}</li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">입찰가</li>
+                    <li class="sub-title">입찰가(데모)</li>
+                </ul>
+                </div>
+                </div>
+                <div class="form-group dealer-check mt-0 mb-0">
+                    <label for="dealer">희망가로 판매할까요? 
+                        <span class="tooltip-toggle nomal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
+                    </label>
+                    <div class="check_box">
+                        <input type="checkbox" id="sell" class="form-control">
+                        <label for="sell">희망가 판매</label>
+                    </div>
+                </div>
+                <div class="input-container mt-4">
+                    <input type="text" class="styled-input" placeholder="희망가 입력(선택)" v-model="amount" @input="updateKoreanAmount">
+                </div>
+                <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
+            <div class="btn-group mt-3 mb-2">
+                <button type="button" class="btn btn-danger" @click="reauction">재경매</button>
+                 <modal v-if="reauctionModal" :isVisible="reauctionModal"/>
+            </div>
+        </div>
+    </div>
+
 </template>
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
 import useUsers from "@/composables/users";
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import useAuctions from "@/composables/auctions";
+import modal from '@/views/modal/modal.vue'; 
 import Modal from '@/views/modal/auction/auctionModal.vue'; 
+import { convertToKorean } from '@/hooks/convertToKorean';
 
-const auctionModal = ref(false);
+const amount = ref('');
+const koreanAmount = ref('원');
+const updateKoreanAmount = () => {
+  koreanAmount.value = convertToKorean(amount.value) + ' 원';
+}; //재경매 - [가격]
+
+const auctionModal = ref(false);//모달
+const reauctionModal = ref(false);//재경매-모달
+
 const scrollButtonVisible = ref(false);
 const selectedDealer = ref(null);
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
 const scrollButtonStyle = ref({ display:'none'});
+
+const showReauctionView = ref(false);
 
 const auctionDetail = ref(null); //상세 경매
 const route = useRoute();
@@ -410,11 +478,9 @@ const carDetails = ref({}); //상세 경매(차 정보)
 const sortedTopBids = computed(() => {
     return auctionDetail.value?.top_bids?.sort((a, b) => b.price - a.price).slice(0, 5) || []; //.slice(0, 5) : 총 5 개만 뷰에 보여짐 , 가격 비교하여 가장 높은가격순
 });
-function toggleModal(state) {
-  console.log(`Setting auctionModal to ${state}`);
-  auctionModal.value = state;
+function toggleView() {
+  showReauctionView.value = !showReauctionView.value;
 }
-
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {
     const bottomSheet = document.querySelector('.bottom-sheet');
@@ -484,6 +550,23 @@ function cancelSelection() {
 function completeAuction() {
     auctionDetail.value.status = 'done';  
 }
+//재경매 - 모달 뷰
+function reauction() {
+    if (!amount.value || isNaN(parseFloat(amount.value))) {
+        alert('희망 가격을 입력해주세요.');
+    } else {
+        const koreanPrice = convertToKorean(amount.value);
+        const confirmReauction = confirm(`입력한 희망 가격: ${koreanPrice} 원입니다. 재경매를 진행하시겠습니까?`);
+        if (confirmReauction) {
+            reauctionModal.value = true;
+        }
+    }
+}
+function cancelAuction(){
+    auctionModal.value = !auctionModal.value;
+}
+
+
 function checkScroll() {
   const scrollY = window.scrollY;
   const windowHeight = document.documentElement.clientHeight;
@@ -517,9 +600,30 @@ onUnmounted(() => {
 </style>    
 
 <style scoped>
+    .dealer-check {
+        margin-top: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: #F5F5F6;
+        border-radius: 30px;
+        padding: 10px;
+    }
 
+    .no-resize {
+        resize: none;
+    }
 
+    .dealer-check input[type=checkbox] {
+        margin-right: 10px;
+    }
 
+    .dealer-check label {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        color: #333;
+    }
 
 .custom-checkbox-input {
     display: none;
@@ -666,4 +770,38 @@ input[type="checkbox"] {
     border-radius: 6px;
     background-color: #f5f5f6;
 }
+
+
+
+
+
+.input-container {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #ccc;
+    padding: 5px 10px;
+    width: 100%; /* 전체 너비 사용 */
+  }
+
+  .styled-input {
+    border: none;
+    outline: none;
+    flex-grow: 1;
+    font-size: 16px;
+    padding-left: 30px; 
+    color: #333;
+    background-color: transparent;
+    width: 100%;
+    direction: rtl; 
+    background-image: url('../../../../img/icon-won.png'); 
+    background-repeat: no-repeat;
+    background-size: 20px 20px;
+    background-position: left 0px center; 
+  }
+
+  .styled-input::placeholder {
+    color: #CCC;
+    direction: ltr; 
+  }
+
 </style>

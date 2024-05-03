@@ -1,9 +1,10 @@
 <!--
-    TODO:popup창 클릭 안했는데 aution에 로드 되는현상 
+    TODO: 상세 차량정보 사라짐
 -->
-<template>
+<template >
+  <div v-if="showModals">    
     <transition name="fade" mode="out-in">
-      <section class="modal modal-section type-confirm alert-modal-type02" v-if="isVisible">
+      <section class="modal modal-section type-confirm alert-modal-type02"v-if="!showSecondModal">
         <div class="modal-dialog-ty04">
           <div class="modal-content-ty03 shadow">
             <div class="modal-body">
@@ -15,16 +16,14 @@
                 </div>
                 <div class="btn-group">
                   <button class="btn btn-outline-secondary modal_close shadow" @click="toggleModal">경매 취소</button>
-                  <button class="btn btn_ok btn-dark shadow w-50">재경매</button>
+                  <button class="btn btn_ok btn-dark shadow w-50" @click="closeAllModals">재경매</button>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </section>
-    </transition>
-    <transition name="fade" mode="out-in">
-      <section v-if="showSecondModal" class="modal modal-section type-confirm alert-modal-type02">
+      <section v-else class="modal modal-section type-confirm alert-modal-type02">
         <div class="modal-dialog-ty04">
           <div class="modal-content-ty03 shadow">
             <div class="modal-body">
@@ -42,15 +41,21 @@
         </div>
       </section>
     </transition>
+  </div>
+
   </template>
   
   <script setup>
   import { ref, defineProps, defineEmits } from 'vue';
-  
-  const showSecondModal = ref(false); 
-  const props = defineProps({
-  modelValue: Boolean
-});
 
-  </script>
-  
+  const showModals = ref(true); 
+  const showSecondModal = ref(false); 
+
+  const toggleModal = () => {
+  showSecondModal.value = !showSecondModal.value;
+  };
+  const closeAllModals = () => {
+      showModals.value = false;
+  };
+
+</script>
