@@ -1,5 +1,5 @@
 <!--
-    TODO: 상세 차량정보 사라짐
+    TODO: 상세 차량정보
 -->
 <template >
   <div v-if="showModals">    

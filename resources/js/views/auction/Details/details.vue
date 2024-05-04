@@ -1,7 +1,7 @@
 
 <template>
     <!--
-        TODO: 사용자: 매물상세2 딜러 체크후 모달창 추가 , ui확인때문에 바꿔놓은 반복문 원복 
+        TODO: 딜러: 모달창 + 사용자 모달창 추가 , and 딜러 전체경매에 대한 데이터?? 옥션전체 데이터에 대해 여쭤보기
     -->
     <div class="container-fluid"  v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
@@ -237,10 +237,17 @@
             <li class="info-num">개인</li>
         </ul>
     </div>
+
     <!-- bottom sheet Start-->
-        <div class="bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet" >
+    <div class="bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet" >
         <div class="sheet-content">
-             <!-- ing(경매 진행중) or diag (진단평가)알때-->
+
+    <!--#####################
+        사용자 바텀시트
+    #########################-->
+
+            <div v-if="isUser">
+             <!-------[사용자]- ing(경매 진행중) or diag (진단평가)알때------->
             <div v-if="auctionDetail.status === 'wait' || auctionDetail.status === 'diag' " @click.stop="">
             <div class="steps-container">
             <div class="step completing">
@@ -263,7 +270,7 @@
         </div>
         <p class="auction-deadline">현재 등록신청 후 진단평가 진행 중 입니다.</p>
     </div>
-    <!-- 딜러 선택 (chosen) 중일때  -->
+    <!-- [사용자]- 딜러 선택 (chosen) 중일때 (TODO: 현재 ui 변경 상황 보려고 ing로 대채 후에 chson으로 바꾸기) -->
     <div v-if="!selectedDealer && auctionDetail.status === 'ing'" @click.stop="">
         <div class="steps-container">
             <div class="step completed">
@@ -289,6 +296,7 @@
         <div class="btn-group mt-3 mb-2">
             <button @click="cancelAuction" type="button" class="btn btn-outline-dark">경매취소</button>
             <Modal v-if="auctionModal" :isVisible="auctionModal"/>
+
             <button type="button" class="btn btn-dark" @click="toggleView">재경매</button>
         </div>
         <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>
@@ -319,7 +327,8 @@
     </div>
         </div>
     </div>
-    <!--딜러 선택 후 경매 했을떄 -->
+
+    <!--[사용자] - 딜러 선택 후 경매 했을떄 -->
     <div v-if="selectedDealer && auctionDetail.status === 'ing'" @click.stop="">
     <div class="steps-container">
         <div class="step completed">
@@ -372,17 +381,103 @@
             </div>
         </div>
     </div>
-        <!-- 경매 완료 -->
+        <!--[사용자] - 경매 완료 -->
         <div v-if="auctionDetail.status === 'done'" @click.stop="">
         <h5 class="text-center p-4"> 거래는 어떠셨나요?</h5>
         <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-danger w-100">후기 남기기</router-link>
     </div>
     </div>
 
-     <!-- 바텀 시트 shwo-->
+     <!-- 바텀 시트 show or black-->
     <button  class="animCircle scroll-button" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
+
+    <!--#####################
+        딜러에 관힌 바텀시트
+    #########################-->
+
+<div v-if="isDealer">
+<!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
+        <div v-if="!succesbid" @click.stop="">
+            <div class="steps-container">
+                <div class="step completed">
+                    <div class="label completed">
+                        STEP01
+                    </div>
+                </div>
+                <div class="line completed"></div>
+                <div class="step completing">
+                    <div class="label completed">
+                        STEP02
+                    </div>
+                </div>
+                <div class="line "></div>
+                <div class="step ">
+                    <div class="label ">
+                        STEP03
+                    </div>
+                </div>
+            </div>
+            <p class="auction-deadline text-center">경매를 시작합니다.</p>
+            <p class="tc-red mt-2">경매 마감까지 23:35:12 분 남음</p>
+            <div class="mt-3 d-flex justify-content-end gap-3">
+                <p class="bid-icon tc-light-gray normal-16-font">입찰 12</p>
+                <p class="interest-icon tc-light-gray normal-16-font">관심 6</p>
+            </div>
+            <div class="o_table_mobile my-5">
+                <div class="tbl_basic tbl_dealer">
+                    <table>
+                        <tbody>
+                            <tr>
+                                <th>입찰 순위</th>
+                                <th>딜러명</th>
+                                <th>입찰금액</th>
+                            </tr>
+                            <tr>
+                                <td>1위</td>
+                                <td>홍길동</td>
+                                <td>1,200만원</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <h5 class="text-start">나의 입찰 금액을 입력해주세요</h5>
+            <div class="input-container mt-4">
+                <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
+            </div>
+            <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
+            <button type="button" class="tc-wh btn btn-danger w-100" @click="SuccesBid">확인</button>
+        </div>
+    </div>
 </div>
-</div>
+<!------------------- [딜러] - 입찰 완료후 바텀 메뉴 -------------------->
+    <div class="p-4"v-if="succesbid"@click.stop="">
+       <h5 class="mx-3 text-center">경매 마감까지 03:25:43 남음</h5>
+       <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">1,300만원</span></p>
+       <h5 class="my-4">입찰 n명/ 관심 n 명</h5>
+       <div class="d-flex justify-content-between">
+           <p class="tc-light-gray">현재 최고 입찰가</p>
+           <p>1,200만원</p>
+        </div>
+        <div class="d-flex justify-content-between">
+            <p class="tc-light-gray">현재 최저 입찰가</p>
+            <p>1,100만원</p>
+        </div>
+        <button type="button" class="my-3 btn btn-outline-danger w-100">입찰 취소 (1회 남음)</button>
+        <!--  수수료 보증금이 부족할때 나오는 메뉴
+        <div class="bottom-message">
+            성사수수료 보즘금이 부족해요
+        </div>-->
+        <!------------------- [딜러] - 경매 완료 -------------------->
+        <div v-if="auctionDetail.status === 'done'" @click.stop="">
+           <h5 class="text-center"> 불편 사항이 있으신가요?</h5>
+           <button type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</button>
+           <a href="#" class="d-flex justify-content-center tc-light-gray">클레임 규정</a>
+        </div>
+    </div>
+    </div>
+
+
 <!-- 재경매 버튼 눌렀을 때 view -->
 <div class="container my-4" v-if="showReauctionView">
         <div class="p-4">
@@ -437,19 +532,37 @@
             <div class="btn-group mt-3 mb-2">
                 <button type="button" class="btn btn-danger" @click="reauction">재경매</button>
                  <modal v-if="reauctionModal" :isVisible="reauctionModal"/>
+                </div>
             </div>
         </div>
     </div>
 
+
 </template>
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue';
+import { useStore } from "vuex";
 import useUsers from "@/composables/users";
+import useRoles from '@/composables/roles';
+
 import { useRoute, useRouter } from 'vue-router';
 import useAuctions from "@/composables/auctions";
-import modal from '@/views/modal/modal.vue'; 
+
+import modal from '@/views/modal/modal.vue';    
 import Modal from '@/views/modal/auction/auctionModal.vue'; 
+
 import { convertToKorean } from '@/hooks/convertToKorean';
+
+const { getUser } = useUsers();
+const { role, getRole } = useRoles();
+const store = useStore();
+const user = computed(() => store.getters["auth/user"]);
+const isDealer = computed(() => user.value?.roles?.includes('dealer'));
+const isUser = computed(() => user.value?.roles?.includes('user'));
+// 딜러,유저 권한 구별
+
+const succesbid = ref(false);
+//[딜러] - 입찰시 뷰 제어
 
 const amount = ref('');
 const koreanAmount = ref('원');
@@ -457,30 +570,34 @@ const updateKoreanAmount = () => {
   koreanAmount.value = convertToKorean(amount.value) + ' 원';
 }; //재경매 - [가격]
 
-const auctionModal = ref(false);//모달
-const reauctionModal = ref(false);//재경매-모달
+const auctionModal = ref(false);//[공통]- 모달
+const reauctionModal = ref(false);//[공통]- 재경매-모달
+
+const route = useRoute();
 
 const scrollButtonVisible = ref(false);
 const selectedDealer = ref(null);
-const showBottomSheet = ref(true); //바텀 시트
+const showBottomSheet = ref(true); 
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
-const scrollButtonStyle = ref({ display:'none'});
+const scrollButtonStyle = ref({ display:'none'}); //[공통]-바텀 시트 및 스타일 제어
 
-const showReauctionView = ref(false);
+const showReauctionView = ref(false); //[사용자]- 재 경매 시 뷰 제어
 
-const auctionDetail = ref(null); //상세 경매
-const route = useRoute();
+const auctionDetail = ref(null); // [공통]- 상세 경매
 const { getAuctions, auctionsData, submitCarInfo } = useAuctions();
-const { getUser } = useUsers();
-const carDetails = ref({}); //상세 경매(차 정보)
+
+const carDetails = ref({}); //[공통]- 상세 경매(차 상세 정보)
 
 // 상위 5개의 입찰을 추출하고 정렬
 const sortedTopBids = computed(() => {
     return auctionDetail.value?.top_bids?.sort((a, b) => b.price - a.price).slice(0, 5) || []; //.slice(0, 5) : 총 5 개만 뷰에 보여짐 , 가격 비교하여 가장 높은가격순
 });
+
+// 뷰 제어 함수
 function toggleView() {
   showReauctionView.value = !showReauctionView.value;
 }
+
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {
     const bottomSheet = document.querySelector('.bottom-sheet');
@@ -497,8 +614,9 @@ function toggleSheet() {
     showBottomSheet.value = !showBottomSheet.value;
 }
 
-// 모든 경매 데이터를 불러오는 함수 호출
+// 모든 경매 데이터를 불러오는 함수 호출 및 바텀 시트 show or black
 onMounted(async () => {
+    await getRole();
     await getAuctions();
     findAuctionDetail();
     window.addEventListener('scroll', checkScroll);
@@ -562,11 +680,15 @@ function reauction() {
         }
     }
 }
+//[사용자]- 모달 창 컨트롤 뷰 (경매 취소)
 function cancelAuction(){
     auctionModal.value = !auctionModal.value;
 }
-
-
+// [딜러]- 바텀 시트 컨트롤 뷰 (입찰 시)
+function SuccesBid(){
+    succesbid.value=true;
+}
+//바텀 시트 버튼 black or show
 function checkScroll() {
   const scrollY = window.scrollY;
   const windowHeight = document.documentElement.clientHeight;
@@ -585,19 +707,6 @@ onUnmounted(() => {
 
 </script>
 
-
-<style type="text/css">
-  .tbl_basic table {width: 100%;border-collapse: collapse; font-size:14px;}
-  .tbl_basic table tr th, .tbl_basic table tr td { text-align:center; }
-  .tbl_basic table tr th {padding:8px 5px; border-radius: 6px; background: #f5f5f6; color: gray; border-style:solid none;}
-  .tbl_basic table tr td {padding:7px 5px; }
-  @media screen and (max-width: 481px) 
-  {
-    .o_table_mobile {width: 100%;overflow: hidden;}
-    .o_table_mobile .tbl_basic {overflow-x: scroll;}
-    .o_table_mobile .tbl_basic table {width: 100%;min-width:480px;}
-  }
-</style>    
 
 <style scoped>
     .dealer-check {

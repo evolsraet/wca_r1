@@ -1,13 +1,13 @@
 <template>
     <!-- modal step02 Start : 경매 취소 팝업 -->
-    <section class="modal modal-section type-confirm alert-modal-type02" :style="{ display: showModal ? 'block' : 'none' }">
+    <section class="modal modal-section type-confirm alert-modal-type02">
         <!-- 모달 컨텐츠 -->
         <div class="modal-dialog">
             <div class="modal-content shadow">
                 <div class="modal-body">
                     <div class="content">
                         <div class="nav-header">
-                            <button type="button" class="btn-close" @click="handleCloseClick">
+                            <button type="button" class="btn-close" @click="closeModal">
                             </button>
                         </div>
                         <div class="facturer">
@@ -45,7 +45,7 @@
                             <p class="my-4">선택 완료 시, 선택한 딜러에게 문자가 발송됩니다.</p>
                         </div>
                         <div class="btn-group">
-                            <button class="btn btn-danger w-50 modal_close shadow">선택완료</button>
+                            <button class="btn btn-danger w-50 modal_close shadow"  @click="confirmSelection">선택완료</button>
                         </div>
                     </div>
                 </div>
@@ -54,4 +54,21 @@
     </section>
 </template>
   
-  
+<script setup>
+import { defineProps, defineEmits } from 'vue';
+
+const props = defineProps({
+  show: Boolean,
+  bid: Object
+});
+
+const emit = defineEmits(['confirm', 'close']);
+
+function confirmSelection() {
+  emit('confirm', props.bid);
+}
+
+function closeModal() {
+  emit('close');
+}
+</script>

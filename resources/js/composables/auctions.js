@@ -24,6 +24,7 @@ export default function useAuctions() {
             console.error('Error fetching auctions:', error);
         }
     };
+    
 
 // 경매 ID를 이용해 경매 상세 정보를 가져오는 함수
 const getAuctionById = async (id) => {
