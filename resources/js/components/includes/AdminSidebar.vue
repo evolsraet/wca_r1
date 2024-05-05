@@ -1,5 +1,5 @@
 <template>
-    <nav class="bg-white sidebar">
+    <nav class="bg-white sidebar"style="right:270px;">
         <div class="pt-3 sidebar-sticky">
             <ul id="menu" class="nav flex-column mb-2">
                 <li class="nav-item">

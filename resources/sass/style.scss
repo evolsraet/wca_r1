@@ -2475,11 +2475,15 @@ background-color: #dbdbdb;
     padding: 20px;
     text-align: center;
 }
-.pagination .page-link:active {
+li.page-item.active{
     background-color: #fae8e8;
+    border-radius: 50%;
 }
 
-
+.pagination .page-link {
+    background-color: #ffffff00 !important;
+    border-color: #fae8e8;
+}
 
 .custom-checkbox-input {
     display: none;

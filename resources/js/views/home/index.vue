@@ -53,7 +53,7 @@ TODO:이용후기,슬라이드 배너 추가
                     </button>
                     </div>
                 </div>
-                <div class="review-content">
+                <div class="review-content mb-5">
                     <div class="apply-top text-start">
                         <h3 class="review-title">다른 사람들의 이용후기에요</h3>
                         <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">전체보기</router-link>
@@ -275,4 +275,5 @@ const closeModal = () => {
     width: 30px;
     height: 30px;
 }
+
 </style>

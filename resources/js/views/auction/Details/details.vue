@@ -709,6 +709,20 @@ onUnmounted(() => {
 
 
 <style scoped>
+  .tbl_basic table {width: 100%;border-collapse: collapse; font-size:14px;}
+  .tbl_basic table tr th, .tbl_basic table tr td { text-align:center; }
+  .tbl_basic table tr th {padding:8px 5px; border-radius: 6px; background: #f5f5f6; color: gray; border-style:solid none;}
+  .tbl_basic table tr td {padding:7px 5px; }
+  @media screen and (max-width: 481px) 
+  {
+    .o_table_mobile {width: 100%;overflow: hidden;}
+    .o_table_mobile .tbl_basic {overflow-x: scroll;}
+    .o_table_mobile .tbl_basic table {width: 100%;min-width:480px;}
+    .o_table_mobile .tbl_dealer table {width: 100%;min-width:0px  !important;}
+  }
+</style>    
+
+<style scoped>
     .dealer-check {
         margin-top: 50px;
         display: flex;
