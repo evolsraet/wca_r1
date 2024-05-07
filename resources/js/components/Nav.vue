@@ -2,7 +2,10 @@
     <div class=""></div>
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container nav-font">
-            <router-link to="/" class="navbar-brand"></router-link>
+            <router-link v-if="isDealer" to="/dealer" class="navbar-brand"></router-link>
+            
+            
+            <router-link v-else to="/" class="navbar-brand"></router-link>
             <!-- movnav bar -->  
             <!-- dealer navbar-->
             <div class="collapse navbar-collapse navbar-collshow" id="navbarSupportedContent">
@@ -156,7 +159,7 @@
                             <router-link :to="{ name: 'autction.index'}" class="nav-link" aria-current="page">내 매물관리</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'index.allreview'}" class="nav-link">이용후기</router-link>
+                            <router-link :to="{ name: 'user.review'}" class="nav-link">이용후기</router-link>
                         </li>
                         <li class="my-member">
                             <img src="../../img/myprofile_ex.png" class="nav-profile" alt="Profile Image"><a class="nav-link" href="#">{{ user.name }}</a>
