@@ -1,5 +1,5 @@
 <template>
-    <div class="row justify-content-center my-2">
+    <div class="p-3 row justify-content-center my-2">
         <div class="col-md-12">
             <div class="card border-0">
                 <div class="card-header bg-transparent">
@@ -62,19 +62,22 @@
                                     <th class="px-6 py-3 text-start"></th>
                                 </tr>
                                 <tr>
-                                    <th class="px-6 py-3 text-start">
+                                    <th class="px-6 py-3 bg-gray-50 text-left">
                                         <div
-                                            class="flex flex-row"
-                                            @click="updateOrdering('id')"
+                                            class="flex flex-row items-center justify-between cursor-pointer"
+                                            @click="
+                                                updateOrdering('created_at')
+                                            "
                                         >
                                             <div
-                                                class="font-medium text-uppercase"
+                                                class="leading-4 font-medium text-gray-500 uppercase tracking-wider"
                                                 :class="{
                                                     'font-bold text-blue-600':
-                                                        orderColumn === 'id',
+                                                        orderColumn ===
+                                                        'created_at',
                                                 }"
                                             >
-                                                ID
+                                                등록일
                                             </div>
                                             <div class="select-none">
                                                 <span
@@ -83,14 +86,14 @@
                                                             orderDirection ===
                                                                 'asc' &&
                                                             orderColumn ===
-                                                                'id',
+                                                                'created_at',
                                                         hidden:
                                                             orderDirection !==
                                                                 '' &&
                                                             orderDirection !==
                                                                 'asc' &&
                                                             orderColumn ===
-                                                                'id',
+                                                                'created_at',
                                                     }"
                                                     >&uarr;</span
                                                 >
@@ -100,14 +103,14 @@
                                                             orderDirection ===
                                                                 'desc' &&
                                                             orderColumn ===
-                                                                'id',
+                                                                'created_at',
                                                         hidden:
                                                             orderDirection !==
                                                                 '' &&
                                                             orderDirection !==
                                                                 'desc' &&
                                                             orderColumn ===
-                                                                'id',
+                                                                'created_at',
                                                     }"
                                                     >&darr;</span
                                                 >
@@ -178,69 +181,14 @@
                                     <th class="px-6 py-3 bg-gray-50 text-left">
                                         <span
                                             class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
-                                            >Category</span
+                                            >카테고리</span
                                         >
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 text-left">
                                         <span
                                             class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
-                                            >Content</span
+                                            >제목</span
                                         >
-                                    </th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left">
-                                        <div
-                                            class="flex flex-row items-center justify-between cursor-pointer"
-                                            @click="
-                                                updateOrdering('created_at')
-                                            "
-                                        >
-                                            <div
-                                                class="leading-4 font-medium text-gray-500 uppercase tracking-wider"
-                                                :class="{
-                                                    'font-bold text-blue-600':
-                                                        orderColumn ===
-                                                        'created_at',
-                                                }"
-                                            >
-                                                Created at
-                                            </div>
-                                            <div class="select-none">
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                    }"
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                    }"
-                                                    >&darr;</span
-                                                >
-                                            </div>
-                                        </div>
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 text-left">
                                         Actions
@@ -249,8 +197,8 @@
                             </thead>
                             <tbody>
                                 <tr v-for="post in posts.data" :key="post.id">
-                                    <td class="px-6 py-4 text-sm" width="20">
-                                        {{ post.id }}
+                                    <td class="px-6 py-4 text-sm">
+                                        {{ post.created_at }}
                                     </td>
                                     <td class="px-6 py-4 text-sm">
                                         {{ post.title }}
@@ -276,9 +224,6 @@
                                                 '...'
                                             "
                                         ></div>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm">
-                                        {{ post.created_at }}
                                     </td>
                                     <td class="px-6 py-4 text-sm">
                                         <!-- v-if="can('post-edit')" -->

@@ -1,9 +1,9 @@
 <template>
     <nav class="navbar navbar-expand-lg sticky-top flex-md-nowrap shadow-sm" style="background-color: #e3f2fd;">
         <div class="container-fluid">
-            <router-link to="/" class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 nuxt-link-active mini">
+            <router-link to="/admin" class="navbar-brand col-md-3 col-lg-2 me-0 px-3 fs-6 nuxt-link-active mini">
             </router-link>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            <button  class="navbar-toggler" type="button" data-bs-toggle="collapse"
                     data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -49,5 +49,14 @@ import LocaleSwitcher from "../../components/LocaleSwitcher.vue";
 </script>
 
 <style scoped>
-
+@media (max-width: 767.98px){
+    .navbar-toggler{
+        display: block !important;
+    }
+}
+@media (min-width: 768px){
+    .navbar-toggler{
+        display:none !important;
+    }
+}
 </style>

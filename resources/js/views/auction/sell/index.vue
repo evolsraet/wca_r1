@@ -77,15 +77,17 @@
                 <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span></p>
                 <router-link :to="{ name: 'sell.update-info' }" class="tc-red link">정보갱신하기</router-link>
                 </div>
-                <div class="none-info">
-                <div class="complete-car">
+            <!-- TODO: 일치하는 차량 없다는 데이터의 기준? auction에 비교해야한가??  
+                      <div class="none-info">
+                        <div class="complete-car">
                         <div class="card my-auction mt-3">
                             <div class="none-complete-ty02">
                                 <span class="tc-light-gray">일치하는 차량이 없습니다.</span>
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>-->
+
                 <div class="flex items-center justify-end my-5">
                  <router-link :to="{ path: '/selldt' }" class="btn primary-btn ">경매 신청하기</router-link></div>
                 </div>
@@ -123,16 +125,19 @@ const user = computed(() => store.getters["auth/user"]);
 const isActive = ref(false); 
 const router = useRoute();
 const carDetails = ref({});
+function saveCarNumberToLocalStorage() {
+  localStorage.setItem('carNumber', carDetails.value.no);
+}
 
 onMounted(() => {
   const storedData = localStorage.getItem('carDetails');
   if (storedData) {
     carDetails.value = JSON.parse(storedData);
+    saveCarNumberToLocalStorage();  
   } else {
     console.log('No car details');
   }
 });
-
 function toggleDetailContent() {
     isActive.value = !isActive.value;  
 }

@@ -1,5 +1,5 @@
 <template>
-    <nav class="bg-white sidebar"style="right:270px;">
+    <nav class="bg-white sidebar"style="right:270px; height: auto !important;">
         <div class="pt-3 sidebar-sticky">
             <ul id="menu" class="nav flex-column mb-2">
                 <li class="nav-item">
@@ -167,4 +167,12 @@ import { useAbility } from "@casl/vue";
 const { can } = useAbility();
 </script>
 
-<style scoped></style>
+<style scoped>
+@media (max-width: 767.98px){
+ .sidebar {
+    min-width: 0px !important;
+    max-width: 0px !important;
+    padding: 0px;
+}
+}
+</style>

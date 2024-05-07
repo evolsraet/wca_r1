@@ -3,8 +3,7 @@
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container nav-font">
             <router-link v-if="isDealer" to="/dealer" class="navbar-brand"></router-link>
-            
-            
+            <router-link v-else-if="isUser" to="/" class="navbar-brand"></router-link>
             <router-link v-else to="/" class="navbar-brand"></router-link>
             <!-- movnav bar -->  
             <!-- dealer navbar-->
@@ -229,7 +228,7 @@ const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
-
+const isAdmin  = computed(() => user.value?.roles?.includes('admin'));
 
 
 const { logout } = useAuth();

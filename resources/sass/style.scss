@@ -964,9 +964,6 @@ video {
         grid-template-columns: 1fr;
         gap: 20px !important;
     }
-    .container {
-        --bs-gutter-x: 0.5rem !important;
-    }
     .review-content {
         overflow-x: hidden;
         padding: 0.2rem;
@@ -3014,3 +3011,4 @@ input[type="checkbox"] {
     padding: 0 15px 0 15px !important;
     text-align: center;
 }
+

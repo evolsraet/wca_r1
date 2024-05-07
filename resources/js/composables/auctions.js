@@ -24,7 +24,6 @@ export default function useAuctions() {
             console.error('Error fetching auctions:', error);
         }
     };
-    
 
 // 경매 ID를 이용해 경매 상세 정보를 가져오는 함수
 const getAuctionById = async (id) => {
@@ -38,32 +37,41 @@ const getAuctionById = async (id) => {
     }
 };
 
+// carinfo detail 정보를 가져오고 스토리지 저장 
+const submitCarInfo = async () => {
+    if (processing.value) return;  // 이미 처리중이면 다시 처리하지 않음
+    processing.value = true;
+    validationErrors.value = {};
 
-    const submitCarInfo = async () => {
-        if (processing.value) return;
-        processing.value = true;
-        validationErrors.value = {};
-        
-        try {
-            const response = await axios.post("/api/auctions/carInfo", carInfoForm);
-            console.log("success:", response);
-            sessionStorage.setItem('carDetails', JSON.stringify(response.data.data));// 조회이기에 세션으로 저장
-            console.log('data:', response.data.data);
-            router.push({ name: "sell" });
-        } catch (error) {
-            console.error(error);
-            if (error.response?.data) {
-                console.error(error.response.data.message);
-                console.error(error.response.data.errors);
-                validationErrors.value = error.response.data.errors;
-            }
-        } finally {
-            processing.value = false;
+    try {
+        const response = await axios.post('/api/auctions/carInfo', carInfoForm);
+        localStorage.setItem('carDetails', JSON.stringify(response.data.data));  // 데이터를 로컬 스토리지에 저장
+        router.push({ name: 'sell' });  // 저장 후 sell 라우트로 이동
+    } catch (error) {
+        console.error(error);
+        if (error.response?.data) {
+            validationErrors.value = error.response.data.errors;  // 서버로부터 받은 에러 메시지 처리
         }
-    };
-    
+    } finally {
+        processing.value = false;
+    }
+};
 
-    
+
+// 경매 정보 업데이트
+const updateAuction = async (id, auctionData) => {
+    processing.value = true;
+    try {
+      const response = await axios.put(`/api/auctions/${id}`, auctionData);
+      console.log('Auction updated successfully', response.data);
+    } catch (error) {
+      console.error('Error updating auction:', error);
+      validationErrors.value = error.response?.data.errors || {};
+    } finally {
+      processing.value = false;
+    }
+  };
+  
     return {
         getAuctionById,
         useAuctions,
@@ -73,7 +81,8 @@ const getAuctionById = async (id) => {
         carInfoForm,
         submitCarInfo,
         processing,
-        validationErrors
+        validationErrors,
+        updateAuction
     };
     
 }
