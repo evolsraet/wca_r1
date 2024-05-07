@@ -271,7 +271,7 @@
         <p class="auction-deadline">현재 등록신청 후 진단평가 진행 중 입니다.</p>
     </div>
     <!-- [사용자]- 딜러 선택 (chosen) 중일때 (TODO: 현재 ui 변경 상황 보려고 ing로 대채 후에 chson으로 바꾸기) -->
-    <div v-if="!selectedDealer && auctionDetail.status === 'ing'" @click.stop="">
+    <div v-if="!selectedDealer && auctionDetail.status === 'chosen'" @click.stop="">
         <div class="steps-container">
             <div class="step completed">
                 <div class="label completed">
@@ -616,7 +616,6 @@ function toggleSheet() {
 
 // 모든 경매 데이터를 불러오는 함수 호출 및 바텀 시트 show or black
 onMounted(async () => {
-    await getRole();
     await getAuctions();
     findAuctionDetail();
     window.addEventListener('scroll', checkScroll);
