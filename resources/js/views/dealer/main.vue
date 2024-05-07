@@ -48,7 +48,7 @@
                 <div class="content">
                     <div class="enter-view text-start mb-2" >
                         <h3 class="review-title">공지사항</h3>
-                        <a href="/reviewtest" class="btn-apply">전체보기</a>
+                        <router-link :to="{ name: 'index.notices'}" class="btn-apply">전체보기</router-link>
                     </div>
                     <table class="table custom-border">
                         <tbody>
@@ -74,7 +74,7 @@
                     </table>
                     <div class="enter-view text-start mt-5 mb-2">
                         <h3 class="review-title">클레임 현황</h3>
-                        <a href="/reviewtest" class="btn-apply">전체보기</a>
+                        <router-link :to="{ name: 'index.claim'}" class="btn-apply">전체보기</router-link>
                     </div>
                     <table class="table custom-border text-center">
                         <thead class="tr-style">
@@ -123,7 +123,7 @@
                     <div class="card-body">
                         <div class="enter-view mt-3">
                             <h5>선택 완료 차량</h5>
-                            <p class="btn-apply" @click="alertNoVehicle">전체보기</p>
+                            <router-link :to="{ name: 'dealer.index2'}" class="btn-apply">전체보기</router-link>
                         </div>
                         <span class="tc-light-gray">24시간 내 응대해 주세요!</span>
                         <!-- 차량이 존재 할 경우-->

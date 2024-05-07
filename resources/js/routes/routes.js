@@ -137,6 +137,12 @@ export default [
               
             },
             {
+                path: '/dealermodal',
+                name: 'dealermodal',
+                component: () => import('../views/modal/auction/connectDealer.vue'),
+              
+            },
+            {
                 path: 'posts/:id',
                 name: 'public-posts.details',
                 component: () => import('../views/posts/details.vue'),
