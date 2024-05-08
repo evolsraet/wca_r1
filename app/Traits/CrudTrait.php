@@ -69,10 +69,12 @@ trait CrudTrait
         $this->beforeProcess(__FUNCTION__, request());
 
         $orderColumn = request('order_column', 'created_at');
-        if (!in_array($orderColumn, ['id', 'name', 'created_at'])) {
-            $orderColumn = 'created_at';
-        }
+        // if (!in_array($orderColumn, ['id', 'name', 'created_at'])) {
+        //     $orderColumn = 'created_at';
+        // }
+
         $orderDirection = request('order_direction', 'desc');
+
         if (!in_array($orderDirection, ['asc', 'desc'])) {
             $orderDirection = 'desc';
         }
@@ -123,10 +125,29 @@ trait CrudTrait
                         break;
 
                     default:
-                        if (isset($row[2])) {
-                            $result = $result->where($row[0], $row[1], $row[2]);
+                        if (strpos($row[0], (new $this->modelClass)->getTable() . ".") !== false) {
+                            // 동일테이블
+                            if (isset($row[2])) {
+                                $result = $result->where($row[0], $row[1], $row[2]);
+                            } else {
+                                $result = $result->where($row[0], $row[1]);
+                            }
                         } else {
-                            $result = $result->where($row[0], $row[1]);
+                            // 다른테이블
+                            $findKey = explode('.', $row[0]); // 0 테이블 1 필드
+                            $result->with($findKey[0]);
+
+                            if (isset($row[2])) {
+                                $result->whereHas($findKey[0], function ($qry) use ($findKey, $row) {
+                                    // findKey[1]는 필드명, row[1]은 연산자, row[2]는 값
+                                    $qry->where($findKey[1], $row[1], $row[2]); // 특정 조건에 맞는 관계를 필터링
+                                });
+                            } else {
+                                $result->whereHas($findKey[0], function ($qry) use ($findKey, $row) {
+                                    // findKey[1]는 필드명, row[1]은 값 (기본 연산자는 '=')
+                                    $qry->where($findKey[1], '=', $row[1]); // 기본 연산자 '='를 명시적으로 사용
+                                });
+                            }
                         }
                         break;
                 }
@@ -192,7 +213,7 @@ trait CrudTrait
             $item->save(); // 상위 객체 저장
 
             // 하위 객체를 동적으로 처리합니다.
-            foreach ($data as $relationName => $relationData) {
+            foreach ((array) $data as $relationName => $relationData) {
                 if (is_array($relationData) && method_exists($item, $relationName)) {
                     // relationName이 실제 모델의 관계 메서드와 일치하는 경우
                     $relation = $item->$relationName();

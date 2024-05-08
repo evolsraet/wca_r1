@@ -54,13 +54,22 @@ class AuctionService
         }
     }
 
+
+
     protected function middleProcess($method, $request, $result, $id = null)
     {
         if ($method == 'index' or $method == 'show') {
             // 관리자 딜러 아니면 본인것만
             if (auth()->user()->hasPermissionTo('act.admin')) {
             } elseif (auth()->user()->hasPermissionTo('act.dealer')) {
-                $result->where('status', 'ing');
+
+                $result->with('bids')  // 'bids' 관계를 포함하여 로드
+                    ->where(function ($query) {
+                        $query->where('status', 'ing')  // 'status'가 'ing'인 경우
+                            ->orWhereHas('bids', function ($qry) {  // 또는
+                                $qry->where('user_id', auth()->user()->id);  // 현재 사용자가 입찰한 경우
+                            });
+                    });
             } else {
                 $result->where('user_id', auth()->user()->id);
             }
@@ -74,5 +83,13 @@ class AuctionService
         } elseif ($method == 'destroy') {
             $this->modifyOnlyMe($result);
         }
+    }
+
+    protected function afterProcess($method, $request, $result, $id = null)
+    {
+        if ($method == 'show') {
+            // Auction 의 hit 를 +1 하기
+            $result->increment('hit');
+        }          // 컨트롤러에서 이 메소드를 오버라이드하여 사용할 수 있습니다.
     }
 }

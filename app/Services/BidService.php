@@ -21,10 +21,6 @@ class BidService
     protected function beforeProcess($method, $request, $id = null)
     {
         if ($method == 'store') {
-            // 딜러만 저장
-            if (!auth()->check() or !auth()->user()->hasRole('dealer')) {
-                throw new \Exception('권한이 없습니다.');
-            }
         }
     }
 
@@ -34,7 +30,6 @@ class BidService
             // 관리자 외 딜러는 본인것만
             if (auth()->user()->hasPermissionTo('act.admin')) {
             } elseif (auth()->user()->hasPermissionTo('act.dealer')) {
-                // 딜러는 본인이 넣은것만
                 $result->where('user_id', auth()->user()->id);
             } else {
                 // 유저는 본인의 auction 인것만
@@ -44,18 +39,32 @@ class BidService
                 });
             }
         } elseif ($method == 'store') {
-            if (!auth()->user()->hasPermissionTo('act.user'))
+            // 딜러만 저장
+            if (!auth()->check() or !auth()->user()->hasRole('dealer')) {
                 throw new \Exception('권한이 없습니다.');
+            }
+
+            // 프라이스 필수
+            if (!$request->input('bids.auction_id'))
+                throw new \Exception('경매 아이디가 누락되었습니다.');
+
+            if (!$request->input('bids.price'))
+                throw new \Exception('입찰가격이 누락되었습니다.');
 
             // 기본값 아이디 지정
             $result->user_id = auth()->user()->id;
             $result->status = 'ask';
+            $result->price = $request->input('bids.price');
+            $result->auction_id = $request->input('bids.auction_id');
+
             // 경매 검증 - 삽입에 auction_id 는 없다
-            // $auction = Auction::find($result->auction_id);
-            // if ($auction) {
-            //     if ($auction->status != 'ing')
-            //         throw new \Exception('신청가능한 경매가 아닙니다.');
-            // }
+            $auction = Auction::find($result->auction_id);
+            if ($auction) {
+                if ($auction->status != 'ing')
+                    throw new \Exception('신청가능한 경매가 아닙니다.');
+            } else {
+                throw new \Exception('신청가능한 아이디가 아닙니다.');
+            }
         } elseif ($method == 'update') {
             $this->modifyOnlyMe($result);
             unset($result->user_id);
