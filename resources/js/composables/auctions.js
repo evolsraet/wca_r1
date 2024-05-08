@@ -36,6 +36,18 @@ const getAuctionById = async (id) => {
         throw error; // 에러를 다시 던져서 호출 측에서 처리할 수 있게 함
     }
 };
+const statusMap = {
+    cancel: "취소",
+    done: "경매완료",
+    chosen: "선택완료",
+    wait: "선택대기",
+    ing: "경매진행",
+    diag: "진단대기",
+    ask: "신청완료"
+};
+const getStatusLabel = (status) => {
+    return statusMap[status] || status;
+};
 
 // carinfo detail 정보를 가져오고 스토리지 저장 
 const submitCarInfo = async () => {
@@ -58,20 +70,7 @@ const submitCarInfo = async () => {
 };
 
 
-// 경매 정보 업데이트
-const updateAuction = async (id, auctionData) => {
-    processing.value = true;
-    try {
-      const response = await axios.put(`/api/auctions/${id}`, auctionData);
-      console.log('Auction updated successfully', response.data);
-    } catch (error) {
-      console.error('Error updating auction:', error);
-      validationErrors.value = error.response?.data.errors || {};
-    } finally {
-      processing.value = false;
-    }
-  };
-  
+    
     return {
         getAuctionById,
         useAuctions,
@@ -82,7 +81,8 @@ const updateAuction = async (id, auctionData) => {
         submitCarInfo,
         processing,
         validationErrors,
-        updateAuction
+        statusMap,
+        getStatusLabel
     };
     
 }

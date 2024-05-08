@@ -1,7 +1,7 @@
 
 <template>
     <!--
-        TODO: 딜러: 모달창 + 사용자 모달창 추가 , and 딜러 전체경매에 대한 데이터?? 옥션전체 데이터에 대해 여쭤보기
+        TODO: 딜러:입찰 등록 -> 권한문제? 해결하기
     -->
     <div class="container-fluid"  v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
@@ -397,7 +397,7 @@
 
 <div v-if="isDealer">
 <!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
-        <div v-if="!succesbid" @click.stop="">
+        <div v-if="!succesbid && auctionDetail" @click.stop="">
             <div class="steps-container">
                 <div class="step completed">
                     <div class="label completed">
@@ -418,9 +418,10 @@
                 </div>
             </div>
             <p class="auction-deadline text-center">경매를 시작합니다.</p>
-            <p class="tc-red mt-2">경매 마감까지 23:35:12 분 남음</p>
+            <!--TODO: 경매 마감일? => final_at 인지 경매마감일 - 최종진단 일 ?, like 관심 기능 추가 필요-->
+            <p class="tc-red mt-2">경매 마감까지 {{auctionDetail.final_at || "null" }} 분 남음</p>
             <div class="mt-3 d-flex justify-content-end gap-3">
-                <p class="bid-icon tc-light-gray normal-16-font">입찰 12</p>
+                <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.top_bids.length }}</p>
                 <p class="interest-icon tc-light-gray normal-16-font">관심 6</p>
             </div>
             <div class="o_table_mobile my-5">
@@ -432,21 +433,21 @@
                                 <th>딜러명</th>
                                 <th>입찰금액</th>
                             </tr>
-                            <tr>
-                                <td>1위</td>
-                                <td>홍길동</td>
-                                <td>1,200만원</td>
+                            <tr v-for="(bid, index) in sortedTopBids" :key="bid.id">
+                                <td>{{ index + 1 }}위</td>
+                                <td>{{ bid.user_id }}</td>
+                                <td>{{ bid.price }} 만원</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-            </div>
-            <h5 class="text-start">나의 입찰 금액을 입력해주세요</h5>
-            <div class="input-container mt-4">
-                <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
-            </div>
-            <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
-            <button type="button" class="tc-wh btn btn-danger w-100" @click="SuccesBid">확인</button>
+</div>
+<h5 class="text-start">나의 입찰 금액을 입력해주세요</h5>
+      <div class="input-container mt-4">
+        <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
+      </div>
+      <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
+      <button type="button" class="tc-wh btn btn-danger w-100" @click="submitAuctionBid">확인</button>
         </div>
     </div>
 </div>
@@ -552,7 +553,7 @@ import modal from '@/views/modal/modal.vue';
 import Modal from '@/views/modal/auction/auctionModal.vue'; 
 
 import { convertToKorean } from '@/hooks/convertToKorean';
-
+import useBids from "@/composables/bids"; 
 const { getUser } = useUsers();
 const { role, getRole } = useRoles();
 const store = useStore();
@@ -585,7 +586,7 @@ const showReauctionView = ref(false); //[사용자]- 재 경매 시 뷰 제어
 
 const auctionDetail = ref(null); // [공통]- 상세 경매
 const { getAuctions, auctionsData, submitCarInfo } = useAuctions();
-
+const {  submitBid } = useBids();
 const carDetails = ref({}); //[공통]- 상세 경매(차 상세 정보)
 
 // 상위 5개의 입찰을 추출하고 정렬
@@ -704,22 +705,28 @@ onUnmounted(() => {
   window.removeEventListener('scroll', checkScroll);
 });
 
+
+function submitAuctionBid() {
+  if (!amount.value || isNaN(parseFloat(amount.value))) {
+    alert('유효한 금액을 입력해주세요.');
+  } else {
+    submitBid(auctionDetail.value.id, amount.value, user.value.id)
+      .then(response => {
+        alert('입찰이 성공적으로 등록되었습니다.');
+        succesbid.value = true;
+      })
+      .catch(error => {
+        const errorMessage = error.response ? JSON.stringify(error.response.data) : error.message;
+        console.error('입찰 등록에 실패했습니다.', errorMessage);
+        alert(`입찰 등록에 실패했습니다. 오류 메시지: ${errorMessage}`);
+      });
+  }
+}
+
 </script>
 
 
-<style scoped>
-  .tbl_basic table {width: 100%;border-collapse: collapse; font-size:14px;}
-  .tbl_basic table tr th, .tbl_basic table tr td { text-align:center; }
-  .tbl_basic table tr th {padding:8px 5px; border-radius: 6px; background: #f5f5f6; color: gray; border-style:solid none;}
-  .tbl_basic table tr td {padding:7px 5px; }
-  @media screen and (max-width: 481px) 
-  {
-    .o_table_mobile {width: 100%;overflow: hidden;}
-    .o_table_mobile .tbl_basic {overflow-x: scroll;}
-    .o_table_mobile .tbl_basic table {width: 100%;min-width:480px;}
-    .o_table_mobile .tbl_dealer table {width: 100%;min-width:0px  !important;}
-  }
-</style>    
+
 
 <style scoped>
     .dealer-check {

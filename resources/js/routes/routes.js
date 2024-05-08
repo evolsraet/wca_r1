@@ -353,6 +353,18 @@ export default [
                 component: () => import('../views/admin/deposit/Index.vue'),
                 meta: { breadCrumb: 'deposit' }
             },
+            {
+                name: 'auction.index',
+                path: 'auction',
+                component: () => import('../views/admin/auction/Index.vue'),
+                meta: { breadCrumb: 'auction' }
+            },
+            {
+                name: 'auction.approve',
+                path: 'auction/approve/:id',
+                component: () => import('../views/admin/auction/approve.vue'),
+                meta: { breadCrumb: 'auction approve' }
+            },
         ]
     },
     {

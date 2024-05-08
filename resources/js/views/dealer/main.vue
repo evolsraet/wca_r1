@@ -4,7 +4,7 @@
             <div class="layout-container02">
                 <!-- 딜러 프로필 요약 정보 -->
                 <div class="banner-top ">
-                    <div class="top-info">현재 진행중인 경매<p class="tc-red"> 1 </p> 건</div>
+                    <div class="top-info">현재 진행중인 경매<p class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }} </p> 건 </div>
                     <div class="styled-div">
                         <div class="profile dealer-mp">
                             <div class="dealer-info">
@@ -18,7 +18,7 @@
                             </div>
                             <div class="footer mob-info"><p class="tc-light-gray" style=" margin-top: 14px;">입찰가능 유효시간 2024.03.20</p></div>
                             <div class="auction-info">
-                                <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">0</span>건 있습니다</p>
+                                <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span>건 있습니다</p>
                                 <div style="display: flex;align-items: flex-end;">
                                     <div class="car-image"></div>
                                     <p class="tc-light-gray mb-3">입찰가능 유효시간 2024.03.20</p>
@@ -48,7 +48,7 @@
                 <div class="content">
                     <div class="enter-view text-start mb-2" >
                         <h3 class="review-title">공지사항</h3>
-                        <router-link :to="{ name: 'index.notices'}" class="btn-apply">전체보기</router-link>
+                        <router-link :to="{ name: 'index.notices'}" class="btn-apply mt-0">전체보기</router-link>
                     </div>
                     <table class="table custom-border">
                         <tbody>
@@ -74,7 +74,7 @@
                     </table>
                     <div class="enter-view text-start mt-5 mb-2">
                         <h3 class="review-title">클레임 현황</h3>
-                        <router-link :to="{ name: 'index.claim'}" class="btn-apply">전체보기</router-link>
+                        <router-link :to="{ name: 'index.claim'}" class="btn-apply mt-0">전체보기</router-link>
                     </div>
                     <table class="table custom-border text-center">
                         <thead class="tr-style">

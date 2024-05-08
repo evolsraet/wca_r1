@@ -10,7 +10,7 @@
                     </router-link>
 --> 
                 </div>
-                <div class="search-type2 mb-5">
+                <div class="search-type2 mb-2">
                         <div class="border-xsl">
                         <div class="image-icon-excel">
 
@@ -20,7 +20,7 @@
                             <button type="button" class="search-btn">검색</button>
                         </div>
                     <div class="container mb-3">
-                    <div class="d-flex justify-content-end">
+                    <div class="d-flex justify-content-end responsive-flex-end">
                         <div class="text-start status-selector">
                         <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
                         <label for="all" class="mx-2">전체</label>
@@ -33,12 +33,11 @@
                     </div>
 
                         <div class="text-end select-option">
-                            <select class="form-select select-rank" aria-label="최근 등록 순">
-                                <option selected>최근 등록 순</option>
-                                <option value="1">가격 낮은 순</option>
-                                <option value="2">가격 높은 순</option>
-                                <option value="3">연식 오래된 순</option>
-                                <option value="4">연식 최신 순</option>
+                            <select class="form-select select-rank" aria-label="심사중">
+                                <option selected>심사중</option>
+                                <option value="1">정상</option>
+                                <option value="2">탈퇴</option>
+                                <option value="3">가입거부</option>
                             </select>
                         </div>
                     </div>
@@ -340,5 +339,20 @@ watch(
 <style scoped>
 .sidebar {
     height: 116vh !important;
+}
+@media screen and (max-width: 481px){
+.o_table_mobile .tbl_basic table {
+    width: 100%;
+    min-width: 600px !important;
+}
+}
+.select-option {
+    width: 112px !important;
+}
+@media (max-width: 360px) {
+  .responsive-flex-end {
+    align-items: flex-end;
+    flex-direction: column;
+  }
 }
 </style>

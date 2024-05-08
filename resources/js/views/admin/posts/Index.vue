@@ -31,15 +31,6 @@
                         <input type="radio" name="status" value="done" id="completed" hidden @change="setFilter('done')">
                         <label for="completed" class="mx-2">딜러</label>
                     </div>
-                    <div class="text-end select-option">
-                            <select class="form-select select-rank" aria-label="최근 등록 순">
-                                <option selected>최근 등록 순</option>
-                                <option value="1">가격 낮은 순</option>
-                                <option value="2">가격 높은 순</option>
-                                <option value="3">연식 오래된 순</option>
-                                <option value="4">연식 최신 순</option>
-                            </select>
-                        </div>
                     </div>
                     </div>
                     <div class="o_table_mobile my-5">
@@ -348,5 +339,19 @@ watch(
     margin-left: 0rem !important;
 }
 }
-
+@media screen and (max-width: 481px){
+.o_table_mobile .tbl_basic table {
+    width: 100%;
+    min-width: 600px !important;
+}
+}
+.select-option {
+    width: 112px !important;
+}
+@media (max-width: 360px) {
+  .responsive-flex-end {
+    align-items: flex-end;
+    flex-direction: column;
+  }
+}
 </style>

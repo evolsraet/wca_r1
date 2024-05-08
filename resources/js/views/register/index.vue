@@ -81,7 +81,7 @@
                                                     <label for="dealerPhoto">사진 (본인 확인용)</label>
                                                     <img id="imagePreview" style="max-width: 50%; display: none;">
                                                     <button type="button" class="btn btn-fileupload" @click="triggerFileUpload">
-                                                        <img src="../../../img/Icon-upload.png" class="me-2" alt="Upload Icon">파일 첨부
+                                                       파일 첨부
                                                     </button>
                                                     <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
                                                     <div class="text-start tc-light-gray" v-if="registerForm.file_user_photo_name">사진 파일 : {{ registerForm.file_user_photo_name }}</div>

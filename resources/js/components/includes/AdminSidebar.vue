@@ -140,7 +140,7 @@
                         </li>
                         <li v-if="can('role.admin')" class="nav-link">
                             <router-link
-                                :to="{ name: 'deposit.index' }"
+                                :to="{ name: 'auction.index' }"
                                 class="nav-link px-0"
                             >
                                 <svg
@@ -224,7 +224,7 @@
                     </router-link>
                 </li>
                 <li class="nav-item logout-fixed">
-                <a href="/login" @click.prevent="logout" class="nav-link d-flex align-items-center">
+                <a href="/login" @click="logout" class="nav-link d-flex align-items-center p-3">
                     <div class="logout-icon me-2"></div>
                     <span class="d-none d-sm-inline">로그아웃</span>
                 </a>
@@ -236,7 +236,9 @@
 
 <script setup>
 import { useAbility } from "@casl/vue";
+import useAuth from "@/composables/auth";
 const { can } = useAbility();
+const { logout } = useAuth();
 </script>
 
 <style scoped>

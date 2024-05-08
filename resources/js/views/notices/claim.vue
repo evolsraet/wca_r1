@@ -93,7 +93,7 @@
                                     <td>24-03-15</td>
                                     <td><p class="blue-box-ty03">4751982</p></td>
                                     <td>접수</td>
-                                    <td class="ms-5 btn-apply">상세</td>
+                                    <td class="d-flex ms-2 justify-content-center btn-apply">상세</td>
                                 </tr>
                             </tbody>
                         </table>

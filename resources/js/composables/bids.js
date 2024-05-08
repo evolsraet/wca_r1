@@ -1,10 +1,18 @@
-import {ref,computed} from 'vue';
+import {ref,computed, inject} from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router'
 
 // 입찰 데이터
 export default function useBid() {
     const bidsData = ref([]);
-
+    const bids = ref([]);
+    const bid = ref({
+        auction_id: '',
+        price: ''
+    });
+    const validationErrors = ref({});
+    const isLoading = ref(false);
+    const swal = inject('$swal')
     const getBids = async () => {
 
         try {
@@ -36,10 +44,49 @@ export default function useBid() {
         return bidsData.value.slice(0, 2);
     });
 
+    const submitBid = async (auctionId, bidAmount, userId) => {
+        if (isLoading.value) return;
+        isLoading.value = true;
+        validationErrors.value = {};
+
+        try {
+            const response = await axios.post("/api/bids", {
+                user_id: userId,
+                auction_id: auctionId,
+                price: bidAmount
+            });
+            swal({
+                icon: 'success',
+                title: 'Bid created successfully'
+            });
+            return response.data;
+        } catch (error) {
+            const errorMessage = error.response ? JSON.stringify(error.response.data) : error.message;
+            console.error('Failed to create bid:', errorMessage);
+            if (error.response && error.response.data) {
+                validationErrors.value = error.response.data.errors;
+            }
+            swal({
+                icon: 'error',
+                title: 'Failed to create bid'
+            });
+            throw error;
+        } finally {
+            isLoading.value = false;
+        }
+    };
+
+
+    
     return {
         bidsData,
         bidsCountByUser,
         getBids,
-        viewBids
+        viewBids,
+        bids,
+        bid,
+        submitBid,
+        validationErrors,
+        isLoading
     };
 }

@@ -54,7 +54,7 @@
                                 <span class="menu-text">입금 관리</span>
                                 <div class="icon right-icon"></div>
                             </router-link >
-                            <router-link :to="{ name: 'deposit.index' }" class="menu-item mb-4"@click="toggleNavbar">
+                            <router-link :to="{ name: 'auction.index' }" class="menu-item mb-4"@click="toggleNavbar">
                                 <div class="icon icon-nav-car"></div>
                                 <span class="menu-text">매물 관리</span>
                                 <div class="icon right-icon"></div>
