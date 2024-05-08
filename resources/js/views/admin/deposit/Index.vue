@@ -212,7 +212,7 @@
                                         <a
                                             href="#"
                                             @click.prevent="deletePost(post.id)"
-                                            class="ms-2 badge web_style"
+                                            class="ms-2 badge"
                                             ><div class="icon-trash-img">
 
                                             </div></a
@@ -341,12 +341,4 @@ watch(
   text-overflow: ellipsis;
   white-space: nowrap; 
 }
-
-@media screen and (max-width: 481px) 
-{
-.web_style{
-    margin-left: 0rem !important;
-}
-}
-
 </style>

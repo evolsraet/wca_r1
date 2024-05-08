@@ -3012,3 +3012,65 @@ input[type="checkbox"] {
     text-align: center;
 }
 
+
+.border-xsl{
+    display: flex;      
+    justify-content: center; 
+    align-items: center; 
+    width: 35px;
+    height: 35px;
+    border-radius: 17px;
+    background-color: #1d6b402f;
+}
+
+.image-icon-excel {
+    width: 16.3px; 
+    height: 21.5px; 
+    background-image: url('../img/excel_icon.png'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+  }
+  .border-red-write {
+    position: fixed; 
+    bottom: 62px;
+    right: 20px;
+    width: 54px;     
+    height: 54px;
+    border-radius: 50%;   
+    background-color: $primary; 
+    padding: 15px;  
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 1000;    
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.border-red-write:hover {
+    background-color: $primary-hover; 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.image-icon-pen {
+    width: 23px; 
+    height: 23px; 
+    background-image: url('../img/Icon-pen.png'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+.icon-trash-img{
+    width: 25px;
+    height: 27px;
+    background-image: url('../img/Icon-feather-trash-2.png'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+.icon-edit-img{
+    width: 23px;
+    height: 24px;
+    background-image: url('../img/Icon-feather-edit.png'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+}

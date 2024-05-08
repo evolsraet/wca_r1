@@ -347,6 +347,12 @@ export default [
                 component: () => import('../views/admin/users/Edit.vue'),
                 meta: { breadCrumb: 'User Edit' }
             },
+            {
+                name: 'deposit.index',
+                path: 'deposit',
+                component: () => import('../views/admin/deposit/Index.vue'),
+                meta: { breadCrumb: 'Users' }
+            },
         ]
     },
     {

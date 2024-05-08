@@ -10,7 +10,12 @@
                     </router-link>
 --> 
                 </div>
-                    <div class="search-type2 justify-content-end mb-5">
+                <div class="search-type2 mb-5">
+                        <div class="border-xsl">
+                        <div class="image-icon-excel">
+
+                        </div>
+                    </div>
                     <input type="text" placeholder="회원 검색" v-model="search_global">
                             <button type="button" class="search-btn">검색</button>
                         </div>
