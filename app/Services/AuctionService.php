@@ -84,4 +84,12 @@ class AuctionService
             $this->modifyOnlyMe($result);
         }
     }
+
+    protected function afterProcess($method, $request, $result, $id = null)
+    {
+        if ($method == 'show') {
+            // Auction 의 hit 를 +1 하기
+            $result->increment('hit');
+        }          // 컨트롤러에서 이 메소드를 오버라이드하여 사용할 수 있습니다.
+    }
 }

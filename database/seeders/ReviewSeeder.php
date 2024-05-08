@@ -13,7 +13,7 @@ class ReviewSeeder extends Seeder
      */
     public function run(): void
     {
-        $done_count = \App\Models\Auction::where('status', 'done')->count() - 2;
+        $done_count = \App\Models\Auction::where('status', 'done')->count() - 10;
         Review::factory($done_count)->create();
     }
 }

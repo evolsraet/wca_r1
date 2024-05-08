@@ -30,10 +30,27 @@ class AuctionResource extends JsonResource
             }
         }
 
+
+
         // 상위 5개 입찰건
         if ($parentArray['status'] != 'ask') {
-            $addArray['top_bids'] = Bid::where('auction_id', $parentArray['id'])->limit(5)->get();
+            $addArray['bids_count'] = Bid::where('auction_id', $parentArray['id'])->count();
+
+            $bidsQuery = Bid::where('auction_id', $parentArray['id'])
+                ->orderBy('price', 'desc')
+                ->limit(5)
+                ->get();
+
+            // 완료시 금액 공개
+            if ($parentArray['status'] == 'done') {
+                $addArray['top_bids'] = $bidsQuery->makeHidden(['user_id']);
+            } elseif ($parentArray['status'] == 'ing') {
+                $addArray['top_bids'] = $bidsQuery->makeHidden(['price', 'user_id']);
+            } else {
+                $addArray['top_bids'] = $bidsQuery;
+            }
         }
+
 
         return array_merge($parentArray, $addArray);
     }
