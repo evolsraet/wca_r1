@@ -34,7 +34,6 @@ class BidService
             // 관리자 외 딜러는 본인것만
             if (auth()->user()->hasPermissionTo('act.admin')) {
             } elseif (auth()->user()->hasPermissionTo('act.dealer')) {
-                // 딜러는 본인이 넣은것만
                 $result->where('user_id', auth()->user()->id);
             } else {
                 // 유저는 본인의 auction 인것만

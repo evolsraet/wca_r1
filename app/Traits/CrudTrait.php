@@ -123,10 +123,29 @@ trait CrudTrait
                         break;
 
                     default:
-                        if (isset($row[2])) {
-                            $result = $result->where($row[0], $row[1], $row[2]);
+                        if (strpos($row[0], "{$this->modelClass}.") !== false) {
+                            // 동일테이블
+                            if (isset($row[2])) {
+                                $result = $result->where($row[0], $row[1], $row[2]);
+                            } else {
+                                $result = $result->where($row[0], $row[1]);
+                            }
                         } else {
-                            $result = $result->where($row[0], $row[1]);
+                            // 다른테이블
+                            $findKey = explode('.', $row[0]); // 0 테이블 1 필드
+                            $result->with($findKey[0]);
+
+                            if (isset($row[2])) {
+                                $result->whereHas($findKey[0], function ($qry) use ($findKey, $row) {
+                                    // findKey[1]는 필드명, row[1]은 연산자, row[2]는 값
+                                    $qry->where($findKey[1], $row[1], $row[2]); // 특정 조건에 맞는 관계를 필터링
+                                });
+                            } else {
+                                $result->whereHas($findKey[0], function ($qry) use ($findKey, $row) {
+                                    // findKey[1]는 필드명, row[1]은 값 (기본 연산자는 '=')
+                                    $qry->where($findKey[1], '=', $row[1]); // 기본 연산자 '='를 명시적으로 사용
+                                });
+                            }
                         }
                         break;
                 }
