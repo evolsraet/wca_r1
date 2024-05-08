@@ -351,7 +351,7 @@ export default [
                 name: 'deposit.index',
                 path: 'deposit',
                 component: () => import('../views/admin/deposit/Index.vue'),
-                meta: { breadCrumb: 'Users' }
+                meta: { breadCrumb: 'deposit' }
             },
         ]
     },

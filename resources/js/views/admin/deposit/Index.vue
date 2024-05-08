@@ -2,7 +2,7 @@
     <div class="p-3 row justify-content-center my-2">
         <div class="col-md-12">
         </div>
-                 <router-link
+        <router-link
                         :to="{ name: 'posts.create' }"
                         class="border-red-write"
                     >
@@ -10,10 +10,11 @@
 
                         </div>
                     </router-link>
+                    <div class="proceeding"></div>
                     <div class="search-type2 mb-5">
-                    <div class="border-xsl">
-                        <div class="image-icon-excel">
-
+                        <div class="border-xsl">
+                            <div class="image-icon-excel">
+                                
                         </div>
                     </div>
                     <input type="text" placeholder="검색어"  v-model="search_title" style="width: auto !important;">

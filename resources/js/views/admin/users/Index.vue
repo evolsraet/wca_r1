@@ -1,5 +1,5 @@
 <template>
-    <div class="row justify-content-center my-2">
+    <div class="row justify-content-center my-2 p-3">
         <div class="col-md-12">
                   <!-- <router-link
                         v-if="can('role.admin')"
@@ -16,7 +16,7 @@
 
                         </div>
                     </div>
-                    <input type="text" placeholder="회원 검색" v-model="search_global">
+                    <input type="text" placeholder="회원 검색" v-model="search_global" style="width: auto !important;">
                             <button type="button" class="search-btn">검색</button>
                         </div>
                     <div class="container mb-3">
@@ -337,3 +337,8 @@ watch(
     }, 200)
 );
 </script>
+<style scoped>
+.sidebar {
+    height: 116vh !important;
+}
+</style>
