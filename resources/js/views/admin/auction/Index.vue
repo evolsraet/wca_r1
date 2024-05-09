@@ -14,9 +14,9 @@
                     <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
                     <label for="all" class="mx-2">전체</label>
                     <input type="radio" name="status" value="ing" id="ongoing" hidden @change="setFilter('ing')">
-                    <label for="ongoing">일반</label>
+                    <label for="ongoing">진단중</label>
                     <input type="radio" name="status" value="done" id="completed" hidden @change="setFilter('done')">
-                    <label for="completed" class="mx-2">딜러</label>
+                    <label for="completed" class="mx-2">진단완료</label>
                 </div>
             </div>
         </div>

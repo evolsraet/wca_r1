@@ -184,7 +184,7 @@
                                             height="70"
                                         />
                                     </td>--> 
-                                   <td class="px-6 py-4 text-sm">
+                                   <td class="px-6 py-4 text-sm text-overflow">
                                         {{ post.title }}
                                     </td>
                                     <td class="px-6 py-4 text-sm">
