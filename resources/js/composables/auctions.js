@@ -21,16 +21,20 @@ export default function useAuctions() {
     });
 
 // 경매 내용 통신 (페이지까지)
-    const getAuctions = async (page = 1) => {
-        try {
-            const response = await axios.get(`/api/auctions?page=${page}`);
-            auctionsData.value = response.data.data;
-            pagination.value = response.data.meta;
-        } catch (error) {
-            console.error('Error fetching auctions:', error);
-        }
-    };
+const getAuctions = async (page = 1) => {
+    try {
+        const response = await axios.get(`/api/auctions?page=${page}`);
+        auctionsData.value = response.data.data;
+        pagination.value = response.data.meta;
+        console.log('Pagination:', pagination.value);
+        console.log('Auctions:', auctionsData.value);
+    } catch (error) {
+        console.error('Error fetching auctions:', error);
+    }
+};
 
+
+    
 // 경매 ID를 이용해 경매 상세 정보를 가져오는 함수
 const getAuctionById = async (id) => {
     try {

@@ -9,18 +9,18 @@
             <div class="container my-4">
                 <div>
                 <div class="mb-4">
-                    <div class="tc-light-gray">조회수: {{ auctionDetail.hit }}</div>
+                    <div class="tc-light-gray">조회수: {{ auctionDetail.data.hit }}</div>
                     <div class="card my-auction">
                         <input class="toggle-heart" type="checkbox" checked />
                         <label class="heart-toggle"></label>
-                        <div :class="{ 'grayscale_img': auctionDetail.status === 'done' }" class="card-img-top-ty01"></div>
-                        <div v-if="auctionDetail.status === 'done'" class="time-remaining">경매 완료</div>
+                        <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' }" class="card-img-top-ty01"></div>
+                        <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
                         <div class="card-body">
                             <div class="enter-view align-items-baseline ">
                                 <p class="card-title fs-5"><span class="blue-box">무사고</span>현대 쏘나타(DN8)</p>
                             </div>
                             <div class="enter-view">
-                                <p class="card-text tc-light-gray fs-5">{{ auctionDetail.car_no }}</p>
+                                <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>
                                 <a href="#"><span class="red-box-type02 pass-red">위카 진단평가</span></a>
                             </div>
                         </div>
@@ -31,11 +31,11 @@
             </div>
         </div>
     <div class="bold-18-font">
-        <div v-if="auctionDetail.status === 'wait'">
-            <p class="auction-deadline">경매 마감일<span> {{ auctionDetail.final_at }}</span></p>
+        <div v-if="auctionDetail.data.status === 'wait'">
+            <p class="auction-deadline">경매 마감일<span> {{ auctionDetail.data.final_at }}</span></p>
         </div>
-        <div v-else-if="auctionDetail.status === 'done'">
-            <p class="auction-deadline">낙찰가 {{ auctionDetail.final_price }} 만원</p>
+        <div v-else-if="auctionDetail.data.status === 'done'">
+            <p class="auction-deadline">낙찰가 {{ auctionDetail.data.final_price }} 만원</p>
         </div>
         <div v-else>
             <p class="auction-deadline">경매 마감되었어요</p>
@@ -222,7 +222,7 @@
         </div>
         <h5 class="mt-5">기타</h5>
         <div class="form-group">
-        <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.memo }}</textarea>
+        <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo }}</textarea>
          </div>
         <ul class="machine-inform-title">
             <li class="tc-light-gray">거래지역</li>
@@ -247,8 +247,8 @@
     #########################-->
 
             <div v-if="isUser">
-             <!-------[사용자]- ing(경매 진행중) or diag (진단평가)알때------->
-            <div v-if="auctionDetail.status === 'wait' || auctionDetail.status === 'diag' " @click.stop="">
+             <!-------[사용자]diag (진단평가)알때------->
+            <div v-if="auctionDetail.data.status === 'diag' " @click.stop="">
             <div class="steps-container">
             <div class="step completing">
                 <div class="label completed">
@@ -270,8 +270,30 @@
         </div>
         <p class="auction-deadline">현재 등록신청 후 진단평가 진행 중 입니다.</p>
     </div>
-    <!-- [사용자]- 딜러 선택 (chosen) 중일때 (TODO: 현재 ui 변경 상황 보려고 ing로 대채 후에 chson으로 바꾸기) -->
-    <div v-if="!selectedDealer && auctionDetail.status === 'chosen'" @click.stop="">
+    <div v-if="auctionDetail.data.status === 'ing' " @click.stop="">
+            <div class="steps-container">
+            <div class="step completing">
+                <div class="label completed">
+                    STEP01
+                </div>
+            </div>
+            <div class="line"> </div>
+            <div class="step">
+                <div class="label">
+                    STEP02
+                </div>
+            </div>
+            <div class="line"></div>
+            <div class="step">
+                <div class="label">
+                    STEP03
+                </div>
+            </div>
+        </div>
+        <p class="auction-deadline">현재 경매중 입니다.</p>
+    </div>
+    <!-- [사용자]- 딜러 선택 (wait) 중일때  -->
+    <div v-if="!selectedDealer && auctionDetail.data.status === 'wait'" @click.stop="">
         <div class="steps-container">
             <div class="step completed">
                 <div class="label completed">
@@ -329,7 +351,7 @@
     </div>
 
     <!--[사용자] - 딜러 선택 후 경매 했을떄 -->
-    <div v-if="selectedDealer && auctionDetail.status === 'ing'" @click.stop="">
+    <div v-if="selectedDealer && auctionDetail.data.status === 'wait'" @click.stop="">
     <div class="steps-container">
         <div class="step completed">
             <div class="label completed">
@@ -382,7 +404,7 @@
         </div>
     </div>
         <!--[사용자] - 경매 완료 -->
-        <div v-if="auctionDetail.status === 'done'" @click.stop="">
+        <div v-if="auctionDetail.data.status === 'done'" @click.stop="">
         <h5 class="text-center p-4"> 거래는 어떠셨나요?</h5>
         <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-danger w-100">후기 남기기</router-link>
     </div>
@@ -397,14 +419,14 @@
 
 <div v-if="isDealer">
         <!------------------- [딜러] - 경매 완료 -------------------->
-        <div class="mt-4" v-if="auctionDetail.status === 'done'" @click.stop="">
+        <div class="mt-4" v-if="auctionDetail.data.status === 'done'" @click.stop="">
         <h5 class="text-center"> 불편 사항이 있으신가요?</h5>
         <button type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</button>
         <a href="#" class="d-flex justify-content-center tc-light-gray">클레임 규정</a>
     </div>
 
 <!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
-        <div v-if="!succesbid && auctionDetail && auctionDetail.status === 'ing'" @click.stop="">
+        <div v-if="!succesbid && auctionDetail && auctionDetail.data.status === 'ing'" @click.stop="">
             <div class="steps-container">
                 <div class="step completed">
                     <div class="label completed">
@@ -426,9 +448,9 @@
             </div>
             <p class="auction-deadline text-center">경매를 시작합니다.</p>
             <!--TODO: 경매 마감일? => final_at 인지 경매마감일 - 최종진단 일 ?, like 관심 기능 추가 필요-->
-            <p class="tc-red mt-2">경매 마감까지 {{auctionDetail.final_at || "null" }} 분 남음</p>
+            <p class="tc-red mt-2">경매 마감까지 {{auctionDetail.data.final_at || "null" }} 분 남음</p>
             <div class="mt-3 d-flex justify-content-end gap-3">
-                <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.top_bids.length }}</p>
+                <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.top_bids.length }}</p>
                 <p class="interest-icon tc-light-gray normal-16-font">관심 6</p>
             </div>
             <div class="o_table_mobile my-5">
@@ -459,7 +481,7 @@
     </div>
 </div>
 <!------------------- [딜러] - 입찰 완료후 바텀 메뉴 -------------------->
-    <div class="p-4"v-if="succesbid && auctionDetail.status === 'ing'"@click.stop="">
+    <div class="p-4"v-if="succesbid && auctionDetail.data.status === 'ing'"@click.stop="">
        <h5 class="mx-3 text-center">경매 마감까지 03:25:43 남음</h5>
        <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">1,300만원</span></p>
        <h5 class="my-4">입찰 n명/ 관심 n 명</h5>
@@ -485,14 +507,14 @@
         <div class="p-4">
                     <h5 class="mb-2 ">재 경매를 진행합니다</h5>
                     <div class="card my-auction">
-                        <div :class="{ 'grayscale_img': auctionDetail.status === 'done' }" class="card-img-top-ty01"></div>
-                        <div v-if="auctionDetail.status === 'done'" class="time-remaining">경매 완료</div>
+                        <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' }" class="card-img-top-ty01"></div>
+                        <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
                         <div class="card-body">
                             <div class="enter-view align-items-baseline ">
                                 <p class="card-title fs-5"><span class="blue-box">무사고</span>현대 쏘나타(DN8)</p>
                             </div>
                             <div class="enter-view">
-                                <p class="card-text tc-light-gray fs-5">{{ auctionDetail.car_no }}</p>
+                                <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>
                                 <a href="#"><span class="red-box-type02 pass-red">위카 진단평가</span></a>
                             </div>
                         </div>
@@ -586,7 +608,7 @@ const scrollButtonStyle = ref({ display:'none'}); //[공통]-바텀 시트 및 �
 const showReauctionView = ref(false); //[사용자]- 재 경매 시 뷰 제어
 
 const auctionDetail = ref(null); // [공통]- 상세 경매
-const { getAuctions, auctionsData, submitCarInfo } = useAuctions();
+const { getAuctions, auctionsData, submitCarInfo ,getAuctionById} = useAuctions();
 const {  submitBid } = useBids();
 const carDetails = ref({}); //[공통]- 상세 경매(차 상세 정보)
 
@@ -615,30 +637,44 @@ function toggleSheet() {
     }
     showBottomSheet.value = !showBottomSheet.value;
 }
-
-// 모든 경매 데이터를 불러오는 함수 호출 및 바텀 시트 show or black
+// URL 파라미터로 받은 ID를 이용하여 해당 경매 데이터 찾기
+/*const findAuctionDetail = () => {
+  const auctionId = parseInt(route.params.id);
+  console.log("!Auction details ID:", auctionId);
+  const detail = auctionsData.value.find(auction => auction.id === auctionId);
+  console.log("!Auction detail:", detail);
+  if (detail) {
+    auctionDetail.value = detail; // 경매 상세 정보 저장
+  } else {
+    console.error("no data"); // 데이터 없음 처리
+  }
+};*/
 onMounted(async () => {
     await getAuctions();
-    findAuctionDetail();
-    window.addEventListener('scroll', checkScroll);
-    const storedData = localStorage.getItem('carDetails');
+  const auctionId = parseInt(route.params.id);
+  console.log("Auction details ID:", auctionId);
+  window.addEventListener('scroll', checkScroll);
+  try {
+    auctionDetail.value = await getAuctionById(auctionId);
+    console.log("Auction detail:", auctionDetail.value);
+  } catch (error) {
+    console.error("Error fetching auction detail:", error);
+  }
+});
+
+// 모든 경매 데이터를 불러오는 함수 호출 및 바텀 시트 show or black
+/*onMounted(async () => {
+  await getAuctions();
+  findAuctionDetail();
+  window.addEventListener('scroll', checkScroll);
+  const storedData = localStorage.getItem('carDetails');
   if (storedData) {
     carDetails.value = JSON.parse(storedData);
   } else {
     console.log('No car details');
   }
-});
+});*/
 
-// URL 파라미터로 받은 ID를 이용하여 해당 경매 데이터 찾기
-const findAuctionDetail = () => {
-    const auctionId = parseInt(route.params.id);
-    const detail = auctionsData.value.find(auction => auction.id === auctionId);
-    if (detail) {
-        auctionDetail.value = detail; // 경매 상세 정보 저장
-    } else {
-        console.error("no data"); // 데이터 없음 처리
-    }
-};
 
 // 딜러 선택 시
 function selectDealer(bid, event) {

@@ -3,10 +3,6 @@ TODO:
 - 관심 차량 숫자 표기
 - 페이지 네이션 처리
 - 옵션:최신등록순, 가격낮은순 처리
-**********************************
- !!!2024.05.09!
- 1번째 페이지는 상세페이지 잘나오는데
- 그 후페이지 는 상세 페이지 뎅터를 못가져오는 문제 해결하기
 -->
 
 <template>
@@ -442,51 +438,65 @@ TODO:
                 <!-- 내 경매 관리 / 경매 전체 -->
 
                 <div class="container my-4" v-if="currentTab === 'allInfo'">
-                    <div class="row">
-                        <!-- if. 경매 ing 있을때 -->
-                        <div class="col-6 col-md-4 mb-4" v-for="auction in filteredAuctions" :key="auction.user_id"  @click="navigateToDetail(auction.id)">
-                            <div class="card my-auction">
-                                <input class="toggle-heart" type="checkbox" checked />
-                                <label class="heart-toggle"></label>
-                                <div :class="{ 'grayscale_img': auction.status === 'done' }" class="card-img-top-placeholder"></div>
-                                <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
-                                <div  v-if="auction.status  === 'ing'"class="progress">
-                                    <div class="progress-bar" role="progressbar"></div>
-                                </div>
-                                <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
-                                <div v-if="auction.status === 'wait'" class="wait-selection">선택 대기</div>
-                                <div v-if="auction.status === 'chosen'" class="dealer-select">딜러 선택</div>
-                                <div v-if="auction.status === 'diag'" class="time-remaining">진단 평가</div>
-                                <div class="card-body">
-                                    <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
-                                </div>
-                            </div>
-                        </div>
+        <div class="row">
+            <!-- if. 경매 ing 있을때 -->
+            <div
+                class="col-6 col-md-4 mb-4"
+                v-for="auction in filteredAuctions"
+                :key="auction.id"
+                @click="navigateToDetail(auction)"
+                :style="getAuctionStyle(auction)"
+            >
+                <div class="card my-auction">
+                    <input class="toggle-heart" type="checkbox" checked />
+                    <label class="heart-toggle"></label>
+                    <div :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' }" class="card-img-top-placeholder"></div>
+                    <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
+                    <div v-if="auction.status === 'ing'" class="progress">
+                        <div class="progress-bar" role="progressbar"></div>
+                    </div>
+                    <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
+                    <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
+                    <div v-if="auction.status === 'wait'" class="dealer-select">딜러 선택</div>
+                    <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
+                    <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
+                    <div class="card-body">
+                        <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
+                        <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
                     </div>
                 </div>
-                <div class="container my-4" v-if="currentTab === 'interInfo'">
-                    <div class="row">
-                        <!-- if. 경매 ing 있을때 -->
-                        <div class="col-6 col-md-4 mb-4" v-for="auction in filteredAuctions" :key="auction.user_id">
-                            <div class="card my-auction">
-                                <div class="card-img-top-placeholder"></div>
-                                <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
-                                <div  v-if="auction.status  === 'ing'"class="progress">
-                                    <div class="progress-bar" role="progressbar"></div>
-                                </div>
-                                <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
-                                <div v-if="auction.status === 'wait'" class="wait-selection">선택 대기</div>
-                                <div v-if="auction.status === 'chosen'" class="dealer-select">딜러 선택</div>
-                                <div v-if="auction.status === 'diag'" class="time-remaining">진단 평가</div>
-                                <div class="card-body">
-                                    <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+        </div>
+    </div>
+    <div class="container my-4" v-if="currentTab === 'interInfo'">
+        <div class="row">
+            <!-- if. 경매 ing 있을때 -->
+            <div
+                class="col-6 col-md-4 mb-4"
+                v-for="auction in filteredAuctions"
+                :key="auction.id"
+                @click="navigateToDetail(auction)"
+                :style="getAuctionStyle(auction)"
+            >
+                <div class="card my-auction">
+                    <div class="card-img-top-placeholder"></div>
+                    <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
+                    <div v-if="auction.status === 'ing'" class="progress">
+                        <div class="progress-bar" role="progressbar"></div>
+                    </div>
+                    <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
+                    <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
+                    <div v-if="auction.status === 'wait'" class="dealer-select">딜러 선택</div>
+                    <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
+                    <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
+                    <div class="card-body">
+                        <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
+                        <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
             <!--
                 <div class="container mt-5 mov-info02">
                     <table class="table custom-border">
@@ -563,14 +573,16 @@ TODO:
                 <nav>
                     <ul class="pagination justify-content-center">
                         <li class="page-item" :class="{ disabled: !pagination.prev }">
-                            <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
+                        <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
                         </li>
-                        <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }"><a class="page-link" @click="loadPage(n)">{{ n }}</a></li>
+                        <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                        <a class="page-link" @click="loadPage(n)">{{ n }}</a>
+                        </li>
                         <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                            <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
+                        <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
                         </li>
                     </ul>
-                </nav>
+                    </nav>
                 <div class="filter-content">
                 <!-- 페이지의 나머지 내용 -->
                 <button @click="toggleModal" class="animCircle filter-button" :style="buttonStyle"> 필터</button>
@@ -637,15 +649,13 @@ export default {
 };
 
 </script>
-
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import useAuctions from "@/composables/auctions";
 import useRoles from '@/composables/roles';
 import FilterModal from '@/views/modal/filter.vue'; 
 import { useRouter } from 'vue-router';
-
-
+import Swal from 'sweetalert2';
 
 const router = useRouter();
 const currentStatus = ref('all'); 
@@ -658,7 +668,7 @@ const interestCount = computed(() => auctionsData.value.filter(auction => auctio
 const auctionModal = ref(false);
 
 const setCurrentTab = (tab) => {
-    currentTab.value = tab;
+  currentTab.value = tab;
 };
 
 const isUser = ref(false);
@@ -675,14 +685,13 @@ function handleClose() {
   showModal.value = false;
 }
 
-// 경매 완료건이 있는지 확인하는 계산된 속성
 const hasCompletedAuctions = computed(() => {
-   return auctionsData.value.some(auction => auction.status === 'done');
+  return auctionsData.value.some(auction => auction.status === 'done');
 });
 
 const filteredAuctions = computed(() => {
   if (currentStatus.value === 'all') {
-    return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag','ask','cancel'].includes(auction.status));
+    return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag', 'ask', 'cancel'].includes(auction.status));
   }
   return auctionsData.value.filter(auction => auction.status === currentStatus.value);
 });
@@ -692,9 +701,23 @@ function loadPage(page) {
   currentPage.value = page;
   getAuctions(page);
 }
-function navigateToDetail(auctionId) {
-    console.log("디테일 :", auctionId);
-    router.push({ name: 'AuctionDetail', params: { id: auctionId } });
+
+function navigateToDetail(auction) {
+  const validStatuses = ['done', 'wait', 'ing', 'diag'];
+  if (validStatuses.includes(auction.status)) {
+    console.log("디테일 :", auction.id);
+    router.push({ name: 'AuctionDetail', params: { id: auction.id } });
+  } else {
+    Swal.fire({
+      icon: 'error',
+      title: '상세 정보를 볼 수 없습니다.',
+      text: `경매 상태: ${auction.status}`
+    });
+  }
+}
+function getAuctionStyle(auction) {
+  const validStatuses = ['done', 'wait', 'ing', 'diag'];
+  return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
 }
 onMounted(async () => {
   if (role.value.name === 'user') {
