@@ -45,17 +45,17 @@ class BidService
             }
 
             // 프라이스 필수
-            if (!$request->input('bids.auction_id'))
+            if (!$request->input('bid.auction_id'))
                 throw new \Exception('경매 아이디가 누락되었습니다.');
 
-            if (!$request->input('bids.price'))
+            if (!$request->input('bid.price'))
                 throw new \Exception('입찰가격이 누락되었습니다.');
 
             // 기본값 아이디 지정
             $result->user_id = auth()->user()->id;
             $result->status = 'ask';
-            $result->price = $request->input('bids.price');
-            $result->auction_id = $request->input('bids.auction_id');
+            $result->price = $request->input('bid.price');
+            $result->auction_id = $request->input('bid.auction_id');
 
             // 경매 검증 - 삽입에 auction_id 는 없다
             $auction = Auction::find($result->auction_id);

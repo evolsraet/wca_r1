@@ -2,19 +2,21 @@
 
 namespace Tests\Feature\Http\Controllers\Api;
 
-use App\Models\Review;
 use Tests\TestCase;
 use App\Models\User;
+use App\Models\Review;
 use App\Models\Auction;
 use Illuminate\Support\Facades\DB;
 use Tests\Traits\NotSuccessfulTestTrait;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class ReviewTest extends TestCase
 {
     use RefreshDatabase;
+    // use DatabaseTransactions;
     use WithFaker;
     use NotSuccessfulTestTrait;
 
@@ -28,7 +30,8 @@ class ReviewTest extends TestCase
 
     public function test_생성(): void
     {
-        $auction = Auction::where('status', 'done')->with('reviews')->doesntHave('reviews')->first();
+        $auction = Auction::where('status', 'done')->doesntHave('reviews')->first();
+
         $review = Review::factory([
             'auction_id' => $auction->id
         ])->make();
@@ -66,9 +69,10 @@ class ReviewTest extends TestCase
 
     public function test_수정(): void
     {
-        $user = User::role('user')->has('review')->first();
-        $review = Review::where('user_id', $user->id)->first();
-        // dd($user->id);
+        // factory를 이용해 데이터를 추가하는 코드 작성해줘
+        $review = Review::factory()->create();
+        $user = User::where('id', $review->user_id)->first();
+
         $data = [
             'review' => [
                 'content' => 'updated'
@@ -103,7 +107,7 @@ class ReviewTest extends TestCase
 
     public function test_삭제(): void
     {
-        $review = Review::first();
+        $review = Review::factory()->create();
         $user = User::where('id', $review->user_id)->first();
 
         // 본인 or 관리자만
