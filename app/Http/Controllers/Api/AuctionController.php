@@ -48,6 +48,7 @@ class AuctionController extends Controller
 
         // 캐시 없을 경우, 한달동안 저장
         $resource = Cache::remember($cacheKey, now()->addDays(30), function () use ($request) {
+            // 임시 데이터 리턴
             return [
                 'owner' => $request->input('owner'),
                 'no' => $request->input('no'),
