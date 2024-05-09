@@ -30,10 +30,11 @@ const getAuctionById = async (id) => {
     try {
         // API 경로에서 {auction} 부분을 실제 ID로 치환하여 요청
         const response = await axios.get(`/api/auctions/${id}`);
+        console.log(response);
         return response.data;
     } catch (error) {
-        console.error('Error fetching auction by ID:', error);
-        throw error; // 에러를 다시 던져서 호출 측에서 처리할 수 있게 함
+        console.error('Error ID:', error);
+        throw error; 
     }
 };
 const statusMap = {
@@ -69,6 +70,38 @@ const submitCarInfo = async () => {
     }
 };
 
+const updateAuction = async (auction) => {
+    if (isLoading.value) return;
+
+    isLoading.value = true;
+    validationErrors.value = {};
+
+    let serializedAuction = new FormData();
+    for (let item in auction) {
+        if (auction.hasOwnProperty(item)) {
+            serializedAuction.append(item, auction[item]);
+        }
+    }
+
+    axios.post('/api/auctions/' + auction.id, serializedAuction, {
+        headers: {
+            "content-type": "multipart/form-data"
+        }
+    })
+        .then(response => {
+            router.push({ name: 'auctions.index' });
+            swal({
+                icon: 'success',
+                title: 'Auction updated successfully'
+            });
+        })
+        .catch(error => {
+            if (error.response?.data) {
+                validationErrors.value = error.response.data.errors;
+            }
+        })
+        .finally(() => isLoading.value = false);
+};
 
     
     return {
@@ -82,7 +115,8 @@ const submitCarInfo = async () => {
         processing,
         validationErrors,
         statusMap,
-        getStatusLabel
+        getStatusLabel,
+        updateAuction
     };
     
 }

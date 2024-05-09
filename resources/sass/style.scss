@@ -2462,17 +2462,6 @@ video {
     position: relative;
 }
 
-.bottom-sheet::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    height: 30px;
-    background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,1));
-    pointer-events: none; 
-}
-
 .bottom-sheet::before {
 content: "";
 position: absolute;

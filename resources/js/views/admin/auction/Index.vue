@@ -58,14 +58,14 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                <div :class="{'gray-box me-0 w-50': auction.status == 'diag'}">
+                                <div :class="{'gray-box me-0': auction.status == 'diag'}">
                                 {{ getStatusLabel(auction.status) }}
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <!-- v-if="can('post-edit')" -->
                                 <router-link :to="{ name: 'auction.approve', params: { id: auction.id } }" class="badge">
-                                    <span class="btn-apply mt-0">전체보기</span>
+                                    <span class="btn-apply mt-0">자세히</span>
                                 </router-link>
                             </td>
                         </tr>

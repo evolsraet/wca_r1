@@ -1,35 +1,29 @@
 <template>
-    <!--
-        TODO: 딜러:입찰 등록 -> 권한문제? 해결하기
-    -->
-    <div class="container-fluid">
-        <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
+  <!-- TODO: 이외 carInfo (상세정보) 추가?? 정보가 필요함-->
+    <div class="container-fluid" v-if="auctionDetails">
         <div>
-            <div class="proceeding"></div>
             <div class="container my-4">
                 <div>
                     <div class="mb-4">
                         <div class="card my-auction">
                             <div class="card-img-top-ty01"></div>
                             <div class="card-body">
-                                <div class="enter-view">
-                                    <p class="card-text tc-light-gray fs-5"></p>
-                                </div>
+                              <p class="tc-light-gray">매물번호</p>
+                              <span>{{ auctionDetails.data.car_no }}</span>
                             </div>
                             <div>
                             </div>
-                            <input type="file" ref="fileInputRefBiz" style="display:none">
-                            <button type="button" class="btn btn-fileupload">
-                                파일 첨부
-                            </button>
+                            <p class="tc-light-gray ms-2">진단평가 자료 정보</p>
+                            <file v-if="auctionDetails.data.status === 'diag'" @file-attached="handleFileAttachment"/>
                         </div>
                     </div>
                 </div>
             </div>
             <div>
-    <button @click="toggleVisibility">
-      {{ isVisible ? '숨기기' : '더보기' }}
-    </button>
+          <div @click="toggleVisibility" class="d-flex justify-content-between align-items-center p-3 border-bottom">
+        <h5>차량정보</h5>
+        <img :src="isVisible ? hideIcon : showIcon" :alt="isVisible ? '숨기기' : '더보기'" class="toggle-icon" width="20px" height="10px" />
+      </div>
     <transition name="slide">
       <div v-show="isVisible" class="container card-style">
         <div class="card card-custom">
@@ -214,7 +208,7 @@
           </div>
           <h5 class="mt-5">기타</h5>
           <div class="form-group">
-            <textarea class="form-control text-box process" readonly style="resize: none;"></textarea>
+            <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetails.data.memo}}</textarea>
           </div>
           <ul class="machine-inform-title">
             <li class="tc-light-gray">거래지역</li>
@@ -232,30 +226,86 @@
       </div>
     </transition>
   </div>
+  <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
+                <div class="sheet-content">
+                    <div class="mt-3"  @click.stop=""> 
+                        <div class="btn-group mt-3"  v-if="auctionDetails.data.status === 'diag'">
+                            <router-link :to="{ name: 'auction.index' }" class="btn btn-danger tc-wh" @click="registerAuction" :disabled="!isFileAttached"> 등록 </router-link>
+                        </div>
+                        <div class="btn-group mt-3" v-else>
+                            <div class="btn primary-disable tc-wh"> 등록</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRoute } from 'vue-router';
+import file from "@/components/file.vue";
+import useAuctions from '@/composables/auctions';
+
+
+import hideIcon from '../../../../../resources/img/Icon-black-down.png';
+import showIcon from '../../../../../resources/img/Icon-black-up.png';
+
+const route = useRoute();
+const { getAuctionById, getStatusLabel,updateAuction} = useAuctions();
+
+const auctionDetails = ref(null);
 
 const isVisible = ref(false);
+const showBottomSheet = ref(true); //바텀 시트
+const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); 
 
 const toggleVisibility = () => {
   isVisible.value = !isVisible.value;
 };
+
+
+function toggleSheet() {
+    const bottomSheet = document.querySelector('.bottom-sheet');
+    
+    if (showBottomSheet.value) {
+        bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
+    } else {
+        bottomSheetStyle.value = { position: 'fixed', bottom: '0px' };
+    }
+    showBottomSheet.value = !showBottomSheet.value;
+}
+
+const fetchAuctionDetails = async () => {
+  try {
+    const id = route.params.id;
+    const data = await getAuctionById(id);
+    auctionDetails.value = data;
+    console.log('Fetched auction details:', data);
+  } catch (error) {
+    console.error('Error fetching auction details:', error);
+  }
+};
+
+
+onMounted(() => {
+  fetchAuctionDetails();
+});
+
 </script>
 
-
-<style>
-    .card-img-top-ty01 {
-        width: 100%;
-        height: 160px;
-        background-image: url('../../../../img/car_example.png');
-        background-size: cover;
-        background-position: center;
-        border-radius: 6px;
-    }
+<style scoped>
+  .bottom-sheet {
+      height: auto !important;
+  }
+  .card-img-top-ty01 {
+      width: 100%;
+      height: 160px;
+      background-image: url('../../../../img/car_example.png');
+      background-size: cover;
+      background-position: center;
+      border-radius: 6px;
+  }
 .slide-enter-active, .slide-leave-active {
   transition: all 0.5s ease;
 }
@@ -265,7 +315,7 @@ const toggleVisibility = () => {
   overflow: hidden;
 }
 .slide-enter-to, .slide-leave-from {
-  max-height: 1000px; /* 적절한 최대 높이 설정 */
+  max-height: 1000px; 
   opacity: 1;
   overflow: hidden;
 }
