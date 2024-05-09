@@ -268,12 +268,7 @@ class AuthTest extends TestCase
 
         // 나 아니면 삭제불가
         $not_mine_id = User::role('user')->where('id', '!=', $user->id)->first();
-        $response = $this->deleteJson("/api/users/{$not_mine_id}", [
-            'user' => [
-                'name' => 'updated',
-                // 'email' => 'email',
-            ]
-        ]);
+        $response = $this->deleteJson("/api/users/{$not_mine_id}");
         $this->assertNotSuccessful($response); // 200번대 x
         $this->assertDatabaseHas('users', [
             'id' => $not_mine_id->id,

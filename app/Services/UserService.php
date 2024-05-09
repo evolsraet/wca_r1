@@ -29,7 +29,7 @@ class UserService
         DB::beginTransaction();
         try {
             $data = $request->input('user');
-            $data = $this->toArray($data);
+            $data = $this->checkJson($data);
 
             // Validator 인스턴스 생성
             $validator = Validator::make($data, [
@@ -181,7 +181,7 @@ class UserService
         // return response()->api(new UserResource($item));
     }
 
-    public function toArray($data)
+    public function checkJson($data)
     {
         if (gettype($data) == 'string') {
             $data = json_decode($data, true);
