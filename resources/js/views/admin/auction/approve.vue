@@ -16,12 +16,12 @@
             </div>
           </div>
         </div>
-      </div>
-      <div>
         <div @click="toggleVisibility" class="d-flex justify-content-between align-items-center p-3 border-bottom">
           <h5>차량정보</h5>
           <img :src="isVisible ? hideIcon : showIcon" :alt="isVisible ? '숨기기' : '더보기'" class="toggle-icon" width="20px" height="10px" />
         </div>
+      </div>
+      <div>
         <transition name="slide">
           <div v-show="isVisible" class="container card-style">
             <div class="card card-custom">
