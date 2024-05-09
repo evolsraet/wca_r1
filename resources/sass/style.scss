@@ -839,7 +839,6 @@ video {
     display: block;
     width: 14px;
     height: 14px;
-    margin-top: 2px;
     background-image: url('../img/Icon-right.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -2452,7 +2451,7 @@ video {
     left: 0;
     width: 100%;
     background-color: white; 
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 -2px 9px rgba(0, 0, 0, 0.2);
     transition: bottom 0.5s ease-in-out;
     z-index: 1000; 
     border-top-right-radius: 20px;

@@ -20,6 +20,7 @@ export default function useAuctions() {
         forceRefresh: "" 
     });
 
+// 경매 내용 통신 (페이지까지)
     const getAuctions = async (page = 1) => {
         try {
             const response = await axios.get(`/api/auctions?page=${page}`);
@@ -43,6 +44,7 @@ const getAuctionById = async (id) => {
         throw error; 
     }
 };
+// 상태를 
 const statusMap = {
     cancel: "취소",
     done: "경매완료",
@@ -75,7 +77,7 @@ const submitCarInfo = async () => {
         processing.value = false;
     }
 };
-
+// 상태 업데이트 
 const updateAuctionStatus = async (id, status) => {
     if (isLoading.value) return;
     
@@ -89,9 +91,9 @@ const updateAuctionStatus = async (id, status) => {
     };
 
     try {
-        console.log(`Sending request to update status to ${status} for auction ID ${id}`);
+        console.log(`status : ${status} auction id : ${id}`);
         const response = await axios.put(`/api/auctions/${id}`, data);
-        console.log('Response:', response.data);
+        console.log('response:', response.data);
         auction.value = response.data;
         swal({
             icon: 'success',
@@ -101,7 +103,6 @@ const updateAuctionStatus = async (id, status) => {
         if (error.response?.data) {
             validationErrors.value = error.response.data.errors;
         }
-        console.error('Error updating auction status:', error);
         swal({
             icon: 'error',
             title: 'Failed to update auction status'
@@ -111,6 +112,30 @@ const updateAuctionStatus = async (id, status) => {
         router.push({ name: 'auction.index' }); 
     }
 };
+
+ const createAuction = async (auctionData) => {
+        if (processing.value) return;
+        processing.value = true;
+        validationErrors.value = {};
+
+        try {
+            const response = await axios.post('/api/auctions', auctionData);
+            return response.data; 
+        } catch (error) {
+            console.error(error);
+            if (error.response?.data) {
+                validationErrors.value = error.response.data.errors;
+            }
+            swal({
+                icon: 'error',
+                title: 'Failed to create auction'
+            });
+            throw error;
+        } finally {
+            processing.value = false;
+        }
+    };
+
 
     return {
         getAuctionById,
@@ -125,7 +150,8 @@ const updateAuctionStatus = async (id, status) => {
         validationErrors,
         statusMap,
         getStatusLabel,
-        updateAuctionStatus
+        updateAuctionStatus,
+        createAuction
     };
     
 }

@@ -35,7 +35,7 @@
             <p class="auction-deadline">경매 마감일<span> {{ auctionDetail.final_at }}</span></p>
         </div>
         <div v-else-if="auctionDetail.status === 'done'">
-            <p class="auction-deadline">낙찰가 {{ selectedDealer.price }} 만원</p>
+            <p class="auction-deadline">낙찰가 {{ auctionDetail.final_price }} 만원</p>
         </div>
         <div v-else>
             <p class="auction-deadline">경매 마감되었어요</p>
@@ -396,8 +396,15 @@
     #########################-->
 
 <div v-if="isDealer">
+        <!------------------- [딜러] - 경매 완료 -------------------->
+        <div class="mt-4" v-if="auctionDetail.status === 'done'" @click.stop="">
+        <h5 class="text-center"> 불편 사항이 있으신가요?</h5>
+        <button type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</button>
+        <a href="#" class="d-flex justify-content-center tc-light-gray">클레임 규정</a>
+    </div>
+
 <!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
-        <div v-if="!succesbid && auctionDetail" @click.stop="">
+        <div v-if="!succesbid && auctionDetail && auctionDetail.status === 'ing'" @click.stop="">
             <div class="steps-container">
                 <div class="step completed">
                     <div class="label completed">
@@ -452,7 +459,7 @@
     </div>
 </div>
 <!------------------- [딜러] - 입찰 완료후 바텀 메뉴 -------------------->
-    <div class="p-4"v-if="succesbid"@click.stop="">
+    <div class="p-4"v-if="succesbid && auctionDetail.status === 'ing'"@click.stop="">
        <h5 class="mx-3 text-center">경매 마감까지 03:25:43 남음</h5>
        <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">1,300만원</span></p>
        <h5 class="my-4">입찰 n명/ 관심 n 명</h5>
@@ -469,12 +476,6 @@
         <div class="bottom-message">
             성사수수료 보즘금이 부족해요
         </div>-->
-        <!------------------- [딜러] - 경매 완료 -------------------->
-        <div v-if="auctionDetail.status === 'done'" @click.stop="">
-           <h5 class="text-center"> 불편 사항이 있으신가요?</h5>
-           <button type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</button>
-           <a href="#" class="d-flex justify-content-center tc-light-gray">클레임 규정</a>
-        </div>
     </div>
     </div>
 

@@ -3,6 +3,10 @@ TODO:
 - 관심 차량 숫자 표기
 - 페이지 네이션 처리
 - 옵션:최신등록순, 가격낮은순 처리
+**********************************
+ !!!2024.05.09!
+ 1번째 페이지는 상세페이지 잘나오는데
+ 그 후페이지 는 상세 페이지 뎅터를 못가져오는 문제 해결하기
 -->
 
 <template>
@@ -678,7 +682,7 @@ const hasCompletedAuctions = computed(() => {
 
 const filteredAuctions = computed(() => {
   if (currentStatus.value === 'all') {
-    return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag'].includes(auction.status));
+    return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag','ask','cancel'].includes(auction.status));
   }
   return auctionsData.value.filter(auction => auction.status === currentStatus.value);
 });
