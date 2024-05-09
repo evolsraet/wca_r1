@@ -4,11 +4,11 @@
         <div v-for="(file, index) in files" :key="index" class="file-preview">
           <img :src="file.url" :alt="file.name" class="image-preview">
           <div @click="removeFile(index)" class="remove-button">
-          <img src="../../img/Icon-black-close.png" alt="Remove" class="remove-icon">
-        </div>
+            <img src="../../img/Icon-black-close.png" alt="Remove" class="remove-icon">
+          </div>
         </div>
         <div v-for="n in (5 - files.length)" :key="'empty-' + n" class="empty-preview">
-            <img src="../../img/image.png" alt="empty" width="50px">
+          <img src="../../img/image.png" alt="empty" width="50px">
         </div>
       </div>
       <input type="file" ref="fileInputRef" style="display:none" @change="handleFileChange" multiple>
@@ -23,7 +23,7 @@
     data() {
       return {
         isDragging: false,
-        files: [],
+        files: [],  // files 배열 초기화
       };
     },
     methods: {
@@ -42,13 +42,15 @@
       addFiles(newFiles) {
         const remainingSlots = 5 - this.files.length;
         if (newFiles.length > remainingSlots) {
-        alert('최대 5개의 파일만 첨부 가능합니다');
+          alert('최대 5개의 파일만 가능합니다');
           newFiles = newFiles.slice(0, remainingSlots);
         }
         newFiles.forEach(file => {
           const reader = new FileReader();
           reader.onload = (e) => {
             this.files.push({ file, url: e.target.result });
+            // 파일이 추가되었을 때 file-attached 이벤트 내보내기
+            this.$emit('file-attached');
           };
           reader.readAsDataURL(file);
         });
@@ -93,9 +95,7 @@
     height: 100%;
     object-fit: cover;
   }
-
-
-.remove-button {
+  .remove-button {
     position: absolute;
     top: 5px;
     right: 5px;
@@ -107,9 +107,9 @@
     cursor: pointer;
     background: white;
     box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.2);
-    border-radius:50%;
-    padding:5px;
-}
+    border-radius: 50%;
+    padding: 5px;
+  }
   .empty-preview {
     display: flex;
     align-items: center;
@@ -117,9 +117,9 @@
     color: #aaa;
   }
   .remove-icon {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
   </style>
   

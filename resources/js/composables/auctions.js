@@ -1,14 +1,19 @@
-import { reactive, ref } from 'vue';
+import { reactive, ref,inject } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import store from "../store";
 
 export default function useAuctions() {
     const auctionsData = ref([]);
+    const auction = ref({});
     const pagination = ref({});
     const router = useRouter();;
     const processing = ref(false);
     const validationErrors = ref({});
+
+    const isLoading = ref(false);
+    const swal = inject('$swal');
+
     const carInfoForm = reactive({
         owner: "",
         no: "",
@@ -30,6 +35,7 @@ const getAuctionById = async (id) => {
     try {
         // API 경로에서 {auction} 부분을 실제 ID로 치환하여 요청
         const response = await axios.get(`/api/auctions/${id}`);
+         auction.value = response.data;
         console.log(response);
         return response.data;
     } catch (error) {
@@ -70,40 +76,41 @@ const submitCarInfo = async () => {
     }
 };
 
-const updateAuction = async (auction) => {
+const updateAuctionStatus = async (id, status) => {
     if (isLoading.value) return;
-
+    
     isLoading.value = true;
     validationErrors.value = {};
 
-    let serializedAuction = new FormData();
-    for (let item in auction) {
-        if (auction.hasOwnProperty(item)) {
-            serializedAuction.append(item, auction[item]);
+    const data = {
+        auction: {
+            status: status
         }
-    }
+    };
 
-    axios.post('/api/auctions/' + auction.id, serializedAuction, {
-        headers: {
-            "content-type": "multipart/form-data"
+    try {
+        console.log(`Sending request to update status to ${status} for auction ID ${id}`);
+        const response = await axios.put(`/api/auctions/${id}`, data);
+        console.log('Response:', response.data);
+        auction.value = response.data;
+        swal({
+            icon: 'success',
+            title: 'Auction status updated successfully'
+        });
+    } catch (error) {
+        if (error.response?.data) {
+            validationErrors.value = error.response.data.errors;
         }
-    })
-        .then(response => {
-            router.push({ name: 'auctions.index' });
-            swal({
-                icon: 'success',
-                title: 'Auction updated successfully'
-            });
-        })
-        .catch(error => {
-            if (error.response?.data) {
-                validationErrors.value = error.response.data.errors;
-            }
-        })
-        .finally(() => isLoading.value = false);
+        console.error('Error updating auction status:', error);
+        swal({
+            icon: 'error',
+            title: 'Failed to update auction status'
+        });
+    } finally {
+        isLoading.value = false;
+    }
 };
 
-    
     return {
         getAuctionById,
         useAuctions,
@@ -112,11 +119,12 @@ const updateAuction = async (auction) => {
         pagination,
         carInfoForm,
         submitCarInfo,
+        auction,
         processing,
         validationErrors,
         statusMap,
         getStatusLabel,
-        updateAuction
+        updateAuctionStatus
     };
     
 }
