@@ -48,33 +48,29 @@ export default function useBid() {
         if (isLoading.value) return;
         isLoading.value = true;
         validationErrors.value = {};
-
-        try {
-            const response = await axios.post("/api/bids", {
-                user_id: userId,
+        console.log("데이터:", auctionId, bidAmount, userId);
+        const response = await axios.post("/api/bids", {
+            user_id: userId,
+            bid :{
                 auction_id: auctionId,
                 price: bidAmount
-            });
+            }            
+        }).then(async(response) => {
             swal({
                 icon: 'success',
                 title: 'Bid created successfully'
             });
-            return response.data;
-        } catch (error) {
-            const errorMessage = error.response ? JSON.stringify(error.response.data) : error.message;
-            console.error('Failed to create bid:', errorMessage);
-            if (error.response && error.response.data) {
+            console.log(response);
+        }).catch((error) => {
+            console.log("1");
+            console.log(error);
+            if (error.response?.data) {
                 validationErrors.value = error.response.data.errors;
             }
-            swal({
-                icon: 'error',
-                title: 'Failed to create bid'
-            });
-            throw error;
-        } finally {
-            isLoading.value = false;
-        }
+        })
+        .finally(() => (isLoading.value = false));
     };
+
 
 
     
