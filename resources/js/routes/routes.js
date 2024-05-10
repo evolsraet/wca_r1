@@ -354,7 +354,7 @@ export default [
                 meta: { breadCrumb: 'deposit' }
             },
             {
-                name: 'auction.index',
+                name: 'auctions.index',
                 path: 'auction',
                 component: () => import('../views/admin/auction/Index.vue'),
                 meta: { breadCrumb: 'auction' }

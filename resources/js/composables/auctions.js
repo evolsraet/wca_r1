@@ -4,6 +4,7 @@ import { useRouter } from 'vue-router';
 import store from "../store";
 
 export default function useAuctions() {
+    const showModal = ref(false);
     const auctionsData = ref([]);
     const auction = ref({});
     const pagination = ref({});
@@ -14,6 +15,7 @@ export default function useAuctions() {
     const isLoading = ref(false);
     const swal = inject('$swal');
 
+ const hope_price = ref('');
     const carInfoForm = reactive({
         owner: "",
         no: "",
@@ -81,6 +83,28 @@ const submitCarInfo = async () => {
         processing.value = false;
     }
 };
+ const createAuction = async (auctionData) => {
+        if (processing.value) return;
+        processing.value = true;
+        validationErrors.value = {};
+
+        try {
+            const response = await axios.post('/api/auctions', auctionData);
+            return response.data; 
+        } catch (error) {
+            console.error(error);
+            if (error.response?.data) {
+                validationErrors.value = error.response.data.errors;
+            }
+            swal({
+                icon: 'error',
+                title: 'Failed to create auction'
+            });
+            throw error;
+        } finally {
+            processing.value = false;
+        }
+    };
 // 상태 업데이트 
 const updateAuctionStatus = async (id, status) => {
     if (isLoading.value) return;
@@ -117,31 +141,55 @@ const updateAuctionStatus = async (id, status) => {
     }
 };
 
- const createAuction = async (auctionData) => {
-        if (processing.value) return;
-        processing.value = true;
-        validationErrors.value = {};
+ const updateAuctionPrice = async (auctionId, amount) => {
+    if (isLoading.value) return;
 
-        try {
-            const response = await axios.post('/api/auctions', auctionData);
-            return response.data; 
-        } catch (error) {
-            console.error(error);
-            if (error.response?.data) {
-                validationErrors.value = error.response.data.errors;
-            }
-            swal({
-                icon: 'error',
-                title: 'Failed to create auction'
-            });
-            throw error;
-        } finally {
-            processing.value = false;
+    isLoading.value = true;
+    validationErrors.value = {};
+
+    const data = {
+        auction: {
+            amount: amount
         }
     };
 
+    try {
+        console.log(`Updating auction price: ${amount}`);
+        const response = await axios.put(`/api/auctions/${auctionId}`, data);
+        console.log('response:', response.data);
+        swal({
+            icon: 'success',
+            title: 'Auction price updated successfully'
+        });
+        return response.data;
+    } catch (error) {
+        if (error.response?.data) {
+            validationErrors.value = error.response.data.errors;
+        }
+        swal({
+            icon: 'error',
+            title: 'Failed to update auction price'
+        });
+        throw error;
+    } finally {
+        isLoading.value = false;
+    }
+};
+
+    const deleteAuction = async (id) => {
+        try {
+          const response = await axios.delete(`/api/auctions/${id}`);
+          return response.data;
+        } catch (error) {
+          console.error('Error deleting auction:', error);
+          throw error;
+        }
+      };
 
     return {
+        hope_price,
+        deleteAuction,
+        updateAuctionPrice,
         getAuctionById,
         useAuctions,
         getAuctions,

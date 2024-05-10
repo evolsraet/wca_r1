@@ -140,7 +140,7 @@
                         </li>
                         <li v-if="can('role.admin')" class="nav-link">
                             <router-link
-                                :to="{ name: 'auction.index' }"
+                                :to="{ name: 'auctions.index' }"
                                 class="nav-link px-0"
                             >
                                 <svg

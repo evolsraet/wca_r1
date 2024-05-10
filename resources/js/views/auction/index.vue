@@ -441,7 +441,7 @@ TODO:
         <div class="row">
             <!-- if. 경매 ing 있을때 -->
             <div
-                class="col-6 col-md-4 mb-4"
+                class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
                 v-for="auction in filteredAuctions"
                 :key="auction.id"
                 @click="navigateToDetail(auction)"
@@ -457,9 +457,10 @@ TODO:
                     </div>
                     <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
                     <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
-                    <div v-if="auction.status === 'wait'" class="dealer-select">딜러 선택</div>
+                    <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
                     <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
                     <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
+                    <div v-if="auction.status === 'chosen'" class="wait-selection">낙찰가 {{auction.final_price}} 만원</div>
                     <div class="card-body">
                         <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
                         <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
@@ -472,7 +473,7 @@ TODO:
         <div class="row">
             <!-- if. 경매 ing 있을때 -->
             <div
-                class="col-6 col-md-4 mb-4"
+                class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
                 v-for="auction in filteredAuctions"
                 :key="auction.id"
                 @click="navigateToDetail(auction)"
@@ -486,7 +487,7 @@ TODO:
                     </div>
                     <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
                     <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
-                    <div v-if="auction.status === 'wait'" class="dealer-select">딜러 선택</div>
+                    <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
                     <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
                     <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
                     <div class="card-body">
@@ -703,18 +704,11 @@ function loadPage(page) {
 }
 
 function navigateToDetail(auction) {
-  const validStatuses = ['done', 'wait', 'ing', 'diag'];
-  if (validStatuses.includes(auction.status)) {
+
     console.log("디테일 :", auction.id);
     router.push({ name: 'AuctionDetail', params: { id: auction.id } });
-  } else {
-    Swal.fire({
-      icon: 'error',
-      title: '상세 정보를 볼 수 없습니다.',
-      text: `경매 상태: ${auction.status}`
-    });
-  }
-}
+  } 
+
 function getAuctionStyle(auction) {
   const validStatuses = ['done', 'wait', 'ing', 'diag'];
   return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
@@ -726,3 +720,11 @@ onMounted(async () => {
   await getAuctions(currentPage.value);
 });
 </script>
+<style scoped>
+.shadow-hover:hover {
+    box-shadow: 0px 0px 10px 0px rgba(78, 120, 97, 0.3);
+    transform: translateY(-0.25rem);
+    transition: transform 0.3s ease-in-out;
+    border-radius:6px;
+}
+</style>
