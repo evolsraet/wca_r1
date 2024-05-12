@@ -38,7 +38,7 @@
                             <span class="menu-text recent-new">입찰하기</span>
                             <div class="icon right-icon"></div>
                         </router-link>
-                        <router-link :to="{ name: 'autction.index'}" class="menu-item mb-4" @click="toggleNavbar">
+                        <router-link :to="{ name: 'auction.index'}" class="menu-item mb-4" @click="toggleNavbar">
                             <div class="icon icon-awsome"></div>
                             <span class="menu-text">내 매물관리</span>
                             <div class="icon right-icon"></div>
@@ -74,13 +74,13 @@
                             </div>
                         </div>
                         <div class="middle-content-ty02">
-                            <router-link :to="{ name: 'autction.index' }" class="nav-link dealer-check-link mt-5" @click="toggleNavbar">딜러 페이지 확인용 링크</router-link>
+                            <router-link :to="{ name: 'auction.index' }" class="nav-link dealer-check-link mt-5" @click="toggleNavbar">딜러 페이지 확인용 링크</router-link>
                             <router-link :to="{ name: 'home' }" class="menu-item ">
                                 <div class="icon icon-side"></div>
                                 <span class="menu-text">내 차 조회</span>
                                 <div class="icon right-icon"></div>
                             </router-link >
-                            <router-link :to="{ name: 'autction.index' }" class="menu-item mb-4"@click="toggleNavbar">
+                            <router-link :to="{ name: 'auction.index' }" class="menu-item mb-4"@click="toggleNavbar">
                                 <div class="icon icon-awsome"></div>
                                 <span class="menu-text">내 매물관리</span>
                                 <div class="icon right-icon"></div>
@@ -155,7 +155,7 @@
                             <router-link to="/" class="nav-link" aria-current="page">내차조회</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'autction.index'}" class="nav-link" aria-current="page">내 매물관리</router-link>
+                            <router-link :to="{ name: 'auction.index'}" class="nav-link" aria-current="page">내 매물관리</router-link>
                         </li>
                         <li class="nav-item">
                             <router-link :to="{ name: 'user.review'}" class="nav-link">이용후기</router-link>
@@ -188,7 +188,7 @@
                             <router-link :to="{ name: 'autction.dealerbid'}" class="nav-link" to="/register" >입찰하기</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'autction.index'}" class="nav-link">내 매물관리</router-link>
+                            <router-link :to="{ name: 'auction.index'}" class="nav-link">내 매물관리</router-link>
                         </li>
                         <li class="nav-item">
                             <router-link :to="{ name: 'dealer.bidList'}" class="nav-link">과거 낙찰 이력</router-link>

@@ -12,7 +12,7 @@ TODO:
                   <p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>
               </div>
               <div class="btn-group tc-wh">
-                <router-link :to="{ name: 'autction.index' }" class="btn btn-danger btn-lg shadow btn_ok">확인</router-link>
+                <router-link :to="{ name: 'auction.index' }" class="btn btn-danger btn-lg shadow btn_ok">확인</router-link>
               </div>
             </div>
           </div>

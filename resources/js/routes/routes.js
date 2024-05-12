@@ -124,7 +124,7 @@ export default [
             },
             {
                 path: '/auction',
-                name: 'autction.index',
+                name: 'auction.index',
                 component: () => import('../views/auction/index.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
               

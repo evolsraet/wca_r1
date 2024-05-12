@@ -55,7 +55,7 @@
                         </div>
                         <button class="btn btn-fileupload mt-3" @click="triggerAdditionalUpload">추가 서류 파일 첨부</button>
                         <input type="file" multiple accept="image/*" @change="handleAdditionalImagesChange" ref="additionalInput" style="display: none;" />
-                        <router-link :to="{ name: 'autction.index' }" class="link process my-member justify-content-end">정보갱신하기</router-link>
+                        <router-link :to="{ name: 'auction.index' }" class="link process my-member justify-content-end">정보갱신하기</router-link>
                     </div>
                         <h5>경매 시 사용할 계좌가 필요해요</h5>
                         <div class="form-group mt-4">
