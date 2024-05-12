@@ -1,6 +1,6 @@
 <template>
     <!--
-        TODO: 딜러:입찰 등록 -> 권한문제? 해결하기
+        TODO: 취소 성공 처리 후 모달 하나더 있음.
     -->
     <div class="container-fluid" v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
@@ -322,7 +322,7 @@
                             <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>
                             <div class="content mt-3 text-start">
                                 <h5>경매에 참여한 딜러</h5>
-                                <p> 금액이 가장 높은 5명까지만 표시돼요.</p>
+                                <p> 금액이 가장 높은 <span class="highlight">5명</span>까지만 표시돼요.</p>
                                 <div class="overflow-auto select-dealer">
                                     <table>
                                         <tbody>
@@ -607,7 +607,7 @@ const { submitBid } = useBids();
 const carDetails = ref({});
 
 const sortedTopBids = computed(() => {
-  return auctionDetail.value?.top_bids?.sort((a, b) => b.price - a.price).slice(0, 5) || [];
+  return auctionDetail.value?.data?.top_bids?.sort((a, b) => b.price - a.price).slice(0, 5) || [];
 });
 
 const isModalVisible = ref(false);
@@ -655,7 +655,8 @@ const selectDealer = (bid, event) => {
     const confirmed = confirm('선택한 딜러를 확정하시겠습니까?');
     if (confirmed) {
       useUsers().getUser(bid.user_id).then(userData => {
-        selectedDealer.value = Object.assign({}, bid, { userData: userData });
+        bid.userData = userData; // Add userData to bid
+        selectedDealer.value = bid;
       }).catch(error => {
         console.error('Error fetching user data:', error);
       });
@@ -713,6 +714,8 @@ onMounted(async () => {
   window.addEventListener('scroll', checkScroll);
   try {
     auctionDetail.value = await getAuctionById(auctionId);
+    console.log('Auction Detail:', auctionDetail.value);
+    console.log('Sorted Top Bids:', sortedTopBids.value);
   } catch (error) {
     console.error('Error fetching auction detail:', error);
   }
