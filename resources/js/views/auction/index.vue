@@ -7,9 +7,16 @@ TODO:
 
 <template>
     <!-- 서브 네비게이션 바 -->
-    <div class="sub-nav row">
-        <div class="col-12">
-            <div class="nav-container mt-3">
+    <div class="sub-nav row ">
+        <div class="col-12 p-0">
+            <div v-if="isUser" class="nav-container mt-4 ps-5 justify-content-start">
+                <nav class="navbar navbar-expand navbar-light">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }, 'p-0'">전체</a>
+                    </div>
+                </nav>
+            </div>
+            <div v-if="isDealer" class="nav-container mt-3">
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav">
                         <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
@@ -20,11 +27,11 @@ TODO:
         </div>
     </div>
     <!-- 슬라이드업 메뉴 트리거 버튼 및 컨테이너 -->
-    <div v-if="isUser" class="review-button-container" :style="{ height: menuHeight }" @click="toggleMenuHeight">
+    <div v-if="isUser"  class="review-button-container" :style="{ height: menuHeight }" @click="toggleMenuHeight">
         <div class="icon-container" v-show="isExpanded" ></div>
-        <router-link :to="{ name: 'home' }" tag="button" class="black-btn" v-show="!isExpanded" :disabled="isExpanded">딜러 선택이 가능해요!<span class="btn-apply-ty02">바로가기</span></router-link>
+        <router-link :to="{ name: 'home' }" tag="button" class="black-btn tc-wh" v-show="!isExpanded" :disabled="isExpanded">딜러 선택이 가능해요!<span class="btn-apply-ty02">바로가기</span></router-link>
        <!--if.경매 완료건이 있을때-->
-       <router-link :to="{ name: 'home' }" tag="button" class="review-btn" v-show="!isExpanded && hasCompletedAuctions" :disabled="isExpanded">후기 남기기</router-link>      
+       <router-link :to="{ name: 'home' }" tag="button" class="review-btn tc-red" v-show="!isExpanded && hasCompletedAuctions" :disabled="isExpanded">후기 남기기</router-link>      
          <!--else. 경매완료 건이 없을때-->
        <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded">후기 남기기</div>
     </div>
@@ -437,19 +444,21 @@ TODO:
                 </div>
                 <!-- 내 경매 관리 / 경매 전체 -->
 
-                <div class="container my-4" v-if="currentTab === 'allInfo'">
+        <div class="container my-4" v-if="currentTab === 'allInfo'">
         <div class="row">
             <!-- if. 경매 ing 있을때 -->
             <div
-                class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
-                v-for="auction in filteredAuctions"
-                :key="auction.id"
-                @click="navigateToDetail(auction)"
-                :style="getAuctionStyle(auction)"
+            class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
+            v-for="auction in filteredAuctions"
+            :key="auction.id"
+            @click="navigateToDetail(auction)"
+            :style="getAuctionStyle(auction)"
             >
-                <div class="card my-auction">
-                    <input class="toggle-heart" type="checkbox" checked />
-                    <label class="heart-toggle"></label>
+            <div class="card my-auction">
+                <div v-if="isDealer"> 
+                <input class="toggle-heart" type="checkbox" checked  @click.stop/>
+                <label class="heart-toggle"></label>
+                </div>
                     <div :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' }" class="card-img-top-placeholder"></div>
                     <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
                     <div v-if="auction.status === 'ing'" class="progress">
@@ -652,11 +661,12 @@ export default {
 </script>
 <script setup>
 import { ref, computed, onMounted } from 'vue';
+import { useStore } from "vuex";
+
 import useAuctions from "@/composables/auctions";
 import useRoles from '@/composables/roles';
 import FilterModal from '@/views/modal/filter.vue'; 
 import { useRouter } from 'vue-router';
-import Swal from 'sweetalert2';
 
 const router = useRouter();
 const currentStatus = ref('all'); 
@@ -668,11 +678,15 @@ const showModal = ref(false);
 const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length);
 const auctionModal = ref(false);
 
+const store = useStore();
+const user = computed(() => store.getters["auth/user"]);
+const isDealer = computed(() => user.value?.roles?.includes('dealer'));
+const isUser = computed(() => user.value?.roles?.includes('user'));
+
 const setCurrentTab = (tab) => {
   currentTab.value = tab;
 };
 
-const isUser = ref(false);
 
 function toggleModal() {
   showModal.value = !showModal.value; 
