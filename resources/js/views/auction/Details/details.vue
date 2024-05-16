@@ -326,25 +326,30 @@
                                 <div class="overflow-auto select-dealer">
                                     <table>
                                         <tbody>
-                                            <!-- 시안: 딜러 사진 , (순위)+딜러명 , 딜러소속  임시 데이터:순위, 딜러아이디, 가격 ,날짜-->
-                                            <tr v-for="(bid, index) in sortedTopBids" :key="bid.user_id">
-                                                <td class="w-25"><img src="../../../../img/myprofile_ex.png" alt="딜러 사진" class="align-text-top"></td>
-                                                <td class="d-flex flex-column align-items-center w-75">
-                                                    <div :class="[(index === 0 ? 'red-box' : index < 3 ? 'blue-box' : 'gray-box'), 'rounded-pill', 'me-0']">
-                                                        {{ index + 1 }}위
-                                                    </div>
-                                                    <div class="bold-18-font">홍길동</div>
-                                                </td>
-                                                <!--  <td class="tc-light-gray align-bottom">파트너 대전 본점</td>-->
-                                                <td class="tc-light-gray align-bottom">{{ bid.price }}원</td>
-                                                <td class="align-middle w-25">
-                                                    <input type="checkbox" :id="'checkbox-' + bid.user_id" class="custom-checkbox-input" @change="selectDealer(bid, $event)">
-                                                    <label :for="'checkbox-' + bid.user_id" class="custom-checkbox-label"></label>
-                                                </td>
-                                            </tr>
+                                        <tr v-for="(bid, index) in sortedTopBids" :key="bid.user_id">
+                                            <td class="w-25"><img src="../../../../img/myprofile_ex.png" alt="딜러 사진" class="align-text-top"></td>
+                                            <td class="d-flex flex-column align-items-center w-75">
+                                            <div :class="[(index === 0 ? 'red-box' : index < 3 ? 'blue-box' : 'gray-box'), 'rounded-pill', 'me-0']">
+                                                {{ index + 1 }}위
+                                            </div>
+                                            <div class="bold-18-font">{{bid.userData}}</div>
+                                            </td>
+                                            <td class="tc-light-gray align-bottom">{{ bid.price }}원</td>
+                                            <td class="align-middle w-25">
+                                            <input type="checkbox" :id="'checkbox-' + bid.user_id" class="custom-checkbox-input" @change="selectDealer(bid, $event, index + 1)">
+                                            <label :for="'checkbox-' + bid.user_id" class="custom-checkbox-label"></label>
+                                            </td>
+                                        </tr>
                                         </tbody>
                                     </table>
-                                </div>
+                                    <ConnectDealerModal
+                                        v-if="connectDealerModal"
+                                        :bid="selectedBid"
+                                        :userData="userInfo"
+                                        @close="handleModalClose"
+                                        @confirm="handleDealerConfirm"
+                                    />
+                                    </div>
                             </div>
                         </div>
 
@@ -571,18 +576,20 @@ import useAuctions from '@/composables/auctions'; // 경매 관련 작업
 import useBids from '@/composables/bids'; // 입찰 관련 작업
 import modal from '@/views/modal/modal.vue'; // 모달 컴포넌트
 import auctionModal from '@/views/modal/auction/auctionModal.vue'; // 경매 모달 컴포넌트
+import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue';
+
 import { convertToKorean } from '@/hooks/convertToKorean'; // 숫자를 한국어로 변환하는 함수
 
 const isSellChecked = ref(false); // 판매 체크박스 상태를 위한 Ref
-
+const { getUser } = useUsers();
 const store = useStore(); // Vuex 스토어 인스턴스
 const user = computed(() => store.getters['auth/user']); // 현재 사용자 가져오는 계산된 속성
 const isDealer = computed(() => user.value?.roles?.includes('dealer')); // 사용자가 딜러인지 확인하는 계산된 속성
 const isUser = computed(() => user.value?.roles?.includes('user')); // 사용자가 일반 사용자인지 확인하는 계산된 속성
-
+const selectedBid = ref(null); // 선택된 입찰을 관리하기 위한 ref
 const route = useRoute(); // 현재 라우트 인스턴스
 const router = useRouter(); // 라우터 인스턴스
-
+const userInfo = ref(null);
 const succesbid = ref(false); // 입찰 성공 여부를 추적하는 Ref
 const amount = ref(''); // 입찰 금액을 저장하는 Ref
 const koreanAmount = ref('원'); // 한국어로 된 금액을 저장하는 Ref
@@ -592,6 +599,7 @@ const updateKoreanAmount = () => { // 한국어 금액을 업데이트하는 함
 
 const auctionModalVisible = ref(false); // 경매 모달의 제어
 const reauctionModal = ref(false); // 재경매 모달의 제어
+const connectDealerModal =ref(false);
 
 const scrollButtonVisible = ref(false); // 스크롤 버튼
 const selectedDealer = ref(null); // 선택된 딜러를 저장
@@ -606,10 +614,39 @@ const { getAuctions, auctionsData, AuctionReauction ,submitCarInfo, getAuctionBy
 const { submitBid } = useBids(); // 입찰 composable에서 함수 
 const carDetails = ref({}); // 자동차 세부 정보를 저장하는 Ref
 
-const sortedTopBids = computed(() => { // 가격에 따라 상위 5개 입찰을 정렬하는 계산된 속성
+/*const sortedTopBids = computed(() => { // 가격에 따라 상위 5개 입찰을 정렬하는 계산된 속성
   return auctionDetail.value?.data?.top_bids?.sort((a, b) => b.price - a.price).slice(0, 5) || [];
+});*/
+
+const sortedTopBids = computed(() => {
+  // 필터 전의 모든 입찰을 로그로 출력
+  console.log('All Bids:', auctionDetail.value?.data?.top_bids);
+
+  if (!auctionDetail.value?.data?.top_bids) {
+    return [];
+  }
+
+  // 각 user_id에 대해 최고 가격의 입찰만 남기기
+  const bidsByUser = auctionDetail.value.data.top_bids.reduce((acc, bid) => {
+    if (!acc[bid.user_id] || acc[bid.user_id].price < bid.price) {
+      acc[bid.user_id] = bid;
+    }
+    return acc;
+  }, {});
+
+  // 필터 후의 입찰을 로그로 출력
+  console.log('Filtered Bids by User:', bidsByUser);
+
+  // 남은 입찰들을 가격 순으로 정렬하여 상위 5개를 가져오기
+  const topBids = Object.values(bidsByUser)
+    .sort((a, b) => b.price - a.price)
+    .slice(0, 5);
+
+  // 상위 5개의 입찰을 로그로 출력
+  console.log('Top 5 Bids:', topBids);
+
+  return topBids;
 });
-const { isLoading } = useAuctions(); // 경매 composable에서 isLoading 
 
 const isModalVisible = ref(false); // 모달
 const selectedAuctionId = ref(null); // 선택된 경매 ID
@@ -667,22 +704,37 @@ const toggleSheet = () => { // 바텀 시트의 가시성을 토글하는 함수
   showBottomSheet.value = !showBottomSheet.value;
 };
 
-const selectDealer = (bid, event) => { // 딜러를 선택하는 함수
+const selectDealer = async (bid, event, index) => {
   if (event.target.checked) {
-    const confirmed = confirm('선택한 딜러를 확정하시겠습니까?');
-    if (confirmed) {
-      useUsers().getUser(bid.user_id).then(userData => {
-        bid.userData = userData; // 입찰에 userData를 추가
-        selectedDealer.value = bid;
-      }).catch(error => {
-        console.error('Error fetching user data:', error);
-      });
-    } else {
-      event.target.checked = false;
+    selectedBid.value = { ...bid, index }; // 순위를 포함시켜 selectedBid에 저장
+    connectDealerModal.value = true;
+    console.log('Selected bid data:', selectedBid.value); // 콘솔에 bid 정보 로깅
+
+    try {
+      const userData = await getUser(bid.user_id); // API 호출로 사용자 정보 가져오기
+      userInfo.value = userData; // 사용자 정보 저장
+      console.log('dealer data:', userData); 
+    } catch (error) {
+      console.error('Error dealer data:', error);
     }
   } else {
-    selectedDealer.value = null;
+    selectedBid.value = null;
+    connectDealerModal.value = false;
   }
+};
+
+
+const handleModalClose = () => {
+  connectDealerModal.value = false; // 모달 숨기기
+  if (selectedBid.value) {
+    const checkbox = document.getElementById('checkbox-' + selectedBid.value.user_id);
+    if (checkbox) checkbox.checked = false; // 연관 체크박스 해제
+    selectedBid.value = null; // 선택된 입찰 초기화
+  }
+};
+const handleDealerConfirm = ({ bid, userData }) => {
+  selectedDealer.value = { ...bid, userData };
+  connectDealerModal.value = false;
 };
 
 const cancelSelection = () => { // 딜러 선택을 취소하는 함수
@@ -767,11 +819,7 @@ watch([isSellChecked, auctionDetail], () => { // 변경 사항을 감지하는 W
   populateHopePrice();
 });
 
-
 </script>
-
-
-
 
 <style scoped>
     .dealer-check {
