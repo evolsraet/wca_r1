@@ -751,7 +751,7 @@ const completeAuction = async () => { //딜러 선택 후 최종 낙찰가 경�
 
   try {
     await chosenDealer(id, data);
-    auctionDetail.value.data.status = 'done';
+     auctionDetail.value.data.status = 'done';
   } catch (error) {
     console.error('Error completing auction:', error);
     alert('경매에 실패했습니다.');
