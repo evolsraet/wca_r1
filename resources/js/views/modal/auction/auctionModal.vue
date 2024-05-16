@@ -53,16 +53,13 @@ const emit = defineEmits(['close', 'confirm']);
 
 const showSecondModal = ref(false);
 
-const toggleModal = () => {
-  showSecondModal.value = !showSecondModal.value;
-};
 
 const closeAllModals = () => {
+  emit('confirm');
   emit('close');
 };
 
 const confirmCancel = async () => {
-  emit('confirm');
   showSecondModal.value = true; 
 };
 </script>

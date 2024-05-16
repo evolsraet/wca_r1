@@ -3075,3 +3075,170 @@ input[type="checkbox"] {
     vertical-align: text-bottom;
 
 }
+
+
+/* 옵션 정보 : -ac 옵션 정보 활성화 아이콘 */
+
+.option-icons {
+    margin-top: 20px;
+}
+
+.option-row {
+    display: grid;
+    gap: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.option-row:nth-child(1) {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.option-row:nth-child(2) {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.option-row:nth-child(3) {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.option-row:nth-child(4) {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.option-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.option-icon .icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.icon.smart-key {
+    background-image: url('../img/opction/key.png');
+}
+.icon.smart-key-ac {
+    background-image: url('../img/opction/activation/b-key.png');
+}
+
+
+.icon.navigation {
+    background-image: url('../img/opction/location.png');
+}
+.icon.navigation-ac {
+    background-image: url('../img/opction/activation/b-location.png');
+}
+
+
+.icon.rear-camera {
+    background-image: url('../img/opction/camera.png');
+}
+.icon.rear-camera-ac {
+    background-image: url('../img/opction/activation/b-camera.png');
+}
+
+
+.icon.sunroof {
+    background-image: url('../img/opction/sun.png');
+}
+.icon.sunroof-ac {
+    background-image: url('../img/opction/activation/b-sun.png');
+}
+
+
+.icon.headlamp {
+    background-image: url('../img/opction/headlight.png');
+}
+.icon.headlamp-ac {
+    background-image: url('../img/opction/activation/b-headlight.png');
+}
+
+.icon.auto-aircon {
+    background-image: url('../img/opction/ac.png');
+}
+.icon.auto-aircon-ac {
+    background-image: url('../img/opction/activation/b-ac.png');
+}
+
+
+.icon.electric-seat {
+    background-image: url('../img/opction/vehicle1.png');
+}
+.icon.electric-seat-ac {
+    background-image: url('../img/opction/activation/b-vehicle1.png');
+}
+
+
+.icon.family {
+    background-image: url('../img/opction/vehicle2.png');
+}
+.icon.family-ac {
+    background-image: url('../img/opction/activation/b-vehicle2.png');
+}
+
+
+.icon.heated-seat {
+    background-image: url('../img/opction/vehicle3.png');
+}
+.icon.heated-seat-ac {
+    background-image: url('../img/opction/activation/b-vehicle3.png');
+}
+
+
+.icon.ventilated-seat {
+    background-image: url('../img/opction/vehicle4.png');
+}
+.icon.ventilated-seat-ac {
+    background-image: url('../img/opction/activation/b-vehicle4.png');
+}
+
+
+.icon.parking-sensor {
+    background-image: url('../img/opction/sensor.png');
+}
+.icon.parking-sensor-ac {
+    background-image: url('../img/opction/activation/b-sensor.png');
+}
+
+
+.icon.electric-side-mirror {
+    background-image: url('../img/opction/mirror.png');
+}
+.icon.electric-side-mirror-ac {
+    background-image: url('../img/opction/activation/b-mirror.png');
+}
+
+
+.option-icon p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.back-btn-icon{
+    background-image: url('../img/Icon-chevron-left.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+/*
+.option-icon::after {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 3%;
+    background-color: #ccc;
+    transform:translateY(34%) translateX(32%);
+  }
+  
+  .option-icon:last-child::after {
+    display: none;
+  }
+  */

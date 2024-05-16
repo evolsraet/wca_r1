@@ -2,10 +2,12 @@
     <div class=""></div>
     <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
         <div class="container nav-font">
-            <router-link v-if="isDealer" to="/dealer" class="navbar-brand"></router-link>
+            <button v-if="isDetailPage" @click="goBack" class="p-2 btn btn-back back-btn-icon">
+            </button>
+            <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand"></router-link>
             <router-link v-else-if="isUser" to="/" class="navbar-brand"></router-link>
             <router-link v-else to="/" class="navbar-brand"></router-link>
-            <!-- movnav bar -->  
+            <!-- movnav bar -->
             <!-- dealer navbar-->
             <div class="collapse navbar-collapse navbar-collshow" id="navbarSupportedContent">
                 <div v-if="isDealer" class="navbar-nav nav-style">
@@ -26,7 +28,7 @@
                                 <div class="icon settings-icon"></div>
                                 <span class="menu-text">정보수정</span>
                                 <div class="icon right-icon"></div>
-                            </router-link >
+                            </router-link>
                             <a class="menu-item mb-3" href="/login" @click="logout">
                                 <div class="icon logout-icon"></div>
                                 <span class="menu-text">로그아웃</span>
@@ -79,12 +81,12 @@
                                 <div class="icon icon-side"></div>
                                 <span class="menu-text">내 차 조회</span>
                                 <div class="icon right-icon"></div>
-                            </router-link >
-                            <router-link :to="{ name: 'auction.index' }" class="menu-item mb-4"@click="toggleNavbar">
+                            </router-link>
+                            <router-link :to="{ name: 'auction.index' }" class="menu-item mb-4" @click="toggleNavbar">
                                 <div class="icon icon-awsome"></div>
                                 <span class="menu-text">내 매물관리</span>
                                 <div class="icon right-icon"></div>
-                            </router-link >
+                            </router-link>
                             <router-link :to="{ name: 'index.allreview' }" class="menu-item mt-0 mb-4" @click="toggleNavbar">
                                 <div class="icon icon-ratings"></div>
                                 <span class="menu-text">이용후기</span>
@@ -98,7 +100,7 @@
                                 <span class="menu-text">정보수정</span>
                                 <div class="icon right-icon"></div>
                             </router-link>
-                            <a class="menu-item mb-3" href="/login" @click="logout" >
+                            <a class="menu-item mb-3" href="/login" @click="logout">
                                 <div class="icon logout-icon"></div>
                                 <span class="menu-text">로그아웃</span>
                                 <div class="icon right-icon"></div>
@@ -209,34 +211,34 @@
                     </ul>
                 </ul>
             </div>
-            <a class="navbar-toggler mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-toggler p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </a>
         </div>
     </nav>
 </template>
+
 <script setup>
 import { ref } from "vue";
 import { useStore } from "vuex";
 import useAuth from "@/composables/auth";
 import { computed } from "vue";
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from "vue-router";
 
 const router = useRouter();
+const route = useRoute();
 
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
-const isAdmin  = computed(() => user.value?.roles?.includes('admin'));
-
+const isAdmin = computed(() => user.value?.roles?.includes('admin'));
 
 const { logout } = useAuth();
 
 const redirectByName = (routeName) => {
     router.push({ name: routeName });
 }; //리다이렉션 : 명
-
 
 const homePath = computed(() => {
     if (isDealer.value) {
@@ -248,82 +250,104 @@ const homePath = computed(() => {
     }
 });
 
+// 현재 경로를 기준으로 상세 페이지인지 확인
+const isDetailPage = computed(() => {
+    // 상세 페이지 경로가 '/auction'으로 시작하고 뒤에 숫자 ID가 있는지 확인
+    return /^\/auction\/\d+$/.test(route.path) || route.path === '/selldt' || route.path === '/selldt2';
+});
+
+// 뒤로 가기 함수
+const goBack = () => {
+    router.back();
+};
+
 //라우터시 메뉴바 닫기
 function toggleNavbar() {
     document.querySelector('.btn-close').click();
 }
 
 </script>
-<style>
-    .toggle-nav-content {
-        display: flex;
-        flex-direction: column;
-        overflow-y: hidden;
-    }
 
-    .middle-content-ty02 {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
-        flex-grow: 1;
-    }
+<style scoped>
 
-    .footer-content {
-        margin-top: auto;
-        width: 100%;
-    }
+.toggle-nav-content {
+    display: flex;
+    flex-direction: column;
+    overflow-y: hidden;
+}
 
-    .dealer-check-link {
-        height: 68px;
-        line-height: 10px;
-        font-weight: 500;
-        padding: 25px 26px;
-        border: solid 1px #f0d;
-        background-color: #fff;
-        color: #f0d !important;
-        text-align: center;
-        margin-right: 0px;
-    }
+.middle-content-ty02 {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-grow: 1;
+}
 
-    .menu-illustration,
-    .menu-footer {
-        width: 100%;
-    }
+.footer-content {
+    margin-top: auto;
+    width: 100%;
+}
 
-    .menu-illustration {
-        margin-bottom: 20px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
+.dealer-check-link {
+    height: 68px;
+    line-height: 10px;
+    font-weight: 500;
+    padding: 25px 26px;
+    border: solid 1px #f0d;
+    background-color: #fff;
+    color: #f0d !important;
+    text-align: center;
+    margin-right: 0px;
+}
 
-    .login-prompt {
-        display: block;
-        width: 100%;
-        text-align: right;
-        font-size: 22px;
-        font-weight: 600;
-        margin: 20px 0;
-    }
+.menu-illustration,
+.menu-footer {
+    width: 100%;
+}
 
-    .register-linker {
-        margin-top: 15px;
-        display: flex;
-        justify-content: space-between;
-    }
+.menu-illustration {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-prompt {
+    display: block;
+    width: 100%;
+    text-align: right;
+    font-size: 22px;
+    font-weight: 600;
+    margin: 20px 0;
+}
+
+.register-linker {
+    margin-top: 15px;
+    display: flex;
+    justify-content: space-between;
+}
 
 
-    a.navbar-toggler.mt-2 {
-        display: none !important;
-    }
-
-    @media (max-width: 991px){
-        a.navbar-toggler.mt-2 {
-        display: block !important;
-    }
-    ul.navbar-nav.mt-2.mt-lg-0.gap-3.ms-auto {
+a.navbar-toggler.mt-2 {
     display: none !important;
 }
+
+@media (max-width: 991px){
+    a.navbar-toggler.mt-2 {
+    display: block !important;
+}
+ul.navbar-nav.mt-2.mt-lg-0.gap-3.ms-auto {
+display: none !important;
+}
 }
 
+/* 뒤로 가기 버튼 스타일 */
+.btn-back {
+    width:25px;
+    height:25px;
+    border: none;
+    font-size: 1.5rem;
+    padding: 0;
+    cursor: pointer;
+}
 </style>

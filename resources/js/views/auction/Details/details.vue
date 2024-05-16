@@ -132,7 +132,65 @@
                 <ul class="machine-inform-title">
                     <li class="tc-light-gray">옵션정보</li>
                 </ul>
-                <div></div>
+                <div class="option-icons">
+                    <div class="option-row">
+                        <div class="option-icon">
+                            <div class="icon smart-key-ac"></div>
+                            <p>스마트키</p>
+                        </div>
+                        <div class="option-icon">
+                            <div class="icon navigation-ac"></div>
+                            <p>네비게이션</p>
+                        </div>
+                        <div class="option-icon">
+                            <div class="icon rear-camera-ac"></div>
+                            <p>후방카메라</p>
+                        </div>
+                    </div>
+                    <div class="option-row">
+                        <div class="option-icon">
+                            <div class="icon sunroof"></div>
+                            <p>선루프</p>
+                        </div>
+                        <div class="option-icon">
+                            <div class="icon headlamp-ac"></div>
+                            <p>헤드램프</p>
+                        </div>
+                        <div class="option-icon">
+                            <div class="icon auto-aircon-ac"></div>
+                            <p>자동에어컨</p>
+                        </div>
+                    </div>
+                    <div class="option-row">
+                        <div class="option-icon">
+                            <div class="icon electric-seat-ac"></div>
+                            <p>전동</p>
+                        </div>
+                        <div class="option-icon">
+                            <div class="icon family"></div>
+                            <p>가죽</p>
+                        </div>
+                        <div class="option-icon">
+                            <div class="icon heated-seat-ac"></div>
+                            <p>열선</p>
+                        </div>
+                        <div class="option-icon">
+                            <div class="icon ventilated-seat"></div>
+                            <p>통풍</p>
+                        </div>
+                    </div>
+                    <div class="option-row">
+                        <div class="option-icon">
+                            <div class="icon parking-sensor"></div>
+                            <p>주차 감지 센서</p>
+                        </div>
+                        <div class="option-icon">
+                            <div class="icon electric-side-mirror-ac"></div>
+                            <p>전동 사이드미러</p>
+                        </div>
+                    </div>
+                </div>
+
                 <ul class="machine-inform-title">
                     <li class="tc-light-gray">추가옵션</li>
                     <li class="info-num">-</li>
@@ -241,9 +299,9 @@
             <div class="bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
                 <div class="sheet-content">
 
-                    <!--#####################
-        사용자 바텀시트
-    #########################-->
+        <!--#####################
+            사용자 바텀시트
+        #########################-->
 
                     <div v-if="isUser">
                         <!-------[사용자]diag (진단평가)알때------->
@@ -316,7 +374,9 @@
                             <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
                             <div class="btn-group mt-3 mb-2">
                                 <button @click="openModal" type="button" class="btn btn-outline-dark">경매취소</button>
+                                <transition name="fade" mode="out-in">
                                 <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
+                                </transition>
                                 <button type="button" class="btn btn-dark" @click="toggleView">재경매</button>
                             </div>
                             <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>
@@ -342,6 +402,7 @@
                                         </tr>
                                         </tbody>
                                     </table>
+                                    <transition name="fade">
                                     <ConnectDealerModal
                                         v-if="connectDealerModal"
                                         :bid="selectedBid"
@@ -349,6 +410,7 @@
                                         @close="handleModalClose"
                                         @confirm="handleDealerConfirm"
                                     />
+                                    </transition>
                                     </div>
                             </div>
                         </div>
@@ -407,10 +469,12 @@
                             </div>
                         </div>
                         <!--[사용자] - 경매 완료 -->
+                        <transition name="fade">
                         <div v-if="auctionDetail.data.status === 'done'" @click.stop="">
                             <h5 class="text-center p-4"> 거래는 어떠셨나요?</h5>
                             <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-danger w-100">후기 남기기</router-link>
                         </div>
+                    </transition>
                     </div>
 
                     <!-- 바텀 시트 show or black-->
@@ -559,7 +623,9 @@
     <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
     <div class="btn-group mt-3 mb-2">
       <button type="button" class="btn btn-danger" @click="reauction">재경매</button>
+      <transition name="fade">
       <modal v-if="reauctionModal" :isVisible="reauctionModal" />
+      </transition>
     </div>
         </div>
     </div>
@@ -1038,5 +1104,4 @@ input[type="checkbox"] {
     color: #CCC;
     direction: ltr; 
   }
-
 </style>
