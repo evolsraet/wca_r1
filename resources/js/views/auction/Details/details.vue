@@ -610,7 +610,7 @@ const scrollButtonStyle = ref({ display: 'none' }); // 스크롤 버튼 스타�
 const showReauctionView = ref(false); // 재경매 뷰의 가시성을 제어하는 Ref
 
 const auctionDetail = ref(null); // 경매 세부 정보를 저장하는 Ref
-const { getAuctions, auctionsData, AuctionReauction ,submitCarInfo, getAuctionById ,deleteAuction} = useAuctions(); // 경매 composable에서 함수
+const { getAuctions, auctionsData, AuctionReauction ,chosenDealer, getAuctionById ,deleteAuction} = useAuctions(); // 경매 composable에서 함수
 const { submitBid } = useBids(); // 입찰 composable에서 함수 
 const carDetails = ref({}); // 자동차 세부 정보를 저장하는 Ref
 
@@ -741,8 +741,21 @@ const cancelSelection = () => { // 딜러 선택을 취소하는 함수
   selectedDealer.value = null;
 };
 
-const completeAuction = () => { // 경매를 완료 상태로 변경하는 함수
+const completeAuction = async () => { //딜러 선택 후 최종 낙찰가 경매 완료.
   auctionDetail.value.status = 'done';
+  const id = route.params.id;
+  const data = {
+    status: 'done',
+    final_price: selectedDealer.value.price,
+  };
+
+  try {
+    await chosenDealer(id, data);
+    auctionDetail.value.data.status = 'done';
+  } catch (error) {
+    console.error('Error completing auction:', error);
+    alert('경매에 실패했습니다.');
+  }
 };
 
 /*const reauction = () => {

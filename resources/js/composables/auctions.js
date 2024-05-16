@@ -133,7 +133,34 @@ const AuctionReauction = async (id, data) => {
         isLoading.value = false;
     }
 };
+//딜러 선택
+const chosenDealer = async (id, data) => {
+    if (isLoading.value) return;
 
+    isLoading.value = true;
+    validationErrors.value = {};
+
+    const requestData = {
+        auction: data
+    };
+
+    try {
+        console.log(`Updating auction id: ${id} with data:`, data);
+        const response = await axios.put(`/api/auctions/${id}`, requestData);
+        console.log('response:', response.data);
+        auction.value = response.data;
+    } catch (error) {
+        if (error.response?.data) {
+            validationErrors.value = error.response.data.errors;
+        }
+        swal({
+            icon: 'error',
+            title: 'Failed to update auction status'
+        });
+    } finally {
+        isLoading.value = false;
+    }
+};
     
 // 상태 업데이트 
 const updateAuctionStatus = async (id, status) => {
@@ -217,6 +244,7 @@ const updateAuctionStatus = async (id, status) => {
       };
 
     return {
+        chosenDealer,
         AuctionReauction,
         hope_price,
         deleteAuction,
