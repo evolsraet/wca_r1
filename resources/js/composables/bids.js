@@ -56,10 +56,6 @@ export default function useBid() {
                 price: bidAmount
             }            
         }).then(async(response) => {
-            swal({
-                icon: 'success',
-                title: 'Bid created successfully'
-            });
             console.log(response);
         }).catch((error) => {
             console.log("1");
@@ -73,7 +69,6 @@ export default function useBid() {
 
 
 
-    
     return {
         bidsData,
         bidsCountByUser,

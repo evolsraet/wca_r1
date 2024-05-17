@@ -79,24 +79,26 @@
                   <!-- board seach area -->
                   <div class="o_table_mobile my-5">
                     <div class="tbl_basic tbl_dealer">
-                        <table>
-                            <tbody>
-                                <tr>
-                                    <th>No.</th>
-                                    <th>등록일</th>
-                                    <th>매물번호</th>
-                                    <th>상태</th>
-                                    <th>관리</th>
-                                </tr>
-                                <tr>
-                                    <td>1</td>
-                                    <td>24-03-15</td>
-                                    <td><p class="blue-box-ty03">4751982</p></td>
-                                    <td>접수</td>
-                                    <td class="d-flex ms-2 justify-content-center btn-apply">상세</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="overflow-auto select-dealer">
+                          <table>
+                              <tbody>
+                                  <tr>
+                                      <th>No.</th>
+                                      <th>등록일</th>
+                                      <th>매물번호</th>
+                                      <th>상태</th>
+                                      <th>관리</th>
+                                  </tr>
+                                  <tr>
+                                      <td>1</td>
+                                      <td>24-03-15</td>
+                                      <td><p class="blue-box-ty03">4751982</p></td>
+                                      <td>접수</td>
+                                      <td class="d-flex ms-2 justify-content-center btn-apply">상세</td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                        </div>
                     </div>
                 </div>
           </div>  
