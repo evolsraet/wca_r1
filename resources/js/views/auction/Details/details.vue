@@ -567,7 +567,7 @@
                     </div>
                     <button
                         type="button"
-                        class="my-3 w-100 btnㅇ"
+                        class="my-3 w-100 btn"
                         :class="buttonClass"
                         @click="handleCancelBid"
                         :disabled="cancelAttempted">
