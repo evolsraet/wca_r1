@@ -517,11 +517,12 @@
                             <!--TODO: 경매 마감일? => final_at 인지 경매마감일 - 최종진단 일 ?, like 관심 기능 추가 필요-->
                             <p class="tc-red mt-2">경매 마감까지 {{auctionDetail.data.final_at || "null" }} 분 남음</p>
                             <div class="mt-3 d-flex justify-content-end gap-3">
-                                <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.top_bids.length }}</p>
+                                <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
                                 <p class="interest-icon tc-light-gray normal-16-font">관심 6</p>
                             </div>
                             <div class="o_table_mobile my-5">
                                 <div class="tbl_basic tbl_dealer">
+                                    <div class="overflow-auto select-dealer">
                                     <table>
                                         <tbody>
                                             <tr>
@@ -529,13 +530,14 @@
                                                 <th>딜러명</th>
                                                 <th>입찰금액</th>
                                             </tr>
-                                            <tr v-for="(bid, index) in sortedTopBids" :key="bid.id">
+                                            <tr v-for="(bid, index) in sortedBids" :key="bid.user_id">
                                                 <td>{{ index + 1 }}위</td>
                                                 <td>{{ bid.user_id }}</td>
                                                 <td>{{ bid.price }} 만원</td>
                                             </tr>
                                         </tbody>
                                     </table>
+                                </div>
                                 </div>
                             </div>
                             <h5 class="text-start">나의 입찰 금액을 입력해주세요</h5>
@@ -646,6 +648,7 @@ import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue';
 
 import { convertToKorean } from '@/hooks/convertToKorean'; // 숫자를 한국어로 변환하는 함수
 
+const usersInfo = ref({});
 const isSellChecked = ref(false); // 판매 체크박스 상태를 위한 Ref
 const { getUser } = useUsers();
 const store = useStore(); // Vuex 스토어 인스턴스
@@ -836,15 +839,6 @@ const completeAuction = async () => { //딜러 선택 후 최종 낙찰가 경�
   }
 };
 */
-
-const cancelAuction = () => { // 경매를 취소하는 함수
-  auctionModalVisible.value = !auctionModalVisible.value;
-};
-
-const SuccesBid = () => { // 입찰 성공을 처리하는 함수
-  succesbid.value = true;
-};
-
 const checkScroll = () => { // 스크롤 위치를 확인하는 함수
   const scrollY = window.scrollY;
   const windowHeight = document.documentElement.clientHeight;
@@ -857,6 +851,16 @@ const checkScroll = () => { // 스크롤 위치를 확인하는 함수
   }
 };
 
+// 모든 사용자 이름을 가져오는 함수
+async function fetchUserNames() {
+  for (const bid of auctionDetail.value.data.bids) {
+    if (!usersInfo.value[bid.user_id]) {
+      const userData = await getUser(bid.user_id);
+      usersInfo.value[bid.user_id] = userData.name; // 사용자 이름 저장
+    }
+  }
+}
+ 
 onMounted(async () => { // 컴포넌트 마운트 시 라이프사이클 훅
   await getAuctions();
   const auctionId = parseInt(route.params.id);
@@ -891,8 +895,14 @@ const populateHopePrice = () => { // 희망 가격을 채우는 함수
     }
   }
 };
+// 입찰 데이터를 가격 오름차순으로 정렬하는 computed 속성
+const sortedBids = computed(() => {
+    // .slice()를 사용하여 원본 배열을 복사하고, 정렬을 수행
+    return auctionDetail.value.data.bids.slice().sort((a, b) => b.price - a.price);
+});
 
 const isReadonly = computed(() => isSellChecked.value && amount.value !== ''); // 금액이 읽기 전용인지 확인하는 계산된 속성
+
 
 watch([isSellChecked, auctionDetail], () => { // 변경 사항을 감지하는 Watcher들
   populateHopePrice();

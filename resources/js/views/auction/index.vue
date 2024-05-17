@@ -458,8 +458,13 @@ TODO:
                 <div v-if="isDealer"> 
                 <input class="toggle-heart" type="checkbox" checked  @click.stop/>
                 <label class="heart-toggle"></label>
+                <div class="participate-badge" v-if="isDealerParticipating(auction) ">참여</div>
                 </div>
-                    <div :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' }" class="card-img-top-placeholder"></div>
+                    <div :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' }" class="card-img-top-placeholder">
+                    <div v-if="isDealer"> 
+                    <div class="participate-badge" v-if="isDealerParticipating(auction) ">참여</div>
+                    </div>
+                    </div>
                     <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
                     <div v-if="auction.status === 'ing'" class="progress">
                         <div class="progress-bar" role="progressbar"></div>
@@ -606,44 +611,41 @@ TODO:
 export default {
   data() {
     return {
-      isExpanded: false,
-      scrollY: 0,
-      buttonStyle: {
-        opacity: 1
-      },
-      scrollTimeout: null,
-      selectedYear: new Date().getFullYear(), 
-      years: [] 
+      isExpanded: false, // 하단 메뉴 확장 상태
+      scrollY: 0, // 스크롤 위치 저장
+      buttonStyle: { opacity: 1 }, // 버튼 스타일 (불투명도)
+      scrollTimeout: null, // 스크롤 타임아웃 저장
+      selectedYear: new Date().getFullYear(), // 선택된 연도 (현재 연도)
+      years: [] // 연도 목록 저장
     };
   },
 
   computed: {
-    menuHeight() {
+    menuHeight() { // 하단 메뉴 높이 계산
       return this.isExpanded ? '0px' : '115px';
     }
   },
 
   created() {
-    window.addEventListener('scroll', this.handleScroll);
-    this.years = this.generateYearRange(1990, new Date().getFullYear()); 
+    window.addEventListener('scroll', this.handleScroll); // 스크롤 이벤트 리스너 추가
+    this.years = this.generateYearRange(1990, new Date().getFullYear()); // 연도 목록 생성
   },
 
   methods: {
-    toggleMenuHeight() { //하단 메뉴
+    toggleMenuHeight() { // 하단 메뉴 높이 토글
       this.isExpanded = !this.isExpanded;
     },
-    submitReview() { 
+    submitReview() { // 리뷰 제출 시 메뉴 높이 토글
       this.toggleMenuHeight();
     },
-    handleScroll() { //필터 스크롤 css
+    handleScroll() { // 스크롤 시 버튼 스타일 변경
       clearTimeout(this.scrollTimeout);
       this.buttonStyle.opacity = 0.5;
-
       this.scrollTimeout = setTimeout(() => {
         this.buttonStyle.opacity = 1;
       }, 150);
     },
-    generateYearRange(start, end) { 
+    generateYearRange(start, end) { // 연도 범위 생성
       const years = [];
       for (let year = start; year <= end; year++) {
         years.push(year);
@@ -652,7 +654,7 @@ export default {
     }
   },
 
-  beforeDestroy() {
+  beforeDestroy() { // 컴포넌트 제거 시 스크롤 이벤트 리스너 제거
     window.removeEventListener('scroll', this.handleScroll);
     clearTimeout(this.scrollTimeout);
   }
@@ -663,71 +665,75 @@ export default {
 import { ref, computed, onMounted } from 'vue';
 import { useStore } from "vuex";
 
-import useAuctions from "@/composables/auctions";
-import useRoles from '@/composables/roles';
-import FilterModal from '@/views/modal/filter.vue'; 
+import useAuctions from "@/composables/auctions"; // 경매 관련 함수 가져오기
+import useRoles from '@/composables/roles'; // 역할 관련 함수 가져오기
+import FilterModal from '@/views/modal/filter.vue'; // 필터 모달 컴포넌트 가져오기
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
-const currentStatus = ref('all'); 
+const currentStatus = ref('all'); // 현재 필터 상태 (기본값: 전체)
 const { role, getRole } = useRoles();
-const currentTab = ref('allInfo');
+const currentTab = ref('allInfo'); // 현재 탭 상태 (기본값: 모든 정보)
 const { auctionsData, pagination, getAuctions } = useAuctions();
-const currentPage = ref(1);
-const showModal = ref(false);
-const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length);
+const currentPage = ref(1); // 현재 페이지 번호
+const showModal = ref(false); // 모달 표시 상태
+const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); // 관심 있는 경매 수
 const auctionModal = ref(false);
 
 const store = useStore();
-const user = computed(() => store.getters["auth/user"]);
-const isDealer = computed(() => user.value?.roles?.includes('dealer'));
-const isUser = computed(() => user.value?.roles?.includes('user'));
+const user = computed(() => store.getters["auth/user"]); // 사용자 정보
+const isDealer = computed(() => user.value?.roles?.includes('dealer')); // 딜러 여부
+const isUser = computed(() => user.value?.roles?.includes('user')); // 사용자 여부
 
-const setCurrentTab = (tab) => {
+const setCurrentTab = (tab) => { // 현재 탭 설정
   currentTab.value = tab;
 };
 
-
-function toggleModal() {
+function toggleModal() { // 모달 토글
   showModal.value = !showModal.value; 
 }
 
-function setFilter(status) {
+function setFilter(status) { // 필터 설정
   currentStatus.value = status;
 }
 
-function handleClose() {
+function handleClose() { // 모달 닫기
   showModal.value = false;
 }
 
-const hasCompletedAuctions = computed(() => {
+const hasCompletedAuctions = computed(() => { // 완료된 경매 여부
   return auctionsData.value.some(auction => auction.status === 'done');
 });
 
-const filteredAuctions = computed(() => {
+const filteredAuctions = computed(() => { // 필터된 경매 목록
   if (currentStatus.value === 'all') {
     return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag', 'ask', 'cancel'].includes(auction.status));
   }
   return auctionsData.value.filter(auction => auction.status === currentStatus.value);
 });
 
-function loadPage(page) {
+function loadPage(page) { // 페이지 로드
   if (page < 1 || page > pagination.value.last_page) return;
   currentPage.value = page;
   getAuctions(page);
 }
 
-function navigateToDetail(auction) {
+function navigateToDetail(auction) { // 경매 상세 페이지로 이동
+  console.log("디테일 :", auction.id);
+  router.push({ name: 'AuctionDetail', params: { id: auction.id } });
+}
 
-    console.log("디테일 :", auction.id);
-    router.push({ name: 'AuctionDetail', params: { id: auction.id } });
-  } 
-
-function getAuctionStyle(auction) {
+function getAuctionStyle(auction) { // 경매 스타일 설정
   const validStatuses = ['done', 'wait', 'ing', 'diag'];
   return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
 }
-onMounted(async () => {
+
+function isDealerParticipating(auction) { // 딜러 참여 여부 확인
+  const currentUserId = user.value.id;
+  return auction.bids.some(bid => bid.user_id === currentUserId);
+}
+
+onMounted(async () => { // 컴포넌트 마운트 시 초기화 작업
   if (role.value.name === 'user') {
     isUser.value = true;
   }
@@ -735,7 +741,7 @@ onMounted(async () => {
 });
 </script>
 <style scoped>
-.shadow-hover:hover {
+.shadow-hover:hover { 
     box-shadow: 0px 0px 10px 0px rgba(78, 120, 97, 0.3);
     transform: translateY(-0.25rem);
     transition: transform 0.3s ease-in-out;
