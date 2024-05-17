@@ -1,6 +1,6 @@
 <template>
     <!--
-        TODO: 취소 성공 처리 후 모달 하나더 있음.
+        TODO: 
     -->
     <div class="container-fluid" v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
@@ -563,13 +563,20 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <p class="tc-light-gray">현재 최저 입찰가</p>
-                        <p>{{lowestBid}}</p>
+                        <p>{{lowestBid}} 만원</p>
                     </div>
-                    <button type="button" class="my-3 btn btn-outline-danger w-100">입찰 취소 (1회 남음)</button>
+                    <button
+                        type="button"
+                        class="my-3 w-100 btnㅇ"
+                        :class="buttonClass"
+                        @click="handleCancelBid"
+                        :disabled="cancelAttempted">
+                        입찰 취소 ({{ cancelAttempted ? '0회 남음' : '1회 남음' }})
+                    </button>
                     <!--  수수료 보증금이 부족할때 나오는 메뉴
-        <div class="bottom-message">
-            성사수수료 보즘금이 부족해요
-        </div>-->
+                    <div class="bottom-message">
+                        성사수수료 보즘금이 부족해요
+                    </div>-->
                 </div>
             </div>
 
@@ -652,6 +659,7 @@ import bidModal from '@/views/modal/bid/bidModal.vue'; // 입찰 모달 컴포�
 
 import { convertToKorean } from '@/hooks/convertToKorean'; // 숫자를 한국어로 변환하는 함수
 
+const lastBidId = ref(null); // 최근 입찰 ID 저장
 const usersInfo = ref({});
 const isSellChecked = ref(false); // 판매 체크 상태를 위한 ref
 const { getUser } = useUsers();
@@ -670,6 +678,7 @@ const updateKoreanAmount = () => { // 한국어 금액을 업데이트하는 함
   koreanAmount.value = convertToKorean(amount.value) + ' 원';
 };
 
+const cancelAttempted = ref(false);  // 입찰 취소 시도 여부
 const showBidModal = ref(false);
 const auctionModalVisible = ref(false); // 경매 모달의 가시성을 제어하는 ref
 const reauctionModal = ref(false); // 재경매 모달의 가시성을 제어하는 ref
@@ -685,7 +694,7 @@ const showReauctionView = ref(false); // 재경매 뷰의 가시성을 제어하
 
 const auctionDetail = ref(null); // 경매 세부 정보를 저장하는 ref
 const { getAuctions, auctionsData, AuctionReauction ,chosenDealer, getAuctionById ,deleteAuction} = useAuctions(); // 경매 관련 함수를 사용
-const { submitBid } = useBids(); // 입찰 관련 함수를 사용
+const { submitBid,cancelBid } = useBids(); // 입찰 관련 함수를 사용
 const carDetails = ref({}); // 자동차 세부 정보를 저장하는 ref
 const highestBid = ref(0);
 const lowestBid = ref(0);
@@ -880,14 +889,23 @@ const submitAuctionBid = () => {
 
 const confirmBid = async () => {
   try {
-    await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
-    await fetchAuctionDetail(); // 입찰 후 최신 경매 데이터를 다시 가져옴
-    closeBidModal();
-    succesbid.value = { success: true, amount: amount.value }; // 입찰 성공 여부와 입찰 금액 저장
+    const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
+    if (bidResult.success) {
+      lastBidId.value = bidResult.bidId; // 입찰 ID 저장
+      await fetchAuctionDetail(); // 최신 경매 데이터 업데이트
+      closeBidModal();
+      succesbid.value = { success: true, amount: amount.value, bidId: lastBidId.value };
+      console.log("입찰ID:", lastBidId.value);
+    } else {
+      alert(bidResult.message);
+    }
   } catch (error) {
     console.error('Error confirming bid:', error);
   }
 };
+
+
+
 
 // 경매 세부 정보를 가져오는 함수 => 딜러가 입찰 후 재 로드
 const fetchAuctionDetail = async () => {
@@ -943,6 +961,28 @@ const sortedBids = computed(() => {
 
 const isReadonly = computed(() => isSellChecked.value && amount.value !== ''); // 금액이 읽기 전용인지 확인하는 계산된 속성
 
+// 버튼 클래스를 동적으로 결정하는 computed 속성
+const buttonClass = computed(() => {
+  return cancelAttempted.value ? 'btn-outline-secondary' : 'btn-outline-danger';
+});
+const handleCancelBid = async () => {
+    if (cancelAttempted.value) {
+        alert("입찰 취소는 최초 1회만 가능합니다.");
+        return;  // 이미 취소를 시도했다면 함수를 더 이상 진행하지 않음
+    }
+
+    const result = await cancelBid(lastBidId.value);
+    if (result.success) {
+        cancelAttempted.value = true; // 취소 시도를 true로 설정
+        lastBidId.value = null;  // 입찰 ID 초기화
+        await fetchAuctionDetail();  // 경매 상세 정보 새로 불러오기
+        amount.value = '';  // 입찰 금액 입력 필드 초기화
+        succesbid.value = null;  // 입찰 성공 상태 초기화
+        koreanAmount.value = '원';
+    } else {
+        alert(result.message);
+    }
+};
 
 watch([isSellChecked, auctionDetail], () => { // 변경 사항을 감지하는 Watcher들
   populateHopePrice();
