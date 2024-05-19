@@ -35,14 +35,14 @@
                                 <div class="icon right-icon"></div>
                             </a>
                         </div>
-                        <router-link :to="{ name: 'autction.dealerbid' }" class="menu-item mb-3" @click="toggleNavbar">
+                        <router-link :to="{ name: 'auction.index'}" class="menu-item mb-3" @click="toggleNavbar">
                             <div class="icon icon-tag"></div>
                             <span class="menu-text recent-new">입찰하기</span>
                             <div class="icon right-icon"></div>
                         </router-link>
-                        <router-link :to="{ name: 'auction.index'}" class="menu-item mb-4" @click="toggleNavbar">
+                        <router-link :to="{ name: 'dealer.bids'}" class="menu-item mb-4" @click="toggleNavbar">
                             <div class="icon icon-awsome"></div>
-                            <span class="menu-text">내 매물관리</span>
+                            <span class="menu-text">선택완료 차량</span>
                             <div class="icon right-icon"></div>
                         </router-link>
                         <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mb-3" @click="toggleNavbar">

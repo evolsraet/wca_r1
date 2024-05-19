@@ -188,8 +188,8 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
-                path: '/dealer2',
-                name: 'dealer.index2',
+                path: '/dealerbids',
+                name: 'dealer.bids',
                 component: () => import('../views/dealer/dealer.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },

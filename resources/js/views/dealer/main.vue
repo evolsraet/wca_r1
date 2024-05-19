@@ -31,7 +31,7 @@
                                 <p class="interest-icon tc-light-gray normal-16-font">관심</p>
                             </div>
                             <div class="item">
-                                <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
+                                <p><span class="tc-red">{{ auctionsData.length }}</span> 건</p>
                                 <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
                             </div>
                             <div class="item">
@@ -123,7 +123,7 @@
                     <div class="card-body">
                         <div class="enter-view mt-3">
                             <h5>선택 완료 차량</h5>
-                            <router-link :to="{ name: 'dealer.index2'}" class="btn-apply">전체보기</router-link>
+                            <router-link :to="{ name: 'dealer.bids'}" class="btn-apply">전체보기</router-link>
                         </div>
                         <span class="tc-light-gray">24시간 내 응대해 주세요!</span>
                         <!-- 차량이 존재 할 경우-->
@@ -163,7 +163,9 @@
 import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
 import { useStore } from 'vuex';
+import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
 
+const myBidsCount = ref(0);
 
 const store = useStore();
 const isExpanded = ref(false);
@@ -171,20 +173,29 @@ const toggleCard = () => {
     isExpanded.value = !isExpanded.value;
 };
 
-const { bidsData, bidsCountByUser, getBids, viewBids } = useBid();
+const { getAuctions, auctionsData } = useAuctions(); // 경매 관련 함수를 사용
+const { bidsData, getBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
 
+const calculateMyBidsCount = () => {
+    if (bidsData.value && user.value) {
+        myBidsCount.value = bidsData.value.filter(bid => bid.user_id === user.value.id).length;
+    }
+};
 
 const alertNoVehicle = (event) => {
     event.preventDefault();
     if (viewBids.value.length === 0) {
         alert("선택 완료된 차량이 없습니다.");
     } else {
-        router.push({ name: 'dealer.index2' });
+        router.push({ name: 'dealer.bids' });
     }
 };
 
 onMounted(async () => {
     await getBids();
+    calculateMyBidsCount();
+    await getAuctions();
 });
 </script>
+
