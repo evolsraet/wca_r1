@@ -31,9 +31,10 @@ class ReviewService
 
                 $this->modifyAuth($auction->user_id);
                 break;
-
-            default:
+            case 'update':
+            case 'delete':
                 $this->modifyAuth($result->user_id);
+            default:
                 break;
         }
         if ($method == 'store') {
