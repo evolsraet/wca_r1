@@ -3,7 +3,7 @@
         <div class="regiest-content">
                 <!-- 딜러 프로필 요약 정보 -->
                 <div class="banner-top ">
-                    <div class="top-info">현재 진행중인 경매<p class="tc-red"> 1 </p> 건</div>
+                    <div class="top-info">현재 진행중인 경매<p class="tc-red"> {{ ingCount }} </p> 건</div>
                     <div class="styled-div">
                         <div class="profile">
                             <div class="dealer-info">
@@ -30,7 +30,7 @@
                                 <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
                             </div>
                             <div class="item">
-                                <p><span class="tc-red">32</span> 건</p>
+                                <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
                                 <p class="purchase-icon tc-light-gray normal-16-font">매입</p>
                             </div>
                         </div>
@@ -112,6 +112,9 @@ const store = useStore();
 const { getAuctions,auctionsData } = useAuctions(); // 경매 관련 함수를 사용
 const isExpanded = ref(false);
 
+const ingCount = computed(() => {
+    return auctionsData.value.filter(auction => auction.status === 'ing').length;
+});
 
 const toggleCard = () => {
     isExpanded.value = !isExpanded.value;
@@ -119,7 +122,7 @@ const toggleCard = () => {
 const setCurrentTab = (tab) => {
     currentTab.value = tab;
 };
-const { bidsData, bidsCountByUser, getBids, viewBids } = useBid();
+const { bidsData, getBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
 
 onMounted(async () => {
