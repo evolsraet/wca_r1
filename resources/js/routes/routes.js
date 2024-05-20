@@ -153,7 +153,7 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
             {
-                path: '/view-do',
+                path: '/view-do/:id',
                 name: 'user.create-review',
                 component: () => import('../views/bbs/Create.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.user']),

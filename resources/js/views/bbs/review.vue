@@ -8,13 +8,13 @@
                     <h3 class="review-title">이용후기 관리</h3>
                     <div class="tab-nav my-4">
                         <ul>
-                            <li class="col-4"><a href="#" @click="setActiveTab('available')" :class="{ 'active': activeTab === 'available' }" title="작성한 이용후기">작성 가능한 이용 후기(2)</a></li>
-                            <li class="col-4"><a href="#" @click="setActiveTab('written')" :class="{ 'active': activeTab === 'written' }" title="작성 가능한 이용후기">작성한 이용후기(3)</a></li>
+                            <li class="col-4"><a href="#" @click="setActiveTab('available')" :class="{ 'active': activeTab === 'available' }" title="작성한 이용후기">작성 가능한 이용 후기(<span>{{ filteredAuctions.length }}</span>)</a></li>
+                            <li class="col-4"><a href="#" @click="setActiveTab('written'), getReview(userId)" :class="{ 'active': activeTab === 'written' }" title="작성 가능한 이용후기">작성한 이용후기(<span></span>)</a></li>
                         </ul>
                         <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
                     <!-- 작성가능한 이용후기-->
-                    <div class="review-card" v-if="activeTab === 'available'">
+                    <div class="review-card" v-if="activeTab === 'available'" v-for="auction in filteredAuctions" :key="auction"> 
                         <div class="review-image">
                             <p class="review-date">3.18 (월)</p>
                             <img src="../../../img/car_example.png" alt="현대 쏘나타 (DN8)">
@@ -26,11 +26,12 @@
                                     <li><button @click="deleteReview" class="tc-red">삭제</button></li>
                                 </ul>
                             </div>
-                            <h3 class="review-title">현대 쏘나타 (DN8)</h3>
+                            <h3 class="review-title">{{auction.car_no}}</h3>
                             <p class="tc-light-gray">12 삼 4567 | 딜러명</p>
                             <div class="justify-content-between flex align-items-center">
                                 <p class="tc-light-gray review-price">1,000 만원</p>
-                                <router-link :to="{ name: 'user.create-review' }" class="btn-review">후기작성</router-link>
+                                <!--<router-link :to="{ name: 'user.create-review' , params: { id: auction.id } }" class="btn-review">후기작성</router-link>-->
+                                <a class="btn-review" @click="navigateToDetail(auction.id)">후기작성</a>
                             </div>
                         </div>
                     </div>
@@ -87,16 +88,24 @@
 </template>
 
 <script setup>
-import { RouterLink } from 'vue-router';
+import { onMounted , computed } from 'vue';
+import { useRouter } from 'vue-router';
 import { ref } from 'vue';
+import useAuctions from "@/composables/auctions";
+import { initReviewSystem } from '@/composables/review';
 
-
+const router = useRouter();
 const activeTab = ref('available'); //nav 탭 바
 const showDeleteConfirmation = ref(false); // "삭제되었습니다," 띄우기
 const isMenuVisible = ref(false);
+const { auctionsData, getAuctions } = useAuctions();
+const filteredAuctions = computed(() => auctionsData.value.filter(auction => auction.status === 'done'));
+const { getWrtReview } = initReviewSystem(); 
+let userId =  ref();
 function toggleMenu() {
     isMenuVisible.value = !isMenuVisible.value;
 }
+
 // ... 더보기 누르면 나오는 탭
 function setActiveTab(tab) {
     if (activeTab.value !== tab) { // 탭이 실제로 변경될 때만 메뉴를 숨김
@@ -113,12 +122,24 @@ function deleteReview() {
         showDeleteMessage();
     }
 }
+function navigateToDetail(auctionId) {
+    router.push({ name: 'user.create-review', params: { id: auctionId } });
+}
+
+function getReview(id){
+    getWrtReview(id);
+
+}
 const deleteMessageVisible = ref(false);
 //삭제후 메시지 띄우기
 function showDeleteMessage() {
     deleteMessageVisible.value = true;
     setTimeout(() => deleteMessageVisible.value = false, 3000);
 }
+onMounted(async () => {
+    await getAuctions(1);
+    userId = auctionsData.value[0].user_id;
+});
 </script>
 
 <style scoped>
