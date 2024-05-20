@@ -84,11 +84,11 @@
                 </ul>
                 <ul class="machine-inform">
                     <li class="tc-light-gray">등급</li>
-                    <li class="sub-title">{{ carDetails.gradeSub }}</li>
+                    <li class="sub-title">{{ carDetails.grade }}</li>
                 </ul>
                 <ul class="machine-inform">
                     <li class="tc-light-gray">세부등급</li>
-                    <li class="sub-title"></li>
+                    <li class="sub-title">{{ carDetails.gradeSub }}</li>
                 </ul>
                 <ul class="machine-inform-title">
                     <li class="tc-light-gray">최초등록일</li>
@@ -693,7 +693,7 @@ const scrollButtonStyle = ref({ display: 'none' }); // 스크롤 버튼 스타�
 const showReauctionView = ref(false); // 재경매 뷰의 가시성을 제어하는 ref
 
 const auctionDetail = ref(null); // 경매 세부 정보를 저장하는 ref
-const { getAuctions, auctionsData, AuctionReauction ,chosenDealer, getAuctionById ,deleteAuction} = useAuctions(); // 경매 관련 함수를 사용
+const { AuctionCarInfo,getAuctions, auctionsData, AuctionReauction ,chosenDealer, getAuctionById ,deleteAuction} = useAuctions(); // 경매 관련 함수를 사용
 const { submitBid,cancelBid } = useBids(); // 입찰 관련 함수를 사용
 const carDetails = ref({}); // 자동차 세부 정보를 저장하는 ref
 const highestBid = ref(0);
@@ -905,30 +905,49 @@ const confirmBid = async () => {
   }
 };
 
-
-
-
 // 경매 세부 정보를 가져오는 함수 => 딜러가 입찰 후 재 로드
 const fetchAuctionDetail = async () => {
   const auctionId = parseInt(route.params.id);
   try {
     auctionDetail.value = await getAuctionById(auctionId);
-    console.log('Auction Detail:', auctionDetail.value);
+    const { car_no, owner_name } = auctionDetail.value.data;
+
+    const carInfoForm = {
+      owner: owner_name,
+      no: car_no,
+      forceRefresh: ""
+    };
+
+    const carInfoResponse = await AuctionCarInfo(carInfoForm);
+    const carData = carInfoResponse.data;
+
+    carDetails.value.no = carData.no;
+    carDetails.value.model = carData.model;
+    carDetails.value.modelSub = carData.modelSub;
+    carDetails.value.grade = carData.grade;
+    carDetails.value.gradeSub = carData.gradeSub;
+    //carDetails.value.registrationDate = carData.registrationDate || "등록일 정보 없음";
+    carDetails.value.year = carData.year;
+    //carDetails.value.vehicleType = carData.vehicleType || "차량 유형 정보 없음";
+    //carDetails.value.engineCapacity = carData.engineCapacity || "배기량 정보 없음";
+    carDetails.value.fuel = carData.fuel;
+    carDetails.value.mission = carData.mission;
+
+    console.log("차량 상세 정보:", carInfoResponse);
   } catch (error) {
     console.error('Error fetching auction detail:', error);
+    errorMessage.value = 'Error fetching auction details';
   }
 };
 
 
 onMounted(async () => { 
-  await getAuctions();
-  fetchAuctionDetail();
+    await getAuctions();
+    fetchAuctionDetail();
   const auctionId = parseInt(route.params.id);
   window.addEventListener('scroll', checkScroll);
   try {
-    auctionDetail.value = await getAuctionById(auctionId);
-    console.log('Auction Detail:', auctionDetail.value);
-    console.log('Sorted Top Bids:', sortedTopBids.value);
+console.log('Sorted Top Bids:', sortedTopBids.value);
   } catch (error) {
     console.error('Error fetching auction detail:', error);
   }
@@ -1163,8 +1182,6 @@ input[type="checkbox"] {
     border-radius: 6px;
     background-color: #f5f5f6;
 }
-
-
 
 
 

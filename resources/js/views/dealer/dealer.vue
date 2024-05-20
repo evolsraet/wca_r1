@@ -4,8 +4,8 @@
             <div class="review">
                 <div class="mov-review my-5">
                     <div class="apply-top02 text-start">
-                        <div class="search-type2">
-                            <h3 class="review-title">선택 완료 차량<br><span class="mb-2 tc-light-gray">24시간 내 응대해 주세요!</span></h3>
+                        <div class="search-type3">
+                            <h3 class="review-title mov-hidden">선택 완료 차량<br><span class="mb-2 tc-light-gray">24시간 내 응대해 주세요!</span></h3>
                             <input type="text" placeholder="모델명,차량번호,지역">
                             <button type="button" class="search-btn">검색</button>
                         </div>
@@ -23,37 +23,73 @@
                         </div>
                     </div>
                     <div class="container my-5">
-                    <div class="row">
-                        <div class="col-md-3 mb-4" v-for="bid in bidsData" :key="bid.id">
-                            <div class="card my-auction">
-                                <input class="toggle-heart" type="checkbox" checked/>
-                                    <label class="heart-toggle" ></label>
+                        <div class="row">
+                            <div class="col-md-3 mb-4" v-for="bid in filteredBids" :key="bid.id"  @click="navigateToDetail(bid)">
+                                <div class="card my-auction">
+                                    <input class="toggle-heart" type="checkbox" checked/>
+                                    <label class="heart-toggle"></label>
                                     <div class="selection-complete-img"></div> 
-                                    <div class="wait-selection">입찰가 {{ bid.price }}</div>
+                                    <div class="wait-selection">낙찰가 {{ bid.price }}</div>
                                     <div class="card-body">
-                                    <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                        <h5 class="card-title"><span class="blue-box">무사고</span>{{ bid.auctionDetails ? bid.auctionDetails.car_no : '차량 정보 없음' }}</h5>
+                                        <p class="card-text tc-light-gray">현대 쏘나타(DN8){{ bid.auctionDetails ? bid.auctionDetails.model : '모델 정보 없음' }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
-                </div>
                 </div>
             </div>
         </div>
     </div>
 </template>
 
-
 <script setup>
-import { onMounted } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
+import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
+import { useRouter } from 'vue-router';
 
+const router = useRouter(); 
+const { getAuctions, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
 const { bidsData, getBids } = useBid();
 
+const filteredBids = ref([]);
+
+const fetchAuctionDetails = async (bid) => {
+    try {
+        const auctionDetails = await getAuctionById(bid.auction_id);
+        console.log('Auction Details for Bid ID:', bid.id, auctionDetails);
+        return {
+            ...bid,
+            auctionDetails: auctionDetails.data
+        };
+    } catch (error) {
+        console.error('Error fetching auction details:', error);
+        return {
+            ...bid,
+            auctionDetails: null
+        };
+    }
+};
+
+function navigateToDetail(bid) {
+    console.log("Navigate to Detail:", bid.auction_id);
+    router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
+}
+
+const fetchFilteredBids = async () => {
+    const filteredBidsData = bidsData.value.filter(bid => bid.status === 'ask');
+    console.log('Filtered Bids:', filteredBidsData); 
+    const bidsWithDetails = await Promise.all(filteredBidsData.map(fetchAuctionDetails));
+    filteredBids.value = bidsWithDetails;
+    console.log('Bids with Auction Details:', filteredBids.value); 
+};
+
 onMounted(async () => {
-  await getBids();
+    await getBids();
+    await getAuctions();
+    await fetchFilteredBids();
 });
 </script>
 

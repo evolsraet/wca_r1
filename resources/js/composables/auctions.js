@@ -83,6 +83,28 @@ const submitCarInfo = async () => {
         processing.value = false;
     }
 };
+
+const AuctionCarInfo = async (carInfoForm) => {
+    if (processing.value) return;  
+    processing.value = true;
+    validationErrors.value = {};
+  
+    try {
+      const response = await axios.post('/api/auctions/carInfo', carInfoForm);
+      return response.data; // response 데이터를 반환
+    } catch (error) {
+      console.error(error);
+      if (error.response?.data) {
+        validationErrors.value = error.response.data.errors;
+      } else {
+        throw new Error('Unknown error');
+      }
+    } finally {
+      processing.value = false;
+    }
+  };
+  
+
  const createAuction = async (auctionData) => {
         if (processing.value) return;
         processing.value = true;
@@ -244,6 +266,7 @@ const updateAuctionStatus = async (id, status) => {
       };
 
     return {
+        AuctionCarInfo,
         chosenDealer,
         AuctionReauction,
         hope_price,

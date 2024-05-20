@@ -115,6 +115,13 @@ video {
     flex-direction: column;
     flex-wrap: nowrap;
 }
+
+.mov-hidden{
+    display: none !important;
+}
+.search-type3 input {
+    width: 100%  !important;
+}
 }
 @media (max-width: 640px){
 .layout-container02 {
@@ -2891,8 +2898,6 @@ input[type="checkbox"] {
 }
 
 
-
-
 .dealer-check {
     margin-top: 50px;
     display: flex;
@@ -3242,3 +3247,39 @@ input[type="checkbox"] {
     display: none;
   }
   */
+
+  .search-type3 input {
+    background-color: #f5f5f5;
+    margin-top: 0;
+    padding: 0 40px 0 20px;
+    height: 42px;
+    line-height: 40px;
+    border-radius: 26px;
+    width: 30%;
+    border: none;
+    outline: none;
+}
+
+.search-type3 {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.search-type3 .search-btn {
+    cursor: pointer; 
+    position: absolute;
+    right: 13px;
+    top: 15px;
+    width: 40px; 
+    height: 40px; 
+    border: none; 
+    background-color: transparent; 
+    background-image: url('../img/search.png');
+    background-repeat: no-repeat;
+    background-position: center; 
+    background-size: 20px 20px;
+    font-size: 0; 
+}

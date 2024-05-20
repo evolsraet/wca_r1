@@ -1,3 +1,6 @@
+<!--
+    TODO: 조회시 조회수 2,3개 올라가는 문제 onmount문제? 같음
+-->
 <template>
     <div class="container">
         <div class="regiest-content">
@@ -130,17 +133,17 @@
                         </div>
                         <span class="tc-light-gray">24시간 내 응대해 주세요!</span>
                         <!-- 차량이 존재 할 경우-->
-                        <div v-if="viewBids.length > 0">
-                            <div class="complete-car" v-for="bid in viewBids" :key="bid.id">
+                        <div v-if="filteredViewBids.length > 0">
+                            <div class="complete-car" v-for="bid in filteredViewBids" :key="bid.id">
                                 <div class="card my-auction mt-3">
                                     <input class="toggle-heart" type="checkbox">
                                     <label class="heart-toggle"></label>
                                     <div class="card-img-top-placeholder border-rad"></div>
                                     <div class="card-body">
-                                        <h5 class="card-title"><span class="blue-box">무사고</span>현대 쏘나타(DN8)</h5>
+                                        <h5 class="card-title"><span class="blue-box">무사고</span>{{bid.auctionDetails.car_no}}</h5>
                                         <div class="enter-view">
-                                            <p class="card-text tc-light-gray">12 삼 4567</p>
-                                            <a href="#"><span class="red-box-type02 pass-red">자세히 보기</span></a>
+                                            <p class="card-text tc-light-gray">{{bid.auctionDetails.car_no}}</p>
+                                            <a href="#"><span class="red-box-type02 pass-red"  @click="navigateToDetail(bid)">자세히 보기</span></a>
                                         </div>
                                     </div>
                                 </div>
@@ -167,17 +170,19 @@
 import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
 
 const myBidsCount = ref(0);
-
 const store = useStore();
+const router = useRouter(); 
 const isExpanded = ref(false);
+
 const toggleCard = () => {
     isExpanded.value = !isExpanded.value;
 };
 
-const { getAuctions, auctionsData } = useAuctions(); // 경매 관련 함수를 사용
+const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
 const { bidsData, getBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
 
@@ -200,10 +205,43 @@ const alertNoVehicle = (event) => {
     }
 };
 
+const fetchAuctionDetails = async (bid) => {
+    try {
+        const auctionDetails = await getAuctionById(bid.auction_id);
+        console.log('Auction Details for Bid ID:', bid.auction_id, auctionDetails);
+        return {
+            ...bid,
+            auctionDetails: auctionDetails.data
+        };
+    } catch (error) {
+        console.error('Error fetching auction details:', error);
+        return {
+            ...bid,
+            auctionDetails: null
+        };
+    }
+};
+
+// Filter bids and fetch auction details
+const filteredViewBids = ref([]);
+
+const fetchFilteredViewBids = async () => {
+    const filteredBids = viewBids.value.filter(bid => bid.status === 'ask');
+    console.log('Filtered Bids:', filteredBids);
+    const bidsWithDetails = await Promise.all(filteredBids.map(fetchAuctionDetails));
+    filteredViewBids.value = bidsWithDetails;
+    console.log('Bids with Auction Details:', filteredViewBids.value);
+};
+
+function navigateToDetail(bid) {
+    console.log("Navigate to Detail:", bid.auction_id);
+    router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
+}
+
 onMounted(async () => {
     await getBids();
     calculateMyBidsCount();
     await getAuctions();
+    await fetchFilteredViewBids();
 });
-
 </script>
