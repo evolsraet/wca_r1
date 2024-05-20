@@ -740,11 +740,3 @@ onMounted(async () => { // 컴포넌트 마운트 시 초기화 작업
   await getAuctions(currentPage.value);
 });
 </script>
-<style scoped>
-.shadow-hover:hover { 
-    box-shadow: 0px 0px 10px 0px rgba(78, 120, 97, 0.3);
-    transform: translateY(-0.25rem);
-    transition: transform 0.3s ease-in-out;
-    border-radius:6px;
-}
-</style>

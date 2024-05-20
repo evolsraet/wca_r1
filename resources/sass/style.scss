@@ -3081,7 +3081,6 @@ input[type="checkbox"] {
 
 }
 
-
 /* 옵션 정보 : -ac 옵션 정보 활성화 아이콘 */
 
 .option-icons {
@@ -3282,4 +3281,23 @@ input[type="checkbox"] {
     background-position: center; 
     background-size: 20px 20px;
     font-size: 0; 
+}
+
+.red-box-type02.pass-red:hover {
+    box-shadow: 0 2px 7px rgba(0, 0, 0, 0.2);
+}
+
+@media screen and (max-width: 481px){
+    .o_table_mobile .tbl_basic table {
+        width: 100%;
+        min-width: 600px !important;
+    }
+}
+
+.shadow-hover:hover { 
+    box-shadow: 0px 0px 10px 0px rgba(78, 120, 97, 0.3);
+    transform: translateY(-0.25rem);
+    transition: transform 0.3s ease-in-out;
+    border-radius:6px;
+    cursor: pointer;
 }

@@ -181,6 +181,7 @@ $disabled-primary:#ebb3b5;
     font-weight: 500;
     padding: 0 !important;
     margin: 0 -8px 0 8px;
+    transition: box-shadow 0.3s ease-in-out;
 }
 
 .gray-box {

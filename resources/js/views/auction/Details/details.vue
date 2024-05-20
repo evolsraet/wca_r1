@@ -1082,26 +1082,10 @@ watch([isSellChecked, auctionDetail], () => { // 변경 사항을 감지하는 W
     opacity: 1; 
 }
 
-
-
-
-.select-dealer{
-    max-height: 220px;
-
-}
-.select-dealer tr{
-    border-bottom: 1px solid #d4d4d4;
-    line-height: 40px;
-}
 input[type="checkbox"] {
     align-self: center; 
 }
 
-.select-dealer td img {
-    width: 50px;
-    height: auto;
-    max-height: 50px;
-}
 
 
     .card-img-top-ty01 {

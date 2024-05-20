@@ -22,6 +22,7 @@
         </div>
         <div class="o_table_mobile my-5">
             <div class="tbl_basic tbl_dealer">
+                <div class="overflow-auto select-dealer">
                 <table class="table">
                     <thead>
                         <tr>
@@ -74,6 +75,7 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
             </div>
         </div>
         <div class="card-footer">
@@ -202,12 +204,6 @@
 {
 .web_style{
     margin-left: 0rem !important;
-}
-}
-@media screen and (max-width: 481px){
-.o_table_mobile .tbl_basic table {
-    width: 100%;
-    min-width: 600px !important;
 }
 }
 .select-option {

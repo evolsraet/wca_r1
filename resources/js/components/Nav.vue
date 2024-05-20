@@ -42,7 +42,7 @@
                         </router-link>
                         <router-link :to="{ name: 'dealer.bids'}" class="menu-item mb-4" @click="toggleNavbar">
                             <div class="icon icon-awsome"></div>
-                            <span class="menu-text">선택완료 차량</span>
+                            <span class="menu-text">선택 완료 차량</span>
                             <div class="icon right-icon"></div>
                         </router-link>
                         <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mb-3" @click="toggleNavbar">
@@ -150,7 +150,7 @@
             </div>
             <!-- web nav bar -->
             <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mt-2 mt-lg-0 gap-3 ms-auto">
+                <ul class="navbar-nav mt-2 mt-lg-0 gap-1 ms-auto">
                  <!-- 사용자 일때 -->
                  <template v-if="isUser">
                         <li class="nav-item">
@@ -187,10 +187,10 @@
                     <!-- 딜러 일때 -->
                     <template v-else-if="isDealer">
                         <li class="nav-item">
-                            <router-link :to="{ name: 'autction.dealerbid'}" class="nav-link" to="/register" >입찰하기</router-link>
+                            <router-link :to="{ name: 'auction.index'}" class="nav-link" to="/register" >입찰하기</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'auction.index'}" class="nav-link">내 매물관리</router-link>
+                            <router-link :to="{ name: 'dealer.bids'}" class="nav-link">선택 완료 차량</router-link>
                         </li>
                         <li class="nav-item">
                             <router-link :to="{ name: 'dealer.bidList'}" class="nav-link">과거 낙찰 이력</router-link>
@@ -328,15 +328,15 @@ function toggleNavbar() {
 }
 
 
-a.navbar-toggler.mt-2 {
+a.navbar-toggler.p-2 {
     display: none !important;
 }
 
 @media (max-width: 991px){
-    a.navbar-toggler.mt-2 {
+    a.navbar-toggler.p-2 {
     display: block !important;
 }
-ul.navbar-nav.mt-2.mt-lg-0.gap-3.ms-auto {
+ul.navbar-nav.mt-2.mt-lg-0.gap-1.ms-auto{
 display: none !important;
 }
 }

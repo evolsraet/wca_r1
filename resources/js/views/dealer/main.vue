@@ -83,6 +83,8 @@
                         <h3 class="review-title">클레임 현황</h3>
                         <router-link :to="{ name: 'index.claim' }" class="btn-apply mt-0">전체보기</router-link>
                     </div>
+                    <div class="o_table_mobile my-5">
+            <div class="tbl_basic tbl_dealer">
                     <table class="table custom-border text-center">
                         <thead class="tr-style">
                             <tr>
@@ -124,6 +126,8 @@
                             </tr>
                         </tbody>
                     </table>
+                     </div>
+                </div>
                 </div>
                 <div class="card completed-card border-0" :style="cardStyle" @click="toggleCard">
                     <div class="card-body">
