@@ -99,7 +99,7 @@ const activeTab = ref('available'); //nav 탭 바
 const showDeleteConfirmation = ref(false); // "삭제되었습니다," 띄우기
 const isMenuVisible = ref(false);
 const { auctionsData, getAuctions } = useAuctions();
-const filteredAuctions = computed(() => auctionsData.value.filter(auction => auction.status === 'done'));
+const filteredAuctions = computed(() => auctionsData.value.filter(auction => auction.status === 'done' && auction.bid_id != null));
 const { getWrtReview } = initReviewSystem(); 
 let userId =  ref();
 function toggleMenu() {

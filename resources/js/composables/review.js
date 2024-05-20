@@ -139,6 +139,14 @@ export function initReviewSystem() {
             const auction_id = document.getElementById('auction_id').value;
             const dealer_id = document.getElementById('dealer_id').value;
 
+            if(auction_id == "" || dealer_id == ""){
+                alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
+                return;
+            }
+            if(starScore == 0 && starScore == ""){
+                alert("별점을 입력해주세요.");
+                return;
+            }
             setReviewValue(user_id, auction_id, dealer_id, starScore);
 
             const response = await axios.post("/api/reviews", reviewForm);
