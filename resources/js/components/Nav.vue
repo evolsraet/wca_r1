@@ -1,6 +1,6 @@
 <template>
     <div class=""></div>
-    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
+    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm p-2">
         <div class="container nav-font">
             <button v-if="isDetailPage" @click="goBack" class="p-2 btn btn-back back-btn-icon">
             </button>

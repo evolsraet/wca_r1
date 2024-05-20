@@ -5,6 +5,8 @@
     <div class="container-fluid" v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
         <div v-if="!showReauctionView">
+            <div class="web-content-style container">
+            <div>
             <div class="container my-4">
                 <div>
                     <div class="mb-4">
@@ -294,7 +296,7 @@
                     <li class="info-num">개인</li>
                 </ul>
             </div>
-
+        </div>
             <!-- bottom sheet Start-->
             <div class="bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
                 <div class="sheet-content">
@@ -641,8 +643,7 @@
     </div>
         </div>
     </div>
-
-
+</div>
 </template>
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'; // Vue 컴포지션 API의 주요 함수들을 임포트
@@ -770,19 +771,28 @@ const toggleView = () => { // 재경매 뷰를 토글하는 함수
   showReauctionView.value = !showReauctionView.value;
 };
 
-const toggleSheet = () => { // 바텀 시트의 가시성을 토글하는 함수
+const toggleSheet = () => {
   const bottomSheet = document.querySelector('.bottom-sheet');
+  const screenWidth = window.innerWidth;
+
   if (showBottomSheet.value) {
     bottomSheet.classList.add('modified');
     bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
+
     scrollButtonStyle.value = { display: 'block' };
   } else {
     bottomSheet.classList.remove('modified');
-    bottomSheetStyle.value = { position: 'fixed', bottom: '0px' };
+    bottomSheetStyle.value = { 
+      position: screenWidth >= 1200 ? 'static' : 'fixed', 
+      bottom: '0px' 
+    };
     scrollButtonStyle.value = { display: 'none' };
   }
   showBottomSheet.value = !showBottomSheet.value;
 };
+
+
+
 
 const selectDealer = async (bid, event, index) => {
   if (event.target.checked) {
@@ -942,6 +952,11 @@ const fetchAuctionDetail = async () => {
 
 
 onMounted(async () => { 
+    const screenWidth = window.innerWidth;
+    bottomSheetStyle.value = { 
+    position: screenWidth >= 1200 ? 'static' : 'fixed', 
+    bottom: '0px' 
+  };
     await getAuctions();
     fetchAuctionDetail();
   const auctionId = parseInt(route.params.id);

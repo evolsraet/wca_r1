@@ -2775,6 +2775,25 @@ input[type="checkbox"] {
     flex: 1.5;
     padding: 20px;
 }
+
+}
+@media screen and (min-width:1200px) {
+    .web-content-style{
+        display: flex;
+        gap: 20px;
+        padding: 15px;
+    }
+    .bottom-sheet::before {
+        display: none;
+    }
+    .bottom-sheet {
+        width: 50%;
+        margin-top: 44px;
+        border-radius: 20px !important;
+    }
+    .animCircle{
+        display: none;
+    }
 }
 @media screen and (min-width:992px) {
     .style-view{
