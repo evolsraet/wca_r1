@@ -43,6 +43,9 @@ class AuctionResource extends JsonResource
 
             // 완료시 금액 공개
             if ($parentArray['status'] == 'done') {
+                if ($parentArray['bid_id']) {
+                    $addArray['win_bid'] = new BidResource(Bid::find($parentArray['bid_id']));
+                }
                 $addArray['top_bids'] = $bidsQuery->makeHidden(['user_id']);
             } elseif ($parentArray['status'] == 'ing') {
                 $addArray['top_bids'] = $bidsQuery->makeHidden(['price', 'user_id']);

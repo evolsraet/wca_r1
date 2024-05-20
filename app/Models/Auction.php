@@ -44,11 +44,6 @@ class Auction extends Model implements HasMedia
         return $this->hasMany(Bid::class);
     }
 
-    public function winningBid()
-    {
-        return $this->hasOne(Bid::class);
-    }
-
     public function likes()
     {
         return $this->morphMany(Like::class, 'likeable');
