@@ -1,6 +1,6 @@
 <template>
     <!--
-        TODO: 
+        TODO: 조회수는 경매완료 되면 동결.
     -->
     <div class="container-fluid" v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->

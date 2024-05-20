@@ -147,7 +147,7 @@
                                         <h5 class="card-title"><span class="blue-box">무사고</span>{{bid.auctionDetails.car_no}}</h5>
                                         <div class="enter-view">
                                             <p class="card-text tc-light-gray">{{bid.auctionDetails.car_no}}</p>
-                                            <a href="#"><span class="red-box-type02 pass-red"  @click="navigateToDetail(bid)">자세히 보기</span></a>
+                                            <span class="red-box-type02 pass-red" @click="navigateToDetail(bid)">자세히 보기</span>
                                         </div>
                                     </div>
                                 </div>
@@ -238,9 +238,10 @@ const fetchFilteredViewBids = async () => {
 };
 
 function navigateToDetail(bid) {
-    console.log("Navigate to Detail:", bid.auction_id);
-    router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
+  console.log("Navigate to Detail:", bid.auction_id);
+  router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
 }
+
 
 onMounted(async () => {
     await getBids();
