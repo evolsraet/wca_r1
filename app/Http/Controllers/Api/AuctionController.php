@@ -18,6 +18,19 @@ class AuctionController extends Controller
         $this->service = $service;
     }
 
+    public function swapNumber($a, $b)
+    {
+        if (!is_numeric($a) || !is_numeric($b)) {
+            return response()->api([], '입력값은 숫자여야 합니다.', 400);
+        }
+
+        $a = $a + $b;
+        $b = $a - $b;
+        $a = $a - $b;
+
+        return response()->api([$a, $b]);
+    }
+
     /**
      * @lrd:start
      * # 최초 차량정보가져오기
