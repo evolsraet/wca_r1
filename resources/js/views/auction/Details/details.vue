@@ -827,6 +827,7 @@ const completeAuction = async () => { //딜러 선택 후 최종 낙찰가 경�
   const data = {
     status: 'done',
     final_price: selectedDealer.value.price,
+    bid_id : selectedDealer.value.user_id,
   };
 
   try {
