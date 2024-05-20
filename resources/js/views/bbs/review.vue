@@ -113,6 +113,7 @@ function setActiveTab(tab) {
     }
     activeTab.value = tab;
 }
+
 function editReview() {
     alert("수정하시겠습니까?");
 }
@@ -122,14 +123,15 @@ function deleteReview() {
         showDeleteMessage();
     }
 }
+
 function navigateToDetail(auctionId) {
     router.push({ name: 'user.create-review', params: { id: auctionId } });
 }
 
 function getReview(id){
     getWrtReview(id);
-
 }
+
 const deleteMessageVisible = ref(false);
 //삭제후 메시지 띄우기
 function showDeleteMessage() {

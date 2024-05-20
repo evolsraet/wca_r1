@@ -147,6 +147,7 @@ const findAuctionDetail = async () => {
 onMounted(() => { 
     findAuctionDetail();
 });
+
 </script>
 <style scoped>
 .bottom-sheet::before {
