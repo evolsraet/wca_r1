@@ -22,7 +22,7 @@
                                 <p class="interest-icon tc-light-gray normal-16-font">관심</p>
                             </div>
                             <div class="item">
-                                <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
+                                <p><span class="tc-red">{{ auctionsData.length }}</span> 건</p>
                                 <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
                             </div>
                             <div class="item">
@@ -104,10 +104,14 @@
 import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
 import { useStore } from 'vuex';
+import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
+
+
 const currentTab = ref('dealerInfo');
 const store = useStore();
-
+const { getAuctions,auctionsData } = useAuctions(); // 경매 관련 함수를 사용
 const isExpanded = ref(false);
+
 
 const toggleCard = () => {
     isExpanded.value = !isExpanded.value;
@@ -120,5 +124,7 @@ const user = computed(() => store.state.auth.user);
 
 onMounted(async () => {
     await getBids();
+    await getAuctions();
 });
+
 </script>
