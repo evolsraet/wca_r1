@@ -117,7 +117,8 @@ export default function useAuth() {
         } else {
             payload.user.role = 'user';
         } 
-        
+        console.log("전체 데이터:" , payload.user.role);
+        console.log("역할:" , payload);
         const formData = new FormData();
         formData.append('user',JSON.stringify(payload.user));
         formData.append('dealer',JSON.stringify(payload.dealer));
@@ -148,6 +149,7 @@ export default function useAuth() {
                     showConfirmButton: false,
                     timer: 1500,
                 });
+                console.log(response);
                 await router.push({ name: "auth.login" });
             })
             .catch((error) => {

@@ -224,7 +224,7 @@ video {
     background-image: url('../img/interest-icon.png');
     background-repeat: no-repeat;
     background-size: contain;
-    background-position: center;
+    background-position: center 1px;
     margin-right: 5px;
 }
 
@@ -839,7 +839,6 @@ video {
     display: block;
     width: 14px;
     height: 14px;
-    margin-top: 2px;
     background-image: url('../img/Icon-right.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -963,9 +962,6 @@ video {
     .layout-container {
         grid-template-columns: 1fr;
         gap: 20px !important;
-    }
-    .container {
-        --bs-gutter-x: 0.5rem !important;
     }
     .review-content {
         overflow-x: hidden;
@@ -2455,12 +2451,17 @@ video {
     left: 0;
     width: 100%;
     background-color: white; 
-    box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 -2px 9px rgba(0, 0, 0, 0.2);
     transition: bottom 0.5s ease-in-out;
     z-index: 1000; 
     border-top-right-radius: 20px;
     border-top-left-radius: 20px;
+    height: auto;
+    max-height: 60vh;
+    overflow-y: auto;
+    position: relative;
 }
+
 .bottom-sheet::before {
 content: "";
 position: absolute;
@@ -2475,11 +2476,15 @@ background-color: #dbdbdb;
     padding: 20px;
     text-align: center;
 }
-.pagination .page-link:active {
+li.page-item.active{
     background-color: #fae8e8;
+    border-radius: 50%;
 }
 
-
+.pagination .page-link {
+    background-color: #ffffff00 !important;
+    border-color: #fae8e8;
+}
 
 .custom-checkbox-input {
     display: none;
@@ -2546,8 +2551,6 @@ input[type="checkbox"] {
     height: auto;
     max-height: 50px;
 }
-
-
     .card-img-top-ty01 {
         width: 100%;
         height: 160px;
@@ -2618,13 +2621,6 @@ input[type="checkbox"] {
 .contour-style {
     height: 6px;
     background-color: #d9d9d9;
-}
-.styled-div {
-    width: 100%;
-    height: 200px;
-
-    border-radius: 6px;
-    background-color: #f5f5f6;
 }
 .more-view {
     position: absolute; 
@@ -2818,8 +2814,7 @@ input[type="checkbox"] {
   }
 
 
-
-  .delete-message {
+  .bottom-message {
     position: fixed;
     bottom: 20px;
     left: 0;
@@ -2835,10 +2830,9 @@ input[type="checkbox"] {
     z-index: 9999;
 }
 
-.delete-message.show {
+.bottom-message.show {
     transform: translateY(0);
 }
-
 
 .review-card {
     position: relative; 
@@ -2895,3 +2889,356 @@ input[type="checkbox"] {
 .rating__label:first-child {
     margin-left: 0px;
 }
+
+
+
+
+.dealer-check {
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #F5F5F6;
+    border-radius: 30px;
+    padding: 10px;
+}
+
+.no-resize {
+    resize: none;
+}
+
+.dealer-check input[type=checkbox] {
+    margin-right: 10px;
+}
+
+.dealer-check label {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    color: #333;
+}
+
+.dealer-check label span {
+    color: #999;
+    margin-left: 5px;
+}
+
+.check_box input[type='checkbox']+label {
+    display: inline-block;
+    color: #acacac;
+}
+
+.check_box input[type='checkbox']:checked+label {
+    display: inline-block;
+    font-weight: 600;
+    color: #000;
+}
+
+.check_box input[type='checkbox']+label::after {
+    display: inline-block;
+    content: "";
+    width: 20px;
+    height: 20px;
+    background: url('/resources/img/none_checkbox.png') no-repeat;
+    background-size: 20px;
+    vertical-align: top;
+    margin: 1px 9px 0px 9px;
+
+}
+
+.check_box input[type='checkbox']:checked+label::after {
+    width: 20px;
+    height: 20px;
+    background: url('/resources/img/checkbox.png') no-repeat;
+    background-size: 20px;
+}
+
+.check_box input[type='checkbox'] {
+    position: absolute;
+    overflow: hidden;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    opacity: 0;
+
+}
+
+
+
+/*-----------------------------------
+    공통 : 테이블 스타일 커스텀
+---------------------------------*/
+
+.tbl_basic table {width: 100%;border-collapse: collapse; font-size:14px;}
+.tbl_basic table tr th, .tbl_basic table tr td { text-align:center; }
+.tbl_basic table tr th {padding:8px 5px; border-radius: 6px; background: #f5f5f6; color: gray; border-style:solid none;}
+.tbl_basic table tr td {padding:7px 5px; }
+@media screen and (max-width: 481px) 
+{
+  .o_table_mobile {width: 100%;overflow: hidden;}
+  .o_table_mobile .tbl_basic {overflow-x: scroll;}
+  .o_table_mobile .tbl_basic table {width: 100%;min-width:480px;}
+  .o_table_mobile .tbl_dealer table {width: 100%;min-width:0px  !important;}
+}
+
+
+
+.blue-box-ty03{
+    display: inline-block;
+    width: auto;
+    height: 25px;
+    margin-right: 10px;
+    border-radius: 15px;
+    background-color: rgba(66, 100, 234, 0.2392156863) !important;
+    color: blue !important;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: center;
+    font-weight: 500;
+    padding: 0 15px 0 15px !important;
+    text-align: center;
+}
+
+
+.border-xsl{
+    display: flex;      
+    justify-content: center; 
+    align-items: center; 
+    width: 35px;
+    height: 35px;
+    border-radius: 17px;
+    background-color: #1d6b402f;
+}
+
+.image-icon-excel {
+    width: 16.3px; 
+    height: 21.5px; 
+    background-image: url('../img/excel_icon.png'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+  }
+  .border-red-write {
+    position: fixed; 
+    bottom: 62px;
+    right: 20px;
+    width: 54px;     
+    height: 54px;
+    border-radius: 50%;   
+    background-color: $primary; 
+    padding: 15px;  
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    z-index: 1000;    
+    transition: background-color 0.3s ease, box-shadow 0.3s ease; 
+}
+
+.border-red-write:hover {
+    background-color: $primary-hover; 
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.image-icon-pen {
+    width: 23px; 
+    height: 23px; 
+    background-image: url('../img/Icon-pen.png'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+.icon-trash-img{
+    width: 20px;
+    height: 22px;
+    background-image: url('../img/Icon-feather-trash-2.png'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+.icon-edit-img{
+    width: 20px;
+    height: 20px;
+    background-image: url('../img/Icon-feather-edit.png'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
+
+.btn-fileupload::before{
+    content: '';
+    width: 13px;
+    height: 20px;
+    background-image: url('../img/Icon-upload.png');
+    margin-right: 8px;
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+    display: inline-block;
+    vertical-align: text-bottom;
+
+}
+
+
+/* 옵션 정보 : -ac 옵션 정보 활성화 아이콘 */
+
+.option-icons {
+    margin-top: 20px;
+}
+
+.option-row {
+    display: grid;
+    gap: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.option-row:nth-child(1) {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.option-row:nth-child(2) {
+    grid-template-columns: repeat(3, 1fr);
+}
+
+.option-row:nth-child(3) {
+    grid-template-columns: repeat(4, 1fr);
+}
+
+.option-row:nth-child(4) {
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.option-icon {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.option-icon .icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 10px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+.icon.smart-key {
+    background-image: url('../img/opction/key.png');
+}
+.icon.smart-key-ac {
+    background-image: url('../img/opction/activation/b-key.png');
+}
+
+
+.icon.navigation {
+    background-image: url('../img/opction/location.png');
+}
+.icon.navigation-ac {
+    background-image: url('../img/opction/activation/b-location.png');
+}
+
+
+.icon.rear-camera {
+    background-image: url('../img/opction/camera.png');
+}
+.icon.rear-camera-ac {
+    background-image: url('../img/opction/activation/b-camera.png');
+}
+
+
+.icon.sunroof {
+    background-image: url('../img/opction/sun.png');
+}
+.icon.sunroof-ac {
+    background-image: url('../img/opction/activation/b-sun.png');
+}
+
+
+.icon.headlamp {
+    background-image: url('../img/opction/headlight.png');
+}
+.icon.headlamp-ac {
+    background-image: url('../img/opction/activation/b-headlight.png');
+}
+
+.icon.auto-aircon {
+    background-image: url('../img/opction/ac.png');
+}
+.icon.auto-aircon-ac {
+    background-image: url('../img/opction/activation/b-ac.png');
+}
+
+
+.icon.electric-seat {
+    background-image: url('../img/opction/vehicle1.png');
+}
+.icon.electric-seat-ac {
+    background-image: url('../img/opction/activation/b-vehicle1.png');
+}
+
+
+.icon.family {
+    background-image: url('../img/opction/vehicle2.png');
+}
+.icon.family-ac {
+    background-image: url('../img/opction/activation/b-vehicle2.png');
+}
+
+
+.icon.heated-seat {
+    background-image: url('../img/opction/vehicle3.png');
+}
+.icon.heated-seat-ac {
+    background-image: url('../img/opction/activation/b-vehicle3.png');
+}
+
+
+.icon.ventilated-seat {
+    background-image: url('../img/opction/vehicle4.png');
+}
+.icon.ventilated-seat-ac {
+    background-image: url('../img/opction/activation/b-vehicle4.png');
+}
+
+
+.icon.parking-sensor {
+    background-image: url('../img/opction/sensor.png');
+}
+.icon.parking-sensor-ac {
+    background-image: url('../img/opction/activation/b-sensor.png');
+}
+
+
+.icon.electric-side-mirror {
+    background-image: url('../img/opction/mirror.png');
+}
+.icon.electric-side-mirror-ac {
+    background-image: url('../img/opction/activation/b-mirror.png');
+}
+
+
+.option-icon p {
+    margin: 0;
+    font-size: 14px;
+    color: #333;
+}
+
+.back-btn-icon{
+    background-image: url('../img/Icon-chevron-left.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+/*
+.option-icon::after {
+    content: "";
+    position: absolute;
+    width: 1px;
+    height: 3%;
+    background-color: #ccc;
+    transform:translateY(34%) translateX(32%);
+  }
+  
+  .option-icon:last-child::after {
+    display: none;
+  }
+  */

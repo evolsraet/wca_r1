@@ -6,13 +6,31 @@
       <main>
       <BarChart :chartData="chartData" :options="chartOptions" />
       </main>
+      <p class="fw-bold my-5">차종별 낙찰 이력</p>
+      <div class="mb-4 d-sm-flex align-items-sm-center ">
+          <p class="refresh-icon" @click="refreshChartData">↻</p>
+          <div class="select-container">
+          <select class="car-select type-sm ms-3 ">
+            <option value="차종 선택">차종 선택</option>
+            <option value="기아">기아</option>
+            <option value="현대">현대</option>
+            <option value="제네시스">제네시스</option>
+            <option value="아우디">아우디</option>
+            <option value="폭스바겐">폭스바겐</option>
+          </select>
+        </div>
+      </div>
+      <main>
+        <LineChart :chartData="lineChartData" :options="lineChartOptions" :key="chartKey" />
+      </main>
     </div>
+    
 </div>
   </template>
   
   <script setup>
   import { ref } from 'vue';
-  import { BarChart } from 'vue-chart-3';
+  import { BarChart, LineChart } from 'vue-chart-3';
   import { Chart, registerables } from 'chart.js';
   
   Chart.register(...registerables);
@@ -37,12 +55,91 @@
       }
     ]
   });
-  
+  // 라인 차트 데이터
+const lineChartData = ref({
+    labels: chartData.value.labels,
+    datasets: [
+        {
+            label: 'Previous Data',
+            data: [900, 1100, 1400, 1000, 1200],
+            borderColor: 'grey',
+            fill: false,
+            tension: 0.1
+        },
+        {
+            label: 'Current Data',
+            data: [1000, 1200, 1500, 1100, 1300],
+            borderColor: 'red',
+            fill: false,
+            tension: 0.1,
+
+            pointRadius: [2, 2, 2, 2, 5],
+            pointBackgroundColor: ['red', 'red', 'red', 'red', 'white'], 
+            pointBorderColor: ['red', 'red', 'red', 'red', 'red'], 
+            pointBorderWidth: [1, 1, 1, 1, 3], 
+        }
+    ]
+});
+// 차트의 key를 관리할 ref
+const chartKey = ref(0);
+// 차트 데이터를 새로고침하는 함수
+function refreshChartData() {
+    chartKey.value++; // key 값을 증가시켜 컴포넌트 재생성 유도
+}
+const lineChartOptions = ref({
+    responsive: true,
+    plugins: {
+        legend: {
+          display: false,
+        },
+        tooltip: {
+            enabled: true,
+            backgroundColor: '#fffcee', // 툴팁의 배경색
+            bodyColor: '#d8a00e', // 툴팁의 본문 글자색
+            titleColor: '#d8a00e', // 툴팁의 타이틀 글자색
+            borderColor: '#d8a00e', // 툴팁의 테두리 색
+            borderWidth: 1, // 툴팁의 테두리 두께
+            bodyFont: {
+                weight: 'bold' // 본문 글자 두께
+            },
+            titleFont: {
+                size: 14 // 타이틀 글자 크기
+            },
+            cornerRadius: 4, // 툴팁 모서리의 둥글기
+            displayColors: false, // 색상 상자 표시 여부
+            callbacks: {
+                title: function(tooltipItems) {
+                    return `평균: ${tooltipItems[0].label}`; // 타이틀 변경
+                },
+                label: function(tooltipItem) {
+                    return ` 낙찰액 : ${tooltipItem.raw}만원`;
+                },
+            }
+        },
+    },
+    scales: {
+        y: {
+            beginAtZero: true,
+            ticks: {
+                callback: function(value) {
+                    return `${value}만원`;
+                }
+            }
+        },
+        x: {
+            grid: {
+                display: false
+            }
+        }
+    }
+});
+
+
   const chartOptions = ref({
     responsive: true,
     plugins: {
       legend: {
-        position: 'top',
+        display: false,
       },
       tooltip: {
         callbacks: {
@@ -95,6 +192,44 @@
   </script>
   
   <style scoped>
+  .refresh-icon {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    background-color: #ccc;
+    color: white;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 50%;
+    font-size: 16px;
+    cursor: pointer;
+    user-select: none;
+    transition: background-color 0.3s;
+  }
+  
+  .refresh-icon:hover {
+      background-color: #bbb; 
+  }
+  .car-select {
+    border-radius: 16px;
+    background-color: #fbeaea;
+    width: auto;
+    color: red;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    padding-right: 30px; 
+}
 
+select {
+    height: 40px;
+    padding: 0 30px 0 10px;
+    border-bottom: 1px solid #041231;
+    background: #fff url('../../../../img/icon-red-down-02.png') no-repeat center right 10px;
+    cursor: pointer;
+}
+select.type-sm {
+    width: 150px;
+}
   </style>
   

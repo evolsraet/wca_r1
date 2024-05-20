@@ -55,7 +55,7 @@
                         </div>
                         <button class="btn btn-fileupload mt-3" @click="triggerAdditionalUpload">추가 서류 파일 첨부</button>
                         <input type="file" multiple accept="image/*" @change="handleAdditionalImagesChange" ref="additionalInput" style="display: none;" />
-                        <router-link :to="{ name: 'autction.index' }" class="link process my-member justify-content-end">정보갱신하기</router-link>
+                        <router-link :to="{ name: 'auction.index' }" class="link process my-member justify-content-end">정보갱신하기</router-link>
                     </div>
                         <h5>경매 시 사용할 계좌가 필요해요</h5>
                         <div class="form-group mt-4">
@@ -265,9 +265,6 @@ export default {
 }
 
 
-
-
-
 .show-content {
     visibility: hidden; 
     opacity: 0;      
@@ -278,62 +275,6 @@ export default {
     visibility: visible; 
     opacity: 1;  
     transition: opacity 0.5s linear; 
-}
-
-.tooltip-toggle {
-    cursor: pointer;
-    position: relative;
-    width: 20px;
-    height: 20px;
-    background-image: url('../../../../img/tooltip-toggle.png');
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
-    display: inline-block;
-    margin-left: 10px;
-    vertical-align: text-bottom;
-
-
-
-  &::before,
-  &::after {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.5s ease;
-  }
-
-  &::before {
-    content: attr(aria-label);
-    top: -77px;
-    left: 80px;
-    transform: translateX(-50%);
-    background-color: #fffcd4;
-    color: #ffcb00;
-    text-align: center;
-    border-radius: 6px;
-    border: 1px solid #ffcb00;
-    padding: 8px;
-    width: auto;
-    min-width: 210px;
-}
-
-  &::after {
-    content: '';
-    top: -16px;
-    left: 50%;
-    transform: translateX(-50%);
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
-    border-top: 8px solid #fee585;
-  }
-
-  &:hover::before,
-  &:hover::after,
-  &:focus::before,
-  &:focus::after {
-    opacity: 1; 
-  }
 }
 
 .no-scroll {

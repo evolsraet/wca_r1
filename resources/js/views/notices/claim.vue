@@ -1,7 +1,7 @@
 <template>
-    <div>
-      <div class="proceeding"></div>
-      <div v-if="isAdmin">
+    <div class="container">
+
+      <div class="main-container py-5 text-center container" v-if="isAdmin">
         <section class="notice">
             <div class="page-title">
                   <div class="container">
@@ -57,66 +57,52 @@
 
           </section>
       </div>
-      <div v-else-if="isDealer">
-        <section class="notice">
-            <div class="page-title">
-                  <div class="container">
-                      <h3>딜러 클레임</h3>
-                  </div>
-              </div>
-              <!-- board seach area -->
-              <div id="board-search">
-                  <div class="container">
-                      <div class="search-window">
-                          <form action="">
-                              <div class="search-wrap">
-                                  <label for="search" class="blind">매물번호</label>
-                                  <input id="search" type="search" name="" placeholder="매물번호 검색해주세요." value="">
-                                  <button type="submit" class="btn btn-dark">검색</button>
-                              </div>
-                          </form>
-                      </div>
-                  </div>
-              </div>
-            
-            <!-- board list area -->
-              <div id="board-list">
-                  <div class="container">
-                    <div class="table-container ">
-                      <table class="board-table">
-                          <thead>
-                          <tr>
-                              <th scope="col" class="th-num">번호</th>
-                              <th scope="col" class="th-title">제목</th>
-                              <th scope="col" class="th-date">등록일</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr>
-                              <td>3</td>
-                              <th><a href="#!">[클레임] 개인정보 처리방침 변경안내처리방침</a></th>
-                              <td>2017.07.13</td>
-                          </tr>
+      <div class="main-container py-5 text-center container"v-else-if="isDealer">
+          <div class="search-type">
+                        <input type="text" placeholder="모델명,차량번호,지역">
+                        <button type="button" class="search-btn">검색</button>
+                    </div>
+                </div>
+                <div class="container mb-3">
+                    <div class="registration-content">
+                        <div class="text-start status-selector">
+                        <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
+                        <label for="all" class="mx-2">전체</label>
 
-                          <tr>
-                              <td>2</td>
-                              <th><a href="#!">클레임 안내입니다. 이용해주셔서 감사합니다</a></th>
-                              <td>2017.06.15</td>
-                          </tr>
+                        <input type="radio" name="status" value="ing" id="ongoing" hidden @change="setFilter('ing')">
+                        <label for="ongoing">진행중</label>
 
-                          <tr>
-                              <td>1</td>
-                              <th><a href="#!">클레임 안내입니다. 이용해주셔서 감사합니다</a></th>
-                              <td>2017.06.15</td>
-                          </tr>
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
-            </div>
-          </section>
-      </div>  
-    </div>
+                        <input type="radio" name="status" value="done" id="completed" hidden @change="setFilter('done')">
+                        <label for="completed" class="mx-2">완료</label>
+                        </div>
+                        </div>
+                  <!-- board seach area -->
+                  <div class="o_table_mobile my-5">
+                    <div class="tbl_basic tbl_dealer">
+                        <div class="overflow-auto select-dealer">
+                          <table>
+                              <tbody>
+                                  <tr>
+                                      <th>No.</th>
+                                      <th>등록일</th>
+                                      <th>매물번호</th>
+                                      <th>상태</th>
+                                      <th>관리</th>
+                                  </tr>
+                                  <tr>
+                                      <td>1</td>
+                                      <td>24-03-15</td>
+                                      <td><p class="blue-box-ty03">4751982</p></td>
+                                      <td>접수</td>
+                                      <td class="d-flex ms-2 justify-content-center btn-apply">상세</td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                        </div>
+                    </div>
+                </div>
+          </div>  
+        </div>
   </template>
   
   <script setup>

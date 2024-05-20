@@ -81,9 +81,10 @@
                                                     <label for="dealerPhoto">사진 (본인 확인용)</label>
                                                     <img id="imagePreview" style="max-width: 50%; display: none;">
                                                     <button type="button" class="btn btn-fileupload" @click="triggerFileUpload">
-                                                        <img src="../../../img/Icon-upload.png" class="me-2" alt="Upload Icon">파일 첨부
+                                                       파일 첨부
                                                     </button>
                                                     <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
+                                                    <div class="text-start tc-light-gray" v-if="registerForm.file_user_photo_name">사진 파일 : {{ registerForm.file_user_photo_name }}</div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealerName">이름</label>
@@ -117,11 +118,28 @@
                                                     <li>사업자등록증</li>
                                                     <li>매도용인감정보</li>
                                                     <li>매매업체 대표증 or 종사원증</li>
-                                                    <a href="#" class="seal-info text-muted my-2 float-end" alt="인감정보양식 다운로드 링크">인감정보양식 다운로드</a>
-                                                    <button type="button" class="btn btn-fileupload" @click="openUploadPage">
-                                                        <img src="../../../img/Icon-upload.png" class="me-2 " alt="설명">파일 첨부
-                                                    </button>
-                                                </div>
+                                                    <div class="d-flex justify-content-flex-end">
+                                                        <a href="#" class="seal-info text-muted my-2 float-end" alt="인감정보양식 다운로드 링크">인감정보양식 다운로드</a>
+                                                    </div>
+                                                        <p class="mt-4">사업자 등록증</p>
+                                                        <input type="file" @change="handleFileUploadBiz" ref="fileInputRefBiz" style="display:none">
+                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadBiz">
+                                                            파일 첨부
+                                                        </button>
+                                                        <div class="text-start mb-3 tc-light-gray" v-if="registerForm.file_user_biz_name">사업자 등록증 : {{ registerForm.file_user_biz_name }}</div>
+                                                        <p>매도용인감정보</p>
+                                                        <input type="file" @change="handleFileUploadSign" ref="fileInputRefSign" style="display:none">
+                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadSign">
+                                                            파일 첨부
+                                                        </button>
+                                                        <div class="text-start mb-3 tc-light-gray" v-if="registerForm.file_user_sign_name">매도용인감정보 : {{ registerForm.file_user_sign_name }}</div>
+                                                        <p>매매업체 대표증 or 종사원증</p>
+                                                        <input type="file" @change="handleFileUploadCert" ref="fileInputRefCert" style="display:none">
+                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadCert">
+                                                            파일 첨부
+                                                        </button>
+                                                        <div class="text-start mb-5 tc-light-gray" v-if="registerForm.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ registerForm.file_user_cert_name }}</div>
+                                                    </div>
                                                 <div class="form-group">
                                                     <label for="deliveryAdress">인수차량 도착지 주소</label>
                                                     <input type="text" v-model="registerForm.dealerReceivePost" placeholder="post">
@@ -154,6 +172,9 @@
 import { ref } from 'vue';
 import useAuth from '@/composables/auth';
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
+const fileInputRefBiz = ref(null);
+const fileInputRefSign = ref(null);
+const fileInputRefCert = ref(null);
 const fileInputRef = ref(null);
 function triggerFileUpload() {
     if (fileInputRef.value) {
@@ -166,6 +187,7 @@ function handleFileUpload(event) {
     const file = event.target.files[0];
     if (file) {
         registerForm.file_user_photo = file;
+        registerForm.file_user_photo_name = file.name;  
         console.log("File:", file.name);
 
 
@@ -179,8 +201,54 @@ function handleFileUpload(event) {
     }
 }
 
-</script>
+function triggerFileUploadBiz() {
+    if (fileInputRefBiz.value) {
+        fileInputRefBiz.value.click();
+    } else {
+        console.error("사업자등록증 파일을 찾을 수 없습니다.");
+    }
+}
+function handleFileUploadBiz(event) {
+    const file = event.target.files[0];
+    if (file) {
+        registerForm.file_user_biz = file;
+        registerForm.file_user_biz_name = file.name;
+        console.log("Business registration file:", file.name);
+    }
+}
 
+function triggerFileUploadSign() {
+    if (fileInputRefSign.value) {
+        fileInputRefSign.value.click();
+    } else {
+        console.error("인감 정보 파일을 찾을 수 없습니다.");
+    }
+}
+function handleFileUploadSign(event) {
+    const file = event.target.files[0];
+    if (file) {
+        registerForm.file_user_sign = file;
+        registerForm.file_user_sign_name = file.name;
+        console.log("Signature file:", file.name);
+    }
+}
+
+function triggerFileUploadCert() {
+    if (fileInputRefCert.value) {
+        fileInputRefCert.value.click();
+    } else {
+        console.error("대표증 또는 종사원증 파일을 찾을 수 없습니다.");
+    }
+}
+function handleFileUploadCert(event) {
+    const file = event.target.files[0];
+    if (file) {
+        registerForm.file_user_cert = file;
+        registerForm.file_user_cert_name = file.name;   
+        console.log("Certification file:", file.name);
+    }
+}
+</script>
 
 <style scoped>
     .seal-info {
@@ -444,80 +512,6 @@ function handleFileUpload(event) {
     .form-group input,
     .form-group input {
         border-radius: 8px !important;
-    }
-
-    .error-icon {
-        position: absolute;
-        right: 18px;
-        color: #D93025;
-        font-size: 20px;
-        cursor: pointer;
-        top: 44px;
-        margin-top: -2px;
-    }
-
-    .error-border {
-        border: 1px solid #c40000 !important;
-    }
-
-    .emailError-border {
-        border: 1px solid #c40000 !important;
-    }
-
-    .nameError-border {
-        border: 1px solid #c40000 !important;
-    }
-
-    .contactError-border {
-        border: 1px solid #c40000 !important;
-    }
-
-    .birthDateError-border {
-        border: 1px solid #c40000 !important;
-    }
-
-    .emailError {
-        color: #c40000;
-        margin-top: 5px;
-    }
-
-    .passwordinputError {
-        color: #c40000;
-        margin-top: 5px;
-    }
-
-    .nameError {
-        color: #c40000;
-        margin-top: 5px;
-    }
-
-    .contactError {
-        color: #c40000;
-        margin-top: 5px;
-    }
-
-    .birthDateError {
-        color: #c40000;
-        margin-top: 5px;
-    }
-
-    .password-correct {
-        color: #0400ff;
-        margin-top: 5px;
-    }
-
-    .correct-icon {
-        position: absolute;
-        right: 18px;
-        color: #0400ff;
-        font-size: 20px;
-        cursor: pointer;
-        top: 44px;
-        margin-top: -2px;
-    }
-
-    .correct-border {
-        border: 1px solid #0400ff !important;
     }
 
     .hidden-content label,

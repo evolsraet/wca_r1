@@ -124,7 +124,7 @@ export default [
             },
             {
                 path: '/auction',
-                name: 'autction.index',
+                name: 'auction.index',
                 component: () => import('../views/auction/index.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
               
@@ -134,6 +134,12 @@ export default [
                 name: 'autction.dealerbid',
                 component: () => import('../views/dealer/auction/index.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+              
+            },
+            {
+                path: '/dealermodal',
+                name: 'dealermodal',
+                component: () => import('../views/modal/auction/connectDealer.vue'),
               
             },
             {
@@ -182,8 +188,8 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
-                path: '/dealer2',
-                name: 'dealer.index2',
+                path: '/dealerbids',
+                name: 'dealer.bids',
                 component: () => import('../views/dealer/dealer.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
@@ -340,6 +346,24 @@ export default [
                 path: 'users/edit/:id',
                 component: () => import('../views/admin/users/Edit.vue'),
                 meta: { breadCrumb: 'User Edit' }
+            },
+            {
+                name: 'deposit.index',
+                path: 'deposit',
+                component: () => import('../views/admin/deposit/Index.vue'),
+                meta: { breadCrumb: 'deposit' }
+            },
+            {
+                name: 'auctions.index',
+                path: 'auction',
+                component: () => import('../views/admin/auction/Index.vue'),
+                meta: { breadCrumb: 'auction' }
+            },
+            {
+                name: 'auction.approve',
+                path: 'auction/approve/:id',
+                component: () => import('../views/admin/auction/approve.vue'),
+                meta: { breadCrumb: 'auction approve' }
             },
         ]
     },

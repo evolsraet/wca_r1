@@ -1,10 +1,18 @@
-import {ref,computed} from 'vue';
+import {ref,computed, inject} from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router'
 
 // 입찰 데이터
 export default function useBid() {
     const bidsData = ref([]);
-
+    const bids = ref([]);
+    const bid = ref({
+        auction_id: '',
+        price: ''
+    });
+    const validationErrors = ref({});
+    const isLoading = ref(false);
+    const swal = inject('$swal')
     const getBids = async () => {
 
         try {
@@ -20,7 +28,7 @@ export default function useBid() {
         const count = {};
         if (bidsData.value) {
             bidsData.value.forEach(bid => {
-                const userId = bid.user_id; // 
+                const userId = bid.user_id; 
                 if (count[userId]) {
                     count[userId]++;
                 } else {
@@ -36,10 +44,79 @@ export default function useBid() {
         return bidsData.value.slice(0, 2);
     });
 
+    const submitBid = async (auctionId, bidAmount, userId) => {
+        if (isLoading.value) return;  // 이미 로딩 중이면 함수 실행을 중지
+        isLoading.value = true;
+        validationErrors.value = {};
+    
+        try {
+            const response = await axios.post("/api/bids", {
+                user_id: userId,
+                bid: {
+                    auction_id: auctionId,
+                    price: bidAmount
+                }
+            });
+    
+            console.log("응답 데이터:", response);
+    
+            if (response.status === 200 && response.data.status === "ok") {
+                return {
+                    success: true,
+                    bidId: response.data.data.id,  // 입찰 ID 추출
+                    message: response.data.message 
+                };
+            } else {
+                return {
+                    success: false,
+                    message: response.data.message
+                };
+            }
+        } catch (error) {
+            console.error("입찰 제출 중 오류 발생:", error);
+            if (error.response?.data) {
+                validationErrors.value = error.response.data.errors;  // 서버로부터 받은 에러를 저장
+            }
+            return {
+                success: false,
+                message: error.response?.data?.message 
+            };
+        } finally {
+            isLoading.value = false;  // 로딩 상태를 false로 설정
+        }
+    };
+    
+    
+
+     const cancelBid = async (bidId) => {
+        try {
+            const response = await axios.delete(`/api/bids/${bidId}`);
+            if (response.status === 204 || response.status === 200) {
+                return { success: true };
+            } else {
+                return { success: false, };
+            }
+        } catch (error) {
+            return { success: false, message: error.response?.data?.message};
+        }
+    }
+    
+    
+      
+    
+
+
+
     return {
+        cancelBid,
         bidsData,
         bidsCountByUser,
         getBids,
-        viewBids
+        viewBids,
+        bids,
+        bid,
+        submitBid,
+        validationErrors,
+        isLoading
     };
 }

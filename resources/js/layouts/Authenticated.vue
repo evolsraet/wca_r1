@@ -72,7 +72,8 @@ function selected(crumb) {
 }
 
 .main-content, .sidebar {
-    height: calc(100vh - 56px);
+    height: auto;
+    min-height: 100vh;
     overflow-x: hidden;
     overflow-y: auto;
 }

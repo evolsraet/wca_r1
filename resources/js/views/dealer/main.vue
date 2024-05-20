@@ -3,35 +3,39 @@
         <div class="regiest-content">
             <div class="layout-container02">
                 <!-- 딜러 프로필 요약 정보 -->
-                <div class="banner-top ">
-                    <div class="top-info">현재 진행중인 경매<p class="tc-red"> 1 </p> 건</div>
+                <div class="banner-top">
+                    <div class="top-info">
+                        현재 진행중인 경매<p class="tc-red">{{ ingCount }}</p> 건
+                    </div>
                     <div class="styled-div">
                         <div class="profile dealer-mp">
                             <div class="dealer-info">
                                 <img src="../../../img/myprofile_ex.png" alt="Profile Image" class="main-profile">
                                 <div class="deal-info">
-                                    <p class="tc-light-gray">{{ user.dealer.company }} </p>
+                                    <p class="tc-light-gray">{{ user.dealer.company }}</p>
                                     <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
                                     <p class="restar">(4.5점)</p>
                                     <p class="no-bidding mt-3"><span>입찰 불가</span></p>
                                 </div>
                             </div>
-                            <div class="footer mob-info"><p class="tc-light-gray" style=" margin-top: 14px;">입찰가능 유효시간 2024.03.20</p></div>
+                            <div class="footer mob-info">
+                                <p class="tc-light-gray mt-3">입찰가능 유효시간 2024.03.20</p>
+                            </div>
                             <div class="auction-info">
-                                <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">0</span>건 있습니다</p>
-                                <div style="display: flex;align-items: flex-end;">
+                                <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ ingCount }}</span>건 있습니다</p>
+                                <div style="display: flex; align-items: flex-end;">
                                     <div class="car-image"></div>
                                     <p class="tc-light-gray mb-3">입찰가능 유효시간 2024.03.20</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="activity-info bold-18-font ">
+                        <div class="activity-info bold-18-font">
                             <div class="item">
                                 <p><span class="tc-red">100</span> 건</p>
                                 <p class="interest-icon tc-light-gray normal-16-font">관심</p>
                             </div>
                             <div class="item">
-                                <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
+                                <p><span class="tc-red">{{ auctionsData.length }}</span> 건</p>
                                 <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
                             </div>
                             <div class="item">
@@ -39,16 +43,16 @@
                                 <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
                             </div>
                             <div class="item">
-                                <p><span class="tc-red">32</span> 건</p>
+                                <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
                                 <p class="purchase-icon tc-light-gray normal-16-font">매입</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="content">
-                    <div class="enter-view text-start mb-2" >
+                    <div class="enter-view text-start mb-2">
                         <h3 class="review-title">공지사항</h3>
-                        <a href="/reviewtest" class="btn-apply">전체보기</a>
+                        <router-link :to="{ name: 'index.notices' }" class="btn-apply mt-0">전체보기</router-link>
                     </div>
                     <table class="table custom-border">
                         <tbody>
@@ -74,7 +78,7 @@
                     </table>
                     <div class="enter-view text-start mt-5 mb-2">
                         <h3 class="review-title">클레임 현황</h3>
-                        <a href="/reviewtest" class="btn-apply">전체보기</a>
+                        <router-link :to="{ name: 'index.claim' }" class="btn-apply mt-0">전체보기</router-link>
                     </div>
                     <table class="table custom-border text-center">
                         <thead class="tr-style">
@@ -115,7 +119,6 @@
                                 <td><span class="gray-bl-box">처리중</span></td>
                                 <td class="tc-light-gray"><a href="#" class="btn-apply">상세</a></td>
                             </tr>
-
                         </tbody>
                     </table>
                 </div>
@@ -123,7 +126,7 @@
                     <div class="card-body">
                         <div class="enter-view mt-3">
                             <h5>선택 완료 차량</h5>
-                            <p class="btn-apply" @click="alertNoVehicle">전체보기</p>
+                            <router-link :to="{ name: 'dealer.bids' }" class="btn-apply">전체보기</router-link>
                         </div>
                         <span class="tc-light-gray">24시간 내 응대해 주세요!</span>
                         <!-- 차량이 존재 할 경우-->
@@ -159,11 +162,14 @@
         </div>
     </div>
 </template>
+
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
 import { useStore } from 'vuex';
+import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
 
+const myBidsCount = ref(0);
 
 const store = useStore();
 const isExpanded = ref(false);
@@ -171,20 +177,33 @@ const toggleCard = () => {
     isExpanded.value = !isExpanded.value;
 };
 
-const { bidsData, bidsCountByUser, getBids, viewBids } = useBid();
+const { getAuctions, auctionsData } = useAuctions(); // 경매 관련 함수를 사용
+const { bidsData, getBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
 
+const calculateMyBidsCount = () => {
+    if (bidsData.value && user.value) {
+        myBidsCount.value = bidsData.value.filter(bid => bid.user_id === user.value.id).length;
+    }
+};
+
+const ingCount = computed(() => {
+    return auctionsData.value.filter(auction => auction.status === 'ing').length;
+});
 
 const alertNoVehicle = (event) => {
     event.preventDefault();
     if (viewBids.value.length === 0) {
         alert("선택 완료된 차량이 없습니다.");
     } else {
-        router.push({ name: 'dealer.index2' });
+        router.push({ name: 'dealer.bids' });
     }
 };
 
 onMounted(async () => {
     await getBids();
+    calculateMyBidsCount();
+    await getAuctions();
 });
+
 </script>

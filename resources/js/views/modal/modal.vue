@@ -1,18 +1,17 @@
-TODO: 
 <template>
-    <transition name="fade" mode="out-in">
-    <section class="modal modal-section type-confirm alert-modal-type02">
-      <div class="modal-dialog-ty04">
+  <transition name="fade" mode="out-in">
+  <section class="modal modal-section type-confirm alert-modal-type02">
+      <div class="modal-dialog-ty04" key="modal">
         <div class="modal-content-ty03 shadow">
           <div class="modal-body">
             <div class="content p-0 mt-0">  
               <div class="enroll_box" style="position: relative;">
                 <img src="../../../img/modal/car-objects-blur.png" alt="자동차 이미지" width="160" height="160">
-                <p class="overlay_text tc-wh">경매 신청이 완료 되었습니다</p>
+                <p class="overlay_text02">경매 신청이 완료되었습니다.</p>
+                <p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>
               </div>
-              <p class="menu_msg mb-4">진단평가 완료까지 조금만 기다려주세요!</p> 
-              <div class="btn-group">
-                <router-link :to="{ name: 'autction.index' }" class="btn btn-danger btn-lg shadow btn_ok">확인</router-link>
+              <div class="btn-group tc-wh">
+                <router-link :to="{ name: 'auction.index' }" class="btn btn-danger btn-lg shadow btn_ok">확인</router-link>
               </div>
             </div>
           </div>
@@ -21,6 +20,7 @@ TODO:
     </section>
   </transition>
 </template>
+
 
     <!-- modal step02 Start : 경매 취소 팝업 -->
 
@@ -68,3 +68,14 @@ TODO:
         </div>
     </section>-->
     <!-- modal step02 END -->
+    <style scoped>
+    .fade-enter-active, .fade-leave-active {
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+    .fade-enter, .fade-leave-to {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    </style>
+    
+    

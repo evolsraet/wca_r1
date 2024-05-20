@@ -79,7 +79,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="delete-message" :class="{ 'show': deleteMessageVisible }">
+                <div class="bottom-message" :class="{ 'show': deleteMessageVisible }">
                     삭제되었습니다.
                 </div>
             </div>

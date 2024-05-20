@@ -1,15 +1,22 @@
 <!--
 TODO:
 - 관심 차량 숫자 표기
-- 페이지 네이션 처리
+- [사용자] - 딜러 선택이 가능해요, 후기남기기 (라우터 어디로..?)
 - 옵션:최신등록순, 가격낮은순 처리
 -->
 
 <template>
     <!-- 서브 네비게이션 바 -->
-    <div class="sub-nav row">
-        <div class="col-12">
-            <div class="nav-container mt-3">
+    <div class="sub-nav row ">
+        <div class="col-12 p-0">
+            <div v-if="isUser" class="nav-container mt-4 ps-5 justify-content-start">
+                <nav class="navbar navbar-expand navbar-light">
+                    <div class="navbar-nav">
+                        <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }, 'p-0'">전체</a>
+                    </div>
+                </nav>
+            </div>
+            <div v-if="isDealer" class="nav-container mt-3">
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav">
                         <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
@@ -20,11 +27,11 @@ TODO:
         </div>
     </div>
     <!-- 슬라이드업 메뉴 트리거 버튼 및 컨테이너 -->
-    <div v-if="isUser" class="review-button-container" :style="{ height: menuHeight }" @click="toggleMenuHeight">
+    <div v-if="isUser"  class="review-button-container" :style="{ height: menuHeight }" @click="toggleMenuHeight">
         <div class="icon-container" v-show="isExpanded" ></div>
-        <router-link :to="{ name: 'home' }" tag="button" class="black-btn" v-show="!isExpanded" :disabled="isExpanded">딜러 선택이 가능해요!<span class="btn-apply-ty02">바로가기</span></router-link>
+        <router-link :to="{ name: 'home' }" tag="button" class="black-btn tc-wh" v-show="!isExpanded" :disabled="isExpanded">딜러 선택이 가능해요!<span class="btn-apply-ty02">바로가기</span></router-link>
        <!--if.경매 완료건이 있을때-->
-       <router-link :to="{ name: 'home' }" tag="button" class="review-btn" v-show="!isExpanded && hasCompletedAuctions" :disabled="isExpanded">후기 남기기</router-link>      
+       <router-link :to="{ name: 'home' }" tag="button" class="review-btn tc-red" v-show="!isExpanded && hasCompletedAuctions" :disabled="isExpanded">후기 남기기</router-link>      
          <!--else. 경매완료 건이 없을때-->
        <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded">후기 남기기</div>
     </div>
@@ -437,52 +444,74 @@ TODO:
                 </div>
                 <!-- 내 경매 관리 / 경매 전체 -->
 
-                <div class="container my-4" v-if="currentTab === 'allInfo'">
-                    <div class="row">
-                        <!-- if. 경매 ing 있을때 -->
-                        <div class="col-6 col-md-4 mb-4" v-for="auction in filteredAuctions" :key="auction.user_id"  @click="navigateToDetail(auction.id)">
-                            <div class="card my-auction">
-                                <input class="toggle-heart" type="checkbox" checked />
-                                <label class="heart-toggle"></label>
-                                <div :class="{ 'grayscale_img': auction.status === 'done' }" class="card-img-top-placeholder"></div>
-                                <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
-                                <div  v-if="auction.status  === 'ing'"class="progress">
-                                    <div class="progress-bar" role="progressbar"></div>
-                                </div>
-                                <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
-                                <div v-if="auction.status === 'wait'" class="wait-selection">선택 대기</div>
-                                <div v-if="auction.status === 'chosen'" class="dealer-select">딜러 선택</div>
-                                <div v-if="auction.status === 'diag'" class="time-remaining">진단 평가</div>
-                                <div class="card-body">
-                                    <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
-                                </div>
-                            </div>
-                        </div>
+        <div class="container my-4" v-if="currentTab === 'allInfo'">
+        <div class="row">
+            <!-- if. 경매 ing 있을때 -->
+            <div
+            class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
+            v-for="auction in filteredAuctions"
+            :key="auction.id"
+            @click="navigateToDetail(auction)"
+            :style="getAuctionStyle(auction)"
+            >
+            <div class="card my-auction">
+                <div v-if="isDealer"> 
+                <input class="toggle-heart" type="checkbox" checked  @click.stop/>
+                <label class="heart-toggle"></label>
+                <div class="participate-badge" v-if="isDealerParticipating(auction) ">참여</div>
+                </div>
+                    <div :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' }" class="card-img-top-placeholder">
+                    <div v-if="isDealer"> 
+                    <div class="participate-badge" v-if="isDealerParticipating(auction) ">참여</div>
+                    </div>
+                    </div>
+                    <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
+                    <div v-if="auction.status === 'ing'" class="progress">
+                        <div class="progress-bar" role="progressbar"></div>
+                    </div>
+                    <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
+                    <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
+                    <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
+                    <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
+                    <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
+                    <div v-if="auction.status === 'chosen'" class="wait-selection">낙찰가 {{auction.final_price}} 만원</div>
+                    <div class="card-body">
+                        <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
+                        <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
                     </div>
                 </div>
-                <div class="container my-4" v-if="currentTab === 'interInfo'">
-                    <div class="row">
-                        <!-- if. 경매 ing 있을때 -->
-                        <div class="col-6 col-md-4 mb-4" v-for="auction in filteredAuctions" :key="auction.user_id">
-                            <div class="card my-auction">
-                                <div class="card-img-top-placeholder"></div>
-                                <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
-                                <div  v-if="auction.status  === 'ing'"class="progress">
-                                    <div class="progress-bar" role="progressbar"></div>
-                                </div>
-                                <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
-                                <div v-if="auction.status === 'wait'" class="wait-selection">선택 대기</div>
-                                <div v-if="auction.status === 'chosen'" class="dealer-select">딜러 선택</div>
-                                <div v-if="auction.status === 'diag'" class="time-remaining">진단 평가</div>
-                                <div class="card-body">
-                                    <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
-                                </div>
-                            </div>
-                        </div>
+            </div>
+        </div>
+    </div>
+    <div class="container my-4" v-if="currentTab === 'interInfo'">
+        <div class="row">
+            <!-- if. 경매 ing 있을때 -->
+            <div
+                class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
+                v-for="auction in filteredAuctions"
+                :key="auction.id"
+                @click="navigateToDetail(auction)"
+                :style="getAuctionStyle(auction)"
+            >
+                <div class="card my-auction">
+                    <div class="card-img-top-placeholder"></div>
+                    <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
+                    <div v-if="auction.status === 'ing'" class="progress">
+                        <div class="progress-bar" role="progressbar"></div>
+                    </div>
+                    <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
+                    <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
+                    <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
+                    <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
+                    <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
+                    <div class="card-body">
+                        <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
+                        <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
             <!--
                 <div class="container mt-5 mov-info02">
                     <table class="table custom-border">
@@ -559,14 +588,16 @@ TODO:
                 <nav>
                     <ul class="pagination justify-content-center">
                         <li class="page-item" :class="{ disabled: !pagination.prev }">
-                            <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
+                        <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
                         </li>
-                        <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }"><a class="page-link" @click="loadPage(n)">{{ n }}</a></li>
+                        <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                        <a class="page-link" @click="loadPage(n)">{{ n }}</a>
+                        </li>
                         <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                            <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
+                        <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
                         </li>
                     </ul>
-                </nav>
+                    </nav>
                 <div class="filter-content">
                 <!-- 페이지의 나머지 내용 -->
                 <button @click="toggleModal" class="animCircle filter-button" :style="buttonStyle"> 필터</button>
@@ -580,44 +611,41 @@ TODO:
 export default {
   data() {
     return {
-      isExpanded: false,
-      scrollY: 0,
-      buttonStyle: {
-        opacity: 1
-      },
-      scrollTimeout: null,
-      selectedYear: new Date().getFullYear(), 
-      years: [] 
+      isExpanded: false, // 하단 메뉴 확장 상태
+      scrollY: 0, // 스크롤 위치 저장
+      buttonStyle: { opacity: 1 }, // 버튼 스타일 (불투명도)
+      scrollTimeout: null, // 스크롤 타임아웃 저장
+      selectedYear: new Date().getFullYear(), // 선택된 연도 (현재 연도)
+      years: [] // 연도 목록 저장
     };
   },
 
   computed: {
-    menuHeight() {
+    menuHeight() { // 하단 메뉴 높이 계산
       return this.isExpanded ? '0px' : '115px';
     }
   },
 
   created() {
-    window.addEventListener('scroll', this.handleScroll);
-    this.years = this.generateYearRange(1990, new Date().getFullYear()); 
+    window.addEventListener('scroll', this.handleScroll); // 스크롤 이벤트 리스너 추가
+    this.years = this.generateYearRange(1990, new Date().getFullYear()); // 연도 목록 생성
   },
 
   methods: {
-    toggleMenuHeight() { //하단 메뉴
+    toggleMenuHeight() { // 하단 메뉴 높이 토글
       this.isExpanded = !this.isExpanded;
     },
-    submitReview() { 
+    submitReview() { // 리뷰 제출 시 메뉴 높이 토글
       this.toggleMenuHeight();
     },
-    handleScroll() { //필터 스크롤 css
+    handleScroll() { // 스크롤 시 버튼 스타일 변경
       clearTimeout(this.scrollTimeout);
       this.buttonStyle.opacity = 0.5;
-
       this.scrollTimeout = setTimeout(() => {
         this.buttonStyle.opacity = 1;
       }, 150);
     },
-    generateYearRange(start, end) { 
+    generateYearRange(start, end) { // 연도 범위 생성
       const years = [];
       for (let year = start; year <= end; year++) {
         years.push(year);
@@ -626,76 +654,97 @@ export default {
     }
   },
 
-  beforeDestroy() {
+  beforeDestroy() { // 컴포넌트 제거 시 스크롤 이벤트 리스너 제거
     window.removeEventListener('scroll', this.handleScroll);
     clearTimeout(this.scrollTimeout);
   }
 };
 
 </script>
-
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import useAuctions from "@/composables/auctions";
-import useRoles from '@/composables/roles';
-import FilterModal from '@/views/modal/filter.vue'; 
+import { useStore } from "vuex";
+
+import useAuctions from "@/composables/auctions"; // 경매 관련 함수 가져오기
+import useRoles from '@/composables/roles'; // 역할 관련 함수 가져오기
+import FilterModal from '@/views/modal/filter.vue'; // 필터 모달 컴포넌트 가져오기
 import { useRouter } from 'vue-router';
 
-
-
 const router = useRouter();
-const currentStatus = ref('all'); 
+const currentStatus = ref('all'); // 현재 필터 상태 (기본값: 전체)
 const { role, getRole } = useRoles();
-const currentTab = ref('allInfo');
+const currentTab = ref('allInfo'); // 현재 탭 상태 (기본값: 모든 정보)
 const { auctionsData, pagination, getAuctions } = useAuctions();
-const currentPage = ref(1);
-const showModal = ref(false);
-const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length);
+const currentPage = ref(1); // 현재 페이지 번호
+const showModal = ref(false); // 모달 표시 상태
+const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); // 관심 있는 경매 수
 const auctionModal = ref(false);
 
-const setCurrentTab = (tab) => {
-    currentTab.value = tab;
+const store = useStore();
+const user = computed(() => store.getters["auth/user"]); // 사용자 정보
+const isDealer = computed(() => user.value?.roles?.includes('dealer')); // 딜러 여부
+const isUser = computed(() => user.value?.roles?.includes('user')); // 사용자 여부
+
+const setCurrentTab = (tab) => { // 현재 탭 설정
+  currentTab.value = tab;
 };
 
-const isUser = ref(false);
-
-function toggleModal() {
+function toggleModal() { // 모달 토글
   showModal.value = !showModal.value; 
 }
 
-function setFilter(status) {
+function setFilter(status) { // 필터 설정
   currentStatus.value = status;
 }
 
-function handleClose() {
+function handleClose() { // 모달 닫기
   showModal.value = false;
 }
 
-// 경매 완료건이 있는지 확인하는 계산된 속성
-const hasCompletedAuctions = computed(() => {
-   return auctionsData.value.some(auction => auction.status === 'done');
+const hasCompletedAuctions = computed(() => { // 완료된 경매 여부
+  return auctionsData.value.some(auction => auction.status === 'done');
 });
 
-const filteredAuctions = computed(() => {
+const filteredAuctions = computed(() => { // 필터된 경매 목록
   if (currentStatus.value === 'all') {
-    return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag'].includes(auction.status));
+    return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag', 'ask', 'cancel'].includes(auction.status));
   }
   return auctionsData.value.filter(auction => auction.status === currentStatus.value);
 });
 
-function loadPage(page) {
+function loadPage(page) { // 페이지 로드
   if (page < 1 || page > pagination.value.last_page) return;
   currentPage.value = page;
   getAuctions(page);
 }
-function navigateToDetail(auctionId) {
-    console.log("디테일 :", auctionId);
-    router.push({ name: 'AuctionDetail', params: { id: auctionId } });
+
+function navigateToDetail(auction) { // 경매 상세 페이지로 이동
+  console.log("디테일 :", auction.id);
+  router.push({ name: 'AuctionDetail', params: { id: auction.id } });
 }
-onMounted(async () => {
+
+function getAuctionStyle(auction) { // 경매 스타일 설정
+  const validStatuses = ['done', 'wait', 'ing', 'diag'];
+  return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
+}
+
+function isDealerParticipating(auction) { // 딜러 참여 여부 확인
+  const currentUserId = user.value.id;
+  return auction.bids.some(bid => bid.user_id === currentUserId);
+}
+
+onMounted(async () => { // 컴포넌트 마운트 시 초기화 작업
   if (role.value.name === 'user') {
     isUser.value = true;
   }
   await getAuctions(currentPage.value);
 });
 </script>
+<style scoped>
+.shadow-hover:hover { 
+    box-shadow: 0px 0px 10px 0px rgba(78, 120, 97, 0.3);
+    transform: translateY(-0.25rem);
+    transition: transform 0.3s ease-in-out;
+    border-radius:6px;
+}
+</style>
