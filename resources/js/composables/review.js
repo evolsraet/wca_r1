@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { reactive } from 'vue';
+import { reactive , ref } from 'vue';
 let starScore = 0;
 
 export function initReviewSystem() {
@@ -15,6 +15,7 @@ export function initReviewSystem() {
     const reviewForm = {
         review
     }
+    const reviewsData = ref([]);
 
     const rateWrap = document.querySelectorAll('.rating'),
         label = document.querySelectorAll('.rating .rating__label'),
@@ -158,15 +159,54 @@ export function initReviewSystem() {
             }
             
         } catch (error) {
+            alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
+            console.log(error);
+        }
+    }
+    
+    // 작성한 이용후기 삭제하기
+    const deleteReviewApi = async (id) => {
+        try {      
+            const response = await axios.delete(`/api/reviews/${id}`);
+            console.log(response);
+            //console.log(reviewsData.value);
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    /** 
+    //작성한 이용후기 수정하기
+    const editReviewApi = async (id) => {
+        try {
+            const response = await axios.
+        } catch(error){
+
+        }
+    }
+    **/
+   
+    // 작성한 이용후기 불러오기 (사용자별 불러오기)
+    const getUserReview = async (id) => {
+        try {      
+            const response = await axios.get("/api/reviews");
+            reviewsData.value  = response.data.data.filter(review => review.user_id === id); 
+            if(response.status === '204'){
+                return true;
+            } else{
+                return false;
+            }
+            //console.log(reviewsData.value);
+        } catch (error) {
             console.log(error);
         }
     }
 
-    // 작성한 이용후기 불러오기
-    const getWrtReview = async (id) => {
+    // 작성한 이용후기 불러오기 (전체 리뷰 불러오기)
+    const getAllReview = async () => {
         try {      
-            const response = await axios.get("/api/reviews"+id);
-            console.log(response);
+            const response = await axios.get("/api/reviews");
+            reviewsData.value  = response.data.data;
+            //console.log(reviewsData.value);
         } catch (error) {
             console.log(error);
         }
@@ -175,7 +215,10 @@ export function initReviewSystem() {
     return {
         review,
         submitReview,
-        getWrtReview
+        getUserReview,
+        getAllReview,
+        deleteReviewApi,
+        reviewsData
     }
 
 }

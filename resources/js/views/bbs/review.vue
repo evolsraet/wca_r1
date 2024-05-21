@@ -9,7 +9,7 @@
                     <div class="tab-nav my-4">
                         <ul>
                             <li class="col-4"><a href="#" @click="setActiveTab('available')" :class="{ 'active': activeTab === 'available' }" title="작성한 이용후기">작성 가능한 이용 후기(<span>{{ filteredAuctions.length }}</span>)</a></li>
-                            <li class="col-4"><a href="#" @click="setActiveTab('written'), getReview(userId)" :class="{ 'active': activeTab === 'written' }" title="작성 가능한 이용후기">작성한 이용후기(<span></span>)</a></li>
+                            <li class="col-4"><a href="#" @click="setActiveTab('written')" :class="{ 'active': activeTab === 'written' }" title="작성 가능한 이용후기">작성한 이용후기(<span>{{ reviewsData.length }}</span>)</a></li>
                         </ul>
                         <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
@@ -36,17 +36,17 @@
                         </div>
                     </div>
                     <!-- 작성한 이용후기-->
-                    <div class="review-card02" v-if="activeTab === 'written'">
+                    <div class="review-card02" v-if="activeTab === 'written'" v-for="review in reviewsData" :key="review">
                         <div class="review-image02">
                             <p class="review-date">3.18 (월)</p>
                             <img src="../../../img/car_example.png" alt="현대 쏘나타 (DN8)">
                         </div>
                         <div class="review-info02">
-                            <p class="more-view" @click="toggleMenu">moreview</p>
-                            <div class="popup-menu" v-show="isMenuVisible">
+                            <p class="more-view" @click="toggleMenu(review.id)">moreview</p>
+                            <div class="popup-menu" :id="'toggleMenu' + review.id" style="display : none">
                                 <ul>
-                                    <li><button @click="editReview" class="tc-blue">수정</button></li>
-                                    <li><button @click="deleteReview" class="tc-red">삭제</button></li>
+                                    <li><button @click="editReview(review.user_id, review.id)" class="tc-blue">수정</button></li>
+                                    <li><button @click="deleteReview(review.id)" class="tc-red">삭제</button></li>
                                 </ul>
                             </div>
                             <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
@@ -54,27 +54,11 @@
                                 <p class="tc-red">1,000 만원</p>
                             </div>
                             <div class="rating">
-                                        <label class="rating__label rating__label--full" for="star1">
-                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
-                                            <span class="star-icon filled"></span>
-                                        </label>
-                                        <label class="rating__label rating__label--full" for="star2">
-                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
-                                            <span class="star-icon filled"></span>
-                                        </label>
-                                        <label class="rating__label rating__label--full" for="star3">
-                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
-                                            <span class="star-icon filled"></span>
-                                        </label>
-                                        <label class="rating__label rating__label--full" for="star4">
-                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
-                                            <span class="star-icon filled"></span>
-                                        </label>
-                                        <label class="rating__label rating__label--full" for="star5">
-                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
-                                            <span class="star-icon"></span>
-                                        </label>
-                                    </div>
+                                <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
+                                    <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
+                                    <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
+                                </label>
+                                </div>
                             <p>차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.</p>
                         </div>
                     </div>
@@ -94,16 +78,22 @@ import { ref } from 'vue';
 import useAuctions from "@/composables/auctions";
 import { initReviewSystem } from '@/composables/review';
 
+let userId =  ref();
 const router = useRouter();
 const activeTab = ref('available'); //nav 탭 바
 const showDeleteConfirmation = ref(false); // "삭제되었습니다," 띄우기
 const isMenuVisible = ref(false);
 const { auctionsData, getAuctions } = useAuctions();
+const { getUserReview , deleteReviewApi , reviewsData } = initReviewSystem(); 
 const filteredAuctions = computed(() => auctionsData.value.filter(auction => auction.status === 'done' && auction.bid_id != null));
-const { getWrtReview } = initReviewSystem(); 
-let userId =  ref();
-function toggleMenu() {
-    isMenuVisible.value = !isMenuVisible.value;
+
+function toggleMenu(id) {
+    let targetObj = document.getElementById('toggleMenu'+id);
+    if (targetObj.style.display === 'none') {
+        targetObj.style.display = 'block';
+    } else {
+        targetObj.style.display = 'none';
+    }
 }
 
 // ... 더보기 누르면 나오는 탭
@@ -118,9 +108,12 @@ function editReview() {
     alert("수정하시겠습니까?");
 }
 
-function deleteReview() {
-    if (confirm("삭제하시겠습니까?")) {
-        showDeleteMessage();
+function deleteReview(id) {
+    if (confirm("삭제하시겠습니까?")) {   
+        if(deleteReviewApi(id)){
+            showDeleteMessage();
+            location.reload();
+        }
     }
 }
 
@@ -128,19 +121,28 @@ function navigateToDetail(auctionId) {
     router.push({ name: 'user.create-review', params: { id: auctionId } });
 }
 
-function getReview(id){
-    getWrtReview(id);
-}
+/** function getReview() {
+    getWrtReview().then(() => {
+        console.log(reviewsData.value);
+        
+    }).catch(error => {
+        console.log(error);
+    });
+} **/
+
 
 const deleteMessageVisible = ref(false);
+
 //삭제후 메시지 띄우기
 function showDeleteMessage() {
     deleteMessageVisible.value = true;
     setTimeout(() => deleteMessageVisible.value = false, 3000);
 }
+
 onMounted(async () => {
     await getAuctions(1);
     userId = auctionsData.value[0].user_id;
+    await getUserReview(userId);
 });
 </script>
 
