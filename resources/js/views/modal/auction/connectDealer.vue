@@ -3,12 +3,12 @@
       <div class="modal-dialog">
         <div class="modal-content shadow">
           <div class="modal-body">
-            <div class="content">
+            <div class="content mt-3">
               <div class="nav-header">
                 <button type="button" class="btn-close" @click="closeModal"></button>
               </div>
               <div class="facturer">
-                <div class="profile ps-2 pt-0 pb-2">
+                <div class="profile ps-2 pt-0 pb-2 ms-0">
                   <div class="dealer-info">
                     <img src="../../../../img/myprofile_ex.png" alt="Profile Image" class="main-profile">
                     <div class="deal-info">

@@ -308,7 +308,7 @@
                     <div v-if="isUser">
                         <!-------[사용자]diag (진단평가)알때------->
                         <div v-if="auctionDetail.data.status === 'diag' " @click.stop="">
-                            <div class="steps-container">
+                            <div class="steps-container mt-3">
                                 <div class="step completing">
                                     <div class="label completed">
                                         STEP01
@@ -330,7 +330,7 @@
                             <p class="auction-deadline">현재 등록신청 후 진단평가 진행 중 입니다.</p>
                         </div>
                         <div v-if="auctionDetail.data.status === 'ing' " @click.stop="">
-                            <div class="steps-container">
+                            <div class="steps-container mt-3">
                                 <div class="step completing">
                                     <div class="label completed">
                                         STEP01
@@ -353,7 +353,7 @@
                         </div>
                         <!-- [사용자]- 딜러 선택 (wait) 중일때  -->
                         <div v-if="!selectedDealer && auctionDetail.data.status === 'wait'" @click.stop="">
-                            <div class="steps-container">
+                            <div class="steps-container mt-3">
                                 <div class="step completed">
                                     <div class="label completed">
                                         STEP01
@@ -419,7 +419,7 @@
 
                         <!--[사용자] - 딜러 선택 후 경매 했을떄 -->
                         <div v-if="selectedDealer && auctionDetail.data.status === 'wait'" @click.stop="">
-                            <div class="steps-container">
+                            <div class="steps-container mt-3">
                                 <div class="step completed">
                                     <div class="label completed">
                                         STEP01
@@ -494,86 +494,89 @@
                             <a href="#" class="d-flex justify-content-center tc-light-gray">클레임 규정</a>
                         </div>
 
-                        <!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
-                        <div v-if="!succesbid && auctionDetail && auctionDetail.data.status === 'ing'" @click.stop="">
-                            <div class="steps-container">
-                                <div class="step completed">
-                                    <div class="label completed">
-                                        STEP01
-                                    </div>
-                                </div>
-                                <div class="line completed"></div>
-                                <div class="step completing">
-                                    <div class="label completed">
-                                        STEP02
-                                    </div>
-                                </div>
-                                <div class="line "></div>
-                                <div class="step ">
-                                    <div class="label ">
-                                        STEP03
-                                    </div>
-                                </div>
-                            </div>
-                            <p class="auction-deadline text-center">경매를 시작합니다.</p>
-                            <!--TODO: 경매 마감일? => final_at 인지 경매마감일 - 최종진단 일 ?, like 관심 기능 추가 필요-->
-                            <p class="tc-red mt-2">경매 마감까지 {{auctionDetail.data.final_at || "null" }} 분 남음</p>
-                            <div class="mt-3 d-flex justify-content-end gap-3">
-                                <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
-                                <p class="interest-icon tc-light-gray normal-16-font">관심 6</p>
-                            </div>
-                            <div class="o_table_mobile my-5">
-                                <div class="tbl_basic tbl_dealer">
-                                    <div class="overflow-auto select-dealer">
-                                    <table>
-                                        <tbody>
-                                            <tr>
-                                                <th>입찰 순위</th>
-                                                <th>딜러명</th>
-                                                <th>입찰금액</th>
-                                            </tr>
-                                            <tr v-for="(bid, index) in sortedBids" :key="bid.user_id">
-                                                <td>{{ index + 1 }}위</td>
-                                                <td>{{ bid.user_id }}</td>
-                                                <td>{{ bid.price }} 만원</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                                </div>
-                            </div>
-                            <h5 class="text-start">나의 입찰 금액을 입력해주세요</h5>
-                            <div class="input-container mt-4">
-                                <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
-                            </div>
-                            <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
-                            <button type="button" class="tc-wh btn btn-danger w-100" @click="submitAuctionBid">확인</button>
-                            <transition name="fade">
-                            <bid-modal  v-if="showBidModal" :amount="amount":highestBid="highestBid":lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
-                            </transition>
+                    <!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
+                    <div v-if="!succesbid && auctionDetail && auctionDetail.data.status === 'ing'" @click.stop="">
+                        <div class="steps-container mt-3">
+                        <div class="step completed">
+                            <div class="label completed">STEP01</div>
                         </div>
+                        <div class="line completed"></div>
+                        <div class="step completing">
+                            <div class="label completed">STEP02</div>
+                        </div>
+                        <div class="line"></div>
+                        <div class="step">
+                            <div class="label">STEP03</div>
+                        </div>
+                        </div>
+                        <p class="auction-deadline text-center">경매를 시작합니다.</p>
+                        <p class="tc-red mt-2">경매 마감까지 {{ auctionDetail.data.final_at || "null" }} 분 남음</p>
+                        <div class="mt-3 d-flex justify-content-end gap-3">
+                        <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
+                        <p class="interest-icon tc-light-gray normal-16-font">관심 6</p>
+                        </div>
+                        <div class="o_table_mobile my-5">
+                        <div class="tbl_basic tbl_dealer">
+                            <div class="overflow-auto select-dealer">
+                            <table>
+                                <tbody>
+                                <tr>
+                                    <th>입찰 순위</th>
+                                    <th>딜러명</th>
+                                    <th>입찰금액</th>
+                                </tr>
+                                <tr v-for="(bid, index) in sortedBids" :key="bid.user_id">
+                                    <td>{{ index + 1 }}위</td>
+                                    <td>{{ bid.user_id }}</td>
+                                    <td>{{ bid.price }} 만원</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
+                        </div>
+                        <div v-if="!userBidExists && !userBidCancelled">
+                        <h5 class="text-start">나의 입찰 금액을 입력해주세요</h5>
+                        <div class="input-container mt-4">
+                            <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
+                        </div>
+                        <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
+                        <button type="button" class="tc-wh btn btn-danger w-100" @click="submitAuctionBid">확인</button>
+                        </div>
+                        <div v-else-if="userBidExists && !userBidCancelled">
+                        <h5 class="text-center">입찰이 완료되었습니다.</h5>
+                        <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
+                        <div class="mt-3 text-center d-flex gap-3 justify-content-center">
+                        <p>수정 가능 횟수 : {{ cancelAttempted === 0 ? '0' : '1' }}회</p>
+                        <a href="#" class="tc-light-gray btn-apply p-0" @click.prevent="handleLinkClick">수정하기</a>
+                        </div>
+                        </div>
+                        <transition name="fade">
+                        <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
+                        </transition>
+                    </div>
                     </div>
                 </div>
                 <!------------------- [딜러] - 입찰 완료후 바텀 메뉴 -------------------->
                 <div class="p-4" v-if="succesbid && auctionDetail.data.status === 'ing'" @click.stop="">
                     <h5 class="mx-3 text-center">경매 마감까지 03:25:43 남음</h5>
-                    <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ koreanAmount }}</span></p>
+                    <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ myBidPrice }}</span></p>
                     <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 n 명</h5>
                     <div class="d-flex justify-content-between">
-                        <p class="tc-light-gray">현재 최고 입찰가</p>
-                        <p>{{highestBid}} 만원</p>
+                    <p class="tc-light-gray">현재 최고 입찰가</p>
+                    <p>{{ highestBid }} 만원</p>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <p class="tc-light-gray">현재 최저 입찰가</p>
-                        <p>{{lowestBid}} 만원</p>
+                    <p class="tc-light-gray">현재 최저 입찰가</p>
+                    <p>{{ lowestBid }} 만원</p>
                     </div>
                     <button
-                        type="button"
-                        class="my-3 w-100 btn"
-                        :class="buttonClass"
-                        @click="handleCancelBid"
-                        :disabled="cancelAttempted">
-                        입찰 취소 ({{ cancelAttempted ? '0회 남음' : '1회 남음' }})
+                    type="button"
+                    class="my-3 w-100 btn"
+                    :class="buttonClass"
+                    @click="handleCancelBid"
+                    :disabled="cancelAttempted === 0">
+                    입찰 취소 ({{ cancelAttempted === 0 ? '0회 남음' : '1회 남음' }})
                     </button>
                     <!--  수수료 보증금이 부족할때 나오는 메뉴
                     <div class="bottom-message">
@@ -645,69 +648,83 @@
     </div>
 </div>
 </template>
+
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue'; // Vue 컴포지션 API의 주요 함수들을 임포트
-import { useRoute, useRouter } from 'vue-router'; // 라우팅을 위한 Vue Router의 함수들
-import { useStore } from 'vuex'; // Vuex 스토어 함수들을 사용하기 위한 임포트
-import useUsers from '@/composables/users'; // 사용자 관련 작업을 위한 컴포저블
-import useRoles from '@/composables/roles'; // 역할 관련 작업을 위한 컴포저블
-import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
-import useBids from '@/composables/bids'; // 입찰 관련 작업을 위한 컴포저블
-import modal from '@/views/modal/modal.vue'; // 모달 컴포넌트
-import auctionModal from '@/views/modal/auction/auctionModal.vue'; // 경매 모달 컴포넌트
-import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue'; // 딜러 연결 모달 컴포넌트
-import bidModal from '@/views/modal/bid/bidModal.vue'; // 입찰 모달 컴포넌트
+import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import useUsers from '@/composables/users';
+import useRoles from '@/composables/roles';
+import useAuctions from '@/composables/auctions';
+import useBids from '@/composables/bids';
+import modal from '@/views/modal/modal.vue';
+import auctionModal from '@/views/modal/auction/auctionModal.vue';
+import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue';
+import bidModal from '@/views/modal/bid/bidModal.vue';
+import { convertToKorean } from '@/hooks/convertToKorean';
 
-import { convertToKorean } from '@/hooks/convertToKorean'; // 숫자를 한국어로 변환하는 함수
-
-const lastBidId = ref(null); // 최근 입찰 ID 저장
+const lastBidId = ref(null);
 const usersInfo = ref({});
-const isSellChecked = ref(false); // 판매 체크 상태를 위한 ref
+const isSellChecked = ref(false);
 const { getUser } = useUsers();
-const store = useStore(); // Vuex 스토어 인스턴스
-const user = computed(() => store.getters['auth/user']); // 현재 사용자를 가져오는 계산된 속성
-const isDealer = computed(() => user.value?.roles?.includes('dealer')); // 사용자가 딜러인지 확인하는 계산된 속성
-const isUser = computed(() => user.value?.roles?.includes('user')); // 사용자가 일반 사용자인지 확인하는 계산된 속성
-const selectedBid = ref(null); // 선택된 입찰을 관리하기 위한 ref
-const route = useRoute(); // 현재 라우트 인스턴스
-const router = useRouter(); // 라우터 인스턴스
+const store = useStore();
+const user = computed(() => store.getters['auth/user']);
+const isDealer = computed(() => user.value?.roles?.includes('dealer'));
+const isUser = computed(() => user.value?.roles?.includes('user'));
+const selectedBid = ref(null);
+const route = useRoute();
+const router = useRouter();
 const userInfo = ref(null);
-const succesbid = ref(false); // 입찰 성공 여부를 추적하는 ref
-const amount = ref(''); // 입찰 금액을 저장하는 ref
-const koreanAmount = ref('원'); // 한국어로 된 금액을 저장하는 ref
-const updateKoreanAmount = () => { // 한국어 금액을 업데이트하는 함수
+const succesbid = ref(false);
+const amount = ref('');
+const koreanAmount = ref('원');
+const myBidPrice = computed(() => {
+  const myBid = auctionDetail.value.data.bids.find(bid => bid.user_id === user.value.id);
+  return myBid ? myBid.price : '0';
+});
+const updateKoreanAmount = () => {
   koreanAmount.value = convertToKorean(amount.value) + ' 원';
 };
 
-const cancelAttempted = ref(false);  // 입찰 취소 시도 여부
+// 사용자 입찰이 취소된 적이 있는지 확인
+const userBid = computed(() => auctionDetail.value.data.bids.find(bid => bid.user_id === user.value.id));
+const userBidExists = computed(() => userBid.value && !userBid.value.deleted_at);
+const userBidCancelled = computed(() => auctionDetail.value.data.bids.some(bid => bid.user_id === user.value.id && bid.deleted_at));
+
+const auctionId = computed(() => auctionDetail.value?.data?.id);
+const cancelAttempted = computed({
+  get() {
+    return store.getters['cancelAttempted/getCancelAttempted'](auctionId.value);
+  },
+  set(value) {
+    store.dispatch('cancelAttempted/setCancelAttempted', { auctionId: auctionId.value, value });
+  }
+});
+
 const showBidModal = ref(false);
-const auctionModalVisible = ref(false); // 경매 모달의 가시성을 제어하는 ref
-const reauctionModal = ref(false); // 재경매 모달의 가시성을 제어하는 ref
-const connectDealerModal =ref(false); // 딜러 연결 모달의 가시성을 제어하는 ref
+const auctionModalVisible = ref(false);
+const reauctionModal = ref(false);
+const connectDealerModal = ref(false);
 
-const scrollButtonVisible = ref(false); // 스크롤 버튼의 가시성을 제어하는 ref
-const selectedDealer = ref(null); // 선택된 딜러를 저장하는 ref
-const showBottomSheet = ref(true); // 바텀 시트의 가시성을 제어하는 ref
-const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); // 바텀 시트 스타일을 저장하는 ref
-const scrollButtonStyle = ref({ display: 'none' }); // 스크롤 버튼 스타일을 저장하는 ref
+const scrollButtonVisible = ref(false);
+const selectedDealer = ref(null);
+const showBottomSheet = ref(true);
+const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
+const scrollButtonStyle = ref({ display: 'none' });
 
-const showReauctionView = ref(false); // 재경매 뷰의 가시성을 제어하는 ref
+const showReauctionView = ref(false);
 
-const auctionDetail = ref(null); // 경매 세부 정보를 저장하는 ref
-const { AuctionCarInfo,getAuctions, auctionsData, AuctionReauction ,chosenDealer, getAuctionById ,deleteAuction} = useAuctions(); // 경매 관련 함수를 사용
-const { submitBid,cancelBid } = useBids(); // 입찰 관련 함수를 사용
-const carDetails = ref({}); // 자동차 세부 정보를 저장하는 ref
+const auctionDetail = ref(null);
+const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, deleteAuction } = useAuctions();
+const { submitBid, cancelBid } = useBids();
+const carDetails = ref({});
 const highestBid = ref(0);
 const lowestBid = ref(0);
 const sortedTopBids = computed(() => {
-  // 필터 전의 모든 입찰을 로그로 출력
-  console.log('All Bids:', auctionDetail.value?.data?.top_bids);
-
   if (!auctionDetail.value?.data?.top_bids) {
     return [];
   }
 
-  // 각 user_id에 대해 최고 가격의 입찰만 남기기
   const bidsByUser = auctionDetail.value.data.top_bids.reduce((acc, bid) => {
     if (!acc[bid.user_id] || acc[bid.user_id].price < bid.price) {
       acc[bid.user_id] = bid;
@@ -715,24 +732,17 @@ const sortedTopBids = computed(() => {
     return acc;
   }, {});
 
-  // 필터 후의 입찰을 로그로 출력
-  console.log('Filtered Bids by User:', bidsByUser);
-
-  // 남은 입찰들을 가격 순으로 정렬하여 상위 5개를 가져오기
   const topBids = Object.values(bidsByUser)
     .sort((a, b) => b.price - a.price)
     .slice(0, 5);
 
-  // 상위 5개의 입찰을 로그로 출력
-  console.log('Top 5 Bids:', topBids);
-
   return topBids;
 });
 
-const isModalVisible = ref(false); // 모달 가시성을 제어하는 ref
-const selectedAuctionId = ref(null); // 선택된 경매 ID를 저장하는 ref
+const isModalVisible = ref(false);
+const selectedAuctionId = ref(null);
 
-const reauction = async () => { // 재경매를 처리하는 함수
+const reauction = async () => {
   const id = route.params.id;
   const data = {
     status: 'ing',
@@ -741,24 +751,24 @@ const reauction = async () => { // 재경매를 처리하는 함수
 
   try {
     await AuctionReauction(id, data);
-    reauctionModal.value = true;  
+    reauctionModal.value = true;
   } catch (error) {
     console.error('Error re-auctioning:', error);
     alert('재경매에 실패했습니다.');
   }
 };
 
-const openModal = () => { // 모달을 여는 함수
+const openModal = () => {
   isModalVisible.value = true;
   selectedAuctionId.value = auctionDetail.value?.data.id;
 };
 
-const closeModal = () => { // 모달을 닫는 함수
+const closeModal = () => {
   isModalVisible.value = false;
 };
 
-const handleConfirmDelete = async () => { // 경매 삭제를 처리하는 함수
-   closeModal();
+const handleConfirmDelete = async () => {
+  closeModal();
   try {
     await deleteAuction(selectedAuctionId.value);
     router.push({ name: 'auction.index' });
@@ -767,7 +777,7 @@ const handleConfirmDelete = async () => { // 경매 삭제를 처리하는 함�
   }
 };
 
-const toggleView = () => { // 재경매 뷰를 토글하는 함수
+const toggleView = () => {
   showReauctionView.value = !showReauctionView.value;
 };
 
@@ -776,34 +786,27 @@ const toggleSheet = () => {
   const screenWidth = window.innerWidth;
 
   if (showBottomSheet.value) {
-    bottomSheet.classList.add('modified');
     bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
 
     scrollButtonStyle.value = { display: 'block' };
   } else {
-    bottomSheet.classList.remove('modified');
-    bottomSheetStyle.value = { 
-      position: screenWidth >= 1200 ? 'static' : 'fixed', 
-      bottom: '0px' 
+    bottomSheetStyle.value = {
+      position: screenWidth >= 1200 ? 'static' : 'fixed',
+      bottom: '0px'
     };
     scrollButtonStyle.value = { display: 'none' };
   }
   showBottomSheet.value = !showBottomSheet.value;
 };
 
-
-
-
 const selectDealer = async (bid, event, index) => {
   if (event.target.checked) {
-    selectedBid.value = { ...bid, index }; // 순위를 포함시켜 selectedBid에 저장
+    selectedBid.value = { ...bid, index };
     connectDealerModal.value = true;
-    console.log('Selected bid data:', selectedBid.value); // 콘솔에 bid 정보 로깅
 
     try {
-      const userData = await getUser(bid.user_id); // API 호출로 사용자 정보 가져오기
-      userInfo.value = userData; // 사용자 정보 저장
-      console.log('dealer data:', userData); 
+      const userData = await getUser(bid.user_id);
+      userInfo.value = userData;
     } catch (error) {
       console.error('Error dealer data:', error);
     }
@@ -813,55 +816,43 @@ const selectDealer = async (bid, event, index) => {
   }
 };
 
-
 const handleModalClose = () => {
-  connectDealerModal.value = false; // 모달 숨기기
+  connectDealerModal.value = false;
   if (selectedBid.value) {
     const checkbox = document.getElementById('checkbox-' + selectedBid.value.user_id);
-    if (checkbox) checkbox.checked = false; // 연관 체크박스 해제
-    selectedBid.value = null; // 선택된 입찰 초기화
+    if (checkbox) checkbox.checked = false;
+    selectedBid.value = null;
   }
 };
+
 const handleDealerConfirm = ({ bid, userData }) => {
   selectedDealer.value = { ...bid, userData };
   connectDealerModal.value = false;
 };
 
-const cancelSelection = () => { // 딜러 선택을 취소하는 함수
+const cancelSelection = () => {
   selectedDealer.value = null;
 };
 
-const completeAuction = async () => { //딜러 선택 후 최종 낙찰가 경매 완료.
+const completeAuction = async () => {
   auctionDetail.value.status = 'done';
   const id = route.params.id;
   const data = {
     status: 'done',
     final_price: selectedDealer.value.price,
-    bid_id : selectedDealer.value.user_id,
+    bid_id: selectedDealer.value.user_id,
   };
 
   try {
     await chosenDealer(id, data);
-     auctionDetail.value.data.status = 'done';
+    auctionDetail.value.data.status = 'done';
   } catch (error) {
     console.error('Error completing auction:', error);
     alert('경매에 실패했습니다.');
   }
 };
 
-/*const reauction = () => {
-  if (!amount.value || isNaN(parseFloat(amount.value))) {
-    alert('희망 가격을 입력해주세요.');
-  } else {
-    const koreanPrice = convertToKorean(amount.value);
-    const confirmReauction = confirm(`입력한 희망 가격: ${koreanPrice} 원입니다. 재경매를 진행하시겠습니까?`);
-    if (confirmReauction) {
-      reauctionModal.value = true;
-    }
-  }
-};
-*/
-const checkScroll = () => { // 스크롤 위치를 확인하는 함수
+const checkScroll = () => {
   const scrollY = window.scrollY;
   const windowHeight = document.documentElement.clientHeight;
   const totalHeight = document.documentElement.scrollHeight;
@@ -873,15 +864,15 @@ const checkScroll = () => { // 스크롤 위치를 확인하는 함수
   }
 };
 
-// 모든 사용자 이름을 가져오는 함수
 async function fetchUserNames() {
   for (const bid of auctionDetail.value.data.bids) {
     if (!usersInfo.value[bid.user_id]) {
       const userData = await getUser(bid.user_id);
-      usersInfo.value[bid.user_id] = userData.name; 
+      usersInfo.value[bid.user_id] = userData.name;
     }
   }
 }
+
 const openBidModal = () => {
   showBidModal.value = true;
 };
@@ -890,23 +881,38 @@ const closeBidModal = () => {
   showBidModal.value = false;
 };
 
-const submitAuctionBid = () => { 
+const submitAuctionBid = async () => {
+  const userBidExists = auctionDetail.value.data.bids.some(bid => bid.user_id === user.value.id && !bid.deleted_at);
   if (!amount.value || isNaN(parseFloat(amount.value))) {
     alert('유효한 금액을 입력해주세요.');
-  }  else {
-    openBidModal();
-}
+  } else {
+    if (userBidExists) {
+      alert('이미 입찰하셨습니다.');
+    } else {
+      openBidModal();
+    }
+  }
+};
+
+const handleLinkClick = () => {
+  succesbid.value = true;
 };
 
 const confirmBid = async () => {
   try {
     const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
     if (bidResult.success) {
-      lastBidId.value = bidResult.bidId; // 입찰 ID 저장
-      await fetchAuctionDetail(); // 최신 경매 데이터 업데이트
+      lastBidId.value = bidResult.bidId;
+      await fetchAuctionDetail();
       closeBidModal();
       succesbid.value = { success: true, amount: amount.value, bidId: lastBidId.value };
+
+      // 재입찰 시 취소 가능 횟수를 0으로 설정
+      store.dispatch('cancelAttempted/setCancelAttempted', { auctionId: auctionDetail.value.data.id, value: 0 });
+
       console.log("입찰ID:", lastBidId.value);
+      console.log("confirmBid - cancelAttempted set for auctionId:", auctionDetail.value.data.id, "value:", cancelAttempted.value);
+      console.log("Current Vuex state:", store.state.cancelAttempted);
     } else {
       alert(bidResult.message);
     }
@@ -915,7 +921,6 @@ const confirmBid = async () => {
   }
 };
 
-// 경매 세부 정보를 가져오는 함수 => 딜러가 입찰 후 재 로드
 const fetchAuctionDetail = async () => {
   const auctionId = parseInt(route.params.id);
   try {
@@ -936,10 +941,7 @@ const fetchAuctionDetail = async () => {
     carDetails.value.modelSub = carData.modelSub;
     carDetails.value.grade = carData.grade;
     carDetails.value.gradeSub = carData.gradeSub;
-    //carDetails.value.registrationDate = carData.registrationDate || "등록일 정보 없음";
     carDetails.value.year = carData.year;
-    //carDetails.value.vehicleType = carData.vehicleType || "차량 유형 정보 없음";
-    //carDetails.value.engineCapacity = carData.engineCapacity || "배기량 정보 없음";
     carDetails.value.fuel = carData.fuel;
     carDetails.value.mission = carData.mission;
 
@@ -950,32 +952,27 @@ const fetchAuctionDetail = async () => {
   }
 };
 
-
-onMounted(async () => { 
-    const screenWidth = window.innerWidth;
-    bottomSheetStyle.value = { 
-    position: screenWidth >= 1200 ? 'static' : 'fixed', 
-    bottom: '0px' 
+onMounted(async () => {
+  const screenWidth = window.innerWidth;
+  bottomSheetStyle.value = {
+    position: screenWidth >= 1200 ? 'static' : 'fixed',
+    bottom: '0px'
   };
-    await getAuctions();
-    fetchAuctionDetail();
-  const auctionId = parseInt(route.params.id);
+  await getAuctions();
+  fetchAuctionDetail();
   window.addEventListener('scroll', checkScroll);
   try {
-console.log('Sorted Top Bids:', sortedTopBids.value);
+    console.log('Sorted Top Bids:', sortedTopBids.value);
   } catch (error) {
     console.error('Error fetching auction detail:', error);
   }
 });
 
-
-onUnmounted(() => { 
+onUnmounted(() => {
   window.removeEventListener('scroll', checkScroll);
 });
 
-
-
-const populateHopePrice = () => { 
+const populateHopePrice = () => {
   if (auctionDetail.value && auctionDetail.value.data) {
     if (isSellChecked.value) {
       amount.value = auctionDetail.value.data.hope_price;
@@ -984,7 +981,7 @@ const populateHopePrice = () => {
     }
   }
 };
-// 입찰 데이터를 가격 오름차순으로 정렬하는 computed 속성 및 최고가와 최저가를 계산
+
 const sortedBids = computed(() => {
   const bids = auctionDetail.value?.data?.bids.slice().sort((a, b) => b.price - a.price) || [];
   if (bids.length > 0) {
@@ -994,35 +991,46 @@ const sortedBids = computed(() => {
   return bids;
 });
 
-const isReadonly = computed(() => isSellChecked.value && amount.value !== ''); // 금액이 읽기 전용인지 확인하는 계산된 속성
+const isReadonly = computed(() => isSellChecked.value && amount.value !== '');
 
-// 버튼 클래스를 동적으로 결정하는 computed 속성
 const buttonClass = computed(() => {
-  return cancelAttempted.value ? 'btn-outline-secondary' : 'btn-outline-danger';
+  return cancelAttempted.value === 0 ? 'btn-outline-secondary' : 'btn-outline-danger';
 });
-const handleCancelBid = async () => {
-    if (cancelAttempted.value) {
-        alert("입찰 취소는 최초 1회만 가능합니다.");
-        return;  // 이미 취소를 시도했다면 함수를 더 이상 진행하지 않음
-    }
 
-    const result = await cancelBid(lastBidId.value);
-    if (result.success) {
-        cancelAttempted.value = true; // 취소 시도를 true로 설정
-        lastBidId.value = null;  // 입찰 ID 초기화
-        await fetchAuctionDetail();  // 경매 상세 정보 새로 불러오기
-        amount.value = '';  // 입찰 금액 입력 필드 초기화
-        succesbid.value = null;  // 입찰 성공 상태 초기화
+const handleCancelBid = async () => {
+  if (cancelAttempted.value === 0) {
+    alert("입찰 취소는 최초 1회만 가능합니다.");
+    return;
+  }
+
+  try {
+    const myBid = auctionDetail.value.data.bids.find(bid => bid.user_id === user.value.id && !bid.deleted_at);
+    if (myBid) {
+      const result = await cancelBid(myBid.id);
+      if (result.success) {
+        myBid.deleted_at = new Date().toISOString();
+        await fetchAuctionDetail();
+        amount.value = '';
+        succesbid.value = false;
         koreanAmount.value = '원';
-    } else {
+        store.dispatch('cancelAttempted/setCancelAttempted', { auctionId: auctionDetail.value.data.id, value: 0 });
+        console.log("handleCancelBid - cancelAttempted set to 0 for auctionId:", auctionDetail.value.data.id);
+        console.log("Current Vuex state:", store.state.cancelAttempted);
+      } else {
         alert(result.message);
+      }
+    } else {
+      alert('입찰 내역이 없습니다.');
     }
+  } catch (error) {
+    console.error('Error canceling bid:', error);
+    alert('입찰 취소에 실패했습니다.');
+  }
 };
 
-watch([isSellChecked, auctionDetail], () => { // 변경 사항을 감지하는 Watcher들
+watch([isSellChecked, auctionDetail], () => {
   populateHopePrice();
 });
-
 </script>
 
 
