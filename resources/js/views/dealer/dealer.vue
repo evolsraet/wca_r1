@@ -46,13 +46,16 @@
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
-import useBid from "@/composables/bids";
-import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
+import useBid from "@/composables/bids";
+import useAuctions from '@/composables/auctions';
 
 const router = useRouter(); 
-const { getAuctions, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
+const store = useStore(); // Vuex 스토어 인스턴스
+const { getAuctions, getAuctionById } = useAuctions();
 const { bidsData, getBids } = useBid();
+const user = computed(() => store.getters['auth/user']); // 현재 사용자를 가져오는 계산된 속성
 
 const filteredBids = ref([]);
 
@@ -79,22 +82,21 @@ function navigateToDetail(bid) {
 }
 
 const fetchFilteredBids = async () => {
+    await getBids(); 
     const filteredBidsData = bidsData.value.filter(bid => bid.status === 'ask');
     console.log('Filtered Bids:', filteredBidsData); 
     const bidsWithDetails = await Promise.all(filteredBidsData.map(fetchAuctionDetails));
-    filteredBids.value = bidsWithDetails;
+    filteredBids.value = bidsWithDetails.filter(bid => bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id);
     console.log('Bids with Auction Details:', filteredBids.value); 
 };
 
 onMounted(async () => {
-    await getBids();
     await getAuctions();
     await fetchFilteredBids();
 });
 </script>
 
-
-<style>
+<style scoped>
 .pd-10{
     padding: 10px;
 }

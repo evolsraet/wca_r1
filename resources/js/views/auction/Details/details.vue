@@ -495,7 +495,7 @@
                         </div>
 
                     <!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
-                    <div v-if="!succesbid && auctionDetail && auctionDetail.data.status === 'ing'" @click.stop="">
+                    <div v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing'" @click.stop="">
                         <div class="steps-container mt-3">
                         <div class="step completed">
                             <div class="label completed">STEP01</div>
@@ -535,7 +535,7 @@
                             </div>
                         </div>
                         </div>
-                        <div v-if="!userBidExists && !userBidCancelled">
+                        <div>
                         <h5 class="text-start">나의 입찰 금액을 입력해주세요</h5>
                         <div class="input-container mt-4">
                             <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
@@ -543,14 +543,14 @@
                         <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
                         <button type="button" class="tc-wh btn btn-danger w-100" @click="submitAuctionBid">확인</button>
                         </div>
-                        <div v-else-if="userBidExists && !userBidCancelled">
+                      <!--  <div v-else-if="userBidExists && !userBidCancelled">
                         <h5 class="text-center">입찰이 완료되었습니다.</h5>
                         <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
                         <div class="mt-3 text-center d-flex gap-3 justify-content-center">
                         <p>수정 가능 횟수 : {{ cancelAttempted === 0 ? '0' : '1' }}회</p>
                         <a href="#" class="tc-light-gray btn-apply p-0" @click.prevent="handleLinkClick">수정하기</a>
                         </div>
-                        </div>
+                        </div>-->
                         <transition name="fade">
                         <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
                         </transition>
@@ -558,7 +558,7 @@
                     </div>
                 </div>
                 <!------------------- [딜러] - 입찰 완료후 바텀 메뉴 -------------------->
-                <div class="p-4" v-if="succesbid && auctionDetail.data.status === 'ing'" @click.stop="">
+                <div class="p-4" v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id))" @click.stop="">
                     <h5 class="mx-3 text-center">경매 마감까지 03:25:43 남음</h5>
                     <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ myBidPrice }}</span></p>
                     <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 n 명</h5>
@@ -572,11 +572,11 @@
                     </div>
                     <button
                     type="button"
-                    class="my-3 w-100 btn"
+                    class="my-3 w-100 btn btn-outline-primary"
                     :class="buttonClass"
                     @click="handleCancelBid"
-                    :disabled="cancelAttempted === 0">
-                    입찰 취소 ({{ cancelAttempted === 0 ? '0회 남음' : '1회 남음' }})
+                    :disabled="cancelAttempted">
+                    입찰 취소 
                     </button>
                     <!--  수수료 보증금이 부족할때 나오는 메뉴
                     <div class="bottom-message">
@@ -894,32 +894,22 @@ const submitAuctionBid = async () => {
   }
 };
 
-const handleLinkClick = () => {
-  succesbid.value = true;
-};
-
 const confirmBid = async () => {
-  try {
-    const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
-    if (bidResult.success) {
-      lastBidId.value = bidResult.bidId;
-      await fetchAuctionDetail();
-      closeBidModal();
-      succesbid.value = { success: true, amount: amount.value, bidId: lastBidId.value };
-
-      // 재입찰 시 취소 가능 횟수를 0으로 설정
-      store.dispatch('cancelAttempted/setCancelAttempted', { auctionId: auctionDetail.value.data.id, value: 0 });
-
-      console.log("입찰ID:", lastBidId.value);
-      console.log("confirmBid - cancelAttempted set for auctionId:", auctionDetail.value.data.id, "value:", cancelAttempted.value);
-      console.log("Current Vuex state:", store.state.cancelAttempted);
-    } else {
-      alert(bidResult.message);
+    try {
+        const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
+        if (bidResult.success) {
+            lastBidId.value = bidResult.bidId;
+            await fetchAuctionDetail();
+            closeBidModal();
+            succesbid.value = true;
+        } else {
+            alert(bidResult.message);
+        }
+    } catch (error) {
+        console.error('Error confirming bid:', error);
     }
-  } catch (error) {
-    console.error('Error confirming bid:', error);
-  }
 };
+
 
 const fetchAuctionDetail = async () => {
   const auctionId = parseInt(route.params.id);
@@ -993,40 +983,29 @@ const sortedBids = computed(() => {
 
 const isReadonly = computed(() => isSellChecked.value && amount.value !== '');
 
-const buttonClass = computed(() => {
-  return cancelAttempted.value === 0 ? 'btn-outline-secondary' : 'btn-outline-danger';
-});
-
 const handleCancelBid = async () => {
-  if (cancelAttempted.value === 0) {
-    alert("입찰 취소는 최초 1회만 가능합니다.");
-    return;
-  }
-
-  try {
-    const myBid = auctionDetail.value.data.bids.find(bid => bid.user_id === user.value.id && !bid.deleted_at);
-    if (myBid) {
-      const result = await cancelBid(myBid.id);
-      if (result.success) {
-        myBid.deleted_at = new Date().toISOString();
-        await fetchAuctionDetail();
-        amount.value = '';
-        succesbid.value = false;
-        koreanAmount.value = '원';
-        store.dispatch('cancelAttempted/setCancelAttempted', { auctionId: auctionDetail.value.data.id, value: 0 });
-        console.log("handleCancelBid - cancelAttempted set to 0 for auctionId:", auctionDetail.value.data.id);
-        console.log("Current Vuex state:", store.state.cancelAttempted);
-      } else {
-        alert(result.message);
-      }
-    } else {
-      alert('입찰 내역이 없습니다.');
+    try {
+        const myBid = auctionDetail.value.data.bids.find(bid => bid.user_id === user.value.id && !bid.deleted_at);
+        if (myBid) {
+            const result = await cancelBid(myBid.id);
+            if (result.success) {
+                myBid.deleted_at = new Date().toISOString();
+                await fetchAuctionDetail();
+                amount.value = '';
+                succesbid.value = false;
+                koreanAmount.value = '원';
+            } else {
+                alert(result.message);
+            }
+        } else {
+            alert('입찰 내역이 없습니다.');
+        }
+    } catch (error) {
+        console.error('Error canceling bid:', error);
+        alert('입찰 취소에 실패했습니다.');
     }
-  } catch (error) {
-    console.error('Error canceling bid:', error);
-    alert('입찰 취소에 실패했습니다.');
-  }
 };
+
 
 watch([isSellChecked, auctionDetail], () => {
   populateHopePrice();
