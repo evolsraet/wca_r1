@@ -13,7 +13,7 @@
                 </div>
                 <div class="btn-group">
                   <button class="btn btn-outline-secondary modal_close shadow" @click="confirmCancel">경매 취소</button>
-                  <button class="btn btn_ok btn-dark shadow w-50" @click="closeAllModals">재경매</button>
+                  <button class="btn btn_ok btn-dark shadow w-50" @click="closeAllModals01">재경매</button>
                 </div>
               </div>
             </div>
@@ -53,6 +53,9 @@ const emit = defineEmits(['close', 'confirm']);
 
 const showSecondModal = ref(false);
 
+const closeAllModals01 = () => {
+  emit('close');
+};
 
 const closeAllModals = () => {
   emit('confirm');

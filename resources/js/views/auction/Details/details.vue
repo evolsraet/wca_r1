@@ -1,6 +1,7 @@
 <template>
     <!--
-        TODO: 조회수는 경매완료 되면 동결.
+        TODO: 미구현 
+              조회수는 경매완료 되면 동결 , final_at , choice_at, done_at(?) => 시간 초.
     -->
     <div class="container-fluid" v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
@@ -584,69 +585,65 @@
                     </div>-->
                 </div>
             </div>
-
         </div>
-
-        <!-- 재경매 버튼 눌렀을 때 view -->
-        <div class="container my-4" v-if="showReauctionView">
-            <div class="p-4">
-                <h5 class="mb-2 ">재 경매를 진행합니다</h5>
-                <div class="card my-auction">
-                    <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' }" class="card-img-top-ty01"></div>
-                    <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
-                    <div class="card-body">
-                        <div class="enter-view align-items-baseline ">
-                            <p class="card-title fs-5"><span class="blue-box">무사고</span>현대 쏘나타(DN8)</p>
-                        </div>
-                        <div class="enter-view">
-                            <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>
-                            <a href="#"><span class="red-box-type02 pass-red">위카 진단평가</span></a>
-                        </div>
-                    </div>
-                    <div>
-                    </div>
-                </div>
-                <div class="container">
-                    <ul class="machine-inform-title">
-                        <li class="tc-light-gray">차량번호</li>
-                        <li class="info-num">{{ carDetails.no }}</li>
-                    </ul>
-                    <ul class="machine-inform">
-                        <li class="tc-light-gray">모델</li>
-                        <li class="sub-title">{{ carDetails.model }}</li>
-                    </ul>
-                    <ul class="machine-inform">
-                        <li class="tc-light-gray">현재 시세</li>
-                        <li class="sub-title">{{ carDetails.priceNow }}</li>
-                    </ul>
-                    <ul class="machine-inform">
-                        <li class="tc-light-gray">입찰가</li>
-                        <li class="sub-title">입찰가(데모)</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="form-group dealer-check mt-0 mb-0">
-      <label for="dealer">희망가로 판매할까요?
-        <span class="tooltip-toggle nomal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
-      </label>
-      <div class="check_box">
-        <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
-        <label for="sell">희망가 판매</label>
+    </div>
+    <!-- 재경매 버튼 눌렀을 때 view -->
+    <div class="container my-4" v-if="showReauctionView">
+         <div class="p-4">
+           <h5 class="mb-2">재경매를 진행합니다</h5>
+           <div class="card my-auction">
+             <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' }" class="card-img-top-ty01"></div>
+             <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
+             <div class="card-body">
+               <div class="enter-view align-items-baseline">
+                 <p class="card-title fs-5"><span class="blue-box">무사고</span>현대 쏘나타(DN8)</p>
+               </div>
+               <div class="enter-view">
+                 <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>
+                 <a href="#"><span class="red-box-type02 pass-red">위카 진단평가</span></a>
+               </div>
+             </div>
+           </div>
+           <div class="container">
+             <ul class="machine-inform-title">
+               <li class="tc-light-gray">차량번호</li>
+               <li class="info-num">{{ carDetails.no }}</li>
+             </ul>
+             <ul class="machine-inform">
+               <li class="tc-light-gray">모델</li>
+               <li class="sub-title">{{ carDetails.model }}</li>
+             </ul>
+             <ul class="machine-inform">
+               <li class="tc-light-gray">현재 시세</li>
+               <li class="sub-title">{{ carDetails.priceNow }}</li>
+             </ul>
+             <ul class="machine-inform">
+               <li class="tc-light-gray">입찰가</li>
+               <li class="sub-title">입찰가(데모)</li>
+             </ul>
+           </div>
+           <div class="form-group dealer-check mt-0 mb-0">
+             <label for="dealer">희망가로 판매할까요?
+               <span class="tooltip-toggle nomal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
+             </label>
+             <div class="check_box">
+               <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
+               <label for="sell">희망가 판매</label>
+             </div>
+           </div>
+           <div class="input-container mt-4">
+             <input type="text" class="styled-input" placeholder="희망가 입력(선택)" v-model="amount" @input="updateKoreanAmount" :readonly="isReadonly">
+           </div>
+           <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
+           <div class="btn-group mt-3 mb-2">
+             <button type="button" class="btn btn-danger" @click="reauction">재경매</button>
+             <transition name="fade">
+               <modal v-if="reauctionModal" :isVisible="reauctionModal" />
+             </transition>
+           </div>
       </div>
     </div>
-    <div class="input-container mt-4">
-      <input type="text" class="styled-input" placeholder="희망가 입력(선택)" v-model="amount" @input="updateKoreanAmount" :readonly="isReadonly">
-    </div>
-    <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
-    <div class="btn-group mt-3 mb-2">
-      <button type="button" class="btn btn-danger" @click="reauction">재경매</button>
-      <transition name="fade">
-      <modal v-if="reauctionModal" :isVisible="reauctionModal" />
-      </transition>
-    </div>
-        </div>
-    </div>
-</div>
+  </div>
 </template>
 
 <script setup>
@@ -778,7 +775,8 @@ const handleConfirmDelete = async () => {
 };
 
 const toggleView = () => {
-  showReauctionView.value = !showReauctionView.value;
+  showReauctionView.value = true;
+  console.log(showReauctionView.value)
 };
 
 const toggleSheet = () => {
