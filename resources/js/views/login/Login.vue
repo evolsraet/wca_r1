@@ -195,7 +195,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card login-card border-0">
+                <div class="card login-card login-any border-0" ref="loginCardRef">
                     <div class="card-body">
                         <!-- 로그인 폼 -->
                         <form @submit.prevent="submitLogin">
@@ -252,23 +252,26 @@
                                     <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
                                     <span @click="openModal('terms')" class="link-style">이용약관</span>
                                 </p>
-                                <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
                             </div>
                         </form>
                     </div>
                 </div>
+                <transition name="fade">
+                <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
+                </transition>
             </div>
         </div>
     </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted, nextTick } from 'vue';
 import LawGid from '@/views/modal/LawGid.vue'; 
 import { initReviewSystem } from '@/composables/review';
 import useAuth from '@/composables/auth';
 
 const isModalOpen = ref(false);
 const modalContent = ref('');
+const loginCardRef = ref(null);
 
 const openModal = (type) => {
   modalContent.value = type;
@@ -280,7 +283,15 @@ const closeModal = () => {
 };
 
 const { loginForm, validationErrors, processing, submitLogin } = useAuth();
-
+onMounted(() => {
+  nextTick(() => {
+    const loginCard = loginCardRef.value;
+    // login-card를 2초 후에 보이기
+    setTimeout(() => {
+      loginCard.classList.add('enter-active');
+    }, 200);
+  });
+});
 </script>
 
 
@@ -288,5 +299,16 @@ const { loginForm, validationErrors, processing, submitLogin } = useAuth();
 .rating__label .star-icon {
     width: 30px;
     height: 30px;
+}
+
+.login-any{
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.4s ease-out;
+}
+
+.login-any.enter-active {
+  opacity: 1;
+  transform: translateY(0);
 }
 </style>

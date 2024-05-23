@@ -42,7 +42,7 @@
                         </router-link>
                         <router-link :to="{ name: 'dealer.bids'}" class="menu-item mb-4" @click="toggleNavbar">
                             <div class="icon icon-awsome"></div>
-                            <span class="menu-text">선택 완료 차량</span>
+                            <span class="menu-text">낙찰 완료 차량</span>
                             <div class="icon right-icon"></div>
                         </router-link>
                         <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mb-3" @click="toggleNavbar">

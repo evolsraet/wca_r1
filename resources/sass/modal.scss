@@ -476,19 +476,6 @@ File upload.vue
   padding: 10px;
 }
 
-.bank-selection .bank-item {
-display: flex;
-justify-content: center;
-align-items: center;
-width: auto;
-margin: 10px;  
-padding: 10px;
-box-sizing: border-box; 
-border: 1px solid #ccc; 
-border-radius: 5px; 
-cursor: pointer;
-transition: background-color 0.3s; 
-}
 
 .bank-selection .bank-item:hover {
   background: #eaeaea;
@@ -501,7 +488,7 @@ transition: background-color 0.3s;
 
 
 .bank-selection .bank-item {
-  padding: 8px;
+  padding: 10px;
   background: #f7f7f7;
   text-align: center;
   border-radius: 8px;
@@ -520,6 +507,46 @@ transition: background-color 0.3s;
 }
 
 
+.account-num {
+  display: none;
+}
+
+.bank-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  text-align: center;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  transition: transform 0.3s;
+}
+.bank-item:hover {
+  transform: scale(1.05);
+}
+.bank-item img {
+  width: 30px;
+  height: 30px;
+  margin-bottom: 5px;
+}
+.bank-item span {
+  font-size: 14px;
+  color: #333;
+}
+.show-content {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 0.5s, opacity 0.5s linear;
+}
+.show-content.active {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.5s linear;
+}
+.no-scroll {
+  overflow: hidden;
+}
 
 .detail-content02 .title{
   display: flex;
@@ -560,6 +587,15 @@ transition: background-color 0.3s;
 .detail-content02 .menu-item:hover::after, .detail-content02 .menu-item.active::after {
   width: 100%;
   background: gray;
+}
+.bank-content{
+  height: 50vh;
+  flex: 1;
+  overflow-y: auto;
+}
+.bank-scroll{
+  padding: 20px;
+  overflow: scroll;
 }
 .button-media{
   margin: auto;

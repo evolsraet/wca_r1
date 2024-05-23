@@ -323,6 +323,12 @@ $disabled-primary:#ebb3b5;
 .wd-100{
     width: 100% !important;
 }
+.tc-primary{
+    color: $primary !important;
+}
+.tc-primary:hover{
+    color: white !important;
+}
 @keyframes social-button-beat {
     0% {
         opacity: 0.3;

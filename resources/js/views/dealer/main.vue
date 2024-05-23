@@ -22,7 +22,7 @@
                                 </div>
                             </div>
                             <div class="footer mob-info">
-                                <p class="tc-light-gray mt-3">입찰가능 유효시간 2024.03.20</p>
+                                <p class="tc-light-gray mt-3 me-5">입찰가능 유효시간 2024.03.20</p>
                             </div>
                             <div class="auction-info">
                                 <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ ingCount }}</span>건 있습니다</p>
@@ -32,22 +32,22 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="activity-info bold-18-font">
+                        <div class="slide-up-ani activity-info bold-18-font">
                             <div class="item">
-                                <p><span class="tc-red">100</span> 건</p>
-                                <p class="interest-icon tc-light-gray normal-16-font">관심</p>
+                            <p><span class="tc-red slide-up" ref="item1">100</span> 건</p>
+                            <p class="interest-icon tc-light-gray normal-16-font">관심</p>
                             </div>
                             <div class="item">
-                                <p><span class="tc-red">{{ auctionsData.length }}</span> 건</p>
-                                <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
+                            <p><span class="tc-red" ref="item2">{{ auctionsData.length }}</span> 건</p>
+                            <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
                             </div>
                             <div class="item">
-                                <p><span class="tc-red">{{filteredViewBids.length}}</span> 건</p>
-                                <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
+                            <p><span class="tc-red" ref="item3">{{ filteredViewBids.length }}</span> 건</p>
+                            <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
                             </div>
                             <div class="item">
-                                <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
-                                <p class="purchase-icon tc-light-gray normal-16-font">매입</p>
+                            <p><span class="tc-red" ref="item4">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
+                            <p class="purchase-icon tc-light-gray normal-16-font">매입</p>
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                 <div class="card completed-card border-0" :style="cardStyle" @click="toggleCard">
                     <div class="card-body">
                         <div class="enter-view mt-3">
-                            <h5>선택 완료 차량</h5>
+                            <h5>낙찰 완료 차량</h5>
                             <router-link :to="{ name: 'dealer.bids' }" class="btn-apply">전체보기</router-link>
                         </div>
                         <span class="tc-light-gray">24시간 내 응대해 주세요!</span>
@@ -176,6 +176,10 @@ import useBid from "@/composables/bids";
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
+const item1 = ref(null);
+const item2 = ref(null);
+const item3 = ref(null);
+const item4 = ref(null);
 
 const myBidsCount = ref(0);
 const store = useStore();
@@ -241,11 +245,25 @@ function navigateToDetail(bid) {
     router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
 }
 
-
 onMounted(async () => {
     await getBids();
     calculateMyBidsCount();
     await getAuctions();
     await fetchFilteredViewBids();
+    setTimeout(() => {
+    item1.value.classList.add('visible');
+  }, 0);
+
+  setTimeout(() => {
+    item2.value.classList.add('visible');
+  }, 200);
+
+  setTimeout(() => {
+    item3.value.classList.add('visible');
+  }, 400);
+
+  setTimeout(() => {
+    item4.value.classList.add('visible');
+  }, 800);
 });
 </script>

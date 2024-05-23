@@ -3,6 +3,7 @@
     카피라이트, 개인정보 처리방침, 이용약관 모달
 ----------------------------------------------->
     <!-- Copywrite  -->
+    <transition name="fade" mode="out-in">
     <section v-if="content === 'copywrite'" class="modal modal-section type-confirm alert-modal-type02">
         <div class="modal-dialog" @click.self="closeModal">
             <div class="modal-content shadow" @click.self="closeModal">
@@ -16,7 +17,8 @@
         </div>
         </div>
     </section>
-
+  </transition>
+  <transition name="fade" mode="out-in">
     <!-- Privacy  -->
     <section v-if="content === 'privacy'" class="modal modal-section type-confirm alert-modal-type02"  @click.self="closeModal">
         <div class="modal-dialog" @click.self="closeModal">
@@ -31,7 +33,8 @@
         </div>
         </div>
     </section>
-
+  </transition>
+    <transition name="fade" mode="out-in">
     <!-- Terms  -->
     <section v-if="content === 'terms'" class="modal modal-section type-confirm alert-modal-type02">
         <div class="modal-dialog" @click.self="closeModal">
@@ -46,6 +49,7 @@
         </div>
         </div>
     </section>
+  </transition>
   </template>
   
   <script setup>

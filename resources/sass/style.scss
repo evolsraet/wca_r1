@@ -3319,3 +3319,15 @@ input[type="checkbox"] {
     border-radius:6px;
     cursor: pointer;
 }
+
+
+.slide-up-ani .item .tc-red {
+    opacity: 0;
+    transform: translateX(10px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  
+  .slide-up-ani .item .tc-red.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }

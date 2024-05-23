@@ -5,7 +5,7 @@
                 <div class="mov-review my-5">
                     <div class="apply-top02 text-start">
                         <div class="search-type3">
-                            <h3 class="review-title mov-hidden">선택 완료 차량<br><span class="mb-2 tc-light-gray">24시간 내 응대해 주세요!</span></h3>
+                            <h3 class="review-title mov-hidden">낙찰 완료 차량<br><span class="mb-2 tc-light-gray">24시간 내 응대해 주세요!</span></h3>
                             <input type="text" placeholder="모델명,차량번호,지역">
                             <button type="button" class="search-btn">검색</button>
                         </div>
