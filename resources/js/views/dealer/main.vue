@@ -42,7 +42,7 @@
                                 <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
                             </div>
                             <div class="item">
-                                <p><span class="tc-red">6</span> 건</p>
+                                <p><span class="tc-red">{{filteredViewBids.length}}</span> 건</p>
                                 <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
                             </div>
                             <div class="item">
@@ -226,11 +226,10 @@ const fetchAuctionDetails = async (bid) => {
     }
 };
 
-// Filter bids and fetch auction details
 const filteredViewBids = ref([]);
 
 const fetchFilteredViewBids = async () => {
-    const filteredBids = viewBids.value; // 필터링하지 않고 모든 입찰 가져오기
+    const filteredBids = bidsData.value.filter(bid => bid.status === 'ask');
     console.log('Filtered Bids:', filteredBids);
     const bidsWithDetails = await Promise.all(filteredBids.map(fetchAuctionDetails));
     filteredViewBids.value = bidsWithDetails.filter(bid => bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id);

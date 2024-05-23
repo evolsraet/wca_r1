@@ -59,7 +59,7 @@ TODO:이용후기,슬라이드 배너 추가
                         <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">전체보기</router-link>
                     </div>
                     <div class="row row-cols-1 row-cols-md-2 g-4">
-                        <div class="col">
+                        <div class="col mb-3">
                             <div class="card">
                                 <div class="car-imges"></div>
                                 <div class="card-body">
@@ -94,7 +94,7 @@ TODO:이용후기,슬라이드 배너 추가
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col mb-3">
                             <div class="card">
                                 <div class="car-imges"></div>
                                 <div class="card-body">
@@ -129,7 +129,7 @@ TODO:이용후기,슬라이드 배너 추가
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col mb-3">
                             <div class="card">
                                 <div class="car-imges"></div>
                                 <div class="card-body">
@@ -164,7 +164,7 @@ TODO:이용후기,슬라이드 배너 추가
                                 </div>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col mb-3">
                             <div class="card">
                                 <div class="car-imges"></div>
                                 <div class="card-body">
@@ -201,53 +201,92 @@ TODO:이용후기,슬라이드 배너 추가
                         </div>
                     </div>
                 </div>
-                <div class="card login-card border-0" :class="{ 'expanded': expanded }" @click="expandCard">
-                    <div class="card-body">
-                        <!-- 조회 폼 -->
-                        <form @submit.prevent="submitCarInfo">
-                            <div>
-                                <input type="text" class="form-control border-0 border-bottom my-4" placeholder="소유자가 누구인가요?" v-model="carInfoForm.owner">
+                    <div v-if="isMobileView" class="bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
+                        <div class="sheet-content">
+                            <div :class="['card login-card border-0', { 'expanded': expanded, 'no-shadow': isMobileView, 'no-hover': isMobileView }]" @click.stop="">
+                            <div class="card-body">
+                                <!-- 조회 폼 -->
+                                <form @submit.prevent="submitCarInfo" class="d-flex flex-column">
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                    <div>
+                                        <input type="text" class="form-control border-0 border-bottom my-4" placeholder="소유자가 누구인가요?" v-model="carInfoForm.owner">
+                                    </div>
+                                    <div>
+                                        <input type="text" class="form-control border-0 border-bottom mb-4" placeholder="차량 번호를 입력해주세요." v-model="carInfoForm.no">
+                                    </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-4">
+                                    <div class="col-12">
+                                    <div class="d-flex justify-content-end my-2">
+                                        <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">내 차 조회</button>
+                                    </div>
+                                    <div class="d-flex justify-content-end my-2" v-if="!user?.name">
+                                        <router-link :to="{ path: '/login' }" class="btn btn-outline-primary tc-red">로그인</router-link>
+                                    </div>
+                                    <div class="text-muted mt-4 text-center">
+                                        <p class="fs-6">
+                                        <span @click="openModal('copywrite')" class="link-style">카피라이트</span> |
+                                        <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
+                                        <span @click="openModal('terms')" class="link-style">이용약관</span>
+                                        </p>
+                                        <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
+                                    </div>
+                                    </div>
+                                </div>
+                                </form>
                             </div>
-                            <div>
-                                <input type="text" class="form-control border-0 border-bottom mb-4" placeholder="차량 번호를 입력해주세요." v-model="carInfoForm.no">
                             </div>
-                            <!--영상-->
-                            <div class="d-sm-flex web-video-container video-container my-4">
-                                <video autoplay loop muted>
-                                    <source src="../../../img/video/mainvideo.mp4" type="video/mp4">
-                                </video>
+                        </div>
+                    </div>
+                        <div v-else class="card login-card border-0" :class="{ 'expanded': expanded }">
+                            <div class="card-body">
+                                <!-- 조회 폼 -->
+                                <form @submit.prevent="submitCarInfo" class="d-flex flex-column">
+                                <div class="row mb-4">
+                                    <div class="col-12">
+                                    <div>
+                                        <input type="text" class="form-control border-0 border-bottom my-4" placeholder="소유자가 누구인가요?" v-model="carInfoForm.owner">
+                                    </div>
+                                    <div>
+                                        <input type="text" class="form-control border-0 border-bottom mb-4" placeholder="차량 번호를 입력해주세요." v-model="carInfoForm.no">
+                                    </div>
+                                    </div>
+                                </div>
+                                <!--영상-->
+                                <div class="row mt-5">
+                                    <div class="col-12">
+                                    <div class="d-flex justify-content-end my-2">
+                                        <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">내 차 조회</button>
+                                    </div>
+                                    <div class="d-flex justify-content-end my-2" v-if="!user?.name">
+                                        <router-link :to="{ path: '/login' }" class="btn btn-outline-primary tc-red">로그인</router-link>
+                                    </div>
+                                    <div class="text-muted mt-4 text-center">
+                                        <p class="fs-6">
+                                        <span @click="openModal('copywrite')" class="link-style">카피라이트</span> |
+                                        <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
+                                        <span @click="openModal('terms')" class="link-style">이용약관</span>
+                                        </p>
+                                        <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
+                                    </div>
+                                    </div>
+                                </div>
+                                </form>
                             </div>
-                          
-                            <div class="flex items-center justify-end my-2">
-                                <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">내 차 조회
-                                </button>
                             </div>
-                            <div class="flex items-center justify-end my-2" v-if="!user?.name">
-                                <router-link :to="{ path: '/login' }" class="btn btn-outline-primary">로그인</router-link>
-                            </div>
-                            <div class="text-muted mt-4 text-center">
-                                <p class="fs-6">
-                                    <span @click="openModal('copywrite')" class="link-style">카피라이트</span> |
-                                    <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
-                                    <span @click="openModal('terms')" class="link-style">이용약관</span>
-                                </p>
-                                <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
-                            </div>
-                        </form>
+                        </div>
                     </div>
                 </div>
-            </div>
-       </div>
-    </div>
 </template>
 
 <script setup>
 import { useStore } from "vuex";
-import { computed,ref,onMounted } from "vue"
+import { computed, ref, onMounted, onBeforeUnmount } from "vue";
 import useAuth from '@/composables/auth';
 import useAuctions from '@/composables/auctions';
-import LawGid from '@/views/modal/LawGid.vue'; 
-
+import LawGid from '@/views/modal/LawGid.vue';
 
 const isModalOpen = ref(false);
 const modalContent = ref('');
@@ -258,6 +297,10 @@ const user = computed(() => store.getters['auth/user']);
 const { loginForm, validationErrors: loginErrors, processing: loginProcessing, submitLogin } = useAuth();
 const { carInfoForm, submitCarInfo, processing: auctionProcessing, validationErrors: auctionErrors } = useAuctions();
 
+const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
+const showBottomSheet = ref(false);
+const scrollButtonStyle = ref({ display: 'block' });
+const isMobileView = ref(window.innerWidth <= 640);
 
 const openModal = (type) => {
   modalContent.value = type;
@@ -268,12 +311,64 @@ const closeModal = () => {
   isModalOpen.value = false;
 };
 
+const toggleSheet = () => {
+  const bottomSheet = document.querySelector('.bottom-sheet');
+  const screenWidth = window.innerWidth;
+
+  if (showBottomSheet.value) {
+    bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
+    scrollButtonStyle.value = { display: 'block' };
+  } else {
+    bottomSheetStyle.value = {
+      position: screenWidth >= 1200 ? 'static' : 'fixed',
+      bottom: '0px'
+    };
+    scrollButtonStyle.value = { display: 'none' };
+  }
+  showBottomSheet.value = !showBottomSheet.value;
+};
+
+const checkScreenWidth = () => {
+  if (typeof window !== 'undefined') {
+    isMobileView.value = window.innerWidth <= 640;
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('resize', checkScreenWidth);
+  checkScreenWidth();
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScreenWidth);
+});
 </script>
 
 <style scoped>
-.rating__label .star-icon {
-    width: 30px;
-    height: 30px;
+.card.no-shadow {
+  box-shadow: none;
 }
 
+.card.no-hover:hover {
+  box-shadow: none;
+}
+
+@media (max-width: 640px) {
+  .card.login-card {
+    box-shadow: none;
+  }
+
+  .card.login-card::before {
+    content: none;
+  }
+
+  .card.login-card:hover {
+    box-shadow: none;
+  }
+}
+
+.rating__label .star-icon {
+  width: 30px;
+  height: 30px;
+}
 </style>
