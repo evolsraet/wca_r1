@@ -5,7 +5,7 @@ let starScore = 0;
 export function initReviewSystem() {
 
     const review = reactive({
-            //content: "",
+            content: "",
             user_id: "",    
             auction_id: "",
             dealer_id: "",
@@ -94,7 +94,6 @@ export function initReviewSystem() {
     function checkedRate() {
         let checkedRadio = document.querySelectorAll('.rating input[type="radio"]:checked');
 
-
         initStars();
         checkedRadio.forEach(radio => {
             let previousSiblings = prevAll(radio);
@@ -139,7 +138,10 @@ export function initReviewSystem() {
             const user_id = document.getElementById('user_id').value;
             const auction_id = document.getElementById('auction_id').value;
             const dealer_id = document.getElementById('dealer_id').value;
-
+            console.log(user_id);
+            console.log(auction_id);
+            console.log(dealer_id);
+            console.log(JSON.stringify(reviewForm));
             if(auction_id == "" || dealer_id == ""){
                 alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
                 return;
@@ -149,9 +151,10 @@ export function initReviewSystem() {
                 return;
             }
             setReviewValue(user_id, auction_id, dealer_id, starScore);
-
+            console.log(JSON.stringify(reviewForm));
             const response = await axios.post("/api/reviews", reviewForm);
-            console.log(response);
+            
+            //console.log(response);
 
             if(response.data.status == 'ok'){
                 alert("작성이 완료되었습니다.");
@@ -159,7 +162,7 @@ export function initReviewSystem() {
             }
             
         } catch (error) {
-            alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
+            alert("오류가 발생하였습니다. 관리자에게 문의해주세요2.");
             console.log(error);
         }
     }
@@ -168,7 +171,7 @@ export function initReviewSystem() {
     const deleteReviewApi = async (id) => {
         try {      
             const response = await axios.delete(`/api/reviews/${id}`);
-            console.log(response);
+            //console.log(response);
             //console.log(reviewsData.value);
         } catch (error) {
             console.log(error);
@@ -200,16 +203,33 @@ export function initReviewSystem() {
             console.log(error);
         }
     }
+    
+    //작성한 이용후기별 불러오기
+    const getUserReviewInfo = async (id) => {
+        try {      
+            const response = await axios.get(`/api/reviews/${id}`);
+            //console.log(response);
+            return response.data.data;
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     // 작성한 이용후기 불러오기 (전체 리뷰 불러오기)
     const getAllReview = async () => {
         try {      
             const response = await axios.get("/api/reviews");
-            reviewsData.value  = response.data.data;
-            //console.log(reviewsData.value);
+            return response.data;
         } catch (error) {
             console.log(error);
         }
+    }
+
+
+    function formattedAmount(amount) {
+        let amountInThousands = Math.floor(amount / 10000); 
+        let formattedAmount = amountInThousands.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+        return formattedAmount + '만원';
     }
 
     return {
@@ -218,6 +238,8 @@ export function initReviewSystem() {
         getUserReview,
         getAllReview,
         deleteReviewApi,
+        getUserReviewInfo,
+        formattedAmount,
         reviewsData
     }
 

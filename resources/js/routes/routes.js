@@ -165,6 +165,12 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
             {
+                path: '/edit-do/:id',
+                name: 'user.edit-review',
+                component: () => import('../views/bbs/Edit.vue'),
+                beforeEnter: requireAct(['act.super','act.admin','act.user']),
+            },
+            {
                 path: '/alllist-do',
                 name: 'index.allreview',
                 component: () => import('../views/bbs/allreview.vue'),
