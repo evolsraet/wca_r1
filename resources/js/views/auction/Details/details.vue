@@ -39,8 +39,8 @@
                         <div v-else-if="auctionDetail.data.status === 'done'">
                             <p class="auction-deadline">낙찰가 {{ auctionDetail.data.final_price }} 만원</p>
                         </div>
-                        <div v-else>
-                            <p class="auction-deadline">경매 마감되었어요</p>
+                        <div v-else-if="auctionDetail.data.status === 'ask'">
+                            <p class="auction-deadline">신청 완료</p>
                         </div>
                     </div>
                     <div class="container card-style">

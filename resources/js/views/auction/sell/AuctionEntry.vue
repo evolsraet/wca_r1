@@ -52,7 +52,6 @@
                 <!-- 은행 선택 모달 -->
                 <transition name="fade">
                 <div class="show-content" :class="{ 'active': showDetails }" @click.self="closeDetailContent" v-if="showDetails">
-                    
                     <div
                         class="detail-content02"
                         :class="{ 'active': isActive }"
@@ -90,6 +89,18 @@
                                             <img src="../../../../img/bank-img/shinhan-logo.png" alt="신한은행">
                                             <span>신한</span>
                                         </div>
+                                        <div class="bank-item" data-bank="농협" @click="selectBank('농협')">
+                                            <img src="../../../../img/bank-img/nonghyeop.png" alt="농협은행">
+                                            <span>농협</span>
+                                        </div>
+                                        <div class="bank-item" data-bank="카카오뱅크" @click="selectBank('카카오뱅크')">
+                                            <img src="../../../../img/bank-img/kakaobank.png" alt="카카오뱅크">
+                                            <span>카카오뱅크</span>
+                                        </div>
+                                        <div class="bank-item" data-bank="토스뱅크" @click="selectBank('토스뱅크')">
+                                            <img src="../../../../img/bank-img/toss.png" alt="카카오뱅크">
+                                            <span>토스뱅크</span>
+                                        </div>
                                         <div class="bank-item" data-bank="기업" @click="selectBank('기업')">
                                             <img src="../../../../img/bank-img/ibk-logo.png" alt="기업은행">
                                             <span>기업</span>
@@ -98,53 +109,45 @@
                                             <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
                                             <span>대구</span>
                                         </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
+                                        <div class="bank-item" data-bank="부산" @click="selectBank('부산')">
+                                            <img src="../../../../img/bank-img/bnk.png" alt="부산은행">
+                                            <span>부산</span>
                                         </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
+                                        <div class="bank-item" data-bank="경남" @click="selectBank('경남')">
+                                            <img src="../../../../img/bank-img/bnk.png" alt="경남은행">
+                                            <span>경남</span>
                                         </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
+                                        <div class="bank-item" data-bank="광주" @click="selectBank('광주')">
+                                            <img src="../../../../img/bank-img/gwangju.png" alt="광주은행">
+                                            <span>광주</span>
                                         </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
+                                        <div class="bank-item" data-bank="전북" @click="selectBank('전북')">
+                                            <img src="../../../../img/bank-img/gwangju.png" alt="전북은행">
+                                            <span>전북</span>
                                         </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
+                                        <div class="bank-item" data-bank="제주" @click="selectBank('제주')">
+                                            <img src="../../../../img/bank-img/shinhan-logo.png" alt="제주은행">
+                                            <span>제주</span>
                                         </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
+                                        <div class="bank-item" data-bank="산업" @click="selectBank('산업')">
+                                            <img src="../../../../img/bank-img/sanup.png" alt="산업은행">
+                                            <span>산업</span>
                                         </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
+                                        <div class="bank-item" data-bank="수협" @click="selectBank('수협')">
+                                            <img src="../../../../img/bank-img/suhyeop.png" alt="수협은행">
+                                            <span>수협</span>
                                         </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
+                                        <div class="bank-item" data-bank="한국씨티" @click="selectBank('한국씨티')">
+                                            <img src="../../../../img/bank-img/ssiti.png" alt="한국씨티">
+                                            <span>한국씨티</span>
                                         </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
+                                        <div class="bank-item" data-bank="SC제일" @click="selectBank('SC제일')">
+                                            <img src="../../../../img/bank-img/jeil.png" alt="SC제일은행">
+                                            <span>SC제일</span>
                                         </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
-                                        </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
-                                        </div>
-                                        <div class="bank-item" data-bank="대구" @click="selectBank('대구')">
-                                            <img src="../../../../img/bank-img/daegu-logo.png" alt="대구은행">
-                                            <span>대구</span>
+                                        <div class="bank-item" data-bank="hsbc" @click="selectBank('hsbc')">
+                                            <img src="../../../../img/bank-img/hsbc.png" alt="hsbc은행">
+                                            <span>HSBC</span>
                                         </div>
                                     </div>
                                 </div>
@@ -241,7 +244,8 @@ const auctionEntry = async () => {
     addr2: addrdt.value,
     bank: selectedBank.value,
     account: account.value,
-    memo: memo.value
+    memo: memo.value,
+    status:"diag"
   };
   try {
     await createAuction({ auction: auctionData });
