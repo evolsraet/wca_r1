@@ -12,7 +12,7 @@
               </div>
               <div></div>
               <p class="tc-light-gray ms-2">진단평가 자료 정보</p>
-              <file v-if="auctionDetails.data.status === 'diag'" @file-attached="handleFileAttachment" />
+              <file v-if="auctionDetails.data.status === 'ask'" @file-attached="handleFileAttachment" />
             </div>
           </div>
         </div>
@@ -227,7 +227,7 @@
       <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
         <div class="sheet-content">
           <div class="mt-3" @click.stop="">
-            <div class="btn-group mt-3" v-if="auctionDetails.data.status === 'diag'">
+            <div class="btn-group mt-3" v-if="auctionDetails.data.status === 'ask'">
               <button class="btn btn-danger tc-wh" @click="registerAuction" :disabled="!isFileAttached"> 등록 </button>
             </div>
             <div class="btn-group mt-3" v-else>
@@ -297,7 +297,7 @@ const registerAuction = async () => {
   
   try {
     const id = route.params.id;
-    await updateAuctionStatus(id, 'ask');
+    await updateAuctionStatus(id, 'diag');
     alert('등록되었습니다.');
   } catch (error) {
     console.error('Error updating auction status:', error);

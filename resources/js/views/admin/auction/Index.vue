@@ -22,7 +22,7 @@
         </div>
         <div class="o_table_mobile my-5">
             <div class="tbl_basic tbl_dealer">
-                <div class="overflow-auto select-dealer">
+                <div class="overflow-auto">
                 <table class="table">
                     <thead>
                         <tr>
@@ -59,7 +59,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                <div :class="{'gray-box me-0': auction.status == 'diag'}">
+                                <div :class="{'gray-box me-0': auction.status == 'ask'}">
                                 {{ getStatusLabel(auction.status) }}
                                 </div>
                             </td>
