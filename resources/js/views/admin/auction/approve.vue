@@ -228,7 +228,7 @@
         <div class="sheet-content">
           <div class="mt-3" @click.stop="">
             <div class="btn-group mt-3" v-if="auctionDetails.data.status === 'ask'">
-              <button class="btn btn-danger tc-wh" @click="registerAuction" :disabled="!isFileAttached"> 등록 </button>
+              <button class="btn btn-primary tc-wh" @click="registerAuction" :disabled="!isFileAttached"> 등록 </button>
             </div>
             <div class="btn-group mt-3" v-else>
               <div class="btn primary-disable tc-wh"> 등록</div>

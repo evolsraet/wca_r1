@@ -16,7 +16,7 @@
                   <p class="">걱정마세요! 입찰 한 뒤에도<br>취소 후 재 입찰이 가능합니다.(1회 한정)</p>
                 </div>
                 <div class="btn-group">
-                  <button class="btn btn_ok btn-danger shadow w-50" @click="confirmBid">입찰하기</button>
+                  <button class="btn btn_ok btn-primary shadow w-50" @click="confirmBid">입찰하기</button>
                   <button class="btn btn-secondary modal_close shadow" @click="cancelBid">취소</button>
                 </div>
               </div>
@@ -33,7 +33,7 @@
                   <h5 class="p-4">입찰이 완료되었습니다.</h5>
                 </div>
                 <div class="btn-group">
-                  <button class="btn btn_ok btn-danger tc-wh shadow" @click="closeAllModals">확인</button>
+                  <button class="btn btn_ok btn-primary tc-wh shadow" @click="closeAllModals">확인</button>
                 </div>
               </div>
             </div>

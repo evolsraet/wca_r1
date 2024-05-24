@@ -9,6 +9,7 @@ $line-height-base: 1.6;
 // Bootstrap 5
 /* 전역적 컬러 스타일*/
 $primary: #da3138;
+
 $primary-sub: #fae8e8;
 $primary-sub02:#fbeaea;
 
@@ -18,7 +19,6 @@ $sub-color:#ff837a;
 $sub-color01: #4263EA;
 $sub-color02: #EBEFFD;
 
-$disabled-primary:#ebb3b5;
 
 
 .bold-20-font{
@@ -56,7 +56,7 @@ $disabled-primary:#ebb3b5;
 .primary-disable{
     width: 100%;
     color: #fff !important;
-    background-color: $disabled-primary !important;
+    background-color: rgba($primary, 0.388) !important; 
     height: 44px;
     line-height: 30px !important;
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.26);
@@ -120,7 +120,7 @@ $disabled-primary:#ebb3b5;
     }
   }
 /* Text color */
-.tc-red{color:$primary !important;}
+.tc-red{color:red !important;}
 
 .tc-light-gray{color:#aaaebe !important;}
 

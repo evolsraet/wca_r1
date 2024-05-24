@@ -51,7 +51,7 @@
 
               <div class="btn-group">
                 <button class="btn btn-secondary shadow" @click="resetSelection">초기화</button>
-                <button class="btn btn-danger w-50 modal_close shadow" @click="applyFilters">필터 적용</button>
+                <button class="btn btn-primary w-50 modal_close shadow" @click="applyFilters">필터 적용</button>
               </div>
             </div>
           </div>

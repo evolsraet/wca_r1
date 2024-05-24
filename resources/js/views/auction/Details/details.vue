@@ -439,7 +439,7 @@
                                 <p class="tc-red text-start mt-2">※ 3일 후 자동으로 경매완료 처리됩니다. </p>
                                 <div class="btn-group mt-3 mb-2">
                                     <button type="button" class="btn btn-outline-dark" @click="cancelSelection">경매취소</button>
-                                    <button type="button" class="btn btn-danger" @click="completeAuction">경매 완료</button>
+                                    <button type="button" class="btn btn-primary" @click="completeAuction">경매 완료</button>
                                 </div>
 
                                 <h5 class="mt-5 text-start">내가 선택한 딜러</h5>
@@ -472,7 +472,7 @@
                             <transition name="fade">
                                 <div v-if="auctionDetail.data.status === 'done'" @click.stop="">
                                     <h5 class="text-center p-4"> 거래는 어떠셨나요?</h5>
-                                    <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-danger w-100">후기 남기기</router-link>
+                                    <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">후기 남기기</router-link>
                                 </div>
                             </transition>
                         </div>
@@ -539,7 +539,7 @@
                                         <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
                                     </div>
                                     <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
-                                    <button type="button" class="tc-wh btn btn-danger w-100" @click="submitAuctionBid">확인</button>
+                                    <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
                                 </div>
                                 <!--  <div v-else-if="userBidExists && !userBidCancelled">
                                                     <h5 class="text-center">입찰이 완료되었습니다.</h5>
@@ -560,11 +560,11 @@
                                 <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 n 명</h5>
                                 <div class="d-flex justify-content-between">
                                     <p class="tc-light-gray">현재 최고 입찰가</p>
-                                    <p>{{auctionDetail.data.bids }} 만원</p>
+                                    <p>{{ heightPrice }} 만원</p>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <p class="tc-light-gray">현재 최저 입찰가</p>
-                                    <p>{{ lowestBid }} 만원</p>
+                                    <p>{{ lowPrice }} 만원</p>
                                 </div>
                                 <button type="button" class="my-3 w-100 btn btn-outline-primary" @click="handleCancelBid">
                                     입찰 취소
@@ -626,7 +626,7 @@
                         </div>
                         <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
                         <div class="btn-group mt-3 mb-2">
-                            <button type="button" class="btn btn-danger" @click="reauction">재경매</button>
+                            <button type="button" class="btn btn-primary" @click="reauction">재경매</button>
                             <transition name="fade">
                                 <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                             </transition>
@@ -652,6 +652,8 @@ import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
 import { convertToKorean } from '@/hooks/convertToKorean';
 
+const heightPrice = ref(0);
+const lowPrice = ref(0);
 const lastBidId = ref(null);
 const usersInfo = ref({});
 const isSellChecked = ref(false);
@@ -925,6 +927,11 @@ const fetchAuctionDetail = async () => {
     carDetails.value.fuel = carData.fuel;
     carDetails.value.mission = carData.mission;
 
+    if (auctionDetail.value.data.bids.length > 0) {
+      heightPrice.value = Math.max(...auctionDetail.value.data.bids.map(bid => bid.price));
+      lowPrice.value = Math.min(...auctionDetail.value.data.bids.map(bid => bid.price));
+    }
+    
     console.log("차량 상세 정보:", carInfoResponse);
   } catch (error) {
     console.error('Error fetching auction detail:', error);

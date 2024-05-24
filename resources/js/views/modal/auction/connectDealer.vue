@@ -38,7 +38,7 @@
                 <p class="my-4">선택 완료 시, 선택한 딜러에게 문자가 발송됩니다.</p>
               </div>
               <div class="btn-group">
-                <button class="btn btn-danger w-50 modal_close shadow" @click="confirmSelection">선택완료</button>
+                <button class="btn btn-primary w-50 modal_close shadow" @click="confirmSelection">선택완료</button>
               </div>
             </div>
           </div>
