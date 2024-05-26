@@ -305,7 +305,13 @@
     const { loginForm, validationErrors: loginErrors, processing: loginProcessing, submitLogin } = useAuth();
     const { carInfoForm, submitCarInfo, processing: auctionProcessing, validationErrors: auctionErrors } = useAuctions();
 
-    const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
+    const bottomSheetStyle = ref({
+    position: 'fixed', 
+    bottom: '0px', 
+    marginBottom: '0px', 
+    borderBottomRightRadius: '0px',
+    borderBottomLeftRadius: '0px'
+});
     const showBottomSheet = ref(false);
     const scrollButtonStyle = ref({ display: 'block' });
     const isMobileView = ref(window.innerWidth <= 640);
@@ -324,23 +330,33 @@
     const screenWidth = window.innerWidth;
 
     if (showBottomSheet.value) {
-        bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
+        bottomSheetStyle.value = { 
+            position: 'static', 
+            bottom: '-100%', 
+            marginBottom: '20px', 
+            borderBottomRightRadius: '20px',
+            borderBottomLeftRadius: '20px'
+        };
         scrollButtonStyle.value = { display: 'block' };
     } else {
         bottomSheetStyle.value = {
-        position: screenWidth >= 1200 ? 'static' : 'fixed',
-        bottom: '0px'
+            position: screenWidth >= 1200 ? 'static' : 'fixed',
+            bottom: '0px',
+            marginBottom: '0px',
+            borderBottomRightRadius: '0px',
+            borderBottomLeftRadius: '0px'
         };
         scrollButtonStyle.value = { display: 'none' };
     }
     showBottomSheet.value = !showBottomSheet.value;
-    };
+};
 
-    const checkScreenWidth = () => {
+const checkScreenWidth = () => {
     if (typeof window !== 'undefined') {
         isMobileView.value = window.innerWidth <= 640;
     }
-    };
+};
+
 
     onMounted(() => {
         nextTick(() => {
@@ -373,11 +389,9 @@
     </script>
 
 <style scoped>
-.bottom-sheet::before {
-    top: 0% !important;
-  margin-top: 10px !important;
+.bottom-sheet {
+    overflow-y: hidden !important;
 }
-
 .card.no-shadow {
   box-shadow: none;
 }

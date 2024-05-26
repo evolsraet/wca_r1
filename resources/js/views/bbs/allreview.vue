@@ -28,9 +28,9 @@
               </swiper-slide>
             </swiper>
           </div>
-          <div class="content-container mt-4 p-2">
+          <div class="content-container mt-4 p-3">
             <div class="main-text">더 다양한 이용 후기를 확인하세요!</div>
-            <div class="tags">
+            <div class="tags p-2">
               <span class="tag" v-for="(tag, index) in tags" :key="index">#{{ tag }}</span>
             </div>
           </div>
@@ -145,42 +145,13 @@
   };
   
   onMounted(() => {
-    window.addEventListener('resize', updateSlidesPerView);
   });
   
   onUnmounted(() => {
-    window.removeEventListener('resize', updateSlidesPerView);
   });
   </script>
   <style scoped>
-  .review-swiper {
-    overflow: visible;
-    margin-left: -20px;
-    margin-right: -20px;
-    height: auto;
-    background: #F2F2F7;
-    padding: 16px 25px;
-  }
-  .review-swiper .swiper-slide {
-    width: 100%;
-  }
-  .review-swiper .review-card {
-    display: block;
-    width: 100%;
-    appearance: none;
-    -webkit-tap-highlight-color: transparent;
-    text-align: left;
-    background: #fff;
-    border-radius: 8px;
-    margin: 0;
-    padding: 16px;
-    border: 1px solid #d9dbdc;
-    overflow: hidden;
-    position: relative;
-    user-select: none;
-    text-decoration: none;
-    transition: all 0.2s;
-  }
+
   .btn-apply::after {
     margin-top: 0 !important;
     margin-bottom: 2px;
@@ -189,32 +160,7 @@
     display: flex;
     flex-direction: column;
   }
-  .main-text {
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    border: solid 1px #4263ea;
-    border-radius: 20px;
-    padding: 5px;
-    color: #4263ea;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  .tags {
-    display: flex;
-    gap: 10px;
-    flex-direction: row;
-    justify-content: center;
-  }
-  .tag {
-    background-color: white;
-    color: #9fb0f4;
-    border-radius: 24px;
-    border: solid 1px #9fb0f4;
-    padding: 5px 15px;
-    font-size: 14px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
+
   .bottom-sheet::before {
     content: "";
     position: absolute;

@@ -43,6 +43,10 @@ $sub-color02: #EBEFFD;
     filter: grayscale(70%);
 }
 
+.custom-highlight {
+    background: linear-gradient(transparent 50%, rgba($primary, 0.1) 40%);
+}
+
 /* 버튼 스타일 */
 .primary-btn {
     width: 100%;
