@@ -6,6 +6,9 @@ import cancelAttempted from './cancelAttempted';
 //import lib_storage from '../store/lib_storage' 
 
 const store = createStore({
+    state: {
+        commercialName: '위카' // 초기 상업명 설정
+      },
     plugins:[
         createPersistedState()
     ],

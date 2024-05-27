@@ -67,7 +67,7 @@
                                             <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
                                             <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
                                         </label>
-                                        </div>
+                                    </div>
                                     <p>차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.</p>
                                 </div>
                             </div>

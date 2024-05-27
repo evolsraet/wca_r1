@@ -74,12 +74,20 @@ export default function useBid() {
             }
         } catch (error) {
             console.error("입찰 제출 중 오류 발생:", error);
+            let errorMessage = "입찰 제출 중 오류가 발생했습니다. 다시 시도해 주세요.";
             if (error.response?.data) {
                 validationErrors.value = error.response.data.errors;  // 서버로부터 받은 에러를 저장
+    
+                // 특정 오류 메시지를 감지하여 구체적인 알림 표시
+                if (error.response.data.message.includes('Numeric value out of range')) {
+                    errorMessage = "입찰 금액이 너무 큽니다. 다시 시도해 주세요.";
+                } else {
+                    errorMessage = error.response.data.message;
+                }
             }
             return {
                 success: false,
-                message: error.response?.data?.message 
+                message: errorMessage
             };
         } finally {
             isLoading.value = false;  // 로딩 상태를 false로 설정

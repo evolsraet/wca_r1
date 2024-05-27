@@ -4,7 +4,7 @@
         <div class="regiest-content">
             <div class="p-4 app-specific-size">
                 <div class="text-center">
-                    <h2 class="my-4 fw-bold">회원가입시 판매가 빨라져요</h2>
+                    <h2 class="my-4 fw-bold"><mark class="custom-highlight">회원가입시</mark> 판매가 빨라져요</h2>
                     <p class="bold-link text-muted">소셜 로그인 및 이메일로 가입 할 수 있어요.</p>
                 </div>
             </div>

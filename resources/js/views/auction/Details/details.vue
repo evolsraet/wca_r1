@@ -6,16 +6,23 @@
     <div class="container-fluid" v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
         <div v-if="!showReauctionView">
-            <div class="web-content-style container">
+            <div class="web-content-style">
                 <div>
                     <div class="container my-4">
                         <div>
                             <div class="mb-4">
-                                <div class="tc-light-gray">조회수: {{ auctionDetail.data.hit }}</div>
+                                <div class="d-flex gap-2 justify-content-end mb-1">
+                                    <div class="tc-light-gray">조회수: {{ auctionDetail.data.hit }}</div>
+                                    <div class="tc-light-gray ml-2">관심 {{ auctionDetail.data.hit }}</div>
+                                </div>
                                 <div class="card my-auction">
                                     <input class="toggle-heart" type="checkbox" checked />
                                     <label class="heart-toggle"></label>
                                     <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' }" class="card-img-top-ty01"></div>
+                                    <div class="allpage">
+                                        <p class="more-page">1/31 |</p>
+                                        <button class="more-img">전체보기</button>
+                                    </div>
                                     <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
                                     <div class="card-body">
                                         <div class="enter-view align-items-baseline ">
@@ -308,7 +315,7 @@
 
                         <div v-if="isUser">
                             <!-------[사용자]diag (진단평가)알때------->
-                            <div v-if="auctionDetail.data.status === 'diag' " @click.stop="">
+                            <div v-if="auctionDetail.data.status === 'diag' || auctionDetail.data.status === 'ask' " @click.stop="">
                                 <div class="steps-container mt-3">
                                     <div class="step completing">
                                         <div class="label completed">
@@ -329,6 +336,30 @@
                                     </div>
                                 </div>
                                 <p class="auction-deadline">현재 등록신청 후 진단평가 진행 중 입니다.</p>
+                            </div>
+
+                            <!-------[사용자]취소 (진단평가)알때------->
+                            <div v-if="auctionDetail.data.status === 'cancel'" @click.stop="">
+                                <div class="steps-container mt-3">
+                                    <div class="step">
+                                        <div class="label">
+                                            STEP01
+                                        </div>
+                                    </div>
+                                    <div class="line"> </div>
+                                    <div class="step">
+                                        <div class="label">
+                                            STEP02
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                    <div class="step">
+                                        <div class="label">
+                                            STEP03
+                                        </div>
+                                    </div>
+                                </div>
+                                <p class="auction-deadline">경매가 취소 되었습니다.</p>
                             </div>
 
                             <div v-if="auctionDetail.data.status === 'ing' " @click.stop="">
@@ -439,7 +470,7 @@
                                 <p class="tc-red text-start mt-2">※ 3일 후 자동으로 경매완료 처리됩니다. </p>
                                 <div class="btn-group mt-3 mb-2">
                                     <button type="button" class="btn btn-outline-dark" @click="cancelSelection">경매취소</button>
-                                    <button type="button" class="btn btn-danger" @click="completeAuction">경매 완료</button>
+                                    <button type="button" class="btn btn-primary" @click="completeAuction">경매 완료</button>
                                 </div>
 
                                 <h5 class="mt-5 text-start">내가 선택한 딜러</h5>
@@ -472,13 +503,13 @@
                             <transition name="fade">
                                 <div v-if="auctionDetail.data.status === 'done'" @click.stop="">
                                     <h5 class="text-center p-4"> 거래는 어떠셨나요?</h5>
-                                    <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-danger w-100">후기 남기기</router-link>
+                                    <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">후기 남기기</router-link>
                                 </div>
                             </transition>
                         </div>
 
                         <!-- 바텀 시트 show or black-->
-                        <button class="animCircle scroll-button" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
+                        <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
 
                         <!--#####################
                         딜러에 관힌 바텀시트
@@ -539,7 +570,7 @@
                                         <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
                                     </div>
                                     <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
-                                    <button type="button" class="tc-wh btn btn-danger w-100" @click="submitAuctionBid">확인</button>
+                                    <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
                                 </div>
                                 <!--  <div v-else-if="userBidExists && !userBidCancelled">
                                                     <h5 class="text-center">입찰이 완료되었습니다.</h5>
@@ -560,11 +591,11 @@
                                 <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 n 명</h5>
                                 <div class="d-flex justify-content-between">
                                     <p class="tc-light-gray">현재 최고 입찰가</p>
-                                    <p>{{auctionDetail.data.bids }} 만원</p>
+                                    <p>{{ heightPrice }} 만원</p>
                                 </div>
                                 <div class="d-flex justify-content-between">
                                     <p class="tc-light-gray">현재 최저 입찰가</p>
-                                    <p>{{ lowestBid }} 만원</p>
+                                    <p>{{ lowPrice }} 만원</p>
                                 </div>
                                 <button type="button" class="my-3 w-100 btn btn-outline-primary" @click="handleCancelBid">
                                     입찰 취소
@@ -626,7 +657,7 @@
                         </div>
                         <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
                         <div class="btn-group mt-3 mb-2">
-                            <button type="button" class="btn btn-danger" @click="reauction">재경매</button>
+                            <button type="button" class="btn btn-primary" @click="reauction">재경매</button>
                             <transition name="fade">
                                 <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                             </transition>
@@ -652,6 +683,8 @@ import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
 import { convertToKorean } from '@/hooks/convertToKorean';
 
+const heightPrice = ref(0);
+const lowPrice = ref(0);
 const lastBidId = ref(null);
 const usersInfo = ref({});
 const isSellChecked = ref(false);
@@ -925,6 +958,11 @@ const fetchAuctionDetail = async () => {
     carDetails.value.fuel = carData.fuel;
     carDetails.value.mission = carData.mission;
 
+    if (auctionDetail.value.data.bids.length > 0) {
+      heightPrice.value = Math.max(...auctionDetail.value.data.bids.map(bid => bid.price));
+      lowPrice.value = Math.min(...auctionDetail.value.data.bids.map(bid => bid.price));
+    }
+    
     console.log("차량 상세 정보:", carInfoResponse);
   } catch (error) {
     console.error('Error fetching auction detail:', error);
@@ -1004,6 +1042,9 @@ watch([isSellChecked, auctionDetail], () => {
 
 
 <style scoped>
+.animCircle::after {
+    border-radius: 50%;
+}
     .dealer-check {
         margin-top: 50px;
         display: flex;
@@ -1078,16 +1119,15 @@ input[type="checkbox"] {
     align-self: center; 
 }
 
-
-
-    .card-img-top-ty01 {
-        width: 100%;
-        height: 160px;
-        background-image: url('../../../../img/car_example.png');
-        background-size: cover;
-        background-position: center;
-        border-radius: 6px;
-    }
+.card-img-top-ty01 {
+    width: 100%;
+    height: 215px;
+    background-image: url('../../../../img/car_example.png');
+    background-size: cover;
+    background-position: center;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+}
     .auction-deadline {
     width: 100%;
     height: 38px;
@@ -1103,72 +1143,6 @@ input[type="checkbox"] {
     padding-right: 1.5rem;
     padding-left: 1.5rem;
 }
-.card-style .card:hover{
-    box-shadow: 0 0 6px 0 rgba(27, 50, 142, 0.2);
-}
-
-.card-style .card-custom {
-      margin: 1rem;
-      padding: 1rem;
-      border-radius: 5px;
-      text-align: center;
-    }
-    .card-style .card-custom :hover{
-        box-shadow: none !important;
-    }
-    .card-style .item-label {
-      font-size: 0.85rem;
-      color: #6c757d;
-      margin-bottom: 0.5rem;
-    }
-    .card-style .item-value {
-      font-size: 1.25rem;
-      color: #212529;
-      margin-bottom: 1rem; 
-    }
-    .card-style .row:not(:last-child) {
-      padding-bottom: 1rem;
-    }
-    .card-style .row:not(:first-child) {
-      padding-top: 1rem; 
-    }
-    .card-style .col-6 {
-      position: relative;
-    }
-    .card-style .col-6:not(:last-child)::after {
-        content: "";
-        position: absolute;
-        right: 0;
-        top: 50%; 
-        bottom: 50%; 
-        height: 50%;
-        width: 1px;
-        background-color: #dee2e6;
-        transform: translateY(-50%);
-}
-
-.contour-style {
-    height: 6px;
-    background-color: #d9d9d9;
-}
-.styled-div {
-    width: 100%;
-    height: 200px;
-
-    border-radius: 6px;
-    background-color: #f5f5f6;
-}
-
-
-
-.input-container {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #ccc;
-    padding: 5px 10px;
-    width: 100%; /* 전체 너비 사용 */
-  }
-
   .styled-input {
     border: none;
     outline: none;
@@ -1189,7 +1163,36 @@ input[type="checkbox"] {
     color: #CCC;
     direction: ltr; 
   }
-
+  .allpage{
+    position: absolute;
+    display: flex;
+    top: 2px;
+    bottom: 0px;
+    right: 0px;
+    height: 37px;
+    width: 130px;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 5px;
+    border-radius: 30px;
+    justify-content: center;
+    align-items: center;
+}
+.allpage:hover{
+    background-color: rgb(40 40 40 / 60%);
+}
+    .more-page {
+        color: white;
+        font-size: 16px;
+        
+    }
+    .more-img{
+        color: white;
+        border: none;
+        margin-left: 10px;
+        text-decoration: none;
+        border-radius: 3px;
+        cursor: pointer;
+    }
   @media screen and (min-width:1200px) {
     .bottom-sheet {
         width:50%;

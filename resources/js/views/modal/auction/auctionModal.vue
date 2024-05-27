@@ -30,7 +30,7 @@
                   <p class="overlay_text04">경매가 취소되었습니다.</p>
                 </div>
                 <div class="btn-group">
-                  <router-link :to="{ name: 'auction.index' }" class="btn btn_ok btn-danger tc-wh shadow" @click="closeAllModals">확인</router-link>
+                  <router-link :to="{ name: 'auction.index' }" class="btn btn_ok btn-primary tc-wh shadow" @click="closeAllModals">확인</router-link>
                 </div>
               </div>
             </div>
