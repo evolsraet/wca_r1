@@ -48,7 +48,7 @@ class UserService
 
 
             // 본인회원가입 - 사용자일경우
-            if (!auth()->check() && $request->input('user.role') == 'user') {
+            if (!auth()->check() && $request->input('users.role') == 'user') {
                 $data['status'] = 'ok';
             }
 
@@ -56,7 +56,7 @@ class UserService
             $item = User::create($data);
 
             // 하위 모델
-            if ($request->input('user.role') == 'dealer') {
+            if ($request->input('users.role') == 'dealer') {
                 $dealerData = $request->input('dealer');
                 $dealerData['user_id'] = $item->id;
                 $item->dealer()->create($dealerData);
@@ -73,8 +73,8 @@ class UserService
             // 가능한 권한
             $ableRole = $this->ableRoles();
 
-            if ($request->input('user.role') && in_array($request->input('user.role'), $ableRole)) {
-                $item->assignRole($request->input('user.role'));
+            if ($request->input('users.role') && in_array($request->input('users.role'), $ableRole)) {
+                $item->assignRole($request->input('users.role'));
             } else {
                 $item->assignRole('user');
             }
@@ -158,9 +158,9 @@ class UserService
 
             // 역할 지정
             // 기본 패키지는 복수지만, 현 서비스에서는 하나만 지정한다
-            if (auth()->user()->hasPermissionTo('act.admin') && $request->input('user.role')) {
-                if ($request->input('user.role')) {
-                    $role = Role::findByName($request->input('user.role'));
+            if (auth()->user()->hasPermissionTo('act.admin') && $request->input('users.role')) {
+                if ($request->input('users.role')) {
+                    $role = Role::findByName($request->input('users.role'));
                     $item->syncRoles($role);
                 }
             }

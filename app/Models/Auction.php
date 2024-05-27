@@ -44,6 +44,12 @@ class Auction extends Model implements HasMedia
         return $this->hasMany(Bid::class);
     }
 
+    // 리소스에서 제공
+    // public function win_bid()
+    // {
+    //     return $this->hasOne(Bid::class, 'id', 'bid_id');
+    // }
+
     public function likes()
     {
         return $this->morphMany(Like::class, 'likeable');

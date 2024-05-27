@@ -63,6 +63,9 @@ class AuctionService
      * @param mixed $id ID 값 (기본값: null)
      * @return void
      */
+
+
+
     protected function middleProcess($method, $request, $result, $id = null)
     {
         if ($method == 'index' || $method == 'show') {
