@@ -30,6 +30,7 @@ class UserService
         try {
             $data = $request->input('user');
             $data = $this->checkJson($data);
+            $dealerData = $this->checkJson($request->input('dealer'));
 
             // Validator 인스턴스 생성
             $validator = Validator::make($data, [
@@ -57,7 +58,7 @@ class UserService
 
             // 하위 모델
             if ($data['role'] == 'dealer') {
-                $dealerData = $request->input('dealer');
+                $dealerData = $dealerData;
                 $dealerData['user_id'] = $item->id;
                 $item->dealer()->create($dealerData);
             }
@@ -108,6 +109,7 @@ class UserService
             $data = $request->input('user');
             $data = $this->checkJson($data);
             $data = $this->beforeData($data);
+            $dealerData = $this->checkJson($data);
 
             if ($data) {
                 $item->update($data);
@@ -121,14 +123,14 @@ class UserService
                 }
             }
 
-            if ($item->hasRole('dealer') && $request->input('dealer')) {
+            if ($item->hasRole('dealer') && $dealerData) {
                 // $item->dealer()->updateOrCreate 는 제대로 기능안함. create 만 하려고함
                 if ($item->dealer()) {
                     // 기존 Dealer 업데이트
-                    $item->dealer()->update($request->input('dealer'));
+                    $item->dealer()->update($dealerData);
                     // TODO: 변경불가 사항 업데이트 시 상태변경 (누구에게 알림?)
                 } else {
-                    $validator = Validator::make($request->input('dealer'), [
+                    $validator = Validator::make($dealerData, [
                         'name' => 'required',
                         'phone' => 'required',
                         'birthday' => 'required',
@@ -149,7 +151,7 @@ class UserService
                     }
 
                     // 새 Dealer 생성
-                    $item->dealer()->create($request->input('dealer'));
+                    $item->dealer()->create($dealerData);
                     // TODO: 알림 : 누구에게?
                 }
 
@@ -158,9 +160,9 @@ class UserService
 
             // 역할 지정
             // 기본 패키지는 복수지만, 현 서비스에서는 하나만 지정한다
-            if (auth()->user()->hasPermissionTo('act.admin') && $request->input('user.role')) {
-                if ($request->input('user.role')) {
-                    $role = Role::findByName($request->input('user.role'));
+            if (auth()->user()->hasPermissionTo('act.admin') && $data) {
+                if ($data['role'])) {
+                    $role = Role::findByName($data);
                     $item->syncRoles($role);
                 }
             }
