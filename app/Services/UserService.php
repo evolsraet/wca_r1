@@ -48,7 +48,7 @@ class UserService
 
 
             // 본인회원가입 - 사용자일경우
-            if (!auth()->check() && $request->input('user.role') == 'user') {
+            if (!auth()->check() && $data['role'] == 'user') {
                 $data['status'] = 'ok';
             }
 
@@ -56,7 +56,7 @@ class UserService
             $item = User::create($data);
 
             // 하위 모델
-            if ($request->input('user.role') == 'dealer') {
+            if ($data['role'] == 'dealer') {
                 $dealerData = $request->input('dealer');
                 $dealerData['user_id'] = $item->id;
                 $item->dealer()->create($dealerData);
@@ -73,8 +73,8 @@ class UserService
             // 가능한 권한
             $ableRole = $this->ableRoles();
 
-            if ($request->input('user.role') && in_array($request->input('user.role'), $ableRole)) {
-                $item->assignRole($request->input('user.role'));
+            if ($data['role'] && in_array($data['role'], $ableRole)) {
+                $item->assignRole($data['role']);
             } else {
                 $item->assignRole('user');
             }
