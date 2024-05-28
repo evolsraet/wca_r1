@@ -21,11 +21,12 @@
                                 <div class="card my-auction">
                                     <input class="toggle-heart" type="checkbox" checked />
                                     <label class="heart-toggle"></label>
-                                    <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' }" class="card-img-top-ty01"></div>
+                                    <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel'}" class="card-img-top-ty01"></div>
                                     <div class="allpage">
                                         <p class="more-page">1/1 |</p>
                                         <button class="more-img">전체보기</button>
                                     </div>
+                                    <div v-if="auctionDetail.data.status === 'cancel'" class="time-remaining">경매 취소</div>
                                     <div v-if="auctionDetail.data.status === 'chosen'" class="time-remaining">선택 완료</div>
                                     <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
                                     <div class="card-body">
@@ -34,7 +35,8 @@
                                         </div>
                                         <div class="enter-view">
                                             <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>
-                                            <a href="#"><span class="red-box-type02 pass-red">위카 진단평가</span></a>
+                                            <span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">위카 진단평가</span>
+                                            <AlarmModal ref="alarmModal" />
                                         </div>
                                     </div>
                                     <div>
@@ -605,7 +607,7 @@
                         </div>
                         <div class="enter-view">
                             <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>
-                            <a href="#"><span class="red-box-type02 pass-red">위카 진단평가</span></a>
+                           <span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">위카 진단평가</span>
                         </div>
                     </div>
                 </div>
@@ -662,6 +664,7 @@ import useBids from '@/composables/bids';
 import modal from '@/views/modal/modal.vue';
 import auctionModal from '@/views/modal/auction/auctionModal.vue';
 import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue';
+import AlarmModal from '@/views/modal/AlarmModal.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
 import { convertToKorean } from '@/hooks/convertToKorean';
 import { initReviewSystem } from '@/composables/review';
@@ -673,6 +676,7 @@ const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = init
 
 const lastBidId = ref(null);
 const usersInfo = ref({});
+const alarmModal = ref(null);
 const isSellChecked = ref(false);
 const { getUser } = useUsers();
 const store = useStore();
@@ -733,19 +737,27 @@ const sortedTopBids = computed(() => {
     return [];
   }
 
+  
   const bidsByUser = auctionDetail.value.data.top_bids.reduce((acc, bid) => {
-    if (!acc[bid.user_id] || acc[bid.user_id].price < bid.price) {
+      if (!acc[bid.user_id] || acc[bid.user_id].price < bid.price) {
       acc[bid.user_id] = bid;
     }
     return acc;
-  }, {});
+}, {});
 
-  const topBids = Object.values(bidsByUser)
-    .sort((a, b) => b.price - a.price)
-    .slice(0, 5);
+const topBids = Object.values(bidsByUser)
+.sort((a, b) => b.price - a.price)
+.slice(0, 5);
 
-  return topBids;
+return topBids;
 });
+
+const openAlarmModal = () => {
+console.log("openAlarmModal called");
+if (alarmModal.value) {
+  alarmModal.value.openModal();
+}
+};
 
 const isModalVisible = ref(false);
 const selectedAuctionId = ref(null);
@@ -953,6 +965,7 @@ const fetchAuctionDetail = async () => {
 };
 
 onMounted(async () => {
+    console.log("알람모달",alarmModal.value);
   const screenWidth = window.innerWidth;
   bottomSheetStyle.value = {
     position: screenWidth >= 1200 ? 'static' : 'fixed',

@@ -475,7 +475,7 @@ TODO:
                     <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
                     <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
                     <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
-                    <div v-if="auction.status === 'chosen'" class="wait-selection">낙찰가 {{auction.final_price}} 만원</div>
+                    <div v-if="auction.status === 'chosen'" class="wait-selection">선택완료</div>
                     <div class="card-body">
                         <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
                         <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
