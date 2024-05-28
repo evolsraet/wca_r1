@@ -431,19 +431,24 @@
                                 <div class="content mt-3 text-start">
                                     <h5>경매에 참여한 딜러</h5>
                                     <p> 금액이 가장 높은 <span class="highlight">5명</span>까지만 표시돼요.</p>
-                                    <div class="overflow-auto select-dealer">
-                                        <table>
+                                    <div class="overflow-auto select-dealer mt-3">
+                                        <table class="">
                                             <tbody>
-                                                <tr v-for="(bid, index) in sortedTopBids" :key="bid.user_id">
-                                                    <td class="w-25"><img src="../../../../img/myprofile_ex.png" alt="딜러 사진" class="align-text-top"></td>
+                                                <tr v-for="(bid, index) in sortedTopBids" :key="bid.user_id"> 
+                                                    <td class="w-25"><img src="../../../../img/myprofile_ex.png" alt="딜러 사진"  class="mb-2 align-text-top"></td>
                                                     <td class="d-flex flex-column align-items-center w-75">
                                                         <div :class="[(index === 0 ? 'red-box' : index < 3 ? 'blue-box' : 'gray-box'), 'rounded-pill', 'me-0']">
                                                             {{ index + 1 }}위
                                                         </div>
-                                                        <div class="bold-18-font">{{bid.userData}}</div>
+                                                        <div class="bold-18-font">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</div>
                                                     </td>
-                                                    <td class="tc-light-gray align-bottom">{{ bid.price }}원</td>
-                                                    <td class="align-middle w-25">
+                                                    <td class="w-30">
+                                                        <div class="d-flex flex-column align-items-left">
+                                                         <p class="tc-light-gray">{{bid.dealerInfo ? bid.dealerInfo.company : 'Loading...'}}</p>
+                                                         <em class="lh-base tc-blue bold-18-font">{{bid.price}} 만원</em>
+                                                        </div>
+                                                    </td>
+                                                    <td class="text-center align-middle w-auto">
                                                         <input type="checkbox" :id="'checkbox-' + bid.user_id" class="custom-checkbox-input" @change="selectDealer(bid, $event, index + 1)">
                                                         <label :for="'checkbox-' + bid.user_id" class="custom-checkbox-label"></label>
                                                     </td>
@@ -654,7 +659,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import useUsers from '@/composables/users';
@@ -694,9 +699,12 @@ const myBidPrice = computed(() => {
   const myBid = auctionDetail.value.data.bids.find(bid => bid.user_id === user.value.id);
   return myBid ? myBid.price : '0';
 });
+
 const updateKoreanAmount = () => {
   koreanAmount.value = convertToKorean(amount.value) + ' 원';
 };
+
+
 
 // 사용자 입찰이 취소된 적이 있는지 확인
 const userBid = computed(() => auctionDetail.value.data.bids.find(bid => bid.user_id === user.value.id));
@@ -819,6 +827,29 @@ const toggleSheet = () => {
   }
   showBottomSheet.value = !showBottomSheet.value;
 };
+// 사용자 정보를 가져오는 함수
+const getDealer = async (userId) => {
+  try {
+    const userData = await getUser(userId);
+    console.log(`User Data for user_id ${userId}:`, userData);
+    return userData;
+  } catch (error) {
+    console.error(`Error fetching data for user_id ${userId}:`, error);
+    return { name: 'Unknown' };
+  }
+};
+
+// auctionDetail이 변경될 때마다 각 bid에 userData를 추가하는 함수
+watchEffect(async () => {
+  if (auctionDetail.value && auctionDetail.value.data && auctionDetail.value.data.top_bids) {
+    const bids = auctionDetail.value.data.top_bids;
+    for (const bid of bids) {
+      const userData = await getDealer(bid.user_id);
+      bid.dealerInfo = userData.dealer; 
+    }
+    sortedTopBids.value = bids;
+  }
+});
 
 const selectDealer = async (bid, event, index) => {
   if (event.target.checked) {
@@ -1037,6 +1068,9 @@ watch([isSellChecked, auctionDetail], () => {
 
 
 <style scoped>
+.w-30{
+    width: 30% !important; 
+}
 .animCircle::after {
     border-radius: 50%;
 }

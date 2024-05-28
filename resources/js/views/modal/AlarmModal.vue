@@ -44,6 +44,13 @@ transition: opacity 0.5s ease, transform 0.5s ease;
 opacity: 0;
 transform: translateY(20px);
 }
+
+@media screen and (max-width: 330px){
+    .modal-dialog-ty04 {
+        width: auto !important;
+        margin: auto 0.5rem;
+    } 
+}
 </style>
       
       
