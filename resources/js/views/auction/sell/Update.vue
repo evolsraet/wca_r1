@@ -16,21 +16,20 @@
             <label for="carNumber">차량 번호</label>
             <input type="text" id="carNumber" v-model="carNumber" placeholder="12 삼 4567">
           </div>
+          <!-- 지역 선택 -->
           <div class="form-group">
             <label for="sido1">지역</label>
             <div class="region">
-              <select v-model="selectedRegion" @change="onRegionChange">
+                <select v-model="selectedRegion" @change="onRegionChange">
                 <option value="">시/도 선택</option>
                 <option v-for="region in regions" :key="region" :value="region">{{ region }}</option>
-              </select>
-              <select v-model="selectedDistrict">
-                <option value="">구/군 선택</option>
-                <option v-for="district in availableDistricts" :key="district" :value="district">{{ district }}</option>
-              </select>
+                </select>
             </div>
           </div>
+          <!-- 주소 입력 -->
           <div class="form-group mb-5">
             <label for="addr">주소</label>
+            <input type="text" id="addr_post" v-model="addrPost" placeholder="우편주소" @click="openPostcodePopup">
             <input type="text" id="addr" v-model="addr" placeholder="주소">
             <input type="text" id="adddt" v-model="addrdt" placeholder="상세주소">
           </div>
@@ -58,8 +57,9 @@ const ownerName = ref('');
 const carNumber = ref('');
 const selectedRegion = ref('');
 const selectedDistrict = ref('');
-const addr = ref('');
-const addrdt = ref('');
+const addrPost = ref('');
+const addr = ref(''); // 주소
+const addrdt = ref(''); // 상세 주소
 const fileInputRef = ref(null);
 const router = useRouter();
 
@@ -96,6 +96,17 @@ function triggerFileUpload() {
   fileInputRef.value?.click();
 }
 
+  // Daum Postcode API를 활용한 주소 검색 팝업 열기
+  const openPostcodePopup = () => {
+    new daum.Postcode({
+      oncomplete: data => {
+        addrPost.value = data.zonecode; // 우편번호
+        addr.value = data.address; // 주소
+      }
+    }).open();
+  };
+
+
 function handleFileUpload(event) {
   const file = event.target.files[0];
   if (file) {
@@ -114,5 +125,9 @@ onMounted(() => {
       carNumber.value = carDetails.no;  // 차량 번호 설정
     }
   }
+    const script = document.createElement('script');
+    script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+    script.onload = () => console.log('Daum Postcode script loaded');
+    document.head.appendChild(script);
 });
 </script>
