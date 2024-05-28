@@ -11,18 +11,22 @@
                     <div class="container my-4">
                         <div>
                             <div class="mb-4">
-                                <div class="d-flex gap-2 justify-content-end mb-1">
+                                <div class="d-flex gap-2 mb-1 justify-content-between">
+                                    <p class="bid-icon tc-light-gray normal-16-font">입찰: {{ auctionDetail.data.bids_count }}</p>
+                                    <div class="d-flex gap-2 justify-content-end mb-1">
                                     <div class="tc-light-gray">조회수: {{ auctionDetail.data.hit }}</div>
-                                    <div class="tc-light-gray ml-2">관심 {{ auctionDetail.data.hit }}</div>
+                                    <div class="tc-light-gray ml-2">관심 0</div>
+                                    </div>
                                 </div>
                                 <div class="card my-auction">
                                     <input class="toggle-heart" type="checkbox" checked />
                                     <label class="heart-toggle"></label>
                                     <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' }" class="card-img-top-ty01"></div>
                                     <div class="allpage">
-                                        <p class="more-page">1/31 |</p>
+                                        <p class="more-page">1/1 |</p>
                                         <button class="more-img">전체보기</button>
                                     </div>
+                                    <div v-if="auctionDetail.data.status === 'chosen'" class="time-remaining">선택 완료</div>
                                     <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
                                     <div class="card-body">
                                         <div class="enter-view align-items-baseline ">
@@ -386,20 +390,6 @@
                                 <div class="o_table_mobile my-5">
                                     <div class="tbl_basic tbl_dealer">
                                         <div class="overflow-auto select-dealer">
-                                            <table>
-                                                <tbody>
-                                                    <tr>
-                                                        <th>입찰 순위</th>
-                                                        <th>딜러명</th>
-                                                        <th>입찰금액</th>
-                                                    </tr>
-                                                    <tr v-for="(bid, index) in sortedTopBids" :key="bid.user_id">
-                                                        <td>{{ index + 1 }}위</td>
-                                                        <td>{{ bid.user_id }}</td>
-                                                        <td>{{ bid.price }}원</td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -435,7 +425,7 @@
                                     </transition>
                                     <button type="button" class="btn btn-dark" @click="toggleView">재경매</button>
                                 </div>
-                                <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>
+                              <!--  <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>-->
                                 <div class="content mt-3 text-start">
                                     <h5>경매에 참여한 딜러</h5>
                                     <p> 금액이 가장 높은 <span class="highlight">5명</span>까지만 표시돼요.</p>
@@ -489,8 +479,8 @@
                                 <p class="auction-deadline">낙찰가 <span class="tc-red"> {{ selectedDealer.price }} 만원</span></p>
                                 <p class="tc-red text-start mt-2">※ 3일 후 자동으로 경매완료 처리됩니다. </p>
                                 <div class="btn-group mt-3 mb-2">
-                                    <button type="button" class="btn btn-outline-dark" @click="cancelSelection">경매취소</button>
-                                    <button type="button" class="btn btn-primary" @click="completeAuction">경매 완료</button>
+                                    <button type="button" class="btn btn-outline-dark" @click="cancelSelection">선택 취소</button>
+                                    <button type="button" class="btn btn-primary" @click="completeAuction">선택 완료</button>
                                 </div>
 
                                 <h5 class="mt-5 text-start">내가 선택한 딜러</h5>
@@ -733,7 +723,7 @@ const scrollButtonStyle = ref({ display: 'none' });
 const showReauctionView = ref(false);
 
 const auctionDetail = ref(null);
-const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, deleteAuction } = useAuctions();
+const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus } = useAuctions();
 const { submitBid, cancelBid } = useBids();
 const carDetails = ref({});
 const highestBid = ref(0);
@@ -788,12 +778,12 @@ const closeModal = () => {
 const handleConfirmDelete = async () => {
   closeModal();
   try {
-    await deleteAuction(selectedAuctionId.value);
-    router.push({ name: 'auction.index' });
+    await updateAuctionStatus(selectedAuctionId.value, 'cancel');
   } catch (error) {
     console.error(error);
   }
 };
+
 
 const toggleView = () => {
   showReauctionView.value = true;
@@ -854,17 +844,17 @@ const cancelSelection = () => {
 };
 
 const completeAuction = async () => {
-  auctionDetail.value.status = 'done';
+  auctionDetail.value.status = 'chosen';
   const id = route.params.id;
   const data = {
-    status: 'done',
+    status: 'chosen',
     final_price: selectedDealer.value.price,
     bid_id: selectedDealer.value.user_id,
   };
 
   try {
     await chosenDealer(id, data);
-    auctionDetail.value.data.status = 'done';
+    auctionDetail.value.data.status = 'chosen';
   } catch (error) {
     console.error('Error completing auction:', error);
     alert('경매에 실패했습니다.');

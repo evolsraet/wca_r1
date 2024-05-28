@@ -8,7 +8,7 @@
                 <!-- 딜러 프로필 요약 정보 -->
                 <div class="banner-top">
                     <div class="top-info">
-                        현재 진행중인 경매<p class="tc-red">{{ ingCount }}</p> 건
+                        현재 진행중인 경매<p class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</p> 건
                     </div>
                     <div class="styled-div">
                         <div class="profile dealer-mp">
@@ -25,7 +25,7 @@
                                 <p class="tc-light-gray mt-3 me-5">입찰가능 유효시간 2024.03.20</p>
                             </div>
                             <div class="auction-info">
-                                <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ ingCount }}</span>건 있습니다</p>
+                                <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span>건 있습니다</p>
                                 <div style="display: flex; align-items: flex-end;">
                                     <div class="car-image"></div>
                                     <p class="tc-light-gray mb-3">입찰가능 유효시간 2024.03.20</p>
@@ -38,7 +38,7 @@
                             <p class="interest-icon tc-light-gray normal-16-font">관심</p>
                             </div>
                             <div class="item">
-                            <p><span class="tc-red" ref="item2">{{ auctionsData.length }}</span> 건</p>
+                            <p><span class="tc-red" ref="item2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
                             <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
                             </div>
                             <div class="item">
@@ -47,7 +47,7 @@
                             </div>
                             <div class="item">
                             <p><span class="tc-red" ref="item4">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
-                            <p class="purchase-icon tc-light-gray normal-16-font">매입</p>
+                            <p class="purchase-icon tc-light-gray normal-16-font">완료</p>
                             </div>
                         </div>
                     </div>

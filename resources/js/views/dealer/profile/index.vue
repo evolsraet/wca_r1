@@ -3,7 +3,7 @@
         <div class="regiest-content">
             <!-- 딜러 프로필 요약 정보 -->
             <div class="banner-top ">
-                <div class="top-info">현재 진행중인 경매<p class="tc-red"> {{ ingCount }} </p> 건</div>
+                <div class="top-info">현재 진행중인 경매<p class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }} </p> 건</div>
                 <div class="styled-div">
                     <div class="profile">
                         <div class="dealer-info">
@@ -18,15 +18,15 @@
                     </div>
                     <div class="activity-info bold-18-font mt-5">
                         <div class="item">
-                            <p><span class="tc-red">100</span> 건</p>
+                            <p><span class="tc-red">0</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font">관심</p>
                         </div>
                         <div class="item">
-                            <p><span class="tc-red">{{ auctionsData.length }}</span> 건</p>
+                            <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
                             <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
                         </div>
                         <div class="item">
-                            <p><span class="tc-red">{{ filteredViewBids.length }} </span>건</p>
+                            <p><span class="tc-red">{{ filteredViewBids.length }}</span>건</p>
                             <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
                         </div>
                         <div class="item">

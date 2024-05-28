@@ -298,6 +298,7 @@ const registerAuction = async () => {
   try {
     const id = route.params.id;
     await updateAuctionStatus(id, 'diag');
+    router.push({ name: 'auctions.index' }); 
     alert('등록되었습니다.');
   } catch (error) {
     console.error('Error updating auction status:', error);
