@@ -671,7 +671,7 @@ import auctionModal from '@/views/modal/auction/auctionModal.vue';
 import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
-import { convertToKorean } from '@/hooks/convertToKorean';
+import { cmmn } from '@/hooks/cmmn';
 import { initReviewSystem } from '@/composables/review';
 
 const heightPrice = ref(0);
