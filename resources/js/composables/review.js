@@ -124,7 +124,8 @@ export function initReviewSystem() {
         }
     }
     
-    function setReviewValue(user_id, auction_id, dealer_id, star){
+    function setReviewValue(user_id, auction_id, dealer_id, star, content){
+        review.content = content;
         review.user_id = user_id;
         review.auction_id = auction_id;
         review.dealer_id = dealer_id;
@@ -134,13 +135,12 @@ export function initReviewSystem() {
 
     // 리뷰 작성 post
     const submitReview = async () => {
-        try {      
+        try {     
+            const content = document.getElementById('content').value; 
             const user_id = document.getElementById('user_id').value;
             const auction_id = document.getElementById('auction_id').value;
             const dealer_id = document.getElementById('dealer_id').value;
-            console.log(user_id);
-            console.log(auction_id);
-            console.log(dealer_id);
+            
             console.log(JSON.stringify(reviewForm));
             if(auction_id == "" || dealer_id == ""){
                 alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
@@ -150,7 +150,7 @@ export function initReviewSystem() {
                 alert("별점을 입력해주세요.");
                 return;
             }
-            setReviewValue(user_id, auction_id, dealer_id, starScore);
+            setReviewValue(user_id, auction_id, dealer_id, starScore, content);
             console.log(JSON.stringify(reviewForm));
             const response = await axios.post("/api/reviews", reviewForm);
             
@@ -158,11 +158,11 @@ export function initReviewSystem() {
 
             if(response.data.status == 'ok'){
                 alert("작성이 완료되었습니다.");
-                location.href = "/alllist-do";
+                location.href = "/list-do";
             }
             
         } catch (error) {
-            alert("오류가 발생하였습니다. 관리자에게 문의해주세요2.");
+            alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
             console.log(error);
         }
     }
@@ -177,16 +177,46 @@ export function initReviewSystem() {
             console.log(error);
         }
     }
-    /** 
+     
     //작성한 이용후기 수정하기
-    const editReviewApi = async (id) => {
-        try {
-            const response = await axios.
-        } catch(error){
-
+    const editReview = async (id) => {
+        console.log(id);
+        if (confirm("수정하시겠습니까?")){
+            try {     
+                const content = document.getElementById('content').value; 
+                const user_id = document.getElementById('user_id').value;
+                const auction_id = document.getElementById('auction_id').value;
+                const dealer_id = document.getElementById('dealer_id').value;
+                const star = document.getElementById('reviewStarValue').value;
+    
+                console.log(JSON.stringify(reviewForm));
+    
+                if(auction_id == "" || dealer_id == ""){
+                    alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
+                    return;
+                }
+                if(starScore == 0){ //별점을 수정(클릭)하지 않은 경우
+                    starScore = star;
+                }
+    
+                setReviewValue(user_id, auction_id, dealer_id, starScore, content);
+                console.log(JSON.stringify(reviewForm));
+                const response = await axios.put(`/api/reviews/${id}`, reviewForm);
+                
+                console.log(response);
+    
+                if(response.data.status == 'ok'){
+                    alert("수정이 완료되었습니다.");
+                    location.href = "/list-do";
+                }
+                
+            } catch (error) {
+                alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
+                console.log(error);
+            }
         }
     }
-    **/
+
    
     // 작성한 이용후기 불러오기 (사용자별 불러오기)
     const getUserReview = async (id) => {
@@ -238,6 +268,7 @@ export function initReviewSystem() {
         getUserReview,
         getAllReview,
         deleteReviewApi,
+        editReview,
         getUserReviewInfo,
         formattedAmount,
         reviewsData

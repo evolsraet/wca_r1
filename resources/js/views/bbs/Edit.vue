@@ -4,7 +4,7 @@
         * web-text: : 웹 화면에서 보이는뷰
     --> 
     <div class="container">
-        <form @submit.prevent="submitReview">
+        <form @submit.prevent="editReview(reviewId)">
             <div class="create-review">
                     <div class="left-container" v-for="auction in auctionsData" :key="auction.id">
                         <div class="container-img mov-info02">
@@ -58,6 +58,7 @@
                             <div class="mt-3"  @click.stop="">
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
+                                    <input type="hidden" id="reviewStarValue">
                                     <div class="rating">
                                         <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
                                             <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
@@ -67,8 +68,7 @@
                                         <span class="d-flex mx-2 rating-score tc-red"></span>
                                     </div>
                                 </div>
-                                <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." v-model="review.content"></textarea>
-                                
+                                <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content">{{ review.content }}</textarea>
                                 <div class="btn-group mt-3">
                                     <button class="btn btn-primary"> 수정 완료 </button>
                                 </div>
@@ -95,7 +95,7 @@ const route = useRoute();
 const reviewId = parseInt(route.params.id); 
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); //바텀 시트 스타일
-const { getUserReviewInfo } = initReviewSystem(); 
+const { getUserReviewInfo , editReview } = initReviewSystem(); 
 const { getAuctionById } = useAuctions();
 let auctionsData = ref();
 let reviewsData = ref();
@@ -124,7 +124,13 @@ onMounted(async () => {
 });
 
 function setInitialStarRating(starRating) {
-    const stars = document.querySelectorAll('.rating__input');
+    const stars = document.querySelectorAll('.rating__input'); 
+    const scoreDisplay = document.querySelector('.rating-score'); // 점수를 표시할 span 요소
+    
+    const reviewStarValue = document.getElementById('reviewStarValue');
+    reviewStarValue.value = starRating;
+    scoreDisplay.textContent = `( ${starRating} 점 )`; 
+    
     const starDescription = document.querySelectorAll('.rating-description');
     stars.forEach(star => {
         if (parseInt(star.value) === starRating) {

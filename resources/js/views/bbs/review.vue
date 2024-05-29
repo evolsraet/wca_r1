@@ -128,13 +128,11 @@ function setActiveTab(tab) {
 }
 
 function editReview(reviewId) {
-    if (confirm("수정하시겠습니까?")) {   
-        router.push({ name: 'user.edit-review', params: { id: reviewId } });
-    }
+    router.push({ name: 'user.edit-review', params: { id: reviewId } });
 }
 
 function deleteReview(id) {
-    if (confirm("삭제하시겠습니까?")) {   
+    if (confirm("삭제하시면 이용 후기를 다시 작성할 수 없습니다. 정말 삭제하시겠습니까?")) {   
         if(deleteReviewApi(id)){
             showDeleteMessage();
         }
