@@ -91,6 +91,7 @@ const AuctionCarInfo = async (carInfoForm) => {
   
     try {
       const response = await axios.post('/api/auctions/carInfo', carInfoForm);
+      console.log('자동차 상세:', response.data);
       return response.data; // response 데이터를 반환
     } catch (error) {
       console.error(error);
@@ -216,6 +217,7 @@ const updateAuctionStatus = async (id, status) => {
         });
     } finally {
         isLoading.value = false;
+        router.push({ name: 'auctions.index' }); 
     }
 };
 
