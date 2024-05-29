@@ -59,7 +59,7 @@
                                         </ul>
                                     </div>
                                     <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
-                                        <p>현대 소나타 (DN8)</p>
+                                        <p>(추후 수정 예정){{ review.id }}</p>
                                         <p class="tc-red">1,000 만원</p>
                                     </div>
                                     <div class="rating">

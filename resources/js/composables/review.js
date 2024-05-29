@@ -249,7 +249,7 @@ export function initReviewSystem() {
     const getAllReview = async () => {
         try {      
             const response = await axios.get("/api/reviews");
-            return response.data;
+            reviewsData.value = response.data.data;
         } catch (error) {
             console.log(error);
         }
@@ -262,6 +262,9 @@ export function initReviewSystem() {
         return formattedAmount + '만원';
     }
 
+    function splitDate (date){
+        return date.split(' ')[0];
+    }
     return {
         review,
         submitReview,
@@ -271,6 +274,7 @@ export function initReviewSystem() {
         editReview,
         getUserReviewInfo,
         formattedAmount,
+        splitDate,
         reviewsData
     }
 
