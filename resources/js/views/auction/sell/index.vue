@@ -76,10 +76,19 @@
                         <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
                 <div v-if="user?.name">
-                    <div class="middle">
-                    <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span></p>
-                    <div class="tc-red link">정보갱신하기</div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <p>차량 정보가 다르신가요?
+                        <span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span>
+                        </p>
+                        <div class="tc-red link refresh-style" @click="isRefreshDisabled ? null : openModal" :class="{ disabled: isRefreshDisabled }">
+                            {{ refreshText }}
+                        <img src="../../../../img/Icon-refresh.png" alt="Refresh" class="fas fa-sync-alt mx-2 mb-1" width="15px"/>
+                        </div> 
                     </div>
+                    <!-- 정보 갱신 모달 -->
+                    <transition name="fade">
+                    <InfoModal v-if="showModal" @close="closeModal" @click="handleRefresh"/>
+                    </transition>
                 <!-- TODO: 일치하는 차량 없다는 데이터의 기준? 
                         <div class="none-info">
                             <div class="complete-car">
@@ -95,7 +104,7 @@
                         <router-link :to="{ path: '/selldt' }" class="btn primary-btn ">경매 신청하기</router-link></div>
                     </div>
                     <div v-if="!user?.name">
-                    <div class="middle">
+                    <div class="d-flex justify-content-between mt-4">
                     <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="로그인을 하면 자세한 정보를 볼수있어요." tabindex="0"></span></p>
                     <p class="tc-light-gray link">정보갱신하기</p>
                     </div>
@@ -118,12 +127,28 @@
 </template>
 
 <script setup>
+import InfoModal from '@/views/modal/infoModal.vue';
 import useAuth from "@/composables/auth";
+import { useRouter } from 'vue-router';
 import { ref, onMounted,computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from "vuex";
+import useAuctions from '@/composables/auctions'; 
 
+const isRefreshDisabled = ref(false); // 버튼 비활성화 상태 변수
+const refreshText = ref("정보갱신하기"); 
+const carInfoForm = ref({}); 
+const showModal = ref(false);
+const processing = ref(false);
+const validationErrors = ref({})
+const openModal = () => {
+    showModal.value = true;
+};
+const { submitCarInfo,refreshCarInfo } = useAuctions();
 
+const closeModal = () => {
+  showModal.value = false;
+};
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 
@@ -136,7 +161,8 @@ const carDetails = ref({});
 function saveCarNumberToLocalStorage() {
   localStorage.setItem('carNumber', carDetails.value.no);
 }
-//바텀 시트 토글시 스타일변경
+
+
 function toggleSheet() {
     const bottomSheet = document.querySelector('.bottom-sheet');
     
@@ -148,15 +174,35 @@ function toggleSheet() {
     showBottomSheet.value = !showBottomSheet.value;
 }
 
-const findAuctionDetail = async () => {
-    try {
-        const response = await getAuctionById(auctionId);
-        auctionsData.value = [response.data]; 
-        console.log(auctionsData.value); 
-        initReviewSystem(); 
-    } catch (error) {
-        console.error('Error fetching auction data:', error);
+//정보 갱신 재로드, 로컬저장
+const handleRefresh = async () => {
+  try {
+    await refreshCarInfo();
+    const updatedCarDetails = JSON.parse(localStorage.getItem('carDetails'));
+    if (updatedCarDetails) {
+      carDetails.value = updatedCarDetails;
+      refreshText.value = "정보 갱신완료";
+      isRefreshDisabled.value = true;
+      localStorage.setItem('lastRefreshTime', new Date().toISOString()); // 갱신 시간 저장
     }
+  } catch (error) {
+    console.error("Failed to refresh car info:", error);
+  }
+};
+
+//임시
+const checkRefreshAvailability = () => {
+  const lastRefreshTime = localStorage.getItem('lastRefreshTime');
+  if (lastRefreshTime) {
+    const lastRefreshDate = new Date(lastRefreshTime);
+    const now = new Date();
+    const timeDiff = now - lastRefreshDate;
+    const oneWeek = 7 * 24 * 60 * 60 * 1000; 
+    if (timeDiff < oneWeek) {
+      isRefreshDisabled.value = true;
+      refreshText.value = "정보 갱신완료"; 
+    }
+  }
 };
 
 
@@ -168,6 +214,7 @@ onMounted(() => {
   } else {
     console.log('No car details');
   }
+  checkRefreshAvailability();
 });
 function toggleDetailContent() {
     isActive.value = !isActive.value;  
@@ -187,5 +234,33 @@ const applyAuction = () => {
     width: 80px;
     height: 3px;
     background-color: #dbdbdb;
+}
+.refresh-indicator {
+    text-align: center;
+    overflow: hidden; 
+    height: auto; 
+    width: 100%;
+}
+.fa-sync-alt {
+  animation: spin 3s linear infinite; 
+  animation-play-state: paused; 
+}
+
+.pulling .fa-sync-alt {
+  animation-play-state: paused; 
+}
+
+.is-spinning .fa-sync-alt {
+  animation-play-state: running; 
+}
+
+@keyframes spin {
+  100% { transform: rotate(1080deg); } 
+}
+.refresh-style{
+    background-color: #ebedf1;
+    border-radius: 20px;
+    padding-left: 10px;
+
 }
 </style>
