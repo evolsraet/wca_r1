@@ -443,14 +443,14 @@ TODO:
                         </div>
                     </div>
                 </div>
-                <!-- 내 경매 관리 / 경매 전체 -->
-                <div :class="['container my-4', { 'pulling': isPulling && distance > 0, 'is-spinning': isSpinning }]" ref="pullContainer" @touchstart.passive="handleTouchStart" @touchmove.passive="handleTouchMove" @touchend="handleTouchEnd" v-if="currentTab === 'allInfo'">
-                <div v-if="isPulling && distance > 0" class="refresh-indicator">
-                <p class="refresh-icon fas fa-sync-alt">↻</p> <!-- fa-spin 제거 -->
-                </div>
-                <div class="content-wrapper" :style="{ 'transform': `translateY(${Math.min(distance, 20)}px)` }">
-                <div class="row-wrapper">
-                <div class="row" :class="{'pulled': isPulling && distance > 0}">
+                    <!-- 내 경매 관리 / 경매 전체 -->
+                    <div :class="['container my-4', { 'pulling': isPulling && distance > 0, 'is-spinning': isSpinning }]" ref="pullContainer" @touchstart.passive="handleTouchStart" @touchmove.passive="handleTouchMove" @touchend="handleTouchEnd" v-if="currentTab === 'allInfo'">
+                        <div v-if="isPulling" class="refresh-indicator" :style="imageStyle">
+                        <img src="../../../img/Icon-refresh.png" alt="Refresh" class="fas fa-sync-alt" width="20px" :style="imagestyle"/>
+                    </div>
+                    <div class="content-wrapper" :style="{ 'transform': `translateY(${Math.min(distance, 20)}px)` }">
+                    <div class="row-wrapper">
+                    <div class="row" :class="{'pulled': isPulling && distance > 0}">
                         <!-- if. 경매 ing 있을때 -->
                         <div
                         class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
@@ -488,8 +488,8 @@ TODO:
                         </div>
                     </div>
                 </div>
-                </div>
-                </div>
+            </div>
+        </div>
     <div class="container my-4" v-if="currentTab === 'interInfo'">
         <div class="row">
             <!-- if. 경매 ing 있을때 -->
@@ -671,7 +671,6 @@ export default {
 <script setup>
 import { ref, computed, onMounted, reactive } from 'vue';
 import { useStore } from "vuex";
-
 import useAuctions from "@/composables/auctions"; // 경매 관련 함수 가져오기
 import useRoles from '@/composables/roles'; // 역할 관련 함수 가져오기
 import FilterModal from '@/views/modal/filter.vue'; // 필터 모달 컴포넌트 가져오기
@@ -679,7 +678,6 @@ import { useRouter } from 'vue-router';
 
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
-
 
 const router = useRouter();
 const currentStatus = ref('all'); // 현재 필터 상태 (기본값: 전체)
@@ -720,21 +718,32 @@ const handleTouchMove = (e) => {
   }
 };
 
-
 const handleTouchEnd = async () => {
-  if (distance.value > 50) {
+  if (distance.value === 100) { // 최대 100px 당겨졌을 때만 새로고침 수행
     isSpinning.value = true; // 회전 시작
     setTimeout(async () => {
       await getAuctions(); // 데이터 로딩
       isSpinning.value = false; // 회전 중지
       isPulling.value = false;
       distance.value = 0;
-    }, 3 * 1000); // 아이콘이 3번 회전하는데 걸리는 시간
+    }, 3000); // 아이콘이 3번 회전하는데 걸리는 시간
   } else {
     isPulling.value = false;
     distance.value = 0;
   }
 };
+
+// 이미지 스타일 동적 계산
+const imageStyle = computed(() => {
+  const opacity = Math.min(distance.value / 100, 1); // 최대 100px 당겨질 때 1의 불투명도
+  const translateY = Math.max(100 - distance.value, 0); // 당겨질수록 translateY 감소
+  return {
+    opacity: opacity,
+    transform: `translateY(${translateY}px)`, // 스르륵 효과
+    transition: 'opacity 0.3s, transform 0.3s' // 부드러운 전환
+  };
+});
+
 
 function toggleModal() { // 모달 토글
   showModal.value = !showModal.value; 
@@ -788,9 +797,13 @@ onMounted(async () => { // 컴포넌트 마운트 시 초기화 작업
 });
 </script>
 
+
 <style scoped>
 .refresh-indicator {
     text-align: center;
+    overflow: hidden; 
+    height: auto; 
+    width: 100%;
 }
 .fa-sync-alt {
   animation: spin 3s linear infinite; 
