@@ -86,11 +86,45 @@ const submitCarInfo = async () => {
         const response = await axios.post('/api/auctions/carInfo', carInfoForm);
         localStorage.setItem('carDetails', JSON.stringify(response.data.data));  // 데이터를 로컬 스토리지에 저장
         router.push({ name: 'sell' });  // 저장 후 sell 라우트로 이동
+        console.log("data",response.data);
     } catch (error) {
         console.error(error);
         if (error.response?.data) {
             validationErrors.value = error.response.data.errors;  // 서버로부터 받은 에러 메시지 처리
         }
+    } finally {
+        processing.value = false;
+    }
+};
+
+const refreshCarInfo = async () => {
+    if (processing.value) return;  // 이미 처리 중이면 다시 처리하지 않음
+    processing.value = true;
+    validationErrors.value = {};
+
+    try {
+        const carDetails = JSON.parse(localStorage.getItem('carDetails'));
+        if (!carDetails || !carDetails.owner || !carDetails.no) {
+            throw new Error("Owner and No fields are required in carDetails");
+        }
+
+        console.log("Refreshing with:", carDetails);
+
+        const response = await axios.post('/api/auctions/carInfo', {
+            owner: carDetails.owner,
+            no: carDetails.no,
+            forceRefresh: 'true'
+        });
+
+        // 갱신된 데이터를 다시 로컬 스토리지에 저장
+        localStorage.setItem('carDetails', JSON.stringify(response.data.data));
+        console.log("Updated carDetails:", response.data.data);  // 확인용 로그
+    } catch (error) {
+        console.error(error);
+        if (error.response?.data) {
+            validationErrors.value = error.response.data.errors;  // 서버로부터 받은 에러 메시지 처리
+        }
+        throw error;  // 에러를 다시 던져서 호출한 쪽에서 처리할 수 있도록 함
     } finally {
         processing.value = false;
     }
@@ -298,7 +332,8 @@ const updateAuctionStatus = async (id, status) => {
         statusMap,
         getStatusLabel,
         updateAuctionStatus,
-        createAuction
+        createAuction,
+        refreshCarInfo
     };
     
 }
