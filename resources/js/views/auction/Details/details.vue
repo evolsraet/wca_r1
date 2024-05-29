@@ -681,7 +681,7 @@ import modal from '@/views/modal/modal.vue';
 import auctionModal from '@/views/modal/auction/auctionModal.vue';
 import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
-import { convertToKorean } from '@/hooks/convertToKorean';
+import { cmmn } from '@/hooks/cmmn';
 
 const heightPrice = ref(0);
 const lowPrice = ref(0);
@@ -700,12 +700,13 @@ const userInfo = ref(null);
 const succesbid = ref(false);
 const amount = ref('');
 const koreanAmount = ref('원');
+const { numberToKoreanUnit } = cmmn();
 const myBidPrice = computed(() => {
   const myBid = auctionDetail.value.data.bids.find(bid => bid.user_id === user.value.id);
   return myBid ? myBid.price : '0';
 });
 const updateKoreanAmount = () => {
-  koreanAmount.value = convertToKorean(amount.value) + ' 원';
+  koreanAmount.value = numberToKoreanUnit(amount.value) + ' 원';
 };
 
 // 사용자 입찰이 취소된 적이 있는지 확인
