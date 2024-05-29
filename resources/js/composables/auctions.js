@@ -2,6 +2,7 @@ import { reactive, ref,inject } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 import store from "../store";
+import useUsers from "./users";
 
 export default function useAuctions() {
     const showModal = ref(false);
@@ -14,7 +15,7 @@ export default function useAuctions() {
 
     const isLoading = ref(false);
     const swal = inject('$swal');
-
+    const { getUser } = useUsers();
  const hope_price = ref('');
     const carInfoForm = reactive({
         owner: "",
@@ -26,9 +27,21 @@ export default function useAuctions() {
 const getAuctions = async (page = 1) => {
     try {
         const response = await axios.get(`/api/auctions?page=${page}`);
+        
         auctionsData.value = response.data.data;
+
         pagination.value = response.data.meta;
+
         console.log('Pagination:', pagination.value);
+
+        for (const auction of auctionsData.value) {
+            if (auction.win_bid) {
+                const data = await getUser(auction.win_bid.user_id);
+                const name = data.dealer.name;
+                auction.dealer_name = name;
+            }
+        };
+
         console.log('Auctions:', auctionsData.value);
     } catch (error) {
         console.error('Error fetching auctions:', error);
@@ -42,8 +55,7 @@ const getAuctionById = async (id) => {
     try {
         // API 경로에서 {auction} 부분을 실제 ID로 치환하여 요청
         const response = await axios.get(`/api/auctions/${id}`);
-         auction.value = response.data;
-        console.log(response);
+        auction.value = response.data;
         return response.data;
     } catch (error) {
         console.error('Error ID:', error);
@@ -91,7 +103,6 @@ const AuctionCarInfo = async (carInfoForm) => {
   
     try {
       const response = await axios.post('/api/auctions/carInfo', carInfoForm);
-      console.log('자동차 상세:', response.data);
       return response.data; // response 데이터를 반환
     } catch (error) {
       console.error(error);
@@ -142,6 +153,7 @@ const AuctionReauction = async (id, data) => {
     try {
         console.log(`Updating auction id: ${id} with data:`, data);
         const response = await axios.put(`/api/auctions/${id}`, requestData);
+
         console.log('response:', response.data);
         auction.value = response.data;
     } catch (error) {
@@ -215,7 +227,7 @@ const updateAuctionStatus = async (id, status) => {
             icon: 'error',
             title: 'Failed to update auction status'
         });
-    } finally {
+    } finally {``
         isLoading.value = false;
         router.push({ name: 'auctions.index' }); 
     }
@@ -290,3 +302,4 @@ const updateAuctionStatus = async (id, status) => {
     };
     
 }
+

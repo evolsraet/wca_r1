@@ -29,9 +29,9 @@
                                         </ul>
                                     </div>
                                     <h3 class="review-title">{{ auction.car_no }}</h3>
-                                    <p class="tc-light-gray">12 삼 4567 | 딜러명</p>
+                                    <p class="tc-light-gray">12 삼 4567 | <span>{{ auction.dealer_name }} 딜러</span></p>
                                     <div class="justify-content-between flex align-items-center">
-                                        <p class="tc-light-gray review-price">{{ formattedAmount(auction.final_price) }}</p>
+                                        <p class="tc-light-gray review-price">{{ amtComma(auction.win_bid.price) }} 만원</p>
                                         <!--<router-link :to="{ name: 'user.create-review' , params: { id: auction.id } }" class="btn-review">후기작성</router-link>-->
                                         <a class="btn-review" @click="navigateToDetail(auction.id)">후기작성</a>
                                     </div>
@@ -91,6 +91,7 @@ import { useRouter } from 'vue-router';
 import { ref } from 'vue';
 import useAuctions from "@/composables/auctions";
 import { initReviewSystem } from '@/composables/review';
+import { cmmn } from '@/hooks/cmmn';
 
 let userId =  ref();
 const router = useRouter();
@@ -99,6 +100,7 @@ const showDeleteConfirmation = ref(false); // "삭제되었습니다," 띄우기
 const isMenuVisible = ref(false);
 const { auctionsData, getAuctions } = useAuctions();
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
+const { amtComma } = cmmn();
 const filteredAuctions = computed(() => {
     const reviewedAuctionIds = reviewsData.value.map(review => review.auction_id);
     return auctionsData.value.filter(auction => 
