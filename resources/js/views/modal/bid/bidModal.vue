@@ -7,8 +7,6 @@
               <div class="content p-0 mt-0">
                 <div class="enroll_box_top p-4">
                   <h5 class="auction-deadline tc-light-gray mb-3">나의 입찰 금액 <span class="tc-red">{{ formattedAmount }}</span></h5>
-                  <p class="tc-light-gray d-flex justify-content-between my-2">현재 최고 입찰가 <span class="process">{{ highestBid }}만원</span></p>
-                  <p class="tc-light-gray d-flex justify-content-between">현재 최저 입찰가 <span class="process">{{ lowestBid }}만원</span></p>
                 </div>
                 <hr>
                 <div class="enroll_box p-4">

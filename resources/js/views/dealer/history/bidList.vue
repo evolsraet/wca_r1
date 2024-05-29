@@ -192,24 +192,6 @@ const lineChartOptions = ref({
   </script>
   
   <style scoped>
-  .refresh-icon {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    background-color: #ccc;
-    color: white;
-    text-align: center;
-    line-height: 30px;
-    border-radius: 50%;
-    font-size: 16px;
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.3s;
-  }
-  
-  .refresh-icon:hover {
-      background-color: #bbb; 
-  }
   .car-select {
     border-radius: 16px;
     background-color: #fbeaea;

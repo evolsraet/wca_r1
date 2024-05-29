@@ -32,9 +32,9 @@ TODO:
         <div class="icon-container" v-show="isExpanded" ></div>
         <router-link :to="{ name: 'home' }" tag="button" class="black-btn tc-wh" v-show="!isExpanded" :disabled="isExpanded">딜러 선택이 가능해요!<span class="btn-apply-ty02">바로가기</span></router-link>
        <!--if.경매 완료건이 있을때-->
-       <router-link :to="{ name: 'home' }" tag="button" class="review-btn tc-red" v-show="!isExpanded && hasCompletedAuctions" :disabled="isExpanded">후기 남기기</router-link>      
+       <router-link :to="{ name: 'index.allreview' }" tag="button" class="review-btn tc-red" v-show="!isExpanded && hasCompletedAuctions" :disabled="isExpanded">후기 남기기</router-link>      
          <!--else. 경매완료 건이 없을때-->
-       <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded">후기 남기기</div>
+       <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded" @click.stop="">후기 남기기</div>
     </div>
     <div class="container my-3 auction-content">
         <div class="row content-main mt-5">
@@ -443,47 +443,53 @@ TODO:
                         </div>
                     </div>
                 </div>
-                <!-- 내 경매 관리 / 경매 전체 -->
-
-        <div class="container my-4" v-if="currentTab === 'allInfo'">
-        <div class="row">
-            <!-- if. 경매 ing 있을때 -->
-            <div
-            class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
-            v-for="auction in filteredAuctions"
-            :key="auction.id"
-            @click="navigateToDetail(auction)"
-            :style="getAuctionStyle(auction)"
-            >
-            <div class="card my-auction">
-                <div v-if="isDealer"> 
-                <input class="toggle-heart" type="checkbox" checked  @click.stop/>
-                <label class="heart-toggle"></label>
-                <div class="participate-badge" v-if="isDealerParticipating(auction) ">참여</div>
-                </div>
-                    <div :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' }" class="card-img-top-placeholder">
-                    <div v-if="isDealer"> 
-                    <div class="participate-badge" v-if="isDealerParticipating(auction) ">참여</div>
+                    <!-- 내 경매 관리 / 경매 전체 -->
+                    <div :class="['container my-4', { 'pulling': isPulling && distance > 0, 'is-spinning': isSpinning }]" ref="pullContainer" @touchstart.passive="handleTouchStart" @touchmove.passive="handleTouchMove" @touchend="handleTouchEnd" v-if="currentTab === 'allInfo'">
+                        <div v-if="isPulling" class="refresh-indicator" :style="imageStyle">
+                        <img src="../../../img/Icon-refresh.png" alt="Refresh" class="fas fa-sync-alt" width="20px" :style="imagestyle"/>
                     </div>
-                    </div>
-                    <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
-                    <div v-if="auction.status === 'ing'" class="progress">
-                        <div class="progress-bar" role="progressbar"></div>
-                    </div>
-                    <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
-                    <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
-                    <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
-                    <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
-                    <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
-                    <div v-if="auction.status === 'chosen'" class="wait-selection">낙찰가 {{auction.final_price}} 만원</div>
-                    <div class="card-body">
-                        <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
-                        <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
+                    <div class="content-wrapper" :style="{ 'transform': `translateY(${Math.min(distance, 20)}px)` }">
+                    <div class="row-wrapper">
+                    <div class="row" :class="{'pulled': isPulling && distance > 0}">
+                        <!-- if. 경매 ing 있을때 -->
+                        <div
+                        class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
+                        v-for="auction in filteredAuctions"
+                        :key="auction.id"
+                        @click="navigateToDetail(auction)"
+                        :style="getAuctionStyle(auction)"
+                        >
+                        <div class="card my-auction">
+                            <div v-if="isDealer"> 
+                            <input class="toggle-heart" type="checkbox" checked  @click.stop/>
+                            <label class="heart-toggle"></label>
+                            <div class="participate-badge" v-if="isDealerParticipating(auction) ">참여</div>
+                            </div>
+                                <div :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' }" class="card-img-top-placeholder">
+                                <div v-if="isDealer"> 
+                                <div class="participate-badge" v-if="isDealerParticipating(auction) ">참여</div>
+                                </div>
+                                </div>
+                                <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
+                                <div v-if="auction.status === 'ing'" class="progress">
+                                    <div class="progress-bar" role="progressbar"></div>
+                                </div>
+                                <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
+                                <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
+                                <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
+                                <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
+                                <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
+                                <div v-if="auction.status === 'chosen'" class="wait-selection">선택완료</div>
+                                <div class="card-body">
+                                    <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
+                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
     <div class="container my-4" v-if="currentTab === 'interInfo'">
         <div class="row">
             <!-- if. 경매 ing 있을때 -->
@@ -663,13 +669,15 @@ export default {
 
 </script>
 <script setup>
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, reactive } from 'vue';
 import { useStore } from "vuex";
-
 import useAuctions from "@/composables/auctions"; // 경매 관련 함수 가져오기
 import useRoles from '@/composables/roles'; // 역할 관련 함수 가져오기
 import FilterModal from '@/views/modal/filter.vue'; // 필터 모달 컴포넌트 가져오기
 import { useRouter } from 'vue-router';
+
+const selectedStartYear = ref(new Date().getFullYear() - 1);
+const selectedEndYear = ref(new Date().getFullYear());
 
 const router = useRouter();
 const currentStatus = ref('all'); // 현재 필터 상태 (기본값: 전체)
@@ -680,15 +688,62 @@ const currentPage = ref(1); // 현재 페이지 번호
 const showModal = ref(false); // 모달 표시 상태
 const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); // 관심 있는 경매 수
 const auctionModal = ref(false);
-
+const isPulling = ref(false);
+const distance = ref(0);
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]); // 사용자 정보
 const isDealer = computed(() => user.value?.roles?.includes('dealer')); // 딜러 여부
 const isUser = computed(() => user.value?.roles?.includes('user')); // 사용자 여부
+const isSpinning = ref(false);
 
-const setCurrentTab = (tab) => { // 현재 탭 설정
-  currentTab.value = tab;
+const pullContainer = ref(null);
+const state = reactive({
+  startY: 0,
+  isPulling: false,
+  distance: 0
+});
+
+const handleTouchStart = (e) => {
+  state.startY = e.touches[0].pageY;
+  state.isPulling = true;
 };
+
+const handleTouchMove = (e) => {
+  if (window.scrollY !== 0) return; // 스크롤이 최상단이 아닐 때는 작동하지 않음
+  const currentY = e.touches[0].pageY;
+  const diff = currentY - state.startY;
+  if (diff > 0) {
+    isPulling.value = true;
+    distance.value = Math.min(diff, 100); // 최대 100px까지 당길 수 있도록 제한
+  }
+};
+
+const handleTouchEnd = async () => {
+  if (distance.value === 100) { // 최대 100px 당겨졌을 때만 새로고침 수행
+    isSpinning.value = true; // 회전 시작
+    setTimeout(async () => {
+      await getAuctions(); // 데이터 로딩
+      isSpinning.value = false; // 회전 중지
+      isPulling.value = false;
+      distance.value = 0;
+    }, 3000); // 아이콘이 3번 회전하는데 걸리는 시간
+  } else {
+    isPulling.value = false;
+    distance.value = 0;
+  }
+};
+
+// 이미지 스타일 동적 계산
+const imageStyle = computed(() => {
+  const opacity = Math.min(distance.value / 100, 1); // 최대 100px 당겨질 때 1의 불투명도
+  const translateY = Math.max(100 - distance.value, 0); // 당겨질수록 translateY 감소
+  return {
+    opacity: opacity,
+    transform: `translateY(${translateY}px)`, // 스르륵 효과
+    transition: 'opacity 0.3s, transform 0.3s' // 부드러운 전환
+  };
+});
+
 
 function toggleModal() { // 모달 토글
   showModal.value = !showModal.value; 
@@ -741,3 +796,29 @@ onMounted(async () => { // 컴포넌트 마운트 시 초기화 작업
   await getAuctions(currentPage.value);
 });
 </script>
+
+
+<style scoped>
+.refresh-indicator {
+    text-align: center;
+    overflow: hidden; 
+    height: auto; 
+    width: 100%;
+}
+.fa-sync-alt {
+  animation: spin 3s linear infinite; 
+  animation-play-state: paused; 
+}
+
+.pulling .fa-sync-alt {
+  animation-play-state: paused; 
+}
+
+.is-spinning .fa-sync-alt {
+  animation-play-state: running; 
+}
+
+@keyframes spin {
+  100% { transform: rotate(1080deg); } 
+}
+</style>

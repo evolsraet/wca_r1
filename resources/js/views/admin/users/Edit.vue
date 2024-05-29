@@ -128,7 +128,9 @@ const schema = {
     email: "required",
     password: "min:8",
 };
-
+const role = reactive({
+    user_id: []
+});
 // Create a form context with the validation schema
 const { validate, errors, resetForm } = useForm({ validationSchema: schema });
 // Define actual fields for validation
