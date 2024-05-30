@@ -1,73 +1,75 @@
 <template>
     <div class="container">
         <div class="main-contenter mt-3 p-2">
-            <h5>차량 정보 조회 되었어요</h5>
-            <ul class="machine-inform-title">
-                <li class="tc-light-gray">차량번호</li>
-                <li class="info-num">{{ carDetails.no }}</li>
-                <li class="car-icon"></li>
-            </ul>
-            <ul class="machine-inform">
-                <li class="tc-light-gray">제조사</li>
-                <li class="sub-title"></li>
-            </ul>
-            <ul class="machine-inform">
-                <li class="tc-light-gray">모델</li>
-                <li class="sub-title">{{ carDetails.model }}</li>
-            </ul>
-            <ul class="machine-inform">
-                <li class="tc-light-gray">세부모델</li>
-                <li class="sub-title">{{ carDetails.modelSub }}</li>
-            </ul>
-            <ul class="machine-inform">
-                <li class="tc-light-gray">등급</li>
-                <li class="sub-title">{{ carDetails.grade }}</li>
-            </ul>
-            <ul class="machine-inform">
-                <li class="tc-light-gray">세부등급</li>
-                <li class="sub-title">{{ carDetails.gradeSub }}</li>
-            </ul>
-            <ul class="machine-inform-title">
-                <li class="tc-light-gray">최초등록일</li>
-                <li class="info-num"></li>
-                <li class="car-aside-icon"></li>
-            </ul>
-            <ul class="machine-inform">
-                <li class="tc-light-gray">년식</li>
-                <li class="sub-title">{{ carDetails.year }}</li>
-            </ul>
-            <ul class="machine-inform">
-                <li class="tc-light-gray">차량유형</li>
-                <li class="sub-title">종합 승용차</li>
-            </ul>
-            <ul class="machine-inform-title">
-                <li class="tc-light-gray">배기량</li>
-                <li class="info-num">2000cc</li>
-                <li class="gasoline-icon"></li>
-            </ul>
-            <ul class="machine-inform">
-                <li class="tc-light-gray">연료</li>
-                <li class="sub-title">{{ carDetails.fuel }}</li>
-            </ul>
-            <ul class="machine-inform">
-                <li class="tc-light-gray">미션</li>
-                <li class="sub-title">{{ carDetails.mission }}</li>
-            </ul>
-            <ul class="machine-inform-title">
-                <li class="tc-light-gray">용도변경이력</li>
-                <li class="info-num">-</li>
-                <li class="clean-icon"></li>
-            </ul>
-            <ul class="machine-inform">
-                <li class="tc-light-gray">튜닝이력</li>
-                <li class="sub-title">1회</li>
-            </ul>
-            <ul class="machine-inform">
-                <li class="tc-light-gray">리콜이력</li>
-                <li class="sub-title">-</li>
-            </ul>
+            <SkeletonLoader v-if="isLoading" />
+            <template v-else>
+                <h5>차량 정보 조회 되었어요</h5>
+                <ul class="machine-inform-title">
+                    <li class="tc-light-gray">차량번호</li>
+                    <li class="info-num">{{ carDetails.no }}</li>
+                    <li class="car-icon"></li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">제조사</li>
+                    <li class="sub-title"></li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">모델</li>
+                    <li class="sub-title">{{ carDetails.model }}</li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">세부모델</li>
+                    <li class="sub-title">{{ carDetails.modelSub }}</li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">등급</li>
+                    <li class="sub-title">{{ carDetails.grade }}</li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">세부등급</li>
+                    <li class="sub-title">{{ carDetails.gradeSub }}</li>
+                </ul>
+                <ul class="machine-inform-title">
+                    <li class="tc-light-gray">최초등록일</li>
+                    <li class="info-num"></li>
+                    <li class="car-aside-icon"></li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">년식</li>
+                    <li class="sub-title">{{ carDetails.year }}</li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">차량유형</li>
+                    <li class="sub-title">종합 승용차</li>
+                </ul>
+                <ul class="machine-inform-title">
+                    <li class="tc-light-gray">배기량</li>
+                    <li class="info-num">2000cc</li>
+                    <li class="gasoline-icon"></li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">연료</li>
+                    <li class="sub-title">{{ carDetails.fuel }}</li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">미션</li>
+                    <li class="sub-title">{{ carDetails.mission }}</li>
+                </ul>
+                <ul class="machine-inform-title">
+                    <li class="tc-light-gray">용도변경이력</li>
+                    <li class="info-num">-</li>
+                    <li class="clean-icon"></li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">튜닝이력</li>
+                    <li class="sub-title">1회</li>
+                </ul>
+                <ul class="machine-inform">
+                    <li class="tc-light-gray">리콜이력</li>
+                    <li class="sub-title">-</li>
+                </ul>
+            </template>
         </div>
-        <!--<div class="detail-content mt-5" :class="{ 'active': isActive }" @click="toggleDetailContent">-->
         <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
             <div class="sheet-content">
                 <div @click.stop="">
@@ -75,50 +77,45 @@
                         <p class="tc-light-gray bold-18-font">현재 시세 <span class="normal-14-font">(무사고 기준)</span></p>
                         <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
-                <div v-if="user?.name">
-                    <div class="d-flex justify-content-between mt-4">
-                        <p>차량 정보가 다르신가요?
-                        <span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span>
-                        </p>
-                        <div class="tc-red link refresh-style" @click="isRefreshDisabled ? null : openModal" :class="{ disabled: isRefreshDisabled }">
-                            {{ refreshText }}
-                        <img src="../../../../img/Icon-refresh.png" alt="Refresh" class="fas fa-sync-alt mx-2 mb-1" width="15px"/>
-                        </div> 
-                    </div>
-                    <!-- 정보 갱신 모달 -->
-                    <transition name="fade">
-                    <InfoModal v-if="showModal" @close="closeModal" @click="handleRefresh"/>
-                    </transition>
-                <!-- TODO: 일치하는 차량 없다는 데이터의 기준? 
-                        <div class="none-info">
-                            <div class="complete-car">
-                            <div class="card my-auction mt-3">
-                                <div class="none-complete-ty02">
-                                    <span class="tc-light-gray">일치하는 차량이 없습니다.</span>
-                                </div>
-                            </div>
+                    <div v-if="user?.name">
+                        <div class="d-flex justify-content-between mt-4">
+                            <p>차량 정보가 다르신가요?
+                                <span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span>
+                            </p>
+                            <div class="tc-red link refresh-style d-flex justify-content-between" @click="openModalIfNeeded">
+                                <span>{{ refreshText }}</span>
+                                <transition name="fade">
+                                    <div class="image-container">
+                                        <img v-if="!isRefreshDisabled" src="../../../../img/Icon-refresh.png" :class="{'fa-sync-alt': isRefreshing, 'transition-image': true ,'mx-2':true,'mb-1':true }" alt="Refresh" width="15px"/>
+                                        <img v-else src="../../../../img/checkbox.png" :class="{'transition-image': true,'mx-2':true,'mb-1':true}" alt="Complete" width="15px"/>
+                                    </div>
+                                </transition>
+                            </div> 
                         </div>
-                    </div>-->
-
-                    <div class="flex items-center justify-end my-5">
-                        <router-link :to="{ path: '/selldt' }" class="btn primary-btn ">경매 신청하기</router-link></div>
+                        <transition name="fade">
+                            <InfoModal v-if="showModal" @close="closeModal" @refresh="startLoading"/>
+                        </transition>
+                        <div class="flex items-center justify-end my-5">
+                            <router-link :to="{ path: '/selldt' }" class="btn primary-btn ">경매 신청하기</router-link>
+                        </div>
                     </div>
                     <div v-if="!user?.name">
-                    <div class="d-flex justify-content-between mt-4">
-                    <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="로그인을 하면 자세한 정보를 볼수있어요." tabindex="0"></span></p>
-                    <p class="tc-light-gray link">정보갱신하기</p>
-                    </div>
-                    <div class="none-info">
-                    <div class="complete-car">
-                            <div class="card my-auction mt-3">
-                                <div class="none-complete-ty02">
-                                    <span class="tc-light-gray">로그인을 하면 경매 신청이 가능해요.</span>
+                        <div class="d-flex justify-content-between mt-4">
+                            <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="로그인을 하면 자세한 정보를 볼수있어요." tabindex="0"></span></p>
+                            <p class="tc-light-gray link">정보갱신하기</p>
+                        </div>
+                        <div class="none-info">
+                            <div class="complete-car">
+                                <div class="card my-auction mt-3">
+                                    <div class="none-complete-ty02">
+                                        <span class="tc-light-gray">로그인을 하면 경매 신청이 가능해요.</span>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="flex items-center justify-end my-5">
-                        <router-link :to="{ path: '/selldt' }" class="btn primary-disable" @click="applyAuction">경매 신청하기</router-link></div>
+                        <div class="flex items-center justify-end my-5">
+                            <router-link :to="{ path: '/selldt' }" class="btn primary-disable" @click="applyAuction">경매 신청하기</router-link>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -128,44 +125,54 @@
 
 <script setup>
 import InfoModal from '@/views/modal/infoModal.vue';
+import SkeletonLoader from '@/views/loader/SkeletonLoader.vue';
 import useAuth from "@/composables/auth";
 import { useRouter } from 'vue-router';
-import { ref, onMounted,computed } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from "vuex";
-import useAuctions from '@/composables/auctions'; 
-
+import useAuctions from '@/composables/auctions';
+const previousCarDetails = ref({});
 const isRefreshDisabled = ref(false); // 버튼 비활성화 상태 변수
+const isRefreshing = ref(false); // 로딩 상태 변수
 const refreshText = ref("정보갱신하기"); 
 const carInfoForm = ref({}); 
 const showModal = ref(false);
 const processing = ref(false);
-const validationErrors = ref({})
+const validationErrors = ref({});
+const isLoading = ref(true); 
 const openModal = () => {
     showModal.value = true;
 };
-const { submitCarInfo,refreshCarInfo } = useAuctions();
+const { submitCarInfo, refreshCarInfo } = useAuctions();
 
 const closeModal = () => {
-  showModal.value = false;
+    showModal.value = false;
 };
+
+const startLoading = async () => {
+    isLoading.value = true;
+    closeModal();
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    await handleRefresh();
+    isLoading.value = false;
+};
+
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); //바텀 시트 스타일
-
 const isActive = ref(false); 
 const router = useRoute();
 const carDetails = ref({});
 function saveCarNumberToLocalStorage() {
-  localStorage.setItem('carNumber', carDetails.value.no);
+    localStorage.setItem('carNumber', carDetails.value.no);
 }
-
 
 function toggleSheet() {
     const bottomSheet = document.querySelector('.bottom-sheet');
-    
+
     if (showBottomSheet.value) {
         bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
     } else {
@@ -173,57 +180,105 @@ function toggleSheet() {
     }
     showBottomSheet.value = !showBottomSheet.value;
 }
-
-//정보 갱신 재로드, 로컬저장
+// 정보 갱신 재로드, 로컬저장
 const handleRefresh = async () => {
-  try {
-    await refreshCarInfo();
-    const updatedCarDetails = JSON.parse(localStorage.getItem('carDetails'));
-    if (updatedCarDetails) {
-      carDetails.value = updatedCarDetails;
-      refreshText.value = "정보 갱신완료";
-      isRefreshDisabled.value = true;
-      localStorage.setItem('lastRefreshTime', new Date().toISOString()); // 갱신 시간 저장
+    try {
+        isRefreshing.value = true;
+        await refreshCarInfo();
+        const updatedCarDetails = JSON.parse(localStorage.getItem('carDetails'));
+        if (updatedCarDetails) {
+            carDetails.value = updatedCarDetails;
+            refreshText.value = "정보 갱신완료";
+            isRefreshDisabled.value = true;
+            isRefreshing.value = false;
+
+            const lastRefreshTimes = JSON.parse(localStorage.getItem('lastRefreshTimes')) || {};
+            lastRefreshTimes[`${carDetails.value.owner}-${carDetails.value.no}`] = new Date().toISOString();
+            localStorage.setItem('lastRefreshTimes', JSON.stringify(lastRefreshTimes)); // 갱신 시간 저장
+
+            setTimeout(() => {
+                isRefreshDisabled.value = false;
+                refreshText.value = "정보갱신하기";
+            }, 5000);
+        }
+    } catch (error) {
+        console.error("Failed to refresh car info:", error);
+        isRefreshing.value = false;
     }
-  } catch (error) {
-    console.error("Failed to refresh car info:", error);
-  }
 };
 
-//임시
-const checkRefreshAvailability = () => {
-  const lastRefreshTime = localStorage.getItem('lastRefreshTime');
-  if (lastRefreshTime) {
+const openModalIfNeeded = () => {
+    if (isRefreshDisabled.value) {
+        return;
+    }
+    const lastRefreshTimes = JSON.parse(localStorage.getItem('lastRefreshTimes')) || {};
+    const lastRefreshTime = lastRefreshTimes[`${carDetails.value.owner}-${carDetails.value.no}`];
+    if (!lastRefreshTime) {
+        openModal();
+        return;
+    }
     const lastRefreshDate = new Date(lastRefreshTime);
     const now = new Date();
     const timeDiff = now - lastRefreshDate;
-    const oneWeek = 7 * 24 * 60 * 60 * 1000; 
-    if (timeDiff < oneWeek) {
-      isRefreshDisabled.value = true;
-      refreshText.value = "정보 갱신완료"; 
+    const fiveSeconds = 5000;
+    if (timeDiff >= fiveSeconds) {
+        openModal();
+    } else {
+        isRefreshDisabled.value = true;
+        refreshText.value = "정보 갱신완료";
+
+        setTimeout(() => {
+            isRefreshDisabled.value = false;
+            refreshText.value = "정보갱신하기";
+        }, fiveSeconds - timeDiff);
     }
-  }
 };
 
+onMounted(async () => {
+    await new Promise(resolve => setTimeout(resolve, 2000));
 
-onMounted(() => {
-  const storedData = localStorage.getItem('carDetails');
-  if (storedData) {
-    carDetails.value = JSON.parse(storedData);
-    saveCarNumberToLocalStorage();  
-  } else {
-    console.log('No car details');
-  }
-  checkRefreshAvailability();
+    const storedData = localStorage.getItem('carDetails');
+    if (storedData) {
+        carDetails.value = JSON.parse(storedData);
+        saveCarNumberToLocalStorage();
+        previousCarDetails.value = { ...carDetails.value };
+    } else {
+        console.log('No car details');
+    }
+    checkRefreshAvailability();
+    isLoading.value = false;
 });
+
+
+const checkRefreshAvailability = () => {
+    const lastRefreshTimes = JSON.parse(localStorage.getItem('lastRefreshTimes')) || {};
+    const lastRefreshTime = lastRefreshTimes[`${carDetails.value.owner}-${carDetails.value.no}`];
+    if (lastRefreshTime) {
+        const lastRefreshDate = new Date(lastRefreshTime);
+        const now = new Date();
+        const timeDiff = now - lastRefreshDate;
+        const fiveSeconds = 5000;
+        if (timeDiff < fiveSeconds) {
+            isRefreshDisabled.value = true;
+            refreshText.value = "정보 갱신완료";
+
+            // Schedule the re-enabling of the refresh button
+            setTimeout(() => {
+                isRefreshDisabled.value = false;
+                refreshText.value = "정보갱신하기";
+            }, fiveSeconds - timeDiff);
+        }
+    }
+};
 function toggleDetailContent() {
-    isActive.value = !isActive.value;  
+    isActive.value = !isActive.value;
 }
 
 const applyAuction = () => {
-  alert('로그인이 필요한 서비스입니다.');
+    alert('로그인이 필요한 서비스입니다.');
 }
 </script>
+
 <style scoped>
 .bottom-sheet::before {
     content: "";
@@ -242,25 +297,36 @@ const applyAuction = () => {
     width: 100%;
 }
 .fa-sync-alt {
-  animation: spin 3s linear infinite; 
-  animation-play-state: paused; 
+  animation: spin 1s linear infinite; 
 }
-
-.pulling .fa-sync-alt {
-  animation-play-state: paused; 
-}
-
-.is-spinning .fa-sync-alt {
-  animation-play-state: running; 
-}
-
-@keyframes spin {
-  100% { transform: rotate(1080deg); } 
-}
-.refresh-style{
+.refresh-style {
     background-color: #ebedf1;
     border-radius: 20px;
     padding-left: 10px;
+}
 
+.transition-image {
+    transition: opacity 0.5s ease-in-out;
+    opacity: 1;
+}
+
+.image-container {
+    position: relative;
+}
+
+.transition-image-hidden {
+    opacity: 0;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to {
+    opacity: 0;
 }
 </style>

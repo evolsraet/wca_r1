@@ -116,19 +116,25 @@ const refreshCarInfo = async () => {
             forceRefresh: 'true'
         });
 
-        // 갱신된 데이터를 다시 로컬 스토리지에 저장
         localStorage.setItem('carDetails', JSON.stringify(response.data.data));
-        console.log("Updated carDetails:", response.data.data);  // 확인용 로그
+        console.log("Updated carDetails:", response.data.data);  
+
+
+        const lastRefreshTimes = JSON.parse(localStorage.getItem('lastRefreshTimes')) || {};
+        lastRefreshTimes[`${carDetails.owner}-${carDetails.no}`] = new Date().toISOString();
+        localStorage.setItem('lastRefreshTimes', JSON.stringify(lastRefreshTimes));
+
     } catch (error) {
         console.error(error);
         if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;  // 서버로부터 받은 에러 메시지 처리
+            validationErrors.value = error.response.data.errors;  
         }
-        throw error;  // 에러를 다시 던져서 호출한 쪽에서 처리할 수 있도록 함
+        throw error;  
     } finally {
         processing.value = false;
     }
 };
+
 
 const AuctionCarInfo = async (carInfoForm) => {
     if (processing.value) return;  
