@@ -19,7 +19,7 @@
                         <div class="enter-view align-items-baseline mt-3 bold-18-font">  
                             <input type="hidden" id="user_id" :value="auction.user_id">
                             <input type="hidden" id="auction_id" :value="auction.id">
-                            <input type="hidden" id="dealer_id" :value=auction.bid_id>
+                            <input type="hidden" id="dealer_id" :value="auction.win_bid.user_id">
                             <p class="card-title fs-5"><span class="blue-box">무사고</span>{{auction.car_no}}</p>
                             </div>
                             <p class="mt-2 card-text tc-light-gray fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
