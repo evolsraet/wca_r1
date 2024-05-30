@@ -374,18 +374,21 @@
                                         <div class="label completed">
                                             STEP01
                                         </div>
+                                        <div class="label label-style tc-light-gray">매물 준비</div>
                                     </div>
                                     <div class="line"> </div>
                                     <div class="step">
                                         <div class="label">
                                             STEP02
                                         </div>
+                                        <div class="label label-style tc-light-gray completing-text">경매</div>
                                     </div>
                                     <div class="line"></div>
                                     <div class="step">
                                         <div class="label">
                                             STEP03
                                         </div>
+                                        <div class="label label-style tc-light-gray">완료</div>
                                     </div>
                                 </div>
                                 <p class="auction-deadline">현재 경매중 입니다.</p>
@@ -404,29 +407,32 @@
                                         <div class="label completed">
                                             STEP01
                                         </div>
+                                        <div class="label label-style tc-light-gray">매물 준비</div>
                                     </div>
                                     <div class="line completed"> </div>
                                     <div class="step completing">
                                         <div class="label completed">
                                             STEP02
                                         </div>
+                                        <div class="label label-style tc-light-gray completing-text">경매</div>
                                     </div>
                                     <div class="line"></div>
                                     <div class="step">
                                         <div class="label">
                                             STEP03
                                         </div>
+                                        <div class="label label-style02 tc-light-gray">완료</div>
                                     </div>
                                 </div>
-                                <p class="auction-deadline">딜러를 선택해주세요.</p>
+                                <p class="auction-deadline mt-2">딜러를 선택해주세요.</p>
                                 <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
                                 <div class="btn-group mt-3 mb-2">
                                     <button @click="openModal" type="button" class="btn btn-outline-dark">경매취소</button>
-                                    <transition name="fade" mode="out-in">
-                                        <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
-                                    </transition>
                                     <button type="button" class="btn btn-dark" @click="toggleView">재경매</button>
                                 </div>
+                                <transition name="fade" mode="out-in">
+                                    <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
+                                </transition>
                               <!--  <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>-->
                                 <div class="content mt-3 text-start">
                                     <h5>경매에 참여한 딜러</h5>
@@ -469,18 +475,21 @@
                                         <div class="label completed">
                                             STEP01
                                         </div>
+                                        <div class="label label-style tc-light-gray">매물 준비</div>
                                     </div>
                                     <div class="line completed"></div>
                                     <div class="step completed">
                                         <div class="label completed">
                                             STEP02
                                         </div>
+                                        <div class="label label-style tc-light-gray completing-text">경매</div>
                                     </div>
                                     <div class="line completed"></div>
                                     <div class="step completing">
                                         <div class="label completed">
                                             STEP03
                                         </div>
+                                        <div class="label label-style02 tc-light-gray">완료</div>
                                     </div>
                                 </div>
                                 <p class="auction-deadline">낙찰가 <span class="tc-red"> {{ selectedDealer.price }} 만원</span></p>
@@ -545,14 +554,17 @@
                                 <div class="steps-container mt-3">
                                     <div class="step completed">
                                         <div class="label completed">STEP01</div>
+                                        <div class="label label-style tc-light-gray">매물 준비</div>
                                     </div>
                                     <div class="line completed"></div>
                                     <div class="step completing">
                                         <div class="label completed">STEP02</div>
+                                        <div class="label label-style tc-light-gray completing-text">경매</div>
                                     </div>
                                     <div class="line"></div>
                                     <div class="step">
                                         <div class="label">STEP03</div>
+                                        <div class="label label-style02 tc-light-gray">완료</div>
                                     </div>
                                 </div>
                                 <p class="auction-deadline text-center">경매를 시작합니다.</p>
@@ -562,7 +574,7 @@
                                     <p class="interest-icon tc-light-gray normal-16-font">관심 6</p>
                                 </div>
                                 <div>
-                                    <h5 class="text-start">나의 입찰 금액을 입력해주세요</h5>
+                                    <h5 class="text-start mt-3">나의 입찰 금액을 입력해주세요</h5>
                                     <div class="input-container mt-4">
                                         <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
                                     </div>
@@ -1227,5 +1239,13 @@ input[type="checkbox"] {
     .bottom-sheet {
         width:50%;
     }
+}
+.label-style{
+    top: 22px !important;
+    width: 100px;
+}
+.label-style02{
+    top: 20px !important;
+    width: 100px;
 }
 </style>

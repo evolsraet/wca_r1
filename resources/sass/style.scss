@@ -2276,6 +2276,10 @@ video {
         border: 2px solid var(--color-label-completed);
         animation: blink 2s infinite;
     }
+    .sheet-content .step.completing-text{
+        top: 20px !important;
+        animation: blink 2s infinite;
+    }
     
     .sheet-content .step.in-progress {
         width: 18px;

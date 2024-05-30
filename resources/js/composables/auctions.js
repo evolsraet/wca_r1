@@ -269,7 +269,6 @@ const updateAuctionStatus = async (id, status) => {
         });
     } finally {``
         isLoading.value = false;
-        router.push({ name: 'auctions.index' }); 
     }
 };
 
