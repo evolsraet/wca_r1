@@ -59,8 +59,8 @@
                                         </ul>
                                     </div>
                                     <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
-                                        <p>(추후 수정 예정){{ review.id }}</p>
-                                        <p class="tc-red">1,000 만원</p>
+                                        <p>{{ review.auction.car_no }}</p>
+                                        <p class="tc-red">{{ amtComma(review.auction.win_bid.price) }} 만원</p>
                                     </div>
                                     <div class="rating">
                                         <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
@@ -68,7 +68,7 @@
                                             <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
                                         </label>
                                     </div>
-                                    <p>차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.</p>
+                                    <p>{{ review.content }}</p>
                                 </div>
                             </div>
                         </div>
@@ -99,7 +99,7 @@ const activeTab = ref('available'); //nav 탭 바
 const showDeleteConfirmation = ref(false); // "삭제되었습니다," 띄우기
 const isMenuVisible = ref(false);
 const { auctionsData, getAuctions } = useAuctions();
-const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
+const { getUserReview , deleteReviewApi , reviewsData } = initReviewSystem(); 
 const { amtComma } = cmmn();
 const filteredAuctions = computed(() => {
     const reviewedAuctionIds = reviewsData.value.map(review => review.auction_id);
@@ -156,7 +156,7 @@ function showDeleteMessage() {
 
 onMounted(async () => {
     await getAuctions(1);
-    console.log(auctionsData.value);
+    //console.log(auctionsData.value);
     userId = auctionsData.value[0].user_id;
     await getUserReview(userId);
     //console.log(reviewsData.value);

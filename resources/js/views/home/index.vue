@@ -55,38 +55,22 @@
               <router-link :to="{ name: 'index.allreview' }" class="btn-apply">전체보기</router-link>
             </div>
             <div class="row row-cols-1 row-cols-md-2 g-4">
-              <div class="col mb-3" v-for="n in 4" :key="n">
+                <div class="col mb-3" v-for="review in reviewsData.slice(0,4)" :key="review">
                 <div class="card">
                   <div class="car-imges"></div>
                   <div class="card-body">
-                    <h5 class="card-title">현대 소나타 (DN8)</h5>
+                    <h5 class="card-title">{{ review.auction.car_no }}</h5>
                     <div class="rating">
-                      <label class="rating__label rating__label--full" for="star1">
-                        <input type="radio" id="star1" class="rating__input" name="rating" value="">
-                        <span class="star-icon filled"></span>
-                      </label>
-                      <label class="rating__label rating__label--full" for="star2">
-                        <input type="radio" id="star2" class="rating__input" name="rating" value="">
-                        <span class="star-icon"></span>
-                      </label>
-                      <label class="rating__label rating__label--full" for="star3">
-                        <input type="radio" id="star3" class="rating__input" name="rating" value="">
-                        <span class="star-icon"></span>
-                      </label>
-                      <label class="rating__label rating__label--full" for="star4">
-                        <input type="radio" id="star4" class="rating__input" name="rating" value="">
-                        <span class="star-icon"></span>
-                      </label>
-                      <label class="rating__label rating__label--full" for="star5">
-                        <input type="radio" id="star5" class="rating__input" name="rating" value="">
-                        <span class="star-icon"></span>
-                      </label>
+                        <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
+                            <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
+                            <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
+                        </label>
                     </div>
                     <div class="d-sm-flex justify-content-between text-muted">
-                      <span class="deilname">담당 딜러 홍길동님</span>
-                      <span class="date">2024-03-18</span>
+                        <span class="deilname">담당 딜러 {{ review.auction.dealer_name }} 님</span>
+                        <span class="date">{{ splitDate(review.created_at) }}</span>
                     </div>
-                    <p class="card-text">차갑아서 보다 안 아닐 그럽시다 다급하다 떨어지어무슨 절망 아닌 자기에 달려가아 누구에 고스톱은 발생한가.</p>
+                    <p class="card-text">{{ review.content }}</p>
                   </div>
                 </div>
               </div>
@@ -179,6 +163,7 @@
   import useAuctions from '@/composables/auctions';
   import LawGid from '@/views/modal/LawGid.vue';
   import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
+  import { initReviewSystem } from '@/composables/review';
   
   const bannerRef = ref(null);
   const reviewContentRef = ref(null);
@@ -192,7 +177,8 @@
   const { carInfoForm, submitCarInfo, processing } = useAuctions();
   
   const isMobileView = ref(window.innerWidth <= 640);
-  
+  const { getAllReview, reviewsData, splitDate } = initReviewSystem(); 
+
   const openModal = (type) => {
     modalContent.value = type;
     isModalOpen.value = true;
@@ -208,7 +194,9 @@
     }
   };
   
-  onMounted(() => {
+  onMounted(async () => {
+    await getAllReview();
+
     nextTick(() => {
       const banner = bannerRef.value;
       const reviewContent = reviewContentRef.value;

@@ -4,9 +4,9 @@
         * web-text: : 웹 화면에서 보이는뷰
     --> 
     <div class="container">
-        <form @submit.prevent="editReview(reviewId)">
+        <form @submit.prevent="editReview(reviewId)" v-for="review in reviewData" :key="review">
             <div class="create-review">
-                    <div class="left-container" v-for="auction in auctionsData" :key="auction.id">
+                    <div class="left-container">
                         <div class="container-img mov-info02">
                             <div class="left-img">
                                 <img src="../../../img/car_example2.png" alt="전체 이미지0 ">
@@ -17,14 +17,14 @@
                             </div>
                         </div>
                         <div class="enter-view align-items-baseline mt-3 bold-18-font">  
-                            <input type="hidden" id="user_id" :value="auction.user_id">
-                            <input type="hidden" id="auction_id" :value="auction.id">
-                            <input type="hidden" id="dealer_id" :value="auction.win_bid.user_id">
-                            <p class="card-title fs-5"><span class="blue-box">무사고</span>{{auction.car_no}}</p>
+                            <input type="hidden" id="user_id" :value="review.auction.user_id">
+                            <input type="hidden" id="auction_id" :value="review.auction.id">
+                            <input type="hidden" id="dealer_id" :value="review.auction.win_bid.user_id">
+                            <p class="card-title fs-5"><span class="blue-box">무사고</span>{{review.auction.car_no}}</p>
                             </div>
                             <p class="mt-2 card-text tc-light-gray fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
                             <div class="enter-view mt-2">
-                                <p class="card-text tc-light-gray fs-5 mov-text">딜러명<span class="process ms-3"> (자동지정)</span></p>
+                                <p class="card-text tc-light-gray fs-5 mov-text">딜러명<span class="process ms-3">{{review.auction.dealer_name}}</span></p>
                                 <p class="card-text tc-light-gray fs-5 web-text">12 삼 4567</p>
                                 <a href="#"><span class="red-box-type02 pass-red">상세보기</span></a>
                                 </div>
@@ -34,7 +34,7 @@
                                     <div class="row flex-row">
                                     <div class="col col-line">
                                         <div class="item-label">년식</div>
-                                        <div class="item-value mb-0">20년형</div>
+                                        <div class="item-value mb-0">{{ carInfo.year }} 년형</div>
                                     </div>
                                     <div class="col col-line">
                                         <div class="item-label">주행거리</div>
@@ -54,7 +54,7 @@
                             </div>
                             <div class="right-container">
                         <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
-                        <div class="sheet-content" v-for="review in reviewsData" :key="review">
+                        <div class="sheet-content">
                             <div class="mt-3"  @click.stop="">
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
@@ -86,7 +86,7 @@
     }
 </script>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted , nextTick } from 'vue';
 import { useRoute } from 'vue-router'; 
 import useAuctions from "@/composables/auctions";
 import { initReviewSystem } from '@/composables/review'; // 별점 js
@@ -95,15 +95,13 @@ const route = useRoute();
 const reviewId = parseInt(route.params.id); 
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); //바텀 시트 스타일
-const { getUserReviewInfo , editReview } = initReviewSystem(); 
-const { getAuctionById } = useAuctions();
-let auctionsData = ref();
-let reviewsData = ref();
+const { getUserReviewInfo , editReview , getCarInfo , setInitialStarRating } = initReviewSystem(); 
+let reviewData = ref();
+const carInfo = ref();
 
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {
-    const bottomSheet = document.querySelector('.bottom-sheet');
-    
+    const bottomSheet = document.querySelector('.bottom-sheet');   
     if (showBottomSheet.value) {
         bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
     } else {
@@ -113,51 +111,15 @@ function toggleSheet() {
 }
 
 onMounted(async () => {
-    const reviewResponse = await getUserReviewInfo(reviewId);
-    reviewsData.value = [reviewResponse]; 
-
-    const auctionResponse = await getAuctionById(reviewsData.value[0].auction_id);
-    auctionsData.value = [auctionResponse.data]; 
-    
-    setInitialStarRating(reviewsData.value[0].star);
+    const response = await getUserReviewInfo(reviewId);
+    reviewData.value = [response];
+    carInfo.value = await getCarInfo(response.auction.owner_name, response.auction.car_no);
+    await nextTick();
+    setInitialStarRating(response.star);
     initReviewSystem();
 });
 
-function setInitialStarRating(starRating) {
-    const stars = document.querySelectorAll('.rating__input'); 
-    const scoreDisplay = document.querySelector('.rating-score'); // 점수를 표시할 span 요소
-    
-    const reviewStarValue = document.getElementById('reviewStarValue');
-    reviewStarValue.value = starRating;
-    scoreDisplay.textContent = `( ${starRating} 점 )`; 
-    
-    const starDescription = document.querySelectorAll('.rating-description');
-    stars.forEach(star => {
-        if (parseInt(star.value) === starRating) {
-            star.checked = true;
-        }
-    });
-    starDescription.forEach(des => {
-        const value = des.getAttribute('value');
-        switch (value) {
-            case '1':
-                des.textContent = '그저그래요';
-                break;
-            case '2':
-                des.textContent = '괜찮아요';
-                break;
-            case '3':
-                des.textContent = '좋아요';
-                break;
-            case '4':
-                des.textContent = '만족해요';
-                break;
-            case '5':
-                des.textContent = '최고에요!';
-                break;      
-        }
-    })
-}
+
 
 </script>
 <style scoped>

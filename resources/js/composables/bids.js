@@ -13,11 +13,21 @@ export default function useBid() {
     const validationErrors = ref({});
     const isLoading = ref(false);
     const swal = inject('$swal')
+
     const getBids = async () => {
 
         try {
             const response = await axios.get("/api/bids");
             bidsData.value = response.data.data;
+        } catch (error) {
+            console.error('Error fetching bids:', error);
+        }
+    };
+
+    const getBidById = async (id) => {
+        try {
+            const response = await axios.get(`/api/bids/${id}`);
+            return response.data.data;
         } catch (error) {
             console.error('Error fetching bids:', error);
         }
@@ -120,6 +130,7 @@ export default function useBid() {
         bidsData,
         bidsCountByUser,
         getBids,
+        getBidById,
         viewBids,
         bids,
         bid,

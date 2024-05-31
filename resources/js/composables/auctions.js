@@ -39,6 +39,8 @@ const getAuctions = async (page = 1) => {
                 const data = await getUser(auction.win_bid.user_id);
                 const name = data.dealer.name;
                 auction.dealer_name = name;
+            } else {
+                auction.value.dealer_name = null; 
             }
         };
 
@@ -55,7 +57,14 @@ const getAuctionById = async (id) => {
     try {
         // API 경로에서 {auction} 부분을 실제 ID로 치환하여 요청
         const response = await axios.get(`/api/auctions/${id}`);
-        auction.value = response.data;
+        auction.value = response.data.data;
+        if (auction.value.win_bid) {
+            const data = await getUser(auction.value.win_bid.user_id);
+            const name = data.dealer.name;
+            auction.value.dealer_name = name;
+        } else {
+            auction.value.dealer_name = null; 
+        }
         return response.data;
     } catch (error) {
         console.error('Error ID:', error);
