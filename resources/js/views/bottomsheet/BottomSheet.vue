@@ -4,7 +4,7 @@
         <span class="handle"></span>
         <i v-if="dismissable" @click.stop="closeSheet" class="material-icons dismiss"></i>
       </header>
-      <div class="content" ref="content" :class="{ 'no-scroll': showHead }" @mousedown.stop @touchstart.stop>
+      <div class="content p-3" ref="content" :class="{ 'no-scroll': showHead }" @mousedown.stop @touchstart.stop>
         <slot></slot>
       </div>
     </div>

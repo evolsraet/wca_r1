@@ -119,10 +119,10 @@
                     </div>
                     <div class="text-muted mt-4 text-center">
                       <p class="fs-6">
-                        <span @click="openModal('copywrite')" class="link-style">카피라이트</span> |
                         <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
                         <span @click="openModal('terms')" class="link-style">이용약관</span>
                       </p>
+                      <p class="my-3 tc-light-gray">ⓒ Watosys all rights reserved.</p>
                     </div>
                   </div>
                 </form>

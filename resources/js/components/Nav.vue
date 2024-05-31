@@ -113,41 +113,56 @@
                         <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close"></button>
                     </div>
                     <div class="toggle-nav-content">
-                        <div class="top-content mt-2">
-                            <span class="login-prompt">로그인하면 <br>더 다양한 정보를 <br>얻을 수 있어요.</span>
-                            <div class="button-area">
-                                <a class="btn btn-primary shadow wd-100 tc-wh" href="/login">로그인</a>
-                            </div>
-                            <div class="register-linker tc-light-gray">
-                                <span>아이디가 없으신가요?</span>
-                                <router-link :to="{ name: 'auth.register' }" class="tc-light-gray" @click="toggleNavbar">회원가입</router-link>
-                            </div>
-                            <div class="middle-content-ty03">
-                                <div class="menu-illustration">
-                                    <img src="../../img/car-objects.png" alt="자동차 이미지" width="170" height="170">
+                        <div class="top-content ">
+                            <div class="menu-illustration p-3">
+                                    <img src="../../img/newicon/login-banner.png" alt="자동차 이미지" width="280" height="80">
+                                    <div class="text-start">
+                                        <p>내 차 팔까?</p>
+                                        <div class="d-flex align-items-center">
+                                            <p class="tc-primary bold-18-font">로그인하기 </p>
+                                            <div class="icon right-icon"></div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="footer-content">
-                                <router-link :to="{ name: 'home' }" class="menu-item" @click="toggleNavbar">
-                                    <div class="icon icon-nav-car"></div>
-                                    <span class="menu-text">내 차 조회</span>
-                                    <div class="icon right-icon"></div>
-                                </router-link>
-                                <router-link :to="{ name: 'index.allreview' }" class="menu-item" @click="toggleNavbar">
-                                    <div class="icon icon-ratings"></div>
-                                    <span class="menu-text">이용후기</span>
-                                    <div class="icon right-icon"></div>
-                                </router-link>
-                                <router-link :to="{ name: 'dealer.profile' }" class="menu-item" @click="toggleNavbar">
-                                    <div class="icon icon-nav-bulb"></div>
-                                    <span class="menu-text">서비스 소개</span>
-                                    <div class="icon right-icon"></div>
-                                </router-link>
+                                <div class="under-line"></div>
+                                    <div class="p-2">
+                                        <router-link :to="{ name: 'home' }" class="menu-item mt-0" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                            <div class="icon icon-nav-car"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text">차량 조회</span>
+                                                <span class="tc-light-gray font-1">내 차량 조회</span>
+                                            </div>
+                                        </router-link>
+                                        <router-link :to="{ name: 'index.allreview' }" class="menu-item mt-1" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                            <div class="icon icon-ratings"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text">이용후기</span>
+                                                <span class="tc-light-gray font-1"> 다양한 판매 후기</span>
+                                            </div>
+                                        </router-link>
+                                        <router-link :to="{ name: 'dealer.profile' }" class="menu-item mt-1 mb-3" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                            <div class="icon icon-nav-bulb"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text">서비스 소개</span>
+                                                <span class="tc-light-gray font-1">위카 란?</span>
+                                            </div>
+                                        </router-link>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                            <div class="logo-content">
+                                <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
+                            </div>
                     </div>
                 </div>
-            </div>
             <!-- web nav bar -->
             <div class="collapse navbar-collapse">
                 <ul class="navbar-nav mt-2 mt-lg-0 gap-1 ms-auto">
@@ -274,6 +289,8 @@ function toggleNavbar() {
     display: flex;
     flex-direction: column;
     overflow-y: hidden;
+    justify-content: space-between;
+    height: 84vh !important;
 }
 
 .middle-content-ty02 {
@@ -306,12 +323,21 @@ function toggleNavbar() {
 }
 
 .menu-illustration {
-    margin-bottom: 20px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    position: relative;
 }
 
+.menu-illustration img {
+    width: 100%;
+    height: 100%;
+}
+
+.text-start {
+    position: absolute;
+    top: 50%; 
+    left: 25%;
+    transform: translate(-50%, -50%); 
+    color: #c79595;
+}
 .login-prompt {
     display: block;
     width: 100%;
@@ -327,7 +353,9 @@ function toggleNavbar() {
     justify-content: space-between;
 }
 
-
+.font-1{
+    font-size: 1rem;
+}
 a.navbar-toggler.p-2 {
     display: none !important;
 }
@@ -349,5 +377,26 @@ display: none !important;
     font-size: 1.5rem;
     padding: 0;
     cursor: pointer;
+}
+
+
+.logo-content {
+    background-color: #f7f8fb;
+    width: 50vh;
+    height: 65px;
+    position: fixed;
+    bottom: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.sd-menu {
+    width: 48px;
+    height: 48px;
+    background-color: #f7f8fb;
+    border-radius: 6px;
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
 }
 </style>

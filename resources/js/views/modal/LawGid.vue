@@ -3,21 +3,6 @@
     카피라이트, 개인정보 처리방침, 이용약관 모달
 ----------------------------------------------->
     <!-- Copywrite  -->
-    <transition name="fade" mode="out-in">
-    <section v-if="content === 'copywrite'" class="modal modal-section type-confirm alert-modal-type02">
-        <div class="modal-dialog" @click.self="closeModal">
-            <div class="modal-content shadow" @click.self="closeModal">
-                <div class="modal-body">
-                <div class="nav-header"><button type="button" class="btn-close" @click="closeModal"></button></div>
-                <div class="demo"></div>
-            <div class="content p-0 mt-0">
-                <p class="overlay_text_cancle">카피라이트 내용</p>
-            </div>
-            </div>
-        </div>
-        </div>
-    </section>
-  </transition>
   <transition name="fade" mode="out-in">
     <!-- Privacy  -->
     <section v-if="content === 'privacy'" class="modal modal-section type-confirm alert-modal-type02"  @click.self="closeModal">
