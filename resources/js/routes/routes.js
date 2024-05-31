@@ -176,6 +176,11 @@ export default [
                 component: () => import('../views/bbs/allreview.vue'),
             },
             {
+                path: '/review/:id',
+                name: 'user.review-detail',
+                component: () => import('../views/bbs/Detail.vue'), 
+            },     
+            {
                 path: '/introduce',
                 name: 'index.introduce',
                 component: () => import('../views/home/intro.vue'),

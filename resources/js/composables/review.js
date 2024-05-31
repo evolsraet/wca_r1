@@ -1,9 +1,10 @@
 import axios from 'axios';
 import { reactive , ref } from 'vue';
+import useAuctions from "./auctions";
 let starScore = 0;
 
 export function initReviewSystem() {
-
+    const { getAuctionById, AuctionCarInfo } = useAuctions();
     const review = reactive({
             content: "",
             user_id: "",    
@@ -124,6 +125,44 @@ export function initReviewSystem() {
         }
     }
     
+    //작성 리뷰 불러올 때 별점 뿌리기(수정,더보기)
+    const setInitialStarRating = (starRating) => {
+        const stars = document.querySelectorAll('.rating__input'); 
+        const scoreDisplay = document.querySelector('.rating-score'); // 점수를 표시할 span 요소
+        scoreDisplay.textContent = `( ${starRating} 점 )`; 
+
+        const reviewStarValue = document.getElementById('reviewStarValue');
+        if(reviewStarValue){
+            reviewStarValue.value = starRating;
+        }
+        const starDescription = document.querySelectorAll('.rating-description');
+        stars.forEach(star => {
+            if (parseInt(star.value) === starRating) {
+                star.checked = true;
+            }
+        });
+        starDescription.forEach(des => {
+            const value = des.getAttribute('value');
+            switch (value) {
+                case '1':
+                    des.textContent = '그저그래요';
+                    break;
+                case '2':
+                    des.textContent = '괜찮아요';
+                    break;
+                case '3':
+                    des.textContent = '좋아요';
+                    break;
+                case '4':
+                    des.textContent = '만족해요';
+                    break;
+                case '5':
+                    des.textContent = '최고에요!';
+                    break;      
+            }
+        })
+    }
+
     function setReviewValue(user_id, auction_id, dealer_id, star, content){
         review.content = content;
         review.user_id = user_id;
@@ -223,12 +262,17 @@ export function initReviewSystem() {
         try {      
             const response = await axios.get("/api/reviews");
             reviewsData.value  = response.data.data.filter(review => review.user_id === id); 
+            for (const review of reviewsData.value) {
+                const auction = await getAuctionById(review.auction_id);
+                review.auction = auction.data;
+            }
+            console.log(reviewsData.value);
             if(response.status === '204'){
                 return true;
             } else{
                 return false;
             }
-            //console.log(reviewsData.value);
+            
         } catch (error) {
             console.log(error);
         }
@@ -238,18 +282,24 @@ export function initReviewSystem() {
     const getUserReviewInfo = async (id) => {
         try {      
             const response = await axios.get(`/api/reviews/${id}`);
-            //console.log(response);
-            return response.data.data;
+            const data = response.data.data;
+            const auction = await getAuctionById(data.auction_id);
+            data.auction = auction.data;
+            return data;
         } catch (error) {
             console.log(error);
         }
     }
 
     // 작성한 이용후기 불러오기 (전체 리뷰 불러오기)
-    const getAllReview = async () => {
+    const getAllReview = async (page = 1) => {
         try {      
             const response = await axios.get("/api/reviews");
             reviewsData.value = response.data.data;
+            for (const review of reviewsData.value) {
+                const auction = await getAuctionById(review.auction_id);
+                review.auction = auction.data;
+            }
         } catch (error) {
             console.log(error);
         }
@@ -265,6 +315,24 @@ export function initReviewSystem() {
     function splitDate (date){
         return date.split(' ')[0];
     }
+    
+    const getCarInfo = async (owner, no) => {
+        try{
+            const carInfoForm = {
+                owner: owner,
+                no: no,
+                forceRefresh: ""
+            };
+            const carInfoResponse = await AuctionCarInfo(carInfoForm);
+            return carInfoResponse.data;
+        } catch (error){
+
+        }
+        
+    }
+
+   
+
     return {
         review,
         submitReview,
@@ -275,7 +343,9 @@ export function initReviewSystem() {
         getUserReviewInfo,
         formattedAmount,
         splitDate,
-        reviewsData
+        reviewsData,
+        getCarInfo,
+        setInitialStarRating
     }
 
 }

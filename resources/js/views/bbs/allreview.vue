@@ -20,7 +20,7 @@
                     </label>
                     <div class="d-sm-flex justify-content-between text-muted">
                       <p class="card-text over-text process">{{ slide.text }}</p>
-                      <span class="tc-light-gray">더보기</span>
+                      <span class="tc-light-gray" @click="navigateToDetail(slide.id)">더보기</span>
                     </div>
                   </div>
                 </div>
@@ -57,7 +57,7 @@
         </div>
         <div class="row">
           <div class="col-md-3 mb-4" v-for="(card, index) in cards" :key="index">
-            <div class="card">
+            <div class="card" @click="navigateToDetail(card.id)">
               <div class="car-imges"></div>
               <div class="card-body">
                 <h5 class="card-title">{{ card.title }}</h5>
@@ -69,7 +69,7 @@
                   <span class="d-flex mx-2 rating-score tc-red"></span>
                 </div>
                 <div class="d-sm-flex justify-content-between text-muted">
-                  <span class="deilname">담당 딜러 홍길동님</span>
+                  <span class="deilname">담당 딜러 {{ card.dealer}} 님</span>
                   <span class="date">{{ splitDate(card.date) }}</span>
                 </div>
                 <p class="card-text">{{ card.text }}</p>
@@ -97,13 +97,13 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useStore } from "vuex";
 import { Swiper, SwiperSlide } from 'swiper/vue';
 import { initReviewSystem } from '@/composables/review';
+import { useRouter } from 'vue-router';
 import 'swiper/css';
-
 import 'swiper/css/pagination';
-//import { Pagination } from 'swiper';
+import { Pagination } from 'swiper';
 
 const showFullView = ref(false);
-
+const router = useRouter();
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 const isUser = computed(() => user.value?.roles?.includes('user'));
@@ -112,7 +112,7 @@ const showBottomSheet = ref(true);
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
 const { getAllReview , reviewsData , splitDate } = initReviewSystem(); 
 const slidesPerView = ref(1); // 슬라이드를 한 번에 하나만 보이도록 설정
-//const modules = [Pagination];
+const modules = [Pagination];
 
 const slides = ref([]);
 
@@ -136,15 +136,23 @@ const toggleSheet = () => {
   showBottomSheet.value = !showBottomSheet.value;
 };
 
+function navigateToDetail(reviewId) {
+  console.log(reviewId);
+    router.push({ name: 'user.review-detail', params: { id: reviewId } });
+}
+
 onMounted(async () => {
   await getAllReview();
   slides.value = reviewsData.value.slice(0,4).map(review => ({
-    title: review.id,
+    title: review.auction.car_no,
+    id: review.id,
     rating: review.star,
     text: review.content
   }));
   cards.value = reviewsData.value.map(review => ({
-    title: review.id,
+    title: review.auction.car_no,
+    dealer: review.auction.dealer_name,
+    id: review.id,
     rating: review.star,
     date: review.created_at,
     text: review.content
