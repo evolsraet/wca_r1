@@ -1,5 +1,4 @@
 <template>
-  <div class="sheet-wrap">
     <div ref="sheet" class="sheet" :class="{ 'head': showHead, 'half': showBottomSheet, 'dragging': isDragging }">
       <header class="handle-head" @mousedown="startDrag" @touchstart="startDrag" @click="toggleSheet">
         <span class="handle"></span>
@@ -9,7 +8,6 @@
         <slot></slot>
       </div>
     </div>
-  </div>
 </template>
 
 <script>
