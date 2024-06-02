@@ -554,6 +554,20 @@ video {
     height: 64px;
     width: 115px;
 }
+.navbar-brand-dealer {
+    background-image: url('../img/logo-delaer.png'); 
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center; 
+    height: 50px; 
+    width: auto; 
+    display: block; 
+    min-width: 100px; 
+}
+
+
+
+
 
 .page-container {
     display: flex;

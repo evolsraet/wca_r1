@@ -1,10 +1,10 @@
 <template>
     <div class=""></div>
-    <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm p-2">
+    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', 'p-2', navbarClass, textClass]">
         <div class="container nav-font">
             <button v-if="isDetailPage" @click="goBack" class="p-2 btn btn-back back-btn-icon">
             </button>
-            <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand"></router-link>
+            <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand-dealer"></router-link>
             <router-link v-else-if="isUser" to="/" class="navbar-brand"></router-link>
             <router-link v-else to="/" class="navbar-brand"></router-link>
             <!-- movnav bar -->
@@ -119,7 +119,7 @@
                                     <div class="text-start">
                                         <p>내 차 팔까?</p>
                                         <div class="d-flex align-items-center">
-                                            <p class="tc-primary bold-18-font">로그인하기 </p>
+                                            <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font">로그인하기 </router-link>
                                             <div class="icon right-icon"></div>
                                         </div>
                                     </div>
@@ -248,7 +248,12 @@ const user = computed(() => store.getters["auth/user"]);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
 const isAdmin = computed(() => user.value?.roles?.includes('admin'));
-
+const navbarClass = computed(() => {
+  return isDealer.value ? 'bg-primary' : 'bg-white';
+});
+const textClass = computed(() => {
+  return isDealer.value ? 'text-white' : 'text-dark';
+});
 const { logout } = useAuth();
 
 const redirectByName = (routeName) => {
@@ -284,7 +289,6 @@ function toggleNavbar() {
 </script>
 
 <style scoped>
-
 .toggle-nav-content {
     display: flex;
     flex-direction: column;
