@@ -228,7 +228,7 @@ export function initReviewSystem() {
                     axios.delete(`/api/reviews/${id}`)
                         .then(response => {
                             getAllReview()
-                            router.push({name: 'deposit.index'})
+                            router.push({name: 'review.index'})
                             swal({
                                 icon: 'success',
                                 title: 'review deleted successfully'

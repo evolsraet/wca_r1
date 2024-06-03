@@ -376,6 +376,12 @@ export default [
                 component: () => import('../views/admin/auction/approve.vue'),
                 meta: { breadCrumb: 'auction approve' }
             },
+            {
+                name: 'review.index',
+                path: 'review',
+                component: () => import('../views/admin/review/Index.vue'),
+                meta: { breadCrumb: 'review' }
+            },
         ]
     },
     {
