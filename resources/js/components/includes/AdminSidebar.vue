@@ -166,7 +166,7 @@
                 </li>
                 <li v-if="can('role.admin')" class="nav-link">
                     <router-link
-                        :to="{ name: 'deposit.index' }"
+                        :to="{ name: 'review.index' }"
                         class="nav-link px-0"
                     >
                         <svg
