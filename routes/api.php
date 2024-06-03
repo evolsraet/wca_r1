@@ -25,12 +25,14 @@ Route::post('users', [UserController::class, 'store']);   // 회원가입은 인
 Route::post('users/test', [UserController::class, 'test']);   // 회원가입은 인증없이
 Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);
 
+Route::apiResource('reviews', ReviewController::class)->only(['index', 'show']);
+Route::apiResource('reviews', ReviewController::class)->except(['index', 'show'])->middleware('auth:sanctum');
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Route::put('auctions/statusUpdate/{id}', [AuctionController::class, 'statusUpdate']);
 
     Route::apiResource('auctions', AuctionController::class);
     Route::apiResource('bids', BidController::class);
-    Route::apiResource('reviews', ReviewController::class);
     // Route::apiResource('likes', LikeController::class);
 
     Route::get('users/me', [UserController::class, 'me']);   // 본인가져오기

@@ -108,6 +108,11 @@ trait CrudTrait
             $query->with($validRelations);
         });
 
+        // 삭제데이터도 포함
+        $result = $result->when(request('withTrashed'), function ($query) {
+            $query->withTrashed();
+        });
+
         // 조건문
         // 키 테이블명(복수).필드
         // 키:값 or 키:비교:값
@@ -297,7 +302,7 @@ trait CrudTrait
             $this->afterProcess(__FUNCTION__, request(), null); // Item is deleted, so passing null
 
             DB::commit();
-            return response()->api(null, null, 'ok', 204); // Consider using HTTP 204 for successful deletion with no content
+            return response()->api(null, null, 'ok', 200); // Consider using HTTP 204 for successful deletion with no content
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;

@@ -32,11 +32,13 @@ class ReviewService
                 $this->modifyAuth($auction->user_id);
                 break;
             case 'update':
-            case 'delete':
+            case 'destroy':
                 $this->modifyAuth($result->user_id);
+                break;
             default:
                 break;
         }
+
         if ($method == 'store') {
         } elseif ($method == 'update' or $method == 'delete') {
         }
@@ -46,12 +48,7 @@ class ReviewService
     public function modifyAuth($user_id)
     {
         if (!auth()->user()->hasPermissionTo('act.admin') && $user_id != auth()->user()->id) {
-            // dd([
-            //     $auction->id,
-            //     $auction->user_id,
-            //     request()->user()->id,
-            // ]);
-            throw new \Exception('리뷰작성 가능한 사용자가 아닙니다.');
+            throw new \Exception('권한이 없습니다.');
         }
     }
 }

@@ -110,7 +110,7 @@ class ReviewTest extends TestCase
         $review = Review::factory()->create();
         $user = User::where('id', $review->user_id)->first();
 
-        // 본인 or 관리자만
+        // 실패 : 본인 or 관리자만
         $disableUser = User::role('user')->where('id', '!=', $user->id)->first();
         $this->actingAs($disableUser);
         $response = $this->deleteJson('/api/reviews/' . $review->id);

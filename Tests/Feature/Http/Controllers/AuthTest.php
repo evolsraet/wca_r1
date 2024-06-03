@@ -216,9 +216,9 @@ class AuthTest extends TestCase
         $file = UploadedFile::fake()->create('file_user_sign.pdf', 100); // 100KB 크기의 PDF 파일
         $data['file_user_sign'] = $file; // 여기서는 $data 배열에 직접 추가하는 대신, 파일을 요청에 별도로 추가합니다.
 
-        $response = $this->putJson('/api/users', $data, [
-            'file_user_sign' => $file,
-        ]);
+        // $response = $this->putJson('/api/users', $data, [
+        //     'file_user_sign' => $file,
+        // ]);
 
         $response = $this->putJson("/api/users/{$user->id}", [
             'user' => [
