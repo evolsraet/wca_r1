@@ -179,7 +179,8 @@
   import useAuctions from '@/composables/auctions';
   import LawGid from '@/views/modal/LawGid.vue';
   import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
-  
+  import { initReviewSystem } from '@/composables/review';
+
   const bannerRef = ref(null);
   const reviewContentRef = ref(null);
   
@@ -208,7 +209,10 @@
     }
   };
   
+  const { getAllReview, reviewsData, splitDate } = initReviewSystem(); 
+
   onMounted(() => {
+    getAllReview();
     nextTick(() => {
       const banner = bannerRef.value;
       const reviewContent = reviewContentRef.value;

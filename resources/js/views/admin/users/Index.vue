@@ -230,7 +230,7 @@
                                         회원
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 text-left">
-                                        Actions
+                                        수정/삭제
                                     </th>
                                 </tr>
                             </thead>

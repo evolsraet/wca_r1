@@ -317,13 +317,37 @@ const updateAuctionStatus = async (id, status) => {
 };
 
     const deleteAuction = async (id) => {
-        try {
-          const response = await axios.delete(`/api/auctions/${id}`);
-          return response.data;
-        } catch (error) {
-          console.error('Error deleting auction:', error);
-          throw error;
-        }
+        swal({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this action!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            confirmButtonColor: '#ef4444',
+            timer: 20000,
+            timerProgressBar: true,
+            reverseButtons: true
+        })
+            .then(result => {
+                if (result.isConfirmed) {
+                    axios.delete(`/api/auctions/${id}`)
+                        .then(response => {
+                            getAuctions()
+                            router.push({name: 'auctions.index'})
+                            swal({
+                                icon: 'success',
+                                title: 'Auction deleted successfully'
+                            })
+                        })
+                        .catch(error => {
+                            swal({
+                                icon: 'error',
+                                title: 'Something went wrong'
+                            })
+                        })
+                }
+            })
+        
       };
 
     return {

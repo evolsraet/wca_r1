@@ -1,9 +1,12 @@
 import axios from 'axios';
-import { reactive , ref } from 'vue';
+import { reactive , ref , inject } from 'vue';
 import useAuctions from "./auctions";
+import { useRouter } from 'vue-router';
 let starScore = 0;
 
 export function initReviewSystem() {
+    const router = useRouter();;
+    const swal = inject('$swal');
     const { getAuctionById, AuctionCarInfo } = useAuctions();
     const review = reactive({
             content: "",
@@ -17,6 +20,7 @@ export function initReviewSystem() {
         review
     }
     const reviewsData = ref([]);
+    const pagination = ref({});
 
     const rateWrap = document.querySelectorAll('.rating'),
         label = document.querySelectorAll('.rating .rating__label'),
@@ -208,13 +212,38 @@ export function initReviewSystem() {
     
     // 작성한 이용후기 삭제하기
     const deleteReviewApi = async (id) => {
-        try {      
-            const response = await axios.delete(`/api/reviews/${id}`);
-            //console.log(response);
-            //console.log(reviewsData.value);
-        } catch (error) {
-            console.log(error);
-        }
+        swal({
+            title: 'Are you sure?',
+            text: 'You won\'t be able to revert this action!',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            confirmButtonColor: '#ef4444',
+            timer: 20000,
+            timerProgressBar: true,
+            reverseButtons: true
+        })
+            .then(result => {
+                if (result.isConfirmed) {
+                    axios.delete(`/api/reviews/${id}`)
+                        .then(response => {
+                            getAllReview()
+                            router.push({name: 'deposit.index'})
+                            swal({
+                                icon: 'success',
+                                title: 'review deleted successfully'
+                            })
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            swal({
+                                icon: 'error',
+                                title: 'Something went wrong'
+                            })
+                        })
+                }
+            })
+
     }
      
     //작성한 이용후기 수정하기
@@ -294,8 +323,10 @@ export function initReviewSystem() {
     // 작성한 이용후기 불러오기 (전체 리뷰 불러오기)
     const getAllReview = async (page = 1) => {
         try {      
-            const response = await axios.get("/api/reviews");
+            const response = await axios.get(`/api/reviews?page=${page}`);
             reviewsData.value = response.data.data;
+            pagination.value = response.data.meta;
+            console.log('Pagination:', pagination.value);
             for (const review of reviewsData.value) {
                 const auction = await getAuctionById(review.auction_id);
                 review.auction = auction.data;
@@ -335,6 +366,7 @@ export function initReviewSystem() {
 
     return {
         review,
+        pagination,
         submitReview,
         getUserReview,
         getAllReview,

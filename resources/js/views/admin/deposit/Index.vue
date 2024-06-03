@@ -176,15 +176,15 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="post in posts.data" :key="post.id">
+                                <tr v-for="review in reviewsData" :key="review">
                                     <td class="px-6 py-4 text-sm">
-                                        {{ post.created_at }}
+                                        {{ review.created_at }}
                                     </td>
                                     <td class="px-6 py-4 text-sm">
                                         <div
-                                            v-for="category in post.categories"
+                                            
                                         >
-                                            {{ category.name }}
+                                            {{ review.id }}
                                         </div>
                                     </td>
                               <!--     <td class="px-6 py-4 text-sm">
@@ -195,28 +195,24 @@
                                         />
                                     </td>--> 
                                    <td class="px-6 py-4 text-sm">
-                                        {{ post.title }}
+                                        {{ review.content }}
                                     </td>
                                     <td class="px-6 py-4 text-sm">
-                                        <!-- v-if="can('post-edit')" -->
                                         <router-link
-                                            :to="{
-                                                name: 'posts.edit',
-                                                params: { id: post.id },
+                                            href="#"
+                                            v-if="can('role.admin')"
+                                            :to="{ 
+                                                name: 'auction.approve', params: { id: review.id } 
                                             }"
-                                            class="badge"
-                                            > <div class="icon-edit-img">
-
-                                            </div>
+                                            class="ms-2 badge bg-danger tc-wh"
+                                            >리뷰 수정
                                         </router-link>
-                                        <!-- v-if="can('role.admin')" -->
                                         <a
                                             href="#"
-                                            @click.prevent="deletePost(post.id)"
-                                            class="ms-2 badge"
-                                            ><div class="icon-trash-img">
-
-                                            </div></a
+                                            v-if="can('role.admin')"
+                                            @click.prevent="deleteReviewApi(review.id)"
+                                            class="ms-2 badge bg-danger tc-wh"
+                                            >리뷰 삭제</a
                                         >
                                     </td>
                                 </tr>
@@ -225,24 +221,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <Pagination
-                        :data="posts"
-                        :limit="3"
-                        @pagination-change-page="
-                            (page) =>
-                                getPosts(
-                                    page,
-                                    search_category,
-                                    search_id,
-                                    search_title,
-                                    search_content,
-                                    search_global,
-                                    orderColumn,
-                                    orderDirection
-                                )
-                        "
-                        class="mt-4"
-                    />
+                    <Pagination :data="pagination" :limit="3" @pagination-change-page="(page) => getAllReview(page)" class="mt-4 justify-content-center" />
                 </div>
             </div>
 </template>
@@ -252,6 +231,7 @@ import { ref, onMounted, watch } from "vue";
 import usePosts from "@/composables/posts";
 import useCategories from "@/composables/categories";
 import { useAbility } from "@casl/vue";
+import { initReviewSystem } from '@/composables/review';
 
 const search_category = ref("");
 const search_id = ref("");
@@ -263,7 +243,12 @@ const orderDirection = ref("desc");
 const { posts, getPosts, deletePost } = usePosts();
 const { categoryList, getCategoryList } = useCategories();
 const { can } = useAbility();
-onMounted(() => {
+const { getAllReview , deleteReviewApi , reviewsData , pagination } = initReviewSystem(); 
+
+
+onMounted(async () => {
+    await getAllReview(1);
+    console.log(reviewsData.value);
     getPosts();
     getCategoryList();
 });

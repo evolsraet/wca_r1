@@ -64,10 +64,22 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                <!-- v-if="can('post-edit')" -->
-                                <router-link :to="{ name: 'auction.approve', params: { id: auction.id } }" class="badge">
-                                    <span class="btn-apply mt-0">자세히</span>
+                                <router-link
+                                    href="#"
+                                    v-if="can('role.admin')"
+                                    :to="{ 
+                                        name: 'auction.approve', params: { id: auction.id } 
+                                    }"
+                                    class="ms-2 badge bg-danger tc-wh"
+                                    >매물 수정
                                 </router-link>
+                                <a
+                                    href="#"
+                                    v-if="can('role.admin')"
+                                    @click.prevent="deleteAuction(auction.id)"
+                                    class="ms-2 badge bg-danger tc-wh"
+                                    >매물 삭제</a
+                                >
                             </td>
                         </tr>
                         <tr v-else>
@@ -130,7 +142,7 @@
         );
     };
     
-    watch(search_category, (current) => {
+    watch(search_category, (current) => {s
         fetchAuctions(
             1,
             current,

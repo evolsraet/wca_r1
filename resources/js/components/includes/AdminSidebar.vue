@@ -2,7 +2,7 @@
     <nav class="bg-white sidebar"style="right:270px;">
         <div class="pt-3 sidebar-sticky">
             <ul id="menu" class="nav flex-column mb-2">
-                <li class="nav-item">
+                <!--                <li class="nav-item">
                     <router-link to="/admin" class="nav-link">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -22,7 +22,8 @@
                         </svg>
                         <span class="d-none d-sm-inline ps-2">Dashboard</span>
                     </router-link>
-                </li>
+                </li>-->
+                <!--  
                 <li v-if="can('role.admin')" class="nav-item">
                     <a
                         href="#submenu2"
@@ -50,7 +51,7 @@
                         id="submenu2"
                         data-bs-parent="#menu"
                     >
-                      <!--  <li v-if="can('role.admin')" class="nav-link w-100">
+                        <li v-if="can('role.admin')" class="nav-link w-100">
                             <router-link
                                 :to="{ name: 'permissions.index' }"
                                 class="nav-link px-0"
@@ -93,96 +94,97 @@
                                     >Roles</span
                                 >
                             </router-link>
-                        </li>-->
-                        <li v-if="can('role.admin')" class="nav-link">
-                            <router-link
-                                :to="{ name: 'users.index' }"
-                                class="nav-link px-0"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                    class="bi bi-square-fill"
-                                    viewBox="0 0 16 16"
-                                >
-                                    <path
-                                        d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
-                                    />
-                                </svg>
-                                <span class="d-none d-sm-inline ps-2"
-                                    >회원관리</span
-                                >
-                            </router-link>
                         </li>
-                        <li v-if="can('role.admin')" class="nav-link">
-                            <router-link
-                                :to="{ name: 'deposit.index' }"
-                                class="nav-link px-0"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                    class="bi bi-square-fill"
-                                    viewBox="0 0 16 16"
-                                >
-                                    <path
-                                        d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
-                                    />
-                                </svg>
-                                <span class="d-none d-sm-inline ps-2"
-                                    >입금관리</span
-                                >
-                            </router-link>
-                        </li>
-                        <li v-if="can('role.admin')" class="nav-link">
-                            <router-link
-                                :to="{ name: 'auctions.index' }"
-                                class="nav-link px-0"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                    class="bi bi-square-fill"
-                                    viewBox="0 0 16 16"
-                                >
-                                    <path
-                                        d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
-                                    />
-                                </svg>
-                                <span class="d-none d-sm-inline ps-2"
-                                    >매물관리</span
-                                >
-                            </router-link>
-                        </li>
-                        <li v-if="can('role.admin')" class="nav-link">
-                            <router-link
-                                :to="{ name: 'deposit.index' }"
-                                class="nav-link px-0"
-                            >
-                                <svg
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="16"
-                                    height="16"
-                                    fill="currentColor"
-                                    class="bi bi-square-fill"
-                                    viewBox="0 0 16 16"
-                                >
-                                    <path
-                                        d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
-                                    />
-                                </svg>
-                                <span class="d-none d-sm-inline ps-2"
-                                    >후기관리</span
-                                >
-                            </router-link>
-                        </li>
+                        
                     </ul>
+                </li>-->
+                <li v-if="can('role.admin')" class="nav-link">
+                    <router-link
+                        :to="{ name: 'users.index' }"
+                        class="nav-link px-0"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-square-fill"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
+                            />
+                        </svg>
+                        <span class="d-none d-sm-inline ps-2"
+                            >회원관리</span
+                        >
+                    </router-link>
+                </li>
+                <li v-if="can('role.admin')" class="nav-link">
+                    <router-link
+                        :to="{ name: 'deposit.index' }"
+                        class="nav-link px-0"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-square-fill"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
+                            />
+                        </svg>
+                        <span class="d-none d-sm-inline ps-2"
+                            >입금관리</span
+                        >
+                    </router-link>
+                </li>
+                <li v-if="can('role.admin')" class="nav-link">
+                    <router-link
+                        :to="{ name: 'auctions.index' }"
+                        class="nav-link px-0"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-square-fill"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
+                            />
+                        </svg>
+                        <span class="d-none d-sm-inline ps-2"
+                            >매물관리</span
+                        >
+                    </router-link>
+                </li>
+                <li v-if="can('role.admin')" class="nav-link">
+                    <router-link
+                        :to="{ name: 'deposit.index' }"
+                        class="nav-link px-0"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            class="bi bi-square-fill"
+                            viewBox="0 0 16 16"
+                        >
+                            <path
+                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
+                            />
+                        </svg>
+                        <span class="d-none d-sm-inline ps-2"
+                            >후기관리</span
+                        >
+                    </router-link>
                 </li>
                 <li class="nav-item">
                     <router-link :to="{ name: 'posts.index' }" class="nav-link">
@@ -202,7 +204,7 @@
                         <span class="d-none d-sm-inline ps-2">공지 관리</span>
                     </router-link>
                 </li>
-                <li v-if="can('role.admin')" class="nav-item">
+                <!--<li v-if="can('role.admin')" class="nav-item">
                     <router-link
                         :to="{ name: 'categories.index' }"
                         class="nav-link"
@@ -222,7 +224,8 @@
                         </svg>
                         <span class="d-none d-sm-inline ps-2">카테고리</span>
                     </router-link>
-                </li>
+                </li>-->
+                
                 <li class="nav-item logout-fixed">
                 <a href="/login" @click="logout" class="nav-link d-flex align-items-center p-3">
                     <div class="logout-icon me-2"></div>
