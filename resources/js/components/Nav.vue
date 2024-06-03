@@ -119,7 +119,7 @@
                                     <div class="text-start">
                                         <p>내 차 팔까?</p>
                                         <div class="d-flex align-items-center">
-                                            <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font">로그인하기 </router-link>
+                                            <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font"@click="toggleNavbar">로그인하기 </router-link>
                                             <div class="icon right-icon"></div>
                                         </div>
                                     </div>
@@ -227,7 +227,7 @@
                 </ul>
             </div>
             <a class="navbar-toggler p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+                <span :class="{'toggle-nav-wh': isDealer, 'toggle-nav-black': !isDealer}"></span>
             </a>
         </div>
     </nav>

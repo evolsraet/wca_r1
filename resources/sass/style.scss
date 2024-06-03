@@ -565,8 +565,28 @@ video {
     min-width: 100px; 
 }
 
+.toggle-nav-black{
+    background-image: url('../img/toggle-nav-black.png'); 
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: right;
+    height: 50px; 
+    width: auto; 
+    display: block; 
+    min-width: 100px; 
 
+}
 
+.toggle-nav-wh{
+    background-image: url('../img/toggle-nav-wh.png'); 
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: right;
+    height: 50px; 
+    width: auto; 
+    display: block; 
+    min-width: 100px; 
+}
 
 
 .page-container {
