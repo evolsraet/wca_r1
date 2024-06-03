@@ -11,8 +11,16 @@
             <!-- dealer navbar-->
             <div class="collapse navbar-collapse navbar-collshow" id="navbarSupportedContent">
                 <div v-if="isDealer" class="navbar-nav nav-style">
-                    <div class="nav-header">
+                    <div class="nav-header d-flex justify-content-between align-items-center ">
                         <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close"></button>
+                        <div class="d-flex align-items-center ">
+                        <span class="p-2 process">{{ user.name }} 님</span>
+                        <i class="fas fa-cog settings-icon mb-1" @click="toggleSettingsMenu" :class="{ 'rotate': showSettings }"></i>
+                        </div>
+                    </div>
+                    <div v-if="showSettings" class="settings-menu">
+                        <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                        <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
                     <div class="toggle-nav-content">
                         <div class="top-content ">
@@ -88,11 +96,19 @@
                             <div class="logo-content">
                                 <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
                             </div>
-                </div>
+                   </div>
                 <!-- user -->
                 <div v-else-if="isUser" class="navbar-nav">
-                    <div class="nav-header">
+                    <div class="nav-header d-flex justify-content-between align-items-center ">
                         <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close"></button>
+                        <div class="d-flex align-items-center ">
+                        <span class="p-2 process">{{ user.name }} 님</span>
+                        <i class="fas fa-cog settings-icon mb-1" @click="toggleSettingsMenu" :class="{ 'rotate': showSettings }"></i>
+                        </div>
+                    </div>
+                    <div v-if="showSettings" class="settings-menu">
+                        <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                        <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
                     <div class="toggle-nav-content">
                         <div class="top-content mt-2">
@@ -232,22 +248,22 @@
                     <!-- 딜러 일때 -->
                     <template v-else-if="isDealer">
                         <li class="nav-item">
-                            <router-link :to="{ name: 'auction.index'}" class="nav-link" to="/register" >입찰하기</router-link>
+                            <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh" to="/register" >입찰하기</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'dealer.bids'}" class="nav-link">선택 완료 차량</router-link>
+                            <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh">선택 완료 차량</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'dealer.bidList'}" class="nav-link">과거 낙찰 이력</router-link>
+                            <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh">과거 낙찰 이력</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'index.claim'}" class="nav-link">클레임</router-link>
+                            <router-link :to="{ name: 'index.claim'}" class="nav-link tc-wh">클레임</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'index.notices' }" class="nav-link">공지사항</router-link>
+                            <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh">공지사항</router-link>
                         </li>
                         <li class="my-member"  @click="redirectByName('dealer.profile')" >
-                            <img src="../../img/myprofile_ex.png" class="nav-profile" alt="Profile Image"><a :to="{ name: 'dealer.profile' }"  class="nav-link" href="#">{{ user.name }}</a>
+                            <img src="../../img/myprofile_ex.png" class="nav-profile" alt="Profile Image"><a :to="{ name: 'dealer.profile' }"  class="nav-link tc-wh" href="#">{{ user.name }}</a>
                         </li>
                     </template>
                     <!-- 로그인 시 -->
@@ -275,7 +291,11 @@ const { getAuctions, getAuctionById } = useAuctions();
 const { bidsData, getBids } = useBid();
 const router = useRouter();
 const route = useRoute();
+const showSettings = ref(false);
 
+function toggleSettingsMenu() {
+  showSettings.value = !showSettings.value;
+}
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
@@ -471,4 +491,24 @@ display: none !important;
     align-items: center;
 }
 }
+.settings-icon {
+  cursor: pointer;
+  transition: transform 0.3s ease-in-out;
+}
+
+.settings-icon.rotate {
+  transform: rotate(360deg);
+}
+
+.settings-menu {
+  position: absolute;
+  background-color: white;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+  width: 150px;
+  right: 10px; 
+  top: 60px; 
+  z-index: 1000;
+  transition: transform 0.3s ease-in-out;
+}
+
 </style>

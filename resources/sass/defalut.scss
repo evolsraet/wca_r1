@@ -10,7 +10,7 @@ img {max-width:100%;}
 table {width:100%; border-collapse:collapse; border-spacing:0; table-layout:fixed;}
 label,button {cursor:pointer;}
 button {margin:0; padding:0; border:0; font:inherit; color:inherit; background:transparent; overflow:visible; cursor:pointer;}
-a:link, a:visited, a:hover, a:active, a:focus {text-decoration:none; color:inherit; cursor:pointer;}
+a:link, a:visited, a:hover, a:active, a:focus {text-decoration:none; cursor:pointer;}
 a.disabled {color:#9a9a9a !important; pointer-events:none;}
 legend, caption {width:0; height:0; font-size:0; line-height:0;}
 input, textarea, select {color:inherit; font:inherit; vertical-align:middle; -webkit-appearance:none; -moz-appearance:none; -webkit-border-radius:0; -moz-border-radius:0;}
