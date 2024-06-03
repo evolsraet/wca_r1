@@ -545,7 +545,8 @@ video {
 
 
 /* 소셜 로그인 or 로그인 */
-
+//딜러 : 색깔 빨간색 바탕에 color:흰색
+//일반 사용자 : 흰색 바탕에 color:검은색
 .navbar-brand {
     background-image: url('../img/logo.png');
     background-size: cover;
@@ -587,6 +588,29 @@ video {
     display: block; 
     min-width: 100px; 
 }
+
+.sub-board-style {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; 
+    height: 80px;
+    width: 100%; 
+    padding-left: 20px; 
+    background-color:rgba($primary, 0.028);
+    border-radius: 6px; 
+}
+
+.text-start {
+    color:rgba($primary, 0.55); 
+    width: 100%; 
+}
+
+.sub-board-image {
+    height: 60px; 
+    width: auto;
+}
+
+
 
 
 .page-container {

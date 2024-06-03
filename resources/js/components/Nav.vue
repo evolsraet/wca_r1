@@ -15,52 +15,79 @@
                         <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close"></button>
                     </div>
                     <div class="toggle-nav-content">
-                        <div class="top-content mt-2">
-                            <p class="nav-gray-box">안녕하세요,<span>{{ user.name }}</span></p>
-                            <div class="tc-light-gray text-end fs-6 mt-2 fw-medium">
-                                <p>{{ user.dealer.name }}</p>
-                                <p class="mt-1">{{ user.dealer.company }} 점</p>
+                        <div class="top-content ">
+                            <div class="menu-illustration p-3">
+                               <div class="sub-board-style">
+                                <div v-if="fetchAuctionDetails" class="text-start">
+                                        <p>경매가 종료됐어요!</p>
+                                        <div class="d-flex align-items-center">
+                                            <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font"@click="toggleNavbar">선택완료차량 확인</router-link>
+                                            <div class="icon right-icon"></div>
+                                        </div>
+                                    </div>
+                                    <div v-else class="text-start">
+                                        <p>아직 경매가 진행 중이에요</p>
+                                        <div class="d-flex align-items-center">
+                                            <router-link :to="{ name: 'auction.index'}" class="tc-primary bold-18-font"@click="toggleNavbar">진행 중 경매 확인</router-link>
+                                            <div class="icon right-icon"></div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                        <div class="middle-content">
-                            <p class="tc-light-gray fs-6">계정</p>
-                            <router-link :to="{ name: 'dealer.profile' }" class="menu-item" @click="toggleNavbar">
-                                <div class="icon settings-icon"></div>
-                                <span class="menu-text">정보수정</span>
-                                <div class="icon right-icon"></div>
-                            </router-link>
-                            <a class="menu-item mb-3" href="/login" @click="logout">
-                                <div class="icon logout-icon"></div>
-                                <span class="menu-text">로그아웃</span>
-                                <div class="icon right-icon"></div>
-                            </a>
-                        </div>
-                        <router-link :to="{ name: 'auction.index'}" class="menu-item mb-3" @click="toggleNavbar">
-                            <div class="icon icon-tag"></div>
-                            <span class="menu-text recent-new">입찰하기</span>
-                            <div class="icon right-icon"></div>
-                        </router-link>
-                        <router-link :to="{ name: 'dealer.bids'}" class="menu-item mb-4" @click="toggleNavbar">
-                            <div class="icon icon-awsome"></div>
-                            <span class="menu-text">낙찰 완료 차량</span>
-                            <div class="icon right-icon"></div>
-                        </router-link>
-                        <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mb-3" @click="toggleNavbar">
-                            <div class="icon icon-side"></div>
-                            <span class="menu-text recent-new">과거 낙찰 이력</span>
-                            <div class="icon right-icon"></div>
-                        </router-link>
-                        <router-link :to="{ name: 'index.claim' }" class="menu-item mb-3" @click="toggleNavbar">
-                            <div class="icon icon-document"></div>
-                            <span class="menu-text recent-new">클레임</span>
-                            <div class="icon right-icon"></div>
-                        </router-link>
-                        <router-link :to="{ name: 'index.notices' }"class="menu-item mb-3" @click="toggleNavbar">
-                            <div class="icon icon-dash"></div>
-                            <span class="menu-text">공지사항</span>
-                            <div class="icon right-icon"></div>
-                        </router-link>
-                    </div>
+                            <div class="footer-content">
+                                    <div class="p-2">
+                                        <router-link :to="{ name: 'auction.index'}" class="menu-item mt-0" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                                <div class="icon icon-tag"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text process">입찰하기</span>
+                                                <span class="tc-light-gray font-1">새 매물 둘러보기</span>
+                                            </div>
+                                        </router-link>
+                                        <router-link :to="{ name: 'dealer.bids'}" class="menu-item mt-0" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                                <div class="icon icon-awsome"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text process">내 매물관리</span>
+                                                <span class="tc-light-gray font-1">경매 진행중인 매물</span>
+                                            </div>
+                                        </router-link>
+                                        <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mt-0" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                                <div class="icon icon-nav-car"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text process">과거 낙찰 이력</span>
+                                                <span class="tc-light-gray font-1">경매 완료 매물</span>
+                                            </div>
+                                        </router-link>
+                                        <router-link :to="{ name: 'index.claim' }" class="menu-item process mt-1" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                                <div class="icon icon-document"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text">클레임</span>
+                                                <span class="tc-light-gray font-1">낙찰 차량에 문제가 있으신가요?</span>
+                                            </div>
+                                        </router-link>
+                                        <router-link :to="{ name: 'index.notices' }" class="menu-item mt-1 process mb-4" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                                <div class="icon icon-dash"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text">공지사항</span>
+                                                <span class="tc-light-gray font-1">새소식</span>
+                                            </div>
+                                        </router-link>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="logo-content">
+                                <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
+                            </div>
                 </div>
                 <!-- user -->
                 <div v-else-if="isUser" class="navbar-nav">
@@ -115,16 +142,19 @@
                     <div class="toggle-nav-content">
                         <div class="top-content ">
                             <div class="menu-illustration p-3">
-                                    <img src="../../img/newicon/login-banner.png" alt="자동차 이미지" width="280" height="80">
+                                <div class="sub-board-style">
                                     <div class="text-start">
                                         <p>내 차 팔까?</p>
                                         <div class="d-flex align-items-center">
-                                            <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font"@click="toggleNavbar">로그인하기 </router-link>
+                                            <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font" @click="toggleNavbar">로그인하기</router-link>
                                             <div class="icon right-icon"></div>
                                         </div>
                                     </div>
+                                    <!-- 이미지 추가 -->
+                                    <img src="../../img/login-object.png" alt="Description of Image" class="sub-board-image">
                                 </div>
                             </div>
+                        </div>
                             <div class="footer-content">
                                 <div class="under-line"></div>
                                     <div class="p-2">
@@ -234,12 +264,15 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, computed, onMounted } from 'vue';
 import { useStore } from "vuex";
 import useAuth from "@/composables/auth";
-import { computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
+import useBid from "@/composables/bids";
+import useAuctions from '@/composables/auctions';
 
+const { getAuctions, getAuctionById } = useAuctions();
+const { bidsData, getBids } = useBid();
 const router = useRouter();
 const route = useRoute();
 
@@ -255,6 +288,15 @@ const textClass = computed(() => {
   return isDealer.value ? 'text-white' : 'text-dark';
 });
 const { logout } = useAuth();
+const auctionStatus = computed(() => {
+  const status = auctionsData.value.map(auction => ({
+    id: auction.id,
+    status: auction.status,
+    bid_id: auction.bid_id
+  })).filter(auction => auction.status === 'chosen' && auction.bid_id === user.value.id);
+  console.log(status); // 현재 상태 로깅
+  return status;
+});
 
 const redirectByName = (routeName) => {
     router.push({ name: routeName });
@@ -270,6 +312,27 @@ const homePath = computed(() => {
     }
 });
 
+const fetchAuctionDetails = async (bid) => {
+    try {
+        const auctionDetails = await getAuctionById(bid.auction_id);
+        console.log('Auction Details for Bid ID:', bid.id, auctionDetails);
+        return {
+            ...bid,
+            auctionDetails: auctionDetails.data
+        };
+    } catch (error) {
+        console.error('Error fetching auction details:', error);
+        return {
+            ...bid,
+            auctionDetails: null
+        };
+    }
+};
+
+
+const firstAuctionStatus = computed(() => {
+  return auctionsData.value.length > 0 ? auctionsData.value[0].status : 'none';
+});
 // 현재 경로를 기준으로 상세 페이지인지 확인
 const isDetailPage = computed(() => {
     // 상세 페이지 경로가 '/auction'으로 시작하고 뒤에 숫자 ID가 있는지 확인
@@ -286,6 +349,10 @@ function toggleNavbar() {
     document.querySelector('.btn-close').click();
 }
 
+
+onMounted(async () => {
+    await getAuctions();
+});
 </script>
 
 <style scoped>
@@ -335,13 +402,6 @@ function toggleNavbar() {
     height: 100%;
 }
 
-.text-start {
-    position: absolute;
-    top: 50%; 
-    left: 25%;
-    transform: translate(-50%, -50%); 
-    color: #c79595;
-}
 .login-prompt {
     display: block;
     width: 100%;
@@ -402,5 +462,13 @@ display: none !important;
     display: flex; 
     justify-content: center; 
     align-items: center; 
+}
+
+@media (min-width: 768px){
+.navbar-expand-md .navbar-collapse {
+    display: grid !important;
+    flex-basis: auto;
+    align-items: center;
+}
 }
 </style>
