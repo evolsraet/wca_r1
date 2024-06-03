@@ -1,5 +1,5 @@
 <template>
-    <div class=""></div>
+<div class="overlay" style="display: none;"></div> 
     <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', 'p-2', navbarClass, textClass]">
         <div class="container nav-font">
             <button v-if="isDetailPage" @click="goBack" class="p-2 btn btn-back back-btn-icon">
@@ -12,17 +12,17 @@
             <div class="collapse navbar-collapse navbar-collshow" id="navbarSupportedContent">
                 <div v-if="isDealer" class="navbar-nav nav-style">
                     <div class="nav-header d-flex justify-content-between align-items-center ">
-                        <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close" @click="toggleNavbar"></button>
                         <div class="d-flex align-items-center ">
                         <span class="p-2 process">{{ user.name }} 님</span>
                         <i class="fas fa-cog settings-icon mb-1" @click="toggleSettingsMenu" :class="{ 'rotate': showSettings }"></i>
                         </div>
                     </div>
-                    <div v-if="showSettings" class="settings-menu">
+                    <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
                         <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
                         <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
-                    <div class="toggle-nav-content">
+                    <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
                         <div class="top-content ">
                             <div class="menu-illustration p-3">
                                <div class="sub-board-style">
@@ -72,7 +72,7 @@
                                                 <span class="tc-light-gray font-1">경매 완료 매물</span>
                                             </div>
                                         </router-link>
-                                        <router-link :to="{ name: 'index.claim' }" class="menu-item process mt-1" @click="toggleNavbar">
+                                        <router-link :to="{ name: 'index.claim' }" class="menu-item process mt-0" @click="toggleNavbar">
                                             <div class="sd-menu">
                                                 <div class="icon icon-document"></div>
                                             </div>
@@ -81,7 +81,7 @@
                                                 <span class="tc-light-gray font-1">낙찰 차량에 문제가 있으신가요?</span>
                                             </div>
                                         </router-link>
-                                        <router-link :to="{ name: 'index.notices' }" class="menu-item mt-1 process mb-4" @click="toggleNavbar">
+                                        <router-link :to="{ name: 'index.notices' }" class="menu-item mt-0 process mb-4" @click="toggleNavbar">
                                             <div class="sd-menu">
                                                 <div class="icon icon-dash"></div>
                                             </div>
@@ -92,70 +92,120 @@
                                         </router-link>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="logo-content">
-                                <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
+                                <div class="logo-content">
+                                    <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
+                                </div>
                             </div>
                    </div>
                 <!-- user -->
                 <div v-else-if="isUser" class="navbar-nav">
                     <div class="nav-header d-flex justify-content-between align-items-center ">
-                        <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close" @click="toggleNavbar"></button>
                         <div class="d-flex align-items-center ">
                         <span class="p-2 process">{{ user.name }} 님</span>
                         <i class="fas fa-cog settings-icon mb-1" @click="toggleSettingsMenu" :class="{ 'rotate': showSettings }"></i>
                         </div>
                     </div>
-                    <div v-if="showSettings" class="settings-menu">
+                    <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
                         <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
                         <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
-                    <div class="toggle-nav-content">
-                        <div class="top-content mt-2">
-                            <p class="nav-gray-box">안녕하세요,<span>{{ user.name }}</span></p>
-                            <div class="tc-light-gray text-end fs-6 mt-2 fw-medium">
-                                <p>소속 상사가 들어갑니다 파트너점</p>
-                                <p class="mt-1"> </p>
+                    <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
+                        <div class="top-content ">
+                            <div v-if="userHasAuction" class="p-4">
+                                <h4>경매 진행 상황</h4>
+                                <p class="tc-light-gray mb-3">가장 최근에 등록한 매물로 알려드려요.</p>
+                                <ul class="timeline">
+                                    <li :class="{'active': isDiagnosing, 'completed': isDiagnosisCompleted}">
+                                    <div class="circle">1</div>
+                                    <span>위카 진단평가 진행</span>
+                                    </li>
+                                    <div class="small-circles" :class="{'completed': isDiagnosisCompleted}">
+                                    <div class="small-circle"></div>
+                                    <div class="small-circle"></div>
+                                    <div class="small-circle"></div>
+                                    </div>
+                                    <li :class="{'active': isAuctioning, 'completed': !isAuctioning && isAuctionCompleted}">
+                                    <div class="circle">2</div>
+                                    <span>경매 시작<span v-if="isAuctioning" class="mx-2 time"><img src="../../img/Icon-clock-red.png" alt="Clock Icon" class="icon-clock">01:42:24</span></span>
+                                    </li>
+                                    <div class="small-circles" :class="{'completed': isAuctionCompleted}">
+                                    <div class="small-circle"></div>
+                                    <div class="small-circle"></div>
+                                    <div class="small-circle"></div>
+                                    </div>
+                                    <li :class="{'active': isSelectingDealer, 'completed': !isSelectingDealer && isDealerSelectionCompleted}">
+                                    <div class="circle">3</div>
+                                    <span >낙찰 딜러 선정<span v-if="isSelectingDealer" class="mx-2 date tc-light-gray"><img src="../../img/Icon-clock.png" alt="Clock Icon" class="icon-clock">D-3</span></span>
+                                    </li>
+                                    <div class="small-circles" :class="{'completed': isDealerSelectionCompleted}">
+                                    <div class="small-circle"></div>
+                                    <div class="small-circle"></div>
+                                    <div class="small-circle"></div>
+                                    </div>
+                                    <li :class="{'active': isCompleted, 'completed': isCompleted}">
+                                    <div class="circle">4</div>
+                                    <span>경매 완료</span>
+                                    </li>
+                                </ul>
+                                </div>
+                            <div v-else class="menu-illustration02 p-3">
+                                <div class="sub-board-style02">
+                                    <div class="text-start">
+                                        <p class="tc-light-gray">경매를 시작해볼까요?</p>
+                                        <div class="d-flex align-items-center">
+                                            <router-link :to="{ name: 'home' }" class="process bold-18-font" @click="toggleNavbar">내 차 팔기</router-link>
+                                            <div class="icon right-icon-nav"></div>
+                                        </div>
+                                    </div>
+                                    <!-- 이미지 추가 -->
+                                    <img src="../../img/car-key.png" alt="Description of Image" class="sub-board-image">
+                                </div>
                             </div>
                         </div>
-                        <div class="middle-content-ty02">
-                            <router-link :to="{ name: 'auction.index' }" class="nav-link dealer-check-link mt-5" @click="toggleNavbar">딜러 페이지 확인용 링크</router-link>
-                            <router-link :to="{ name: 'home' }" class="menu-item ">
-                                <div class="icon icon-side"></div>
-                                <span class="menu-text">내 차 조회</span>
-                                <div class="icon right-icon"></div>
-                            </router-link>
-                            <router-link :to="{ name: 'auction.index' }" class="menu-item mb-4" @click="toggleNavbar">
-                                <div class="icon icon-awsome"></div>
-                                <span class="menu-text">내 매물관리</span>
-                                <div class="icon right-icon"></div>
-                            </router-link>
-                            <router-link :to="{ name: 'index.allreview' }" class="menu-item mt-0 mb-4" @click="toggleNavbar">
-                                <div class="icon icon-ratings"></div>
-                                <span class="menu-text">이용후기</span>
-                                <div class="icon right-icon"></div>
-                            </router-link>
-                        </div>
-                        <div class="footer-content">
-                            <p class="tc-light-gray fs-6">계정</p>
-                            <router-link :to="{ name: 'dealer.profile' }" class="menu-item" @click="toggleNavbar">
-                                <div class="icon settings-icon"></div>
-                                <span class="menu-text">정보수정</span>
-                                <div class="icon right-icon"></div>
-                            </router-link>
-                            <a class="menu-item mb-3" href="/login" @click="logout">
-                                <div class="icon logout-icon"></div>
-                                <span class="menu-text">로그아웃</span>
-                                <div class="icon right-icon"></div>
-                            </a>
-                        </div>
+                            <div class="footer-content">
+                                <div class="under-line"></div>
+                                    <div class="p-2">
+                                      <router-link :to="{ name: 'home' }" class="menu-item mt-0" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                            <div class="icon icon-nav-car"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text">내 차 팔기</span>
+                                                <span class="tc-light-gray font-1">위카가 척척</span>
+                                            </div>
+                                        </router-link>
+                                        <router-link :to="{ name: 'auction.index'}" class="menu-item mt-1" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                            <div class="icon icon-nav-bulb"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text">내 매물관리</span>
+                                                <span class="tc-light-gray font-1">경매 진행중인 매물</span>
+                                            </div>
+                                        </router-link>
+                                        <router-link :to="{ name: 'index.allreview' }" class="menu-item mt-1 mb-4" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                            <div class="icon icon-ratings"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text">이용후기</span>
+                                                <span class="tc-light-gray font-1"> 다양한 판매 후기</span>
+                                            </div>
+                                        </router-link>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="logo-content">
+                                <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
+                            </div>
                     </div>
-                </div>
+                
                 <div v-else class="navbar-nav">
                     <div class="nav-header">
                         <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close"></button>
                     </div>
-                    <div class="toggle-nav-content">
+                    <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
                         <div class="top-content ">
                             <div class="menu-illustration p-3">
                                 <div class="sub-board-style">
@@ -280,47 +330,35 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue';
-import { useStore } from "vuex";
-import useAuth from "@/composables/auth";
-import { useRouter, useRoute } from "vue-router";
-import useBid from "@/composables/bids";
+import { ref, computed, onMounted, watch } from 'vue';
+import { useStore } from 'vuex';
+import useAuth from '@/composables/auth';
+import { useRouter, useRoute } from 'vue-router';
 import useAuctions from '@/composables/auctions';
 
-const { getAuctions, getAuctionById } = useAuctions();
-const { bidsData, getBids } = useBid();
+const { getAuctions, auctionsData } = useAuctions();
+const { logout } = useAuth();
 const router = useRouter();
 const route = useRoute();
 const showSettings = ref(false);
+const store = useStore();
+const isNavbarShown = ref(false);
+const showScrollGradient = ref(false);
+let scrollTimeout = null;
 
 function toggleSettingsMenu() {
   showSettings.value = !showSettings.value;
 }
-const store = useStore();
-const user = computed(() => store.getters["auth/user"]);
+
+const user = computed(() => store.getters['auth/user']);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
-const isAdmin = computed(() => user.value?.roles?.includes('admin'));
-const navbarClass = computed(() => {
-  return isDealer.value ? 'bg-primary' : 'bg-white';
-});
-const textClass = computed(() => {
-  return isDealer.value ? 'text-white' : 'text-dark';
-});
-const { logout } = useAuth();
-const auctionStatus = computed(() => {
-  const status = auctionsData.value.map(auction => ({
-    id: auction.id,
-    status: auction.status,
-    bid_id: auction.bid_id
-  })).filter(auction => auction.status === 'chosen' && auction.bid_id === user.value.id);
-  console.log(status); // 현재 상태 로깅
-  return status;
-});
+const navbarClass = computed(() => (isDealer.value ? 'bg-primary' : 'bg-white'));
+const textClass = computed(() => (isDealer.value ? 'text-white' : 'text-dark'));
 
 const redirectByName = (routeName) => {
     router.push({ name: routeName });
-}; //리다이렉션 : 명
+};
 
 const homePath = computed(() => {
     if (isDealer.value) {
@@ -335,13 +373,11 @@ const homePath = computed(() => {
 const fetchAuctionDetails = async (bid) => {
     try {
         const auctionDetails = await getAuctionById(bid.auction_id);
-        console.log('Auction Details for Bid ID:', bid.id, auctionDetails);
         return {
             ...bid,
             auctionDetails: auctionDetails.data
         };
     } catch (error) {
-        console.error('Error fetching auction details:', error);
         return {
             ...bid,
             auctionDetails: null
@@ -349,13 +385,25 @@ const fetchAuctionDetails = async (bid) => {
     }
 };
 
-
-const firstAuctionStatus = computed(() => {
-  return auctionsData.value.length > 0 ? auctionsData.value[0].status : 'none';
+const userHasAuction = computed(() => {
+    return auctionsData.value.some(auction => auction.user_id === user.value.id);
 });
+
+const latestAuction = computed(() => {
+  return auctionsData.value.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+});
+
+const isDiagnosing = computed(() => latestAuction.value && latestAuction.value.status === 'diag'|| latestAuction.value.status === 'ask');
+const isAuctioning = computed(() => latestAuction.value && latestAuction.value.status === 'ing');
+const isSelectingDealer = computed(() => latestAuction.value && latestAuction.value.status === 'wait');
+const isCompleted = computed(() => latestAuction.value && latestAuction.value.status === 'chosen');
+
+const isDiagnosisCompleted = computed(() => ['ing', 'wait', 'chosen'].includes(latestAuction.value?.status));
+const isAuctionCompleted = computed(() => ['wait', 'chosen'].includes(latestAuction.value?.status));
+const isDealerSelectionCompleted = computed(() => latestAuction.value?.status === 'chosen');
+
 // 현재 경로를 기준으로 상세 페이지인지 확인
 const isDetailPage = computed(() => {
-    // 상세 페이지 경로가 '/auction'으로 시작하고 뒤에 숫자 ID가 있는지 확인
     return /^\/auction\/\d+$/.test(route.path) || route.path === '/selldt' || route.path === '/selldt2';
 });
 
@@ -364,24 +412,131 @@ const goBack = () => {
     router.back();
 };
 
-//라우터시 메뉴바 닫기
+// 라우터 시 메뉴바 닫기
 function toggleNavbar() {
-    document.querySelector('.btn-close').click();
+    const content = document.querySelector('.toggle-nav-content');
+    content.classList.remove('visible');
+    clearTimeout(scrollTimeout);
+
+    // Close the navbar
+    const navbar = document.querySelector('.navbar-collapse');
+    navbar.addEventListener('transitionend', handleNavbarClosed);
+    showSettings.value = false;
+    if (content) {
+        content.scrollTop = 0;
+    }
+
+    // Ensure the event listener is attached before triggering the close
+    setTimeout(() => {
+        document.querySelector('.btn-close').click();
+    }, 10);
+}
+function checkScrollGradient() {
+    const content = document.querySelector('.toggle-nav-content');
+    if (content.scrollHeight > content.clientHeight) {
+        clearTimeout(scrollTimeout);
+        scrollTimeout = setTimeout(() => {
+            showScrollGradient.value = content.scrollTop + content.clientHeight < content.scrollHeight;
+            if (showScrollGradient.value) {
+                content.classList.add('visible');
+            } else {
+                content.classList.remove('visible');
+            }
+        }, 200); // 0.2초 후에 gradient 표시
+    } else {
+        showScrollGradient.value = false;
+        content.classList.remove('visible');
+    }
 }
 
+onMounted(() => {
+    const content = document.querySelector('.toggle-nav-content');
+    content.addEventListener('scroll', checkScrollGradient);
+    checkScrollGradient();
+    getAuctions();
 
-onMounted(async () => {
-    await getAuctions();
+    const navbar = document.querySelector('.navbar-collapse');
+    navbar.addEventListener('transitionend', () => {
+        if (isNavbarShown.value) {
+            checkScrollGradient();
+        } else {
+            const content = document.querySelector('.toggle-nav-content');
+            content.classList.remove('visible');
+        }
+    });
+    
+    // Listen to the collapse navbar button
+    const navbarButton = document.querySelector('.navbar-toggler');
+    navbarButton.addEventListener('click', () => {
+        isNavbarShown.value = !isNavbarShown.value;
+        toggleOverlay(isNavbarShown.value);
+    });
+
+    const closeButton = document.querySelector('.btn-close');
+    closeButton.addEventListener('click', () => {
+        isNavbarShown.value = false;
+        toggleOverlay(isNavbarShown.value);
+        toggleNavbar();
+    });
+    
+    const overlay = document.querySelector('.overlay');
+    overlay.addEventListener('click', () => {
+        isNavbarShown.value = false;
+        toggleOverlay(isNavbarShown.value);
+        toggleNavbar();
+    });
 });
+
+function toggleOverlay(show) {
+    const overlay = document.querySelector('.overlay');
+    if (show) {
+        overlay.style.display = 'block';
+        setTimeout(() => {
+            overlay.style.opacity = '1';
+        }, 10); // opacity 트랜지션을 적용하기 위해 약간의 딜레이를 줌
+    } else {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+        }, 300); // opacity 트랜지션이 끝난 후 display를 none으로 설정
+    }
+}
 </script>
+
 
 <style scoped>
 .toggle-nav-content {
     display: flex;
     flex-direction: column;
-    overflow-y: hidden;
+    overflow-y: auto; 
     justify-content: space-between;
     height: 84vh !important;
+    position: relative; 
+}
+
+.has-gradient::after {
+    content: '';
+    position: fixed;
+    bottom: 54px;
+    right: 0;
+    width: 46vh;
+    height: 58px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 1));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.has-gradient.visible::after {
+    opacity: 1;
+}
+
+.icon-clock {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    vertical-align: middle;
+    margin-bottom: 2px;
 }
 
 .middle-content-ty02 {
@@ -394,18 +549,24 @@ onMounted(async () => {
 .footer-content {
     margin-top: auto;
     width: 100%;
+    position: relative; /* Add position relative for gradient overlay */
 }
 
-.dealer-check-link {
-    height: 68px;
-    line-height: 10px;
-    font-weight: 500;
-    padding: 25px 26px;
-    border: solid 1px #f0d;
-    background-color: #fff;
-    color: #f0d !important;
-    text-align: center;
-    margin-right: 0px;
+.has-gradient.footer-content::after {
+    content: '';
+    position: fixed; /* fixed로 설정 */
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 40px;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 1));
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.has-gradient.footer-content.visible::after {
+    opacity: 1;
 }
 
 .menu-illustration,
@@ -420,6 +581,15 @@ onMounted(async () => {
 .menu-illustration img {
     width: 100%;
     height: 100%;
+}
+
+.menu-illustration02 {
+    position: relative;
+}
+
+.menu-illustration02 img {
+    width: 55px;
+    height: auto;
 }
 
 .login-prompt {
@@ -437,78 +607,129 @@ onMounted(async () => {
     justify-content: space-between;
 }
 
-.font-1{
+.font-1 {
     font-size: 1rem;
 }
+
 a.navbar-toggler.p-2 {
     display: none !important;
 }
 
-@media (max-width: 991px){
+@media (max-width: 991px) {
     a.navbar-toggler.p-2 {
-    display: block !important;
-}
-ul.navbar-nav.mt-2.mt-lg-0.gap-1.ms-auto{
-display: none !important;
-}
+        display: block !important;
+    }
+    ul.navbar-nav.mt-2.mt-lg-0.gap-1.ms-auto {
+        display: none !important;
+    }
 }
 
-/* 뒤로 가기 버튼 스타일 */
 .btn-back {
-    width:25px;
-    height:25px;
+    width: 25px;
+    height: 25px;
     border: none;
     font-size: 1.5rem;
     padding: 0;
     cursor: pointer;
 }
 
-
 .logo-content {
     background-color: #f7f8fb;
     width: 50vh;
     height: 65px;
     position: fixed;
-    bottom: 0px;
+    bottom: 0;
     display: flex;
     justify-content: center;
     align-items: center;
 }
+
 .sd-menu {
     width: 48px;
     height: 48px;
     background-color: #f7f8fb;
     border-radius: 6px;
-    display: flex; 
-    justify-content: center; 
-    align-items: center; 
-}
-
-@media (min-width: 768px){
-.navbar-expand-md .navbar-collapse {
-    display: grid !important;
-    flex-basis: auto;
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
+
+@media (min-width: 768px) {
+    .navbar-expand-md .navbar-collapse {
+        display: grid !important;
+        flex-basis: auto;
+        align-items: center;
+    }
 }
+
 .settings-icon {
-  cursor: pointer;
-  transition: transform 0.3s ease-in-out;
+    cursor: pointer;
+    transition: transform 0.3s ease-in-out;
 }
 
 .settings-icon.rotate {
-  transform: rotate(360deg);
+    transform: rotate(360deg);
 }
 
 .settings-menu {
-  position: absolute;
-  background-color: white;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.15);
-  width: 150px;
-  right: 10px; 
-  top: 60px; 
-  z-index: 1000;
-  transition: transform 0.3s ease-in-out;
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    width: 150px;
+    right: 10px;
+    top: 60px;
+    z-index: 1000;
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    border-radius: 6px;
 }
+
+.settings-menu.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.timeline {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+}
+
+.timeline li {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+.timeline li .circle {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 10px;
+    font-size: 14px;
+    color: white;
+    z-index: 1;
+    background-color: #cacaca;
+}
+
+.timeline li.upcoming .circle {
+    background-color: #d3d3d3;
+}
+
+.timeline li span {
+    display: flex;
+    align-items: center;
+}
+
+.timeline li.completed ~ li .small-circle,
+.timeline li.active ~ li .small-circle {
+    background-color: #d3d3d3; /* Gray for upcoming */
+}
+
 
 </style>

@@ -532,7 +532,7 @@ video {
 }
 @keyframes blink {
     0%, 100% {
-      background-color: #f24200;  
+      background-color: rgba($primary, 0.6);  
       opacity: 1;
     }
     50% {
@@ -540,7 +540,16 @@ video {
       opacity: 0.5;
     }
   }
-  
+  @keyframes blink02{
+    0%, 100% {
+      background-color: $primary;  
+      opacity: 1;
+    }
+    50% {
+      background-color: #cacaca;  
+      opacity: 0.5;
+    }
+  } 
 
 
 
@@ -606,7 +615,8 @@ video {
     justify-content: space-between; 
     height: 80px;
     width: 100%; 
-    padding-left: 20px; 
+    padding-left: 25px;
+    padding-right: 25px;
     background-color:#f7f8fb;
     border-radius: 6px; 
 }
@@ -614,6 +624,54 @@ video {
 .text-start {
     color:rgba($primary, 0.55); 
     width: 100%; 
+
+    &:hover .right-icon-nav {
+        margin-left: 10px; 
+        }
+}
+.small-circles {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-left: 10px;
+}
+.active.small-circles .small-circle{
+    background-color: $primary;
+}
+.small-circle {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #d3d3d3;
+    margin: 3px 0;
+}
+.timeline li.active span.time {
+    color: $primary;
+    background-color:rgba($primary, 0.028);
+    padding-right: 10px;
+    padding-left: 10px;
+    border-radius: 6px;
+}
+.timeline li.active span.date {
+    color: $primary;
+    background-color:rgba($primary, 0.028);
+    padding-right: 10px;
+    padding-left: 10px;
+    border-radius: 6px;
+}
+.timeline .small-circles.completed .small-circle {
+    background-color: $primary !important;
+}
+.timeline li.completed .circle{
+    background-color: $primary !important;
+} 
+
+.timeline li.active .small-circle {
+    border: 2px solid var(--color-label-completed);
+    animation: blink02 2s infinite;
+}
+.timeline li.active .circle{
+    animation: blink02 2s infinite;
 }
 
 .sub-board-image {

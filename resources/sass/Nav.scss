@@ -95,6 +95,18 @@
     background-position: center; 
     transition: transform 0.3s ease; 
 }
+.right-icon-nav {
+    width: 19px;
+    height: 19px;
+    margin-left: 5px;
+    background-image: url('../img/Icon-right-black.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    transition: transform 0.3s ease, margin-left 0.3s ease;
+  }
+  
+
 .logout-icon{
     width: 27px;
     height: 20px;
