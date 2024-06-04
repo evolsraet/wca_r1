@@ -187,6 +187,35 @@ $sub-color02: #EBEFFD;
     transition: box-shadow 0.3s ease-in-out;
 }
 
+.ac-evaluation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 40px;
+    border-radius: 6px;
+    background-color: rgba($primary, 0.088);
+    color: $primary !important;
+    text-align: center;
+    transition: box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.modal-bid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 65px;
+    border-radius: 6px;
+    background-color: $primary;
+    color: white;
+    text-align: center;
+    transition: box-shadow 0.3s ease-in-out;
+    box-shadow: 0 3px 6px 0 rgba(117, 18, 22, 0.2);
+}
+
+
 .gray-box {
     display: inline-block;
     width: 55px;

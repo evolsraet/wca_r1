@@ -1,6 +1,8 @@
 <template>
 <div class="overlay" style="display: none;"></div> 
-    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', 'p-2', navbarClass, textClass]">
+    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass]">
+        <div v-if="isAuctionDetailPage">
+        </div>
         <div class="container nav-font">
             <button v-if="isDetailPage" @click="goBack" class="p-2 btn btn-back back-btn-icon">
             </button>
@@ -331,9 +333,9 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import useAuth from '@/composables/auth';
-import { useRouter, useRoute } from 'vue-router';
 import useAuctions from '@/composables/auctions';
 
 const { getAuctions, auctionsData } = useAuctions();
@@ -407,6 +409,11 @@ const isDetailPage = computed(() => {
     return /^\/auction\/\d+$/.test(route.path) || route.path === '/selldt' || route.path === '/selldt2';
 });
 
+// 특정 페이지 경로 확인 (AuctionDetail 페이지)
+const isAuctionDetailPage = computed(() => {
+  return route.name === 'AuctionDetail';
+});
+
 // 뒤로 가기 함수
 const goBack = () => {
     router.back();
@@ -418,18 +425,11 @@ function toggleNavbar() {
     content.classList.remove('visible');
     clearTimeout(scrollTimeout);
 
-    // Close the navbar
-    const navbar = document.querySelector('.navbar-collapse');
-    navbar.addEventListener('transitionend', handleNavbarClosed);
+    document.querySelector('.btn-close').click();
     showSettings.value = false;
     if (content) {
         content.scrollTop = 0;
     }
-
-    // Ensure the event listener is attached before triggering the close
-    setTimeout(() => {
-        document.querySelector('.btn-close').click();
-    }, 10);
 }
 function checkScrollGradient() {
     const content = document.querySelector('.toggle-nav-content');
@@ -442,7 +442,7 @@ function checkScrollGradient() {
             } else {
                 content.classList.remove('visible');
             }
-        }, 200); // 0.2초 후에 gradient 표시
+        }, 200);
     } else {
         showScrollGradient.value = false;
         content.classList.remove('visible');
@@ -493,12 +493,12 @@ function toggleOverlay(show) {
         overlay.style.display = 'block';
         setTimeout(() => {
             overlay.style.opacity = '1';
-        }, 10); // opacity 트랜지션을 적용하기 위해 약간의 딜레이를 줌
+        }, 10); 
     } else {
         overlay.style.opacity = '0';
         setTimeout(() => {
             overlay.style.display = 'none';
-        }, 300); // opacity 트랜지션이 끝난 후 display를 none으로 설정
+        }, 300); 
     }
 }
 </script>

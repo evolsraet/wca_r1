@@ -8,44 +8,48 @@
         <div v-if="!showReauctionView">
             <div class="web-content-style">
                 <div>
-                    <div class="container my-4">
+                    <div>
                         <div>
                             <div class="mb-4">
-                                <div class="d-flex gap-2 mb-1 justify-content-between">
-                                    <p class="bid-icon tc-light-gray normal-16-font">입찰: {{ auctionDetail.data.bids_count }}</p>
-                                    <div class="d-flex gap-2 justify-content-end mb-1">
-                                    <div class="tc-light-gray">조회수: {{ auctionDetail.data.hit }}</div>
-                                    <div class="tc-light-gray ml-2">관심 0</div>
-                                    </div>
-                                </div>
+                            <!--    <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>-->
                                 <div class="card my-auction">
                                     <input class="toggle-heart" type="checkbox" checked />
                                     <label class="heart-toggle"></label>
-                                    <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel'}" class="card-img-top-ty01"></div>
+                                    <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel'}" class="card-img-top-ty02"></div>
                                     <div class="allpage">
-                                        <p class="more-page">1/1 |</p>
-                                        <button class="more-img">전체보기</button>
+                                        <p class="more-page">1/1</p>
                                     </div>
                                     <div v-if="auctionDetail.data.status === 'cancel'" class="time-remaining">경매 취소</div>
                                     <div v-if="auctionDetail.data.status === 'chosen'" class="time-remaining">선택 완료</div>
                                     <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
-                                    <div class="card-body">
-                                        <div class="enter-view align-items-baseline ">
-                                            <p class="card-title fs-5"><span class="blue-box">무사고</span>현대 쏘나타(DN8)</p>
+                                    <div class="card-body p-3">
+                                        <div class="d-flex gap-3 mb-1 justify-content-between">
+                                            <p class="bid-icon tc-light-gray normal-16-font">실차주 판매</p>
+                                            <div class="d-flex gap-3 justify-content-end mb-1">
+                                            <div class="tc-light-gray icon-hit">{{ auctionDetail.data.hit }}</div>
+                                            <div class="tc-light-gray ml-2 icon-heart"> 0</div>
+                                            <p class="tc-light-gray icon-bid">0{{ auctionDetail.data.bids_count }}</p>
+                                            </div>
                                         </div>
+                                        <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                        <p>2020년 / 2.4km / 무사고</p>
+                                        <p class="tc-light-gray">현대 소나타 (DN8)</p>
                                         <div class="enter-view">
-                                            <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>
-                                            <span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">위카 진단평가</span>
                                             <AlarmModal ref="alarmModal" />
                                         </div>
-                                    </div>
-                                    <div>
+                                        <p class="blue-box">무사고</p>
+                                        <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
+                                        </div>
+                                    <div v-if="isUser">
+                                        <div class="modal-bid d-flex">
+                                            
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="bold-18-font">
+               <!--     <div class="bold-18-font">
                         <div v-if="auctionDetail.data.status === 'ing'">
                             <p class="auction-deadline">경매 마감일<span> {{ auctionDetail.data.final_at }}</span></p>
                         </div>
@@ -55,9 +59,9 @@
                         <div v-else-if="auctionDetail.data.status === 'ask'">
                             <p class="auction-deadline">신청 완료</p>
                         </div>
-                    </div>
-                    <div class="container card-style">
-                        <div class="card card-custom">
+                    </div>-->
+                  <!--   <div class="container card-style">
+                       <div class="card card-custom">
                             <div class="row">
                                 <div class="col-6">
                                     <div class="item-label">년식</div>
@@ -79,8 +83,9 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div>-->
                     <div class="container p-4">
+                        <h5>차량 정보</h5>
                         <ul class="machine-inform-title">
                             <li class="tc-light-gray">차량번호</li>
                             <li class="info-num">{{ carDetails.no }}</li>
@@ -616,7 +621,7 @@
             <div class="p-4">
                 <h5 class="mb-2">재경매를 진행합니다</h5>
                 <div class="card my-auction">
-                    <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' }" class="card-img-top-ty01"></div>
+                    <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' }" class="card-img-top-ty02"></div>
                     <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
                     <div class="card-body">
                         <div class="enter-view align-items-baseline">
@@ -1161,15 +1166,6 @@ input[type="checkbox"] {
     align-self: center; 
 }
 
-.card-img-top-ty01 {
-    width: 100%;
-    height: 215px;
-    background-image: url('../../../../img/car_example.png');
-    background-size: cover;
-    background-position: center;
-    border-top-right-radius: 6px;
-    border-top-left-radius: 6px;
-}
     .auction-deadline {
     width: 100%;
     height: 38px;
@@ -1205,23 +1201,6 @@ input[type="checkbox"] {
     color: #CCC;
     direction: ltr; 
   }
-  .allpage{
-    position: absolute;
-    display: flex;
-    top: 2px;
-    bottom: 0px;
-    right: 0px;
-    height: 37px;
-    width: 130px;
-    background-color: rgba(0, 0, 0, 0.5);
-    padding: 5px;
-    border-radius: 30px;
-    justify-content: center;
-    align-items: center;
-}
-.allpage:hover{
-    background-color: rgb(40 40 40 / 60%);
-}
     .more-page {
         color: white;
         font-size: 16px;

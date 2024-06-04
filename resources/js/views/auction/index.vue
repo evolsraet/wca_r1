@@ -13,7 +13,7 @@ TODO:
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav">
                         <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link"><span class="interest mx-1"></span></a>
+                        <a class="nav-item nav-link"@click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">판매한 차량</a>
                     </div>
                 </nav>
             </div>
