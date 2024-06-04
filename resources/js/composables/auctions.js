@@ -16,7 +16,7 @@ export default function useAuctions() {
     const isLoading = ref(false);
     const swal = inject('$swal');
     const { getUser } = useUsers();
- const hope_price = ref('');
+    const hope_price = ref('');
     const carInfoForm = reactive({
         owner: "",
         no: "",
@@ -167,27 +167,27 @@ const AuctionCarInfo = async (carInfoForm) => {
   
 
  const createAuction = async (auctionData) => {
-        if (processing.value) return;
-        processing.value = true;
-        validationErrors.value = {};
+    if (processing.value) return;
+    processing.value = true;
+    validationErrors.value = {};
 
-        try {
-            const response = await axios.post('/api/auctions', auctionData);
-            return response.data; 
-        } catch (error) {
-            console.error(error);
-            if (error.response?.data) {
-                validationErrors.value = error.response.data.errors;
-            }
-            swal({
-                icon: 'error',
-                title: 'Failed to create auction'
-            });
-            throw error;
-        } finally {
-            processing.value = false;
+    try {
+        const response = await axios.post('/api/auctions', auctionData);
+        return response.data; 
+    } catch (error) {
+        console.error(error);
+        if (error.response?.data) {
+            validationErrors.value = error.response.data.errors;
         }
-    };
+        swal({
+            icon: 'error',
+            title: 'Failed to create auction'
+        });
+        throw error;
+    } finally {
+        processing.value = false;
+    }
+};
 //재경매- (희망가) 변경
 const AuctionReauction = async (id, data) => {
     if (isLoading.value) return;
@@ -217,6 +217,43 @@ const AuctionReauction = async (id, data) => {
         isLoading.value = false;
     }
 };
+//수정
+const updateAuction = async (id,auction) => {
+    const auctionForm = {
+        auction
+    }
+    swal({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this action!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, edit it!',
+        confirmButtonColor: '#ef4444',
+        timer: 20000,
+        timerProgressBar: true,
+        reverseButtons: true
+    })
+        .then(result => {
+            if (result.isConfirmed) {
+                axios.put(`/api/auctions/${id}`,auctionForm)
+                    .then(response => {
+                        getAuctions()
+                        router.push({name: 'auctions.index'})
+                        swal({
+                            icon: 'success',
+                            title: 'Auction edit successfully'
+                        })
+                    })
+                    .catch(error => {
+                        swal({
+                            icon: 'error',
+                            title: 'Something went wrong'
+                        })
+                    })
+            }
+        })
+   
+}
 //딜러 선택
 const chosenDealer = async (id, data) => {
     if (isLoading.value) return;
@@ -316,37 +353,37 @@ const updateAuctionStatus = async (id, status) => {
     }
 };
 
-    const deleteAuction = async (id) => {
-        swal({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this action!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            confirmButtonColor: '#ef4444',
-            timer: 20000,
-            timerProgressBar: true,
-            reverseButtons: true
+const deleteAuction = async (id) => {
+    swal({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this action!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        confirmButtonColor: '#ef4444',
+        timer: 20000,
+        timerProgressBar: true,
+        reverseButtons: true
+    })
+        .then(result => {
+            if (result.isConfirmed) {
+                axios.delete(`/api/auctions/${id}`)
+                    .then(response => {
+                        getAuctions()
+                        router.push({name: 'auctions.index'})
+                        swal({
+                            icon: 'success',
+                            title: 'Auction deleted successfully'
+                        })
+                    })
+                    .catch(error => {
+                        swal({
+                            icon: 'error',
+                            title: 'Something went wrong'
+                        })
+                    })
+            }
         })
-            .then(result => {
-                if (result.isConfirmed) {
-                    axios.delete(`/api/auctions/${id}`)
-                        .then(response => {
-                            getAuctions()
-                            router.push({name: 'auctions.index'})
-                            swal({
-                                icon: 'success',
-                                title: 'Auction deleted successfully'
-                            })
-                        })
-                        .catch(error => {
-                            swal({
-                                icon: 'error',
-                                title: 'Something went wrong'
-                            })
-                        })
-                }
-            })
         
       };
 
@@ -371,7 +408,8 @@ const updateAuctionStatus = async (id, status) => {
         getStatusLabel,
         updateAuctionStatus,
         createAuction,
-        refreshCarInfo
+        refreshCarInfo,
+        updateAuction,
     };
     
 }

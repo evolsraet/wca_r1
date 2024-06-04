@@ -71,14 +71,14 @@
                                         name: 'auction.approve', params: { id: auction.id } 
                                     }"
                                     class="ms-2 badge bg-danger tc-wh"
-                                    >매물 수정
+                                    >수정
                                 </router-link>
                                 <a
                                     href="#"
                                     v-if="can('role.admin')"
                                     @click.prevent="deleteAuction(auction.id)"
                                     class="ms-2 badge bg-danger tc-wh"
-                                    >매물 삭제</a
+                                    >삭제</a
                                 >
                             </td>
                         </tr>
