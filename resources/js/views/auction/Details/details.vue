@@ -11,45 +11,61 @@
                     <div>
                         <div>
                             <div class="mb-4">
-                            <!--    <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>-->
+                                <!--    <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>-->
                                 <div class="card my-auction">
-                                    <input class="toggle-heart" type="checkbox" checked />
-                                    <label class="heart-toggle"></label>
-                                    <div :class="{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel'}" class="card-img-top-ty02"></div>
-                                    <div class="allpage">
-                                        <p class="more-page">1/1</p>
-                                    </div>
-                                    <div v-if="auctionDetail.data.status === 'cancel'" class="time-remaining">경매 취소</div>
-                                    <div v-if="auctionDetail.data.status === 'chosen'" class="time-remaining">선택 완료</div>
-                                    <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
-                                    <div class="card-body p-3">
-                                        <div class="d-flex gap-3 mb-1 justify-content-between">
-                                            <p class="bid-icon tc-light-gray normal-16-font">실차주 판매</p>
-                                            <div class="d-flex gap-3 justify-content-end mb-1">
-                                            <div class="tc-light-gray icon-hit">{{ auctionDetail.data.hit }}</div>
-                                            <div class="tc-light-gray ml-2 icon-heart"> 0</div>
-                                            <p class="tc-light-gray icon-bid">0{{ auctionDetail.data.bids_count }}</p>
+                                    <div>
+                                        <div class="mb-3" v-if="auctionDetail.data.status === 'ask' || auctionDetail.data.status === 'diag'">
+                                            <div class="diag-img">
+                                                <p class="diag-text tc-light-gray mb-4">위카가 꼼꼼하게 진단 중이에요</p>
                                             </div>
                                         </div>
+                                        <div v-else>
+                                            <span v-if="auctionDetail.data.status === 'ing'" class="mx-2 timer"><img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">01:42:24</span>
+                                            <input class="toggle-heart" type="checkbox" checked />
+                                            <label class="heart-toggle"></label>
+                                            <div :class="['card-img-top-ty02', { 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]"></div>
+                                            <div class="allpage">
+                                                <p class="more-page">1/1</p>
+                                            </div>
+                                            <div v-if="auctionDetail.data.status === 'cancel'" class="time-remaining">경매 취소</div>
+                                            <div v-if="auctionDetail.data.status === 'chosen'" class="time-remaining">선택 완료</div>
+                                            <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
+                                            <div class="p-3 pb-1 d-flex gap-3 justify-content-between">
+                                                <p class="bid-icon tc-light-gray normal-16-font">실차주 판매</p>
+                                                <div class="d-flex gap-3 justify-content-end mb-1">
+                                                    <div class="tc-light-gray icon-hit">{{ auctionDetail.data.hit }}</div>
+                                                    <div class="tc-light-gray ml-2 icon-heart"> 0</div>
+                                                    <p class="tc-light-gray icon-bid">{{ auctionDetail.data.bids_count }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body p-3 pt-0">
                                         <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                        <p>2020년 / 2.4km / 무사고</p>
+                                        <p>{{ carDetails.year }} 년 / 2.4km / 무사고</p>
                                         <p class="tc-light-gray">현대 소나타 (DN8)</p>
                                         <div class="enter-view">
                                             <AlarmModal ref="alarmModal" />
                                         </div>
-                                        <p class="blue-box">무사고</p>
-                                        <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
+                                        <div v-if="auctionDetail.data.status === 'ing'">
+                                            <p class="blue-box">무사고</p>
+                                            <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
                                         </div>
-                                    <div v-if="isUser">
-                                        <div class="modal-bid d-flex">
-                                            
-                                        </div>
+
+                                    </div>
+                                    <div v-if="isUser && auctionDetail.data.status === 'ing'" class="px-3">
+                                        <transition name="fade">
+                                            <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
+                                                <p>현재 최고 입찰액</p>
+                                                <p class="icon-coins">{{ heightPrice }} 만원</p>
+                                            </div>
+                                        </transition>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-               <!--     <div class="bold-18-font">
+                    <!--     <div class="bold-18-font">
                         <div v-if="auctionDetail.data.status === 'ing'">
                             <p class="auction-deadline">경매 마감일<span> {{ auctionDetail.data.final_at }}</span></p>
                         </div>
@@ -60,7 +76,7 @@
                             <p class="auction-deadline">신청 완료</p>
                         </div>
                     </div>-->
-                  <!--   <div class="container card-style">
+                    <!--   <div class="container card-style">
                        <div class="card card-custom">
                             <div class="row">
                                 <div class="col-6">
@@ -326,7 +342,7 @@
 
                         <div v-if="isUser">
                             <!-------[사용자]diag (진단평가)알때------->
-                            <div v-if="auctionDetail.data.status === 'diag' || auctionDetail.data.status === 'ask' " @click.stop="">
+                          <!--  <div v-if="auctionDetail.data.status === 'diag' || auctionDetail.data.status === 'ask' " @click.stop="">
                                 <div class="steps-container mt-3">
                                     <div class="step completing">
                                         <div class="label completed">
@@ -347,7 +363,7 @@
                                     </div>
                                 </div>
                                 <p class="auction-deadline">현재 등록신청 후 진단평가 진행 중 입니다.</p>
-                            </div>
+                            </div>-->
 
                             <!-------[사용자]취소 (진단평가)알때------->
                             <div v-if="auctionDetail.data.status === 'cancel'" @click.stop="">
@@ -372,8 +388,7 @@
                                 </div>
                                 <p class="auction-deadline">경매가 취소 되었습니다.</p>
                             </div>
-
-                            <div v-if="auctionDetail.data.status === 'ing' " @click.stop="">
+                            <!--    <div v-if="auctionDetail.data.status === 'ing' " @click.stop="">
                                 <div class="steps-container mt-3">
                                     <div class="step completing">
                                         <div class="label completed">
@@ -403,7 +418,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>-->
 
                             <!-- [사용자]- 딜러 선택 (wait) 중일때  -->
                             <div v-if="!selectedDealer && auctionDetail.data.status === 'wait'" @click.stop="">
@@ -438,15 +453,15 @@
                                 <transition name="fade" mode="out-in">
                                     <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
                                 </transition>
-                              <!--  <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>-->
+                                <!--  <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>-->
                                 <div class="content mt-3 text-start">
                                     <h5>경매에 참여한 딜러</h5>
                                     <p> 금액이 가장 높은 <span class="highlight">5명</span>까지만 표시돼요.</p>
                                     <div class="overflow-auto select-dealer mt-3">
                                         <table class="">
                                             <tbody>
-                                                <tr v-for="(bid, index) in sortedTopBids" :key="bid.user_id"> 
-                                                    <td class="w-25"><img src="../../../../img/myprofile_ex.png" alt="딜러 사진"  class="mb-2 align-text-top"></td>
+                                                <tr v-for="(bid, index) in sortedTopBids" :key="bid.user_id">
+                                                    <td class="w-25"><img src="../../../../img/myprofile_ex.png" alt="딜러 사진" class="mb-2 align-text-top"></td>
                                                     <td class="d-flex flex-column align-items-center w-75">
                                                         <div :class="[(index === 0 ? 'red-box' : index < 3 ? 'blue-box' : 'gray-box'), 'rounded-pill', 'me-0']">
                                                             {{ index + 1 }}위
@@ -455,8 +470,8 @@
                                                     </td>
                                                     <td class="w-30">
                                                         <div class="d-flex flex-column align-items-left">
-                                                         <p class="tc-light-gray">{{bid.dealerInfo ? bid.dealerInfo.company : 'Loading...'}}</p>
-                                                         <em class="lh-base tc-blue bold-18-font">{{bid.price}} 만원</em>
+                                                            <p class="tc-light-gray">{{bid.dealerInfo ? bid.dealerInfo.company : 'Loading...'}}</p>
+                                                            <em class="lh-base tc-blue bold-18-font">{{bid.price}} 만원</em>
                                                         </div>
                                                     </td>
                                                     <td class="text-center align-middle w-auto">
@@ -540,7 +555,7 @@
                         </div>
 
                         <!-- 바텀 시트 show or black-->
-                        <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
+                        <!--  <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>-->
 
                         <!--#####################
                         딜러에 관힌 바텀시트
@@ -629,7 +644,7 @@
                         </div>
                         <div class="enter-view">
                             <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>
-                           <span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">위카 진단평가</span>
+                            <span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">위카 진단평가</span>
                         </div>
                     </div>
                 </div>
@@ -676,9 +691,10 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch, watchEffect } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watchEffect, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import { gsap } from 'gsap';
 import useUsers from '@/composables/users';
 import useRoles from '@/composables/roles';
 import useAuctions from '@/composables/auctions';
@@ -690,9 +706,6 @@ import AlarmModal from '@/views/modal/AlarmModal.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
 import { cmmn } from '@/hooks/cmmn';
 import { initReviewSystem } from '@/composables/review';
-
-const heightPrice = ref(0);
-const lowPrice = ref(0);
 
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
 
@@ -714,20 +727,26 @@ const amount = ref('');
 const koreanAmount = ref('원');
 const { numberToKoreanUnit } = cmmn();
 const myBidPrice = computed(() => {
-  const myBid = auctionDetail.value.data.bids.find(bid => bid.user_id === user.value.id);
+  const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id);
   return myBid ? myBid.price : '0';
 });
-
+let pollingInterval = null;
 const updateKoreanAmount = () => {
   koreanAmount.value = numberToKoreanUnit(amount.value) + ' 원';
 };
 
-
+const dynamicClass = computed(() => {
+  if (auctionDetail.value?.data?.status === 'ask' || auctionDetail.value?.data?.status === 'diag') {
+    return 'diag-img';
+  } else {
+    return 'card-img-top-ty02';
+  }
+});
 
 // 사용자 입찰이 취소된 적이 있는지 확인
-const userBid = computed(() => auctionDetail.value.data.bids.find(bid => bid.user_id === user.value.id));
+const userBid = computed(() => auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id));
 const userBidExists = computed(() => userBid.value && !userBid.value.deleted_at);
-const userBidCancelled = computed(() => auctionDetail.value.data.bids.some(bid => bid.user_id === user.value.id && bid.deleted_at));
+const userBidCancelled = computed(() => auctionDetail.value?.data?.bids?.some(bid => bid.user_id === user.value.id && bid.deleted_at));
 
 const auctionId = computed(() => auctionDetail.value?.data?.id);
 const cancelAttempted = computed({
@@ -754,7 +773,7 @@ const showReauctionView = ref(false);
 
 const auctionDetail = ref(null);
 const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus } = useAuctions();
-const { submitBid, cancelBid } = useBids();
+const { submitBid, cancelBid,getBidById } = useBids();
 const carDetails = ref({});
 const highestBid = ref(0);
 const lowestBid = ref(0);
@@ -763,26 +782,58 @@ const sortedTopBids = computed(() => {
     return [];
   }
 
-  
   const bidsByUser = auctionDetail.value.data.top_bids.reduce((acc, bid) => {
-      if (!acc[bid.user_id] || acc[bid.user_id].price < bid.price) {
+    if (!acc[bid.user_id] || acc[bid.user_id].price < bid.price) {
       acc[bid.user_id] = bid;
     }
     return acc;
-}, {});
+  }, {});
 
-const topBids = Object.values(bidsByUser)
-.sort((a, b) => b.price - a.price)
-.slice(0, 5);
+  const topBids = Object.values(bidsByUser)
+    .sort((a, b) => b.price - a.price)
+    .slice(0, 5);
 
-return topBids;
+  return topBids;
 });
 
+const heightPrice = ref(0);
+// 숫자 애니메이션 함수
+const animateHeightPrice = (newPrice) => {
+  const heightPriceElement = document.querySelector('.icon-coins');
+  const startValue = parseInt(heightPriceElement.innerText.replace(' 만원', ''));
+  const endValue = newPrice;
+
+  gsap.fromTo(
+    heightPriceElement,
+    { innerText: startValue },
+    {
+      innerText: endValue,
+      duration: 1.5,
+      ease: 'Power1.easeOut',
+      snap: { innerText: 1 },
+      onUpdate: function () {
+        heightPriceElement.innerText = Math.round(heightPriceElement.innerText) + ' 만원';
+      }
+    }
+  );
+};
+watch(
+  () => auctionDetail.value?.data?.bids,
+  (bids) => {
+    if (bids && bids.length > 0) {
+      heightPrice.value = Math.max(...bids.map(bid => bid.price), 0);
+      console.log("Height price updated:", heightPrice.value);
+    }
+  },
+  { immediate: true } // 이 옵션을 통해 컴포넌트가 마운트될 때 즉시 실행됩니다.
+);
+
+
 const openAlarmModal = () => {
-console.log("openAlarmModal called");
-if (alarmModal.value) {
-  alarmModal.value.openModal();
-}
+  console.log("openAlarmModal called");
+  if (alarmModal.value) {
+    alarmModal.value.openModal();
+  }
 };
 
 const isModalVisible = ref(false);
@@ -822,7 +873,6 @@ const handleConfirmDelete = async () => {
   }
 };
 
-
 const toggleView = () => {
   showReauctionView.value = true;
   console.log(showReauctionView.value)
@@ -845,25 +895,34 @@ const toggleSheet = () => {
   }
   showBottomSheet.value = !showBottomSheet.value;
 };
+
 // 사용자 정보를 가져오는 함수
-const getDealer = async (userId) => {
+const getDealer = async (user_Id) => {
+  if (!user_Id) {
+    console.error('user_id is undefined:', user_Id);
+    return { name: 'Unknown' };
+  }
+
   try {
-    const userData = await getUser(userId);
-    console.log(`User Data for user_id ${userId}:`, userData);
+    const userData = await getUser(user_Id);
+    console.log(`User Data for user_id ${user_Id}:`, userData);
     return userData;
   } catch (error) {
-    console.error(`Error fetching data for user_id ${userId}:`, error);
+    console.error(`Error fetching data for user_id ${user_Id}:`, error);
     return { name: 'Unknown' };
   }
 };
+
 
 // auctionDetail이 변경될 때마다 각 bid에 userData를 추가하는 함수
 watchEffect(async () => {
   if (auctionDetail.value && auctionDetail.value.data && auctionDetail.value.data.top_bids) {
     const bids = auctionDetail.value.data.top_bids;
     for (const bid of bids) {
-      const userData = await getDealer(bid.user_id);
-      bid.dealerInfo = userData.dealer; 
+      if (bid.user_id) {
+        const userData = await getDealer(bid.user_id);
+        bid.dealerInfo = userData.dealer;
+      }
     }
     sortedTopBids.value = bids;
   }
@@ -905,7 +964,7 @@ const cancelSelection = () => {
 };
 
 const completeAuction = async () => {
-  auctionDetail.value.status = 'chosen';
+  auctionDetail.value.data.status = 'chosen';
   const id = route.params.id;
   const data = {
     status: 'chosen',
@@ -935,7 +994,7 @@ const checkScroll = () => {
 };
 
 async function fetchUserNames() {
-  for (const bid of auctionDetail.value.data.bids) {
+  for (const bid of auctionDetail.value?.data?.bids || []) {
     if (!usersInfo.value[bid.user_id]) {
       const userData = await getUser(bid.user_id);
       usersInfo.value[bid.user_id] = userData.name;
@@ -952,7 +1011,7 @@ const closeBidModal = () => {
 };
 
 const submitAuctionBid = async () => {
-  const userBidExists = auctionDetail.value.data.bids.some(bid => bid.user_id === user.value.id && !bid.deleted_at);
+  const userBidExists = auctionDetail.value?.data?.bids?.some(bid => bid.user_id === user.value.id && !bid.deleted_at);
   if (!amount.value || isNaN(parseFloat(amount.value))) {
     alert('유효한 금액을 입력해주세요.');
   } else {
@@ -965,37 +1024,35 @@ const submitAuctionBid = async () => {
 };
 
 const confirmBid = async () => {
-    try {
-        const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
-        if (bidResult.success) {
-            lastBidId.value = bidResult.bidId;
-            await fetchAuctionDetail();
-            closeBidModal();
-            succesbid.value = true;
-        } else {
-            alert(bidResult.message);
-        }
-    } catch (error) {
-        console.error('Error confirming bid:', error);
+  try {
+    const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
+    if (bidResult.success) {
+      lastBidId.value = bidResult.bidId;
+      await fetchAuctionDetail();
+      closeBidModal();
+      succesbid.value = true;
+    } else {
+      alert(bidResult.message);
     }
+  } catch (error) {
+    console.error('Error confirming bid:', error);
+  }
 };
 
+const errorMessage = ref('');
 
 const fetchAuctionDetail = async () => {
   const auctionId = parseInt(route.params.id);
   try {
     auctionDetail.value = await getAuctionById(auctionId);
     const { car_no, owner_name } = auctionDetail.value.data;
-
     const carInfoForm = {
       owner: owner_name,
       no: car_no,
       forceRefresh: ""
     };
-
     const carInfoResponse = await AuctionCarInfo(carInfoForm);
     const carData = carInfoResponse.data;
-
     carDetails.value.no = carData.no;
     carDetails.value.model = carData.model;
     carDetails.value.modelSub = carData.modelSub;
@@ -1004,24 +1061,47 @@ const fetchAuctionDetail = async () => {
     carDetails.value.year = carData.year;
     carDetails.value.fuel = carData.fuel;
     carDetails.value.mission = carData.mission;
-
-
-    console.log("차량 상세 정보:", carInfoResponse);
+    
+    // top_bids를 통해 각 bid의 정보를 가져옵니다.
+    if (auctionDetail.value.data.top_bids && auctionDetail.value.data.top_bids.length > 0) {
+      await fetchBidsInfo(auctionDetail.value.data.top_bids);
+    }
   } catch (error) {
     console.error('Error fetching auction detail:', error);
-    errorMessage.value = 'Error fetching auction details';
   }
 };
 
+
+const fetchBidsInfo = async (topBids) => {
+  try {
+    const bidsInfo = await Promise.all(topBids.map(bid => getBidById(bid.id)));
+    sortedTopBids.value = bidsInfo;
+    // 가장 높은 가격을 heightPrice에 설정하고 애니메이션 적용합니다.
+    const newHeightPrice = Math.max(...bidsInfo.map(bid => bid.price));
+    if (newHeightPrice !== heightPrice.value) {
+      heightPrice.value = newHeightPrice;
+      animateHeightPrice(newHeightPrice);
+    }
+    console.log("Height price updated:", heightPrice.value);
+  } catch (error) {
+    console.error('Error fetching bid info:', error);
+  }
+};
+// 일정 간격으로 데이터를 갱신하는 함수
+const startPolling = () => {
+  pollingInterval = setInterval(fetchAuctionDetail, 60000);
+};
 onMounted(async () => {
-    console.log("알람모달",alarmModal.value);
+  console.log("알람모달", alarmModal.value);
   const screenWidth = window.innerWidth;
   bottomSheetStyle.value = {
     position: screenWidth >= 1200 ? 'static' : 'fixed',
     bottom: '0px'
   };
+  console.log("Component mounted, fetching auctions");
   await getAuctions();
   fetchAuctionDetail();
+  startPolling();
   window.addEventListener('scroll', checkScroll);
   try {
     console.log('Sorted Top Bids:', sortedTopBids.value);
@@ -1031,7 +1111,8 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-  window.removeEventListener('scroll', checkScroll);
+    window.removeEventListener('scroll', checkScroll);
+    clearInterval(pollingInterval);
 });
 
 const populateHopePrice = () => {
@@ -1045,7 +1126,7 @@ const populateHopePrice = () => {
 };
 
 const sortedBids = computed(() => {
-  const bids = auctionDetail.value?.data?.bids.slice().sort((a, b) => b.price - a.price) || [];
+  const bids = auctionDetail.value?.data?.bids?.slice().sort((a, b) => b.price - a.price) || [];
   if (bids.length > 0) {
     highestBid.value = bids[0].price;
     lowestBid.value = bids[bids.length - 1].price;
@@ -1056,32 +1137,32 @@ const sortedBids = computed(() => {
 const isReadonly = computed(() => isSellChecked.value && amount.value !== '');
 
 const handleCancelBid = async () => {
-    try {
-        const myBid = auctionDetail.value.data.bids.find(bid => bid.user_id === user.value.id && !bid.deleted_at);
-        if (myBid) {
-            const result = await cancelBid(myBid.id);
-            if (result.success) {
-                myBid.deleted_at = new Date().toISOString();
-                await fetchAuctionDetail();
-                amount.value = '';
-                succesbid.value = false;
-                koreanAmount.value = '원';
-            } else {
-                alert(result.message);
-            }
-        } else {
-            alert('입찰 내역이 없습니다.');
-        }
-    } catch (error) {
-        console.error('Error canceling bid:', error);
-        alert('입찰 취소에 실패했습니다.');
+  try {
+    const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id && !bid.deleted_at);
+    if (myBid) {
+      const result = await cancelBid(myBid.id);
+      if (result.success) {
+        myBid.deleted_at = new Date().toISOString();
+        await fetchAuctionDetail();
+        amount.value = '';
+        succesbid.value = false;
+        koreanAmount.value = '원';
+      } else {
+        alert(result.message);
+      }
+    } else {
+      alert('입찰 내역이 없습니다.');
     }
+  } catch (error) {
+    console.error('Error canceling bid:', error);
+    alert('입찰 취소에 실패했습니다.');
+  }
 };
-
 
 watch([isSellChecked, auctionDetail], () => {
   populateHopePrice();
 });
+
 </script>
 
 
@@ -1181,6 +1262,16 @@ input[type="checkbox"] {
     padding-right: 1.5rem;
     padding-left: 1.5rem;
 }
+.blinking {
+  animation: blink 1.5s linear infinite;
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0.5;
+  }
+}
+
   .styled-input {
     border: none;
     outline: none;
@@ -1226,5 +1317,11 @@ input[type="checkbox"] {
 .label-style02{
     top: 20px !important;
     width: 100px;
+}
+.fade-enter-active, .fade-leave-active {
+  transition: opacity 0.5s;
+}
+.fade-enter, .fade-leave-to{
+  opacity: 0;
 }
 </style>

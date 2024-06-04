@@ -531,14 +531,6 @@ function toggleOverlay(show) {
     opacity: 1;
 }
 
-.icon-clock {
-    width: 16px;
-    height: 16px;
-    margin-right: 6px;
-    vertical-align: middle;
-    margin-bottom: 2px;
-}
-
 .middle-content-ty02 {
     display: flex;
     flex-direction: column;

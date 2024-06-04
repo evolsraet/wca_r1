@@ -28,14 +28,14 @@ TODO:
         </div>
     </div>
     <!-- 슬라이드업 메뉴 트리거 버튼 및 컨테이너 -->
-    <div v-if="isUser"  class="review-button-container" :style="{ height: menuHeight }" @click="toggleMenuHeight">
+   <!-- <div v-if="isUser"  class="review-button-container" :style="{ height: menuHeight }" @click="toggleMenuHeight">
         <div class="icon-container" v-show="isExpanded" ></div>
         <router-link :to="{ name: 'home' }" tag="button" class="black-btn tc-wh" v-show="!isExpanded" :disabled="isExpanded">딜러 선택이 가능해요!<span class="btn-apply-ty02">바로가기</span></router-link>
-       <!--if.경매 완료건이 있을때-->
+       
        <router-link :to="{ name: 'index.allreview' }" tag="button" class="review-btn tc-red" v-show="!isExpanded && hasCompletedAuctions" :disabled="isExpanded">후기 남기기</router-link>      
-         <!--else. 경매완료 건이 없을때-->
+     
        <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded" @click.stop="">후기 남기기</div>
-    </div>
+    </div>-->
     <div class="container my-3 auction-content">
         <div class="row content-main mt-5">
             <!-- 사이드바 -->
@@ -465,15 +465,21 @@ TODO:
                             <label class="heart-toggle"></label>
                             <div class="participate-badge" v-if="isDealerParticipating(auction) ">참여</div>
                             </div>
-                                <div :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' }" class="card-img-top-placeholder">
+                                <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
+                                <div v-if="auction.status === 'ask' || auction.status === 'diag'">
+                                <div class="card-img-demo">
+                                    <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
+                                </div>
+                                </div>
+
+                                <div v-else :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' }" class="card-img-top-placeholder">
+                                    <span v-if="auction.status === 'ing'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">01:42:24</span>
+                                    <span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>
                                 <div v-if="isDealer"> 
                                 <div class="participate-badge" v-if="isDealerParticipating(auction) ">참여</div>
                                 </div>
                                 </div>
-                                <div v-if="auction.status === 'ing'" class="time-remaining">39분 남음</div>
-                                <div v-if="auction.status === 'ing'" class="progress">
-                                    <div class="progress-bar" role="progressbar"></div>
-                                </div>
+
                                 <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
                                 <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
                                 <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
@@ -481,8 +487,10 @@ TODO:
                                 <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
                                 <div v-if="auction.status === 'chosen'" class="wait-selection">선택완료</div>
                                 <div class="card-body">
-                                    <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
+                                    <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                    <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                    <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
+                                    <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                                 </div>
                             </div>
                         </div>

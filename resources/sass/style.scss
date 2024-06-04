@@ -1705,6 +1705,28 @@ video {
     }
 }
 
+.timer{
+    position: absolute;
+    display: flex;
+    top: 10px;
+    bottom: 0px;
+    height: 25px;
+    width: 88px;
+    color: white;
+    background-color: $primary;
+    padding: 5px;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+}
+.icon-clock {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    vertical-align: middle;
+    margin-bottom: 2px;
+}
+
 .allpage{
     position: absolute;
     display: flex;
@@ -1726,13 +1748,24 @@ video {
 
 .card-img-top-placeholder {
     width: 100%; 
-    height: 160px; 
+    height: 180px; 
     background-image: url('../img/car_example.png'); 
     background-size: cover; 
     background-position: center;
+    border-radius: 6px;
+}
+
+.card-img-demo {
+    width: 100%;
+    height: 160px;
+    background-color: #f7f8fb;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
 }
+
 
 .selection-complete-img {
     width: 100%; 
@@ -2673,8 +2706,22 @@ input[type="checkbox"] {
     background-position: center;
 
 }
-
-
+.diag-img {
+    width: 100%;
+    height: 240px;
+    background-color: #f7f8fb;
+    background-image: url('../img/diag.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  
+  .diag-text {
+    text-align: center;
+    font-size: 16px;
+  }
 .auction-deadline {
     width: 100%;
     height: 38px;
@@ -3218,6 +3265,20 @@ input[type="checkbox"] {
     vertical-align: text-bottom;
 
 }
+
+.icon-coins::before{
+    content: '';
+    width: 15px;
+    height: 20px;
+    background-image: url('../img/Icon-coins.png');
+    margin-right: 8px;
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
 
 /* 옵션 정보 : -ac 옵션 정보 활성화 아이콘 */
 
