@@ -5,7 +5,7 @@
     -->
     <div class="container-fluid" v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
-        <div v-if="!showReauctionView">
+        <div v-if="!showReauctionView && auctionDetail.data.status !== 'wait'">
             <div class="web-content-style">
                 <div>
                     <div>
@@ -628,6 +628,14 @@
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="isUser && auctionDetail.data.status === 'wait'">
+            <div class="wd-100 bid-content p-4">
+                <div class="d-flex justify-content-between">
+                    <p>현재 6명이 입찰했어요.</p>
+                    <p>경매취소</p>
                 </div>
             </div>
         </div>
