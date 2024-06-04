@@ -205,14 +205,14 @@
                                                 name: 'auction.approve', params: { id: review.id } 
                                             }"
                                             class="ms-2 badge bg-danger tc-wh"
-                                            >리뷰 수정
+                                            >수정
                                         </router-link>
                                         <a
                                             href="#"
                                             v-if="can('role.admin')"
                                             @click.prevent="deleteReviewApi(review.id)"
                                             class="ms-2 badge bg-danger tc-wh"
-                                            >리뷰 삭제</a
+                                            >삭제</a
                                         >
                                     </td>
                                 </tr>

@@ -259,14 +259,14 @@
                                                 params: { id: post.id },
                                             }"
                                             class="badge bg-primary tc-wh"
-                                            >회원 수정
+                                            >수정
                                         </router-link>
                                         <a
                                             href="#"
                                             v-if="can('role.admin')"
                                             @click.prevent="deleteUser(post.id)"
                                             class="ms-2 badge bg-danger tc-wh"
-                                            >회원 삭제</a
+                                            >삭제</a
                                         >
                                     </td>
                                 </tr>

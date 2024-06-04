@@ -71,6 +71,7 @@ export default function useUsers() {
     }
 
     const updateUser = async (user) => {
+        console.log(JSON.stringify(user));
         if (isLoading.value) return;
 
         isLoading.value = true

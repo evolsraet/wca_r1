@@ -29,7 +29,7 @@
                                 v-model="user.email"
                                 id="email"
                                 type="email"
-                                class="form-control"
+                                class="form-control"                                
                             />
                             <div class="text-danger mt-1">
                                 {{ errors.email }}
@@ -69,7 +69,7 @@
                             <v-select
                                 multiple
                                 v-model="role.user_id"
-                                :options="roleList"
+                                :options="roles.data"
                                 :reduce="(role) => role.id"
                                 label="name"
                                 class="form-control"
@@ -108,7 +108,7 @@ import { useRoute } from "vue-router";
 import useRoles from "@/composables/roles";
 import useUsers from "@/composables/users";
 
-const { roleList, getRoleList } = useRoles();
+const { roles, getRoles } = useRoles();
 const {
     updateUser,
     getUser,
@@ -150,14 +150,15 @@ const user = reactive({
 });
 
 const route = useRoute();
+
 function submitForm() {
     validate().then((form) => {
         if (form.valid) updateUser(user);
     });
 }
-onMounted(() => {
-    getUser(route.params.id);
-    getRoleList();
+onMounted(async () => {
+    await getUser(route.params.id);
+    await getRoles();
 });
 // https://vuejs.org/api/reactivity-core.html#watcheffect
 watchEffect(() => {
