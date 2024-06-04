@@ -634,9 +634,31 @@
         <div v-if="isUser && auctionDetail.data.status === 'wait'">
             <div class="wd-100 bid-content p-4">
                 <div class="d-flex justify-content-between">
-                    <p>현재 6명이 입찰했어요.</p>
-                    <p>경매취소</p>
+                    <p class="bold-20-font">현재 6명이 입찰했어요.</p>
+                    <p class="mt-1"><span class="cancelbox">경매취소</span></p>
                 </div>
+            </div>
+            <div class="container p-3 mt-3">
+                <h5>딜러 선택하기</h5>
+                <p class="tc-light-gray">입찰 금액이 가장 높은 순으로 5명까지만 표시돼요.</p>
+                <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
+            </div>
+            <div class="bid-bc p-2">
+                <ul  v-for="(bid, index) in sortedTopBids" :key="bid.user_id" class="px-0 inspector_list max_width_900">
+                    <li>
+                        <div class="d-flex gap-4 align-items-center justify-content-between">
+                            <div class="img_box">
+                                <img src="../../../../img/myprofile_ex.png" alt="딜러 사진" class="mb-2 align-text-top">
+                            </div>
+                            <div class="txt_box">
+                                <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
+                                <p class="txt">{{bid.price}} 만원</p>
+                            </div>
+                            <p class="restar mb-4 normal-16-font">4.5점</p>
+                            <p class="btn-apply-ty03"></p>
+                        </div>
+                    </li>
+                </ul>
             </div>
         </div>
         <!-- 재경매 버튼 눌렀을 때 view -->

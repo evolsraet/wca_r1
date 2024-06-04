@@ -1005,6 +1005,29 @@ video {
   .btn-apply:hover::after {
     transform: translateX(5px); 
   }
+
+.btn-apply-ty03 {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    cursor: pointer; 
+  }
+  
+  .btn-apply-ty03:after {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 18px;
+    background-image: url('../img/Icon-right.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: transform 0.3s ease;
+}
+  
+
+
   
   
 .mob-info {
@@ -3612,3 +3635,61 @@ input[type="checkbox"] {
     background-color: #4263ea;
     color:white;
   }
+  .cancelbox{
+    width:70px;
+    height: 24px;
+    border-radius: 6px;
+    padding: 3px 6px;
+    background-color: #2020207e;
+  }
+  .bid-bc{
+    background: #f7f9ff;
+  }
+  .bid-bc .inspector_list > li{
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0px 3px 6px 0px rgba(178, 174, 190, 0.2);
+    padding: 1rem 1rem 1rem;
+    border-color: #ccc;
+    cursor: pointer;
+}
+.bid-bc .inspector_list > li .img_box {
+    width: 4.6rem;
+    height: 4.6rem;
+    min-width: 4.6rem;
+    border-radius: 100%;
+    overflow: hidden;
+}
+.bid-bc .inspector_list > li .txt_box .name{
+    font-size: 1.3rem;
+}
+.bid-bc .inspector_list > li .txt_box .txt{
+    font-size: 1.1rem;
+}
+.bid-bc ul li:hover .txt_box .txt,
+.bid-bc ul li:hover .txt_box .name,
+.bid-bc ul li:hover .restar {
+    color: #4263ea;
+    transition: color 0.5s ease; 
+}
+
+.bid-bc ul li:hover .img_box {
+    border: solid 1px blue;
+    transition: border 0.5s ease; 
+}
+
+.bid-bc ul li:active,
+.bid-bc ul li:hover {
+    border: 1px solid #4263ea;
+    box-shadow: 0px 8px 10px 0px rgba(174, 170, 187, 0.247);
+    transition: border 1s ease-out;
+}
+
+
+.bid-bc ul li:hover .btn-apply-ty03::after {
+    background-image: url('../img/Icon-right-blue.png');
+    width: 35px;
+    height: 40px;
+    transform: translateX(5px); 
+    transition: transform 1s ease-out;
+}
