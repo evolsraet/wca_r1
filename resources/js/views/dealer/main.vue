@@ -224,12 +224,14 @@ const fetchAuctionDetails = async (bid) => {
 };
 const filteredViewBids = ref([]);
 const fetchFilteredViewBids = async () => {
-    const filteredBids = bidsData.value.filter(bid => bid.status === 'ask');
-    console.log('Filtered Bids:', filteredBids);
-    const bidsWithDetails = await Promise.all(filteredBids.map(fetchAuctionDetails));
+    // 필터링을 제거하고 모든 입찰을 가져옵니다.
+    console.log('Original Bids:', bidsData.value);
+    const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
     filteredViewBids.value = bidsWithDetails.filter(bid => bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id);
     console.log('Bids with Auction Details:', filteredViewBids.value);
 };
+
+
 function navigateToDetail(bid) {
     console.log("Navigate to Detail:", bid.auction_id);
     router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });

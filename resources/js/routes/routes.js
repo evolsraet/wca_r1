@@ -365,6 +365,12 @@ export default [
                 meta: { breadCrumb: 'deposit' }
             },
             {
+                name: 'deposit.approve',
+                path: 'deposit/approve/:id',
+                component: () => import('../views/admin/deposit/approve.vue'),
+                meta: { breadCrumb: 'deposit approve' }
+            },
+            {
                 name: 'auctions.index',
                 path: 'auction',
                 component: () => import('../views/admin/auction/Index.vue'),

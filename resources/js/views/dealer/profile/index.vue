@@ -97,8 +97,8 @@
                     </div> 
                 </div>
             </div>
-            </div>
         </div>
+    </div>
 </template>
 
 <script setup>
@@ -109,7 +109,7 @@ import useAuctions from '@/composables/auctions';
 
 const currentTab = ref('dealerInfo');
 const store = useStore();
-const { getAuctions, auctionsData,getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
+const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
 const isExpanded = ref(false);
 const ingCount = computed(() => {
     return auctionsData.value.filter(auction => auction.status === 'ing').length;
@@ -145,15 +145,19 @@ const user = computed(() => store.state.auth.user);
 const filteredViewBids = ref([]);
 
 const fetchFilteredViewBids = async () => {
-    const filteredBids = bidsData.value.filter(bid => bid.status === 'ask');
-    console.log('Filtered Bids:', filteredBids);
-    const bidsWithDetails = await Promise.all(filteredBids.map(fetchAuctionDetails));
-    filteredViewBids.value = bidsWithDetails.filter(bid => bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id);
+    console.log('Original Bids:', bidsData.value);
+    const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
+    console.log('Bids with Details:', bidsWithDetails);  // Bids with Details 데이터 출력
+    filteredViewBids.value = bidsWithDetails.filter(bid => {
+        console.log('Checking Bid:', bid);  // 각 Bid 데이터 출력
+        return bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id;
+    });
     console.log('Bids with Auction Details:', filteredViewBids.value);
 };
 
 onMounted(async () => {
     await getBids();
+    console.log('Loaded Bids:', bidsData.value);  // Bids 데이터 출력
     await getAuctions();
     await fetchFilteredViewBids();
 });

@@ -4,7 +4,9 @@
         <div v-if="isAuctionDetailPage">
         </div>
         <div class="container nav-font">
-            <button v-if="isDetailPage" @click="goBack" class="p-2 btn btn-back back-btn-icon">
+            <button v-if="isDetailPage && isUser" @click="goBack" class="p-2 btn btn-back back-btn-icon">
+            </button>
+            <button  v-else-if="isDetailPage && isDealer" @click="goBack" class="p-2 btn btn-back wh-btn-icon">
             </button>
             <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand-dealer"></router-link>
             <router-link v-else-if="isUser" to="/" class="navbar-brand"></router-link>
@@ -28,18 +30,18 @@
                         <div class="top-content ">
                             <div class="menu-illustration p-3">
                                <div class="sub-board-style">
-                                <div v-if="fetchAuctionDetails" class="text-start">
-                                        <p>경매가 종료됐어요!</p>
-                                        <div class="d-flex align-items-center">
-                                            <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font"@click="toggleNavbar">선택완료차량 확인</router-link>
-                                            <div class="icon right-icon"></div>
-                                        </div>
-                                    </div>
-                                    <div v-else class="text-start">
-                                        <p>아직 경매가 진행 중이에요</p>
-                                        <div class="d-flex align-items-center">
-                                            <router-link :to="{ name: 'auction.index'}" class="tc-primary bold-18-font"@click="toggleNavbar">진행 중 경매 확인</router-link>
-                                            <div class="icon right-icon"></div>
+                                   <div v-if="fetchFilteredViewBids.value" class="text-start">
+                                           <p>경매가 종료됐어요!</p>
+                                           <div class="d-flex align-items-center">
+                                               <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font"@click="toggleNavbar">선택완료차량 확인</router-link>
+                                               <div class="icon right-icon"></div>
+                                           </div>
+                                       </div>
+                                   <div v-else class="text-start">
+                                       <p>아직 경매가 진행 중이에요</p>
+                                       <div class="d-flex align-items-center">
+                                           <router-link :to="{ name: 'auction.index'}" class="tc-primary bold-18-font"@click="toggleNavbar">진행 중 경매 확인</router-link>
+                                           <div class="icon right-icon"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -61,8 +63,8 @@
                                                 <div class="icon icon-awsome"></div>
                                             </div>
                                             <div class="d-flex flex-column">
-                                                <span class="menu-text process">내 매물관리</span>
-                                                <span class="tc-light-gray font-1">경매 진행중인 매물</span>
+                                                <span class="menu-text process">낙찰 차량관리</span>
+                                                <span class="tc-light-gray font-1">경매 낙찰차량 확인</span>
                                             </div>
                                         </router-link>
                                         <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mt-0" @click="toggleNavbar">
@@ -347,6 +349,7 @@ const store = useStore();
 const isNavbarShown = ref(false);
 const showScrollGradient = ref(false);
 let scrollTimeout = null;
+const auctionDetailsLoaded = ref(false);
 
 function toggleSettingsMenu() {
   showSettings.value = !showSettings.value;
@@ -372,21 +375,17 @@ const homePath = computed(() => {
     }
 });
 
-const fetchAuctionDetails = async (bid) => {
-    try {
-        const auctionDetails = await getAuctionById(bid.auction_id);
-        return {
-            
-            ...bid,
-            auctionDetails: auctionDetails.data
-        };
-    } catch (error) {
-        return {
-            ...bid,
-            auctionDetails: null
-        };
-    }
+const fetchFilteredViewBids = async () => {
+    console.log('Original Bids:', bidsData.value);
+    const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
+    console.log('Bids with Details:', bidsWithDetails);  // Bids with Details 데이터 출력
+    filteredViewBids.value = bidsWithDetails.filter(bid => {
+        console.log('Checking Bid:', bid);  // 각 Bid 데이터 출력
+        return bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id;
+    });
+    console.log('Bids with Auction Details:', filteredViewBids.value);
 };
+
 
 const userHasAuction = computed(() => {
     return auctionsData.value.some(auction => auction.user_id === user.value.id);

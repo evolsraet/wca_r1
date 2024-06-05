@@ -28,7 +28,7 @@
                                 <div class="card my-auction">
                                     <input class="toggle-heart" type="checkbox" checked/>
                                     <label class="heart-toggle"></label>
-                                    <div class="selection-complete-img"></div> 
+                                    <div class="card-img-top-placeholder"></div> 
                                     <div class="wait-selection">낙찰가 {{ bid.price }}</div>
                                     <div class="card-body">
                                         <h5 class="card-title"><span class="blue-box">무사고</span>{{ bid.auctionDetails ? bid.auctionDetails.car_no : '차량 정보 없음' }}</h5>
@@ -83,9 +83,8 @@ function navigateToDetail(bid) {
 
 const fetchFilteredBids = async () => {
     await getBids(); 
-    const filteredBidsData = bidsData.value.filter(bid => bid.status === 'ask');
-    console.log('Filtered Bids:', filteredBidsData); 
-    const bidsWithDetails = await Promise.all(filteredBidsData.map(fetchAuctionDetails));
+    console.log('All Bids:', bidsData.value); 
+    const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
     filteredBids.value = bidsWithDetails.filter(bid => bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id);
     console.log('Bids with Auction Details:', filteredBids.value); 
 };

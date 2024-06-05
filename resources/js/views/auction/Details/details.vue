@@ -28,7 +28,12 @@
                                                 <p class="more-page">1/1</p>
                                             </div>
                                             <div v-if="auctionDetail.data.status === 'cancel'" class="time-remaining">경매 취소</div>
-                                            <div v-if="auctionDetail.data.status === 'chosen'" class="time-remaining">선택 완료</div>
+                                            <div v-if="isDealer">
+                                                <div v-if="auctionDetail.data.status === 'chosen'" class="time-remaining">경매 종료</div>
+                                            </div>
+                                            <div v-else>
+                                                <div v-if="auctionDetail.data.status === 'chosen'" class="time-remaining">선택 완료</div>
+                                            </div>
                                             <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">경매 완료</div>
                                             <div class="p-3 pb-1 d-flex gap-3 justify-content-between">
                                                 <p class="bid-icon tc-light-gray normal-16-font">실차주 판매</p>
