@@ -472,7 +472,7 @@ TODO:
                                 </div>
                                 </div>
 
-                                <div v-else :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' }" class="card-img-top-placeholder">
+                                <div v-else :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
                                     <span v-if="auction.status === 'ing'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">01:42:24</span>
                                     <span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>
                                 <div v-if="isDealer"> 
@@ -481,11 +481,16 @@ TODO:
                                 </div>
 
                                 <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
+                                <div v-if="isDealer">
+                                    <div v-if="auction.status === 'chosen'" class="time-remaining">경매 종료</div>
+                                </div>
+                                <div v-else>
+                                    <div v-if="auction.status === 'chosen'" class="wait-selection">선택완료</div>
+                                </div>
                                 <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
                                 <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
                                 <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
                                 <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
-                                <div v-if="auction.status === 'chosen'" class="wait-selection">선택완료</div>
                                 <div class="card-body">
                                     <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
                                     <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>

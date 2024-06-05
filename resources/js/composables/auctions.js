@@ -40,7 +40,10 @@ const getAuctions = async (page = 1) => {
                 const name = data.dealer.name;
                 auction.dealer_name = name;
             } else {
-                auction.value.dealer_name = null; 
+                const isExits = Object.keys(auction).includes('value');
+                if(isExits){
+                    auction.value.dealer_name = null; 
+                }
             }
         };
 

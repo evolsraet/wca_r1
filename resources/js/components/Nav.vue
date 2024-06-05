@@ -376,6 +376,7 @@ const fetchAuctionDetails = async (bid) => {
     try {
         const auctionDetails = await getAuctionById(bid.auction_id);
         return {
+            
             ...bid,
             auctionDetails: auctionDetails.data
         };
@@ -430,7 +431,9 @@ function toggleNavbar() {
     if (content) {
         content.scrollTop = 0;
     }
+    toggleOverlay(false);
 }
+
 function checkScrollGradient() {
     const content = document.querySelector('.toggle-nav-content');
     if (content.scrollHeight > content.clientHeight) {
@@ -453,7 +456,9 @@ onMounted(() => {
     const content = document.querySelector('.toggle-nav-content');
     content.addEventListener('scroll', checkScrollGradient);
     checkScrollGradient();
-    getAuctions();
+    if (isUser.value || isDealer.value) {
+        getAuctions();
+    }
 
     const navbar = document.querySelector('.navbar-collapse');
     navbar.addEventListener('transitionend', () => {
@@ -485,6 +490,11 @@ onMounted(() => {
         toggleOverlay(isNavbarShown.value);
         toggleNavbar();
     });
+
+    // Watch for route changes to hide the overlay
+    router.afterEach(() => {
+        toggleOverlay(false);
+    });
 });
 
 function toggleOverlay(show) {
@@ -502,6 +512,7 @@ function toggleOverlay(show) {
     }
 }
 </script>
+
 
 
 <style scoped>

@@ -1,4 +1,8 @@
 <template>
+  <!--
+    TODO: 게스트일떄 모든리뷰 가져오는거 해결하기.
+
+  -->
     <div class="container">
       <!-- 회원가입 권장 섹션 -->
       <div class="main-contenter">
@@ -212,7 +216,7 @@
   const { getAllReview, reviewsData, splitDate } = initReviewSystem(); 
 
   onMounted(() => {
-    getAllReview();
+    //getAllReview();
     nextTick(() => {
       const banner = bannerRef.value;
       const reviewContent = reviewContentRef.value;

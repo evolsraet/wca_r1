@@ -5,7 +5,7 @@
     -->
     <div class="container-fluid" v-if="auctionDetail">
         <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
-        <div v-if="!showReauctionView && auctionDetail.data.status !== 'wait'">
+        <div v-if="!showReauctionView">
             <div class="web-content-style">
                 <div>
                     <div>
@@ -342,7 +342,7 @@
 
                         <div v-if="isUser">
                             <!-------[사용자]diag (진단평가)알때------->
-                          <!--  <div v-if="auctionDetail.data.status === 'diag' || auctionDetail.data.status === 'ask' " @click.stop="">
+                          <div v-if="auctionDetail.data.status === 'diag' || auctionDetail.data.status === 'ask' " @click.stop="">
                                 <div class="steps-container mt-3">
                                     <div class="step completing">
                                         <div class="label completed">
@@ -363,7 +363,7 @@
                                     </div>
                                 </div>
                                 <p class="auction-deadline">현재 등록신청 후 진단평가 진행 중 입니다.</p>
-                            </div>-->
+                            </div>
 
                             <!-------[사용자]취소 (진단평가)알때------->
                             <div v-if="auctionDetail.data.status === 'cancel'" @click.stop="">
@@ -388,7 +388,7 @@
                                 </div>
                                 <p class="auction-deadline">경매가 취소 되었습니다.</p>
                             </div>
-                            <!--    <div v-if="auctionDetail.data.status === 'ing' " @click.stop="">
+                            <div v-if="auctionDetail.data.status === 'ing' " @click.stop="">
                                 <div class="steps-container mt-3">
                                     <div class="step completing">
                                         <div class="label completed">
@@ -418,7 +418,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>-->
+                            </div>
 
                             <!-- [사용자]- 딜러 선택 (wait) 중일때  -->
                             <div v-if="!selectedDealer && auctionDetail.data.status === 'wait'" @click.stop="">
@@ -547,7 +547,7 @@
 
                             <!--[사용자] - 경매 완료 -->
                             <transition name="fade">
-                                <div v-if="auctionDetail.data.status === 'done'" @click.stop="">
+                                <div v-if="auctionDetail.data.status === 'chosen'" @click.stop="">
                                     <h5 class="text-center p-4"> 거래는 어떠셨나요?</h5>
                                     <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">후기 남기기</router-link>
                                 </div>
@@ -555,7 +555,7 @@
                         </div>
 
                         <!-- 바텀 시트 show or black-->
-                        <!--  <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>-->
+                        <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
 
                         <!--#####################
                         딜러에 관힌 바텀시트
@@ -563,9 +563,9 @@
 
                         <div v-if="isDealer">
                             <!------------------- [딜러] - 경매 완료 -------------------->
-                            <div class="mt-4" v-if="auctionDetail.data.status === 'done'" @click.stop="">
+                            <div class="mt-4" v-if="auctionDetail.data.status === 'chosen'" @click.stop="">
                                 <h5 class="text-center"> 불편 사항이 있으신가요?</h5>
-                                <button type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</button>
+                                <router-link :to="{ name: 'index.claim' }" type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</router-link >
                                 <a href="#" class="d-flex justify-content-center tc-light-gray">클레임 규정</a>
                             </div>
 
@@ -601,18 +601,14 @@
                                     <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
                                     <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
                                 </div>
-                                <!--  <div v-else-if="userBidExists && !userBidCancelled">
-                                                    <h5 class="text-center">입찰이 완료되었습니다.</h5>
-                                                    <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
-                                                    <div class="mt-3 text-center d-flex gap-3 justify-content-center">
-                                                    <p>수정 가능 횟수 : {{ cancelAttempted === 0 ? '0' : '1' }}회</p>
-                                                    <a href="#" class="tc-light-gray btn-apply p-0" @click.prevent="handleLinkClick">수정하기</a>
-                                                    </div>
-                                                    </div>-->
+                            </div>
+                            <div v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing'">
+                                    <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
+                                    <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
+                                    </div>
                                 <transition name="fade">
                                     <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
                                 </transition>
-                            </div>
                             <!------------------- [딜러] - 입찰 완료후 바텀 메뉴 -------------------->
                             <div class="p-4" v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id))" @click.stop="">
                                 <h5 class="mx-3 text-center">경매 마감까지 03:25:43 남음</h5>
@@ -631,7 +627,7 @@
                 </div>
             </div>
         </div>
-        <div v-if="isUser && auctionDetail.data.status === 'wait'">
+       <!-- <div v-if="isUser && auctionDetail.data.status === 'wait'">
             <div class="wd-100 bid-content p-4">
                 <div class="d-flex justify-content-between">
                     <p class="bold-20-font">현재 6명이 입찰했어요.</p>
@@ -660,7 +656,7 @@
                     </li>
                 </ul>
             </div>
-        </div>
+        </div>-->
         <!-- 재경매 버튼 눌렀을 때 view -->
         <div v-if="showReauctionView">
             <div class="p-4">
@@ -946,6 +942,7 @@ const getDealer = async (user_Id) => {
 
 // auctionDetail이 변경될 때마다 각 bid에 userData를 추가하는 함수
 watchEffect(async () => {
+    if(isUser.value){
   if (auctionDetail.value && auctionDetail.value.data && auctionDetail.value.data.top_bids) {
     const bids = auctionDetail.value.data.top_bids;
     for (const bid of bids) {
@@ -956,6 +953,7 @@ watchEffect(async () => {
     }
     sortedTopBids.value = bids;
   }
+}
 });
 
 const selectDealer = async (bid, event, index) => {
@@ -1091,32 +1089,37 @@ const fetchAuctionDetail = async () => {
     carDetails.value.year = carData.year;
     carDetails.value.fuel = carData.fuel;
     carDetails.value.mission = carData.mission;
-    
-    // top_bids를 통해 각 bid의 정보를 가져옵니다.
-    if (auctionDetail.value.data.top_bids && auctionDetail.value.data.top_bids.length > 0) {
-      await fetchBidsInfo(auctionDetail.value.data.top_bids);
+    if (isUser.value && auctionDetail.value.data.status !== 'done') { 
+      // top_bids를 통해 각 bid의 정보를 가져옵니다.
+      if (auctionDetail.value.data.top_bids && auctionDetail.value.data.top_bids.length > 0) {
+        await fetchBidsInfo(auctionDetail.value.data.top_bids);
+      }
     }
   } catch (error) {
     console.error('Error fetching auction detail:', error);
   }
 };
 
-
 const fetchBidsInfo = async (topBids) => {
   try {
     const bidsInfo = await Promise.all(topBids.map(bid => getBidById(bid.id)));
     sortedTopBids.value = bidsInfo;
-    // 가장 높은 가격을 heightPrice에 설정하고 애니메이션 적용합니다.
-    const newHeightPrice = Math.max(...bidsInfo.map(bid => bid.price));
-    if (newHeightPrice !== heightPrice.value) {
-      heightPrice.value = newHeightPrice;
-      animateHeightPrice(newHeightPrice);
+
+    if (auctionDetail.value.data.status !== 'chosen') {
+    
+      const newHeightPrice = Math.max(...bidsInfo.map(bid => bid.price));
+      if (newHeightPrice !== heightPrice.value) {
+        heightPrice.value = newHeightPrice;
+        animateHeightPrice(newHeightPrice);
+      }
+      console.log("Height price updated:", heightPrice.value);
     }
-    console.log("Height price updated:", heightPrice.value);
   } catch (error) {
     console.error('Error fetching bid info:', error);
   }
 };
+
+
 // 일정 간격으로 데이터를 갱신하는 함수
 const startPolling = () => {
   pollingInterval = setInterval(fetchAuctionDetail, 60000);
@@ -1130,9 +1133,14 @@ onMounted(async () => {
   };
   console.log("Component mounted, fetching auctions");
   await getAuctions();
-  fetchAuctionDetail();
-  startPolling();
+  await fetchAuctionDetail(); // Ensure this is awaited to get the latest auction detail before checking the condition
+
+  if(auctionDetail.value?.data?.status === 'ing' && isUser.value){
+    startPolling();
+  }
+
   window.addEventListener('scroll', checkScroll);
+
   try {
     console.log('Sorted Top Bids:', sortedTopBids.value);
   } catch (error) {
@@ -1141,9 +1149,12 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-    window.removeEventListener('scroll', checkScroll);
+  window.removeEventListener('scroll', checkScroll);
+  if(isUser.value){
     clearInterval(pollingInterval);
+  }
 });
+
 
 const populateHopePrice = () => {
   if (auctionDetail.value && auctionDetail.value.data) {
