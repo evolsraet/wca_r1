@@ -94,7 +94,7 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
             },        
             {
-                path: '/edit-profile',
+                path: '/profiledt',
                 name: 'profile',
                 component: () => import('../views/profile/index.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
@@ -390,7 +390,7 @@ export default [
             },
             {
                 name: 'review.approve',
-                path: 'review/approve',
+                path: 'review/approve/:id',
                 component: () => import('../views/admin/review/approve.vue'),
                 meta: { breadCrumb: 'review approve' }
             },
