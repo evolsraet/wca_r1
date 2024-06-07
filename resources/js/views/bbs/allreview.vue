@@ -20,7 +20,7 @@
                     </label>
                     <div class="d-sm-flex justify-content-between text-muted">
                       <p class="card-text over-text process">{{ slide.text }}</p>
-                      <span class="tc-light-gray" @click="navigateToDetail(slide.id)">더보기</span>
+                      <span class="tc-light-gray">더보기</span>
                     </div>
                   </div>
                 </div>
@@ -69,7 +69,7 @@
                   <span class="d-flex mx-2 rating-score tc-red"></span>
                 </div>
                 <div class="d-sm-flex justify-content-between text-muted">
-                  <span class="deilname">담당 딜러 {{ card.dealer}} 님</span>
+                  <span class="deilname">담당 딜러 {{ card.dealer }} 님</span>
                   <span class="date">{{ splitDate(card.date) }}</span>
                 </div>
                 <p class="card-text">{{ card.text }}</p>
@@ -110,7 +110,7 @@ const isUser = computed(() => user.value?.roles?.includes('user'));
 
 const showBottomSheet = ref(true);
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
-const { getAllReview , reviewsData , splitDate } = initReviewSystem(); 
+const { getHomeReview , reviewsData , splitDate } = initReviewSystem(); 
 const slidesPerView = ref(1); // 슬라이드를 한 번에 하나만 보이도록 설정
 const modules = [Pagination];
 
@@ -142,16 +142,16 @@ function navigateToDetail(reviewId) {
 }
 
 onMounted(async () => {
-  await getAllReview();
+  await getHomeReview();
   slides.value = reviewsData.value.slice(0,4).map(review => ({
-    title: review.auction.car_no,
+    title: review.id,
     id: review.id,
     rating: review.star,
     text: review.content
   }));
   cards.value = reviewsData.value.map(review => ({
-    title: review.auction.car_no,
-    dealer: review.auction.dealer_name,
+    title: review.id,
+    dealer: review.dealer.name,
     id: review.id,
     rating: review.star,
     date: review.created_at,
