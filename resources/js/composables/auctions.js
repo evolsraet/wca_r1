@@ -226,8 +226,7 @@ const updateAuction = async (id,auction) => {
         auction
     }
     swal({
-        title: 'Are you sure?',
-        text: 'You won\'t be able to revert this action!',
+        text: '변경을 하시겠습니까?',
         icon: 'warning',
         showCancelButton: true,
         confirmButtonText: '변경하기',

@@ -94,7 +94,7 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
             },        
             {
-                path: '/profiledt',
+                path: '/edit-profile',
                 name: 'profile',
                 component: () => import('../views/profile/index.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
