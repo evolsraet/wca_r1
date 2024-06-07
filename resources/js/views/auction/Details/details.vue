@@ -52,8 +52,11 @@
                                         <div class="enter-view">
                                             <AlarmModal ref="alarmModal" />
                                         </div>
-                                        <div v-if="auctionDetail.data.status === 'ing'">
-                                            <p class="blue-box">무사고</p>
+                                        <div class="d-flex">
+                                    <h5 class="card-title"><span class="blue-box">무사고</span></h5>
+                                    <h5 v-if="auctionDetail.data.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                                    </div>
+                                        <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
                                             <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
                                         </div>
 

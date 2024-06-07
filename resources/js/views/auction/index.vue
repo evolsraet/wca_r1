@@ -495,7 +495,10 @@ TODO:
                                     <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
                                     <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
                                     <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
+                                    <div class="d-flex">
                                     <h5 class="card-title"><span class="blue-box">무사고</span></h5>
+                                    <h5 v-if="auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                                    </div>
                                 </div>
                             </div>
                         </div>

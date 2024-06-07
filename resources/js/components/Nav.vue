@@ -354,8 +354,8 @@ const auctionDetailsLoaded = ref(false);
 function toggleSettingsMenu() {
   showSettings.value = !showSettings.value;
 }
-
 const user = computed(() => store.getters['auth/user']);
+
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
 const navbarClass = computed(() => (isDealer.value ? 'bg-primary' : 'bg-white'));
