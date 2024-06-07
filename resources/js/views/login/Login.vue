@@ -101,12 +101,6 @@
                   <div class="mb-3">
                     <label for="email" class="form-label">email</label>
                     <input v-model="loginForm.email" id="email" type="email" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="이메일을 입력해주세요.">
-                    <!-- 유효성 검사 오류 메시지 -->
-                    <div class="text-danger mt-1">
-                      <div v-for="message in validationErrors?.email" :key="message">
-                        {{ message }}
-                      </div>
-                    </div>
                   </div>
                   <!-- 비밀번호 입력 -->
                   <div class="mb-4">
@@ -114,12 +108,6 @@
                       {{ $t("password") }}
                     </label>
                     <input v-model="loginForm.password" id="password" type="password" class="form-control border-0 border-bottom" required autocomplete="current-password" placeholder="비밀번호를 입력해주세요.">
-                    <!-- 유효성 검사 오류 메시지 -->
-                    <div class="text-danger-600 mt-1">
-                      <div v-for="message in validationErrors?.password" :key="message">
-                        {{ message }}
-                      </div>
-                    </div>
                   </div>
                   <!-- 백엔드 오류 메시지 -->
                   <div v-if="errorMessage" class="text-danger my-2">
@@ -140,8 +128,8 @@
                       로그인
                     </button>
                   </div>
-                  <router-link :to="{name: 'auth.forgot-password'}">비밀번호 찾기</router-link>
                 </div>
+                <router-link :to="{name: 'auth.forgot-password'}">비밀번호 찾기</router-link>
                 <div class="register-link mt-5 text-center">
                   <router-link :to="{ path: '/register' }" class="register-link">회원가입하기</router-link>
                 </div>

@@ -599,7 +599,7 @@
                                 <p class="tc-red mt-2">경매 마감까지 {{ auctionDetail.data.final_at || "null" }} 분 남음</p>
                                 <div class="mt-3 d-flex justify-content-end gap-3">
                                     <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
-                                    <p class="interest-icon tc-light-gray normal-16-font">관심 6</p>
+                                    <p class="interest-icon tc-light-gray normal-16-font">관심 0</p>
                                 </div>
                                 <div>
                                     <h5 class="text-start mt-3">나의 입찰 금액을 입력해주세요</h5>
@@ -621,7 +621,7 @@
                             <div class="p-4" v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id))" @click.stop="">
                                 <h5 class="mx-3 text-center">경매 마감까지 03:25:43 남음</h5>
                                 <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ myBidPrice }}</span></p>
-                                <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 n 명</h5>
+                                <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 0 명</h5>
                                 <button type="button" class="my-3 w-100 btn btn-outline-primary" @click="handleCancelBid">
                                     입찰 취소
                                 </button>

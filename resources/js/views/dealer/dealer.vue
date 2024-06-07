@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div class="container my-5">
-                        <div class="row">
+                        <div v-if="filteredBids.length > 0" class="row">
                             <div class="col-md-3 p-2 mb-2 shadow-hover" v-for="bid in filteredBids" :key="bid.id"  @click="navigateToDetail(bid)">
                                 <div class="card my-auction">
                                     <input class="toggle-heart" type="checkbox" checked/>
@@ -33,6 +33,15 @@
                                     <div class="card-body">
                                         <h5 class="card-title"><span class="blue-box">무사고</span>{{ bid.auctionDetails ? bid.auctionDetails.car_no : '차량 정보 없음' }}</h5>
                                         <p class="card-text tc-light-gray">현대 쏘나타(DN8){{ bid.auctionDetails ? bid.auctionDetails.model : '모델 정보 없음' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="complete-car">
+                                <div class="card my-auction mt-3">
+                                    <div class="none-complete">
+                                        <span class="tc-light-gray">선택 완료된 차량이 없습니다.</span>
                                     </div>
                                 </div>
                             </div>

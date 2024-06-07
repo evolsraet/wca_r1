@@ -158,7 +158,7 @@
                             <div class="complete-car">
                                 <div class="card my-auction mt-3">
                                     <div class="none-complete">
-                                        <span>선택 완료된 차량이 없습니다.</span>
+                                        <span class="tc-light-gray">선택 완료된 차량이 없습니다.</span>
                                     </div>
                                 </div>
                             </div>

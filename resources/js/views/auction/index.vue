@@ -13,7 +13,7 @@ TODO:
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav">
                         <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link"@click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">판매한 차량</a>
+                        <a class="nav-item nav-link"@click="setCurrentTab('auctionDone')" :class="{ active: currentTab === 'auctionDone' }">판매한 차량</a>
                     </div>
                 </nav>
             </div>
@@ -21,7 +21,7 @@ TODO:
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav">
                         <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-1">4</span></a><!-- 관심 차량 숫자표기 -->
+                        <a class="nav-item nav-link" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-1">0</span></a><!-- 관심 차량 숫자표기 -->
                     </div>
                 </nav>
             </div>
@@ -507,8 +507,8 @@ TODO:
             </div>
         </div>
         <div class="container my-4" v-if="currentTab === 'interInfo'">
-            <div class="row">
-                <!-- if. 경매 ing 있을때 -->
+          <!--  <div class="row">
+            
                 <div
                     class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
                     v-for="auction in filteredAuctions"
@@ -530,6 +530,44 @@ TODO:
                         <div class="card-body">
                             <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
                             <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <div>
+                <div class="complete-car">
+                    <div class="card my-auction mt-3">
+                        <div class="none-complete">
+                            <span class="tc-light-gray">관심 차량이 없습니다.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container my-4" v-if="currentTab === 'auctionDone'">
+            <div class="row">
+                <div 
+                    class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
+                    v-for="auction in filteredDone"
+                    :key="auction.id"
+                    @click="navigateToDetail(auction)"
+                    :style="getAuctionStyle(auction)"
+                >
+                    <div class="card my-auction">
+                        <div class="card-img-top-placeholder grayscale_img"></div>
+                         <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
+                        <div class="card-body">
+                            <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
+                            <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        <div>
+                <div v-if ="!filteredDone"class="complete-car">
+                    <div class="card my-auction mt-3">
+                        <div class="none-complete">
+                            <span class="tc-light-gray">판매 차량이 없습니다.</span>
                         </div>
                     </div>
                 </div>
@@ -608,7 +646,7 @@ TODO:
                 </div>
                 -->
                 <!-- Pagination -->
-                <nav>
+                <nav v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" :class="{ disabled: !pagination.prev }">
                         <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
@@ -620,7 +658,7 @@ TODO:
                         <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
                         </li>
                     </ul>
-                    </nav>
+                </nav>
                 <div class="filter-content">
                 <!-- 페이지의 나머지 내용 -->
                 <button @click="toggleModal" class="animCircle filter-button" :style="buttonStyle"> 필터</button>
@@ -782,6 +820,13 @@ const hasCompletedAuctions = computed(() => { // 완료된 경매 여부
 const filteredAuctions = computed(() => { // 필터된 경매 목록
   if (currentStatus.value === 'all') {
     return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag', 'ask', 'cancel'].includes(auction.status));
+  }
+  return auctionsData.value.filter(auction => auction.status === currentStatus.value);
+});
+
+const filteredDone = computed(() => { // 필터된 경매 목록
+  if (currentStatus.value === 'all') {
+    return auctionsData.value.filter(auction => ['done'].includes(auction.status));
   }
   return auctionsData.value.filter(auction => auction.status === currentStatus.value);
 });

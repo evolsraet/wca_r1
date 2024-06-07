@@ -13,7 +13,7 @@
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav">
                         <a class="nav-item nav-link active" href="#">전체</a>
-                        <a class="nav-item nav-link" href="#">관심 차량<span class="interest mx-1">4</span></a>
+                        <a class="nav-item nav-link" href="#">관심 차량<span class="interest mx-1">0</span></a>
                     </div>
                 </nav>
             </div>
