@@ -345,6 +345,17 @@ export function initReviewSystem() {
         }
     }
 
+    // 홈 화면 리뷰 불러오기 (auction 정보 포함하지 않음.)
+    const getHomeReview = async (page = 1) => {
+        try {      
+            const response = await axios.get(`/api/reviews?with=dealer`);
+            console.log(response.data.data);
+            reviewsData.value = response.data.data;
+
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
     function formattedAmount(amount) {
         let amountInThousands = Math.floor(amount / 10000); 
@@ -385,6 +396,7 @@ export function initReviewSystem() {
         formattedAmount,
         splitDate,
         reviewsData,
+        getHomeReview,
         getCarInfo,
         setInitialStarRating
     }
