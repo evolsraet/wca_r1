@@ -18,7 +18,8 @@
                                     <p class="tc-light-gray">{{ user.dealer.company }}</p>
                                     <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
                                     <p class="restar">(4.5점)</p>
-                                    <p class="no-bidding mt-3"><span>입찰 불가</span></p>
+                                 <!--   <p class="no-bidding mt-3"><span>입찰 불가</span></p>-->
+                                    <p class="bidding mt-3"><span>입찰 가능</span></p>
                                 </div>
                             </div>
                             <div class="footer mob-info">
@@ -34,7 +35,7 @@
                         </div>
                         <div class="slide-up-ani activity-info bold-18-font">
                             <div class="item">
-                            <p><span class="tc-red slide-up" ref="item1">100</span> 건</p>
+                            <p><span class="tc-red slide-up" ref="item1">0</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font">관심</p>
                             </div>
                             <div class="item">
