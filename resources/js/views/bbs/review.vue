@@ -55,7 +55,7 @@
                                     <div class="popup-menu" :id="'toggleMenu' + review.id" style="display : none">
                                         <ul>
                                             <li><button @click="editReview(review.id)" class="tc-blue">수정</button></li>
-                                            <li><button @click="deleteReview(review.id)" class="tc-red">삭제</button></li>
+                                            <li><button @click="deleteReviewApi(review.id)" class="tc-red">삭제</button></li>
                                         </ul>
                                     </div>
                                     <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
@@ -121,6 +121,7 @@ function toggleMenu(id) {
 
 // ... 더보기 누르면 나오는 탭
 function setActiveTab(tab) {
+    console.log(activeTab.value);
     if (activeTab.value !== tab) { // 탭이 실제로 변경될 때만 메뉴를 숨김
         isMenuVisible.value = false;
     }
@@ -129,14 +130,6 @@ function setActiveTab(tab) {
 
 function editReview(reviewId) {
     router.push({ name: 'user.edit-review', params: { id: reviewId } });
-}
-
-function deleteReview(id) {
-    if (confirm("삭제하시면 이용 후기를 다시 작성할 수 없습니다. 정말 삭제하시겠습니까?")) {   
-        if(deleteReviewApi(id)){
-            showDeleteMessage();
-        }
-    }
 }
 
 function navigateToDetail(auctionId) {

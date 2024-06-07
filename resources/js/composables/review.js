@@ -213,83 +213,153 @@ export function initReviewSystem() {
     // 작성한 이용후기 삭제하기
     const deleteReviewApi = async (id) => {
         swal({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this action!',
+            title: '정말 삭제하시겠어요?',
+            text: '삭제하시면 이용후기를 다시 작성할 수 없습니다.',
             icon: 'warning',
             showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
+            confirmButtonText: '삭제',
             confirmButtonColor: '#ef4444',
             timer: 20000,
             timerProgressBar: true,
             reverseButtons: true
         })
-            .then(result => {
-                if (result.isConfirmed) {
-                    axios.delete(`/api/reviews/${id}`)
-                        .then(response => {
-                            getAllReview()
-                            router.push({name: 'review.index'})
-                            swal({
-                                icon: 'success',
-                                title: 'review deleted successfully'
-                            })
+        .then(result => {
+            if (result.isConfirmed) {
+                axios.delete(`/api/reviews/${id}`)
+                    .then(response => {
+                        swal({
+                            icon: 'success',
+                            title: '이용후기가 정상적으로 삭제되었습니다.',
+                        }).then(() => {
+                            location.reload();
+                        });
+                        
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        swal({
+                            icon: 'error',
+                            title: 'Something went wrong'
                         })
-                        .catch(error => {
-                            console.log(error);
-                            swal({
-                                icon: 'error',
-                                title: 'Something went wrong'
-                            })
-                        })
-                }
-            })
+                    })
+            }
+        })
 
     }
      
-    //작성한 이용후기 수정하기
-    const editReview = async (id, role) => {
-        console.log(id);
-        if (confirm("수정하시겠습니까?")){
-            try {     
-                const content = document.getElementById('content').value; 
-                const user_id = document.getElementById('user_id').value;
-                const auction_id = document.getElementById('auction_id').value;
-                const dealer_id = document.getElementById('dealer_id').value;
-                const star = document.getElementById('reviewStarValue').value;
-    
-                console.log(JSON.stringify(reviewForm));
-    
-                if(auction_id == "" || dealer_id == ""){
-                    alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
-                    return;
-                }
-                if(starScore == 0){ //별점을 수정(클릭)하지 않은 경우
-                    starScore = star;
-                }
-    
-                setReviewValue(user_id, auction_id, dealer_id, starScore, content);
-                console.log(JSON.stringify(reviewForm));
-                const response = await axios.put(`/api/reviews/${id}`, reviewForm);
-                
-                console.log(response);
-    
-                if(response.data.status == 'ok'){
-                    alert("수정이 완료되었습니다.");
-                    if(role == 'user'){
-                        location.href = "/list-do";
-                    } else if(role == 'admin'){
-                        location.href = "";
-                    }
-                    
-                }
-                
-            } catch (error) {
-                alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
-                console.log(error);
-            }
+    //작성한 이용후기 수정하기 - 사용자
+    const editReview = async (id) => {
+        const content = document.getElementById('content').value; 
+        const user_id = document.getElementById('user_id').value;
+        const auction_id = document.getElementById('auction_id').value;
+        const dealer_id = document.getElementById('dealer_id').value;
+        const star = document.getElementById('reviewStarValue').value;
+
+        console.log(JSON.stringify(reviewForm));
+
+        if(auction_id == "" || dealer_id == ""){
+            alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
+            return;
         }
+        if(starScore == 0){ //별점을 수정(클릭)하지 않은 경우
+            starScore = star;
+        }
+
+        setReviewValue(user_id, auction_id, dealer_id, starScore, content);
+        console.log(JSON.stringify(reviewForm));
+
+        swal({
+            title: '정말 수정하시겠어요?',
+            text: '',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '수정',
+            confirmButtonColor: '#ef4444',
+            timer: 20000,
+            timerProgressBar: true,
+            reverseButtons: true
+        })
+        .then(result => {
+            if (result.isConfirmed) {
+                axios.put(`/api/reviews/${id}`, reviewForm)
+                    .then(response => {
+                        swal({
+                            icon: 'success',
+                            title: '이용후기가 정상적으로 수정되었습니다.',
+                        }).then(() => {
+                            location.href = "/list-do";
+                        });
+                        
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        swal({
+                            icon: 'error',
+                            title: 'Something went wrong'
+                        })
+                    })
+            }
+        })
+
     }
 
+    //작성한 이용후기 수정하기 - 관리자
+    const editReviewAdmin = async (id) => {
+        const content = document.getElementById('content').value; 
+        const user_id = document.getElementById('user_id').value;
+        const auction_id = document.getElementById('auction_id').value;
+        const dealer_id = document.getElementById('dealer_id').value;
+        const star = document.getElementById('reviewStarValue').value;
+
+        console.log(JSON.stringify(reviewForm));
+
+        if(auction_id == "" || dealer_id == ""){
+            alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
+            return;
+        }
+        if(starScore == 0){ //별점을 수정(클릭)하지 않은 경우
+            starScore = star;
+        }
+
+        setReviewValue(user_id, auction_id, dealer_id, starScore, content);
+        console.log(JSON.stringify(reviewForm));
+
+        swal({
+            title: '정말 수정하시겠어요?',
+            text: '',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: '수정',
+            confirmButtonColor: '#ef4444',
+            timer: 20000,
+            timerProgressBar: true,
+            reverseButtons: true
+        })
+        .then(result => {
+            if (result.isConfirmed) {
+                axios.put(`/api/reviews/${id}`, reviewForm)
+                    .then(response => {
+                        swal({
+                            icon: 'success',
+                            title: '이용후기가 정상적으로 수정되었습니다.',
+                        }).then(() => {
+                            location.href = "/admin/review";
+                        });
+                        
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        swal({
+                            icon: 'error',
+                            title: 'Something went wrong'
+                        })
+                    })
+            }
+        })
+
+    }
+
+    
    
     // 작성한 이용후기 불러오기 (사용자별 불러오기)
     const getUserReview = async (id) => {
@@ -392,6 +462,7 @@ export function initReviewSystem() {
         getAllReview,
         deleteReviewApi,
         editReview,
+        editReviewAdmin,
         getUserReviewInfo,
         formattedAmount,
         splitDate,

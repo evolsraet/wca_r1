@@ -4,7 +4,7 @@
         * web-text: : 웹 화면에서 보이는뷰
     --> 
     <div class="container">
-        <form @submit.prevent="editReview(reviewId,'admin')" v-for="review in reviewData" :key="review">
+        <form @submit.prevent="editReviewAdmin(reviewId)" v-for="review in reviewData" :key="review">
             <div class="create-review">
                     <div class="left-container">
                         <div class="container-img mov-info02">
@@ -94,7 +94,7 @@ const route = useRoute();
 const reviewId = parseInt(route.params.id); 
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); //바텀 시트 스타일
-const { getUserReviewInfo , editReview , getCarInfo , setInitialStarRating } = initReviewSystem(); 
+const { getUserReviewInfo , editReviewAdmin , getCarInfo , setInitialStarRating } = initReviewSystem(); 
 let reviewData = ref();
 const carInfo = ref();
 
@@ -117,9 +117,6 @@ onMounted(async () => {
     setInitialStarRating(response.star);
     initReviewSystem();
 });
-
-
-
 </script>
 <style scoped>
 .bottom-sheet::before {
