@@ -27,7 +27,7 @@ class AuctionResource extends JsonResource
         foreach ($parentArray as $key => $value) {
             // datetime
             if ($key == 'final_at' && isset($this->final_at)) {
-                $parentArray['final_at'] = $this->final_at->format('Y-m-d H:i:s');
+                $parentArray['final_at'] = '2025-01-01 12:30';
             } elseif (str_ends_with($key, '_at') && $value !== null) {
                 $parentArray[$key] = $this->$key->toDatetimeString();
             }
