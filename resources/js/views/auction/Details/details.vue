@@ -341,9 +341,8 @@
                     </div>
                 </div>
                 <!-- bottom sheet Start-->
-                <div class="bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
-                    <div class="sheet-content">
-
+                <bottom-sheet initial="half" :dismissable="true">
+                  <div class="sheet-content">
                         <!--#####################
                         사용자 바텀시트
                     #########################-->
@@ -419,7 +418,7 @@
                                         <div class="label label-style tc-light-gray">완료</div>
                                     </div>
                                 </div>
-                                <p class="auction-deadline">현재 경매중 입니다.</p>
+                                <p class="auction-deadline mt-4">현재 경매중 입니다.</p>
                                 <div class="o_table_mobile my-5">
                                     <div class="tbl_basic tbl_dealer">
                                         <div class="overflow-auto select-dealer">
@@ -555,8 +554,30 @@
 
                             <!--[사용자] - 경매 완료 -->
                             <transition name="fade">
-                                <div v-if="auctionDetail.data.status === 'chosen'" @click.stop="">
-                                    <h5 class="text-center p-4"> 거래는 어떠셨나요?</h5>
+                                <div v-if="auctionDetail.data.status === 'chosen' ||auctionDetail.data.status === 'done'"  @click.stop="">
+                                  <div class="steps-container mt-2">
+                                    <div class="step completed">
+                                        <div class="label completed">
+                                            STEP01
+                                        </div>
+                                        <div class="label label-style tc-light-gray">매물 준비</div>
+                                    </div>
+                                    <div class="line completed"></div>
+                                    <div class="step completed">
+                                        <div class="label completed">
+                                            STEP02
+                                        </div>
+                                        <div class="label label-style tc-light-gray completing-text">경매</div>
+                                    </div>
+                                    <div class="line completed"></div>
+                                    <div class="step completed">
+                                        <div class="label completed">
+                                            STEP03
+                                        </div>
+                                        <div class="label label-style02 tc-light-gray">완료</div>
+                                    </div>
+                                </div>  
+                                  <h5 class="text-center p-4"> 거래는 어떠셨나요?</h5>
                                     <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">후기 남기기</router-link>
                                 </div>
                             </transition>
@@ -564,7 +585,6 @@
 
                         <!-- 바텀 시트 show or black-->
                         <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
-
                         <!--#####################
                         딜러에 관힌 바텀시트
                     #########################-->
@@ -579,7 +599,7 @@
 
                             <!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
                             <div v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing'" @click.stop="">
-                                <div class="steps-container mt-3">
+                                <div class="steps-container">
                                     <div class="step completed">
                                         <div class="label completed">STEP01</div>
                                         <div class="label label-style tc-light-gray">매물 준비</div>
@@ -630,10 +650,10 @@
                                         성사수수료 보즘금이 부족해요
                                     </div>-->
                             </div>
+                          </div>
                         </div>
-                    </div>
-                </div>
-            </div>
+                      </bottom-sheet>
+              </div>
         </div>
        <!-- <div v-if="isUser && auctionDetail.data.status === 'wait'">
             <div class="wd-100 bid-content p-4">
@@ -740,6 +760,7 @@ import AlarmModal from '@/views/modal/AlarmModal.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
 import { cmmn } from '@/hooks/cmmn';
 import { initReviewSystem } from '@/composables/review';
+import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
 
