@@ -106,7 +106,7 @@
                                     <th class="px-6 py-3 bg-gray-50 text-left">
                                         <span
                                             class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
-                                            >카테고리</span
+                                            >매물번호</span
                                         >
                                     </th>
                                     <!--<th class="px-6 py-3 text-left">
@@ -118,57 +118,11 @@
                                             </div>
                                         </div>
                                     </th> -->
-                                    <th class="px-6 py-3 text-left">
-                                        <div
-                                            class="flex flex-row justify-content-center"
-                                            @click="updateOrdering('title')"
+                                    <th class="px-6 py-3 bg-gray-50 text-left">
+                                        <span
+                                            class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+                                            >내용</span
                                         >
-                                            <div
-                                                class="font-medium text-uppercase"
-                                                :class="{
-                                                    'font-bold text-blue-600':
-                                                        orderColumn === 'title',
-                                                }"
-                                            >
-                                              제목
-                                            </div>
-                                            <div class="select-none">
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                    }"
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                    }"
-                                                    >&darr;</span
-                                                >
-                                            </div>
-                                        </div>
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 text-left">
                                         수정/삭제
@@ -181,10 +135,10 @@
                                         {{ review.created_at }}
                                     </td>
                                     <td class="px-6 py-4 text-sm">
-                                        <div
+                                        <div class="blue-box"
                                             
                                         >
-                                            {{ review.id }}
+                                            {{ review.auction.car_no }}
                                         </div>
                                     </td>
                               <!--     <td class="px-6 py-4 text-sm">
@@ -202,7 +156,7 @@
                                             href="#"
                                             v-if="can('role.admin')"
                                             :to="{ 
-                                                name: 'auction.approve', params: { id: review.id } 
+                                                name: 'review.approve', params: { id: review.id } 
                                             }"
                                             class="ms-2 badge bg-danger tc-wh"
                                             >수정

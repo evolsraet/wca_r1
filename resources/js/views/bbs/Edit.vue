@@ -4,7 +4,7 @@
         * web-text: : 웹 화면에서 보이는뷰
     --> 
     <div class="container">
-        <form @submit.prevent="editReview(reviewId)" v-for="review in reviewData" :key="review">
+        <form @submit.prevent="editReview(reviewId,'user')" v-for="review in reviewData" :key="review">
             <div class="create-review">
                     <div class="left-container">
                         <div class="container-img mov-info02">
