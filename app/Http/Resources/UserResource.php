@@ -28,6 +28,9 @@ class UserResource extends JsonResource
         $additionalArray['dealer'] = new DealerResource($this->dealer);
         // }
 
+        // 파일들
+        $additionalArray['files'] = count($this->getMedia('*')) > 0 ? $this->getMedia('*') : null;
+
         // 날짜 필드를 Y-m-d 포맷으로 변환
         foreach ($parentArray as $key => $value) {
             if (str_ends_with($key, '_at') && $value !== null) {
