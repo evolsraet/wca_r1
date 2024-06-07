@@ -60,7 +60,6 @@ export default function useAuth() {
                 await loginUser();
                 swal({
                     icon: "success",
-                    title: "Login successfully",
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -145,7 +144,6 @@ export default function useAuth() {
             .then(async(response) => {
                 swal({
                     icon: "success",
-                    title: "Registration successfully",
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -162,6 +160,12 @@ export default function useAuth() {
     };
 
     const submitForgotPassword = async () => {
+        swal({
+            icon: 'error',
+            title: '준비중',
+            showConfirmButton: false
+        });
+        return;
         if (processing.value) return;
 
         processing.value = true;
@@ -172,7 +176,7 @@ export default function useAuth() {
             .then(async (response) => {
                 swal({
                     icon: "success",
-                    title: "We have emailed your password reset link! Please check your mail inbox.",
+                    title: "비밀번호 재설정 링크를 이메일로 보냈습니다! 메일함을 확인해 주세요.",
                     showConfirmButton: false,
                     timer: 1500,
                 });
@@ -197,7 +201,7 @@ export default function useAuth() {
             .then(async (response) => {
                 swal({
                     icon: "success",
-                    title: "Password successfully changed.",
+                    title: "비밀번호가 정상적으로 변경되었습니다.",
                     showConfirmButton: false,
                     timer: 1500,
                 });

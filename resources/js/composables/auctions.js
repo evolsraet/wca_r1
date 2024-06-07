@@ -230,7 +230,7 @@ const updateAuction = async (id,auction) => {
         text: 'You won\'t be able to revert this action!',
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: 'Yes, edit it!',
+        confirmButtonText: '변경하기',
         confirmButtonColor: '#ef4444',
         timer: 20000,
         timerProgressBar: true,
@@ -243,14 +243,12 @@ const updateAuction = async (id,auction) => {
                         getAuctions()
                         router.push({name: 'auctions.index'})
                         swal({
-                            icon: 'success',
-                            title: 'Auction edit successfully'
+                            icon: 'success'
                         })
                     })
                     .catch(error => {
                         swal({
-                            icon: 'error',
-                            title: 'Something went wrong'
+                            icon: 'error'
                         })
                     })
             }
