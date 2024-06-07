@@ -701,10 +701,10 @@
                     <label for="dealer">희망가로 판매할까요?
                         <span class="tooltip-toggle nomal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
                     </label>
-                    <div class="check_box">
-                        <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
+                   <!-- <div class="check_box">
+                        <input type="checkbox" id="sell" class="form-control">
                         <label for="sell">희망가 판매</label>
-                    </div>
+                    </div>-->
                 </div>
                 <div class="input-container mt-4">
                     <input type="text" class="styled-input" placeholder="희망가 입력(선택)" v-model="amount" @input="updateKoreanAmount" :readonly="isReadonly">

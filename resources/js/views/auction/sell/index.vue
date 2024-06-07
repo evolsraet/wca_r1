@@ -70,10 +70,9 @@
                 </ul>
             </template>
         </div>
-        <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
-            <div class="sheet-content">
-                <div @click.stop="">
-                    <div class="top-content wd-100">
+         <bottom-sheet initial="half" :dismissable="true">
+                <div>
+                    <div class="top-content-style wd-100">
                         <p class="tc-light-gray bold-18-font">현재 시세 <span class="normal-14-font">(무사고 기준)</span></p>
                         <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
@@ -118,8 +117,7 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </bottom-sheet>
     </div>
 </template>
 
@@ -131,6 +129,7 @@ import { useRouter } from 'vue-router';
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from "vuex";
+import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 import useAuctions from '@/composables/auctions';
 const previousCarDetails = ref({});
 const isRefreshDisabled = ref(false); // 버튼 비활성화 상태 변수
