@@ -79,7 +79,7 @@ video {
 	width: 100vw;
 	height: 100vh;
 	background-color: rgba(0, 0, 0, 0.5);
-	z-index: 1;
+    z-index: 1000;
 }
 
 /*   text-style  */
@@ -265,6 +265,32 @@ video {
     background-size: contain;
     background-position: center;
     margin-right: 5px;
+}
+
+.icon-bid::before,
+.icon-hit::before,
+.icon-heart::before {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    margin-right: 5px;
+    vertical-align:sub;
+}
+
+.icon-bid::before {
+    background-image: url('../img/Icon-bid.png');
+}
+
+.icon-hit::before {
+    background-image: url('../img/Icon-hits.png');
+}
+
+.icon-heart::before {
+    background-image: url('../img/Icon-auction-heart.png');
 }
 
 .text-with-marker {
@@ -979,6 +1005,29 @@ video {
   .btn-apply:hover::after {
     transform: translateX(5px); 
   }
+
+.btn-apply-ty03 {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    color: #000;
+    cursor: pointer; 
+  }
+  
+  .btn-apply-ty03:after {
+    content: "";
+    display: block;
+    width: 10px;
+    height: 18px;
+    background-image: url('../img/Icon-right.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    transition: transform 0.3s ease;
+}
+  
+
+
   
   
 .mob-info {
@@ -1371,7 +1420,7 @@ video {
 
  .my-auction .participate-badge {
     position: absolute;
-    top: 0;
+    top: 153px;
     right: 0;
     background-color: #4263ea;
     color: #fff;
@@ -1646,9 +1695,9 @@ video {
     position: absolute;
     width: 59px;
     height: 37px;
-    left: 4px;
+    right: 0px;
     top: -8px;
-    opacity: 0;  
+    opacity: 0;
     z-index: 1;
     cursor: pointer;
 }
@@ -1656,7 +1705,7 @@ video {
 .heart-toggle {
     position: absolute;
     top: -2px;
-    left: -6px;
+    right: 0px;
     width: 48px;
     height: 37px;
     background-image: url('../img/Icon-heart.png');
@@ -1679,15 +1728,69 @@ video {
     }
 }
 
+.timer{
+    position: absolute;
+    display: flex;
+    top: 10px;
+    bottom: 0px;
+    height: 25px;
+    width: 88px;
+    color: white;
+    background-color: $primary;
+    padding: 5px;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+}
+.icon-clock {
+    width: 16px;
+    height: 16px;
+    margin-right: 6px;
+    vertical-align: middle;
+    margin-bottom: 2px;
+}
+
+.allpage{
+    position: absolute;
+    display: flex;
+    top: 200px;
+    bottom: 0px;
+    right: 5px;
+    height: 28px;
+    width: 45px;
+    background-color: #202020;
+    padding: 5px;
+    border-radius: 30px;
+    justify-content: center;
+    align-items: center;
+}
+.allpage:hover{
+    background-color: rgb(40 40 40 / 60%);
+}
+
+
 .card-img-top-placeholder {
     width: 100%; 
-    height: 160px; 
+    height: 180px; 
     background-image: url('../img/car_example.png'); 
     background-size: cover; 
     background-position: center;
+    border-radius: 6px;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+}
+
+.card-img-demo {
+    width: 100%;
+    height: 160px;
+    background-color: #f7f8fb;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
 }
+
 
 .selection-complete-img {
     width: 100%; 
@@ -2149,7 +2252,7 @@ video {
     margin-top: 35px;
     justify-content: space-between;
 }
-.bottom-sheet .sheet-content .top-content{
+ .top-content-style{
     display: flex;
     margin-top: 35px;
     height: 50px;
@@ -2613,14 +2716,37 @@ input[type="checkbox"] {
 
 .card-img-top-ty01 {
     width: 100%;
-    height: 160px;
+    height: 180px;
     background-image: url('../../../../img/car_example.png');
     background-size: cover;
     background-position: center;
     border-top-right-radius: 6px;
     border-top-left-radius: 6px;
 }
+.card-img-top-ty02 {
+    width: 100%;
+    height: 240px;
+    background-image: url('../img/car_example.png');
+    background-size: cover;
+    background-position: center;
 
+}
+.diag-img {
+    width: 100%;
+    height: 240px;
+    background-color: #f7f8fb;
+    background-image: url('../img/diag.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  
+  .diag-text {
+    text-align: center;
+    font-size: 16px;
+  }
 .auction-deadline {
     width: 100%;
     height: 38px;
@@ -3148,8 +3274,36 @@ input[type="checkbox"] {
     background-position: center; 
     display: inline-block;
     vertical-align: text-bottom;
+}
+
+
+.btn-fileupload-red::before{
+    content: '';
+    width: 13px;
+    height: 20px;
+    background-image: url('../img/Icon-file-red.png');
+    margin-right: 8px;
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+    display: inline-block;
+    vertical-align: text-bottom;
 
 }
+
+.icon-coins::before{
+    content: '';
+    width: 15px;
+    height: 20px;
+    background-image: url('../img/Icon-coins.png');
+    margin-right: 8px;
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+    display: inline-block;
+    vertical-align: text-bottom;
+}
+
 
 /* 옵션 정보 : -ac 옵션 정보 활성화 아이콘 */
 
@@ -3309,6 +3463,14 @@ input[type="checkbox"] {
     background-position: center;
     background-repeat: no-repeat;
 }
+
+.wh-btn-icon{
+    background-image: url('../img/Icon-chevron-left-wh.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
 /*
 .option-icon::after {
     content: "";
@@ -3475,3 +3637,69 @@ input[type="checkbox"] {
   .refresh-icon:hover {
       background-color: #bbb; 
   }
+
+
+  /* [사용자] - 경매 (딜러) 선택 */
+  .bid-content{
+    height: 83px;
+    background-color: #4263ea;
+    color:white;
+  }
+  .cancelbox{
+    width:70px;
+    height: 24px;
+    border-radius: 6px;
+    padding: 3px 6px;
+    background-color: #2020207e;
+  }
+  .bid-bc{
+    background: #f7f9ff;
+  }
+  .bid-bc .inspector_list > li{
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0px 3px 6px 0px rgba(178, 174, 190, 0.2);
+    padding: 1rem 1rem 1rem;
+    border-color: #ccc;
+    cursor: pointer;
+}
+.bid-bc .inspector_list > li .img_box {
+    width: 4.6rem;
+    height: 4.6rem;
+    min-width: 4.6rem;
+    border-radius: 100%;
+    overflow: hidden;
+}
+.bid-bc .inspector_list > li .txt_box .name{
+    font-size: 1.3rem;
+}
+.bid-bc .inspector_list > li .txt_box .txt{
+    font-size: 1.1rem;
+}
+.bid-bc ul li:hover .txt_box .txt,
+.bid-bc ul li:hover .txt_box .name,
+.bid-bc ul li:hover .restar {
+    color: #4263ea;
+    transition: color 0.5s ease; 
+}
+
+.bid-bc ul li:hover .img_box {
+    border: solid 1px blue;
+    transition: border 0.5s ease; 
+}
+
+.bid-bc ul li:active,
+.bid-bc ul li:hover {
+    border: 1px solid #4263ea;
+    box-shadow: 0px 8px 10px 0px rgba(174, 170, 187, 0.247);
+    transition: border 1s ease-out;
+}
+
+
+.bid-bc ul li:hover .btn-apply-ty03::after {
+    background-image: url('../img/Icon-right-blue.png');
+    width: 35px;
+    height: 40px;
+    transform: translateX(5px); 
+    transition: transform 1s ease-out;
+}

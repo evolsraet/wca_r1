@@ -14,9 +14,9 @@
                     <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
                     <label for="all" class="mx-2">전체</label>
                     <input type="radio" name="status" value="ing" id="ongoing" hidden @change="setFilter('ing')">
-                    <label for="ongoing">진단중</label>
+                    <label for="ongoing">진행중</label>
                     <input type="radio" name="status" value="done" id="completed" hidden @change="setFilter('done')">
-                    <label for="completed" class="mx-2">진단완료</label>
+                    <label for="completed" class="mx-2">완료</label>
                 </div>
             </div>
         </div>
@@ -49,7 +49,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-if="auctionsData.length > 0" v-for="auction in auctionsData" :key="auction.id">
+                        <tr v-if="filteredAuctions.length > 0" v-for="auction in filteredAuctions" :key="auction.id">
                             <td class="px-6 py-4 text-sm">
                                 {{ auction.created_at }}
                             </td>
@@ -71,14 +71,14 @@
                                         name: 'auction.approve', params: { id: auction.id } 
                                     }"
                                     class="ms-2 badge bg-danger tc-wh"
-                                    >매물 수정
+                                    >수정
                                 </router-link>
                                 <a
                                     href="#"
                                     v-if="can('role.admin')"
                                     @click.prevent="deleteAuction(auction.id)"
                                     class="ms-2 badge bg-danger tc-wh"
-                                    >매물 삭제</a
+                                    >삭제</a
                                 >
                             </td>
                         </tr>
@@ -98,7 +98,7 @@
 
     
     <script setup>
-    import { ref, onMounted, watch } from 'vue';
+    import { ref, onMounted, watch, computed } from 'vue';
     import useAuctions from '@/composables/auctions';
     import useCategories from '@/composables/categories';
     import { useAbility } from '@casl/vue';
@@ -113,7 +113,8 @@
     const { auctionsData, pagination, getAuctions, deleteAuction,getStatusLabel } = useAuctions();
     const { categoryList, getCategoryList } = useCategories();
     const { can } = useAbility();
-    
+    const currentStatus = ref('all'); 
+
     const fetchAuctions = async (page = 1) => {
         try {
             await getAuctions(page);
@@ -127,6 +128,17 @@
         getCategoryList();
     });
     
+    function setFilter(status) { // 필터 설정
+        currentStatus.value = status;
+    }
+
+    const filteredAuctions = computed(() => { // 필터된 경매 목록
+    if (currentStatus.value === 'all') {
+        return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag', 'ask', 'cancel'].includes(auction.status));
+    }
+    return auctionsData.value.filter(auction => auction.status === currentStatus.value);
+    });
+
     const updateOrdering = (column) => {
         orderColumn.value = column;
         orderDirection.value = orderDirection.value === 'asc' ? 'desc' : 'asc';

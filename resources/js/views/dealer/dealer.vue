@@ -23,16 +23,25 @@
                         </div>
                     </div>
                     <div class="container my-5">
-                        <div class="row">
+                        <div v-if="filteredBids.length > 0" class="row">
                             <div class="col-md-3 p-2 mb-2 shadow-hover" v-for="bid in filteredBids" :key="bid.id"  @click="navigateToDetail(bid)">
                                 <div class="card my-auction">
                                     <input class="toggle-heart" type="checkbox" checked/>
                                     <label class="heart-toggle"></label>
-                                    <div class="selection-complete-img"></div> 
+                                    <div class="card-img-top-placeholder"></div> 
                                     <div class="wait-selection">낙찰가 {{ bid.price }}</div>
                                     <div class="card-body">
                                         <h5 class="card-title"><span class="blue-box">무사고</span>{{ bid.auctionDetails ? bid.auctionDetails.car_no : '차량 정보 없음' }}</h5>
                                         <p class="card-text tc-light-gray">현대 쏘나타(DN8){{ bid.auctionDetails ? bid.auctionDetails.model : '모델 정보 없음' }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="complete-car">
+                                <div class="card my-auction mt-3">
+                                    <div class="none-complete">
+                                        <span class="tc-light-gray">선택 완료된 차량이 없습니다.</span>
                                     </div>
                                 </div>
                             </div>
@@ -83,9 +92,8 @@ function navigateToDetail(bid) {
 
 const fetchFilteredBids = async () => {
     await getBids(); 
-    const filteredBidsData = bidsData.value.filter(bid => bid.status === 'ask');
-    console.log('Filtered Bids:', filteredBidsData); 
-    const bidsWithDetails = await Promise.all(filteredBidsData.map(fetchAuctionDetails));
+    console.log('All Bids:', bidsData.value); 
+    const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
     filteredBids.value = bidsWithDetails.filter(bid => bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id);
     console.log('Bids with Auction Details:', filteredBids.value); 
 };

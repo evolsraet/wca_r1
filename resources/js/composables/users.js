@@ -29,6 +29,7 @@ export default function useUsers() {
             .then(response => {
                 users.value = response.data;
             })
+   
     }
 
     const getUser = async (id) => {
@@ -71,6 +72,7 @@ export default function useUsers() {
     }
 
     const updateUser = async (user) => {
+        console.log(JSON.stringify(user));
         if (isLoading.value) return;
 
         isLoading.value = true

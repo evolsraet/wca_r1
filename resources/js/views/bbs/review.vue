@@ -31,7 +31,7 @@
                                     <h3 class="review-title">{{ auction.car_no }}</h3>
                                     <p class="tc-light-gray">12 삼 4567 | <span>{{ auction.dealer_name }} 딜러</span></p>
                                     <div class="justify-content-between flex align-items-center">
-                                        <p class="tc-light-gray review-price">{{ amtComma(auction.win_bid.price) }} 만원</p>
+                                        <p class="tc-light-gray review-price">{{ amtComma(auction.win_bid.price) }}</p>
                                         <!--<router-link :to="{ name: 'user.create-review' , params: { id: auction.id } }" class="btn-review">후기작성</router-link>-->
                                         <a class="btn-review" @click="navigateToDetail(auction.id)">후기작성</a>
                                     </div>
@@ -60,7 +60,7 @@
                                     </div>
                                     <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
                                         <p>{{ review.auction.car_no }}</p>
-                                        <p class="tc-red">{{ amtComma(review.auction.win_bid.price) }} 만원</p>
+                                        <p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>
                                     </div>
                                     <div class="rating">
                                         <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
@@ -159,7 +159,7 @@ onMounted(async () => {
     //console.log(auctionsData.value);
     userId = auctionsData.value[0].user_id;
     await getUserReview(userId);
-    //console.log(reviewsData.value);
+    console.log(reviewsData.value);
 });
 </script>
 

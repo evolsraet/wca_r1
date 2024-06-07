@@ -149,10 +149,9 @@ export default function useRoles() {
     }
 
     const getRoleList = async () => {
-        axios.get('/api/role-list')
-            .then(response => {
-                roleList.value = response.data.data;
-            })
+        const response = await axios.get('/api/roles')
+        roleList.value = response.data.data;
+        console.log(roleList.value);
     }
 
     return {

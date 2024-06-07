@@ -25,7 +25,7 @@ export default {
       startY: 0,
       currentY: 0,
       deltaY: 0,
-      sheetHeight: 56, // Initial height set to head height
+      sheetHeight: 20, // Initial height set to head height
       animationFrame: null
     };
   },
@@ -34,7 +34,7 @@ export default {
       if (this.showBottomSheet) {
         this.showBottomSheet = false;
         this.showHead = true;
-        this.sheetHeight = 56;
+        this.sheetHeight = 20;
         this.$refs.sheet.style.height = `${this.sheetHeight}px`;
       } else {
         this.showBottomSheet = true;
@@ -46,7 +46,7 @@ export default {
     closeSheet() {
       this.showBottomSheet = false;
       this.showHead = true;
-      this.sheetHeight = 56;
+      this.sheetHeight = 20;
       this.$refs.sheet.style.height = `${this.sheetHeight}px`;
     },
     startDrag(event) {
@@ -64,7 +64,7 @@ export default {
       this.deltaY = this.startY - this.currentY;
       cancelAnimationFrame(this.animationFrame);
       this.animationFrame = requestAnimationFrame(() => {
-        const newHeight = Math.max(56, Math.min(window.innerHeight * 0.5, this.sheetHeight + this.deltaY));
+        const newHeight = Math.max(20, Math.min(window.innerHeight * 0.5, this.sheetHeight + this.deltaY));
         this.$refs.sheet.style.height = `${newHeight}px`;
       });
     },
@@ -83,7 +83,7 @@ export default {
       } else {
         this.showBottomSheet = false;
         this.showHead = true;
-        this.sheetHeight = 56;
+        this.sheetHeight = 20;
       }
       this.$refs.sheet.style.height = `${this.sheetHeight}px`;
       this.deltaY = 0;
@@ -96,7 +96,7 @@ export default {
       this.$refs.sheet.style.height = `${this.sheetHeight}px`;
     } else {
       this.showHead = true;
-      this.sheetHeight = 56;
+      this.sheetHeight = 20;
       this.$refs.sheet.style.height = `${this.sheetHeight}px`;
     }
   }
@@ -129,7 +129,7 @@ export default {
 
 
 .sheet.head {
-  height: 56px;
+  height: 20px;
 }
 
 .sheet.half {

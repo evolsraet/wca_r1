@@ -25,11 +25,11 @@
                         <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
                         <label for="all" class="mx-2">전체</label>
 
-                        <input type="radio" name="status" value="ing" id="ongoing" hidden @change="setFilter('ing')">
-                        <label for="ongoing">일반</label>
+                        <input type="radio" name="status" value="user" id="user" hidden @change="setFilter('user')">
+                        <label for="user">일반</label>
 
-                        <input type="radio" name="status" value="done" id="completed" hidden @change="setFilter('done')">
-                        <label for="completed" class="mx-2">딜러</label>
+                        <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setFilter('dealer')">
+                        <label for="dealer" class="mx-2">딜러</label>
                     </div>
 
                         <div class="text-end select-option">
@@ -235,7 +235,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="post in users.data" :key="post.id">
+                                <tr v-for="post in filteredUsers" :key="post.id">
                                     <td class="px-6 py-4 text-sm">
                                         {{ post.created_at }}
                                     </td>
@@ -259,14 +259,14 @@
                                                 params: { id: post.id },
                                             }"
                                             class="badge bg-primary tc-wh"
-                                            >회원 수정
+                                            >수정
                                         </router-link>
                                         <a
                                             href="#"
                                             v-if="can('role.admin')"
                                             @click.prevent="deleteUser(post.id)"
                                             class="ms-2 badge bg-danger tc-wh"
-                                            >회원 삭제</a
+                                            >삭제</a
                                         >
                                     </td>
                                 </tr>
@@ -297,7 +297,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed} from "vue";
 import useUsers from "../../../composables/users";
 import { useAbility } from "@casl/vue";
 
@@ -308,9 +308,28 @@ const orderColumn = ref("created_at");
 const orderDirection = ref("desc");
 const { users, getUsers, deleteUser } = useUsers();
 const { can } = useAbility();
-onMounted(() => {
+const currentStatus = ref('all');
+
+onMounted(async () => {
     getUsers();
 });
+
+const filteredUsers = computed(() => {
+    if (currentStatus.value === "all") {
+        return users.value.data;
+    } else {
+        return users.value.data.filter(user => 
+            user.roles.some(role => role === currentStatus.value)
+        );
+    }
+});
+
+
+function setFilter(status) { // 필터 설정
+  currentStatus.value = status;
+  //filteredUsers();
+}
+
 const updateOrdering = (column) => {
     orderColumn.value = column;
     orderDirection.value = orderDirection.value === "asc" ? "desc" : "asc";

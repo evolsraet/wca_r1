@@ -26,10 +26,10 @@
                         <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
                         <label for="all" class="mx-2">전체</label>
 
-                        <input type="radio" name="status" value="ing" id="ongoing" hidden @change="setFilter('ing')">
+                        <input type="radio" name="status" value="user" id="user" hidden @change="setFilter('user')">
                         <label for="ongoing">일반</label>
 
-                        <input type="radio" name="status" value="done" id="completed" hidden @change="setFilter('done')">
+                        <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setFilter('dealer')">
                         <label for="completed" class="mx-2">딜러</label>
                     </div>
                     <div class="text-end select-option">
@@ -106,7 +106,7 @@
                                     <th class="px-6 py-3 bg-gray-50 text-left">
                                         <span
                                             class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
-                                            >카테고리</span
+                                            >매물번호</span
                                         >
                                     </th>
                                     <!--<th class="px-6 py-3 text-left">
@@ -118,57 +118,11 @@
                                             </div>
                                         </div>
                                     </th> -->
-                                    <th class="px-6 py-3 text-left">
-                                        <div
-                                            class="flex flex-row justify-content-center"
-                                            @click="updateOrdering('title')"
+                                    <th class="px-6 py-3 bg-gray-50 text-left">
+                                        <span
+                                            class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
+                                            >내용</span
                                         >
-                                            <div
-                                                class="font-medium text-uppercase"
-                                                :class="{
-                                                    'font-bold text-blue-600':
-                                                        orderColumn === 'title',
-                                                }"
-                                            >
-                                              제목
-                                            </div>
-                                            <div class="select-none">
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                    }"
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                    }"
-                                                    >&darr;</span
-                                                >
-                                            </div>
-                                        </div>
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 text-left">
                                         수정/삭제
@@ -181,10 +135,10 @@
                                         {{ review.created_at }}
                                     </td>
                                     <td class="px-6 py-4 text-sm">
-                                        <div
+                                        <div class="blue-box"
                                             
                                         >
-                                            {{ review.id }}
+                                            {{ review.auction.car_no }}
                                         </div>
                                     </td>
                               <!--     <td class="px-6 py-4 text-sm">
@@ -202,17 +156,17 @@
                                             href="#"
                                             v-if="can('role.admin')"
                                             :to="{ 
-                                                name: 'auction.approve', params: { id: review.id } 
+                                                name: 'review.approve', params: { id: review.id } 
                                             }"
                                             class="ms-2 badge bg-danger tc-wh"
-                                            >리뷰 수정
+                                            >수정
                                         </router-link>
                                         <a
                                             href="#"
                                             v-if="can('role.admin')"
                                             @click.prevent="deleteReviewApi(review.id)"
                                             class="ms-2 badge bg-danger tc-wh"
-                                            >리뷰 삭제</a
+                                            >삭제</a
                                         >
                                     </td>
                                 </tr>
@@ -244,7 +198,7 @@ const { posts, getPosts, deletePost } = usePosts();
 const { categoryList, getCategoryList } = useCategories();
 const { can } = useAbility();
 const { getAllReview , deleteReviewApi , reviewsData , pagination } = initReviewSystem(); 
-
+const currentStatus = ref('all');
 
 onMounted(async () => {
     await getAllReview(1);
@@ -252,6 +206,23 @@ onMounted(async () => {
     getPosts();
     getCategoryList();
 });
+
+function setFilter(status) { // 필터 설정
+  currentStatus.value = status;
+}
+
+/** 
+const filterReviews = computed(() => {
+    
+    if (currentStatus.value === "all") {
+        return users.value.data;
+    } else {
+        return users.value.data.filter(user => 
+            user.roles.some(role => role === currentStatus.value)
+        );
+    }
+});*/
+
 const updateOrdering = (column) => {
     orderColumn.value = column;
     orderDirection.value = orderDirection.value === "asc" ? "desc" : "asc";

@@ -4,12 +4,12 @@
         * web-text: : 웹 화면에서 보이는뷰
     --> 
     <div class="container">
-        <form @submit.prevent="editReview(reviewId,'user')" v-for="review in reviewData" :key="review">
+        <form @submit.prevent="editReview(reviewId,'admin')" v-for="review in reviewData" :key="review">
             <div class="create-review">
                     <div class="left-container">
                         <div class="container-img mov-info02">
                             <div class="left-img">
-                                <img src="../../../img/car_example2.png" alt="전체 이미지0 ">
+                                <img src="../../../../img/car_example2.png" alt="전체 이미지0 ">
                             </div>
                             <div class="right-img web-text">
                                 <div class="detail detail1"></div>
@@ -88,7 +88,6 @@
 <script setup>
 import { ref, onMounted , nextTick } from 'vue';
 import { useRoute } from 'vue-router'; 
-import useAuctions from "@/composables/auctions";
 import { initReviewSystem } from '@/composables/review'; // 별점 js
 
 const route = useRoute();

@@ -18,7 +18,8 @@
                                     <p class="tc-light-gray">{{ user.dealer.company }}</p>
                                     <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
                                     <p class="restar">(4.5점)</p>
-                                    <p class="no-bidding mt-3"><span>입찰 불가</span></p>
+                                 <!--   <p class="no-bidding mt-3"><span>입찰 불가</span></p>-->
+                                    <p class="bidding mt-3"><span>입찰 가능</span></p>
                                 </div>
                             </div>
                             <div class="footer mob-info">
@@ -34,7 +35,7 @@
                         </div>
                         <div class="slide-up-ani activity-info bold-18-font">
                             <div class="item">
-                            <p><span class="tc-red slide-up" ref="item1">100</span> 건</p>
+                            <p><span class="tc-red slide-up" ref="item1">0</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font">관심</p>
                             </div>
                             <div class="item">
@@ -45,10 +46,10 @@
                             <p><span class="tc-red" ref="item3">{{ filteredViewBids.length }}</span> 건</p>
                             <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
                             </div>
-                            <div class="item">
+                         <!--   <div class="item">
                             <p><span class="tc-red" ref="item4">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
                             <p class="purchase-icon tc-light-gray normal-16-font">완료</p>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
@@ -158,7 +159,7 @@
                             <div class="complete-car">
                                 <div class="card my-auction mt-3">
                                     <div class="none-complete">
-                                        <span>선택 완료된 차량이 없습니다.</span>
+                                        <span class="tc-light-gray">선택 완료된 차량이 없습니다.</span>
                                     </div>
                                 </div>
                             </div>
@@ -180,30 +181,24 @@ const item1 = ref(null);
 const item2 = ref(null);
 const item3 = ref(null);
 const item4 = ref(null);
-
 const myBidsCount = ref(0);
 const store = useStore();
 const router = useRouter(); 
 const isExpanded = ref(false);
-
 const toggleCard = () => {
     isExpanded.value = !isExpanded.value;
 };
-
 const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
 const { bidsData, getBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
-
 const calculateMyBidsCount = () => {
     if (bidsData.value && user.value) {
         myBidsCount.value = bidsData.value.filter(bid => bid.user_id === user.value.id).length;
     }
 };
-
 const ingCount = computed(() => {
     return auctionsData.value.filter(auction => auction.status === 'ing').length;
 });
-
 const alertNoVehicle = (event) => {
     event.preventDefault();
     if (viewBids.value.length === 0) {
@@ -212,7 +207,6 @@ const alertNoVehicle = (event) => {
         router.push({ name: 'dealer.bids' });
     }
 };
-
 const fetchAuctionDetails = async (bid) => {
     try {
         const auctionDetails = await getAuctionById(bid.auction_id);
@@ -229,22 +223,20 @@ const fetchAuctionDetails = async (bid) => {
         };
     }
 };
-
 const filteredViewBids = ref([]);
-
 const fetchFilteredViewBids = async () => {
-    const filteredBids = bidsData.value.filter(bid => bid.status === 'ask');
-    console.log('Filtered Bids:', filteredBids);
-    const bidsWithDetails = await Promise.all(filteredBids.map(fetchAuctionDetails));
+    // 필터링을 제거하고 모든 입찰을 가져옵니다.
+    console.log('Original Bids:', bidsData.value);
+    const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
     filteredViewBids.value = bidsWithDetails.filter(bid => bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id);
     console.log('Bids with Auction Details:', filteredViewBids.value);
 };
+
 
 function navigateToDetail(bid) {
     console.log("Navigate to Detail:", bid.auction_id);
     router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
 }
-
 onMounted(async () => {
     await getBids();
     calculateMyBidsCount();
@@ -253,15 +245,12 @@ onMounted(async () => {
     setTimeout(() => {
     item1.value.classList.add('visible');
   }, 0);
-
   setTimeout(() => {
     item2.value.classList.add('visible');
   }, 200);
-
   setTimeout(() => {
     item3.value.classList.add('visible');
   }, 400);
-
   setTimeout(() => {
     item4.value.classList.add('visible');
   }, 800);

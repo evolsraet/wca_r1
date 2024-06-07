@@ -94,6 +94,12 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
             },        
             {
+                path: '/profiledt',
+                name: 'profile',
+                component: () => import('../views/profile/index.vue'),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
+            },  
+            {
                 path: '/sell',
                 name: 'sell',
                 component: () => import('../views/auction/sell/index.vue'),
@@ -365,6 +371,12 @@ export default [
                 meta: { breadCrumb: 'deposit' }
             },
             {
+                name: 'deposit.approve',
+                path: 'deposit/approve/:id',
+                component: () => import('../views/admin/deposit/approve.vue'),
+                meta: { breadCrumb: 'deposit approve' }
+            },
+            {
                 name: 'auctions.index',
                 path: 'auction',
                 component: () => import('../views/admin/auction/Index.vue'),
@@ -375,6 +387,12 @@ export default [
                 path: 'auction/approve/:id',
                 component: () => import('../views/admin/auction/approve.vue'),
                 meta: { breadCrumb: 'auction approve' }
+            },
+            {
+                name: 'review.approve',
+                path: 'review/approve/:id',
+                component: () => import('../views/admin/review/approve.vue'),
+                meta: { breadCrumb: 'review approve' }
             },
             {
                 name: 'review.index',

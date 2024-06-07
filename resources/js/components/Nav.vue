@@ -1,8 +1,12 @@
 <template>
 <div class="overlay" style="display: none;"></div> 
-    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', 'p-2', navbarClass, textClass]">
+    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass]">
+        <div v-if="isAuctionDetailPage">
+        </div>
         <div class="container nav-font">
-            <button v-if="isDetailPage" @click="goBack" class="p-2 btn btn-back back-btn-icon">
+            <button v-if="isDetailPage && isUser" @click="goBack" class="p-2 btn btn-back back-btn-icon">
+            </button>
+            <button  v-else-if="isDetailPage && isDealer" @click="goBack" class="p-2 btn btn-back wh-btn-icon">
             </button>
             <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand-dealer"></router-link>
             <router-link v-else-if="isUser" to="/" class="navbar-brand"></router-link>
@@ -26,18 +30,18 @@
                         <div class="top-content ">
                             <div class="menu-illustration p-3">
                                <div class="sub-board-style">
-                                <div v-if="fetchAuctionDetails" class="text-start">
-                                        <p>경매가 종료됐어요!</p>
-                                        <div class="d-flex align-items-center">
-                                            <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font"@click="toggleNavbar">선택완료차량 확인</router-link>
-                                            <div class="icon right-icon"></div>
-                                        </div>
-                                    </div>
-                                    <div v-else class="text-start">
-                                        <p>아직 경매가 진행 중이에요</p>
-                                        <div class="d-flex align-items-center">
-                                            <router-link :to="{ name: 'auction.index'}" class="tc-primary bold-18-font"@click="toggleNavbar">진행 중 경매 확인</router-link>
-                                            <div class="icon right-icon"></div>
+                                   <div v-if="fetchFilteredViewBids.value" class="text-start">
+                                           <p>경매가 종료됐어요!</p>
+                                           <div class="d-flex align-items-center">
+                                               <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font"@click="toggleNavbar">선택완료차량 확인</router-link>
+                                               <div class="icon right-icon"></div>
+                                           </div>
+                                       </div>
+                                   <div v-else class="text-start">
+                                       <p>아직 경매가 진행 중이에요</p>
+                                       <div class="d-flex align-items-center">
+                                           <router-link :to="{ name: 'auction.index'}" class="tc-primary bold-18-font"@click="toggleNavbar">진행 중 경매 확인</router-link>
+                                           <div class="icon right-icon"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -59,8 +63,8 @@
                                                 <div class="icon icon-awsome"></div>
                                             </div>
                                             <div class="d-flex flex-column">
-                                                <span class="menu-text process">내 매물관리</span>
-                                                <span class="tc-light-gray font-1">경매 진행중인 매물</span>
+                                                <span class="menu-text process">낙찰 차량관리</span>
+                                                <span class="tc-light-gray font-1">경매 낙찰차량 확인</span>
                                             </div>
                                         </router-link>
                                         <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mt-0" @click="toggleNavbar">
@@ -331,9 +335,9 @@
 
 <script setup>
 import { ref, computed, onMounted, watch } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
 import useAuth from '@/composables/auth';
-import { useRouter, useRoute } from 'vue-router';
 import useAuctions from '@/composables/auctions';
 
 const { getAuctions, auctionsData } = useAuctions();
@@ -345,12 +349,13 @@ const store = useStore();
 const isNavbarShown = ref(false);
 const showScrollGradient = ref(false);
 let scrollTimeout = null;
+const auctionDetailsLoaded = ref(false);
 
 function toggleSettingsMenu() {
   showSettings.value = !showSettings.value;
 }
-
 const user = computed(() => store.getters['auth/user']);
+
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
 const navbarClass = computed(() => (isDealer.value ? 'bg-primary' : 'bg-white'));
@@ -370,33 +375,39 @@ const homePath = computed(() => {
     }
 });
 
-const fetchAuctionDetails = async (bid) => {
-    try {
-        const auctionDetails = await getAuctionById(bid.auction_id);
-        return {
-            ...bid,
-            auctionDetails: auctionDetails.data
-        };
-    } catch (error) {
-        return {
-            ...bid,
-            auctionDetails: null
-        };
-    }
+const fetchFilteredViewBids = async () => {
+    console.log('Original Bids:', bidsData.value);
+    const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
+    console.log('Bids with Details:', bidsWithDetails);  // Bids with Details 데이터 출력
+    filteredViewBids.value = bidsWithDetails.filter(bid => {
+        console.log('Checking Bid:', bid);  // 각 Bid 데이터 출력
+        return bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id;
+    });
+    console.log('Bids with Auction Details:', filteredViewBids.value);
 };
+
 
 const userHasAuction = computed(() => {
     return auctionsData.value.some(auction => auction.user_id === user.value.id);
 });
 
 const latestAuction = computed(() => {
-  return auctionsData.value.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+    // 데이터 배열이 비어 있으면 null을 반환
+    if (auctionsData.value.length === 0) return null;
+
+    // 데이터를 복사하여 생성된 날짜 기준으로 정렬
+    const sortedAuctions = [...auctionsData.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    // 가장 최근의 경매 반환
+    return sortedAuctions[0];
 });
+
+
 
 const isDiagnosing = computed(() => latestAuction.value && latestAuction.value.status === 'diag'|| latestAuction.value.status === 'ask');
 const isAuctioning = computed(() => latestAuction.value && latestAuction.value.status === 'ing');
 const isSelectingDealer = computed(() => latestAuction.value && latestAuction.value.status === 'wait');
-const isCompleted = computed(() => latestAuction.value && latestAuction.value.status === 'chosen');
+const isCompleted = computed(() => latestAuction.value && latestAuction.value.status === 'chosen' || latestAuction.value && latestAuction.value.status === 'done');
 
 const isDiagnosisCompleted = computed(() => ['ing', 'wait', 'chosen'].includes(latestAuction.value?.status));
 const isAuctionCompleted = computed(() => ['wait', 'chosen'].includes(latestAuction.value?.status));
@@ -405,6 +416,11 @@ const isDealerSelectionCompleted = computed(() => latestAuction.value?.status ==
 // 현재 경로를 기준으로 상세 페이지인지 확인
 const isDetailPage = computed(() => {
     return /^\/auction\/\d+$/.test(route.path) || route.path === '/selldt' || route.path === '/selldt2';
+});
+
+// 특정 페이지 경로 확인 (AuctionDetail 페이지)
+const isAuctionDetailPage = computed(() => {
+  return route.name === 'AuctionDetail';
 });
 
 // 뒤로 가기 함수
@@ -418,19 +434,14 @@ function toggleNavbar() {
     content.classList.remove('visible');
     clearTimeout(scrollTimeout);
 
-    // Close the navbar
-    const navbar = document.querySelector('.navbar-collapse');
-    navbar.addEventListener('transitionend', handleNavbarClosed);
+    document.querySelector('.btn-close').click();
     showSettings.value = false;
     if (content) {
         content.scrollTop = 0;
     }
-
-    // Ensure the event listener is attached before triggering the close
-    setTimeout(() => {
-        document.querySelector('.btn-close').click();
-    }, 10);
+    toggleOverlay(false);
 }
+
 function checkScrollGradient() {
     const content = document.querySelector('.toggle-nav-content');
     if (content.scrollHeight > content.clientHeight) {
@@ -442,7 +453,7 @@ function checkScrollGradient() {
             } else {
                 content.classList.remove('visible');
             }
-        }, 200); // 0.2초 후에 gradient 표시
+        }, 200);
     } else {
         showScrollGradient.value = false;
         content.classList.remove('visible');
@@ -453,7 +464,9 @@ onMounted(() => {
     const content = document.querySelector('.toggle-nav-content');
     content.addEventListener('scroll', checkScrollGradient);
     checkScrollGradient();
-    getAuctions();
+    if (isUser.value || isDealer.value) {
+        getAuctions();
+    }
 
     const navbar = document.querySelector('.navbar-collapse');
     navbar.addEventListener('transitionend', () => {
@@ -485,6 +498,11 @@ onMounted(() => {
         toggleOverlay(isNavbarShown.value);
         toggleNavbar();
     });
+
+    // Watch for route changes to hide the overlay
+    router.afterEach(() => {
+        toggleOverlay(false);
+    });
 });
 
 function toggleOverlay(show) {
@@ -493,15 +511,16 @@ function toggleOverlay(show) {
         overlay.style.display = 'block';
         setTimeout(() => {
             overlay.style.opacity = '1';
-        }, 10); // opacity 트랜지션을 적용하기 위해 약간의 딜레이를 줌
+        }, 10); 
     } else {
         overlay.style.opacity = '0';
         setTimeout(() => {
             overlay.style.display = 'none';
-        }, 300); // opacity 트랜지션이 끝난 후 display를 none으로 설정
+        }, 300); 
     }
 }
 </script>
+
 
 
 <style scoped>
@@ -529,14 +548,6 @@ function toggleOverlay(show) {
 
 .has-gradient.visible::after {
     opacity: 1;
-}
-
-.icon-clock {
-    width: 16px;
-    height: 16px;
-    margin-right: 6px;
-    vertical-align: middle;
-    margin-bottom: 2px;
 }
 
 .middle-content-ty02 {
