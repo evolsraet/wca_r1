@@ -18,8 +18,8 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
 
-// Route::post('forget-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
-// Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('password.reset');
+// Route::post('forgetPassword', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
+// Route::post('resetPassword', [ResetPasswordController::class, 'reset'])->name('password.reset');
 
 Route::post('users', [UserController::class, 'store']);   // 회원가입은 인증없이
 Route::post('users/test', [UserController::class, 'test']);   // 회원가입은 인증없이
