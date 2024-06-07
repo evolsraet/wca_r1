@@ -65,7 +65,7 @@
                                         <transition name="fade">
                                             <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
                                                 <p>현재 최고 입찰액</p>
-                                                <p class="icon-coins">{{ heightPrice }} 만원</p>
+                                                <p class="icon-coins">{{ amtComma(heightPrice) }}</p>
                                             </div>
                                         </transition>
                                     </div>
@@ -640,7 +640,7 @@
                             <!------------------- [딜러] - 입찰 완료후 바텀 메뉴 -------------------->
                             <div class="p-4" v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id))" @click.stop="">
                                 <h5 class="mx-3 text-center">경매 마감까지 03:25:43 남음</h5>
-                                <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ myBidPrice }}</span></p>
+                                <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ amtComma(myBidPrice) }}</span></p>
                                 <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 0 명</h5>
                                 <button type="button" class="my-3 w-100 btn btn-outline-primary" @click="handleCancelBid">
                                     입찰 취소
@@ -780,14 +780,14 @@ const userInfo = ref(null);
 const succesbid = ref(false);
 const amount = ref('');
 const koreanAmount = ref('원');
-const { numberToKoreanUnit } = cmmn();
+const { numberToKoreanUnit , amtComma } = cmmn();
 const myBidPrice = computed(() => {
   const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id);
   return myBid ? myBid.price : '0';
 });
 let pollingInterval = null;
 const updateKoreanAmount = () => {
-  koreanAmount.value = numberToKoreanUnit(amount.value) + ' 원';
+  koreanAmount.value = amtComma(amount.value);
 };
 
 const dynamicClass = computed(() => {

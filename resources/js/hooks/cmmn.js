@@ -21,7 +21,7 @@ export function cmmn() {
     }
 
     const amtComma = (amt) => {
-        return amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        return amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+" 만원";
     }
 
     return {
