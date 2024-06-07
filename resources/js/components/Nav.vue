@@ -392,13 +392,22 @@ const userHasAuction = computed(() => {
 });
 
 const latestAuction = computed(() => {
-  return auctionsData.value.sort((a, b) => new Date(b.created_at) - new Date(a.created_at))[0];
+    // 데이터 배열이 비어 있으면 null을 반환
+    if (auctionsData.value.length === 0) return null;
+
+    // 데이터를 복사하여 생성된 날짜 기준으로 정렬
+    const sortedAuctions = [...auctionsData.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+
+    // 가장 최근의 경매 반환
+    return sortedAuctions[0];
 });
+
+
 
 const isDiagnosing = computed(() => latestAuction.value && latestAuction.value.status === 'diag'|| latestAuction.value.status === 'ask');
 const isAuctioning = computed(() => latestAuction.value && latestAuction.value.status === 'ing');
 const isSelectingDealer = computed(() => latestAuction.value && latestAuction.value.status === 'wait');
-const isCompleted = computed(() => latestAuction.value && latestAuction.value.status === 'chosen');
+const isCompleted = computed(() => latestAuction.value && latestAuction.value.status === 'chosen' || latestAuction.value && latestAuction.value.status === 'done');
 
 const isDiagnosisCompleted = computed(() => ['ing', 'wait', 'chosen'].includes(latestAuction.value?.status));
 const isAuctionCompleted = computed(() => ['wait', 'chosen'].includes(latestAuction.value?.status));

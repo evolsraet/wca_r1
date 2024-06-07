@@ -46,10 +46,10 @@
                             <p><span class="tc-red" ref="item3">{{ filteredViewBids.length }}</span> 건</p>
                             <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
                             </div>
-                            <div class="item">
+                         <!--   <div class="item">
                             <p><span class="tc-red" ref="item4">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
                             <p class="purchase-icon tc-light-gray normal-16-font">완료</p>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
                 </div>
