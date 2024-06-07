@@ -26,10 +26,10 @@
                         <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
                         <label for="all" class="mx-2">전체</label>
 
-                        <input type="radio" name="status" value="ing" id="ongoing" hidden @change="setFilter('ing')">
+                        <input type="radio" name="status" value="user" id="user" hidden @change="setFilter('user')">
                         <label for="ongoing">일반</label>
 
-                        <input type="radio" name="status" value="done" id="completed" hidden @change="setFilter('done')">
+                        <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setFilter('dealer')">
                         <label for="completed" class="mx-2">딜러</label>
                     </div>
                     <div class="text-end select-option">
@@ -198,7 +198,7 @@ const { posts, getPosts, deletePost } = usePosts();
 const { categoryList, getCategoryList } = useCategories();
 const { can } = useAbility();
 const { getAllReview , deleteReviewApi , reviewsData , pagination } = initReviewSystem(); 
-
+const currentStatus = ref('all');
 
 onMounted(async () => {
     await getAllReview(1);
@@ -206,6 +206,23 @@ onMounted(async () => {
     getPosts();
     getCategoryList();
 });
+
+function setFilter(status) { // 필터 설정
+  currentStatus.value = status;
+}
+
+/** 
+const filterReviews = computed(() => {
+    
+    if (currentStatus.value === "all") {
+        return users.value.data;
+    } else {
+        return users.value.data.filter(user => 
+            user.roles.some(role => role === currentStatus.value)
+        );
+    }
+});*/
+
 const updateOrdering = (column) => {
     orderColumn.value = column;
     orderDirection.value = orderDirection.value === "asc" ? "desc" : "asc";
