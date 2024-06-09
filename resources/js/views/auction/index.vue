@@ -471,7 +471,7 @@ TODO:
                                             </div>
                                         </div>
                                         <div v-else :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
-                                            <span v-if="auction.status === 'ing'" class="mx-2 timer">
+                                            <span v-if="auction.status === 'ing' && auction.timeLeft" class="mx-2 timer">
                                                 <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
                                                 {{ auction.timeLeft.days }}일 {{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
                                             </span>
@@ -779,7 +779,6 @@ const updateAuctionTimes = () => {
     auction.timeLeft = calculateTimeLeft(auction);
   });
 };
-
 
 
 const handleTouchStart = (e) => {
