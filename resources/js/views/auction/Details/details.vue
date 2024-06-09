@@ -20,7 +20,7 @@
                                             </div>
                                         </div>
                                         <div v-else>
-                                            <span v-if="auctionDetail.data.status === 'ing'" class="mx-2 timer"><img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">01:42:24</span>
+                                            <span v-if="auctionDetail.data.status === 'ing'" class="mx-2 timer"><img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">{{ timeLeft.days }}-day {{ timeLeft.hours }} : {{ timeLeft.minutes }} : {{ timeLeft.seconds }}</span>
                                             <input class="toggle-heart" type="checkbox" checked />
                                             <label class="heart-toggle"></label>
                                             <div :class="['card-img-top-ty02', { 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]"></div>
@@ -61,12 +61,28 @@
                                         </div>
 
                                     </div>
-                                    <div v-if="isUser && auctionDetail.data.status === 'ing'" class="px-3">
+                                    <div v-if="isUser && auctionDetail.data.status === 'ing'" class="p-3">
                                         <transition name="fade">
+                                          <div  v-if="auctionDetail.data.hope_price != null">
                                             <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
+                                                <p>현재 희망가</p>
+                                                <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
+                                              </div>
+                                          </div>
+                                            <div v-else class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
                                                 <p>현재 최고 입찰액</p>
                                                 <p class="icon-coins">{{ amtComma(heightPrice) }}</p>
                                             </div>
+                                        </transition>
+                                    </div>
+                                    <div v-if="auctionDetail.data.status === 'ing' " class="p-3">
+                                      <transition name="fade">
+                                          <div v-if="isDealer && auctionDetail.data.hope_price != null && auctionDetail.data.hope_price != null">
+                                            <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
+                                                <p>현재 희망가</p>
+                                                <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
+                                              </div>
+                                          </div>
                                         </transition>
                                     </div>
                                 </div>
@@ -598,6 +614,39 @@
                             </div>
 
                             <!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
+                            <div v-if="!succesbidhope && userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price !==null" @click.stop="">
+                              <div class="steps-container">
+                                    <div class="step completed">
+                                        <div class="label completed">STEP01</div>
+                                        <div class="label label-style tc-light-gray">매물 준비</div>
+                                    </div>
+                                    <div class="line completed"></div>
+                                    <div class="step completing">
+                                        <div class="label completed">STEP02</div>
+                                        <div class="label label-style tc-light-gray completing-text">경매</div>
+                                    </div>
+                                    <div class="line"></div>
+                                    <div class="step">
+                                        <div class="label">STEP03</div>
+                                        <div class="label label-style02 tc-light-gray">완료</div>
+                                    </div>
+                                </div>
+                                <p class="auction-deadline text-center"></p>
+                                <p class="tc-red mt-2">경매 마감까지 {{ timeLeft.days }}일 {{ timeLeft.hours }}시간 {{ timeLeft.minutes }}분 {{ timeLeft.seconds }}초 남음</p>
+                                <div class="mt-3 d-flex justify-content-end gap-3">
+                                    <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
+                                    <p class="interest-icon tc-light-gray normal-16-font">관심 0</p>
+                                </div>
+                                <div>
+                                    <h5 class="text-start mt-3 tc-primary">희망가에 경매하시겠습니까?</h5>
+                                    <div class="input-container mt-4">
+                                      <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
+                                    </div>
+                                    <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
+                                    <p class="text-start tc-red mb-2">※ 희망가에 경매 시 즉시 낙찰이 가능합니다.</p>
+                                    <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
+                                </div>
+                            </div>
                             <div v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing'" @click.stop="">
                                 <div class="steps-container">
                                     <div class="step completed">
@@ -616,7 +665,7 @@
                                     </div>
                                 </div>
                                 <p class="auction-deadline text-center">경매를 시작합니다.</p>
-                                <p class="tc-red mt-2">경매 마감까지 {{ auctionDetail.data.final_at || "null" }} 분 남음</p>
+                                <p class="tc-red mt-2">경매 마감까지 {{ timeLeft.days }}일 {{ timeLeft.hours }}시간 {{ timeLeft.minutes }}분 {{ timeLeft.seconds }}초  남음</p>
                                 <div class="mt-3 d-flex justify-content-end gap-3">
                                     <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
                                     <p class="interest-icon tc-light-gray normal-16-font">관심 0</p>
@@ -630,7 +679,7 @@
                                     <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
                                 </div>
                             </div>
-                            <div v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing'">
+                            <div v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
                                     <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
                                     <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
                                     </div>
@@ -638,8 +687,8 @@
                                     <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
                                 </transition>
                             <!------------------- [딜러] - 입찰 완료후 바텀 메뉴 -------------------->
-                            <div class="p-4" v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id))" @click.stop="">
-                                <h5 class="mx-3 text-center">경매 마감까지 03:25:43 남음</h5>
+                            <div class="p-4" v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id))&& auctionDetail.data.hope_price == null" @click.stop="">
+                                <h5 class="mx-3 text-center">{{ minutesLeft }}</h5>
                                 <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ amtComma(myBidPrice) }}</span></p>
                                 <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 0 명</h5>
                                 <button type="button" class="my-3 w-100 btn btn-outline-primary" @click="handleCancelBid">
@@ -720,15 +769,27 @@
                         <li class="sub-title">입찰가(데모)</li>
                     </ul>
                 </div>
-                <div class="form-group dealer-check mt-0 mb-0">
-                    <label for="dealer">희망가로 판매할까요?
-                        <span class="tooltip-toggle nomal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
-                    </label>
-                   <!-- <div class="check_box">
-                        <input type="checkbox" id="sell" class="form-control">
-                        <label for="sell">희망가 판매</label>
-                    </div>-->
-                </div>
+                <div>
+                  <div v-if="auctionDetail.data.hope_price != null" class="form-group dealer-check mt-0 mb-0">
+                      <label for="sell">희망가 수정
+                          <span class="tooltip-toggle normal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
+                      </label>
+                      <div class="check_box">
+                          <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
+                          <label for="sell">희망가 판매</label>
+                      </div>
+                  </div>
+
+                  <div v-else class="form-group dealer-check mt-0 mb-0">
+                      <label for="sell">희망가로 판매할까요?
+                          <span class="tooltip-toggle normal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
+                      </label>
+                      <div class="check_box">
+                          <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
+                          <label for="sell">희망가 판매</label>
+                      </div>
+                  </div>
+              </div>
                 <div class="input-container mt-4">
                     <input type="text" class="styled-input" placeholder="희망가 입력(선택)" v-model="amount" @input="updateKoreanAmount" :readonly="isReadonly">
                 </div>
@@ -778,6 +839,7 @@ const route = useRoute();
 const router = useRouter();
 const userInfo = ref(null);
 const succesbid = ref(false);
+const succesbidhope = ref(false);
 const amount = ref('');
 const koreanAmount = ref('원');
 const { numberToKoreanUnit , amtComma } = cmmn();
@@ -832,6 +894,7 @@ const { submitBid, cancelBid,getBidById } = useBids();
 const carDetails = ref({});
 const highestBid = ref(0);
 const lowestBid = ref(0);
+
 const sortedTopBids = computed(() => {
   if (!auctionDetail.value?.data?.top_bids) {
     return [];
@@ -896,10 +959,13 @@ const selectedAuctionId = ref(null);
 
 const reauction = async () => {
   const id = route.params.id;
-  const data = {
-    status: 'ing',
-    hope_price: amount.value
+  let data = {
+    status: 'ing'
   };
+
+  if (isSellChecked.value) {
+    data.hope_price = amount.value;
+  }
 
   try {
     await AuctionReauction(id, data);
@@ -933,24 +999,6 @@ const toggleView = () => {
   console.log(showReauctionView.value)
 };
 
-const toggleSheet = () => {
-  const bottomSheet = document.querySelector('.bottom-sheet');
-  const screenWidth = window.innerWidth;
-
-  if (showBottomSheet.value) {
-    bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
-
-    scrollButtonStyle.value = { display: 'block' };
-  } else {
-    bottomSheetStyle.value = {
-      position: screenWidth >= 1200 ? 'static' : 'fixed',
-      bottom: '0px'
-    };
-    scrollButtonStyle.value = { display: 'none' };
-  }
-  showBottomSheet.value = !showBottomSheet.value;
-};
-
 // 사용자 정보를 가져오는 함수
 const getDealer = async (user_Id) => {
   if (!user_Id) {
@@ -967,7 +1015,9 @@ const getDealer = async (user_Id) => {
     return { name: 'Unknown' };
   }
 };
-
+const submitHopePrice = () => {
+  console.log("입력된 희망가:", hopePrice.value);
+};
 
 // auctionDetail이 변경될 때마다 각 bid에 userData를 추가하는 함수
 watchEffect(async () => {
@@ -984,6 +1034,22 @@ watchEffect(async () => {
   }
 }
 });
+
+const computedAmount = computed(() => {
+  if (userBidExists.value && !userBidCancelled.value && auctionDetail.value.data.status === 'ing' && auctionDetail.value.data.hope_price !== null) {
+    return auctionDetail.value.data.hope_price;
+  } else {
+    return amount.value; 
+  }
+});
+watch(amount, (newValue) => {
+  koreanAmount.value = amtComma(newValue);
+});
+
+watch(computedAmount, (newValue) => {
+  amount.value = newValue;
+}, { immediate: true });
+
 
 const selectDealer = async (bid, event, index) => {
   if (event.target.checked) {
@@ -1072,13 +1138,11 @@ const submitAuctionBid = async () => {
   if (!amount.value || isNaN(parseFloat(amount.value))) {
     alert('유효한 금액을 입력해주세요.');
   } else {
-    if (userBidExists) {
-      alert('이미 입찰하셨습니다.');
-    } else {
       openBidModal();
-    }
+
   }
 };
+
 
 const confirmBid = async () => {
   try {
@@ -1153,7 +1217,17 @@ const fetchBidsInfo = async (topBids) => {
 const startPolling = () => {
   pollingInterval = setInterval(fetchAuctionDetail, 60000);
 };
+let timer;
+const currentTime = ref(new Date());
 onMounted(async () => {
+  timer = setInterval(() => {
+    currentTime.value = new Date();
+    console.log('현재:', currentTime.value.toString()); // 현재 시간을 로컬 시간 형식으로 출력
+    console.log('마감:', finalAt().toString()); // 마감 시간을 로컬 시간 형식으로 출력
+    console.log('남은 시간(ms):', finalAt().getTime() - currentTime.value.getTime()); // 남은 시간을 밀리초 단위로 출력
+  }, 1000);
+
+
   console.log("알람모달", alarmModal.value);
   const screenWidth = window.innerWidth;
   bottomSheetStyle.value = {
@@ -1178,6 +1252,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+  clearInterval(timer);
   window.removeEventListener('scroll', checkScroll);
   if(isUser.value){
     clearInterval(pollingInterval);
@@ -1187,11 +1262,7 @@ onUnmounted(() => {
 
 const populateHopePrice = () => {
   if (auctionDetail.value && auctionDetail.value.data) {
-    if (isSellChecked.value) {
-      amount.value = auctionDetail.value.data.hope_price;
-    } else {
       amount.value = '';
-    }
   }
 };
 
@@ -1204,7 +1275,27 @@ const sortedBids = computed(() => {
   return bids;
 });
 
-const isReadonly = computed(() => isSellChecked.value && amount.value !== '');
+
+const finalAt = () => {
+  const finalAtValue = auctionDetail.value.data.final_at;
+  const finalAtDate = new Date(finalAtValue.replace(' ', 'T') + 'Z'); 
+  console.log('DB에서 받은 finalAtValue:', finalAtValue);
+  console.log('Parsed finalAtDate:', finalAtDate.toString());
+  return finalAtDate;
+}; // 마감 시간을 Date 객체로 변환
+const padZero = (num) => {
+  return num < 10 ? '0' + num : num; // 숫자가 10보다 작을 경우 앞에 '0' 추가
+};
+const timeLeft = computed(() => {
+  const diff = finalAt().getTime() - currentTime.value.getTime(); // 마감 시간과 현재 시간의 차이 계산
+  const days = Math.floor(diff / (24 * 3600000)); // 밀리초를 일로 변환
+  const hours = padZero(Math.floor((diff % (24 * 3600000)) / 3600000)); // 남은 밀리초를 시간으로 변환하고 두 자리로 포맷팅
+  const minutes = padZero(Math.floor((diff % 3600000) / 60000)); // 남은 밀리초를 분으로 변환하고 두 자리로 포맷팅
+  const seconds = padZero(Math.floor((diff % 60000) / 1000)); // 남은 밀리초를 초로 변환하고 두 자리로 포맷팅
+
+  return { days, hours, minutes, seconds }; // 객체 형태로 일, 시, 분, 초 반환
+});
+
 
 const handleCancelBid = async () => {
   try {
@@ -1228,10 +1319,6 @@ const handleCancelBid = async () => {
     alert('입찰 취소에 실패했습니다.');
   }
 };
-
-watch([isSellChecked, auctionDetail], () => {
-  populateHopePrice();
-});
 
 </script>
 
