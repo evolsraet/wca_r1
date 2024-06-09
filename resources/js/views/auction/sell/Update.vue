@@ -96,15 +96,20 @@ function triggerFileUpload() {
   fileInputRef.value?.click();
 }
 
-  // Daum Postcode API를 활용한 주소 검색 팝업 열기
-  const openPostcodePopup = () => {
-    new daum.Postcode({
-      oncomplete: data => {
-        addrPost.value = data.zonecode; // 우편번호
-        addr.value = data.address; // 주소
-      }
-    }).open();
-  };
+// Daum Postcode API를 활용한 주소 검색 팝업 열기
+const openPostcodePopup = () => {
+  new daum.Postcode({
+    oncomplete: data => {
+      addr_post.value = data.zonecode; // 우편번호
+      addr1.value = data.address; // 주소
+      auction.addr_post = addr_post.value;
+      auction.addr1 = addr1.value;
+    }
+  }).open({
+    left: (window.screen.width / 2) - 200, // 화면의 중앙으로 조절
+    top: (window.screen.height / 2) - 300 // 화면의 중앙으로 조절
+  });
+};
 
 
 function handleFileUpload(event) {

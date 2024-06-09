@@ -755,9 +755,16 @@ const padZero = (num) => {
   return num < 10 ? '0' + num : num;
 };
 
-const calculateTimeLeft = (finalAtValue) => {
-  if (!finalAtValue) return null;
-  const finalAtDate = new Date(finalAtValue.replace(' ', 'T') + 'Z');
+const calculateTimeLeft = (auction) => {
+  if (auction.status !== 'ing' || !auction.final_at) {
+    return {
+      days: 0,
+      hours: '00',
+      minutes: '00',
+      seconds: '00'
+    };
+  }
+  const finalAtDate = new Date(auction.final_at.replace(' ', 'T') + 'Z');
   const diff = finalAtDate.getTime() - currentTime.value.getTime();
   return {
     days: Math.floor(diff / (24 * 3600000)),
@@ -769,9 +776,10 @@ const calculateTimeLeft = (finalAtValue) => {
 
 const updateAuctionTimes = () => {
   auctionsData.value.forEach((auction) => {
-    auction.timeLeft = calculateTimeLeft(auction.final_at);
+    auction.timeLeft = calculateTimeLeft(auction);
   });
 };
+
 
 
 const handleTouchStart = (e) => {
