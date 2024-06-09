@@ -4,7 +4,6 @@
         <div class="main-contenter">
             <div class="review">
                 <div class="review-content mov-review my-5">
-                    <div class="proceeding"></div>
                     <h3 class="review-title">이용후기 관리</h3>
                     <div class="tab-nav my-4">
                         <ul>

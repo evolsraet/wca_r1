@@ -188,7 +188,7 @@
                                                 <span class="tc-light-gray font-1">경매 진행중인 매물</span>
                                             </div>
                                         </router-link>
-                                        <router-link :to="{ name: 'index.allreview' }" class="menu-item mt-1 mb-4" @click="toggleNavbar">
+                                        <router-link :to="{ name: 'user.review'}" class="menu-item mt-1 mb-4" @click="toggleNavbar">
                                             <div class="sd-menu">
                                             <div class="icon icon-ratings"></div>
                                             </div>
