@@ -6,12 +6,12 @@
             <div class="modal-body p-4">
               <div class="content p-0 mt-0">  
           <h3>클레임 규정</h3>
-          <div class="text-start my-3 process"> 
-            <p>1. 거래 완료 후 30일 이내 작성가능 합니다.</p>
-            <p>2. 제출된 클레임은 7일 이내에 처리됩니다.</p>
-            <p>3. 모든 클레임은 검토 후 승인 또는 거부됩니다.</p>
-            </div>
-          <button class="btn btn-primary btn-lg shadow btn_ok" @click="close">닫기</button>
+            <div class="text-start my-3 process"> 
+                <p>1. 거래 완료 후 30일 이내 작성가능 합니다.</p>
+                <p>2. 제출된 클레임은 7일 이내에 처리됩니다.</p>
+                <p>3. 모든 클레임은 검토 후 승인 또는 거부됩니다.</p>
+                </div>
+            <button class="btn btn-primary btn-lg shadow btn_ok" @click="close">닫기</button>
           </div>
           </div>
           </div>

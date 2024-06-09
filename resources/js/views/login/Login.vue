@@ -117,9 +117,9 @@
                 <div class="login-v2 my-5">
                   <h3 class="mb-4 text-muted"><span>또는 소셜 로그인</span></h3>
                   <ul class="login-v2-area">
-                    <li><a href="#" class="google" title="google">Google</a></li>
-                    <li><a href="#" class="naver" title="naver">Naver</a></li>
-                    <li><a href="#" class="kakao" title="kakao">Kakao</a></li>
+                    <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal">Google</a></li>
+                    <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal">Naver</a></li>
+                    <li><a href="#" class="kakao" title="kakao" @click.prevent="openAlarmModal">Kakao</a></li>
                   </ul>
                 </div>
                 <!-- 로그인 버튼 -->
@@ -135,14 +135,15 @@
               </div>
               <div class="text-muted mt-4 text-center">
                 <p class="fs-6">
-                  <span @click="openModal('copywrite')" class="link-style">카피라이트</span> |
                   <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
                   <span @click="openModal('terms')" class="link-style">이용약관</span>
                 </p>
-              </div>
+                <p class="my-3 tc-light-gray">ⓒ Watosys all rights reserved.</p>
+                </div>
             </form>
           </div>
         </div>
+        <AlarmModal ref="alarmModal" />
         <transition name="fade">
           <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
         </transition>
@@ -158,6 +159,7 @@ import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import LawGid from '@/views/modal/LawGid.vue';
 import useAuth from '@/composables/auth';
+import AlarmModal from '@/views/modal/AlarmModal.vue';
 
 const isModalOpen = ref(false);
 const modalContent = ref('');
@@ -165,6 +167,7 @@ const loginCardRef = ref(null);
 const loginForm = ref({ email: '', password: '' });
 const validationErrors = ref({});
 const processing = ref(false);
+const alarmModal = ref(null);
 const store = useStore();
 const router = useRouter();
 const errorMessage = computed(() => store.getters['auth/errorMessage']);
@@ -173,7 +176,12 @@ const openModal = (type) => {
   modalContent.value = type;
   isModalOpen.value = true;
 };
-
+const openAlarmModal = () => {
+console.log("openAlarmModal called");
+if (alarmModal.value) {
+  alarmModal.value.openModal();
+}
+};
 const closeModal = () => {
   isModalOpen.value = false;
 };

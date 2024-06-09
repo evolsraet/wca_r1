@@ -18,8 +18,10 @@
                                     <p class="tc-light-gray">{{ user.dealer.company }}</p>
                                     <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
                                     <p class="restar">(4.5점)</p>
-                                 <!--   <p class="no-bidding mt-3"><span>입찰 불가</span></p>-->
-                                    <p class="bidding mt-3"><span>입찰 가능</span></p>
+                                    <div>
+                                        <p v-if="user.status === 'fail'" class="no-bidding mt-3"><span>입찰 불가</span></p>
+                                        <p v-else-if="user.status === 'ok'" class="bidding mt-3"><span>입찰 가능</span></p>
+                                    </div>
                                 </div>
                             </div>
                             <div class="footer mob-info">
@@ -102,31 +104,11 @@
                                 <td>24-03-15</td>
                                 <td><span class="blue-box list-num">475192</span></td>
                                 <td>접수</td>
-                                <td class="tc-light-gray"><a href="#" class="btn-apply">상세</a></td>
-                            </tr>
-                            <tr>
-                                <td>2</td>
-                                <td>24-03-15</td>
-                                <td><span class="blue-box list-num">475192</span></td>
-                                <td><span class="gray-bl-box">처리중</span></td>
-                                <td class="tc-light-gray"><a href="#" class="btn-apply">상세</a></td>
-                            </tr>
-                            <tr>
-                                <td>3</td>
-                                <td>24-03-15</td>
-                                <td><span class="blue-box list-num">475192</span></td>
-                                <td><span class="red-box">완료</span></td>
-                                <td class="tc-light-gray"><a href="#" class="btn-apply">상세</a></td>
-                            </tr>
-                            <tr>
-                                <td>4</td>
-                                <td>24-03-15</td>
-                                <td><span class="blue-box list-num">475192</span></td>
-                                <td><span class="gray-bl-box">처리중</span></td>
-                                <td class="tc-light-gray"><a href="#" class="btn-apply">상세</a></td>
+                                <td class="tc-light-gray"><a href="#" class="btn-apply" @click.prevent="openAlarmModal">상세</a></td>
                             </tr>
                         </tbody>
                     </table>
+                    <AlarmModal ref="alarmModal" />
                      </div>
                 </div>
                 </div>
@@ -176,6 +158,7 @@ import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import AlarmModal from '@/views/modal/AlarmModal.vue';
 import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
 const item1 = ref(null);
 const item2 = ref(null);
@@ -188,6 +171,7 @@ const isExpanded = ref(false);
 const toggleCard = () => {
     isExpanded.value = !isExpanded.value;
 };
+const alarmModal = ref(null);
 const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
 const { bidsData, getBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
@@ -195,6 +179,12 @@ const calculateMyBidsCount = () => {
     if (bidsData.value && user.value) {
         myBidsCount.value = bidsData.value.filter(bid => bid.user_id === user.value.id).length;
     }
+};
+const openAlarmModal = () => {
+console.log("openAlarmModal called");
+if (alarmModal.value) {
+  alarmModal.value.openModal();
+}
 };
 const ingCount = computed(() => {
     return auctionsData.value.filter(auction => auction.status === 'ing').length;

@@ -37,6 +37,9 @@ defineExpose({ openModal, closeModal });
 </script>
 
 <style scoped>
+.overlay_text04{
+  font-weight: 500 !important;
+}
 .fade-enter-active, .fade-leave-active {
 transition: opacity 0.5s ease, transform 0.5s ease;
 }

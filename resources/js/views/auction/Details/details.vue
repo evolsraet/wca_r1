@@ -617,10 +617,33 @@
 
                       <div v-if="isDealer">
                           <!------------------- [딜러] - 경매 완료 -------------------->
-                          <div class="mt-4" v-if="auctionDetail.data.status === 'chosen'" @click.stop="">
-                              <h5 class="text-center"> 불편 사항이 있으신가요?</h5>
+                          <div  v-if="auctionDetail.data.status === 'chosen'" @click.stop="">
+                            <div class="steps-container mb-3">
+                                  <div class="step completed">
+                                      <div class="label completed">
+                                          STEP01
+                                      </div>
+                                      <div class="label label-style tc-light-gray">매물 준비</div>
+                                  </div>
+                                  <div class="line completed"></div>
+                                  <div class="step completed">
+                                      <div class="label completed">
+                                          STEP02
+                                      </div>
+                                      <div class="label label-style tc-light-gray completing-text">경매</div>
+                                  </div>
+                                  <div class="line completed"></div>
+                                  <div class="step completed">
+                                      <div class="label completed">
+                                          STEP03
+                                      </div>
+                                      <div class="label label-style02 tc-light-gray">완료</div>
+                                  </div>
+                              </div> 
+                            <hr>
+                              <h5 class="text-center mt-4"> 불편 사항이 있으신가요?</h5>
                               <router-link :to="{ name: 'index.claim' }" type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</router-link >
-                                <a href="#" class="d-flex justify-content-center tc-light-gray" @click.prevent="openClaimModal">클레임 규정</a>
+                                <a href="#" class="d-flex justify-content-center tc-light-gray" @click.prevent="openClaimModal">클레임 규정 확인</a>
                                 <transition name="fade">  
                                 <ClaimModal v-if="isClaimModalOpen" :isOpen="isClaimModalOpen" @close="closeClaimModal" />
                                 </transition>
