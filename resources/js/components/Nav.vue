@@ -149,7 +149,7 @@
                                     </div>
                                     <li :class="{'active': isCompleted, 'completed': isCompleted}">
                                     <div class="circle">4</div>
-                                    <span>경매 완료</span>
+                                    <span>선택 완료</span>
                                     </li>
                                 </ul>
                                 </div>

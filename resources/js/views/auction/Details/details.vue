@@ -620,8 +620,11 @@
                           <div class="mt-4" v-if="auctionDetail.data.status === 'chosen'" @click.stop="">
                               <h5 class="text-center"> 불편 사항이 있으신가요?</h5>
                               <router-link :to="{ name: 'index.claim' }" type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</router-link >
-                              <a href="#" class="d-flex justify-content-center tc-light-gray">클레임 규정</a>
-                          </div>
+                                <a href="#" class="d-flex justify-content-center tc-light-gray" @click.prevent="openClaimModal">클레임 규정</a>
+                                <transition name="fade">  
+                                <ClaimModal v-if="isClaimModalOpen" :isOpen="isClaimModalOpen" @close="closeClaimModal" />
+                                </transition>
+                              </div>
 
                           <!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
                           <div v-if="!succesbidhope && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price !==null" @click.stop="">
@@ -725,6 +728,9 @@
                                     </div>-->
                                     <h5 class="text-center mt-5">희망가에 입찰 완료 되었습니다.</h5>
                                     <p class="text-center tc-red mb-2">※ 희망가에 입찰이 완료되었습니다. 수정이 불가능합니다.</p>
+                                    <button type="button" class="my-3 w-100 btn btn-outline-primary" @click="handleCancelBid">
+                                          입찰 취소
+                                      </button>
                             </div>
                       </div>
                   </bottom-sheet>
@@ -844,6 +850,7 @@ import modal from '@/views/modal/modal.vue';
 import auctionModal from '@/views/modal/auction/auctionModal.vue';
 import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
+import ClaimModal from '@/views/modal/ClaimModal.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
 import { cmmn } from '@/hooks/cmmn';
 import { initReviewSystem } from '@/composables/review';
@@ -851,6 +858,8 @@ import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
 
+
+const isClaimModalOpen = ref(false);
 const lastBidId = ref(null);
 const usersInfo = ref({});
 const alarmModal = ref(null);
@@ -877,6 +886,12 @@ let pollingInterval = null;
 const updateKoreanAmount = () => {
 console.log("Updating Korean amount"); // Check if this logs in the console
 koreanAmount.value = amtComma(amount.value);
+};
+const openClaimModal = () => {
+  isClaimModalOpen.value = true;
+};
+const closeClaimModal = () => {
+  isClaimModalOpen.value = false;
 };
 
 const dynamicClass = computed(() => {
@@ -1171,33 +1186,67 @@ showBidModal.value = false;
 };
 
 const submitAuctionBid = async () => {
-const userBidExists = auctionDetail.value?.data?.bids?.some(bid => bid.user_id === user.value.id && !bid.deleted_at);
-if (!amount.value || isNaN(parseFloat(amount.value))) {
-  alert('유효한 금액을 입력해주세요.');
-} else {
-    openBidModal();
+    if (!amount.value || isNaN(parseFloat(amount.value))) {
+        alert('유효한 금액을 입력해주세요.');
+    } else {
+        // 희망가와 사용자가 입력한 금액 비교
+        if (auctionDetail.value.data.hope_price !== null && amount.value == auctionDetail.value.data.hope_price) {
+            // 희망가에 입찰한 경우 즉시 낙찰 처리
+            try {
+                const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
+                if (bidResult.success) {
+                    await handleImmediateAuctionEnd(user.value.id, amount.value);
+                } else {
+                    alert(bidResult.message);
+                }
+            } catch (error) {
+                console.error('Error confirming bid:', error);
+            }
+        } else {
+            openBidModal();
+        }
+    }
+};
+const handleImmediateAuctionEnd = async (userId, price) => {
+    const id = route.params.id;
+    const data = {
+        status: 'chosen',
+        final_price: price,
+        bid_id: userId,
+        chosen_at: new Date().toISOString(),
+    };
 
-}
+    try {
+        const response = await axios.post(`http://localhost/api/user/completeAuction/${id}`, data); // 사용자 API로 요청
+        auctionDetail.value.data.status = 'chosen';
+        auctionDetail.value.data.final_price = price;
+        auctionDetail.value.data.bid_id = userId;
+        auctionDetail.value.data.chosen_at = data.chosen_at;
+        completeAuctionModal.value = true; // 경매 완료 모달 표시
+    } catch (error) {
+        console.error('Error completing auction:', error);
+        alert('경매에 실패했습니다.');
+    }
 };
 
 
 const confirmBid = async () => {
-try {
-  const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
-  if (bidResult.success) {
-    lastBidId.value = bidResult.bidId;
-    await fetchAuctionDetail();
-    closeBidModal();
-    succesbid.value = true;
-    if(auctionDetail.value.data.hope_price !== null){
-      succesbidhope.value = true;
+    try {
+        const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
+        if (bidResult.success) {
+            lastBidId.value = bidResult.bidId;
+            await fetchAuctionDetail();
+            closeBidModal();
+            succesbid.value = true;
+            if (auctionDetail.value.data.hope_price !== null && amount.value == auctionDetail.value.data.hope_price) {
+                await handleImmediateAuctionEnd(user.value.id, amount.value);
+            }
+        } else {
+            alert(bidResult.message);
+        }
+    } catch (error) {
+        console.error('Error confirming bid:', error);
     }
-  } else {
-    alert(bidResult.message);
-  }
-} catch (error) {
-  console.error('Error confirming bid:', error);
-}
 };
 
 const errorMessage = ref('');
