@@ -47,7 +47,8 @@
   const props = defineProps({
     amount: String,
     highestBid: Number,
-    lowestBid: Number
+    lowestBid: Number,
+    isHopePriceBid: Boolean
   });
   
   const emit = defineEmits(['close', 'confirm']);
