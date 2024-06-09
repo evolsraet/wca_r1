@@ -57,28 +57,15 @@
 
         </section>
     </div>
-    <div class="main-container py-5 text-center container"v-else-if="isDealer">
-          <div class="search-type">
-                        <input type="text" placeholder="모델명,차량번호,지역">
-                        <button type="button" class="search-btn">검색</button>
-                    </div>
-                </div>
-            <div class="container mb-3">
-                    <div class="registration-content">
-                        <div class="text-start status-selector">
-                        <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
-                        <label for="all" class="mx-2">전체</label>
-
-                        <input type="radio" name="status" value="ing" id="ongoing" hidden @change="setFilter('ing')">
-                        <label for="ongoing">진행중</label>
-
-                        <input type="radio" name="status" value="done" id="completed" hidden @change="setFilter('done')">
-                        <label for="completed" class="mx-2">완료</label>
-                        </div>
-                        </div>
-          
+    <div v-else-if="isDealer">
+      <div class="search-type mx-3">
+                    <input type="text" placeholder="제목 검색">
+                    <button type="button" class="search-btn">검색</button>
+          </div>
+            
+    <div class="main-container p-3  text-center container">
           <!-- board list area -->
-             <div class="o_table_mobile my-5">
+             <div class="o_table_mobile my-5 mt-4">
                     <div class="tbl_basic tbl_dealer">
                         <div class="overflow-auto select-dealer">
                     <table >
@@ -113,6 +100,7 @@
             </div>
         </div>
     </div>  
+  </div>
   </div>
 </template>
 
