@@ -2448,7 +2448,8 @@ video {
     }
     .form-group .bank,
     .form-group input[type=carNo],
-    .form-group input[type=text] {
+    .form-group input[type=text],
+    .form-group input[type=datetime-local] {
         width: 100%;
         padding: 15px;
         border: 1px solid #ccc;

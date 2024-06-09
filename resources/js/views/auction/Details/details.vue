@@ -602,8 +602,16 @@
                                   </div>
                               </div> 
                               <div> 
-                                <h5 class="text-center p-4"> 거래는 어떠셨나요?</h5>
-                                  <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">후기 남기기</router-link>
+                                <h5 class="text-center p-4" v-if="auctionDetail.data.status === 'done'">거래는 어떠셨나요?</h5>
+                                <p class="auction-deadline mt-4" v-else>선택이 완료 되었습니다.</p>
+                                <router-link
+                                  v-if="auctionDetail.data.status === 'done'"
+                                  :to="{ name: 'user.create-review' }"
+                                  type="button"
+                                  class="tc-wh btn btn-primary w-100"
+                                >
+                                  후기 남기기
+                                </router-link>
                               </div>
                             </div>
                           </transition>
