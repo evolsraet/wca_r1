@@ -50,11 +50,6 @@
   <script setup>
   import { defineProps, defineEmits } from 'vue';
   import { cmmn } from '@/hooks/cmmn';
-<<<<<<< HEAD
-
-=======
-  const { numberToKoreanUnit , amtComma } = cmmn();
->>>>>>> a0269b7043b9016e5de4266cbaa63f00dad81231
   const props = defineProps({
     bid: Object,
     userData: Object,

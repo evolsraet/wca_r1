@@ -87,7 +87,7 @@
                             <div class="card-body">
                                 <div class="enter-view align-items-center ">
                                     <h5 class="card-title my-0">현대 쏘나타 (DN8)</h5>
-                                    <p class="tc-red bold-18-font">{{bid.price}}만원</p>
+                                    <p class="tc-red bold-18-font">{{ amtComma(bid.price) }}만원</p>
                                 </div>
                                 <div class="enter-view">
                                     <p class="card-text tc-light-gray">{{bid.auctionDetails.car_no}}</p>
@@ -106,8 +106,10 @@ import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
 import { useStore } from 'vuex';
 import useAuctions from '@/composables/auctions';
+import { cmmn } from '@/hooks/cmmn';
 
 const currentTab = ref('dealerInfo');
+const { amtComma } = cmmn();
 const store = useStore();
 const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
 const isExpanded = ref(false);
