@@ -50,11 +50,14 @@ class Dealer extends Model implements HasMedia
         'introduce' => 'introduce',
     ];
 
-    // public $enums = [
-    //     'status' => [
 
-    //     ],
-    // ];
+    // TODO: 디비 추가 및 기본값 설정
+    public $enums = [
+        'status' => [
+            'ok' => '입찰가능',
+            'fail' => '입찰불가능',
+        ],
+    ];
 
     public function user()
     {

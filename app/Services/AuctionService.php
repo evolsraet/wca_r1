@@ -11,6 +11,8 @@ class AuctionService
 {
     use CrudTrait;
 
+    // TODO: 옥션에 재경매 횟수 기록
+
     public function __construct()
     {
         // CrudTrait
@@ -84,6 +86,7 @@ class AuctionService
                 $result->where('user_id', auth()->user()->id);
             }
         } elseif ($method == 'store') {
+            // TODO: 선택대기에서 선택완료로 변경 시 choice_at
             // 경매 등록 메소드인 경우 사용자 ID와 상태를 설정합니다.
             $result->user_id = auth()->user()->id;
             $result->status = 'ask';
