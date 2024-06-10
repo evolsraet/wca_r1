@@ -657,6 +657,33 @@
                                 <ClaimModal v-if="isClaimModalOpen" :isOpen="isClaimModalOpen" @close="closeClaimModal" />
                                 </transition>
                               </div>
+                            
+
+                              <div v-if="auctionDetail.data.status === 'wait'" @click.stop="">
+                            <div class="steps-container mb-3">
+                                  <div class="step completed">
+                                      <div class="label completed">
+                                          STEP01
+                                      </div>
+                                      <div class="label label-style tc-light-gray">매물 준비</div>
+                                  </div>
+                                  <div class="line completing"></div>
+                                  <div class="step completing">
+                                      <div class="label completing">
+                                          STEP02
+                                      </div>
+                                      <div class="label label-style tc-light-gray completing-text">경매</div>
+                                  </div>
+                                  <div class="line "></div>
+                                  <div class="step ">
+                                      <div class="label ">
+                                          STEP03
+                                      </div>
+                                      <div class="label label-style02 tc-light-gray">완료</div>
+                                  </div>
+                              </div> 
+                              <p class="auction-deadline text-center mt-2">경매 선택 중 입니다.</p>
+                              </div>
 
                           <!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
                           <div v-if="!succesbidhope && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price !==null" @click.stop="">
