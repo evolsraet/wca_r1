@@ -535,7 +535,7 @@
                                       <div class="label label-style02 tc-light-gray">완료</div>
                                   </div>
                               </div>
-                              <p class="auction-deadline">낙찰가 <span class="tc-red"> {{ amtComma(selectedDealer.price) }} 만원</span></p>
+                              <p class="auction-deadline">낙찰가 <span class="tc-red"> {{ amtComma(selectedDealer.price) }}</span></p>
                               <p class="tc-red text-start mt-2">※ 3일 후 자동으로 경매완료 처리됩니다. </p>
                               <div class="btn-group mt-3 mb-2">
                                   <button type="button" class="btn btn-outline-dark" @click="cancelSelection">선택 취소</button>
@@ -554,7 +554,7 @@
                               <div class="select-content my-4">
                                   <img src="../../../../img/myprofile_ex.png" alt="딜러 사진" width="100px">
                                   <div class="text-container">
-                                      <h4 class="amount fw-semibold">{{ selectedDealer.price }} 만원</h4>
+                                      <h4 class="amount fw-semibold">{{ amtComma(selectedDealer.price) }}</h4>
                                       <p class="info">{{ selectedDealer.userData.dealer.name }} | {{ selectedDealer.userData.dealer.company }}</p>
                                   </div>
                               </div>
