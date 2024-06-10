@@ -36,7 +36,7 @@
                             </div>
                         </div>
                         <div class="slide-up-ani activity-info bold-18-font process">
-                            <router-link :to="{  name: 'dealer.bids' }" class="item">
+                            <router-link :to="{  name: 'auction.index' }" class="item">
                             <p><span class="tc-red slide-up" ref="item1">0</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font">관심</p>
                             </router-link>
