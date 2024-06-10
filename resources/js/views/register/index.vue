@@ -101,7 +101,7 @@
                                                     <label for="dealer">소속상사</label>
                                                     <input type="text" id="dealerName" v-model="registerForm.dealerCompany" placeholder="상사명(상사 정식 명칭)">
                                                 </div>
-                                                <div class="form-group">
+                                                  <div class="form-group">
                                                     <label for="dealerName">소속상사 직책</label>
                                                     <input type="text" id="dealerName" v-model="registerForm.dealerCompanyDuty" placeholder="사원">
                                                 </div>

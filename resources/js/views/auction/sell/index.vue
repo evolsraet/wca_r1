@@ -94,12 +94,12 @@
                         <transition name="fade">
                             <InfoModal v-if="showModal" @close="closeModal" @refresh="startLoading"/>
                         </transition>
-                        <div class="flex items-center justify-end my-5">
+                        <div class="flex items-center justify-end mt-5">
                             <router-link :to="{ path: '/selldt' }" class="btn primary-btn ">경매 신청하기</router-link>
                         </div>
                     </div>
                     <div v-if="!user?.name">
-                        <div class="d-flex justify-content-between mt-4">
+                        <div class="d-flex justify-content-between mt-5">
                             <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="로그인을 하면 자세한 정보를 볼수있어요." tabindex="0"></span></p>
                             <p class="tc-light-gray link">정보갱신하기</p>
                         </div>

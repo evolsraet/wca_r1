@@ -20,7 +20,8 @@
                                           </div>
                                       </div>
                                       <div v-else>
-                                          <span v-if="auctionDetail.data.status === 'ing'" class="mx-2 timer"><img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">{{ timeLeft.days }}-day {{ timeLeft.hours }} : {{ timeLeft.minutes }} : {{ timeLeft.seconds }}</span>
+                                          <span v-if="auctionDetail.data.status === 'ing'" class="mx-2 timer"><img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock"><span v-if="timeLeft.days != '0' ">{{ timeLeft.days }}일 &nbsp; </span>{{ timeLeft.hours }} : {{ timeLeft.minutes }} : {{ timeLeft.seconds }}</span>
+                                             
                                           <input class="toggle-heart" type="checkbox" checked />
                                           <label class="heart-toggle"></label>
                                           <div :class="['card-img-top-ty02', { 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]"></div>
@@ -667,9 +668,9 @@
                                       </div>
                                       <div class="label label-style tc-light-gray">매물 준비</div>
                                   </div>
-                                  <div class="line completing"></div>
-                                  <div class="step completing">
-                                      <div class="label completing">
+                                  <div class="line completed"></div>
+                                  <div class="step completed">
+                                      <div class="label completed">
                                           STEP02
                                       </div>
                                       <div class="label label-style tc-light-gray completing-text">경매</div>
@@ -1467,9 +1468,11 @@ const sortedBids = computed(() => {
 const finalAt = () => {
   if (auctionDetail.value?.data?.status === 'ing') {
     const finalAtValue = auctionDetail.value.data.final_at;
-    const finalAtDate = new Date(finalAtValue.replace(' ', 'T') + 'Z'); 
-    console.log('DB에서 받은 finalAtValue:', finalAtValue);
-    console.log('Parsed finalAtDate:', finalAtDate.toString());
+
+    //const finalAtDate = new Date(finalAtValue.replace(' ', 'T') + 'Z'); 
+    const finalAtDate = new Date(finalAtValue);
+    //console.log('DB에서 받은 finalAtValue:', finalAtValue);
+    //console.log('Parsed finalAtDate:', finalAtDate.toString());
     return finalAtDate;
   }
 }; // 마감 시간을 Date 객체로 변환
@@ -1486,6 +1489,7 @@ const timeLeft = computed(() => {
 
     return { days, hours, minutes, seconds }; // 객체 형태로 일, 시, 분, 초 반환
   } else {
+
     return { days: '00', hours: '00', minutes: '00', seconds: '00' }; // 기본값 반환
   }
 });

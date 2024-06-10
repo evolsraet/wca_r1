@@ -473,7 +473,7 @@ TODO:
                                         <div v-else :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
                                             <span v-if="auction.status === 'ing' && auction.timeLeft" class="mx-2 timer">
                                                 <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
-                                                {{ auction.timeLeft.days }}일 {{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
+                                                <span v-if="auction.timeLeft.days != '0' ">{{ auction.timeLeft.days }}일 &nbsp; </span>{{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
                                             </span>
                                             <span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>
                                             <div v-if="isDealer"> 
@@ -764,7 +764,9 @@ const calculateTimeLeft = (auction) => {
       seconds: '00'
     };
   }
-  const finalAtDate = new Date(auction.final_at.replace(' ', 'T') + 'Z');
+    const finalAtDate = new Date(auction.final_at);
+    //console.log(auction.final_at);
+ // const finalAtDate = new Date(auction.final_at.replace(' ', 'T') + 'Z');
   const diff = finalAtDate.getTime() - currentTime.value.getTime();
   return {
     days: Math.floor(diff / (24 * 3600000)),

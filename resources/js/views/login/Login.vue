@@ -110,9 +110,7 @@
                   <input v-model="loginForm.password" id="password" type="password" class="form-control border-0 border-bottom" required autocomplete="current-password" placeholder="비밀번호를 입력해주세요.">
                 </div>
                 <!-- 백엔드 오류 메시지 -->
-                <div v-if="errorMessage" class="text-danger my-2">
-                  {{ errorMessage }}
-                </div>
+
                 <!-- 소셜 로그인 섹션 -->
                 <div class="login-v2 my-5">
                   <h3 class="mb-4 text-muted"><span>또는 소셜 로그인</span></h3>
