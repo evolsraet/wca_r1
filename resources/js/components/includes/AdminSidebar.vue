@@ -98,92 +98,72 @@
                         
                     </ul>
                 </li>-->
-                <li v-if="can('role.admin')" class="nav-link">
-                    <router-link
-                        :to="{ name: 'users.index' }"
-                        class="nav-link px-0"
-                    >
+                <li class="nav-item">
+                    <router-link :to="{ name: 'users.index' }" class="nav-link">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
+                            width="22"
+                            height="22"
                             fill="currentColor"
-                            class="bi bi-square-fill"
+                            class="bi bi-list"
                             viewBox="0 0 16 16"
                         >
-                            <path
-                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
-                            />
+                        <path
+                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
+                        />
                         </svg>
-                        <span class="d-none d-sm-inline ps-2"
-                            >회원관리</span
-                        >
+                        <span class="d-none d-sm-inline ps-2">회원 관리</span>
                     </router-link>
                 </li>
-                <li v-if="can('role.admin')" class="nav-link">
-                    <router-link
-                        :to="{ name: 'deposit.index' }"
-                        class="nav-link px-0"
-                    >
+                <li class="nav-item">
+                    <router-link :to="{ name: 'deposit.index' }" class="nav-link">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
+                            width="22"
+                            height="22"
                             fill="currentColor"
-                            class="bi bi-square-fill"
+                            class="bi bi-list"
                             viewBox="0 0 16 16"
                         >
-                            <path
-                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
-                            />
+                        <path
+                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
+                        />
                         </svg>
-                        <span class="d-none d-sm-inline ps-2"
-                            >입금관리</span
-                        >
+                        <span class="d-none d-sm-inline ps-2">입금 관리</span>
                     </router-link>
                 </li>
-                <li v-if="can('role.admin')" class="nav-link">
-                    <router-link
-                        :to="{ name: 'auctions.index' }"
-                        class="nav-link px-0"
-                    >
+                <li class="nav-item">
+                    <router-link :to="{ name: 'auctions.index' }" class="nav-link">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
+                            width="22"
+                            height="22"
                             fill="currentColor"
-                            class="bi bi-square-fill"
+                            class="bi bi-list"
                             viewBox="0 0 16 16"
                         >
-                            <path
-                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
-                            />
+                        <path
+                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
+                        />
                         </svg>
-                        <span class="d-none d-sm-inline ps-2"
-                            >매물관리</span
-                        >
+                        <span class="d-none d-sm-inline ps-2">매물 관리</span>
                     </router-link>
                 </li>
-                <li v-if="can('role.admin')" class="nav-link">
-                    <router-link
-                        :to="{ name: 'review.index' }"
-                        class="nav-link px-0"
-                    >
+                <li class="nav-item">
+                    <router-link :to="{ name: 'review.index' }" class="nav-link">
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="16"
-                            height="16"
+                            width="22"
+                            height="22"
                             fill="currentColor"
-                            class="bi bi-square-fill"
+                            class="bi bi-list"
                             viewBox="0 0 16 16"
                         >
-                            <path
-                                d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
-                            />
+                        <path
+                            d="M0 2a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V2z"
+                        />
                         </svg>
-                        <span class="d-none d-sm-inline ps-2"
-                            >후기관리</span
-                        >
+                        <span class="d-none d-sm-inline ps-2">후기 관리</span>
                     </router-link>
                 </li>
                 <li class="nav-item">
@@ -238,10 +218,18 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useAbility } from "@casl/vue";
 import useAuth from "@/composables/auth";
+import { useRouter } from 'vue-router';
 const { can } = useAbility();
 const { logout } = useAuth();
+const router = useRouter();
+
+onMounted(() => {
+    router.push({ name: 'users.index' });
+})
+
 </script>
 
 <style scoped>

@@ -138,7 +138,7 @@
                                         <div class="blue-box"
                                             
                                         >
-                                            {{ review.auction.car_no }}
+                                            {{ review.id }}
                                         </div>
                                     </td>
                               <!--     <td class="px-6 py-4 text-sm">
