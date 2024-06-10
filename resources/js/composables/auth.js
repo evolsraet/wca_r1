@@ -47,40 +47,62 @@ export default function useAuth() {
 
     const submitLogin = async () => {
         if (processing.value) return;
-
+      
         processing.value = true;
         validationErrors.value = {};
-
-        await axios
-            .post("/login", loginForm)
-            .then(async (response) => {
-                const userData = response.data.data.user
-                await store.dispatch("auth/getUser");
-                await store.dispatch("auth/getAbilities");
-                await loginUser();
-                swal({
-                    icon: "success",
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-                if (userData.roles.includes('admin')) {
-                   router.push({ name: "admin.index" });
-                } else if (userData.roles.includes('dealer')) {
-                    router.push({ name: "dealer.index" }); 
-                } else {
-                    router.push({ name: "home" }); 
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                console.log(error.response?.data.message);
-                console.log(error.response?.data.errors);
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors;
-                }
-            })
-            .finally(() => (processing.value = false));
-    };
+      
+        try {
+          const userData = await store.dispatch('auth/login', loginForm.value);
+          await store.dispatch("auth/getUser");
+          await store.dispatch("auth/getAbilities");
+          Swal.fire({
+            icon: "success",
+            title: "로그인",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          if (userData.roles.includes('admin')) {
+            router.push({ name: "admin.index" });
+          } else if (userData.roles.includes('dealer')) {
+            router.push({ name: "dealer.index" });
+          } else {
+            router.push({ name: "home" });
+          }
+        } catch (error) {
+          if (!error.response) {
+            // 네트워크 오류
+            Swal.fire({
+              icon: "error",
+              title: "Network Error",
+              text: "네트워크 통신 오류 입니다.",
+              showConfirmButton: true,
+            });
+          } else if (error.response.data.status === 'fail') {
+            Swal.fire({
+              icon: "error",
+              title: "Error",
+              text: error.response.data.message,
+              showConfirmButton: true,
+            });
+          } else {
+      
+            Swal.fire({
+              icon: "error",
+              text: error.response.data.message || "관리자에게 문의해 주세요.",
+              showConfirmButton: true,
+            });
+            if (error.response?.data) {
+              validationErrors.value = error.response.data.errors;
+            }
+          }
+          console.log(error);
+          console.log(error.response?.data.message);
+          console.log(error.response?.data.errors);
+        } finally {
+          processing.value = false;
+        }
+      };
+    
 
     const submitRegister = async () => {
         if (processing.value) return;
@@ -165,7 +187,6 @@ export default function useAuth() {
             title: '준비중',
             showConfirmButton: false
         });
-        return;
         if (processing.value) return;
 
         processing.value = true;

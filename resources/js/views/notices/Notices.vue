@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="proceeding"></div>
+    <div class="main-container py-5 text-center container"></div>
     <div v-if="isAdmin">
       <section class="notice">
           <div class="page-title">
@@ -58,64 +58,49 @@
         </section>
     </div>
     <div v-else-if="isDealer">
-      <section class="notice">
-          <div class="page-title">
-                <div class="container">
-                    <h3>딜러 공지사항</h3>
-                </div>
-            </div>
-            <!-- board seach area -->
-            <div id="board-search">
-                <div class="container">
-                    <div class="search-window">
-                        <form action="">
-                            <div class="search-wrap">
-                                <label for="search" class="blind">매물번호</label>
-                                <input id="search" type="search" name="" placeholder="매물번호 검색해주세요." value="">
-                                <button type="submit" class="btn btn-dark">검색</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-          
+      <div class="search-type mx-3">
+                    <input type="text" placeholder="제목 검색">
+                    <button type="button" class="search-btn">검색</button>
+          </div>
+            
+    <div class="main-container p-3  text-center container">
           <!-- board list area -->
-            <div id="board-list">
-                <div class="container">
-                  <div class="table-container ">
-                    <table class="board-table">
+             <div class="o_table_mobile my-5 mt-4">
+                    <div class="tbl_basic tbl_dealer">
+                        <div class="overflow-auto select-dealer">
+                    <table >
                         <thead>
                         <tr>
-                            <th scope="col" class="th-num">번호</th>
-                            <th scope="col" class="th-title">제목</th>
+                            <th scope="col" class="th-num w-25">번호</th>
+                            <th scope="col" class="th-title w-50">제목</th>
                             <th scope="col" class="th-date">등록일</th>
                         </tr>
                         </thead>
                         <tbody>
                         <tr>
                             <td>3</td>
-                            <th><a href="#!">[공지사항] 개인정보 처리방침 변경안내처리방침</a></th>
+                            <td>[공지사항] 개인정보 처리방침 변경안내처리방침</td>
                             <td>2017.07.13</td>
                         </tr>
 
                         <tr>
                             <td>2</td>
-                            <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
+                            <td>공지사항 안내입니다. 이용해주셔서 감사합니다</td>
                             <td>2017.06.15</td>
                         </tr>
 
                         <tr>
                             <td>1</td>
-                            <th><a href="#!">공지사항 안내입니다. 이용해주셔서 감사합니다</a></th>
+                            <td>공지사항 안내입니다. 이용해주셔서 감사합니다</td>
                             <td>2017.06.15</td>
                         </tr>
                         </tbody>
                     </table>
                 </div>
             </div>
-          </div>
-        </section>
+        </div>
     </div>  
+  </div>
   </div>
 </template>
 

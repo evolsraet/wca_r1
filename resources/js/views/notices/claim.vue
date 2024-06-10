@@ -94,10 +94,11 @@
                                       <td>24-03-15</td>
                                       <td><p class="blue-box-ty03">4751982</p></td>
                                       <td>접수</td>
-                                      <td class="d-flex ms-2 justify-content-center btn-apply">상세</td>
+                                      <td class="d-flex ms-2 justify-content-center btn-apply" @click.prevent="openAlarmModal">상세</td>
                                   </tr>
                               </tbody>
                           </table>
+                          <AlarmModal ref="alarmModal" />
                         </div>
                     </div>
                 </div>
@@ -107,15 +108,24 @@
   
   <script setup>
   import { useStore } from "vuex";
-  import { computed } from "vue";
+  import { computed , ref } from "vue";
   import { useRouter } from 'vue-router';
+  import AlarmModal from '@/views/modal/AlarmModal.vue';
 
   const router = useRouter();
   const store = useStore();
   const user = computed(() => store.getters["auth/user"]);
-
+  const alarmModal = ref(null);
   const isDealer = computed(() => user.value?.roles?.includes('dealer'));
   const isUser = computed(() => user.value?.roles?.includes('user'));
+
+
+  const openAlarmModal = () => {
+console.log("openAlarmModal called");
+if (alarmModal.value) {
+  alarmModal.value.openModal();
+}
+};
   </script>
 
 <style scoped>

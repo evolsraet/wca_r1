@@ -35,7 +35,7 @@
                     <div class="nav-header p-3">
                         <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close"></button>
                     </div>
-                    <div class="toggle-nav-content">
+                    <div class="toggle-nav-content p-3">
                         <div class="top-content mt-2">
                             <p class="nav-gray-box">안녕하세요,<span>{{ user.name }}</span></p>
                             <div class="tc-light-gray text-end fs-6 mt-2 fw-medium">
@@ -65,7 +65,7 @@
                                 <div class="icon right-icon"></div>
                             </router-link >
                             <router-link :to="{ name: 'posts.index' }" class="menu-item mt-0 mb-4" @click="toggleNavbar">
-                                <div class="icon icon-ratings me-3"></div>
+                                <div class="icon icon-ratings"></div>
                                 <span class="menu-text">공지 관리</span>
                                 <div class="icon right-icon"></div>
                             </router-link>

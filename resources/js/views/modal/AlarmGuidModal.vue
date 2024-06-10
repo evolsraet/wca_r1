@@ -7,7 +7,7 @@
               <div class="content p-0 mt-0">  
                 <div class="enroll_box" style="position: relative;">
                   <img src="../../../img/electric-car.png" alt="자동차 이미지" width="160" height="160">
-                  <p class="overlay_text04">해당 서비스는 개발 중 상태입니다.</p>
+                  <p class="overlay_text04">희망가 입찰은 취소 불가능합니다.</p>
                 </div>
                 <div class="btn-group tc-wh">
                   <div class="btn btn-primary btn-lg shadow btn_ok" @click="closeModal">확인</div>

@@ -12,7 +12,7 @@
                     <div class="card-body">
                         <div class="registration-container">
                             <div class="text-left">
-                        <p class="mb-4 fw-bold">회원 정보를 입력해주세요</p>
+                                <p class="mb-4 fw-bold">회원 정보를 입력해주세요</p>
                             </div>
                             <div class="form-body">
                                 <form @submit.prevent="submitRegister">
@@ -20,46 +20,46 @@
                                         <label for="name">이름</label>
                                         <input v-model="registerForm.name" id="name" type="name" class="form-control" placeholder="이름">
                                         <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.name">
-                                            {{ message }}
+                                            <div v-for="message in validationErrors?.name">
+                                                {{ message }}
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="email">이메일</label>
                                         <input type="email" v-model="registerForm.email" @input="checkEmail" id="email" class="form-control" placeholder="example@demo.com">
                                         <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.email">
-                                            {{ message }}
+                                            <div v-for="message in validationErrors?.email">
+                                                {{ message }}
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="phone">전화번호</label>
                                         <input type="phone" v-model="registerForm.phone" id="phone" class="form-control" placeholder="">
                                         <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.phone">
-                                            {{ message }}
+                                            <div v-for="message in validationErrors?.phone">
+                                                {{ message }}
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="password">비밀번호</label>
                                         <input v-model="registerForm.password" id="password" type="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합">
                                         <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.password">
-                                            {{ message }}
+                                            <div v-for="message in validationErrors?.password">
+                                                {{ message }}
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="form-group password-confirmation">
                                         <label for="password-confirm">비밀번호 확인</label>
                                         <input v-model="registerForm.password_confirmation" id="password_confirmation" type="password" class="form-control" placeholder="비밀번호를 다시 입력해주세요">
                                         <div class="text-danger mt-1">
-                                        <div v-for="message in validationErrors?.password_confirmation">
-                                            {{ message }}
+                                            <div v-for="message in validationErrors?.password_confirmation">
+                                                {{ message }}
+                                            </div>
                                         </div>
-                                    </div>
                                     </div>
                                     <div class="text-center">
                                         <div class="form-group dealer-check">
@@ -70,10 +70,9 @@
                                             </div>
                                         </div>
                                         <p class="text-muted">딜러라면 추가 정보 입력이 필요해요</p>
-                                         <a href="your-link.html" class="icon-link mt-5 mb-3">
+                                        <a href="your-link.html" class="icon-link mt-5 mb-3">
                                             <img src="../../../img/Icon-file.png" class="ms-2" alt="회원약관 및 개인정보 처리방침">위카모빌리티 회원약관 및 개인정보처리 방침
                                         </a>
-
                                         <!-- 딜러 체크 -->
                                         <transition name="slide-fade">
                                             <div v-if="registerForm.dealer" class="hidden-content mt-4">
@@ -81,7 +80,7 @@
                                                     <label for="dealerPhoto">사진 (본인 확인용)</label>
                                                     <img id="imagePreview" style="max-width: 50%; display: none;">
                                                     <button type="button" class="btn btn-fileupload" @click="triggerFileUpload">
-                                                       파일 첨부
+                                                        파일 첨부
                                                     </button>
                                                     <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
                                                     <div class="text-start tc-light-gray" v-if="registerForm.file_user_photo_name">사진 파일 : {{ registerForm.file_user_photo_name }}</div>
@@ -100,15 +99,15 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealer">소속상사</label>
-                                                    <input type="text" id="dealerName"  v-model="registerForm.dealerCompany" placeholder="상사명(상사 정식 명칭)">
+                                                    <input type="text" id="dealerName" v-model="registerForm.dealerCompany" placeholder="상사명(상사 정식 명칭)">
                                                 </div>
-                                                <div class="form-group">
+                                                  <div class="form-group">
                                                     <label for="dealerName">소속상사 직책</label>
                                                     <input type="text" id="dealerName" v-model="registerForm.dealerCompanyDuty" placeholder="사원">
                                                 </div>
                                                 <div class="form-group">
                                                     <label for="dealeradress">소속상사 주소</label>
-                                                    <input type="text" v-model="registerForm.dealerCompanyPost" placeholder="post">
+                                                    <input type="text" v-model="registerForm.dealerCompanyPost" placeholder="post" @click="openPostcode">
                                                     <input type="text" v-model="registerForm.dealercompany_addr1" placeholder="주소" class="searchadress">
                                                     <input type="text" v-model="registerForm.dealercompany_addr2" placeholder="상세주소">
                                                     <div class="password-error" v-if="nameError">이름을 정확히 입력해 주세요.</div>
@@ -121,28 +120,28 @@
                                                     <div class="d-flex justify-content-flex-end">
                                                         <a href="#" class="seal-info text-muted my-2 float-end" alt="인감정보양식 다운로드 링크">인감정보양식 다운로드</a>
                                                     </div>
-                                                        <p class="mt-4">사업자 등록증</p>
-                                                        <input type="file" @change="handleFileUploadBiz" ref="fileInputRefBiz" style="display:none">
-                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadBiz">
-                                                            파일 첨부
-                                                        </button>
-                                                        <div class="text-start mb-3 tc-light-gray" v-if="registerForm.file_user_biz_name">사업자 등록증 : {{ registerForm.file_user_biz_name }}</div>
-                                                        <p>매도용인감정보</p>
-                                                        <input type="file" @change="handleFileUploadSign" ref="fileInputRefSign" style="display:none">
-                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadSign">
-                                                            파일 첨부
-                                                        </button>
-                                                        <div class="text-start mb-3 tc-light-gray" v-if="registerForm.file_user_sign_name">매도용인감정보 : {{ registerForm.file_user_sign_name }}</div>
-                                                        <p>매매업체 대표증 or 종사원증</p>
-                                                        <input type="file" @change="handleFileUploadCert" ref="fileInputRefCert" style="display:none">
-                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadCert">
-                                                            파일 첨부
-                                                        </button>
-                                                        <div class="text-start mb-5 tc-light-gray" v-if="registerForm.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ registerForm.file_user_cert_name }}</div>
-                                                    </div>
+                                                    <p class="mt-4">사업자 등록증</p>
+                                                    <input type="file" @change="handleFileUploadBiz" ref="fileInputRefBiz" style="display:none">
+                                                    <button type="button" class="btn btn-fileupload" @click="triggerFileUploadBiz">
+                                                        파일 첨부
+                                                    </button>
+                                                    <div class="text-start mb-3 tc-light-gray" v-if="registerForm.file_user_biz_name">사업자 등록증 : {{ registerForm.file_user_biz_name }}</div>
+                                                    <p>매도용인감정보</p>
+                                                    <input type="file" @change="handleFileUploadSign" ref="fileInputRefSign" style="display:none">
+                                                    <button type="button" class="btn btn-fileupload" @click="triggerFileUploadSign">
+                                                        파일 첨부
+                                                    </button>
+                                                    <div class="text-start mb-3 tc-light-gray" v-if="registerForm.file_user_sign_name">매도용인감정보 : {{ registerForm.file_user_sign_name }}</div>
+                                                    <p>매매업체 대표증 or 종사원증</p>
+                                                    <input type="file" @change="handleFileUploadCert" ref="fileInputRefCert" style="display:none">
+                                                    <button type="button" class="btn btn-fileupload" @click="triggerFileUploadCert">
+                                                        파일 첨부
+                                                    </button>
+                                                    <div class="text-start mb-5 tc-light-gray" v-if="registerForm.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ registerForm.file_user_cert_name }}</div>
+                                                </div>
                                                 <div class="form-group">
                                                     <label for="deliveryAdress">인수차량 도착지 주소</label>
-                                                    <input type="text" v-model="registerForm.dealerReceivePost" placeholder="post">
+                                                    <input type="text" v-model="registerForm.dealerReceivePost" placeholder="post" @click="openPostcodeReceive">
                                                     <input type="text" v-model="registerForm.dealerReceiveAddr1" placeholder="주소">
                                                     <input type="text" v-model="registerForm.dealerReceiveAddr2" placeholder="상세주소">
                                                 </div>
@@ -153,7 +152,7 @@
                                             </div>
                                         </transition>
                                     </div>
-                                <!-- Buttons -->
+                                    <!-- Buttons -->
                                     <div class="flex items-center justify-end mt-4">
                                         <button type="submit" class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
                                             약관 동의 및 회원가입
@@ -168,14 +167,17 @@
         </div>
     </div>
 </template>
+
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
 import useAuth from '@/composables/auth';
+
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
 const fileInputRefBiz = ref(null);
 const fileInputRefSign = ref(null);
 const fileInputRefCert = ref(null);
 const fileInputRef = ref(null);
+
 function triggerFileUpload() {
     if (fileInputRef.value) {
         fileInputRef.value.click();
@@ -183,21 +185,13 @@ function triggerFileUpload() {
         console.error("파일을 찾을수 없습니다.");
     }
 }
+
 function handleFileUpload(event) {
     const file = event.target.files[0];
     if (file) {
         registerForm.file_user_photo = file;
-        registerForm.file_user_photo_name = file.name;  
+        registerForm.file_user_photo_name = file.name;
         console.log("File:", file.name);
-
-
-        /*const reader = new FileReader();
-        reader.onload = function(e) {
-            const imagePreview = document.getElementById('imagePreview');
-            imagePreview.src = e.target.result;
-            imagePreview.style.display = 'block'; 
-        };
-        reader.readAsDataURL(file);*/
     }
 }
 
@@ -208,6 +202,7 @@ function triggerFileUploadBiz() {
         console.error("사업자등록증 파일을 찾을 수 없습니다.");
     }
 }
+
 function handleFileUploadBiz(event) {
     const file = event.target.files[0];
     if (file) {
@@ -224,6 +219,7 @@ function triggerFileUploadSign() {
         console.error("인감 정보 파일을 찾을 수 없습니다.");
     }
 }
+
 function handleFileUploadSign(event) {
     const file = event.target.files[0];
     if (file) {
@@ -240,14 +236,42 @@ function triggerFileUploadCert() {
         console.error("대표증 또는 종사원증 파일을 찾을 수 없습니다.");
     }
 }
+
 function handleFileUploadCert(event) {
     const file = event.target.files[0];
     if (file) {
         registerForm.file_user_cert = file;
-        registerForm.file_user_cert_name = file.name;   
+        registerForm.file_user_cert_name = file.name;
         console.log("Certification file:", file.name);
     }
 }
+
+function openPostcode() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            registerForm.dealerCompanyPost = data.zonecode;
+            registerForm.dealercompany_addr1 = data.address;
+            registerForm.dealercompany_addr2 = '';
+        }
+    }).open();
+}
+
+function openPostcodeReceive() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            registerForm.dealerReceivePost = data.zonecode;
+            registerForm.dealerReceiveAddr1 = data.address;
+            registerForm.dealerReceiveAddr2 = '';
+        }
+    }).open();
+}
+
+onMounted(() => {
+    const script = document.createElement('script');
+    script.src = "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+    script.onload = () => console.log('Daum Postcode script loaded');
+    document.head.appendChild(script);
+});
 </script>
 
 <style scoped>

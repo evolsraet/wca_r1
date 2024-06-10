@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
-                        <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                      <!-- <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>--> 
                         <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
                     <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                     <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
-                        <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                       <!-- <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>-->
                         <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
                     <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
@@ -149,7 +149,7 @@
                                     </div>
                                     <li :class="{'active': isCompleted, 'completed': isCompleted}">
                                     <div class="circle">4</div>
-                                    <span>경매 완료</span>
+                                    <span>선택 완료</span>
                                     </li>
                                 </ul>
                                 </div>
@@ -188,7 +188,7 @@
                                                 <span class="tc-light-gray font-1">경매 진행중인 매물</span>
                                             </div>
                                         </router-link>
-                                        <router-link :to="{ name: 'index.allreview' }" class="menu-item mt-1 mb-4" @click="toggleNavbar">
+                                        <router-link :to="{ name: 'user.review'}" class="menu-item mt-1 mb-4" @click="toggleNavbar">
                                             <div class="sd-menu">
                                             <div class="icon icon-ratings"></div>
                                             </div>
@@ -590,7 +590,7 @@ function toggleOverlay(show) {
 }
 
 .menu-illustration img {
-    width: 100%;
+    width: auto;
     height: 100%;
 }
 
