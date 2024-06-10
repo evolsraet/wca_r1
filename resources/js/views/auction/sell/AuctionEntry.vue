@@ -26,10 +26,10 @@
         <div class="form-group">
           <label for="sido1">지역</label>
           <div class="region">
-              <select v-model="selectedRegion" @change="onRegionChange">
+            <select v-model="selectedRegion" @change="onRegionChange">
               <option value="">시/도 선택</option>
               <option v-for="region in regions" :key="region" :value="region">{{ region }}</option>
-              </select>
+            </select>
           </div>
         </div>
         <!-- 주소 입력 -->
@@ -54,9 +54,10 @@
         </div>
         <h5><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
         <input type="file" @change="handleFileUploadOwner" ref="fileInputRefOwner" style="display:none">
-            <button type="button" class="btn btn-fileupload" @click="triggerFileUploadOwner">
-                파일 첨부
-            </button>
+        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadOwner">
+          파일 첨부
+        </button>
+        <div class="text-start tc-light-gray" v-if="fileUserOwnerName">위임장 / 소유자 인감 증명서: {{ fileUserOwnerName }}</div>
         <!-- 파일 첨부 -->
         <div class="flex items-center justify-end mt-5">
           <button type="submit" class="btn primary-btn normal-16-font">경매 신청하기</button>
@@ -68,7 +69,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted, computed, nextTick, watch } from 'vue';
 import { useStore } from 'vuex';
@@ -109,6 +109,9 @@ const startY = ref(0);
 const currentY = ref(0);
 const isDragging = ref(false);
 const fileInputRefOwner = ref(null);
+const fileUserOwner = ref(null); // 추가: 파일 저장 변수
+const fileUserOwnerName = ref(''); // 추가: 파일 이름 저장 변수
+
 // 경매 등록 함수
 const auctionEntry = async () => {
   // 필수 정보를 확인
@@ -123,6 +126,7 @@ const auctionEntry = async () => {
     !account.value.trim() ||
     !addrPost.value.trim() ||
     !finalAt.value.trim()
+   // !fileUserOwner.value // 파일이 업로드되었는지 확인
   ) {
     Swal.fire({
       icon: 'error',
@@ -143,6 +147,7 @@ const auctionEntry = async () => {
     account: account.value,
     memo: memo.value,
     addr_post: addrPost.value,
+  //  file_user_owner: fileUserOwner.value, // 업로드된 파일 추가
     status:"diag"
   };
   try {
@@ -248,21 +253,26 @@ const handleTouchMove = event => {
     document.querySelector('.detail-content02').style.transform = `translateY(${diffY}px)`;
   }
 };
-function handleFileUploadOwner(event) {
-    const file = event.target.files[0];
-    if (file) {
-        auctionEntry.file_user_owner = file;
-        auctionEntry.file_user_owner_name = file.name;
-        console.log("Business registration file:", file.name);
-    }
-}
-function triggerFileUploadOwner() {
-    if (fileInputRefOwner.value) {
-        fileInputRefOwner.value.click();
-    } else {
-        console.error("파일을 찾을 수 없습니다.");
-    }
-}
+
+const handleFileUploadOwner = event => {
+  const file = event.target.files[0];
+  if (file) {
+    fileUserOwner.value = file; // 파일 저장
+    fileUserOwnerName.value = file.name; // 파일 이름 저장
+    console.log("위임장 / 소유자 인감 증명서:", file.name);
+  } else {
+    console.error('No file selected');
+  }
+};
+
+const triggerFileUploadOwner = () => {
+  if (fileInputRefOwner.value) {
+    fileInputRefOwner.value.click();
+  } else {
+    console.error('파일을 찾을 수 없습니다.');
+  }
+};
+
 // 터치 종료 이벤트 핸들러
 const handleTouchEnd = () => {
   isDragging.value = false;
@@ -295,7 +305,6 @@ const openPostcodePopup = () => {
     top: top + window.screenY
   });
 };
-
 
 watch(showDetails, val => {
   if (val) {
