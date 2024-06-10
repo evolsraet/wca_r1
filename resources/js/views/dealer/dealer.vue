@@ -29,7 +29,7 @@
                                     <input class="toggle-heart" type="checkbox" checked/>
                                     <label class="heart-toggle"></label>
                                     <div class="card-img-top-placeholder"></div> 
-                                    <div class="wait-selection">낙찰가 {{ bid.price }}</div>
+                                    <div class="wait-selection">낙찰가 {{ amtComma(bid.price) }}</div>
                                     <div class="card-body">
                                         <h5 class="card-title"><span class="blue-box">무사고</span>{{ bid.auctionDetails ? bid.auctionDetails.car_no : '차량 정보 없음' }}</h5>
                                         <p class="card-text tc-light-gray">현대 쏘나타(DN8){{ bid.auctionDetails ? bid.auctionDetails.model : '모델 정보 없음' }}</p>
@@ -59,13 +59,14 @@ import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import useBid from "@/composables/bids";
 import useAuctions from '@/composables/auctions';
+import { cmmn } from '@/hooks/cmmn';
 
 const router = useRouter(); 
 const store = useStore(); // Vuex 스토어 인스턴스
 const { getAuctions, getAuctionById } = useAuctions();
 const { bidsData, getBids } = useBid();
 const user = computed(() => store.getters['auth/user']); // 현재 사용자를 가져오는 계산된 속성
-
+const { amtComma } = cmmn();
 const filteredBids = ref([]);
 
 const fetchAuctionDetails = async (bid) => {
