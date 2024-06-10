@@ -35,19 +35,19 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="slide-up-ani activity-info bold-18-font">
-                            <div class="item">
+                        <div class="slide-up-ani activity-info bold-18-font process">
+                            <router-link :to="{  name: 'dealer.bids' }" class="item">
                             <p><span class="tc-red slide-up" ref="item1">0</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font">관심</p>
-                            </div>
-                            <div class="item">
+                            </router-link>
+                            <router-link :to="{ name: 'auction.index' }" class="item">
                             <p><span class="tc-red" ref="item2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
                             <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
-                            </div>
-                            <div class="item">
+                            </router-link>
+                            <router-link :to="{  name: 'dealer.bids' }" class="item">
                             <p><span class="tc-red" ref="item3">{{ filteredViewBids.length }}</span> 건</p>
                             <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
-                            </div>
+                            </router-link>
                          <!--   <div class="item">
                             <p><span class="tc-red" ref="item4">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
                             <p class="purchase-icon tc-light-gray normal-16-font">완료</p>
