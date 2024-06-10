@@ -26,9 +26,9 @@
                             <div class="enter-view mt-2">
                                 <p class="card-text tc-light-gray fs-5 mov-text">딜러명<span class="process ms-3">{{ auction.dealer_name }}</span></p>
                                 <p class="card-text tc-light-gray fs-5 web-text">12 삼 4567</p>
-                                <a href="#"><span class="red-box-type02 pass-red">상세보기</span></a>
-                                </div>
-                                <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>2024년 2월 13일 오후 6시 00분</span></p>
+                                <a href="#"><span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">상세보기</span></a>
+                            </div>
+                            <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>2024년 2월 13일 오후 6시 00분</span></p>
                                 <div class="container card-style p-0 mt-5">
                                 <div class="card card-custom card-custom-ty">
                                     <div class="row flex-row">
@@ -48,14 +48,14 @@
                                         <div class="item-label">타사 피해</div>
                                         <div class="item-value mb-0">3건</div>
                                     </div>
-                                    </div>
+                                </div>
                                 </div>
                                 </div>
                             </div>
                             <div class="right-container">
-                        <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
-                        <div class="sheet-content">
-                            <div class="mt-3"  @click.stop="">
+                                <bottom-sheet initial="half" :dismissable="true">
+                        <div class="sheet-content p-0">
+                            <div class="mt-1" @click.stop="">
                                 
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
@@ -90,15 +90,17 @@
                                 </div>
                                 <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content"></textarea>
                                 
-                                <div class="btn-group mt-3">
+                                <div class="btn-group mt-3 mb-4">
                                     <button class="btn btn-primary"> 작성 완료 </button>
                                 </div>
                             </div>
                         </div>
+                    </bottom-sheet>
                     </div>
-                </div>
+                 
             </div>
         </form>
+        <AlarmModal ref="alarmModal" />
     </div>
 
 </template>
@@ -112,6 +114,8 @@ import { ref, onMounted } from 'vue';
 import { useRoute } from 'vue-router'; 
 import { initReviewSystem } from '@/composables/review'; // 별점 js
 import useAuctions from "@/composables/auctions";
+import BottomSheet from '@/views/bottomsheet/BottomSheet.vue'
+import AlarmModal from '@/views/modal/AlarmModal.vue';
 
 const route = useRoute();
 const showBottomSheet = ref(true); //바텀 시트
@@ -122,6 +126,14 @@ let auctionsData = ref();
 const carInfo = ref();
 const { review , submitReview , getCarInfo } = initReviewSystem(); 
 
+const alarmModal = ref(null);
+
+const openAlarmModal = () => {
+    console.log("openAlarmModal called");
+    if (alarmModal.value) {
+        alarmModal.value.openModal();
+    }
+};
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {
     const bottomSheet = document.querySelector('.bottom-sheet');
@@ -162,4 +174,48 @@ onMounted(() => {
     height: 3px;
     background-color: #dbdbdb;
 }
+.card {
+            border: 1px solid #ccc;
+            padding: 16px;
+            margin: 16px;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .col {
+            flex: 1 1 25%; /* 기본적으로 각 항목이 차지할 넓이 설정 */
+            box-sizing: border-box;
+            padding: 8px;
+        }
+        .item-label {
+            font-weight: bold;
+        }
+        .item-value {
+            margin-top: 4px;
+        }
+
+        @media (max-width: 600px) {
+            .row {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 작은 화면에서 격자 배치 */
+                gap: 8px;
+            }
+            .col {
+                flex: 1 1 100%; /* 작은 화면에서는 각 항목이 전체 너비를 차지 */
+            }
+            .card-style .col-line:not(:last-child)::after {
+            display: none;
+            }
+            .col {
+                flex: 1 1 50%; /* 작은 화면에서는 각 항목이 전체 너비를 차지 */
+                border-bottom: 1px solid #dddddd; /* 작은 화면에서 아래쪽에 선 추가 */
+                padding-bottom: 16px;
+                margin-bottom: 16px;
+            }
+            .col:last-child {
+                border-bottom: none; /* 마지막 항목은 아래쪽 선을 제거 */
+                margin-bottom: 0;
+            }
+        }
 </style>

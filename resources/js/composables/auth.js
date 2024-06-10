@@ -74,7 +74,7 @@ export default function useAuth() {
             Swal.fire({
               icon: "error",
               title: "Network Error",
-              text: "Please check your internet connection and try again.",
+              text: "네트워크 통신 오류 입니다.",
               showConfirmButton: true,
             });
           } else if (error.response.data.status === 'fail') {

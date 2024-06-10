@@ -218,6 +218,7 @@ export function initReviewSystem() {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: '삭제',
+            cancelButtonText: '취소',
             confirmButtonColor: '#ef4444',
             timer: 20000,
             timerProgressBar: true,
@@ -274,6 +275,7 @@ export function initReviewSystem() {
             icon: 'warning',
             showCancelButton: true,
             confirmButtonText: '수정',
+            cancelButtonText: '취소',
             confirmButtonColor: '#ef4444',
             timer: 20000,
             timerProgressBar: true,
@@ -286,6 +288,7 @@ export function initReviewSystem() {
                         swal({
                             icon: 'success',
                             title: '이용후기가 정상적으로 수정되었습니다.',
+                            confirmButtonText: '확인',
                         }).then(() => {
                             location.href = "/list-do";
                         });
@@ -331,6 +334,7 @@ export function initReviewSystem() {
             showCancelButton: true,
             confirmButtonText: '수정',
             confirmButtonColor: '#ef4444',
+            cancelButtonText: '취소',
             timer: 20000,
             timerProgressBar: true,
             reverseButtons: true
