@@ -214,7 +214,7 @@ trait CrudTrait
                 // }
             }
 
-            $this->middleProcess(__FUNCTION__, request(), $item);
+            $this->middleProcess(__FUNCTION__, $data, $item);
             $item->save(); // 상위 객체 저장
 
             // 하위 객체를 동적으로 처리합니다.

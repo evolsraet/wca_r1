@@ -24,12 +24,10 @@ class AuctionResource extends JsonResource
         // 더 업데이트
 
         // 날짜 필드를 Y-m-d 포맷으로 변환
-        foreach ($parentArray as $key => $value) {
-            // datetime
-            if ($key == 'final_at' && isset($this->final_at)) {
-                $parentArray['final_at'] = '2025-01-01 12:30';
-            } elseif (str_ends_with($key, '_at') && $value !== null) {
-                $parentArray[$key] = $this->$key->toDatetimeString();
+        $timestampFields = ['created_at', 'updated_at', 'deleted_at'];
+        foreach ($timestampFields as $field) {
+            if (isset($this->resource->$field)) {
+                $parentArray[$field] = $this->$field->toDatetimeString();
             }
         }
 

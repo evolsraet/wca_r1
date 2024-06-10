@@ -22,6 +22,13 @@ class Auction extends Model implements HasMedia
 
     public $guarded = [];
 
+    protected $dates = [
+        'final_at',
+        'choice_at',
+        'done_at',
+        'diag_check_at',
+    ];
+
     public $enums = [
         'status' => [
             'cancel' => '취소',

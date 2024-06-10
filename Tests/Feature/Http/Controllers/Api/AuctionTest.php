@@ -31,7 +31,7 @@ class AuctionTest extends TestCase
         $data = [
             'auction' => $auction->makeVisible($auction->getHidden())->toArray()
         ];
-
+        $data['auction']['final_at'] = now()->addDay()->toDateTimeString();
         // 로그인 role:user 사용자만
         $user = User::role('dealer')->first();
         $this->actingAs($user);
@@ -43,6 +43,12 @@ class AuctionTest extends TestCase
         $user = User::role('user')->first();
         $this->actingAs($user);
         $response = $this->postJson('/api/auctions', $data);
+
+        // dd: 로그인된 사용자 배열, 응답배열 을 출력
+        // dd([
+        //     '로그인된 사용자' => $user->toArray(),
+        //     '응답 배열' => $response->json()
+        // ]);
 
         // 데이터 확인
         // $responsedata = $response->json('data');

@@ -87,6 +87,13 @@ class AuctionService
             }
         } elseif ($method == 'store') {
             // TODO: 선택대기에서 선택완료로 변경 시 choice_at
+
+            $request = validator($request, [
+                'final_at' => 'required|date|after:today',
+            ], [
+                'final_at.after' => '경매 종료 시간은 오늘 이후여야 합니다.',
+            ])->validate();
+
             // 경매 등록 메소드인 경우 사용자 ID와 상태를 설정합니다.
             $result->user_id = auth()->user()->id;
             $result->status = 'ask';

@@ -23,7 +23,7 @@ class ReviewService
     {
         switch ($method) {
             case 'store':
-                $auction = Auction::find($request->input('review.auction_id'));
+                $auction = Auction::find($request['auction_id']);
                 $result->user_id = auth()->user()->id;
 
                 if (!$auction or $auction->status != 'done')
