@@ -62,22 +62,22 @@
 
                                   </div>
                                   <div v-if="isUser && auctionDetail.data.status === 'ing'" class="p-3">
-                                      <transition name="fade">
-                                        <div  v-if="auctionDetail.data.hope_price != null">
-                                          <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
-                                              <p>현재 희망가</p>
-                                              <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
-                                            </div>
-                                        </div>
-                                          <div v-else class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
-                                              <p>현재 최고 입찰액</p>
-                                              <p class="icon-coins">{{ amtComma(heightPrice) }}</p>
-                                          </div>
-                                      </transition>
+                                    <template v-if="auctionDetail.data.hope_price !== null">
+                                      <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
+                                        <p>현재 희망가</p>
+                                        <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
+                                      </div>
+                                    </template>
+                                    <template v-else>
+                                      <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
+                                        <p>현재 최고 입찰액</p>
+                                        <p class="icon-coins">{{ amtComma(heightPrice)}}</p>
+                                      </div>
+                                    </template>
                                   </div>
-                                  <div v-if="auctionDetail.data.status === 'ing' " class="p-3">
+                                  <div v-if="isDealer && auctionDetail.data.status === 'ing' " class="p-3">
                                     <transition name="fade">
-                                        <div v-if="isDealer && auctionDetail.data.hope_price != null && auctionDetail.data.hope_price != null">
+                                        <div v-if=" auctionDetail.data.hope_price !== null">
                                           <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
                                               <p>현재 희망가</p>
                                               <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
@@ -604,6 +604,7 @@
                               <div> 
                                 <h5 class="text-center p-4" v-if="auctionDetail.data.status === 'done'">거래는 어떠셨나요?</h5>
                                 <p class="auction-deadline mt-4" v-else>선택이 완료 되었습니다.</p>
+                                <p class="tc-red text-center mt-3">※ 입금완료 후 경매완료 처리가 됩니다. </p>
                                 <router-link
                                   v-if="auctionDetail.data.status === 'done'"
                                   :to="{ name: 'user.create-review' }"
@@ -867,9 +868,8 @@
       </div>
   </div>
 </template>
-
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watchEffect, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, watchEffect } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { gsap } from 'gsap';
@@ -888,7 +888,6 @@ import { initReviewSystem } from '@/composables/review';
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
-
 
 const isClaimModalOpen = ref(false);
 const lastBidId = ref(null);
@@ -910,13 +909,13 @@ const amount = ref('');
 const koreanAmount = ref('원');
 const { numberToKoreanUnit , amtComma } = cmmn();
 const myBidPrice = computed(() => {
-const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id);
-return myBid ? myBid.price : '0';
+  const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id);
+  return myBid ? myBid.price : '0';
 });
 let pollingInterval = null;
 const updateKoreanAmount = () => {
-console.log("Updating Korean amount"); // Check if this logs in the console
-koreanAmount.value = amtComma(amount.value);
+  console.log("Updating Korean amount"); // Check if this logs in the console
+  koreanAmount.value = amtComma(amount.value);
 };
 const openClaimModal = () => {
   isClaimModalOpen.value = true;
@@ -926,11 +925,11 @@ const closeClaimModal = () => {
 };
 
 const dynamicClass = computed(() => {
-if (auctionDetail.value?.data?.status === 'ask' || auctionDetail.value?.data?.status === 'diag') {
-  return 'diag-img';
-} else {
-  return 'card-img-top-ty02';
-}
+  if (auctionDetail.value?.data?.status === 'ask' || auctionDetail.value?.data?.status === 'diag') {
+    return 'diag-img';
+  } else {
+    return 'card-img-top-ty02';
+  }
 });
 
 // 사용자 입찰이 취소된 적이 있는지 확인
@@ -940,12 +939,12 @@ const userBidCancelled = computed(() => auctionDetail.value?.data?.bids?.some(bi
 
 const auctionId = computed(() => auctionDetail.value?.data?.id);
 const cancelAttempted = computed({
-get() {
-  return store.getters['cancelAttempted/getCancelAttempted'](auctionId.value);
-},
-set(value) {
-  store.dispatch('cancelAttempted/setCancelAttempted', { auctionId: auctionId.value, value });
-}
+  get() {
+    return store.getters['cancelAttempted/getCancelAttempted'](auctionId.value);
+  },
+  set(value) {
+    store.dispatch('cancelAttempted/setCancelAttempted', { auctionId: auctionId.value, value });
+  }
 });
 
 const showBidModal = ref(false);
@@ -969,128 +968,140 @@ const highestBid = ref(0);
 const lowestBid = ref(0);
 
 const sortedTopBids = computed(() => {
-if (!auctionDetail.value?.data?.top_bids) {
-  return [];
-}
-
-const bidsByUser = auctionDetail.value.data.top_bids.reduce((acc, bid) => {
-  if (!acc[bid.user_id] || acc[bid.user_id].price < bid.price) {
-    acc[bid.user_id] = bid;
+  if (!auctionDetail.value?.data?.top_bids) {
+    return [];
   }
-  return acc;
-}, {});
 
-const topBids = Object.values(bidsByUser)
-  .sort((a, b) => b.price - a.price)
-  .slice(0, 5);
+  const bidsByUser = auctionDetail.value.data.top_bids.reduce((acc, bid) => {
+    if (!acc[bid.user_id] || acc[bid.user_id].price < bid.price) {
+      acc[bid.user_id] = bid;
+    }
+    return acc;
+  }, {});
 
-return topBids;
+  const topBids = Object.values(bidsByUser)
+    .sort((a, b) => b.price - a.price)
+    .slice(0, 5);
+
+  return topBids;
 });
 
 const heightPrice = ref(0);
 // 숫자 애니메이션 함수
 const animateHeightPrice = (newPrice) => {
-const heightPriceElement = document.querySelector('.icon-coins');
-const startValue = parseInt(heightPriceElement.innerText.replace(' 만원', ''));
-const endValue = newPrice;
+  const heightPriceElement = document.querySelector('.icon-coins');
+  const startValue = parseInt(heightPriceElement.innerText.replace(/[^0-9]/g, ''), 10);
+  const endValue = newPrice;
 
-gsap.fromTo(
-  heightPriceElement,
-  { innerText: startValue },
-  {
-    innerText: endValue,
-    duration: 1.5,
-    ease: 'Power1.easeOut',
-    snap: { innerText: 1 },
-    onUpdate: function () {
-      heightPriceElement.innerText = Math.round(heightPriceElement.innerText) + ' 만원';
+  gsap.fromTo(
+    { value: startValue },
+    { value: endValue },
+    {
+      duration: 1.5,
+      ease: 'Power1.easeOut',
+      snap: { value: 1 },
+      onUpdate: function () {
+        heightPriceElement.innerText = amtComma(Math.round(this.targets()[0].value));
+      }
     }
-  }
-);
+  );
 };
+
+
+// auctionDetail의 변경사항을 감지하여 amount 값을 업데이트합니다.
 watch(
-() => auctionDetail.value?.data?.bids,
-(bids) => {
-  if (bids && bids.length > 0) {
-    heightPrice.value = Math.max(...bids.map(bid => bid.price), 0);
-    console.log("Height price updated:", heightPrice.value);
-  }
-},
-{ immediate: true } // 이 옵션을 통해 컴포넌트가 마운트될 때 즉시 실행됩니다.
+  () => auctionDetail.value?.data?.hope_price,
+  (newVal, oldVal) => {
+    console.log('auctionDetail.data.hope_price changed from', oldVal, 'to', newVal);
+    if (newVal !== null) {
+      amount.value = newVal;
+    }
+  },
+  { immediate: true }
 );
 
+watch(
+  () => auctionDetail.value?.data?.bids,
+  (bids) => {
+    if (bids && bids.length > 0) {
+      heightPrice.value = Math.max(...bids.map(bid => bid.price), 0);
+      console.log("Height price updated:", heightPrice.value);
+    }
+  },
+  { immediate: true } // 이 옵션을 통해 컴포넌트가 마운트될 때 즉시 실행됩니다.
+);
 
 const openAlarmModal = () => {
-console.log("openAlarmModal called");
-if (alarmModal.value) {
-  alarmModal.value.openModal();
-}
+  console.log("openAlarmModal called");
+  if (alarmModal.value) {
+    alarmModal.value.openModal();
+  }
 };
 
 const isModalVisible = ref(false);
 const selectedAuctionId = ref(null);
 
 const reauction = async () => {
-const id = route.params.id;
-let data = {
-  status: 'ing',
-  final_at: '2024-06-07 17:32:19',
-};
+  const id = route.params.id;
+  let data = {
+    status: 'ing',
+    final_at: '2024-06-07 17:32:19',
+  };
 
-if (isSellChecked.value) {
-  data.hope_price = amount.value;
-}
+  if (isSellChecked.value) {
+    data.hope_price = amount.value;
+  }
 
-try {
-  await AuctionReauction(id, data);
-  reauctionModal.value = true;
-} catch (error) {
-  console.error('Error re-auctioning:', error);
-  alert('재경매에 실패했습니다.');
-}
+  try {
+    await AuctionReauction(id, data);
+    reauctionModal.value = true;
+  } catch (error) {
+    console.error('Error re-auctioning:', error);
+    alert('재경매에 실패했습니다.');
+  }
 };
 
 const openModal = () => {
-isModalVisible.value = true;
-selectedAuctionId.value = auctionDetail.value?.data.id;
+  isModalVisible.value = true;
+  selectedAuctionId.value = auctionDetail.value?.data.id;
 };
 
 const closeModal = () => {
-isModalVisible.value = false;
+  isModalVisible.value = false;
 };
 
 const handleConfirmDelete = async () => {
-closeModal();
-try {
-  await updateAuctionStatus(selectedAuctionId.value, 'cancel');
-} catch (error) {
-  console.error(error);
-}
+  closeModal();
+  try {
+    await updateAuctionStatus(selectedAuctionId.value, 'cancel');
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 const toggleView = () => {
-showReauctionView.value = true;
-console.log(showReauctionView.value)
+  showReauctionView.value = true;
+  console.log(showReauctionView.value);
 };
 
 // 사용자 정보를 가져오는 함수
 const getDealer = async (user_Id) => {
-if (!user_Id) {
-  console.error('user_id is undefined:', user_Id);
-  return { name: 'Unknown' };
-}
+  if (!user_Id) {
+    console.error('user_id is undefined:', user_Id);
+    return { name: 'Unknown' };
+  }
 
-try {
-  const userData = await getUser(user_Id);
-  console.log(`User Data for user_id ${user_Id}:`, userData);
-  return userData;
-} catch (error) {
-  console.error(`Error fetching data for user_id ${user_Id}:`, error);
-  return { name: 'Unknown' };
-}
+  try {
+    const userData = await getUser(user_Id);
+    console.log(`User Data for user_id ${user_Id}:`, userData);
+    return userData;
+  } catch (error) {
+    console.error(`Error fetching data for user_id ${user_Id}:`, error);
+    return { name: 'Unknown' };
+  }
 };
 const submitHopePrice = () => {
-console.log("입력된 희망가:", hopePrice.value);
+  console.log("입력된 희망가:", hopePrice.value);
 };
 
 // auctionDetail이 변경될 때마다 각 bid에 userData를 추가하는 함수
@@ -1098,77 +1109,93 @@ watchEffect(async () => {
   if (auctionDetail.value && auctionDetail.value.data.hope_price !== null) {
     amount.value = auctionDetail.value.data.hope_price;
   }
-  if(isUser.value){
-if (auctionDetail.value && auctionDetail.value.data && auctionDetail.value.data.top_bids) {
-  const bids = auctionDetail.value.data.top_bids;
-  for (const bid of bids) {
-    if (bid.user_id) {
-      const userData = await getDealer(bid.user_id);
-      bid.dealerInfo = userData.dealer;
+  if (isUser.value) {
+    if (auctionDetail.value && auctionDetail.value.data && auctionDetail.value.data.top_bids) {
+      const bids = auctionDetail.value.data.top_bids;
+      for (const bid of bids) {
+        if (bid.user_id) {
+          const userData = await getDealer(bid.user_id);
+          bid.dealerInfo = userData.dealer;
+        }
+      }
+      sortedTopBids.value = bids;
     }
   }
-  sortedTopBids.value = bids;
-}
-}
 });
 
 const computedAmount = computed(() => {
-if (userBidExists.value && !userBidCancelled.value && auctionDetail.value.data.status === 'ing' && auctionDetail.value.data.hope_price !== null) {
-  return auctionDetail.value.data.hope_price;
-} else {
-  return amount.value; 
-}
-});
-watch(amount, (newValue) => {
-koreanAmount.value = amtComma(newValue);
+  if (userBidExists.value && !userBidCancelled.value && auctionDetail.value.data.status === 'ing' && auctionDetail.value.data.hope_price !== null) {
+    return auctionDetail.value.data.hope_price;
+  } else {
+    return amount.value; 
+  }
 });
 
+watch(amount, (newValue) => {
+  koreanAmount.value = amtComma(newValue);
+});
 
 watch(computedAmount, (newValue) => {
-amount.value = newValue;
+  amount.value = newValue;
 }, { immediate: true });
 
-
 const selectDealer = async (bid, event, index) => {
-if (event.target.checked) {
-  selectedBid.value = { ...bid, index };
-  connectDealerModal.value = true;
+  if (event.target.checked) {
+    selectedBid.value = { ...bid, index };
+    connectDealerModal.value = true;
 
-  try {
-    const userData = await getUser(bid.user_id);
-    userInfo.value = userData;
-  } catch (error) {
-    console.error('Error dealer data:', error);
+    try {
+      const userData = await getUser(bid.user_id);
+      userInfo.value = userData;
+    } catch (error) {
+      console.error('Error dealer data:', error);
+    }
+  } else {
+    selectedBid.value = null;
+    connectDealerModal.value = false;
   }
-} else {
-  selectedBid.value = null;
-  connectDealerModal.value = false;
-}
 };
 
 const handleModalClose = () => {
-connectDealerModal.value = false;
-if (selectedBid.value) {
-  const checkbox = document.getElementById('checkbox-' + selectedBid.value.user_id);
-  if (checkbox) checkbox.checked = false;
-  selectedBid.value = null;
-}
+  connectDealerModal.value = false;
+  if (selectedBid.value) {
+    const checkbox = document.getElementById('checkbox-' + selectedBid.value.user_id);
+    if (checkbox) checkbox.checked = false;
+    selectedBid.value = null;
+  }
 };
 
 const handleDealerConfirm = ({ bid, userData }) => {
-selectedDealer.value = { ...bid, userData };
-connectDealerModal.value = false;
+  selectedDealer.value = { ...bid, userData };
+  connectDealerModal.value = false;
 };
 
 const cancelSelection = () => {
-selectedDealer.value = null;
+  selectedDealer.value = null;
 };
+const formatDateToString = (date) => {
+  const pad = (num) => num.toString().padStart(2, '0');
+
+  const year = date.getFullYear();
+  const month = pad(date.getMonth() + 1); // months are zero-indexed
+  const day = pad(date.getDate());
+  const hours = pad(date.getHours());
+  const minutes = pad(date.getMinutes());
+  const seconds = pad(date.getSeconds());
+
+  return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+};
+
 const completeAuctionModal = ref(false); // 추가된 모달 상태
 const completeAuction = async () => {
   auctionDetail.value.data.status = 'chosen';
   const id = route.params.id;
+  const currentDate = new Date();
+  const formattedDate = formatDateToString(currentDate);
+
   const data = {
     status: 'chosen',
+   // choice_at: formattedDate,
     final_price: selectedDealer.value.price,
     bid_id: selectedDealer.value.user_id,
   };
@@ -1188,222 +1215,228 @@ const closeCompleteAuctionModal = () => {
 };
 
 const checkScroll = () => {
-const scrollY = window.scrollY;
-const windowHeight = document.documentElement.clientHeight;
-const totalHeight = document.documentElement.scrollHeight;
+  const scrollY = window.scrollY;
+  const windowHeight = document.documentElement.clientHeight;
+  const totalHeight = document.documentElement.scrollHeight;
 
-if (scrollY + windowHeight >= totalHeight) {
-  scrollButtonVisible.value = false;
-} else {
-  scrollButtonVisible.value = true;
-}
+  if (scrollY + windowHeight >= totalHeight) {
+    scrollButtonVisible.value = false;
+  } else {
+    scrollButtonVisible.value = true;
+  }
 };
 
 async function fetchUserNames() {
-for (const bid of auctionDetail.value?.data?.bids || []) {
-  if (!usersInfo.value[bid.user_id]) {
-    const userData = await getUser(bid.user_id);
-    usersInfo.value[bid.user_id] = userData.name;
+  for (const bid of auctionDetail.value?.data?.bids || []) {
+    if (!usersInfo.value[bid.user_id]) {
+      const userData = await getUser(bid.user_id);
+      usersInfo.value[bid.user_id] = userData.name;
+    }
   }
-}
 }
 
 const openBidModal = () => {
-showBidModal.value = true;
+  showBidModal.value = true;
 };
 
 const closeBidModal = () => {
-showBidModal.value = false;
+  showBidModal.value = false;
 };
 
 const submitAuctionBid = async () => {
-    if (!amount.value || isNaN(parseFloat(amount.value))) {
-        alert('유효한 금액을 입력해주세요.');
-    } else {
-        // 희망가와 사용자가 입력한 금액 비교
-        if (auctionDetail.value.data.hope_price !== null && amount.value == auctionDetail.value.data.hope_price) {
-            // 희망가에 입찰한 경우 즉시 낙찰 처리
-            try {
-                const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
-                if (bidResult.success) {
-                    await handleImmediateAuctionEnd(user.value.id, amount.value);
-                } else {
-                    alert(bidResult.message);
-                }
-            } catch (error) {
-                console.error('Error confirming bid:', error);
-            }
+  if (!amount.value || isNaN(parseFloat(amount.value))) {
+    alert('유효한 금액을 입력해주세요.');
+  } else {
+    // 희망가와 사용자가 입력한 금액 비교
+    if (auctionDetail.value.data.hope_price !== null && amount.value == auctionDetail.value.data.hope_price) {
+      // 희망가에 입찰한 경우 즉시 낙찰 처리
+      try {
+        const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
+        if (bidResult.success) {
+          await handleImmediateAuctionEnd(user.value.id, amount.value);
         } else {
-            openBidModal();
+          alert(bidResult.message);
         }
+      } catch (error) {
+        console.error('Error confirming bid:', error);
+      }
+    } else {
+      openBidModal();
     }
+  }
 };
-const handleImmediateAuctionEnd = async (userId, price) => {
-    const id = route.params.id;
-    const data = {
-        status: 'chosen',
-        final_price: price,
-        bid_id: userId,
-        chosen_at: new Date().toISOString(),
-    };
 
-    try {
-        const response = await axios.post(`http://localhost/api/user/completeAuction/${id}`, data); // 사용자 API로 요청
-        auctionDetail.value.data.status = 'chosen';
-        auctionDetail.value.data.final_price = price;
-        auctionDetail.value.data.bid_id = userId;
-        auctionDetail.value.data.chosen_at = data.chosen_at;
-        completeAuctionModal.value = true; // 경매 완료 모달 표시
-    } catch (error) {
-        console.error('Error completing auction:', error);
-        alert('경매에 실패했습니다.');
-    }
+const handleImmediateAuctionEnd = async (userId, price) => {
+  const id = route.params.id;
+  const data = {
+    status: 'chosen',
+    final_price: price,
+    bid_id: userId,
+    chosen_at: new Date().toISOString(),
+  };
+
+  try {
+    const response = await axios.post(`http://localhost/api/user/completeAuction/${id}`, data); // 사용자 API로 요청
+    auctionDetail.value.data.status = 'chosen';
+    auctionDetail.value.data.final_price = price;
+    auctionDetail.value.data.bid_id = userId;
+    auctionDetail.value.data.chosen_at = data.chosen_at;
+    completeAuctionModal.value = true; // 경매 완료 모달 표시
+  } catch (error) {
+    console.error('Error completing auction:', error);
+    alert('경매에 실패했습니다.');
+  }
 };
 
 
 const confirmBid = async () => {
-    try {
-        const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
-        if (bidResult.success) {
-            lastBidId.value = bidResult.bidId;
-            await fetchAuctionDetail();
-            closeBidModal();
-            succesbid.value = true;
-            if (auctionDetail.value.data.hope_price !== null && amount.value == auctionDetail.value.data.hope_price) {
-                await handleImmediateAuctionEnd(user.value.id, amount.value);
-            }
-        } else {
-            alert(bidResult.message);
-        }
-    } catch (error) {
-        console.error('Error confirming bid:', error);
+  try {
+    const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
+    if (bidResult.success) {
+      lastBidId.value = bidResult.bidId;
+      await fetchAuctionDetail();
+      closeBidModal();
+      succesbid.value = true;
+      if (auctionDetail.value.data.hope_price !== null && amount.value == auctionDetail.value.data.hope_price) {
+        await handleImmediateAuctionEnd(user.value.id, amount.value);
+      }
+    } else {
+      alert(bidResult.message);
     }
+  } catch (error) {
+    console.error('Error confirming bid:', error);
+  }
 };
 
 const errorMessage = ref('');
 
 const fetchAuctionDetail = async () => {
-const auctionId = parseInt(route.params.id);
-try {
-  auctionDetail.value = await getAuctionById(auctionId);
-  const { car_no, owner_name } = auctionDetail.value.data;
-  const carInfoForm = {
-    owner: owner_name,
-    no: car_no,
-    forceRefresh: ""
-  };
-  const carInfoResponse = await AuctionCarInfo(carInfoForm);
-  const carData = carInfoResponse.data;
-  carDetails.value.no = carData.no;
-  carDetails.value.model = carData.model;
-  carDetails.value.modelSub = carData.modelSub;
-  carDetails.value.grade = carData.grade;
-  carDetails.value.gradeSub = carData.gradeSub;
-  carDetails.value.year = carData.year;
-  carDetails.value.fuel = carData.fuel;
-  carDetails.value.mission = carData.mission;
-  if (isUser.value && auctionDetail.value.data.status !== 'done') { 
-    // top_bids를 통해 각 bid의 정보를 가져옵니다.
-    if (auctionDetail.value.data.top_bids && auctionDetail.value.data.top_bids.length > 0) {
-      await fetchBidsInfo(auctionDetail.value.data.top_bids);
+  const auctionId = parseInt(route.params.id);
+  try {
+    auctionDetail.value = await getAuctionById(auctionId);
+    const { car_no, owner_name } = auctionDetail.value.data;
+    const carInfoForm = {
+      owner: owner_name,
+      no: car_no,
+      forceRefresh: ""
+    };
+    const carInfoResponse = await AuctionCarInfo(carInfoForm);
+    const carData = carInfoResponse.data;
+    carDetails.value.no = carData.no;
+    carDetails.value.model = carData.model;
+    carDetails.value.modelSub = carData.modelSub;
+    carDetails.value.grade = carData.grade;
+    carDetails.value.gradeSub = carData.gradeSub;
+    carDetails.value.year = carData.year;
+    carDetails.value.fuel = carData.fuel;
+    carDetails.value.mission = carData.mission;
+    if (isUser.value && auctionDetail.value.data.status !== 'done') { 
+      // top_bids를 통해 각 bid의 정보를 가져옵니다.
+      if (auctionDetail.value.data.top_bids && auctionDetail.value.data.top_bids.length > 0) {
+        await fetchBidsInfo(auctionDetail.value.data.top_bids);
+      }
     }
+  } catch (error) {
+    console.error('Error fetching auction detail:', error);
   }
-} catch (error) {
-  console.error('Error fetching auction detail:', error);
-}
 };
 
 const fetchBidsInfo = async (topBids) => {
-try {
-  const bidsInfo = await Promise.all(topBids.map(bid => getBidById(bid.id)));
-  sortedTopBids.value = bidsInfo;
+  try {
+    const bidsInfo = await Promise.all(topBids.map(bid => getBidById(bid.id)));
+    sortedTopBids.value = bidsInfo;
 
-  if (auctionDetail.value.data.status !== 'chosen') {
-  
-    const newHeightPrice = Math.max(...bidsInfo.map(bid => bid.price));
-    if (newHeightPrice !== heightPrice.value) {
-      heightPrice.value = newHeightPrice;
-      animateHeightPrice(newHeightPrice);
+    if (auctionDetail.value.data.status !== 'chosen') {
+    
+      const newHeightPrice = Math.max(...bidsInfo.map(bid => bid.price));
+      if (newHeightPrice !== heightPrice.value) {
+         heightPrice.value = newHeightPrice;
+         console.log("?",auctionDetail.value.data.status);
+         console.log(auctionDetail.value.data.hope_price);
+         if (auctionDetail.value.data.status === 'ing' && auctionDetail.value.data.hope_price === null) {
+          animateHeightPrice(newHeightPrice);
+        }else if(auctionDetail.value.data.hope_price !== 'null'){
+          animateHeightPrice(auctionDetail.value.data.hope_price);
+        }
+      }
+      console.log("Height price updated:", heightPrice.value);
     }
-    console.log("Height price updated:", heightPrice.value);
+  } catch (error) {
+    console.error('Error fetching bid info:', error);
   }
-} catch (error) {
-  console.error('Error fetching bid info:', error);
-}
 };
 
 
 // 일정 간격으로 데이터를 갱신하는 함수
 const startPolling = () => {
-pollingInterval = setInterval(fetchAuctionDetail, 60000);
+  pollingInterval = setInterval(fetchAuctionDetail, 60000);
 };
 let timer;
 const currentTime = ref(new Date());
 onMounted(async () => {
-timer = setInterval(() => {
-  currentTime.value = new Date();
-}, 1000);
+  timer = setInterval(() => {
+    currentTime.value = new Date();
+  }, 1000);
 
+  console.log("알람모달", alarmModal.value);
+  const screenWidth = window.innerWidth;
+  bottomSheetStyle.value = {
+    position: screenWidth >= 1200 ? 'static' : 'fixed',
+    bottom: '0px'
+  };
+  console.log("Component mounted, fetching auctions");
+  await getAuctions();
+  await fetchAuctionDetail(); // Ensure this is awaited to get the latest auction detail before checking the condition
 
-console.log("알람모달", alarmModal.value);
-const screenWidth = window.innerWidth;
-bottomSheetStyle.value = {
-  position: screenWidth >= 1200 ? 'static' : 'fixed',
-  bottom: '0px'
-};
-console.log("Component mounted, fetching auctions");
-await getAuctions();
-await fetchAuctionDetail(); // Ensure this is awaited to get the latest auction detail before checking the condition
+  if(auctionDetail.value?.data?.status === 'ing' && isUser.value){
+    startPolling();
+  }
 
-if(auctionDetail.value?.data?.status === 'ing' && isUser.value){
-  startPolling();
-}
+  window.addEventListener('scroll', checkScroll);
 
-window.addEventListener('scroll', checkScroll);
-
-try {
-  console.log('Sorted Top Bids:', sortedTopBids.value);
-} catch (error) {
-  console.error('Error fetching auction detail:', error);
-}
+  try {
+    console.log('Sorted Top Bids:', sortedTopBids.value);
+  } catch (error) {
+    console.error('Error fetching auction detail:', error);
+  }
 });
 
 onUnmounted(() => {
-clearInterval(timer);
-window.removeEventListener('scroll', checkScroll);
-if(isUser.value){
-  clearInterval(pollingInterval);
-}
+  clearInterval(timer);
+  window.removeEventListener('scroll', checkScroll);
+  if(isUser.value){
+    clearInterval(pollingInterval);
+  }
 });
 
 
 const populateHopePrice = () => {
-if (auctionDetail.value && auctionDetail.value.data) {
+  if (auctionDetail.value && auctionDetail.value.data) {
     amount.value = '';
-}
+  }
 };
 
 const sortedBids = computed(() => {
-const bids = auctionDetail.value?.data?.bids?.slice().sort((a, b) => b.price - a.price) || [];
-if (bids.length > 0) {
-  highestBid.value = bids[0].price;
-  lowestBid.value = bids[bids.length - 1].price;
-}
-return bids;
+  const bids = auctionDetail.value?.data?.bids?.slice().sort((a, b) => b.price - a.price) || [];
+  if (bids.length > 0) {
+    highestBid.value = bids[0].price;
+    lowestBid.value = bids[bids.length - 1].price;
+  }
+  return bids;
 });
 
 
 const finalAt = () => {
   if (auctionDetail.value?.data?.status === 'ing') {
-const finalAtValue = auctionDetail.value.data.final_at;
-const finalAtDate = new Date(finalAtValue.replace(' ', 'T') + 'Z'); 
-console.log('DB에서 받은 finalAtValue:', finalAtValue);
-console.log('Parsed finalAtDate:', finalAtDate.toString());
-return finalAtDate;
-}
+    const finalAtValue = auctionDetail.value.data.final_at;
+    const finalAtDate = new Date(finalAtValue.replace(' ', 'T') + 'Z'); 
+    console.log('DB에서 받은 finalAtValue:', finalAtValue);
+    console.log('Parsed finalAtDate:', finalAtDate.toString());
+    return finalAtDate;
+  }
 }; // 마감 시간을 Date 객체로 변환
 const padZero = (num) => {
-return num < 10 ? '0' + num : num; // 숫자가 10보다 작을 경우 앞에 '0' 추가
+  return num < 10 ? '0' + num : num; // 숫자가 10보다 작을 경우 앞에 '0' 추가
 };
 const timeLeft = computed(() => {
   if (auctionDetail.value?.data?.status === 'ing') {
@@ -1420,29 +1453,30 @@ const timeLeft = computed(() => {
 });
 
 const handleCancelBid = async () => {
-try {
-  const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id && !bid.deleted_at);
-  if (myBid) {
-    const result = await cancelBid(myBid.id);
-    if (result.success) {
-      myBid.deleted_at = new Date().toISOString();
-      await fetchAuctionDetail();
-      amount.value = '';
-      succesbid.value = false;
-      koreanAmount.value = '원';
+  try {
+    const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id && !bid.deleted_at);
+    if (myBid) {
+      const result = await cancelBid(myBid.id);
+      if (result.success) {
+        myBid.deleted_at = new Date().toISOString();
+        await fetchAuctionDetail();
+        amount.value = '';
+        succesbid.value = false;
+        koreanAmount.value = '원';
+      } else {
+        alert(result.message);
+      }
     } else {
-      alert(result.message);
+      alert('입찰 내역이 없습니다.');
     }
-  } else {
-    alert('입찰 내역이 없습니다.');
+  } catch (error) {
+    console.error('Error canceling bid:', error);
+    alert('입찰 취소에 실패했습니다.');
   }
-} catch (error) {
-  console.error('Error canceling bid:', error);
-  alert('입찰 취소에 실패했습니다.');
-}
 };
 
 </script>
+
 
 
 <style scoped>
