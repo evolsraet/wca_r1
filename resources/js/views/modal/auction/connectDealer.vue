@@ -1,5 +1,5 @@
 <template>
-    <section class="modal modal-section type-confirm alert-modal-type02">
+    <section class="modal modal-section type-confirm alert-modal-type02 process">
       <div class="modal-dialog">
         <div class="modal-content shadow">
           <div class="modal-body">
@@ -29,7 +29,7 @@
                     <p><span>{{ userData?.dealer?.company_addr1 }}, {{ userData?.dealer?.company_addr2 }}</span></p>
                   </div>
                   <div class="info-item m-0">
-                    <p class="text-start">{{ userData?.dealer?.introduce }}</p>
+                    <p class="text-start process">{{ userData?.dealer?.introduce }}</p>
                   </div>
                 </div>
               </div>
@@ -50,7 +50,11 @@
   <script setup>
   import { defineProps, defineEmits } from 'vue';
   import { cmmn } from '@/hooks/cmmn';
+<<<<<<< HEAD
 
+=======
+  const { numberToKoreanUnit , amtComma } = cmmn();
+>>>>>>> a0269b7043b9016e5de4266cbaa63f00dad81231
   const props = defineProps({
     bid: Object,
     userData: Object,

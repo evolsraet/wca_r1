@@ -477,8 +477,8 @@
                                   <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
                               </transition>
                               <!--  <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>-->
-                              <div class="content mt-3 text-start">
-                                  <h5>경매에 참여한 딜러</h5>
+                              <div class="content mt-3 text-start process">
+                                  <h5 class="process">경매에 참여한 딜러</h5>
                                   <p> 금액이 가장 높은 <span class="highlight">5명</span>까지만 표시돼요.</p>
                                   <div class="overflow-auto select-dealer mt-3">
                                       <table class="">
@@ -560,7 +560,7 @@
                               </div>
 
                               <div class="p-4 rounded text-body-emphasis bg-body-secondary">
-                                  <div class="info-item m-0">
+                                  <div class="info-item m-0 process">
                                       <div class="phone"></div>
                                       <p>010-1234-1234</p>
                                   </div>
@@ -626,7 +626,7 @@
 
                       <div v-if="isDealer">
                           <!------------------- [딜러] - 경매 완료 -------------------->
-                          <div  v-if="auctionDetail.data.status === 'chosen'" @click.stop="">
+                          <div v-if="auctionDetail.data.status === 'chosen' || auctionDetail.data.status === 'done'" @click.stop="">
                             <div class="steps-container mb-3">
                                   <div class="step completed">
                                       <div class="label completed">
@@ -656,6 +656,33 @@
                                 <transition name="fade">  
                                 <ClaimModal v-if="isClaimModalOpen" :isOpen="isClaimModalOpen" @close="closeClaimModal" />
                                 </transition>
+                              </div>
+                            
+
+                              <div v-if="auctionDetail.data.status === 'wait'" @click.stop="">
+                            <div class="steps-container mb-3">
+                                  <div class="step completed">
+                                      <div class="label completed">
+                                          STEP01
+                                      </div>
+                                      <div class="label label-style tc-light-gray">매물 준비</div>
+                                  </div>
+                                  <div class="line completing"></div>
+                                  <div class="step completing">
+                                      <div class="label completing">
+                                          STEP02
+                                      </div>
+                                      <div class="label label-style tc-light-gray completing-text">경매</div>
+                                  </div>
+                                  <div class="line "></div>
+                                  <div class="step ">
+                                      <div class="label ">
+                                          STEP03
+                                      </div>
+                                      <div class="label label-style02 tc-light-gray">완료</div>
+                                  </div>
+                              </div> 
+                              <p class="auction-deadline text-center mt-2">경매 선택 중 입니다.</p>
                               </div>
 
                           <!------------------- [딜러] - 입찰 바텀 뷰 -------------------->
@@ -733,9 +760,14 @@
                               <h5 class="mx-3 text-center">{{ minutesLeft }}</h5>
                               <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ amtComma(myBidPrice) }}</span></p>
                               <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 0 명</h5>
-                              <button type="button" class="my-3 w-100 btn btn-outline-primary" @click="handleCancelBid">
-                                  입찰 취소
+                              <button
+                                type="button"
+                                class="my-3 w-100 btn"
+                                :class="{'btn-outline-primary': auctionDetail.data.hope_price === null, 'primary-disable': auctionDetail.data.hope_price !== null}"
+                                @click="handleCancelBid">
+                                입찰 취소
                               </button>
+
                               <!--  수수료 보증금이 부족할때 나오는 메뉴
                                   <div class="bottom-message">
                                       성사수수료 보즘금이 부족해요
@@ -760,10 +792,17 @@
                                     </div>-->
                                     <h5 class="text-center mt-5">희망가에 입찰 완료 되었습니다.</h5>
                                     <p class="text-center tc-red mb-2">※ 희망가에 입찰이 완료되었습니다. 수정이 불가능합니다.</p>
-                                    <button type="button" class="my-3 w-100 btn btn-outline-primary" @click="handleCancelBid">
-                                          입찰 취소
-                                      </button>
+                                    <button
+                                type="button"
+                                class="my-3 w-100 btn"
+                                :class="{'btn-outline-primary': auctionDetail.data.hope_price === null, 'primary-disable': auctionDetail.data.hope_price !== null}"
+                                @click.prevent="openAlarmGuidModal">
+                                입찰 취소
+                              </button>
                             </div>
+                            <transition name="fade">
+                              <AlarmGuidModal ref="alarmGuidModal" />
+                          </transition>
                       </div>
                   </bottom-sheet>
             </div>
@@ -881,6 +920,7 @@ import modal from '@/views/modal/modal.vue';
 import auctionModal from '@/views/modal/auction/auctionModal.vue';
 import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
+import AlarmGuidModal from '@/views/modal/AlarmGuidModal.vue';
 import ClaimModal from '@/views/modal/ClaimModal.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
 import { cmmn } from '@/hooks/cmmn';
@@ -893,6 +933,7 @@ const isClaimModalOpen = ref(false);
 const lastBidId = ref(null);
 const usersInfo = ref({});
 const alarmModal = ref(null);
+const alarmGuidModal = ref(null);
 const isSellChecked = ref(false);
 const { getUser } = useUsers();
 const store = useStore();
@@ -1037,6 +1078,15 @@ const openAlarmModal = () => {
     alarmModal.value.openModal();
   }
 };
+
+const openAlarmGuidModal = () => {
+  console.log("openAlarmGuidModal called");
+  if (alarmGuidModal.value) {
+    alarmGuidModal.value.openModal();
+  }
+};
+
+
 
 const isModalVisible = ref(false);
 const selectedAuctionId = ref(null);
@@ -1244,27 +1294,16 @@ const closeBidModal = () => {
 };
 
 const submitAuctionBid = async () => {
-  if (!amount.value || isNaN(parseFloat(amount.value))) {
-    alert('유효한 금액을 입력해주세요.');
-  } else {
-    // 희망가와 사용자가 입력한 금액 비교
-    if (auctionDetail.value.data.hope_price !== null && amount.value == auctionDetail.value.data.hope_price) {
-      // 희망가에 입찰한 경우 즉시 낙찰 처리
-      try {
-        const bidResult = await submitBid(auctionDetail.value.data.id, amount.value, user.value.id);
-        if (bidResult.success) {
-          await handleImmediateAuctionEnd(user.value.id, amount.value);
-        } else {
-          alert(bidResult.message);
-        }
-      } catch (error) {
-        console.error('Error confirming bid:', error);
-      }
-    } else {
-      openBidModal();
-    }
-  }
+const userBidExists = auctionDetail.value?.data?.bids?.some(bid => bid.user_id === user.value.id && !bid.deleted_at);
+if (!amount.value || isNaN(parseFloat(amount.value))) {
+  alert('유효한 금액을 입력해주세요.');
+} else {
+    openBidModal();
 };
+}
+
+
+
 
 const handleImmediateAuctionEnd = async (userId, price) => {
   const id = route.params.id;
@@ -1272,15 +1311,15 @@ const handleImmediateAuctionEnd = async (userId, price) => {
     status: 'chosen',
     final_price: price,
     bid_id: userId,
-    chosen_at: new Date().toISOString(),
+    //chosen_at: new Date().toISOString(),
   };
 
   try {
-    const response = await axios.post(`http://localhost/api/user/completeAuction/${id}`, data); // 사용자 API로 요청
+    const response = await axios.post(`api/auctions/${id}`, data); // 사용자 API로 요청
     auctionDetail.value.data.status = 'chosen';
     auctionDetail.value.data.final_price = price;
     auctionDetail.value.data.bid_id = userId;
-    auctionDetail.value.data.chosen_at = data.chosen_at;
+   /* auctionDetail.value.data.chosen_at = data.chosen_at;*/
     completeAuctionModal.value = true; // 경매 완료 모달 표시
   } catch (error) {
     console.error('Error completing auction:', error);
@@ -1297,9 +1336,9 @@ const confirmBid = async () => {
       await fetchAuctionDetail();
       closeBidModal();
       succesbid.value = true;
-      if (auctionDetail.value.data.hope_price !== null && amount.value == auctionDetail.value.data.hope_price) {
+     /* if (auctionDetail.value.data.hope_price !== null && amount.value == auctionDetail.value.data.hope_price) {
         await handleImmediateAuctionEnd(user.value.id, amount.value);
-      }
+      }*/
     } else {
       alert(bidResult.message);
     }
@@ -1378,7 +1417,6 @@ onMounted(async () => {
     currentTime.value = new Date();
   }, 1000);
 
-  console.log("알람모달", alarmModal.value);
   const screenWidth = window.innerWidth;
   bottomSheetStyle.value = {
     position: screenWidth >= 1200 ? 'static' : 'fixed',
