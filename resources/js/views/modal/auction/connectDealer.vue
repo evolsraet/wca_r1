@@ -1,5 +1,5 @@
 <template>
-    <section class="modal modal-section type-confirm alert-modal-type02">
+    <section class="modal modal-section type-confirm alert-modal-type02 process">
       <div class="modal-dialog">
         <div class="modal-content shadow">
           <div class="modal-body">
@@ -13,7 +13,7 @@
                     <img src="../../../../img/myprofile_ex.png" alt="Profile Image" class="main-profile">
                     <div class="deal-info">
                       <div :class="[(bid.index === 1 ? 'red-box' : bid.index < 3 ? 'blue-box' : 'gray-box'), 'rounded-pill', 'me-0']">{{ bid.index }}순위</div>
-                      <div class="bold-20-font">{{ bid?.price }} 만원</div>
+                      <div class="bold-20-font">{{ amtComma(bid?.price) }}</div>
                       <div class="bold-18-font">{{ userData?.dealer.name }}</div>
                       <p>{{ userData?.dealer?.company }}</p>
                     </div>
@@ -29,7 +29,7 @@
                     <p><span>{{ userData?.dealer?.company_addr1 }}, {{ userData?.dealer?.company_addr2 }}</span></p>
                   </div>
                   <div class="info-item m-0">
-                    <p class="text-start">{{ userData?.dealer?.introduce }}</p>
+                    <p class="text-start process">{{ userData?.dealer?.introduce }}</p>
                   </div>
                 </div>
               </div>
@@ -49,7 +49,8 @@
   
   <script setup>
   import { defineProps, defineEmits } from 'vue';
-  
+  import { cmmn } from '@/hooks/cmmn';
+  const { numberToKoreanUnit , amtComma } = cmmn();
   const props = defineProps({
     bid: Object,
     userData: Object,

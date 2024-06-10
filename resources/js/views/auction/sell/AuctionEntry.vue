@@ -53,6 +53,10 @@
           <textarea type="text" id="memo" v-model="memo" placeholder="침수 및 화재 이력 등 차량관련 주요사항이 있으면 적어주세요." rows="2"></textarea>
         </div>
         <h5><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
+        <input type="file" @change="handleFileUploadOwner" ref="fileInputRefOwner" style="display:none">
+            <button type="button" class="btn btn-fileupload" @click="triggerFileUploadOwner">
+                파일 첨부
+            </button>
         <!-- 파일 첨부 -->
         <div class="flex items-center justify-end mt-5">
           <button type="submit" class="btn primary-btn normal-16-font">경매 신청하기</button>
@@ -104,7 +108,7 @@ const fileInputRef = ref(null); // 파일 입력 참조
 const startY = ref(0);
 const currentY = ref(0);
 const isDragging = ref(false);
-
+const fileInputRefOwner = ref(null);
 // 경매 등록 함수
 const auctionEntry = async () => {
   // 필수 정보를 확인
@@ -244,7 +248,21 @@ const handleTouchMove = event => {
     document.querySelector('.detail-content02').style.transform = `translateY(${diffY}px)`;
   }
 };
-
+function handleFileUploadOwner(event) {
+    const file = event.target.files[0];
+    if (file) {
+        auctionEntry.file_user_owner = file;
+        auctionEntry.file_user_owner_name = file.name;
+        console.log("Business registration file:", file.name);
+    }
+}
+function triggerFileUploadOwner() {
+    if (fileInputRefOwner.value) {
+        fileInputRefOwner.value.click();
+    } else {
+        console.error("파일을 찾을 수 없습니다.");
+    }
+}
 // 터치 종료 이벤트 핸들러
 const handleTouchEnd = () => {
   isDragging.value = false;

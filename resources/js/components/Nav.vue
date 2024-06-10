@@ -590,7 +590,7 @@ function toggleOverlay(show) {
 }
 
 .menu-illustration img {
-    width: 100%;
+    width: auto;
     height: 100%;
 }
 
