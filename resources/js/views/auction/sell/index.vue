@@ -91,9 +91,9 @@
                                 </transition>
                             </div> 
                         </div>
-                        <transition name="fade">
+                        
                             <InfoModal v-if="showModal" @close="closeModal" @refresh="startLoading"/>
-                        </transition>
+                    
                         <div class="flex items-center justify-end mt-5">
                             <router-link :to="{ path: '/selldt' }" class="btn primary-btn ">경매 신청하기</router-link>
                         </div>

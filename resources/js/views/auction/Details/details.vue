@@ -77,14 +77,14 @@
                                     </template>
                                   </div>
                                   <div v-if="isDealer && auctionDetail.data.status === 'ing' " class="p-3">
-                                    <transition name="fade">
+                                
                                         <div v-if=" auctionDetail.data.hope_price !== null">
                                           <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
                                               <p>현재 희망가</p>
                                               <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
                                             </div>
                                         </div>
-                                      </transition>
+                                    
                                   </div>
                               </div>
                           </div>
@@ -474,9 +474,9 @@
                                   <button @click="openModal" type="button" class="btn btn-outline-dark">경매취소</button>
                                   <button type="button" class="btn btn-dark" @click="toggleView">재경매</button>
                               </div>
-                              <transition name="fade" mode="out-in">
+                            
                                   <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
-                              </transition>
+                             
                               <!--  <p class="text-end tc-light-gray">3번 더 재경매 할 수 있어요.</p>-->
                               <div class="content mt-3 text-start process">
                                   <h5 class="process">경매에 참여한 딜러</h5>
@@ -505,9 +505,9 @@
                                               </tr>
                                           </tbody>
                                       </table>
-                                      <transition name="fade">
+                                   
                                           <ConnectDealerModal v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
-                                      </transition>
+                                     
                                   </div>
                               </div>
                           </div>
@@ -542,14 +542,14 @@
                                   <button type="button" class="btn btn-outline-dark" @click="cancelSelection">선택 취소</button>
                                   <button type="button" class="btn btn-primary" @click="completeAuction">선택 완료</button>
                               </div>
-                              <transition name="fade">
+                           
                                 <div v-if="completeAuctionModal" class="modal">
                                   <div class="modal-content">
                                     <h5>경매가 성공적으로 완료되었습니다.</h5>
                                     <button @click="closeCompleteAuctionModal">확인</button>
                                   </div>
                                 </div>
-                              </transition>
+                             
     
                               <h5 class="mt-5 text-start">내가 선택한 딜러</h5>
                               <div class="select-content my-4">
@@ -654,9 +654,9 @@
                               <h5 class="text-center mt-4"> 불편 사항이 있으신가요?</h5>
                               <router-link :to="{ name: 'index.claim' }" type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</router-link >
                                 <a href="#" class="d-flex justify-content-center tc-light-gray" @click.prevent="openClaimModal">클레임 규정 확인</a>
-                                <transition name="fade">  
+                              
                                 <ClaimModal v-if="isClaimModalOpen" :isOpen="isClaimModalOpen" @close="closeClaimModal" />
-                                </transition>
+                           
                               </div>
                             
 
@@ -778,9 +778,9 @@
                                   <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
                                   <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
                                   </div>
-                              <transition name="fade">
+                          
                                   <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
-                              </transition>
+                         
                             </div>
                             <!------------------- [딜러] - 입찰 완료후 바텀 메뉴 -------------------->
                             <div v-if="isDealer && auctionDetail.data.status === 'ing' && (succesbid || succesbidhope || auctionDetail.data.bids.some(bid => bid.user_id === user.id))&& auctionDetail.data.hope_price !== null" @click.stop="">
@@ -801,9 +801,9 @@
                                 입찰 취소
                               </button>
                             </div>
-                            <transition name="fade">
+                         
                               <AlarmGuidModal ref="alarmGuidModal" />
-                          </transition>
+                       
                       </div>
                   </bottom-sheet>
             </div>
@@ -900,9 +900,9 @@
               <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
               <div class="btn-group mt-3 mb-2">
                   <button type="button" class="btn btn-primary" @click="reauction">재경매</button>
-                  <transition name="fade">
+               
                       <modal v-if="reauctionModal" :isVisible="reauctionModal" />
-                  </transition>
+               
               </div>
           </div>
       </div>

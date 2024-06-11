@@ -14,9 +14,9 @@
         </div>
       </div>
     </footer>
-    <transition name="fade" mode="out-in">
+
         <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
-      </transition>
+
   </template>
   
   <script>

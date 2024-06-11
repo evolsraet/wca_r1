@@ -174,9 +174,8 @@
           </div>
         </div>
       </div>
-      <transition name="fade" mode="out-in">
+ 
         <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
-      </transition>
     </div>
   </template>
   

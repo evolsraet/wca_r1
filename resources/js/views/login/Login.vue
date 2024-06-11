@@ -159,9 +159,9 @@
             </div>
           </div>
           <AlarmModal ref="alarmModal" />
-          <transition name="fade">
+         
             <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
-          </transition>
+         
         </div>
     
         <div v-if="isMobileView" class="card login-card login-any border-0" ref="loginCardRef">
@@ -217,9 +217,8 @@
           </div>
         </div>
         <AlarmModal ref="alarmModal" />
-        <transition name="fade">
           <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
-        </transition>
+
       </div>
     </div>
   
