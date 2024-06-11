@@ -1,14 +1,27 @@
 <template>
   <div class="container">
-    <!-- 회원가입 권장 섹션 -->
-    <div class="regiest-content">
-      <div class="p-4 app-specific-size">
+    <div class="main-contenter">
+      <div v-if="isMobileView" class="p-4 app-specific-size">
         <div class="text-center">
           <h2 class="my-4 fw-bold"><mark class="custom-highlight">회원가입시</mark> 판매가 빨라져요</h2>
           <p class="bold-link text-muted">소셜 로그인 및 이메일로 가입 할 수 있어요.</p>
         </div>
       </div>
-      <div class="layout-container">
+      <div class="register-content">
+      <div v-if="!isMobileView">
+          <div class="any-content">
+          <div class="review-any"></div>
+        </div>
+        <div :class="animationClass" ref="animatedSection">
+        <div class="css-ifyyt1 gap-5">
+          <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
+        <h5 class="font-title">위카와 함께해요.</h5>
+      </div>
+      <p class="tc-light-gray font-sub-title">13,314명이 위카와 함께 했어요!</p>
+    </div>
+  </div>
+</div>
+   <!--   <div class="layout-container">
         <div class="banner">
           <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
             <div class="carousel-indicators">
@@ -45,8 +58,8 @@
               <span class="visually-hidden">Next</span>
             </button>
           </div>
-        </div>
-        <div class="review-content">
+        </div>-->
+        <!--   <div class="review-content">
           <div class="apply-top text-start">
             <h3 class="review-title">다른 사람들의 이용후기에요</h3>
             <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">전체보기</router-link>
@@ -88,8 +101,70 @@
               </div>
             </div>
           </div>
+        </div>-->
+        <div v-if="!isMobileView" class="card login-card border-0 overlay-style">
+            <div class="card-body">
+              <!-- 로그인 폼 -->
+              <form @submit.prevent="submitLogin">
+                <div class="">
+                  <div class="video-container d-sm-flex">
+                        <video autoplay loop muted>
+                          <source src="../../../img/video/mainvideo.mp4" type="video/mp4">
+                        </video>
+                      </div>
+                  <div class="my- text-left">
+                    <router-link :to="{ path: '/' }" class="register-link text-muted ms-2">이미 위카 회원이신가요?</router-link>
+                  </div>
+                  <!-- 이메일 입력 -->
+                  <div class="mb-2">
+                    <label for="email" class="form-label"></label>
+                    <input v-model="loginForm.email" id="email" type="email" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="이메일을 입력해주세요.">
+                  </div>
+                  <!-- 비밀번호 입력 -->
+                  <div class="mb-2">
+                    <label for="password" class="form-label">
+                    </label>
+                    <input v-model="loginForm.password" id="password" type="password" class="form-control border-0 border-bottom" required autocomplete="current-password" placeholder="비밀번호를 입력해주세요.">
+                  </div>
+                  <!-- 백엔드 오류 메시지 -->
+      
+                  <!-- 소셜 로그인 섹션 -->
+                  <div class="login-v2 mb-3">
+                    <h3 class="my-4 text-muted"><span>또는 소셜 로그인</span></h3>
+                    <ul class="login-v2-area">
+                      <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal">Google</a></li>
+                      <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal">Naver</a></li>
+                      <li><a href="#" class="kakao" title="kakao" @click.prevent="openAlarmModal">Kakao</a></li>
+                    </ul>
+                  </div>
+                  <!-- 로그인 버튼 -->
+                  <div class="flex items-center justify-end my-4">
+                    <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
+                      로그인
+                    </button>
+                  </div>
+                </div>
+                <router-link :to="{name: 'auth.forgot-password'}">비밀번호 찾기</router-link>
+                <div class="register-link text-center">
+                  <router-link :to="{ path: '/register' }" class="register-link">회원가입하기</router-link>
+                </div>
+                <div class="text-muted mt-4 text-center">
+                  <p class="fs-6">
+                    <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
+                    <span @click="openModal('terms')" class="link-style">이용약관</span>
+                  </p>
+                  <p class="my-3 tc-light-gray">ⓒ Watosys all rights reserved.</p>
+                  </div>
+              </form>
+            </div>
+          </div>
+          <AlarmModal ref="alarmModal" />
+          <transition name="fade">
+            <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
+          </transition>
         </div>
-        <div class="card login-card login-any border-0" ref="loginCardRef">
+    
+        <div v-if="isMobileView" class="card login-card login-any border-0" ref="loginCardRef">
           <div class="card-body">
             <!-- 로그인 폼 -->
             <form @submit.prevent="submitLogin">
@@ -147,11 +222,11 @@
         </transition>
       </div>
     </div>
-  </div>
+  
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, computed } from 'vue';
+import { ref, onMounted, nextTick, computed, onBeforeUnmount } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
@@ -169,11 +244,16 @@ const alarmModal = ref(null);
 const store = useStore();
 const router = useRouter();
 const errorMessage = computed(() => store.getters['auth/errorMessage']);
-
+const isMobileView = ref(window.innerWidth <= 640);
 const openModal = (type) => {
   modalContent.value = type;
   isModalOpen.value = true;
 };
+const checkScreenWidth = () => {
+    if (typeof window !== 'undefined') {
+      isMobileView.value = window.innerWidth <= 640;
+    }
+  };
 const openAlarmModal = () => {
 console.log("openAlarmModal called");
 if (alarmModal.value) {
@@ -250,7 +330,14 @@ onMounted(() => {
       loginCard.classList.add('enter-active');
     }, 200);
   });
+  window.addEventListener('resize', checkScreenWidth);
+    checkScreenWidth();
 });
+
+
+  onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScreenWidth);
+}); 
 </script>
 
 <style scoped>
@@ -269,4 +356,96 @@ onMounted(() => {
   opacity: 1;
   transform: translateY(0);
 }
+
+
+.enter-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.register-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.overlay-style {
+  height: 100vh;
+}
+
+.register-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.overlay-style {
+  height: 100vh;
+}
+
+.review-any {
+  width: 100%;
+  height: 100%;
+  background-repeat: repeat-x;
+  background-position: 0px 50%;
+  background-size: auto 100%;
+  background-image: url('../../../img/car_grid.png'); 
+  animation: slide 30s linear infinite;
+}
+.any-content {
+  height: 24.5rem;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  bottom: 0rem;
+  overflow: hidden;
+  z-index: 0;
+}
+@keyframes slide {
+  0% {
+    background-position-x: 0px;
+  }
+  100% {
+    background-position-x: -2734px;
+  }
+}
+.css-ifyyt1 {
+  display: grid;
+  padding: 7rem 17px 9rem;
+  color: rgb(39, 46, 64);
+  align-content: space-evenly;
+}
+.css-kzs0t {
+  transition: opacity 0.8s ease-in-out 0s, transform 0.8s ease-in-out 0s;
+  opacity: 1;
+  transform: translateY(0px);
+}
+.css-91307t {
+  color: rgb(57, 110, 255);
+}
+.font-sub-title {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.font-title {
+  font-size: 2.3rem;
+  line-height: 3.3rem;
+  -webkit-text-stroke: 0.01875rem currentcolor;
+}
+.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+}
+@media (max-width: 768px) {
+      .css-ifyyt1 {
+          display: none;
+      }
+  }
+
+@media (max-width: 991px) {
+  .font-title {
+    font-size: 1.8rem;
+    line-height: 2rem;
+    -webkit-text-stroke: 0.01875rem currentcolor;
+}
+        }
 </style>

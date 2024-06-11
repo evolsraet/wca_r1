@@ -13,8 +13,22 @@
             </video>
           </div>
         </div>
-        <div class="layout-container">
-          <!-- 슬라이드 배너 -->
+        <div class="register-content">
+          <div v-if="!isMobileView">
+          <div class="any-content">
+          <div class="review-any"></div>
+        </div>
+        <div :class="animationClass" ref="animatedSection">
+        <div class="css-ifyyt1 gap-5">
+          <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
+        <h5 class="font-title">위카와 함께해요.</h5>
+      </div>
+      <p class="tc-light-gray font-sub-title">13,314명이 위카와 함께 했어요!</p>
+    </div>
+  </div>
+  </div>
+          <!--    <div class="layout-container">
+     
           <div class="banner" ref="bannerRef">
             <div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
               <div class="carousel-indicators">
@@ -51,9 +65,9 @@
                 <span class="visually-hidden">Next</span>
               </button>
             </div>
-          </div>
-          <!-- 이용 후기 섹션 -->
-          <div class="review-content mb-5" ref="reviewContentRef">
+          </div>-->
+     
+          <div v-if="isMobileView" class="review-content mb-5" ref="reviewContentRef">
             <div class="apply-top text-start">
               <h3 class="review-title">다른 사람들의 이용후기에요</h3>
               <router-link :to="{ name: 'index.allreview' }" class="btn-apply">전체보기</router-link>
@@ -80,11 +94,11 @@
               </div>
             </div>
           </div>
-          <!-- 모바일 화면에서 BottomSheet -->
+          
           <div v-if="isMobileView">
             <bottom-sheet initial="half" :dismissable="true">
               <template #default>
-                <!-- 조회 폼 -->
+               
                 <form @submit.prevent="submitCarInfo" class="d-flex flex-column">
                   <div class="row mb-1">
                     <div class="col-12">
@@ -118,12 +132,17 @@
             </bottom-sheet>
           </div>
           <!-- 웹 화면에서 조회 폼 -->
-          <div v-else class="card login-card border-0" :class="{ 'expanded': expanded }">
+          <div v-else class="card login-card border-0 overlay-style" :class="{ 'expanded': expanded }">
             <div class="card-body">
               <!-- 조회 폼 -->
               <form @submit.prevent="submitCarInfo" class="d-flex flex-column">
-                <div class="row mb-4">
+                <div class="row mb-4 mt-4">
                   <div class="col-12">
+                      <div class="video-container d-sm-flex">
+                        <video autoplay loop muted>
+                          <source src="../../../img/video/mainvideo.mp4" type="video/mp4">
+                        </video>
+                      </div>
                     <div>
                       <input type="text" class="form-control border-0 border-bottom my-4" placeholder="소유자가 누구인가요?" v-model="carInfoForm.owner">
                     </div>
@@ -132,6 +151,7 @@
                     </div>
                   </div>
                 </div>
+                <img src="../../../img/modal/car-objects-blur.png" alt="자동차 이미지" width="150" height="150" style="margin: auto !important;">
                 <div class="row mt-4">
                   <div class="col-12">
                     <div class="d-flex justify-content-end my-2">
@@ -142,10 +162,10 @@
                     </div>
                     <div class="text-muted mt-4 text-center">
                       <p class="fs-6">
-                        <span @click="openModal('copywrite')" class="link-style">카피라이트</span> |
                         <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
                         <span @click="openModal('terms')" class="link-style">이용약관</span>
                       </p>
+                      <p class="my-3 tc-light-gray">ⓒ Watosys all rights reserved.</p>
                     </div>
                   </div>
                 </div>
@@ -168,10 +188,10 @@
   import LawGid from '@/views/modal/LawGid.vue';
   import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
   import { initReviewSystem } from '@/composables/review';
-
+  
   const bannerRef = ref(null);
   const reviewContentRef = ref(null);
-  
+  const animatedSection = ref(null);
   const isModalOpen = ref(false);
   const modalContent = ref('');
   
@@ -181,6 +201,7 @@
   const { carInfoForm, submitCarInfo, processing } = useAuctions();
   
   const isMobileView = ref(window.innerWidth <= 640);
+  const animationClass = ref('css-kzs0t hidden');
   
   const openModal = (type) => {
     modalContent.value = type;
@@ -197,70 +218,157 @@
     }
   };
   
-  const { getHomeReview , reviewsData , splitDate } = initReviewSystem(); 
-
-  onMounted(() => {
-    getHomeReview();
-    nextTick(() => {
-      const banner = bannerRef.value;
-      const reviewContent = reviewContentRef.value;
-      setTimeout(() => {
-        banner.classList.add('enter-active');
-      }, 100);
-      setTimeout(() => {
-        reviewContent.classList.add('enter-active');
-      }, 500);
-    });
-    window.addEventListener('resize', checkScreenWidth);
-    checkScreenWidth();
-  });
+  const { getHomeReview, reviewsData, splitDate } = initReviewSystem();
   
-  onBeforeUnmount(() => {
-    window.removeEventListener('resize', checkScreenWidth);
+  onMounted(() => {
+  getHomeReview();
+  nextTick(() => {
+    const banner = bannerRef.value;
+    const reviewContent = reviewContentRef.value;
+    const animatedSectionElement = animatedSection.value;
+
+    setTimeout(() => {
+      banner.classList.add('enter-active');
+    }, 100);
+    setTimeout(() => {
+      reviewContent.classList.add('enter-active');
+    }, 500);
+    setTimeout(() => {
+      if (animatedSectionElement) {
+        animatedSectionElement.classList.add('enter-active');
+        animatedSectionElement.classList.remove('hidden');
+      }
+    }, 600);
   });
-  </script>
+  window.addEventListener('resize', checkScreenWidth);
+  checkScreenWidth();
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScreenWidth);
+});
+</script>
   
   <style scoped>
-  .bottom-sheet {
-    overflow-y: hidden !important;
-  }
-  .card.no-shadow {
+.bottom-sheet {
+  overflow-y: hidden !important;
+}
+.card.no-shadow {
+  box-shadow: none;
+}
+.card.no-hover:hover {
+  box-shadow: none;
+}
+@media (max-width: 640px) {
+  .card.login-card {
     box-shadow: none;
   }
-  .card.no-hover:hover {
+  .card.login-card::before {
+    content: none;
+  }
+  .card.login-card:hover {
     box-shadow: none;
   }
-  @media (max-width: 640px) {
-    .card.login-card {
-      box-shadow: none;
-    }
-    .card.login-card::before {
-      content: none;
-    }
-    .card.login-card:hover {
-      box-shadow: none;
-    }
+}
+.rating__label .star-icon {
+  width: 30px;
+  height: 30px;
+}
+.login-card::before{
+  display: none;
+}
+.banner,
+.review-content,
+.login-any {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 1s ease-out, transform 1s ease-out;
+}
+.review-content {
+  transform: translateX(-20px);
+}
+.login-any {
+  transform: translateX(20px);
+}
+.enter-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.register-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.overlay-style {
+  height: 100vh;
+}
+
+.review-any {
+  width: 100%;
+  height: 100%;
+  background-repeat: repeat-x;
+  background-position: 0px 50%;
+  background-size: auto 100%;
+  background-image: url('../../../img/car_grid.png'); 
+  animation: slide 30s linear infinite;
+}
+.any-content {
+  height: 24.5rem;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  bottom: 0rem;
+  overflow: hidden;
+  z-index: 0;
+}
+@keyframes slide {
+  0% {
+    background-position-x: 0px;
   }
-  .rating__label .star-icon {
-    width: 30px;
-    height: 30px;
+  100% {
+    background-position-x: -2734px;
   }
-  .banner,
-  .review-content,
-  .login-any {
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 1s ease-out, transform 1s ease-out;
+}
+.css-ifyyt1 {
+  display: grid;
+  padding: 7rem 17px 9rem;
+  color: rgb(39, 46, 64);
+  align-content: space-evenly;
+}
+.css-kzs0t {
+  transition: opacity 0.8s ease-in-out 0s, transform 0.8s ease-in-out 0s;
+  opacity: 1;
+  transform: translateY(0px);
+}
+.css-91307t {
+  color: rgb(57, 110, 255);
+}
+.font-sub-title {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+}
+.font-title {
+  font-size: 2.3rem;
+  line-height: 3.3rem;
+  -webkit-text-stroke: 0.01875rem currentcolor;
+}
+.hidden {
+  opacity: 0;
+  transform: translateY(20px);
+}
+@media (max-width: 768px) {
+      .css-ifyyt1 {
+          display: none;
+      }
   }
-  .review-content {
-    transform: translateX(-20px);
-  }
-  .login-any {
-    transform: translateX(20px);
-  }
-  .enter-active {
-    opacity: 1;
-    transform: translateY(0);
-  }
-  </style>
-  
+
+@media (max-width: 991px) {
+  .font-title {
+    font-size: 1.8rem;
+    line-height: 2rem;
+    -webkit-text-stroke: 0.01875rem currentcolor;
+}
+        }
+
+</style>
