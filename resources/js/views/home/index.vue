@@ -202,6 +202,7 @@
   const { carInfoForm, submitCarInfo, processing } = useAuctions();
   
   const isMobileView = ref(window.innerWidth <= 640);
+
   const animationClass = ref('css-kzs0t hidden');
   
   const openModal = (type) => {
@@ -231,12 +232,14 @@
     setTimeout(() => {
       loginCard.classList.add('enter-active');
     }, 200);
-    setTimeout(() => {
+   /* setTimeout(() => {
       banner.classList.add('enter-active');
-    }, 100);
-    setTimeout(() => {
-      reviewContent.classList.add('enter-active');
-    }, 500);
+    }, 100);*/
+    if(isMobileView.value){
+      setTimeout(() => {
+        reviewContent.classList.add('enter-active');
+      }, 500);
+    }
     setTimeout(() => {
       if (animatedSectionElement) {
         animatedSectionElement.classList.add('enter-active');
