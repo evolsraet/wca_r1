@@ -102,7 +102,7 @@
             </div>
           </div>
         </div>-->
-        <div v-if="!isMobileView" class="card login-card border-0 overlay-style">
+        <div v-if="!isMobileView" class="card login-card border-0 overlay-style layover-style">
             <div class="card-body">
               <!-- 로그인 폼 -->
               <form @submit.prevent="submitLogin">

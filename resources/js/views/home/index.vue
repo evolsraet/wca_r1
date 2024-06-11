@@ -132,7 +132,7 @@
             </bottom-sheet>
           </div>
           <!-- 웹 화면에서 조회 폼 -->
-          <div v-else class="card login-card border-0 overlay-style" :class="{ 'expanded': expanded }">
+          <div v-else class="card login-card border-0 overlay-style layover-style" :class="{ 'expanded': expanded }">
             <div class="card-body">
               <!-- 조회 폼 -->
               <form @submit.prevent="submitCarInfo" class="d-flex flex-column">
