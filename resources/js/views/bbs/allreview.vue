@@ -7,12 +7,12 @@
           <button class="btn-apply mt-0" @click="toggleView">전체보기</button>
         </div>
         <div class="review-swiper">
-          <swiper :slidesPerView="slidesPerView" :spaceBetween="30" :pagination="{ clickable: true }" :modules="modules" class="mySwiper">
+          <swiper :slidesPerView="slidesPerView" :spaceBetween="30" :pagination="{ clickable: true }" class="mySwiper">
             <swiper-slide v-for="(slide, index) in slides" :key="index">
               <div class="review-card">
                 <div class="car-imges"></div>
                 <div class="card-body sub-style">
-                  <h5 class="card-title">{{ slide.title }}</h5>
+                  <h5 class="card-title">차량 종류 들어갈 예정: {{ slide.title }}</h5>
                   <div class="rating">
                     <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
                       <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
@@ -60,7 +60,7 @@
             <div class="card" @click="navigateToDetail(card.id)">
               <div class="car-imges"></div>
               <div class="card-body">
-                <h5 class="card-title">{{ card.title }}</h5>
+                <h5 class="card-title">차량 종류 들어갈 예정:{{ card.title }}</h5>
                 <div class="rating">
                   <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
                       <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
@@ -80,15 +80,18 @@
       </div>
       <nav>
         <ul class="pagination justify-content-center">
-          <li class="page-item">
-            <a class="page-link prev-style"></a>
-          </li>
-          <li class="page-item" v-for="n in totalPages" :key="n"><a class="page-link">{{ n }}</a></li>
-          <li class="page-item next-prev">
-            <a class="page-link next-style"></a>
-          </li>
+            <li class="page-item" :class="{ disabled: !pagination.prev }">
+            <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
+            </li>
+            <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+            <a class="page-link" @click="loadPage(n)">{{ n }}</a>
+            </li>
+            <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+            <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
+            </li>
         </ul>
-      </nav>
+        
+    </nav>
     </div>
   </div>
 </template>
@@ -100,7 +103,7 @@ import { initReviewSystem } from '@/composables/review';
 import { useRouter } from 'vue-router';
 import 'swiper/css';
 import 'swiper/css/pagination';
-import { Pagination } from 'swiper';
+//import { Pagination } from 'swiper';
 
 const showFullView = ref(false);
 const router = useRouter();
@@ -110,15 +113,17 @@ const isUser = computed(() => user.value?.roles?.includes('user'));
 
 const showBottomSheet = ref(true);
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
-const { getHomeReview , reviewsData , splitDate } = initReviewSystem(); 
+const { getHomeReview , reviewsData , splitDate, pagination } = initReviewSystem(); 
 const slidesPerView = ref(1); // 슬라이드를 한 번에 하나만 보이도록 설정
-const modules = [Pagination];
+//const modules = [Pagination];
 
 const slides = ref([]);
 
 const tags = ['자유문의1', '자유문의2', '댓글', '삭제'];
 
 const cards = ref([]);
+
+const currentPage = ref(1); // 현재 페이지 번호
 
 const totalPages = 3; // Adjust based on the number of cards and pagination logic
 
@@ -136,13 +141,7 @@ const toggleSheet = () => {
   showBottomSheet.value = !showBottomSheet.value;
 };
 
-function navigateToDetail(reviewId) {
-  console.log(reviewId);
-    router.push({ name: 'user.review-detail', params: { id: reviewId } });
-}
-
-onMounted(async () => {
-  await getHomeReview();
+const inputCardsValue = () => {
   slides.value = reviewsData.value.slice(0,4).map(review => ({
     title: review.id,
     id: review.id,
@@ -157,13 +156,30 @@ onMounted(async () => {
     date: review.created_at,
     text: review.content
   }));
+}
+
+function navigateToDetail(reviewId) {
+  console.log(reviewId);
+    router.push({ name: 'user.review-detail', params: { id: reviewId } });
+}
+
+async function loadPage(page) { // 페이지 로드
+  if (page < 1 || page > pagination.value.last_page) return;
+  currentPage.value = page;
+  await getHomeReview(page); // getHomeReview 호출을 대기
+  inputCardsValue();
+}
+
+
+onMounted(async () => {
+  await getHomeReview();
+  inputCardsValue();
 });
 
 onUnmounted(() => {
 });
 </script>
 <style scoped>
-
 .btn-apply::after {
   margin-top: 0 !important;
   margin-bottom: 2px;
@@ -251,3 +267,4 @@ onUnmounted(() => {
   }
 }
 </style>
+

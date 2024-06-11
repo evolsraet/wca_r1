@@ -24,10 +24,19 @@ export default function useAuctions() {
     });
 
 // 경매 내용 통신 (페이지까지)
-const getAuctions = async (page = 1) => {
+const getAuctions = async (page = 1, isReviews = false) => {
     try {
-        const response = await axios.get(`/api/auctions?page=${page}`);
         
+        let response ;
+
+        if(isReviews){
+            response = await axios.get(`/api/auctions?page=${page}&where=auctions.status:done|auctions.bid_id:>:0&with=reviews`);
+        } else {
+            response = await axios.get(`/api/auctions?page=${page}`);
+        }
+        
+        console.log(response);
+
         auctionsData.value = response.data.data;
 
         pagination.value = response.data.meta;
@@ -386,6 +395,7 @@ const deleteAuction = async (id) => {
         })
         
       };
+
 
     return {
         AuctionCarInfo,
