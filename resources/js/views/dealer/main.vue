@@ -2,7 +2,7 @@
     TODO: 조회시 조회수 2,3개 올라가는 문제 onmount문제? 같음
 -->
 <template>
-    <div class="container">
+    <div class="container my-4">
         <div class="regiest-content">
             <div class="layout-container02">
                 <!-- 딜러 프로필 요약 정보 -->
@@ -37,16 +37,16 @@
                         </div>
                         <div class="slide-up-ani activity-info bold-18-font process">
                             <router-link :to="{  name: 'auction.index' }" class="item">
-                            <p><span class="tc-red slide-up" ref="item1">0</span> 건</p>
-                            <p class="interest-icon tc-light-gray normal-16-font">관심</p>
+                            <p><span class="tc-red slide-up mb-0" ref="item1">0</span> 건</p>
+                            <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
                             </router-link>
                             <router-link :to="{ name: 'auction.index' }" class="item">
-                            <p><span class="tc-red" ref="item2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
-                            <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
+                            <p><span class="tc-red mb-0" ref="item2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
+                            <p class="bid-icon tc-light-gray normal-16-font mb-0">입찰</p>
                             </router-link>
                             <router-link :to="{  name: 'dealer.bids' }" class="item">
-                            <p><span class="tc-red" ref="item3">{{ filteredViewBids.length }}</span> 건</p>
-                            <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
+                            <p><span class="tc-red mb-0" ref="item3">{{ filteredViewBids.length }}</span> 건</p>
+                            <p class="suc-bid-icon tc-light-gray normal-16-font mb-0">낙찰</p>
                             </router-link>
                          <!--   <div class="item">
                             <p><span class="tc-red" ref="item4">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
@@ -151,11 +151,13 @@
             </div>
         </div>
     </div>
+    <Footer />
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
+import Footer from "@/views/layout/footer.vue"
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
@@ -246,3 +248,18 @@ onMounted(async () => {
   }, 800);
 });
 </script>
+<style scoped>
+p {
+    margin-top: 0;
+    margin-bottom: 0rem !important;
+}
+
+@media (max-width: 640px){
+    .layout-container02 {
+        display: flex !important;
+        gap: 2rem !important;
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+}
+</style>

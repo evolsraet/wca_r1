@@ -51,12 +51,14 @@
             </div>
         </div>
     </div>
+    <Footer />
 </template>
 
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import Footer from "@/views/layout/footer.vue"
 import useBid from "@/composables/bids";
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';

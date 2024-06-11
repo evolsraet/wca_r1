@@ -26,13 +26,14 @@
     </div>
     
 </div>
+<Footer />
   </template>
   
   <script setup>
   import { ref } from 'vue';
   import { BarChart, LineChart } from 'vue-chart-3';
   import { Chart, registerables } from 'chart.js';
-  
+  import Footer from "@/views/layout/footer.vue"
   Chart.register(...registerables);
   
   const chartData = ref({

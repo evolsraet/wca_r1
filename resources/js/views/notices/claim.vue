@@ -104,6 +104,7 @@
                 </div>
           </div>  
         </div>
+      <Footer/>
   </template>
   
   <script setup>
@@ -111,7 +112,8 @@
   import { computed , ref } from "vue";
   import { useRouter } from 'vue-router';
   import AlarmModal from '@/views/modal/AlarmModal.vue';
-
+  import Footer from "@/views/layout/footer.vue"
+  
   const router = useRouter();
   const store = useStore();
   const user = computed(() => store.getters["auth/user"]);

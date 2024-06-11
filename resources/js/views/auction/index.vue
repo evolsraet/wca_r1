@@ -661,6 +661,7 @@ TODO:
             </div>
         </div>
     </div>
+    <Footer />
 </template>
 <script>
 export default {
@@ -723,6 +724,7 @@ import useAuctions from "@/composables/auctions"; // 경매 관련 함수 가져
 import useRoles from '@/composables/roles'; // 역할 관련 함수 가져오기
 import FilterModal from '@/views/modal/filter.vue'; // 필터 모달 컴포넌트 가져오기
 import { useRouter } from 'vue-router';
+import Footer from "@/views/layout/footer.vue"
 
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());

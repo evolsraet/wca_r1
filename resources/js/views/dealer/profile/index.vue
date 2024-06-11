@@ -99,6 +99,7 @@
             </div>
         </div>
     </div>
+    <Footer />
 </template>
 
 <script setup>
@@ -107,6 +108,7 @@ import useBid from "@/composables/bids";
 import { useStore } from 'vuex';
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
+import Footer from "@/views/layout/footer.vue"
 
 const currentTab = ref('dealerInfo');
 const { amtComma } = cmmn();
