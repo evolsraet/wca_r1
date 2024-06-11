@@ -55,8 +55,8 @@
             <button type="button" class="search-btn">검색</button>
           </div>
         </div>
-        <div class="row">
-          <div class="col-md-3 mb-4" v-for="(card, index) in cards" :key="index">
+        <div class="row" >
+          <div class="col-md-3 mb-4" v-if="reviewsData.length > 0" v-for="(card, index) in cards" :key="index">
             <div class="card" @click="navigateToDetail(card.id)">
               <div class="car-imges"></div>
               <div class="card-body">
@@ -76,7 +76,17 @@
               </div>
             </div>
           </div>
+          <div v-else>
+            <div class="complete-car">
+                <div class="card my-auction mt-3">
+                    <div class="none-complete">
+                        <span class="tc-light-gray">아직 작성된 이용후기가 없습니다.</span>
+                    </div>
+                </div>
+            </div>
         </div>
+        </div>
+        
       </div>
       <nav>
         <ul class="pagination justify-content-center">
@@ -110,7 +120,7 @@ const router = useRouter();
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 const isUser = computed(() => user.value?.roles?.includes('user'));
-
+const test = [];
 const showBottomSheet = ref(true);
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
 const { getHomeReview , reviewsData , splitDate, pagination } = initReviewSystem(); 
