@@ -132,7 +132,7 @@
             </bottom-sheet>
           </div>
           <!-- 웹 화면에서 조회 폼 -->
-          <div v-else class="card login-card border-0 overlay-style layover-style" :class="{ 'expanded': expanded }">
+          <div v-else class="card login-card border-0 overlay-style layover-style login-any" :class="{ 'expanded': expanded }" ref="loginCardRef">
             <div class="card-body">
               <!-- 조회 폼 -->
               <form @submit.prevent="submitCarInfo" class="d-flex flex-column">
@@ -189,6 +189,7 @@
   import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
   import { initReviewSystem } from '@/composables/review';
   
+  const loginCardRef = ref(null);
   const bannerRef = ref(null);
   const reviewContentRef = ref(null);
   const animatedSection = ref(null);
@@ -226,7 +227,10 @@
     const banner = bannerRef.value;
     const reviewContent = reviewContentRef.value;
     const animatedSectionElement = animatedSection.value;
-
+    const loginCard = loginCardRef.value;
+    setTimeout(() => {
+      loginCard.classList.add('enter-active');
+    }, 200);
     setTimeout(() => {
       banner.classList.add('enter-active');
     }, 100);
@@ -273,6 +277,17 @@ onBeforeUnmount(() => {
 .rating__label .star-icon {
   width: 30px;
   height: 30px;
+}
+
+.login-any {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease-out, transform 0.4s ease-out;
+}
+
+.login-any.enter-active {
+  opacity: 1;
+  transform: translateY(0);
 }
 .login-card::before{
   display: none;
