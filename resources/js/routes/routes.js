@@ -88,6 +88,12 @@ export default [
 
             },
             {
+                path: '/user',
+                name: 'user.index',
+                component: () => import('../views/user/index.vue'),
+                beforeEnter: requireAct(['act.super','act.admin','act.user']),
+            },
+            {
                 path: '/auction/:id',
                 name: 'AuctionDetail',
                 component: () => import('../views/auction/Details/details.vue'),

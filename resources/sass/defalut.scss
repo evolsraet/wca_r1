@@ -17,3 +17,7 @@ input, textarea, select {color:inherit; font:inherit; vertical-align:middle; -we
 *::-moz-focus-inner {padding:0; border:0;}
 *::-ms-clear {display:none;}
 * {box-sizing:border-box;}
+p {
+    margin-top: 0;
+    margin-bottom: 0rem !important;
+}

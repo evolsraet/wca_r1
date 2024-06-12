@@ -13,7 +13,6 @@ export function initReviewSystem() {
             user_id: "",    
             auction_id: "",
             dealer_id: "",
-            star: ""
 
     })
     const reviewForm = {
@@ -368,8 +367,8 @@ export function initReviewSystem() {
     // 작성한 이용후기 불러오기 (사용자별 불러오기)
     const getUserReview = async (id) => {
         try {      
-            const response = await axios.get("/api/reviews");
-            reviewsData.value  = response.data.data.filter(review => review.user_id === id); 
+            const response = await axios.get(`/api/reviews?where=reviews.user_id:${id}`);
+            reviewsData.value = response.data.data;
             for (const review of reviewsData.value) {
                 const auction = await getAuctionById(review.auction_id);
                 if(auction){
@@ -408,9 +407,9 @@ export function initReviewSystem() {
             const response = await axios.get(`/api/reviews?page=${page}`);
             reviewsData.value = response.data.data;
             pagination.value = response.data.meta;
-            console.log('Pagination:', pagination.value);
+            //console.log('Pagination:', pagination.value);
             for (const review of reviewsData.value) {
-                console.log(review);
+                //console.log(review);
                 const auction = await getAuctionById(review.auction_id);
                 review.auction = auction.data;
             }
@@ -422,8 +421,10 @@ export function initReviewSystem() {
     // 홈 화면 리뷰 불러오기 (auction 정보 포함하지 않음.)
     const getHomeReview = async (page = 1) => {
         try {      
-            const response = await axios.get(`/api/reviews?with=dealer`);
-            console.log(response.data.data);
+            const response = await axios.get(`/api/reviews?page=${page}&with=dealer`);
+            pagination.value = response.data.meta;
+            //console.log('Pagination:', pagination.value);
+            //console.log(response.data.data);
             reviewsData.value = response.data.data;
 
         } catch (error) {

@@ -62,9 +62,7 @@
         <div class="flex items-center justify-end mt-5">
           <button type="submit" class="btn primary-btn normal-16-font">경매 신청하기</button>
         </div>
-        <transition name="fade">
           <Modal v-if="showAuctionModal" @close="handleAuctionClose" />
-        </transition>
       </form>
     </div>
   </div>

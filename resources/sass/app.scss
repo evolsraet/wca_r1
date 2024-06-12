@@ -1,41 +1,66 @@
-// Fonts
-@import url("https://fonts.bunny.net/css?family=Nunito");
+  // Fonts
+  @import url("https://fonts.bunny.net/css?family=Nunito");
 
-// Variables
-@import "_variables";
+  // Variables
+  @import "_variables";
 
-@import "defalut";
+  @import "defalut";
 
-// Bootstrap
-@import "bootstrap/scss/bootstrap";
-@import "style";
-@import "Nav";
-@import "modal";
+  // Bootstrap
+  @import "bootstrap/scss/bootstrap";
+  @import "style";
+  @import "Nav";
+  @import "modal";
 
-:root{
+  :root {
     --bs-body-bg: #ffffff;
+    --main-font-family: 'Nunito', sans-serif !important;
 }
 
-body {background-color: #ffffff !important;}
-a{text-decoration: none !important;}
-p{margin-top: 0rem; margin-bottom: 0rem;}
-
-/* 'demo' : 임의의 데이터 */
-.demo::before {
-  content: "demo";  
-  color: white;     
-  background-color: rgb(255, 102, 0); 
-  padding: 10px;   
-  margin: 10px;    
-  display: block; 
+body {
+    background-color: #ffffff !important;
+    font-family: var(--main-font-family);
 }
 
-/* ' 구현 진행 중' */
-.proceeding::before {
-  content: "진행중";  
-  color: white;     
-  background-color: rgb(17, 0, 255); 
-  padding: 10px;   
-  margin: 10px;    
-  display: block; 
+  /* 'demo' : 임의의 데이터 */
+  .demo::before {
+    content: "demo";  
+    color: white;     
+    background-color: rgb(255, 102, 0); 
+    padding: 10px;   
+    margin: 10px;    
+    display: block; 
+  }
+
+  /* ' 구현 진행 중' */
+  .proceeding::before {
+    content: "진행중";  
+    color: white;     
+    background-color: rgb(17, 0, 255); 
+    padding: 10px;   
+    margin: 10px;    
+    display: block; 
+  }
+
+/* 전체 페이지의 스크롤바 스타일 */
+.scrollable-content::-webkit-scrollbar {
+  width: 12px; /* 스크롤바 너비 */
 }
+
+.scrollable-content::-webkit-scrollbar-track {
+  background: #f1f1f1; /* 스크롤바 트랙 색상 */
+  border-radius: 6px !important; /* 트랙의 둥근 모서리 */
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+  background: #c5c5c5; /* 스크롤바 색상 */
+  border-radius: 6px !important; /* 스크롤바의 둥근 모서리 */
+  transition: background 0.3s ease, border-radius 0.3s ease; /* 트랜지션 추가 */
+}
+
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+  background: #b1b1b1; /* 마우스 오버 시 스크롤바 색상 */
+  border-radius: 6px !important ; /* 스크롤바의 둥근 모서리 유지 */
+}
+
+

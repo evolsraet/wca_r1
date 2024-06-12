@@ -3,19 +3,19 @@
     <div class="container">
         <div class="main-contenter">
             <div class="review">
-                <div class="review-content mov-review my-5">
+                <div class="review-content mov-review my-5" v-if="loading">
                     <h3 class="review-title">이용후기 관리</h3>
                     <div class="tab-nav my-4">
                         <ul>
-                            <li class="col-4"><a href="#" @click="setActiveTab('available')" :class="{ 'active': activeTab === 'available' }" title="작성한 이용후기">작성 가능한 이용 후기(<span>{{ filteredAuctions.length }}</span>)</a></li>
+                            <li class="col-4"><a href="#" @click="setActiveTab('available')" :class="{ 'active': activeTab === 'available' }" title="작성한 이용후기">작성 가능한 이용 후기(<span>{{ auctionsData.length }}</span>)</a></li>
                             <li class="col-4"><a href="#" @click="setActiveTab('written')" :class="{ 'active': activeTab === 'written' }" title="작성 가능한 이용후기">작성한 이용후기(<span>{{ reviewsData.length }}</span>)</a></li>
                         </ul>
                         <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
                     <!-- 작성가능한 이용후기-->
                     <div v-if="activeTab === 'available'">
-                        <div v-if="filteredAuctions.length > 0">
-                            <div class="review-card" v-for="auction in filteredAuctions" :key="auction.id"> 
+                        <div v-if="auctionsData.length > 0">
+                            <div class="review-card" v-for="auction in auctionsData" :key="auction.id"> 
                                 <div class="review-image">
                                     <p class="review-date">3.18 (월)</p>
                                     <img src="../../../img/car_example.png" alt="현대 쏘나타 (DN8)">
@@ -24,7 +24,7 @@
                                     <div class="popup-menu" v-show="isMenuVisible">
                                         <ul>
                                             <li><button @click="editReview" class="tc-blue">수정</button></li>
-                                            <li><button @click="deleteReview" class="tc-red">삭제</button></li>
+                                            <li><button @click="deleteReviewApi" class="tc-red">삭제</button></li>
                                         </ul>
                                     </div>
                                     <h3 class="review-title">{{ auction.car_no }}</h3>
@@ -100,14 +100,7 @@ const isMenuVisible = ref(false);
 const { auctionsData, getAuctions } = useAuctions();
 const { getUserReview , deleteReviewApi , reviewsData } = initReviewSystem(); 
 const { amtComma } = cmmn();
-const filteredAuctions = computed(() => {
-    const reviewedAuctionIds = reviewsData.value.map(review => review.auction_id);
-    return auctionsData.value.filter(auction => 
-        auction.status === 'done' && 
-        auction.bid_id != null &&
-        !reviewedAuctionIds.includes(auction.id)
-    ); 
-});
+const loading = ref(false);
 
 function toggleMenu(id) {
     let targetObj = document.getElementById('toggleMenu'+id);
@@ -147,11 +140,10 @@ function showDeleteMessage() {
 }
 
 onMounted(async () => {
-    await getAuctions(1);
-    //console.log(auctionsData.value);
+    await getAuctions(1,true);
     userId = auctionsData.value[0].user_id;
     await getUserReview(userId);
-    console.log(reviewsData.value);
+    loading.value = true;
 });
 </script>
 

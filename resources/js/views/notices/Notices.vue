@@ -58,12 +58,12 @@
         </section>
     </div>
     <div v-else-if="isDealer">
-      <div class="search-type mx-3">
-                    <input type="text" placeholder="제목 검색">
-                    <button type="button" class="search-btn">검색</button>
-          </div>
-            
-    <div class="main-container p-3  text-center container">
+      
+      <div class="main-container p-3  text-center container">
+          <div class="search-type mx-3">
+                <input type="text" placeholder="제목 검색">
+                <button type="button" class="search-btn">검색</button>
+              </div>
           <!-- board list area -->
              <div class="o_table_mobile my-5 mt-4">
                     <div class="tbl_basic tbl_dealer">
@@ -102,13 +102,14 @@
     </div>  
   </div>
   </div>
+  <Footer/>
 </template>
 
 <script setup>
 import { useStore } from "vuex";
 import { computed } from "vue";
 import { useRouter } from 'vue-router';
-
+import Footer from "@/views/layout/footer.vue"
 const router = useRouter();
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);

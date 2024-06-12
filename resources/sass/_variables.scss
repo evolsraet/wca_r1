@@ -2,7 +2,7 @@
 $body-bg: #f8fafc;
 
 // Typography
-$font-family-sans-serif: "Nunito", sans-serif;
+$font-family-sans-serif: "Spoqa Han Sans", system-ui, sans-serif;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
 
@@ -64,7 +64,9 @@ $sub-color02: #EBEFFD;
     line-height: 30px !important;
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.26);
 }
-
+.btn-outline-primary:hover{
+    color:white !important;
+}
 .primary-btn:hover{
     background-color: $primary-hover;
     border-color: $primary-hover;

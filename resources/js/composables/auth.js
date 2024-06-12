@@ -65,6 +65,8 @@ export default function useAuth() {
             router.push({ name: "admin.index" });
           } else if (userData.roles.includes('dealer')) {
             router.push({ name: "dealer.index" });
+           } else if (userData.roles.includes('user')) {
+                router.push({ name: "user.index" });
           } else {
             router.push({ name: "home" });
           }
