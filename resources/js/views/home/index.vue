@@ -27,6 +27,58 @@
     </div>
   </div>
   </div>
+   <!--  <div v-if="!isMobileView">
+          <div class="content-container">
+            <div class="any-content">
+              <div class="review-any">
+                <div class="grid-container">
+                
+                  <div class="cardtype02" v-for="n in 8" :key="n">
+                    <h5 class="text-start process">현대 쏘나타 (DN8)</h5>
+                    <img src="../../../img/car_example.png" alt="Car">
+                    <div class="content">
+                      <div class="rating">
+                        <span>★</span>
+                        <span>★</span>
+                        <span>★</span>
+                        <span>★</span>
+                        <span>☆</span>
+                      </div>
+                      <div class="date">2024-03-18</div>
+                      <p>차감아서 보다 안 아닐 그럴시다 다급하다 무슨 절망 아닌 자기게 달려가야 누구에 고은 발생한가.</p>
+                      <div class="price">3,250만원</div>
+                    </div>
+                  </div>
+             
+                  <div class="cardtype02" v-for="n in 8" :key="'d' + n">
+                    <h5 class="text-start process">현대 쏘나타 (DN8)</h5>
+                    <img src="../../../img/car_example.png" alt="Car">
+                    <div class="content">
+                      <div class="rating">
+                        <span>★</span>
+                        <span>★</span>
+                        <span>★</span>
+                        <span>★</span>
+                        <span>☆</span>
+                      </div>
+                      <div class="date">2024-03-18</div>
+                      <p>차감아서 보다 안 아닐 그럴시다 다급하다 무슨 절망 아닌 자기게 달려가야 누구에 고은 발생한가.</p>
+                      <div class="price">3,250만원</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        <div :class="animationClass" ref="animatedSection">
+        <div class="css-ifyyt1 gap-5">
+          <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
+        <h5 class="font-title">위카와 함께해요.</h5>
+      </div>
+      <p class="tc-light-gray font-sub-title">13,314명이 위카와 함께 했어요!</p>
+    </div>
+  </div>
+  </div>-->
           <!--    <div class="layout-container">
      
           <div class="banner" ref="bannerRef">
@@ -174,8 +226,9 @@
           </div>
         </div>
       </div>
- 
+      <transition name="fade" mode="out-in">
         <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
+      </transition>
     </div>
   </template>
   
@@ -201,7 +254,6 @@
   const { carInfoForm, submitCarInfo, processing } = useAuctions();
   
   const isMobileView = ref(window.innerWidth <= 640);
-
   const animationClass = ref('css-kzs0t hidden');
   
   const openModal = (type) => {
@@ -231,14 +283,12 @@
     setTimeout(() => {
       loginCard.classList.add('enter-active');
     }, 200);
-   /* setTimeout(() => {
+    setTimeout(() => {
       banner.classList.add('enter-active');
-    }, 100);*/
-    if(isMobileView.value){
-      setTimeout(() => {
-        reviewContent.classList.add('enter-active');
-      }, 500);
-    }
+    }, 100);
+    setTimeout(() => {
+      reviewContent.classList.add('enter-active');
+    }, 500);
     setTimeout(() => {
       if (animatedSectionElement) {
         animatedSectionElement.classList.add('enter-active');
@@ -386,6 +436,220 @@ onBeforeUnmount(() => {
     line-height: 2rem;
     -webkit-text-stroke: 0.01875rem currentcolor;
 }
-        }
+   }
+
 
 </style>
+<!--
+
+.bottom-sheet {
+overflow-y: hidden !important;
+}
+.card.no-shadow {
+box-shadow: none;
+}
+.card.no-hover:hover {
+box-shadow: none;
+}
+@media (max-width: 640px) {
+.card.login-card {
+  box-shadow: none;
+}
+.card.login-card::before {
+  content: none;
+}
+.card.login-card:hover {
+  box-shadow: none;
+}
+}
+.rating__label .star-icon {
+width: 30px;
+height: 30px;
+}
+
+.login-any {
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 0.5s ease-out, transform 0.4s ease-out;
+}
+
+.login-any.enter-active {
+opacity: 1;
+transform: translateY(0);
+}
+.login-card::before{
+display: none;
+}
+.banner,
+.review-content,
+.login-any {
+opacity: 0;
+transform: translateY(20px);
+transition: opacity 1s ease-out, transform 1s ease-out;
+}
+.review-content {
+transform: translateX(-20px);
+}
+.login-any {
+transform: translateX(20px);
+}
+.enter-active {
+opacity: 1;
+transform: translateY(0);
+}
+
+.register-content {
+display: flex;
+justify-content: space-between;
+gap: 20px;
+}
+.overlay-style {
+height: 100vh;
+}
+
+.grid-container {
+display: flex;
+gap: 10px;
+width: calc(200%); /* Ensure the width is enough to cover the animation */
+animation: scroll 20s linear infinite;
+}
+
+@keyframes scroll {
+0% {
+  transform: translateX(0);
+}
+100% {
+  transform: translateX(-50%);
+}
+}
+
+.cardtype02 {
+border: 1px solid #e5e7eb;
+border-radius: 6px;
+margin: 0 18px;
+padding: 24px 20px;
+background-color: #fff;
+width: 285px;
+height: 363px;
+box-shadow: 0 0 6px 0 rgba(27, 50, 142, 0.2);
+overflow: hidden;
+text-align: center;
+}
+
+.cardtype02 img {
+width: 245px;
+height: 90px;
+object-fit: cover;
+margin: 14px 0 14px;
+border-radius: 6px;
+}
+
+.content {
+padding: 15px;
+}
+
+.content h2 {
+font-size: 18px;
+margin: 10px 0;
+}
+
+.rating {
+color: #f39c12;
+margin: 10px 0;
+}
+
+.date {
+font-size: 14px;
+color: #999;
+}
+
+.content p {
+font-size: 14px;
+color: #333;
+margin: 10px 0;
+}
+
+.price {
+font-size: 16px;
+font-weight: bold;
+color: #333;
+margin: 10px 0;
+}
+
+/* Additional styles */
+.hidden {
+opacity: 0;
+transform: translateY(20px);
+}
+.enter-active {
+opacity: 1;
+transform: translateY(0);
+}
+
+.register-content {
+display: flex;
+justify-content: space-between;
+gap: 20px;
+}
+
+.any-content {
+height: 24.5rem;
+position: absolute;
+left: 0;
+width: 100%;
+bottom: 0rem;
+overflow: hidden;
+z-index: 0;
+}
+@keyframes slide {
+0% {
+  transform: translateX(0);
+}
+50% {
+  transform: translateX(-100%);
+}
+100% {
+  transform: translateX(0);
+}
+}
+.css-ifyyt1 {
+display: grid;
+padding: 7rem 17px 9rem;
+color: rgb(39, 46, 64);
+align-content: space-evenly;
+}
+.css-kzs0t {
+transition: opacity 0.8s ease-in-out 0s, transform 0.8s ease-in-out 0s;
+opacity: 1;
+transform: translateY(0px);
+}
+.css-91307t {
+color: rgb(57, 110, 255);
+}
+.font-sub-title {
+font-size: 1.25rem;
+line-height: 1.75rem;
+}
+.font-title {
+font-size: 2.3rem;
+line-height: 3.3rem;
+-webkit-text-stroke: 0.01875rem currentcolor;
+}
+.hidden {
+opacity: 0;
+transform: translateY(20px);
+}
+@media (max-width: 768px) {
+    .css-ifyyt1 {
+        display: none;
+    }
+}
+
+@media (max-width: 991px) {
+.font-title {
+  font-size: 1.8rem;
+  line-height: 2rem;
+  -webkit-text-stroke: 0.01875rem currentcolor;
+}
+
+-->
