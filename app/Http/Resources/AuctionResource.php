@@ -43,7 +43,7 @@ class AuctionResource extends JsonResource
                 ->get();
 
             // 완료시 금액 공개
-            if ($parentArray['status'] == 'done') {
+            if ($parentArray['status'] == 'done' or $parentArray['status'] == 'chosen') {
                 if ($parentArray['bid_id']) {
                     $addArray['win_bid'] = new BidResource(Bid::find($parentArray['bid_id']));
                 }
