@@ -108,6 +108,18 @@ trait CrudTrait
             $query->with($validRelations);
         });
 
+        // 연관데이터 없는것들
+        // with 와 사용법 동일
+        // ?doesnthave=reviews
+        $result = $result->when(request('doesnthave'), function ($query) {
+            $relations = request('doesnthave') ? explode(',', request('doesnthave')) : [];
+            foreach ($relations as $relation) {
+                if (method_exists($this->modelClass, $relation)) {
+                    $query->doesntHave($relation);
+                }
+            }
+        });
+
         // 삭제데이터도 포함
         $result = $result->when(request('withTrashed'), function ($query) {
             $query->withTrashed();
