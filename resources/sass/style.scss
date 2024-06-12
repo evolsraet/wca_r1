@@ -607,8 +607,8 @@ video {
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
-    height: 64px;
-    width: 115px;
+    height: 50px;
+    width: 100px;
 }
 .navbar-brand-dealer {
     background-image: url('../img/logo-delaer.png'); 
@@ -2970,6 +2970,10 @@ input[type="checkbox"] {
     display: inline-flex;
     line-height: 20px;
 }
+.logo-container{
+    height: 55px; /* 부모 요소의 높이를 지정 */
+    width: 120px; 
+}
 @media screen and (max-width:1200px) {
 .right-container {
     flex: 1.5;
@@ -2982,6 +2986,7 @@ input[type="checkbox"] {
         display: flex;
         gap: 20px;
         padding: 15px;
+        justify-content: center;
     }
     .bottom-sheet::before {
         display: none;

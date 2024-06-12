@@ -7,7 +7,7 @@
       <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
       <div v-if="!showReauctionView">
           <div class="web-content-style">
-              <div>
+              <div class="container mov-wide">
                   <div>
                       <div>
                           <div class="mb-4">
@@ -1522,6 +1522,12 @@ const handleCancelBid = async () => {
 
 
 <style scoped>
+
+@media (min-width: 992px) {
+  .mov-wide {
+    width: 60vh;
+  }
+}
 .w-30{
   width: 30% !important; 
 }
@@ -1664,6 +1670,9 @@ animation: blink 1.5s linear infinite;
   .bottom-sheet {
       width:50%;
   }
+}
+@media screen and (min-width:575px) {
+
 }
 .label-style{
   top: 22px !important;
