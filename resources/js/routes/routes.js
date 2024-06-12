@@ -88,9 +88,9 @@ export default [
 
             },
             {
-                path: '/userhome',
-                name: 'userhome',
-                component: () => import('../views/search/index.vue'),
+                path: '/user',
+                name: 'user.index',
+                component: () => import('../views/user/index.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
             {

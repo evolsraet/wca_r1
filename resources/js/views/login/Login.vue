@@ -283,7 +283,9 @@ const submitLogin = async () => {
       router.push({ name: "admin.index" });
     } else if (userData.roles.includes('dealer')) {
       router.push({ name: "dealer.index" });
-    } else {
+    }else if (userData.roles.includes('user')) {
+                router.push({ name: "user.index" });
+          }  else {
       router.push({ name: "home" });
     }
   } catch (error) {
