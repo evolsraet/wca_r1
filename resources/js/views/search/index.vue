@@ -1,37 +1,37 @@
-<!--
-    TODO: 조회시 조회수 2,3개 올라가는 문제 onmount문제? 같음
--->
 <template>
-    <div class="regiest-content">
-        <div class="banner-top">
-            <div class="styled-div mt-0">
-                <img src="../../../img/main_banner.png" class="styled-img" alt="배너 이미지">
-                <div class="content d-flex">
-                    <div>
-                        <h2 class="fw-bolder mb-4">내 차 판매는 <br>위카에서!</h2>
-                        <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">더 알아보기</router-link>
-                    </div>
-                    <div>
-                        <input type="text" class="styled-input" placeholder="검색">
-                    <div>
-                        <div class="tags">
-                            <div class="tag">무사고</div>
-                            <div class="tag">최신형</div>
-                            <div class="tag">국산차</div>
-                            <div class="tag">흰색</div>
-                            <div class="tag">실차주</div>
-                            <div class="tag">경매진행</div>
-                            <div class="tag">진단평가</div>
-                            <div class="tag">국산차</div>
-                        </div>
-                    </div>
-                    </div>
+<div class="banner-top">
+    <div class="styled-div mt-0">
+        <img src="../../../img/main_banner.png" class="styled-img" alt="배너 이미지">
+        <div class="content d-flex">
+            <div>
+                <h2 class="fw-bolder mb-4 lh-base">내 차 판매는 <br>위카에서!</h2>
+                <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">더 알아보기</router-link>
+            </div>
+            <div v-if="!isMobileView" class="app-style">
+                <div class="input-container-search">
+                    <p class="icon-search-img"></p>
+                        <input type="text" class="styled-input" id="search-input" placeholder="더 뉴 그랜저">
+                </div>
+            <div>
+                <div class="tags">
+                    <div class="tag">무사고</div>
+                    <div class="tag">최신형</div>
+                    <div class="tag">국산차</div>
+                    <div class="tag">흰색</div>
+                    <div class="tag">실차주</div>
+                    <div class="tag">경매진행</div>
+                    <div class="tag">진단평가</div>
                 </div>
             </div>
+            </div>
         </div>
+    </div>
+</div>
+<div class="container">
+    <div class="regiest-content">
         
         <div class="container my-4">
-            <div class="layout-container02">
+            <div class="layout-container02 mt-5">
                 <!-- 딜러 프로필 요약 정보 -->
                 <div class="content">
                     <div class="row row-cols-1 row-cols-md-2">
@@ -74,142 +74,157 @@
                 </div>
                 <div class="border-0" :style="cardStyle" @click="toggleCard">
                     <div class="card-body">
-                        <div class="enter-view mt-3">
-                            <h5>낙찰 완료 차량</h5>
-                            <router-link :to="{ name: 'dealer.bids' }" class="btn-apply">전체보기</router-link>
+                        <div class="enter-view">
+                            <h5>내 매물관리</h5>
+                            <router-link :to="{ name: 'auction.index' }" class="btn-apply">전체보기</router-link>
                         </div>
-                        <!-- 차량이 존재 할 경우-->
-                        <div v-if="filteredViewBids.length > 0">
-                            <div class="complete-car" v-for="bid in filteredViewBids" :key="bid.id">
-                            
-                            </div>
-                        </div>
-                        <!-- 선택 완료된 차량이 없는경우-->
-                        <div v-else>
-                            <div class="complete-car">
-                                <div class="card my-auction mt-3">
-                                    <div class="none-complete">
-                                        <span class="tc-light-gray">선택 완료된 차량이 없습니다.</span>
+                        <!-- 차량이 존재 할 경우 -->
+                        <div v-if="auctionsData.length > 0" class="scrollable-content">
+                            <div v-for="auction in auctionsData"
+                                :key="auction.id"
+                                @click="navigateToDetail(auction)"
+                                :style="getAuctionStyle(auction)">
+                                <div class="complete-car">
+                                    <div class="my-auction">
+                                        <div class="bid-bc p-2">
+                                            <ul class="px-0 inspector_list max_width_900">
+                                                <li>
+                                                    <div>
+                                                        <div class="prop-mange gap-4">
+                                                            <div class="img_box">
+                                                                <img src="../../../img/car_example.png" alt="딜러 사진" class="mb-2 align-text-top">
+                                                            </div>
+                                                            <h5 class="mb-0">{{ auction.car_no }}</h5>
+                                                            <p v-if="auction.status === 'chosen'" class="ml-auto"><span class="blue-box02">선택완료</span></p>
+                                                            <p v-if="auction.status === 'cancel'" class="ml-auto"><span class="blue-box02">경매 취소</span></p>
+                                                            <p v-if="auction.status === 'wait'" class="ml-auto"><span class="blue-box02">딜러 선택</span></p>
+                                                            <p v-if="auction.status === 'diag'" class="ml-auto"><span class="blue-box02">진단 대기</span></p>
+                                                            <p v-if="auction.status === 'ask'" class="ml-auto"><span class="blue-box02">신청 완료</span></p>
+                                                            <p v-if="auction.status === 'ing'" class="ml-auto"><span class="blue-box02">경매진행</span></p>
+                                                            <p v-if="auction.status === 'done'" class="ml-auto"><span class="blue-box02">경매완료</span></p>
+                                                        </div>
+                                                    </div>
+                                                </li>
+                                            </ul>
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
+                            <router-link :to="{ name: 'home' }"   class="bid-bc p-2">
+                                        <ul class="px-0 inspector_list max_width_900">
+                                            <li>
+                                                <div>
+                                                    <p class="tc-light-gray d-flex justify-content-center">새 차량 등록하기<span class="ms-2 icon-auction-plus"></span></p>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </router-link >
+                        </div>
+                            <!-- 선택 완료된 차량이 없는경우-->
+                            <div v-else>
+                            <div class="complete-car">
+                                <div class=" my-auction none-content">
+                                    <div class="none-complete-img">
+                                    </div>
+                                    <div class="d-flex align-items-center flex-column gap-3">   
+                                    <div class="tc-light-gray d-flex align-items-center flex-column gap-5">                                    
+                                    <h4>등록된 차가 없어요</h4>
+                                    <h5>차량 등록후, 경매를 시작해보세요.</h5>
+                                    </div>
+                                    <p class="btn primary-btn btn-apply-ty02 justify-content-around">차량 등록하기</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+            </div>
                 </div>
             </div>
         </div>
-    
+    </div>
     <Footer />
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
-import useBid from "@/composables/bids";
 import Footer from "@/views/layout/footer.vue"
-import { useStore } from 'vuex';
+import { onMounted , onBeforeUnmount, ref} from 'vue';
 import { useRouter } from 'vue-router';
-import AlarmModal from '@/views/modal/AlarmModal.vue';
-import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
-const item1 = ref(null);
-const item2 = ref(null);
-const item3 = ref(null);
-const item4 = ref(null);
-const myBidsCount = ref(0);
-const store = useStore();
-const router = useRouter(); 
-const isExpanded = ref(false);
-const toggleCard = () => {
-    isExpanded.value = !isExpanded.value;
-};
-const alarmModal = ref(null);
-const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
-const { bidsData, getBids, viewBids, bidsCountByUser } = useBid();
-const user = computed(() => store.state.auth.user);
-const calculateMyBidsCount = () => {
-    if (bidsData.value && user.value) {
-        myBidsCount.value = bidsData.value.filter(bid => bid.user_id === user.value.id).length;
-    }
-};
-const openAlarmModal = () => {
-console.log("openAlarmModal called");
-if (alarmModal.value) {
-  alarmModal.value.openModal();
+import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
+import useAuctions from "@/composables/auctions";
+
+const { auctionsData, getAuctions } = useAuctions();
+const router = useRouter();
+const isMobileView = ref(window.innerWidth <= 640);
+function navigateToDetail(auction) {
+    console.log("디테일 :", auction.id);
+    router.push({ name: 'AuctionDetail', params: { id: auction.id } });
 }
-};
-const ingCount = computed(() => {
-    return auctionsData.value.filter(auction => auction.status === 'ing').length;
+const checkScreenWidth = () => {
+    if (typeof window !== 'undefined') {
+      isMobileView.value = window.innerWidth <= 640;
+    }
+  };
+  
+function getAuctionStyle(auction) {
+    const validStatuses = ['done', 'wait', 'ing', 'diag'];
+    return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
+}
+
+onMounted(() => {
+    getAuctions();
+    console.log('Auctions Data:', auctionsData);  // Log the data
+    setRandomPlaceholder();
+    window.addEventListener('resize', checkScreenWidth);
+   checkScreenWidth();
 });
-const alertNoVehicle = (event) => {
-    event.preventDefault();
-    if (viewBids.value.length === 0) {
-        alert("선택 완료된 차량이 없습니다.");
-    } else {
-        router.push({ name: 'dealer.bids' });
-    }
-};
-const fetchAuctionDetails = async (bid) => {
-    try {
-        const auctionDetails = await getAuctionById(bid.auction_id);
-        console.log('Auction Details for Bid ID:', bid.auction_id, auctionDetails);
-        return {
-            ...bid,
-            auctionDetails: auctionDetails.data
-        };
-    } catch (error) {
-        console.error('Error fetching auction details:', error);
-        return {
-            ...bid,
-            auctionDetails: null
-        };
-    }
-};
-const filteredViewBids = ref([]);
-const fetchFilteredViewBids = async () => {
-    // 필터링을 제거하고 모든 입찰을 가져옵니다.
-    console.log('Original Bids:', bidsData.value);
-    const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
-    filteredViewBids.value = bidsWithDetails.filter(bid => bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id);
-    console.log('Bids with Auction Details:', filteredViewBids.value);
-};
-
-
-function navigateToDetail(bid) {
-    console.log("Navigate to Detail:", bid.auction_id);
-    router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
-}
-onMounted(async () => {
-    await getBids();
-    calculateMyBidsCount();
-    await getAuctions();
-    await fetchFilteredViewBids();
-    setTimeout(() => {
-    item1.value.classList.add('visible');
-  }, 0);
-  setTimeout(() => {
-    item2.value.classList.add('visible');
-  }, 200);
-  setTimeout(() => {
-    item3.value.classList.add('visible');
-  }, 400);
-  setTimeout(() => {
-    item4.value.classList.add('visible');
-  }, 800);
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScreenWidth);
 });
 </script>
+
 <style scoped>
 p {
     margin-top: 0;
     margin-bottom: 0rem !important;
 }
 
-@media (max-width: 640px){
+@media (max-width: 650px){
     .layout-container02 {
         display: flex !important;
         gap: 2rem !important;
         flex-direction: column;
         flex-wrap: nowrap;
     }
+    .styled-div .content{
+        margin-top: 0px !important;
+    }
+    .none-content{
+        padding: 10px 40px 35.5px !important;
+    }
+    .scrollable-content{
+        padding: 5px 5px 5px !important;
+    }
+    .prop-mange{
+        flex-direction: column;
+    }
+    .ml-auto{
+        margin-left: 0px !important;
+    }
+    .blue-box02{
+        margin-right:0px !important;
+    }
+}
+@media (max-width: 991px){
+    .app-style{
+        display: none !important;
+    }
+    .content{
+        margin-top: 0px !important;
+    }
+}
+.prop-mange{
+    display: flex;
+    align-items: center;
 }
 .styled-div {
     width: 100%;
@@ -217,19 +232,38 @@ p {
     margin-top: 57px;
     border-radius: 0px;
     background-color: #f5f5f6;
-    overflow: hidden; /* 이미지가 div를 넘치지 않도록 설정 */
-    position: relative; /* content 위치 조정을 위해 추가 */
+    overflow: hidden; 
+    position: relative; 
 }
-
+.ml-auto{
+    margin-left: auto;
+}
 .styled-div .styled-img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* 이미지가 div를 꽉 채우도록 설정 */
-    object-position: center; /* 이미지의 중심을 div의 중심에 맞추기 */
+    object-fit: cover; 
+    object-position: center; 
+}
+.input-container-search {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+
+.bid-bc {
+    background: none;
+}
+
+.scrollable-content {
+    max-height: 400px; 
+    overflow-y: auto;
+    padding: 50px 70px 50px 70px;
+    background-color: #f7f8fb;
 }
 
 .styled-div .content {
-position: absolute;
+    position: absolute;
     top: 0;
     left: 0;
     width: 100%;
@@ -240,6 +274,13 @@ position: absolute;
     padding: 50px;
     color: white;
     align-items: center;
+}
+
+.layout-container02 {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
 }
 
 .styled-div .top-content {
@@ -262,10 +303,11 @@ position: absolute;
 .styled-input {
     width: 439px;
     height: 40px;
-    padding: 10px 10px 10px 60px;
+    padding: 10px 10px 10px 55px;
     border-radius: 5px;
     border: 1px solid #ccc;
     font-size: 16px;
+    color: black;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     outline: none;
@@ -273,8 +315,9 @@ position: absolute;
 }
 
 .styled-input:focus {
-    border-color: #66afe9; 
+    border-color: #66afe9;
 }
+
 .tags {
     display: flex;
     gap: 10px;
@@ -298,7 +341,16 @@ position: absolute;
 }
 
 .tag:hover {
-    background-color: #66afe9; /* 호버 시 배경색 변경 */
-    color: white; /* 호버 시 글자색 변경 */
+    background-color: #fae0e0;
+    color: white;
 }
+
+.blue-box02 {
+    padding: 0 15px !important;
+    width: auto !important;
+    border-radius: 6px !important;
+}
+
+
 </style>
+

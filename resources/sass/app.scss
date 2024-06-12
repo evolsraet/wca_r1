@@ -43,44 +43,24 @@ body {
   }
 
 /* 전체 페이지의 스크롤바 스타일 */
-body::-webkit-scrollbar {
+.scrollable-content::-webkit-scrollbar {
   width: 12px; /* 스크롤바 너비 */
 }
 
-body::-webkit-scrollbar-track {
+.scrollable-content::-webkit-scrollbar-track {
   background: #f1f1f1; /* 스크롤바 트랙 색상 */
-  border-radius: 6px; /* 트랙의 둥근 모서리 */
+  border-radius: 6px !important; /* 트랙의 둥근 모서리 */
 }
 
-body::-webkit-scrollbar-thumb {
+.scrollable-content::-webkit-scrollbar-thumb {
   background: #c5c5c5; /* 스크롤바 색상 */
-  border-radius: 6px; /* 스크롤바의 둥근 모서리 */
+  border-radius: 6px !important; /* 스크롤바의 둥근 모서리 */
   transition: background 0.3s ease, border-radius 0.3s ease; /* 트랜지션 추가 */
 }
 
-body::-webkit-scrollbar-thumb:hover {
+.scrollable-content::-webkit-scrollbar-thumb:hover {
   background: #b1b1b1; /* 마우스 오버 시 스크롤바 색상 */
-  border-radius: 6px; /* 스크롤바의 둥근 모서리 유지 */
+  border-radius: 6px !important ; /* 스크롤바의 둥근 모서리 유지 */
 }
 
-/* 특정 요소의 스크롤바 스타일 */
-.container::-webkit-scrollbar {
-  width: 12px;
-}
-
-.container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 6px;
-}
-
-.container::-webkit-scrollbar-thumb {
-  background: #c5c5c5;
-  border-radius: 6px;
-  transition: background 0.3s ease, border-radius 0.3s ease;
-}
-
-.container::-webkit-scrollbar-thumb:hover {
-  background: #b1b1b1;
-  border-radius: 6px;
-}
 
