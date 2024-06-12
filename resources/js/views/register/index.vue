@@ -129,9 +129,12 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="dealeradress">소속상사 주소</label>
-                                                        <input type="text" v-model="registerForm.dealerCompanyPost" placeholder="post" @click="openPostcode">
+                                                        <input type="text" v-model="registerForm.dealerCompanyPost" placeholder="post" @click="editPostCode('daumPostcodeInput')">
                                                         <input type="text" v-model="registerForm.dealercompany_addr1" placeholder="주소" class="searchadress">
                                                         <input type="text" v-model="registerForm.dealercompany_addr2" placeholder="상세주소">
+                                                        <div id="daumPostcodeInput" style="display: none;">
+                                                            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" @click="closePostcode('daumPostcodeInput')">
+                                                        </div>
                                                         <div class="password-error" v-if="nameError">이름을 정확히 입력해 주세요.</div>
                                                     </div>
                                                     <div class="form-group">
@@ -163,9 +166,12 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="deliveryAdress">인수차량 도착지 주소</label>
-                                                        <input type="text" v-model="registerForm.dealerReceivePost" placeholder="post" @click="openPostcodeReceive">
+                                                        <input type="text" v-model="registerForm.dealerReceivePost" placeholder="post" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">
                                                         <input type="text" v-model="registerForm.dealerReceiveAddr1" placeholder="주소">
                                                         <input type="text" v-model="registerForm.dealerReceiveAddr2" placeholder="상세주소">
+                                                        <div id="daumPostcodeDealerReceiveInput" style="Display: none;">
+                                                            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" @click="closePostcode('daumPostcodeDealerReceiveInput')">
+                                                        </div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="introduce">소개</label>
@@ -197,7 +203,8 @@ import {
     onMounted
 } from 'vue';
 import useAuth from '@/composables/auth';
-
+import { cmmn } from '@/hooks/cmmn';
+const { openPostcode , closePostcode} = cmmn();
 const {
     registerForm,
     validationErrors,
@@ -208,6 +215,22 @@ const fileInputRefBiz = ref(null);
 const fileInputRefSign = ref(null);
 const fileInputRefCert = ref(null);
 const fileInputRef = ref(null);
+
+function editPostCode(elementName) {
+  openPostcode(elementName)
+    .then(({ zonecode, address }) => {
+        registerForm.dealerCompanyPost = zonecode;
+        registerForm.dealercompany_addr1 = address;
+    })
+}
+
+function editPostCodeReceive(elementName) {
+    openPostcode(elementName)
+    .then(({ zonecode, address }) => {
+        registerForm.dealerReceivePost = zonecode;
+        registerForm.dealerReceiveAddr1 = address;
+    })
+}
 
 function triggerFileUpload() {
     if (fileInputRef.value) {
@@ -277,6 +300,7 @@ function handleFileUploadCert(event) {
     }
 }
 
+/** 
 function openPostcode() {
     new daum.Postcode({
         oncomplete: function(data) {
@@ -285,17 +309,9 @@ function openPostcode() {
             registerForm.dealercompany_addr2 = '';
         }
     }).open();
-}
+}*/
 
-function openPostcodeReceive() {
-    new daum.Postcode({
-        oncomplete: function(data) {
-            registerForm.dealerReceivePost = data.zonecode;
-            registerForm.dealerReceiveAddr1 = data.address;
-            registerForm.dealerReceiveAddr2 = '';
-        }
-    }).open();
-}
+
 
 onMounted(() => {
     const script = document.createElement('script');

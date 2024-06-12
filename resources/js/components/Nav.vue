@@ -1,15 +1,15 @@
 <template>
 <div class="overlay" style="display: none;"></div> 
-    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass]">
+    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass,'p-2']">
         <div v-if="isAuctionDetailPage">
         </div>
         <div class="container nav-font">
-            <button v-if="isDetailPage && isUser" @click="goBack" class="p-2 btn btn-back back-btn-icon">
+            <button v-if="isDetailPage && isUser" @click="goBack" class="btn btn-back back-btn-icon">
             </button>
-            <button  v-else-if="isDetailPage && isDealer" @click="goBack" class="p-2 btn btn-back wh-btn-icon">
+            <button  v-else-if="isDetailPage && isDealer" @click="goBack" class="btn btn-back wh-btn-icon">
             </button>
             <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand-dealer"></router-link>
-            <router-link v-else-if="isUser" to="/user" class="navbar-brand"></router-link>
+            <router-link v-else-if="isUser" to="/user" class="navbar-brand logo-container"></router-link>
             <router-link v-else to="/" class="navbar-brand"></router-link>
             <!-- movnav bar -->
             <!-- dealer navbar-->

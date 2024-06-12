@@ -41,7 +41,10 @@
                 <div class="card-body">
                   <p class="tc-light-gray">우편주소</p>
                   <input v-model="auction.addr_post" class="form-control" type="hidden" id="addr_post">
-                  <input v-model="auction.addr1" class="form-control" id="addr1" @click="openPostcodePopup">
+                  <input v-model="auction.addr1" class="form-control" id="addr1" @click="editPostCode('daumPostcodeInput')">
+                  <div id="daumPostcodeInput" style="display: none;">
+                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" @click="closePostcode('daumPostcodeInput')">
+                  </div>
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">상세주소</p>
@@ -316,7 +319,7 @@ import { ref, onMounted, reactive, watchEffect} from 'vue';
 import { useRoute } from 'vue-router';
 import file from "@/components/file.vue";
 import useAuctions from '@/composables/auctions';
-
+import { cmmn } from '@/hooks/cmmn';
 import hideIcon from '../../../../../resources/img/Icon-black-down.png';
 import showIcon from '../../../../../resources/img/Icon-black-up.png';
 
@@ -328,7 +331,7 @@ const isVisible = ref(false);
 const showBottomSheet = ref(true);
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
 const isFileAttached = ref(false);
-
+const { openPostcode , closePostcode} = cmmn();
 const auction = reactive({ 
     car_no: '',
     owner_name: '',
@@ -401,36 +404,31 @@ const registerAuction = async () => {
   }
 };
 
-// Daum Postcode API를 활용한 주소 검색 팝업 열기
-const openPostcodePopup = () => {
-  new daum.Postcode({
-    oncomplete: data => {
-      addr_post.value = data.zonecode; // 우편번호
-      addr1.value = data.address; // 주소
-      auction.addr_post = addr_post.value;
-      auction.addr1 = addr1.value;
-    }
-  }).open();
-};
+function editPostCode(elementName) {
+  openPostcode(elementName)
+    .then(({ zonecode, address }) => {
+      auction.addr_post = zonecode;
+      auction.addr1 = address;
+    })
+}
 
 onMounted(async () => {
   await fetchAuctionDetails();
-  const script = document.createElement('script');
-  script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
-  script.onload = () => console.log('Daum Postcode script loaded');
-  document.head.appendChild(script);
-  
-  auction.car_no = auctionDetails.value.data.car_no;
-  auction.owner_name = auctionDetails.value.data.owner_name;
-  document.getElementById("status").value = auctionDetails.value.data.status;
-  auction.bank = auctionDetails.value.data.bank;
-  auction.account = auctionDetails.value.data.account;
-  auction.memo = auctionDetails.value.data.memo;
-  auction.addr_post = auctionDetails.value.data.addr_post;
-  auction.addr1 = auctionDetails.value.data.addr1;
-  auction.addr2 = auctionDetails.value.data.addr2;
+  const data = auctionDetails.value.data;
+  document.getElementById("status").value = data.status;
 
-
+  watchEffect(() => {
+      auction.car_no = data.car_no;
+      auction.owner_name = data.owner_name;
+      auction.status = data.status;
+      document.getElementById("status").value = data.status;
+      auction.bank = data.bank;
+      auction.account = data.account;
+      auction.memo = data.memo;
+      auction.addr_post = data.addr_post;
+      auction.addr1 = data.addr1;
+      auction.addr2 = data.addr2;
+  });
 });
 
 
