@@ -1,5 +1,5 @@
 <template>
-    <div class="banner-top">
+    <div v-if="!isMobileView" class="banner-top">
         <div class="styled-div mt-0">
             <img src="../../../img/main_banner.png" class="styled-img" alt="배너 이미지">
             <div class="content d-flex">
@@ -7,7 +7,7 @@
                     <h2 class="fw-bolder mb-4 lh-base">내 차 판매는 <br>위카에서!</h2>
                     <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">더 알아보기</router-link>
                 </div>
-                <div v-if="!isMobileView" class="app-style">
+                <div class="app-style">
                     <div class="input-container-search">
                         <p class="icon-search-img"></p>
                             <input type="text" class="styled-input" id="search-input" placeholder="더 뉴 그랜저">
@@ -28,12 +28,16 @@
         </div>
     </div>
     <div class="container">
+        <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-4">
+            <h2 class="fw-bolder lh-base">내 차 판매는 <br>위카에서!</h2>
+            <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">더 알아보기</router-link>
+        </div>
         <div class="regiest-content">
             
             <div class="container my-4">
                 <div class="layout-container02 mt-5">
                     <!-- 딜러 프로필 요약 정보 -->
-                    <div class="content">
+                    <div class="content p-2">
                         <div class="row row-cols-1 row-cols-md-2">
                             <div class="apply-top text-start mb-0">
                             <h3 class="review-title">이용후기</h3>
@@ -90,7 +94,7 @@
                                                 <ul class="px-0 inspector_list max_width_900">
                                                     <li>
                                                         <div>
-                                                            <div class="prop-mange gap-4">
+                                                            <div class="d-flex gap-4 align-items-center">
                                                                 <div class="img_box">
                                                                     <img src="../../../img/car_example.png" alt="딜러 사진" class="mb-2 align-text-top">
                                                                 </div>
@@ -204,12 +208,6 @@
         .scrollable-content{
             padding: 5px 5px 5px !important;
         }
-        .prop-mange{
-            flex-direction: column;
-        }
-        .ml-auto{
-            margin-left: 0px !important;
-        }
         .blue-box02{
             margin-right:0px !important;
         }
@@ -221,11 +219,26 @@
         .content{
             margin-top: 0px !important;
         }
+        .mt-5{
+            margin-top: 0px !important;
+        }
+        .my-4{
+            margin-top: 0px !important;
+        }
     }
-    .prop-mange{
-        display: flex;
-        align-items: center;
+    @media (max-width: 991px){
+.container {
+     --bs-gutter-x: 0rem;
+}
+.card-body {
+            padding: 0px;
+        }
+}
+    @media (max-width: 650px){
+    .layout-container02{
+        flex-direction: column-reverse;
     }
+}
     .styled-div {
         width: 100%;
         height: 40vh;
@@ -250,7 +263,33 @@
         align-items: center;
     }
     
-    
+
+.row-cols-md-2 .complete-car {
+    flex: 0 0 50%; 
+    max-width: 50%; 
+}
+
+
+@media (min-width: 768px) {
+    .row-cols-md-2 .complete-car {
+        flex: 0 0 50%;
+        max-width: 50%;
+    }
+}
+
+.card-img-top-ty02 {
+    width: 100%;
+    height: 190px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 10px;
+}
+@media (min-width: 768px) {
+    .card-img-top-ty02 {
+        height: 250px; 
+    }
+}
+
     .bid-bc {
         background: none;
     }
@@ -277,11 +316,11 @@
     }
     
     .layout-container02 {
-        display: grid;
-        grid-template-rows: auto 1fr;
-        grid-template-columns: 1fr 1fr;
-        gap: 40px;
-    }
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2열 설정 */
+    grid-template-rows: repeat(2, 1fr); /* 2행 설정 */
+    gap: 20px; /* 행과 열 사이의 간격 */
+}
     
     .styled-div .top-content {
         display: flex;
