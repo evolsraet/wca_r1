@@ -283,6 +283,11 @@ export function initReviewSystem() {
             review
         }
 
+        if(review.auction_id == "" || review.dealer_id == "" || review.user_id == ""){
+            alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
+            return;
+        }
+
         swal({
             title: '정말 수정하시겠어요?',
             text: '',
@@ -322,25 +327,23 @@ export function initReviewSystem() {
     }
 
     //작성한 이용후기 수정하기 - 관리자
-    const editReviewAdmin = async (id) => {
-        const content = document.getElementById('content').value; 
-        const user_id = document.getElementById('user_id').value;
-        const auction_id = document.getElementById('auction_id').value;
-        const dealer_id = document.getElementById('dealer_id').value;
-        const star = document.getElementById('reviewStarValue').value;
+    const editReviewAdmin = async (id, review) => {
+        console.log(review.auction_id);
+        if(starScore > 0){
+            review.star = starScore;
+        }
+   
+        const form = {
+            review
+        }
 
-        //console.log(JSON.stringify(reviewForm));
+        console.log(JSON.stringify(form));
 
-        if(auction_id == "" || dealer_id == ""){
+        if(review.auction_id == "" || review.dealer_id == "" || review.user_id == ""){
             alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
             return;
         }
-        if(starScore == 0){ //별점을 수정(클릭)하지 않은 경우
-            starScore = star;
-        }
 
-        setReviewValue(user_id, auction_id, dealer_id, starScore, content);
-        //console.log(JSON.stringify(reviewForm));
 
         swal({
             title: '정말 수정하시겠어요?',
@@ -356,13 +359,13 @@ export function initReviewSystem() {
         })
         .then(result => {
             if (result.isConfirmed) {
-                axios.put(`/api/reviews/${id}`, reviewForm)
+                axios.put(`/api/reviews/${id}`, form)
                     .then(response => {
                         swal({
                             icon: 'success',
                             title: '이용후기가 정상적으로 수정되었습니다.',
                         }).then(() => {
-                            location.href = "/admin/review";
+                            router.push({name: 'review.index'});
                         });
                         
                     })
@@ -408,6 +411,7 @@ export function initReviewSystem() {
             }
         }).then(async result => {
             return result.data;
+
         });
     }
 
@@ -417,11 +421,13 @@ export function initReviewSystem() {
             _type: 'get',
             _url:`/api/reviews`,
             _param: {
-                _with:['auction']
+                _with:['auction'],
+                _page:`${page}`
             }
         }).then(async result => {
-            //console.log(result);
-            return result.data;
+            reviewsData.value = result.data;
+            console.log(reviewsData.value);
+            reviewPagination.value = result.rawData.data.meta;
         });
     }
 

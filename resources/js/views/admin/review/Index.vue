@@ -175,7 +175,17 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <Pagination :data="pagination" :limit="3" @pagination-change-page="(page) => getAllReview(page)" class="mt-4 justify-content-center" />
+                    <ul class="pagination justify-content-center">
+                            <li class="page-item" :class="{ disabled: !reviewPagination.prev }">
+                            <a class="page-link prev-style" @click="loadPage(reviewPagination.current_page - 1)"></a>
+                            </li>
+                            <li v-for="n in reviewPagination.last_page" :key="n" class="page-item" :class="{ active: n === reviewPagination.current_page }">
+                            <a class="page-link" @click="loadPage(n)">{{ n }}</a>
+                            </li>
+                            <li class="page-item next-prev" :class="{ disabled: !reviewPagination.next }">
+                            <a class="page-link next-style" @click="loadPage(reviewPagination.current_page + 1)"></a>
+                            </li>
+                        </ul>
                 </div>
             </div>
 </template>
@@ -197,8 +207,9 @@ const orderDirection = ref("desc");
 const { posts, getPosts, deletePost } = usePosts();
 const { categoryList, getCategoryList } = useCategories();
 const { can } = useAbility();
-const { getAllReview , deleteReviewApi , reviewsData , pagination } = initReviewSystem(); 
+const { getAllReview , deleteReviewApi , reviewsData , reviewPagination } = initReviewSystem(); 
 const currentStatus = ref('all');
+const currentPage = ref(1);
 
 onMounted(async () => {
     await getAllReview(1);
@@ -209,6 +220,12 @@ onMounted(async () => {
 
 function setFilter(status) { // 필터 설정
   currentStatus.value = status;
+}
+
+async function loadPage(page) { // 페이지 로드
+    if (page < 1 || page > reviewPagination.value.last_page) return;
+    currentPage.value = page;
+    await getAllReview(page);
 }
 
 /** 
