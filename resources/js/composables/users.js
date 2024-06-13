@@ -1,17 +1,19 @@
 import { ref, inject } from 'vue'
 import { useRouter } from 'vue-router'
+import { cmmn } from '@/hooks/cmmn';
 
 export default function useUsers() {
     const users = ref([])
     const user = ref({
         name: ''
     })
-
+    const { callApi } = cmmn();
     const router = useRouter()
     const validationErrors = ref({})
     const isLoading = ref(false)
     const swal = inject('$swal')
-
+    const pagination = ref({});
+    
     const getUsers = async (
         page = 1,
         search_id = '',
@@ -28,8 +30,37 @@ export default function useUsers() {
             '&order_direction=' + order_direction)
             .then(response => {
                 users.value = response.data;
+                console.log(users.value);
             })
    
+    }
+    
+    const adminGetUsers = async (
+        page = 1,
+        stat = 'all',
+        role = 'all',
+    ) => {
+        const apiList = [];
+        if(stat != 'all'){
+            apiList.push(`users.status:${stat}`)
+        } 
+        if(role != 'all'){
+            apiList.push(`users.roles:${role}`)
+        }
+
+        console.log(apiList);
+        return callApi({
+            _type: 'get',
+            _url:`/api/users`,
+            _param: {
+                _where:apiList,
+                _page:`${page}`
+            }
+        }).then(async result => {
+            users.value = result.data;
+            pagination.value = result.rawData.data.meta;
+        });
+
     }
 
     const getUser = async (id) => {
@@ -132,10 +163,12 @@ export default function useUsers() {
         user,
         getUsers,
         getUser,
+        adminGetUsers,
         storeUser,
         updateUser,
         deleteUser,
         validationErrors,
-        isLoading
+        isLoading,
+        pagination
     }
 }

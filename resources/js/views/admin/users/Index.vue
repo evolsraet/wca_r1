@@ -22,24 +22,24 @@
                     <div class="container mb-3">
                     <div class="d-flex justify-content-end responsive-flex-end">
                         <div class="text-start status-selector">
-                        <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
+                        <input type="radio" name="status" value="all" id="all" hidden checked @change="setUserFilter('all')">
                         <label for="all" class="mx-2">전체</label>
 
-                        <input type="radio" name="status" value="user" id="user" hidden @change="setFilter('user')">
+                        <input type="radio" name="status" value="user" id="user" hidden @change="setUserFilter('user')">
                         <label for="user">일반</label>
 
-                        <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setFilter('dealer')">
+                        <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setUserFilter('dealer')">
                         <label for="dealer" class="mx-2">딜러</label>
                     </div>
 
-                        <div class="text-end select-option">
-                            <select class="form-select select-rank" aria-label="심사중">
-                                <option selected>심사중</option>
-                                <option value="1">정상</option>
-                                <option value="2">탈퇴</option>
-                                <option value="3">가입거부</option>
-                            </select>
-                        </div>
+                    <div class="text-end select-option">
+                        <select class="form-select select-rank" @change="event => setStatusFilter(event.target.value)">
+                            <option value="all" selected>전체</option>
+                            <option value="ok">정상</option>
+                            <option value="ask">심사중</option>
+                            <option value="reject">가입거부</option>
+                        </select>
+                    </div>
                     </div>
                     </div>
                     <div class="o_table_mobile my-5">
@@ -235,7 +235,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="post in filteredUsers" :key="post.id">
+                                <tr v-for="post in users" :key="post.id">
                                     <td class="px-6 py-4 text-sm">
                                         {{ post.created_at }}
                                     </td>
@@ -276,22 +276,17 @@
                 </div>
             </div>
                 <div class="card-footer">
-                    <Pagination 
-                        :data="users"
-                        :limit="3"
-                        @pagination-change-page="
-                            (page) =>
-                                getUsers(
-                                    page,
-                                    search_id,
-                                    search_title,
-                                    search_global,
-                                    orderColumn,
-                                    orderDirection
-                                )
-                        "
-                        class="mt-4 justify-content-center"
-                    />
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" :class="{ disabled: !pagination.prev }">
+                        <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
+                        </li>
+                        <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                        <a class="page-link" @click="loadPage(n)">{{ n }}</a>
+                        </li>
+                        <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+                        <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
+                        </li>
+                    </ul>
                 </div>
 
 </template>
@@ -306,41 +301,33 @@ const search_title = ref("");
 const search_global = ref("");
 const orderColumn = ref("created_at");
 const orderDirection = ref("desc");
-const { users, getUsers, deleteUser } = useUsers();
+const { users, getUsers, deleteUser, adminGetUsers , pagination } = useUsers();
 const { can } = useAbility();
+const currentRoleStatus = ref('all');
 const currentStatus = ref('all');
-
+const currentPage = ref(1);
 onMounted(async () => {
-    getUsers();
+    adminGetUsers(1,currentStatus.value,currentRoleStatus.value);                  
 });
 
-const filteredUsers = computed(() => {
-    if (currentStatus.value === "all") {
-        return users.value.data;
-    } else {
-        return users.value.data.filter(user => 
-            user.roles.some(role => role === currentStatus.value)
-        );
-    }
-});
-
-
-function setFilter(status) { // 필터 설정
-  currentStatus.value = status;
-  //filteredUsers();
+async function loadPage(page) { // 페이지 로드
+    if (page < 1 || page > pagination.value.last_page) return;
+    currentPage.value = page;
+    adminGetUsers(page,currentStatus.value,currentRoleStatus.value);
 }
 
+function setUserFilter(status) { // 필터 설정
+    currentRoleStatus.value = status;
+    adminGetUsers(1,currentStatus.value,currentRoleStatus.value);
+}
+function setStatusFilter(status) { // 필터 설정
+    currentStatus.value = status;
+    adminGetUsers(1,currentStatus.value,currentRoleStatus.value);
+}
 const updateOrdering = (column) => {
     orderColumn.value = column;
     orderDirection.value = orderDirection.value === "asc" ? "desc" : "asc";
-    getUsers(
-        1,
-        search_id.value,
-        search_title.value,
-        search_global.value,
-        orderColumn.value,
-        orderDirection.value
-    );
+    adminGetUsers(1,currentStatus.value,currentRoleStatus.value);
 };
 watch(search_id, (current, previous) => {
     getUsers(1, current, search_title.value, search_global.value);
