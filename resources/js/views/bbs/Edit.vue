@@ -4,7 +4,7 @@
         * web-text: : 웹 화면에서 보이는뷰
     --> 
     <div class="container">
-        <form @submit.prevent="editReview(reviewId, 'user')" v-for="review in reviewData" :key="review">
+        <form @submit.prevent="submitForm" v-for="review in reviewData" :key="review">
             <div class="create-review">
                 <div class="left-container">
                     <div class="container-img mov-info02">
@@ -17,24 +17,27 @@
                         </div>
                     </div>
                     <div class="enter-view align-items-baseline mt-3 bold-18-font">
-                        <input type="hidden" id="user_id" :value="review.auction.user_id">
+                        <!--                        <input type="hidden" id="user_id" :value="review.auction.user_id">
                         <input type="hidden" id="auction_id" :value="review.auction.id">
-                        <input type="hidden" id="dealer_id" :value="review.auction.win_bid.user_id">
+                        <input type="hidden" id="dealer_id" :value="review.auction.win_bid.user_id">-->
+                        <input type="hidden" id="user_id" :v-model="rv.user_id">
+                        <input type="hidden" id="auction_id" :v-model="rv.auction_id">
+                        <input type="hidden" id="dealer_id" :v-model="rv.dealer_id">
                         <p class="card-title fs-5"><span class="blue-box">무사고</span>{{review.auction.car_no}}</p>
                     </div>
                     <p class="mt-2 card-text tc-light-gray fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
                     <div class="enter-view mt-2">
-                        <p class="card-text tc-light-gray fs-5 mov-text">딜러명<span class="process ms-3">{{review.auction.dealer_name}}</span></p>
+                        <p class="card-text tc-light-gray fs-5 mov-text">딜러명<span class="process ms-3">{{review.dealer.name}} 딜러</span></p>
                         <p class="card-text tc-light-gray fs-5 web-text">12 삼 4567</p>
                         <a href="#"><span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">상세보기</span></a>
                     </div>
-                    <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>2024년 2월 13일 오후 6시 00분</span></p>
+                    <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>{{ formatDateAndTime(review.auction.final_at )}}</span></p>
                     <div class="container card-style p-0 mt-5">
                         <div class="card card-custom card-custom-ty">
                             <div class="row flex-row">
                                 <div class="col col-line">
                                     <div class="item-label">년식</div>
-                                    <div class="item-value mb-0">{{ carInfo.year }} 년형</div>
+                                    <div class="item-value mb-0"> 년형</div>
                                 </div>
                                 <div class="col col-line">
                                     <div class="item-label">주행거리</div>
@@ -58,7 +61,7 @@
                             <div class="mt-3" @click.stop="">
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
-                                    <input type="hidden" id="reviewStarValue">
+                                    <input type="hidden" :v-model="rv.star">
                                     <div class="rating">
                                         <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
                                             <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
@@ -68,7 +71,7 @@
                                         <span class="d-flex mx-2 rating-score tc-red"></span>
                                     </div>
                                 </div>
-                                <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content">{{ review.content }}</textarea>
+                                <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content">{{ review.content }}</textarea>
                                 <div class="btn-group mt-3">
                                     <button class="btn btn-primary"> 수정 완료 </button>
                                 </div>
@@ -89,22 +92,22 @@ export default {
 </script>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick, reactive , watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
-import useAuctions from "@/composables/auctions";
 import { initReviewSystem } from '@/composables/review'; // 별점 js
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
+import { cmmn } from '@/hooks/cmmn';
 
 const route = useRoute();
 const reviewId = parseInt(route.params.id);
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); //바텀 시트 스타일
-const { getUserReviewInfo, editReview, getCarInfo, setInitialStarRating } = initReviewSystem();
+const { getUserReviewInfo, editReview, setInitialStarRating , getCarInfo } = initReviewSystem();
 let reviewData = ref();
-const carInfo = ref();
-
 const alarmModal = ref(null);
+const carInfo = ref();
+const { formatDateAndTime } = cmmn();
 
 const openAlarmModal = () => {
 console.log("openAlarmModal called");
@@ -113,6 +116,17 @@ if (alarmModal.value) {
 }
 };
 
+const rv = reactive({
+    user_id:route.params.id,
+    auction_id:'',
+    dealer_id:'',
+    star:'',
+    content:'',
+})
+
+function submitForm(){
+    editReview(reviewId, rv);
+}
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {
     const bottomSheet = document.querySelector('.bottom-sheet');
@@ -126,11 +140,22 @@ function toggleSheet() {
 
 onMounted(async () => {
     const response = await getUserReviewInfo(reviewId);
+    console.log(response);
     reviewData.value = [response];
     carInfo.value = await getCarInfo(response.auction.owner_name, response.auction.car_no);
+    console.log(carInfo.value);
     await nextTick();
     setInitialStarRating(response.star);
     initReviewSystem();
+
+    watchEffect(() => {
+        rv.auction_id = response.auction_id,
+        rv.dealer_id = response.dealer_id,
+        rv.star = response.star;
+        rv.user_id = response.user_id,
+        rv.content = response.content
+    })
+
 });
 </script>
 

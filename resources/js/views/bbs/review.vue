@@ -7,17 +7,16 @@
                     <h3 class="review-title">이용후기 관리</h3>
                     <div class="tab-nav my-4">
                         <ul>
-                            <li class="col-4"><a href="#" @click="setActiveTab('available')" :class="{ 'active': activeTab === 'available' }" title="작성한 이용후기">작성 가능한 이용 후기(<span>{{ auctionsData.length }}</span>)</a></li>
-                            <li class="col-4"><a href="#" @click="setActiveTab('written')" :class="{ 'active': activeTab === 'written' }" title="작성 가능한 이용후기">작성한 이용후기(<span>{{ reviewsData.length }}</span>)</a></li>
+                            <li class="col-4"><a href="#" @click="setActiveTab('available')" :class="{ 'active': activeTab === 'available' }" title="작성한 이용후기">작성 가능한 이용 후기(<span>{{ totalAuction }}</span>)</a></li>
+                            <li class="col-4"><a href="#" @click="setActiveTab('written')" :class="{ 'active': activeTab === 'written' }" title="작성 가능한 이용후기">작성한 이용후기(<span>{{ totalReview }}</span>)</a></li>
                         </ul>
                         <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
-                    <!-- 작성가능한 이용후기-->
                     <div v-if="activeTab === 'available'">
                         <div v-if="auctionsData.length > 0">
                             <div class="review-card" v-for="auction in auctionsData" :key="auction.id"> 
                                 <div class="review-image">
-                                    <p class="review-date">3.18 (월)</p>
+                                    <p class="review-date">{{ splitDate(auction.updated_at) }} ({{ getDayOfWeek(auction.updated_at) }})</p>
                                     <img src="../../../img/car_example.png" alt="현대 쏘나타 (DN8)">
                                 </div>
                                 <div class="review-info">
@@ -28,10 +27,10 @@
                                         </ul>
                                     </div>
                                     <h3 class="review-title">{{ auction.car_no }}</h3>
-                                    <p class="tc-light-gray">12 삼 4567 | <span>{{ auction.dealer_name }} 딜러</span></p>
+                                    <p class="tc-light-gray">12 삼 4567 | <span>(추후 추가 예정) 딜러</span></p>
                                     <div class="justify-content-between flex align-items-center">
                                         <p class="tc-light-gray review-price">{{ amtComma(auction.win_bid.price) }}</p>
-                                        <!--<router-link :to="{ name: 'user.create-review' , params: { id: auction.id } }" class="btn-review">후기작성</router-link>-->
+                                        
                                         <a class="btn-review" @click="navigateToDetail(auction.id)">후기작성</a>
                                     </div>
                                 </div>
@@ -40,13 +39,27 @@
                         <div v-else>
                             작성 가능한 이용 후기가 없습니다.
                         </div>
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" :class="{ disabled: !pagination.prev }">
+                                <a class="page-link prev-style" @click="auctionLoadPage(pagination.current_page - 1)"></a>
+                                </li>
+                                <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                                <a class="page-link" @click="auctionLoadPage(n)">{{ n }}</a>
+                                </li>
+                                <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+                                <a class="page-link next-style" @click="auctionLoadPage(pagination.current_page + 1)"></a>
+                                </li>
+                            </ul>
+                        </nav>
+                        
                     </div>
-                    <!-- 작성한 이용후기-->
+                    
                     <div v-if="activeTab === 'written'">
                         <div v-if="reviewsData.length > 0">
                             <div class="review-card02" v-for="review in reviewsData" :key="review">
                                 <div class="review-image02">
-                                    <p class="review-date">3.18 (월)</p>
+                                    <p class="review-date">{{ splitDate(review.updated_at) }} ({{ getDayOfWeek(review.updated_at) }})</p>
                                     <img src="../../../img/car_example.png" alt="현대 쏘나타 (DN8)">
                                 </div>
                                 <div class="review-info02">
@@ -58,8 +71,10 @@
                                         </ul>
                                     </div>
                                     <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
+                                        <!--
                                         <p>{{ review.auction.car_no }}</p>
                                         <p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>
+                                            -->
                                     </div>
                                     <div class="rating">
                                         <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
@@ -74,10 +89,19 @@
                         <div v-else>
                             작성한 이용 후기가 없습니다.
                         </div>
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item" :class="{ disabled: !reviewPagination.prev }">
+                            <a class="page-link prev-style" @click="reviewLoadPage(reviewPagination.current_page - 1)"></a>
+                            </li>
+                            <li v-for="n in reviewPagination.last_page" :key="n" class="page-item" :class="{ active: n === reviewPagination.current_page }">
+                            <a class="page-link" @click="reviewLoadPage(n)">{{ n }}</a>
+                            </li>
+                            <li class="page-item next-prev" :class="{ disabled: !reviewPagination.next }">
+                            <a class="page-link next-style" @click="reviewLoadPage(reviewPagination.current_page + 1)"></a>
+                            </li>
+                        </ul>
                     </div>
-                </div>
-                <div class="bottom-message" :class="{ 'show': deleteMessageVisible }">
-                    삭제되었습니다.
+                    
                 </div>
             </div>
         </div>
@@ -87,6 +111,7 @@
 <script setup>
 import { onMounted , computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 import { ref } from 'vue';
 import useAuctions from "@/composables/auctions";
 import { initReviewSystem } from '@/composables/review';
@@ -95,12 +120,19 @@ import { cmmn } from '@/hooks/cmmn';
 let userId =  ref();
 const router = useRouter();
 const activeTab = ref('available'); //nav 탭 바
-const showDeleteConfirmation = ref(false); // "삭제되었습니다," 띄우기
 const isMenuVisible = ref(false);
-const { auctionsData, getAuctions } = useAuctions();
-const { getUserReview , deleteReviewApi , reviewsData } = initReviewSystem(); 
-const { amtComma } = cmmn();
+const { auctionsData, getAuctions , pagination } = useAuctions();
+const { getUserReview , deleteReviewApi , reviewsData , reviewPagination } = initReviewSystem(); 
+const { amtComma , splitDate , getDayOfWeek} = cmmn();
 const loading = ref(false);
+const store = useStore();
+const user = computed(() => store.getters['auth/user']);
+
+const auctionCurrentPage = ref(1); // 현재 페이지 번호
+const reviewCurrentPage = ref(1); // 현재 페이지 번호
+
+let totalAuction;
+let totalReview;
 
 function toggleMenu(id) {
     let targetObj = document.getElementById('toggleMenu'+id);
@@ -138,11 +170,25 @@ function showDeleteMessage() {
         location.reload();
     }, 1000);
 }
+async function auctionLoadPage(page) { // 페이지 로드
+    if (page < 1 || page > pagination.value.last_page) return;
+    auctionCurrentPage.value = page;
+    await getAuctions(page,true);
+}
+async function reviewLoadPage(page) { // 페이지 로드
+    if (page < 1 || page > reviewPagination.value.last_page) return;
+    reviewCurrentPage.value = page;
+    await getUserReview(user.value.id,page);
+}
 
 onMounted(async () => {
+
     await getAuctions(1,true);
-    userId = auctionsData.value[0].user_id;
-    await getUserReview(userId);
+    totalAuction = pagination.value.total;
+    
+    await getUserReview(user.value.id);
+    totalReview = reviewPagination.value.total;
+
     loading.value = true;
 });
 </script>

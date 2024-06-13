@@ -88,12 +88,16 @@ export function cmmn() {
         return callApi({
             _type: 'get',
             _url:`/api/reviews/${id}`,
-            _param: null
+            _param: ['auctions','reviews'],
+            doesnthave: ['reviews'] -> with한 데이터 null 체크
         }).then(async result => {
             console.log(result);
             return result.data;
         });
+
+        
     */  
+     
     function parseApiCompleted(rstData, response) {
         console.log('cmmn.callApiGet result : ',response);
         rstData.rawData = response;
@@ -207,6 +211,16 @@ export function cmmn() {
                         if(urlParams) urlParams += '&';
                         urlParams += 'page='+input._param._page;    
                     }
+                    if(input._param._doesnthave){
+                        let urlParamsWith = '';
+                        input._param._with.forEach(function(item){
+                            if(urlParamsWith) urlParamsWith += ',';
+                            urlParamsWith += item;
+                        });
+                        if(urlParams) urlParams += '&';
+                        urlParams += 'doesnthave='+urlParamsWith;
+                    }
+                    
                 } else if(isPost) {
                     urlParams = input._param;
                 } else if(isPut) {
@@ -225,8 +239,9 @@ export function cmmn() {
         console.log('cmmn.callApi params : ' + urlParams);
         console.log('cmmn.callApi type : ' + callType);
         let returnData;
+
         if(isGet) {
-            const response = await axios.get(`${urlPath}?${urlParams}`).then(response => {            
+            const response = await axios.get(`${urlPath}?${urlParams}`).then(response => {        
                 returnData = parseApiCompleted(rstData,response);                
             })
             .catch(error => {            
@@ -251,6 +266,45 @@ export function cmmn() {
     }
     //End of callApi
     
+    function splitDate (date){
+        return date.split(' ')[0];
+    }
+
+    // param : yyyy-mm-dd
+    // 날짜 => 요일
+    function getDayOfWeek(dateString) {
+        const date = new Date(dateString);
+
+        const daysOfWeek = ["일", "월", "화", "수", "목", "금", "토"];
+        
+        const dayIndex = date.getDay();
+        
+        return daysOfWeek[dayIndex];
+    }
+
+    function formatDateAndTime(dateTimeString) {
+        const dateObj = new Date(dateTimeString);
+
+        const monthNames = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
+        
+        const year = dateObj.getFullYear();
+        const month = monthNames[dateObj.getMonth()];
+        const date = dateObj.getDate();
+        let hours = dateObj.getHours();
+        const minutes = ('0' + dateObj.getMinutes()).slice(-2); // Ensure two digits for minutes
+        
+        const ampm = hours >= 12 ? '오후' : '오전';
+        
+        if (hours > 12) {
+            hours -= 12;
+        } else if (hours === 0) {
+            hours = 12;
+        }
+
+        const formattedDateTime = `${year}년 ${month} ${date}일 ${ampm} ${hours}시 ${minutes}분`;
+        
+        return formattedDateTime;
+    }
 
     return {
       numberToKoreanUnit,
@@ -258,5 +312,8 @@ export function cmmn() {
       openPostcode,
       closePostcode,
       callApi,
+      splitDate,
+      getDayOfWeek,
+      formatDateAndTime,
     }
   }

@@ -4,7 +4,7 @@
         * web-text: : 웹 화면에서 보이는뷰
     --> 
     <div class="container">
-        <form @submit.prevent="submitReview">
+        <form @submit.prevent="submitForm">
             <div class="create-review">
                     <div class="left-container" v-for="auction in auctionsData" :key="auction.id">
                         <div class="container-img mov-info02">
@@ -17,9 +17,9 @@
                             </div>
                         </div>
                         <div class="enter-view align-items-baseline mt-3 bold-18-font">  
-                            <input type="hidden" id="user_id" :value="auction.user_id">
-                            <input type="hidden" id="auction_id" :value="auction.id">
-                            <input type="hidden" id="dealer_id" :value="auction.win_bid.user_id">
+                            <input type="hidden" id="user_id" :v-model="rv.user_id">
+                            <input type="hidden" id="auction_id" :v-model="rv.auction_id">
+                            <input type="hidden" id="dealer_id" :v-model="rv.dealer_id">
                             <p class="card-title fs-5"><span class="blue-box">무사고</span>{{auction.car_no}}</p>
                             </div>
                             <p class="mt-2 card-text tc-light-gray fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
@@ -88,7 +88,7 @@
                                         <span class="d-flex mx-2 rating-score tc-red"></span>
                                     </div>
                                 </div>
-                                <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content"></textarea>
+                                <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content">{{ review.content }}</textarea>
                                 
                                 <div class="btn-group mt-3 mb-4">
                                     <button class="btn btn-primary"> 작성 완료 </button>
@@ -110,7 +110,7 @@
     }
 </script>
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted , reactive} from 'vue';
 import { useRoute } from 'vue-router'; 
 import { initReviewSystem } from '@/composables/review'; // 별점 js
 import useAuctions from "@/composables/auctions";
@@ -134,6 +134,19 @@ const openAlarmModal = () => {
         alarmModal.value.openModal();
     }
 };
+
+const rv = reactive({
+    user_id:'',
+    auction_id:'',
+    dealer_id:'',
+    star:'',
+    content:'',
+})
+
+function submitForm(){
+    submitReview(rv);
+}
+
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {
     const bottomSheet = document.querySelector('.bottom-sheet');
@@ -149,6 +162,11 @@ function toggleSheet() {
 const findAuctionDetail = async () => {
     try {
         const response = await getAuctionById(auctionId);
+
+        rv.user_id = response.data.user_id;
+        rv.auction_id = response.data.id;
+        rv.dealer_id = response.data.win_bid.user_id;
+
         //차량정보 불러오기
         carInfo.value = await getCarInfo(response.data.owner_name, response.data.car_no);
         auctionsData.value = [response.data]; 
@@ -160,6 +178,7 @@ const findAuctionDetail = async () => {
 
 onMounted(() => { 
     findAuctionDetail();
+    
 });
 
 </script>

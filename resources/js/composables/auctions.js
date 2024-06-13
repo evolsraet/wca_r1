@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import store from "../store";
 import useUsers from "./users";
+import { cmmn } from '@/hooks/cmmn';
 
 export default function useAuctions() {
     const showModal = ref(false);
@@ -22,50 +23,44 @@ export default function useAuctions() {
         no: "",
         forceRefresh: "" 
     });
-
+    const { callApi } = cmmn();
+    
 // 경매 내용 통신 (페이지까지)
-const getAuctions = async (page = 1, isReviews = false) => {
-    try {
-        
-        let response ;
-
-        if(isReviews){
-            response = await axios.get(`/api/auctions?page=${page}&where=auctions.status:done|auctions.bid_id:>:0&with=reviews`);
-        } else {
-            response = await axios.get(`/api/auctions?page=${page}`);
-        }
-        
-        console.log(response);
-
-        auctionsData.value = response.data.data;
-
-        pagination.value = response.data.meta;
-
-        console.log('Pagination:', pagination.value);
-
-        for (const auction of auctionsData.value) {
-            if (auction.win_bid) {
-                const data = await getUser(auction.win_bid.user_id);
-                const name = data.dealer.name;
-                auction.dealer_name = name;
-            } else {
-                const isExits = Object.keys(auction).includes('value');
-                if(isExits){
-                    auction.value.dealer_name = null; 
-                }
+const getAuctions = async (page = 1, isReviews = false ) => {
+    if(isReviews){
+        return callApi({
+            _type: 'get',
+            _url:`/api/auctions`,
+            _param: {
+                _where:['auctions.status:done','auctions.bid_id:>:0'],
+                _with:['reviews'],
+                _doesnthave:['reviews'],
+                _page:`${page}`
             }
-        };
-
-        console.log('Auctions:', auctionsData.value);
-    } catch (error) {
-        console.error('Error fetching auctions:', error);
+        }).then(async result => {
+            auctionsData.value = result.data;
+            pagination.value = result.rawData.data.meta;
+        });
+        
+    } else {
+        return callApi({
+            _type: 'get',
+            _url:`/api/auctions`,
+            _param: {
+                _page:`${page}`
+            }
+        }).then(async result => {
+            console.log(result);
+            auctionsData.value = result.data;
+            pagination.value = result.rawData.data.meta;
+        });
     }
 };
-
 
     
 // 경매 ID를 이용해 경매 상세 정보를 가져오는 함수
 const getAuctionById = async (id) => {
+
     try {
         // API 경로에서 {auction} 부분을 실제 ID로 치환하여 요청
         const response = await axios.get(`/api/auctions/${id}`);
@@ -234,6 +229,7 @@ const updateAuction = async (id,auction) => {
     const auctionForm = {
         auction
     }
+    console.log(JSON.stringify(auctionForm));
     swal({
         text: '변경을 하시겠습니까?',
         icon: 'warning',

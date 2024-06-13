@@ -90,18 +90,17 @@
       </div>
       <nav>
         <ul class="pagination justify-content-center">
-            <li class="page-item" :class="{ disabled: !pagination.prev }">
-            <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
+            <li class="page-item" :class="{ disabled: !reviewPagination.prev }">
+            <a class="page-link prev-style" @click="loadPage(reviewPagination.current_page - 1)"></a>
             </li>
-            <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+            <li v-for="n in reviewPagination.last_page" :key="n" class="page-item" :class="{ active: n === reviewPagination.current_page }">
             <a class="page-link" @click="loadPage(n)">{{ n }}</a>
             </li>
-            <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-            <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
+            <li class="page-item next-prev" :class="{ disabled: !reviewPagination.next }">
+            <a class="page-link next-style" @click="loadPage(reviewPagination.current_page + 1)"></a>
             </li>
         </ul>
-        
-    </nav>
+      </nav>
     </div>
   </div>
 </template>
@@ -113,7 +112,6 @@ import { initReviewSystem } from '@/composables/review';
 import { useRouter } from 'vue-router';
 import 'swiper/css';
 import 'swiper/css/pagination';
-//import { Pagination } from 'swiper';
 
 const showFullView = ref(false);
 const router = useRouter();
@@ -123,9 +121,8 @@ const isUser = computed(() => user.value?.roles?.includes('user'));
 const test = [];
 const showBottomSheet = ref(true);
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
-const { getHomeReview , reviewsData , splitDate, pagination } = initReviewSystem(); 
+const { getHomeReview , reviewsData , splitDate, reviewPagination } = initReviewSystem(); 
 const slidesPerView = ref(1); // 슬라이드를 한 번에 하나만 보이도록 설정
-//const modules = [Pagination];
 
 const slides = ref([]);
 
@@ -174,7 +171,9 @@ function navigateToDetail(reviewId) {
 }
 
 async function loadPage(page) { // 페이지 로드
-  if (page < 1 || page > pagination.value.last_page) return;
+  console.log(page);
+  console.log(reviewPagination.value.last_page)
+  if (page < 1 || page > reviewPagination.value.last_page) return;
   currentPage.value = page;
   await getHomeReview(page); // getHomeReview 호출을 대기
   inputCardsValue();
