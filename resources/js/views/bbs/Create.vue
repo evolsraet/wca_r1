@@ -5,13 +5,24 @@
     --> 
     <div class="container">
         <form @submit.prevent="submitForm">
-            <div class="create-review">
-                    <div class="left-container" v-for="auction in auctionsData" :key="auction.id">
+            <div class="container mov-wide">
+                    <div  v-for="auction in auctionsData" :key="auction.id">
                         <div class="container-img mov-info02">
                             <div class="left-img">
-                                <img src="../../../img/car_example2.png" alt="전체 이미지0 ">
+                                <div v-if ="!isMobileView" class="d-flex flex-row">
+                                    <div class="w-50">
+                                        <div class="card-img-top-ty02"></div>
+                                    </div>
+                                    <div class="w-50 d-flex flex-column">
+                                        <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
+                                        <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+                                    </div>
+                                </div>
+                                <div v-if = "isMobileView">
+                                    <div class="card-img-top-ty02"></div>
+                                </div>
                             </div>
-                            <div class="right-img web-text">
+                            <div class="web-text">
                                 <div class="detail detail1"></div>
                                 <div class="detail detail2"></div>
                             </div>
@@ -52,7 +63,7 @@
                                 </div>
                                 </div>
                             </div>
-                            <div class="right-container">
+                            <div class="">
                                 <bottom-sheet initial="half" :dismissable="true">
                         <div class="sheet-content p-0">
                             <div class="mt-1" @click.stop="">
@@ -110,13 +121,14 @@
     }
 </script>
 <script setup>
-import { ref, onMounted , reactive} from 'vue';
+import { ref, onMounted , reactive ,onBeforeUnmount} from 'vue';
 import { useRoute } from 'vue-router'; 
 import { initReviewSystem } from '@/composables/review'; // 별점 js
 import useAuctions from "@/composables/auctions";
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue'
 import AlarmModal from '@/views/modal/AlarmModal.vue';
 
+const isMobileView = ref(window.innerWidth <= 640);
 const route = useRoute();
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); //바텀 시트 스타일
@@ -142,7 +154,11 @@ const rv = reactive({
     star:'',
     content:'',
 })
-
+const checkScreenWidth = () => {
+    if (typeof window !== 'undefined') {
+      isMobileView.value = window.innerWidth <= 640;
+    }
+  };
 function submitForm(){
     submitReview(rv);
 }
@@ -178,9 +194,13 @@ const findAuctionDetail = async () => {
 
 onMounted(() => { 
     findAuctionDetail();
-    
+    window.addEventListener('resize', checkScreenWidth);
+    checkScreenWidth();
 });
 
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScreenWidth);
+}); 
 </script>
 <style scoped>
 .bottom-sheet::before {
@@ -237,4 +257,9 @@ onMounted(() => {
                 margin-bottom: 0;
             }
         }
+@media (min-width: 1200px) {
+  .container-xl, .container-lg, .container-md, .container-sm, .container {
+    max-width: 1140px;
+  }
+}
 </style>

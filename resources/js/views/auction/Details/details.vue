@@ -21,7 +21,7 @@
                                       </div>
                                       <div v-else>
                                           <span v-if="auctionDetail.data.status === 'ing'" class="mx-2 timer"><img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock"><span v-if="timeLeft.days != '0' ">{{ timeLeft.days }}일 &nbsp; </span>{{ timeLeft.hours }} : {{ timeLeft.minutes }} : {{ timeLeft.seconds }}</span>
-                                             
+                                          <span v-if="auctionDetail.data.status === 'done'" class="mx-2 auction-done">경매완료</span>   
                                           <input class="toggle-heart" type="checkbox" checked />
                                           <label class="heart-toggle"></label>
                                           <div :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
@@ -48,7 +48,7 @@
                                           <div v-else>
                                          <!--       <div v-if="auctionDetail.data.status === 'chosen'" class="time-remaining">선택 완료</div>-->
                                           </div>
-                                          <div v-if="auctionDetail.data.status === 'done'" class="time-remaining">낙찰가 1,000 만원</div>
+                                          <h4 v-if="auctionDetail.data.status === 'done'" class="wait-selection">낙찰가 {{ amtComma&nbsp(auctionDetail.data.final_price) }}</h4>
                                           <div class="p-3 pb-1 d-flex gap-3 justify-content-between">
                                           <div></div>
                                             <!--TODO: 실차주 딜러 차주 판매 추가 하기-->
@@ -596,34 +596,9 @@
                           </div>
 
                           [사용자] - 경매 완료 -->
-                          <!--  <transition name="fade">
-                              <div v-if="auctionDetail.data.status === 'chosen' ||auctionDetail.data.status === 'done'"  @click.stop="">
-                                <div class="steps-container mt-2">
-                                  <div class="step completed">
-                                      <div class="label completed">
-                                          STEP01
-                                      </div>
-                                      <div class="label label-style tc-light-gray">매물 준비</div>
-                                  </div>
-                                  <div class="line completed"></div>
-                                  <div class="step completed">
-                                      <div class="label completed">
-                                          STEP02
-                                      </div>
-                                      <div class="label label-style tc-light-gray completing-text">경매</div>
-                                  </div>
-                                  <div class="line completed"></div>
-                                  <div class="step completed">
-                                      <div class="label completed">
-                                          STEP03
-                                      </div>
-                                      <div class="label label-style02 tc-light-gray">완료</div>
-                                  </div>
-                              </div> 
-                              <div> 
-                                <h5 class="text-center p-4" v-if="auctionDetail.data.status === 'done'">거래는 어떠셨나요?</h5>
+                        <BottomSheet02>
+                                <h5 class="text-center p-2" v-if="auctionDetail.data.status === 'done'">거래는 어떠셨나요?</h5>
                                 <p class="auction-deadline mt-4" v-else>선택이 완료 되었습니다.</p>
-                                <p class="tc-red text-center mt-3">※ 입금완료 후 경매완료 처리가 됩니다. </p>
                                 <router-link
                                   v-if="auctionDetail.data.status === 'done'"
                                   :to="{ name: 'user.create-review' }"
@@ -632,12 +607,9 @@
                                 >
                                   후기 남기기
                                 </router-link>
-                              </div>
-                            </div>
-                          </transition>
-                      </div>
+                        </BottomSheet02>
 
-                       바텀 시트 show or black-->
+                     <!--  바텀 시트 show or black-->
              <!--       <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
 
                       <div v-if="isDealer">
