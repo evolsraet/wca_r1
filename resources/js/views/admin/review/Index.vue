@@ -154,7 +154,6 @@
                                     <td class="px-6 py-4 text-sm">
                                         <router-link
                                             href="#"
-                                            v-if="can('role.admin')"
                                             :to="{ 
                                                 name: 'review.approve', params: { id: review.id } 
                                             }"
@@ -163,7 +162,6 @@
                                         </router-link>
                                         <a
                                             href="#"
-                                            v-if="can('role.admin')"
                                             @click.prevent="deleteReviewApi(review.id)"
                                             class="ms-2 badge bg-danger tc-wh"
                                             >삭제</a

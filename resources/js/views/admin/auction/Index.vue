@@ -49,7 +49,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-if="filteredAuctions.length > 0" v-for="auction in filteredAuctions" :key="auction.id">
+                        <tr v-if="auctionsData.length > 0" v-for="auction in auctionsData" :key="auction.id">
                             <td class="px-6 py-4 text-sm">
                                 {{ auction.created_at }}
                             </td>
@@ -65,8 +65,6 @@
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <router-link
-                                    href="#"
-                                    v-if="can('role.admin')"
                                     :to="{ 
                                         name: 'auction.approve', params: { id: auction.id } 
                                     }"
@@ -75,7 +73,6 @@
                                 </router-link>
                                 <a
                                     href="#"
-                                    v-if="can('role.admin')"
                                     @click.prevent="deleteAuction(auction.id)"
                                     class="ms-2 badge bg-danger tc-wh"
                                     >삭제</a
@@ -91,7 +88,19 @@
             </div>
         </div>
         <div class="card-footer">
-            <Pagination :data="pagination" :limit="3" @pagination-change-page="(page) => fetchAuctions(page)" class="mt-4 justify-content-center" />
+            <nav v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" :class="{ disabled: !pagination.prev }">
+                    <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
+                    </li>
+                    <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                    <a class="page-link" @click="loadPage(n)">{{ n }}</a>
+                    </li>
+                    <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+                    <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </template>
@@ -114,10 +123,10 @@
     const { categoryList, getCategoryList } = useCategories();
     const { can } = useAbility();
     const currentStatus = ref('all'); 
-
+    const currentPage = ref(1); // 현재 페이지 번호
     const fetchAuctions = async (page = 1) => {
         try {
-            await getAuctions(page);
+            await getAuctions(1,false,currentStatus.value);
         } catch (error) {
             console.error('Error fetching auctions:', error);
         }
@@ -130,14 +139,14 @@
     
     function setFilter(status) { // 필터 설정
         currentStatus.value = status;
+        getAuctions(1,false,currentStatus.value);
     }
 
-    const filteredAuctions = computed(() => { // 필터된 경매 목록
-    if (currentStatus.value === 'all') {
-        return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag', 'ask', 'cancel'].includes(auction.status));
+    function loadPage(page) { // 페이지 로드
+        if (page < 1 || page > pagination.value.last_page) return;
+        currentPage.value = page;
+        getAuctions(page,false,currentStatus.value);
     }
-    return auctionsData.value.filter(auction => auction.status === currentStatus.value);
-    });
 
     const updateOrdering = (column) => {
         orderColumn.value = column;

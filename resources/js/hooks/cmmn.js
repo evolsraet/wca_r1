@@ -306,6 +306,187 @@ export function cmmn() {
         return formattedDateTime;
     }
 
+  // public swal
+    /**
+        salert({
+            _swal: swal, //필수 지정
+            //_type: 'C', //C:confirm , T:toast , A:alert
+            _msg: '<b style="color:red">msg1</b>',
+            //_title: '<b style="color:red">title1</b>',
+            //_isHtml: false, //_msg가 HTML 태그 인 경우 활성화
+            //_icon: 'E|W|I|Q', //E:error , W:warning , I:info , Q:question
+            //_isClose: true,// 닫기 버튼 활성화
+            //_btnOkLabel: '', //확인 버튼 라벨 변경시
+            //_btnCancelLabel: '', //취소 버튼 라벨 변경시
+            //_btnBatch: 'L|R', //확인 버튼 위치 지정
+            //_timer: 10, //자동 닫기 타이머 설정
+            //_isBackCancel:true, //창 외부 클릭 닫기 활성화
+            //_isReturnFunction:false, //결과 함수 리턴 비활성화 , 기본 선언 필요
+            //_addClassNm:'', // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
+            //_addOption: { //swal 기타 옵션 추가
+            //    width: 700,
+            //    padding: 150,
+            //    background: '#fff url(https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg)',
+            //    imageUrl: 'https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg',
+            //    imageWidth: 200,
+            //    imageHeight: 200,
+            //    imageAlt: 'Custom image',
+            //},
+        },function(result){
+            console.log('salert', result);
+        }); 
+
+        // Toast
+        salert({
+            _swal: swal, //필수 지정
+            _type: 'T', //C:confirm , T:toast , A:alert
+            _msg: '<b style="color:red">msg1</b>',
+            //_isHtml: false, //_msg가 HTML 태그 인 경우 활성화
+            _isBackCancel:true, //창 외부 클릭 닫기 활성화
+            _isReturnFunction:false, //결과 함수 리턴 비활성화 , 기본 선언 필요
+        }); 
+     */
+    const salert = (input,fnCallback) => {
+        let rstData = {
+            isError : false,
+            isOk : false,
+            msg : '',
+            rawData : input,
+            css: null,
+        };
+        let isReturn = true;
+        if(input) {
+            let _classNm = 'wica-salert';
+            let _isBackCancel;
+            let isRight;
+            let _title;
+            let _icon = null;//success , error , warning , info , question
+            let _btnOkLabel = '확인';
+            let _btnCancelLabel = '취소';
+            let isConfirm;
+            let isAlert;
+            let isToast;
+            let isClose;
+            if(input._icon) {
+                if(input._icon.toUpperCase() == 'E') {
+                    _icon = 'error'
+                } else if(input._icon.toUpperCase() == 'W') {
+                    _icon = 'warning'
+                } else if(input._icon.toUpperCase() == 'I') {
+                    _icon = 'info'
+                } else if(input._icon.toUpperCase() == 'Q') {
+                    _icon = 'question'
+                }
+            }
+            if(input._type) {
+                if(input._type.toUpperCase() == 'C') {
+                    isConfirm = true;
+                } else if(input._type.toUpperCase() == 'A') {
+                    isAlert = true;
+                } else if(input._type.toUpperCase() == 'T') {
+                    isToast = true;
+                } else {
+                    isToast = true;
+                }
+            } else {
+                isToast = true;
+            }
+            if(input._title) {
+                _title = input._title;
+            }
+            if(input._btnBatch) {
+                if(input._btnBatch.toUpperCase() == 'R') { 
+                    isRight = true;
+                } else {
+                    isRight = false;
+                }
+            }
+            if(input._btnOkLabel) {
+                _btnOkLabel = input._btnOkLabel;
+            }
+            if(input._btnCancelLabel) {
+                _btnCancelLabel = input._btnCancelLabel; 
+            }
+            if(input._isBackCancel) {
+                _isBackCancel = input._isBackCancel;
+            }   
+            if(input._addClassNm) {
+                _classNm = input._addClassNm;
+            }   
+            if(input._isClose)      {
+                isClose = input._isClose;
+            }
+            if(input._isReturnFunction != undefined) {
+                isReturn = input._isReturnFunction;
+            }
+            let _customClass = {
+                container: _classNm+'-container',
+                confirmButton: _classNm+'-confirmButton',
+                cancelButton: _classNm+'-cancelButton',
+                popup: _classNm+'-popup',
+                header: _classNm+'-header',
+                title: _classNm+'-title',
+                content: _classNm+'-content',
+                icon: _classNm+'-icon',
+                closeButton: _classNm+'-closeButton',
+                image: _classNm+'-image',
+                input: _classNm+'-input',
+                actions: _classNm+'-actions',
+                footer: _classNm+'-footer',
+            };
+            rstData.css = _customClass;
+            let opt = {
+                title: _title,
+                icon: _icon,
+                showConfirmButton: !isToast,
+                showCancelButton: isConfirm,
+                showCloseButton: isClose,
+                confirmButtonText: _btnOkLabel,
+                //confirmButtonColor: '#ef4444',
+                cancelButtonText: _btnCancelLabel,
+                //cancelButtonColor: '#ef4444', 
+                reverseButtons: isRight,
+                allowOutsideClick: _isBackCancel,
+                customClass: _customClass,
+            }; 
+            if(input._addOption) {
+                Object.assign(opt, input._addOption);
+            }
+            if(input._msg) {
+                if(input._isHtml) {
+                    opt.html = input._msg;
+                } else {
+                    opt.text = input._msg;
+                }
+            }
+            if(input._timer) {
+                opt.timer = 1000 * input._timer;
+                opt.timerProgressBar = true;
+            } else {
+                if(isToast) {
+                    opt.timer = 1000 * 2;
+                    opt.timerProgressBar = false;
+                }
+            }
+            input._swal(opt)
+                .then(result => {
+                    console.log(result);
+                    if (result.isConfirmed) {
+                        rstData.isOk = true;
+                    }
+                    if(isToast) {
+                        rstData.isOk = true;
+                    }
+                    if(isReturn) fnCallback(rstData);
+                })
+        } else {
+            rstData.isError = true;
+            rstData.msg = 'not exist _param';
+            if(isReturn) fnCallback(rstData);
+        }        
+    }
+    //End of public swal
+
     return {
       numberToKoreanUnit,
       amtComma,
@@ -315,5 +496,6 @@ export function cmmn() {
       splitDate,
       getDayOfWeek,
       formatDateAndTime,
+      salert
     }
   }

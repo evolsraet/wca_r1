@@ -249,11 +249,10 @@
                                         {{ post.email }}
                                     </td>
                                     <td class="px-6 py-4 text-sm">
-                                        {{ post.roles.includes('dealer') ? '딜러' : '일반' }}
+                                        {{ (post.roles || []).includes('dealer') ? '딜러' : '일반' }}
                                     </td>
                                     <td class="px-6 py-4 text-sm">
                                         <router-link
-                                            v-if="can('role.admin')"
                                             :to="{
                                                 name: 'users.edit',
                                                 params: { id: post.id },
@@ -263,7 +262,6 @@
                                         </router-link>
                                         <a
                                             href="#"
-                                            v-if="can('role.admin')"
                                             @click.prevent="deleteUser(post.id)"
                                             class="ms-2 badge bg-danger tc-wh"
                                             >삭제</a

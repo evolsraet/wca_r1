@@ -7,7 +7,7 @@ export default function useUsers() {
     const user = ref({
         name: ''
     })
-    const { callApi } = cmmn();
+    const { callApi , salert } = cmmn();
     const router = useRouter()
     const validationErrors = ref({})
     const isLoading = ref(false)
@@ -126,36 +126,49 @@ export default function useUsers() {
     }
 
     const deleteUser = async (id) => {
-        swal({
-            title: 'Are you sure?',
-            text: 'You won\'t be able to revert this action!',
-            icon: 'warning',
-            showCancelButton: true,
-            confirmButtonText: 'Yes, delete it!',
-            confirmButtonColor: '#ef4444',
-            timer: 20000,
-            timerProgressBar: true,
-            reverseButtons: true
-        })
-            .then(result => {
-                if (result.isConfirmed) {
-                    axios.delete('/api/users/' + id)
-                        .then(response => {
-                            getUsers()
-                            router.push({name: 'users.index'})
-                            swal({
-                                icon: 'success',
-                                title: 'User deleted successfully'
-                            })
+        salert({
+            _swal: swal, //필수 지정
+            _title: '삭제하시겠습니까?',
+            _msg: '삭제된 정보는 복구할 수 없습니다.',
+            _type: 'C',
+            _isHtml: true, 
+            _icon: 'Q',
+        },function(result){
+            if(result.isOk){
+                axios.delete('/api/users/' + id)
+                    .then(response => {
+                        salert({
+                            _type: 'A',
+                            _swal: swal, //필수 지정
+                            _msg: '삭제되었습니다.',
+                            _icon: 'I',
+                            _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
+                        },function(result){
+                            if(result.isOk){
+                                //location.reload();
+                                router.push({name: 'users.index'})
+                                getUsers()
+                                
+                            }
+                        });
+                    })
+                    .catch(error => {
+                        salert({
+                            _type: 'A',
+                            _swal: swal, //필수 지정
+                            _title: '오류가 발생하였습니다.',
+                            _msg: '관리자에게 문의해주세요.',
+                            _icon: 'E',
+                            _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
+
+                        },function(result){
+                            console.log(result);
                         })
-                        .catch(error => {
-                            swal({
-                                icon: 'error',
-                                title: 'Something went wrong'
-                            })
-                        })
-                }
-            })
+                    })
+            }
+            //console.log('salert', result);
+        }); 
+        
     }
 
     return {

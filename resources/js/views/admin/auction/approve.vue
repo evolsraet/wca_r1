@@ -299,11 +299,8 @@
         <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
           <div class="sheet-content">
             <div class="mt-3" @click.stop="">
-              <div class="btn-group mt-3" v-if="auctionDetails.data.status === 'ask'">
-                <button class="btn btn-primary tc-wh" @click="registerAuction" :disabled="!isFileAttached"> 등록 </button>
-              </div>
-              <div class="btn-group mt-3" v-else>
-                <button type="submit" class="btn primary-disable tc-wh"> 등록</button>
+              <div class="btn-group mt-3">
+                <button class="btn btn-primary tc-wh"> 등록 </button>
               </div>
             </div>
           </div>

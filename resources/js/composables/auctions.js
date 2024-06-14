@@ -23,7 +23,7 @@ export default function useAuctions() {
         no: "",
         forceRefresh: "" 
     });
-    const { callApi } = cmmn();
+    const { callApi , salert } = cmmn();
     
 // 경매 내용 통신 (페이지까지)
 const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
@@ -234,37 +234,54 @@ const AuctionReauction = async (id, data) => {
 };
 //수정
 const updateAuction = async (id,auction) => {
+    
     const auctionForm = {
         auction
     }
     console.log(JSON.stringify(auctionForm));
-    swal({
-        text: '변경을 하시겠습니까?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: '변경하기',
-        confirmButtonColor: '#ef4444',
-        timer: 20000,
-        timerProgressBar: true,
-        reverseButtons: true
-    })
-        .then(result => {
-            if (result.isConfirmed) {
-                axios.put(`/api/auctions/${id}`,auctionForm)
-                    .then(response => {
-                        getAuctions()
-                        router.push({name: 'auctions.index'})
-                        swal({
-                            icon: 'success'
-                        })
+
+
+    salert({
+        _swal: swal, //필수 지정
+        _title: '변경하시겠습니까?',
+        _type: 'C',
+        _isHtml: true, 
+        _icon: 'Q',
+    },function(result){
+        if(result.isOk){
+            axios.put(`/api/auctions/${id}`,auctionForm)
+                .then(response => {
+                    salert({
+                        _type: 'A',
+                        _swal: swal, //필수 지정
+                        _msg: '변경되었습니다.',
+                        _icon: 'I',
+                        _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
+                    },function(result){
+                        if(result.isOk){
+                            //location.reload();
+                            getAuctions()
+                            router.push({name: 'auctions.index'})
+                                
+                        }
+                    });
+                })
+                .catch(error => {
+                    salert({
+                        _type: 'A',
+                        _swal: swal, //필수 지정
+                        _title: '오류가 발생하였습니다.',
+                        _msg: '관리자에게 문의해주세요.',
+                        _icon: 'E',
+                        _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
+
+                    },function(result){
+                        console.log(result);
                     })
-                    .catch(error => {
-                        swal({
-                            icon: 'error'
-                        })
-                    })
-            }
-        })
+                })
+        }
+        //console.log('salert', result);
+    });
    
 }
 //딜러 선택
@@ -367,38 +384,49 @@ const updateAuctionStatus = async (id, status) => {
 };
 
 const deleteAuction = async (id) => {
-    swal({
-        title: 'Are you sure?',
-        text: 'You won\'t be able to revert this action!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Yes, delete it!',
-        confirmButtonColor: '#ef4444',
-        timer: 20000,
-        timerProgressBar: true,
-        reverseButtons: true
-    })
-        .then(result => {
-            if (result.isConfirmed) {
-                axios.delete(`/api/auctions/${id}`)
-                    .then(response => {
-                        getAuctions()
-                        router.push({name: 'auctions.index'})
-                        swal({
-                            icon: 'success',
-                            title: 'Auction deleted successfully'
-                        })
+
+    salert({
+        _swal: swal, //필수 지정
+        _title: '삭제하시겠습니까?',
+        _msg: '삭제된 정보는 복구할 수 없습니다.',
+        _type: 'C',
+        _icon: 'Q',
+    },function(result){
+        if(result.isOk){
+            axios.delete(`/api/auctions/${id}`)
+                .then(response => {
+                    salert({
+                        _type: 'A',
+                        _swal: swal, //필수 지정
+                        _msg: '삭제되었습니다.',
+                        _icon: 'I',
+                    },function(result){
+                        if(result.isOk){
+                            getAuctions()
+                            router.push({name: 'auctions.index'})                            
+                        }
+                    });
+                })
+                .catch(error => {
+                    salert({
+                        _type: 'A',
+                        _swal: swal, //필수 지정
+                        _title: '오류가 발생하였습니다.',
+                        _msg: '관리자에게 문의해주세요.',
+                        _icon: 'E',
+                        _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
+
+                    },function(result){
+                        console.log(result);
                     })
-                    .catch(error => {
-                        swal({
-                            icon: 'error',
-                            title: 'Something went wrong'
-                        })
-                    })
-            }
-        })
+                })
+        }
+        console.log('salert', result);
+    }); 
+
+    
         
-      };
+};
 
 
     return {
