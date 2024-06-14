@@ -132,7 +132,7 @@ export default function useUsers() {
             _msg: '삭제된 정보는 복구할 수 없습니다.',
             _type: 'C',
             _isHtml: true, 
-            _icon: 'Q',
+            _icon: 'W',
         },function(result){
             if(result.isOk){
                 axios.delete('/api/users/' + id)
@@ -140,7 +140,7 @@ export default function useUsers() {
                         salert({
                             _type: 'A',
                             _swal: swal, //필수 지정
-                            _msg: '삭제되었습니다.',
+                            _msg: '회원정보가 정상적으로 삭제되었습니다.',
                             _icon: 'I',
                             _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
                         },function(result){

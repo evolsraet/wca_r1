@@ -162,7 +162,7 @@
                                         </router-link>
                                         <a
                                             href="#"
-                                            @click.prevent="deleteReviewApi(review.id)"
+                                            @click.prevent="adminDeleteReview(review.id)"
                                             class="ms-2 badge bg-danger tc-wh"
                                             >삭제</a
                                         >
@@ -205,7 +205,7 @@ const orderDirection = ref("desc");
 const { posts, getPosts, deletePost } = usePosts();
 const { categoryList, getCategoryList } = useCategories();
 const { can } = useAbility();
-const { getAllReview , deleteReviewApi , reviewsData , reviewPagination } = initReviewSystem(); 
+const { getAllReview , adminDeleteReview , reviewsData , reviewPagination } = initReviewSystem(); 
 const currentStatus = ref('all');
 const currentPage = ref(1);
 

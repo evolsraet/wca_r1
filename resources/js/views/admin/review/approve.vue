@@ -93,7 +93,7 @@ const route = useRoute();
 const reviewId = parseInt(route.params.id); 
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); //바텀 시트 스타일
-const { getUserReviewInfo , editReviewAdmin , getCarInfo , setInitialStarRating } = initReviewSystem(); 
+const { getUserReviewInfo , editReview , getCarInfo , setInitialStarRating } = initReviewSystem(); 
 let reviewData = ref();
 const carInfo = ref();
 
@@ -110,7 +110,7 @@ function toggleSheet() {
 
 
 function submitForm(){
-    editReviewAdmin(reviewId, rv);
+    editReview(reviewId, rv, 'admin');
 }
 
 const rv = reactive({

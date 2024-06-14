@@ -125,7 +125,7 @@ const rv = reactive({
 })
 
 function submitForm(){
-    editReview(reviewId, rv);
+    editReview(reviewId, rv , 'user');
 }
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {

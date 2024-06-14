@@ -34,7 +34,10 @@
                                             <div>
                                                 <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
                                             </div>
-                                            <h5 class="tc-red">{{ amtComma(auction.win_bid.price) }}</h5>
+                                            <!--
+                                                <h5 class="tc-red">{{ amtComma(auction.win_bid.price) }}</h5>
+                                            -->
+                                            
                                         </div>
                                        <!-- <a class="btn-review" @click="navigateToDetail(auction.id)">후기작성</a>-->
                                     </div>
@@ -70,8 +73,8 @@
                                     <p class="more-view" @click="toggleMenu(review.id)">moreview</p>
                                     <div class="popup-menu" :id="'toggleMenu' + review.id" style="display : none">
                                         <ul>
-                                            <li><button @click="editReview(review.id)" class="tc-blue">수정</button></li>
-                                            <li><button @click="deleteReviewApi(review.id)" class="tc-red">삭제</button></li>
+                                            <li><button @click="editReview(review.id,'user')" class="tc-blue">수정</button></li>
+                                            <li><button @click="userDeleteReview(review.id, userId)" class="tc-red">삭제</button></li>
                                         </ul>
                                     </div>
                                     <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
@@ -80,7 +83,7 @@
                                         <div>
                                             <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
                                         </div>
-                                        <p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>
+                                        <!--<p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>-->
                                     </div>
                                     <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
                                         <!-- <p>{{ review.auction.car_no }}</p>
@@ -119,7 +122,7 @@
 </template>
 
 <script setup>
-import { onMounted , computed } from 'vue';
+import { onMounted , computed, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { ref } from 'vue';
@@ -127,12 +130,12 @@ import useAuctions from "@/composables/auctions";
 import { initReviewSystem } from '@/composables/review';
 import { cmmn } from '@/hooks/cmmn';
 
-let userId =  ref();
+let userId ;
 const router = useRouter();
 const activeTab = ref('available'); //nav 탭 바
 const isMenuVisible = ref(false);
 const { auctionsData, getAuctions , pagination } = useAuctions();
-const { getUserReview , deleteReviewApi , reviewsData , reviewPagination } = initReviewSystem(); 
+const { getUserReview , userDeleteReview , reviewsData , reviewPagination } = initReviewSystem(); 
 const { amtComma , splitDate , getDayOfWeek} = cmmn();
 const loading = ref(false);
 const store = useStore();
@@ -184,6 +187,8 @@ async function auctionLoadPage(page) { // 페이지 로드
     if (page < 1 || page > pagination.value.last_page) return;
     auctionCurrentPage.value = page;
     await getAuctions(page,true);
+
+
 }
 async function reviewLoadPage(page) { // 페이지 로드
     if (page < 1 || page > reviewPagination.value.last_page) return;
@@ -195,8 +200,8 @@ onMounted(async () => {
 
     await getAuctions(1,true);
     totalAuction = pagination.value.total;
-    
-    await getUserReview(user.value.id);
+    userId = user.value.id;
+    await getUserReview(userId);
     totalReview = reviewPagination.value.total;
 
     loading.value = true;

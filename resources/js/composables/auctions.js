@@ -390,7 +390,7 @@ const deleteAuction = async (id) => {
         _title: '삭제하시겠습니까?',
         _msg: '삭제된 정보는 복구할 수 없습니다.',
         _type: 'C',
-        _icon: 'Q',
+        _icon: 'W',
     },function(result){
         if(result.isOk){
             axios.delete(`/api/auctions/${id}`)

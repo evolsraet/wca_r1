@@ -6,7 +6,7 @@
                     <form @submit.prevent="submitForm">
                         <div class="mb-3">
                             <label for="user-title" class="form-label"
-                                >Name</label
+                                >이름</label
                             >
                             <input
                                 v-model = "user.name"
@@ -40,31 +40,10 @@
                             </div>
                             
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label"
-                                >Password</label
-                            >
-                            <input
-                                id="password"
-                                type="password"
-                                class="form-control"
-                            />
-                            <div class="text-danger mt-1">
-                                {{ errors.password }}
-                            </div>
-                            <div class="text-danger mt-1">
-                                <div
-                                    v-for="message in validationErrors?.password"
-                                >
-                                    {{ message }}
-                                </div>
-                            </div>-
-
-                        </div>
                         <!-- Role -->
                         <div class="mb-3">
                             <label for="user-category" class="form-label" >
-                                Role
+                                권한
                             </label>
                             <v-select id="roleSelect"
                                 v-model="user.role"
@@ -86,6 +65,18 @@
                                 </div>
                             </div>
                            
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">승인여부</label>
+                            <div class="text-start status-selector">
+                                <input type="radio" name="status" v-model="user.stat" value="ok">
+                                <label for="ok" class="mx-2">정상</label>
+                                <input type="radio" name="status" value="ask" v-model="user.stat" id="ask">
+                                <label for="ask">심사중</label>
+                                <input type="radio" name="status" value="reject" v-model="user.stat" id="reject">
+                                <label for="reject" class="mx-2">거절</label>
+                            </div>
+                            
                         </div>
                         <!-- Buttons -->
                         <div class="mt-4">
@@ -136,6 +127,7 @@ const { validate, errors, resetForm } = useForm({ validationSchema: schema });
 // Define actual fields for validation
 const { value: name } = useField("name", null, { initialValue: "" });
 const { value: email } = useField("email", null, { initialValue: "" });
+const { value: stat } = useField("stat", null, { initialValue: "" });
 const { value: password } = useField("password", null, { initialValue: "" });
 const { value: role } = useField("role", null, {
     initialValue: "",
@@ -149,6 +141,7 @@ const user = reactive({
     email,
     password,
     role,
+    stat,
 });
 
 onMounted(async () => {
@@ -163,6 +156,7 @@ onMounted(async () => {
     user.name = response.name;
     user.email = response.email;
     user.password = response.password;
+    user.stat = response.status;
 });
 
 function submitForm() {
