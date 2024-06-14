@@ -12,29 +12,33 @@
                         </ul>
                         <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
-                    <div v-if="activeTab === 'available'">
-                        <div v-if="auctionsData.length > 0">
-                            <div class="review-card" v-for="auction in auctionsData" :key="auction.id"> 
+                    <div v-if="activeTab === 'available'" class="row">
+                        <div class="col-md-3 p-2 mb-2" v-if="auctionsData.length > 0">
+                            <div class="p-2 card my-auction" v-for="auction in auctionsData" :key="auction.id" @click="navigateToDetail(auction.id)"> 
                                 <div class="review-image">
                                     <p class="review-date">{{ splitDate(auction.updated_at) }} ({{ getDayOfWeek(auction.updated_at) }})</p>
-                                    <img src="../../../img/car_example.png" alt="현대 쏘나타 (DN8)">
+                                    <div class="card-img-top-placeholder"></div> 
                                 </div>
-                                <div class="review-info">
+                                <div class="card-body">
                                     <div class="popup-menu" v-show="isMenuVisible">
                                         <ul>
                                             <li><button @click="editReview" class="tc-blue">수정</button></li>
                                             <li><button @click="deleteReviewApi" class="tc-red">삭제</button></li>
                                         </ul>
                                     </div>
-                                    <h3 class="review-title">{{ auction.car_no }}</h3>
-                                    <p class="tc-light-gray">12 삼 4567 | <span>(추후 추가 예정) 딜러</span></p>
-                                    <div class="justify-content-between flex align-items-center">
-                                        <p class="tc-light-gray review-price">{{ amtComma(auction.win_bid.price) }}</p>
-                                        
-                                        <a class="btn-review" @click="navigateToDetail(auction.id)">후기작성</a>
+                                    <!--<h3 class="review-title">{{ auction.car_no }}</h3>-->
+                                    <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                                        <p>2020년 / 2.4km / 무사고</p>
+                                        <span>(추후 추가 예정) 딜러</span>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
+                                            </div>
+                                            <h5 class="tc-red">{{ amtComma(auction.win_bid.price) }}</h5>
+                                        </div>
+                                       <!-- <a class="btn-review" @click="navigateToDetail(auction.id)">후기작성</a>-->
                                     </div>
                                 </div>
-                            </div>
                         </div>
                         <div v-else>
                             작성 가능한 이용 후기가 없습니다.
@@ -55,14 +59,14 @@
                         
                     </div>
                     
-                    <div v-if="activeTab === 'written'">
-                        <div v-if="reviewsData.length > 0">
-                            <div class="review-card02" v-for="review in reviewsData" :key="review">
+                    <div v-if="activeTab === 'written'"  class="row">
+                        <div class="col-md-3 p-2 mb-2" v-if="reviewsData.length > 0">
+                            <div class="card my-auction p-2" v-for="review in reviewsData" :key="review">
                                 <div class="review-image02">
                                     <p class="review-date">{{ splitDate(review.updated_at) }} ({{ getDayOfWeek(review.updated_at) }})</p>
-                                    <img src="../../../img/car_example.png" alt="현대 쏘나타 (DN8)">
+                                    <div class="card-img-top-placeholder mt-2"></div> 
                                 </div>
-                                <div class="review-info02">
+                                <div class="card-body">
                                     <p class="more-view" @click="toggleMenu(review.id)">moreview</p>
                                     <div class="popup-menu" :id="'toggleMenu' + review.id" style="display : none">
                                         <ul>
@@ -70,18 +74,24 @@
                                             <li><button @click="deleteReviewApi(review.id)" class="tc-red">삭제</button></li>
                                         </ul>
                                     </div>
-                                    <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
-                                        <!--
-                                        <p>{{ review.auction.car_no }}</p>
+                                    <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                                    <p>2020년 / 2.4km / 무사고</p>
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
+                                        </div>
                                         <p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>
-                                            -->
                                     </div>
-                                    <div class="rating">
-                                        <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
-                                            <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
-                                            <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
-                                        </label>
-                                    </div>
+                                    <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
+                                        <!-- <p>{{ review.auction.car_no }}</p>
+                                            <p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>-->
+                                        </div>
+                                        <div class="rating">
+                                            <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
+                                                <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
+                                                <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
+                                            </label>
+                                        </div>
                                     <p>{{ review.content }}</p>
                                 </div>
                             </div>
@@ -223,6 +233,9 @@ onMounted(async () => {
 .review-image02{
     padding: 10px;
 }
+.review-content .card:hover {
+    box-shadow: 4px 3px 13px -1px rgba(27, 50, 142, 0.2) !important;
+}
 .review-image02 img {
     width: 100%;
     height: 11rem;
@@ -277,5 +290,23 @@ onMounted(async () => {
 
 .popup-menu li button:hover {
     background-color: #f5f5f5;
+}
+@media (min-width: 300px) and (max-width:540px ){
+.col-md-3{
+    flex: 0 0 auto;
+    width: 100% !important;
+}
+}
+@media(min-width:541px) and (max-width: 991px){
+    .col-md-3 {
+        flex: 0 0 auto;
+        width: 49.3333% !important;
+    }
+}
+@media (min-width: 768px){
+.col-md-3 {
+    flex: 0 0 auto;
+    width: 33%;
+}
 }
 </style>

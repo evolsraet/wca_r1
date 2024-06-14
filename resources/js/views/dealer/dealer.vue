@@ -3,15 +3,13 @@
         <div class="main-contenter">
             <div class="review">
                 <div class="mov-review my-5">
-                    <div class="apply-top02 text-start">
-                        <div class="search-type3">
-                            <h3 class="review-title mov-hidden">낙찰 완료 차량<br><span class="mb-2 tc-light-gray">24시간 내 응대해 주세요!</span></h3>
-                            <input type="text" placeholder="모델명,차량번호,지역">
-                            <button type="button" class="search-btn">검색</button>
-                        </div>
-                    </div>
                     <div class="registration-content">
-                        <div class="text-start"></div>
+                        <div class="apply-top02 text-start">
+                            <div class="search-type3">
+                                <input type="text" class="w-100" placeholder="모델명,차량번호,지역">
+                                <button type="button" class="search-btn">검색</button>
+                            </div>
+                        </div>
                         <div class="text-end pd-10">
                             <select class="form-select select-rank" aria-label="최근 등록 순">
                                 <option selected>최근 등록 순</option>
@@ -26,25 +24,23 @@
                         <div v-if="filteredBids.length > 0" class="row">
                             <div class="col-md-3 p-2 mb-2 shadow-hover" v-for="bid in filteredBids" :key="bid.id"  @click="navigateToDetail(bid)">
                                 <div class="card my-auction">
-                                    <input class="toggle-heart" type="checkbox" checked/>
-                                    <label class="heart-toggle"></label>
                                     <div class="card-img-top-placeholder"></div> 
-                                    <div class="wait-selection">낙찰가 {{ amtComma(bid.price) }}</div>
+
                                     <div class="card-body">
-                                        <h5 class="card-title"><span class="blue-box">무사고</span>{{ bid.auctionDetails ? bid.auctionDetails.car_no : '차량 정보 없음' }}</h5>
-                                        <p class="card-text tc-light-gray">현대 쏘나타(DN8){{ bid.auctionDetails ? bid.auctionDetails.model : '모델 정보 없음' }}</p>
+                                        <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                                        <p>2020년 / 2.4km / 무사고</p>
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
+                                            </div>
+                                            <h5 class="tc-red">{{ amtComma(bid.price) }}</h5>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div v-else>
-                            <div class="complete-car">
-                                <div class="card my-auction mt-3">
-                                    <div class="none-complete">
-                                        <span class="tc-light-gray">선택 완료된 차량이 없습니다.</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <p class="tc-red">선택 차량이 존재하지 않습니다.</p>
                         </div>
                     </div>
                 </div>
@@ -113,5 +109,24 @@ onMounted(async () => {
 }
 .search-type2 span{
     font-size: 17px;
+}
+
+@media (min-width: 300px) and (max-width:540px ){
+.col-md-3{
+    flex: 0 0 auto;
+    width: 100% !important;
+}
+}
+@media(min-width:541px) and (max-width: 991px){
+    .col-md-3 {
+        flex: 0 0 auto;
+        width: 49.3333% !important;
+    }
+}
+@media (min-width: 768px){
+.col-md-3 {
+    flex: 0 0 auto;
+    width: 33%;
+}
 }
 </style>

@@ -127,6 +127,7 @@
                                     <label class="heart-toggle"></label>
                                     <div class="card-img-top-placeholder border-rad"></div>
                                     <div class="card-body">
+                                        
                                         <h5 class="card-title"><span class="blue-box">무사고</span>{{bid.auctionDetails.car_no}}</h5>
                                         <div class="enter-view">
                                             <p class="card-text tc-light-gray">{{bid.auctionDetails.car_no}}</p>
