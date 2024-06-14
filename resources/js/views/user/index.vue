@@ -41,39 +41,38 @@
                         <div class="row row-cols-1 row-cols-md-2">
                             <div class="apply-top text-start mb-0">
                             <h3 class="review-title">이용후기</h3>
-                            <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">전체보기</router-link>
+                            <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
                             </div>
-                            <div class="complete-car">
-                                    <div class="card my-auction mt-3">
-                                        <input class="toggle-heart" type="checkbox">
-                                        <label class="heart-toggle"></label>
-                                        <div>
-                                            <div class="card-img-top-ty02 border-rad"></div>
-                                            <div class="card-body">
-                                                    <p>더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                    <p class="card-text tc-light-gray">2020년 / 2.4 km / 무사고</p>
-                                                    <p class="card-text tc-light-gray">현대 소나타(DN8)</p>
-                                                <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                            </div>
-                                        </div>
+                            <div v-if="reviewsData.length > 0" class="complete-car" v-for="review in reviewsData.slice(0,2)" :key="review">
+                                <div class="card my-auction mt-3">
+                                    <input class="toggle-heart" type="checkbox">
+                                    <label class="heart-toggle"></label>
+                                    <div>
+                                        <div class="card-img-top-ty02 border-rad"></div>
+                                        <div class="card-body">
+                                                <p class="card-text tc-light-gray">(차량 기종 들어갈 예정) {{ review.id }}</p>
+                                                <p class="card-text tc-light-gray">담당 딜러: {{ review.dealer.name }} 님</p>
+                                                <div class="rating">
+                                                    <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
+                                                        <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
+                                                        <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
+                                                    </label>
+                                                </div>
+                                                <p>{{ review.content }}</p>
+                                            <h5 class="card-title"><span class="blue-box">무사고</span></h5>
+                                        </div>    
                                     </div>
                                 </div>
+                            </div>
+                            <div v-else>
                                 <div class="complete-car">
                                     <div class="card my-auction mt-3">
-                                        <input class="toggle-heart" type="checkbox">
-                                        <label class="heart-toggle"></label>
-                                        <div>
-                                            <div class="card-img-top-ty02 border-rad"></div>
-                                            <div class="card-body">
-                                                    <p>더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                    <p class="card-text tc-light-gray">2020년 / 2.4 km / 무사고</p>
-                                                    <p class="card-text tc-light-gray">현대 소나타(DN8)</p>
-                                                <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                            </div>
+                                        <div class="none-complete">
+                                            <span class="tc-light-gray">아직 작성된 이용후기가 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
-                            
+                            </div>
                         </div>
                     </div>
                     <div class="border-0" :style="cardStyle" @click="toggleCard">
@@ -155,8 +154,12 @@
     import { useRouter } from 'vue-router';
     import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
     import useAuctions from "@/composables/auctions";
-    
+    import { initReviewSystem } from '@/composables/review';
+    import { cmmn } from '@/hooks/cmmn';
+
     const { auctionsData, getAuctions } = useAuctions();
+    const { getUserReview , deleteReviewApi , reviewsData } = initReviewSystem(); 
+    const { amtComma } = cmmn();
     const router = useRouter();
     const isMobileView = ref(window.innerWidth <= 640);
     function navigateToDetail(auction) {
@@ -174,13 +177,18 @@
         return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
     }
     
-    onMounted(() => {
-        getAuctions();
-        console.log('Auctions Data:', auctionsData);  // Log the data
+    onMounted(async() => {
+        await getAuctions();
+        //console.log('Auctions Data:', auctionsData);  // Log the data
+        const userId = auctionsData.value[0].user_id;
+        await getUserReview(userId);
+        console.log(reviewsData.value);
         setRandomPlaceholder();
         window.addEventListener('resize', checkScreenWidth);
-       checkScreenWidth();
+        checkScreenWidth();
+        
     });
+
     onBeforeUnmount(() => {
       window.removeEventListener('resize', checkScreenWidth);
     });

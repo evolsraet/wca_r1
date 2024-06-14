@@ -1,40 +1,6 @@
 <template>
   <div class="main-contenter">
-    <div class="review" v-if="!showFullView">
-      <div class="review-content mov-review my-5">
-        <div class="justify-content-between flex align-items-center p-2">
-          <h3 class="review-title">이용후기 둘러보기</h3>
-          <button class="btn-apply mt-0" @click="toggleView">전체보기</button>
-        </div>
-        <div class="review-swiper">
-          <swiper :slidesPerView="slidesPerView" :spaceBetween="30" :pagination="{ clickable: true }" class="mySwiper">
-            <swiper-slide v-for="(slide, index) in slides" :key="index">
-              <div class="review-card">
-                <div class="car-imges"></div>
-                <div class="card-body sub-style">
-                  <h5 class="card-title">차량 종류 들어갈 예정: {{ slide.title }}</h5>
-                  <div class="rating">
-                    <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
-                      <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
-                      <span :class="['star-icon', index <= slide.rating ? 'filled' : '']"></span>
-                    </label>
-                    <div class="d-sm-flex justify-content-between text-muted">
-                      <p class="card-text over-text process">{{ slide.text }}</p>
-                      <span class="tc-light-gray">더보기</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </swiper-slide>
-          </swiper>
-        </div>
-        <div class="content-container mt-4 p-3">
-          <div class="main-text">더 다양한 이용 후기를 확인하세요!</div>
-          <div class="tags p-2">
-            <span class="tag" v-for="(tag, index) in tags" :key="index">#{{ tag }}</span>
-          </div>
-        </div>
-      </div>
+    <div class="review">
     </div>
     <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet" v-if="isUser && !showFullView">
       <div class="sheet-content">
@@ -46,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div class="review" v-if="showFullView">
+    <div class="review">
       <div class="review-content mov-review my-5">
         <div class="apply-top text-start">
           <h3 class="review-title">다른 사람들의 이용후기에요</h3>
@@ -107,26 +73,18 @@
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useStore } from "vuex";
-import { Swiper, SwiperSlide } from 'swiper/vue';
 import { initReviewSystem } from '@/composables/review';
 import { useRouter } from 'vue-router';
 import 'swiper/css';
 import 'swiper/css/pagination';
 
-const showFullView = ref(false);
 const router = useRouter();
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 const isUser = computed(() => user.value?.roles?.includes('user'));
-const test = [];
 const showBottomSheet = ref(true);
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
 const { getHomeReview , reviewsData , splitDate, reviewPagination } = initReviewSystem(); 
-const slidesPerView = ref(1); // 슬라이드를 한 번에 하나만 보이도록 설정
-
-const slides = ref([]);
-
-const tags = ['자유문의1', '자유문의2', '댓글', '삭제'];
 
 const cards = ref([]);
 
@@ -134,9 +92,6 @@ const currentPage = ref(1); // 현재 페이지 번호
 
 const totalPages = 3; // Adjust based on the number of cards and pagination logic
 
-const toggleView = () => {
-  showFullView.value = !showFullView.value;
-};
 
 const toggleSheet = () => {
   const bottomSheet = document.querySelector('.bottom-sheet');
@@ -149,12 +104,6 @@ const toggleSheet = () => {
 };
 
 const inputCardsValue = () => {
-  slides.value = reviewsData.value.slice(0,4).map(review => ({
-    title: review.id,
-    id: review.id,
-    rating: review.star,
-    text: review.content
-  }));
   cards.value = reviewsData.value.map(review => ({
     title: review.id,
     dealer: review.dealer.name,
@@ -171,8 +120,6 @@ function navigateToDetail(reviewId) {
 }
 
 async function loadPage(page) { // 페이지 로드
-  console.log(page);
-  console.log(reviewPagination.value.last_page)
   if (page < 1 || page > reviewPagination.value.last_page) return;
   currentPage.value = page;
   await getHomeReview(page); // getHomeReview 호출을 대기
@@ -184,6 +131,7 @@ onMounted(async () => {
   await getHomeReview();
   inputCardsValue();
 });
+
 
 onUnmounted(() => {
 });
