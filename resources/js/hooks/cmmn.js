@@ -487,6 +487,292 @@ export function cmmn() {
     }
     //End of public swal
 
+    //public wica swal
+    /**
+    
+        wica.ntcn(swal)
+        .param({}) // 리턴값에 전달 할 데이터
+        .title('') // 알림 제목
+        .useHtmlText() // HTML 태그 인 경우 활성화
+        .icon('E') //E:error , W:warning , I:info , Q:question
+        .useClose() // 닫기 버튼 활성화
+        .useBackCancel() // 창 외부 클릭 닫기 활성화
+        .labelOk('') //확인 버튼 라벨 변경시
+        .labelCancel('') //취소 버튼 라벨 변경시
+        .btnBatch('L') //확인 버튼 위치 지정 , L 기본
+        .timer(10) //자동 닫기 타이머 설정 , toast 는 미지정시 2초 자동 처리
+        .addClassNm('') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
+        .addOption({}) //swal 기타 옵션 추가
+        .callback(function(result) {
+
+        })
+        .toast('<b style="color:red">msg wica toast</b>');
+        .alert('<b style="color:red">msg wica alert</b>');
+        .confirm('<b style="color:red">msg wica confirm</b>');
+
+        //
+        wica.ntcn(swal).toast('이용후기가 정상적으로 삭제되었습니다.');
+        //
+        wica.ntcn(swal)
+        .icon('I') //E:error , W:warning , I:info , Q:question
+        .callback(function(result) {
+            if(result.isOk){                                
+                getAllReview(1);                                
+            }
+        })
+        .alert('이용후기가 정상적으로 삭제되었습니다.');
+        //
+        wica.ntcn(swal)
+        .title('오류가 발생하였습니다.')
+        .icon('E') //E:error , W:warning , I:info , Q:question
+        .alert('관리자에게 문의해주세요.');
+
+        //참고
+        wica.ntcn(swal).useHtmlText().alert('<b style="color:red">message !!</b>');
+
+        wica.ntcn(swal).title('message !!!').alert();
+
+        wica.ntcn(swal).icon('E').title('error message !!!').alert();
+
+        wica.ntcn(swal).icon('E').title('error message !!!').callback(function(result){
+            console.log(result);
+        }).alert();
+
+     */
+    const wica = {
+        _swal : null,
+        _input : null,
+        _isReturn: false,
+        _rstData: null,
+        _callback: null,
+        toast : function(txt) {
+            let _this = this;            
+            _this = this.init(_this, txt, true, false);            
+            _this._swal(_this._input.opt)
+            .then(result => {       
+                _this._rstData.isOk = true;
+                if(_this._isReturn) _this._callback(_this._rstData);
+            })            
+        },
+        alert : function(txt) {
+            let _this = this;            
+            _this = this.init(_this, txt, false, false);            
+            _this._swal(_this._input.opt)
+            .then(result => {       
+                _this._rstData.isOk = true;
+                if(_this._isReturn) _this._callback(_this._rstData);
+            })            
+        },
+        confirm : function(txt) {
+            let _this = this;            
+            _this = this.init(_this, txt, false, true);            
+            _this._swal(_this._input.opt)
+            .then(result => {       
+                if (result.isConfirmed) {
+                    _this._rstData.isOk = true;
+                }
+                if(_this._isReturn) _this._callback(_this._rstData);
+            })            
+        },
+        init : function(_this, txt, isToast, isConfirm) {
+            let input = _this._input;
+            let rstData = _this._rstData;
+            if(input._isParam) {
+                rstData.rawData = input.param;
+            }
+            let _classNm = 'wica-salert';
+            if(input._isAddClassNm) {
+                _classNm = input.addClassNm;
+            }
+
+            let _customClass = {
+                container: _classNm+'-container',
+                confirmButton: _classNm+'-confirmButton',
+                cancelButton: _classNm+'-cancelButton',
+                popup: _classNm+'-popup',
+                header: _classNm+'-header',
+                title: _classNm+'-title',
+                content: _classNm+'-content',
+                icon: _classNm+'-icon',
+                closeButton: _classNm+'-closeButton',
+                image: _classNm+'-image',
+                input: _classNm+'-input',
+                actions: _classNm+'-actions',
+                footer: _classNm+'-footer',
+            };
+            rstData.css = _customClass;
+            input.opt = {
+                title: input._isTitle?input.title:null,
+                icon: input._icon,
+                showConfirmButton: !isToast,
+                showCancelButton: isConfirm,
+                showCloseButton: input._isUseClose,
+                confirmButtonText: input._btnOkLabel,
+                //confirmButtonColor: '#ef4444',
+                cancelButtonText: input._btnCancelLabel,
+                //cancelButtonColor: '#ef4444', 
+                reverseButtons: input._isRight,
+                allowOutsideClick: input._isUseBackCancel,
+                customClass: _customClass,
+            }; 
+            if(input._isAddOption) {
+                Object.assign(input.opt, input.addOption);
+            }
+            if(txt) {
+                if(input._isHtml) {
+                    input.opt.html = txt;
+                } else {
+                    input.opt.text = txt;
+                }
+            }            
+            if(input._isTimer) {
+                input.opt.timer = 1000 * input.timer;
+                input.opt.timerProgressBar = true;
+            } else {
+                if(isToast) {
+                    input.opt.timer = 1000 * 2;
+                    input.opt.timerProgressBar = false;
+                }
+            }
+            return _this;
+        },
+        ntcn : function(_swal) {
+            let newObj = Object.create(this);
+            newObj._swal = _swal;
+            newObj._rstData = {
+                isError : false,
+                isOk : false,
+                msg : '',
+                rawData : null,
+                css: null,
+            };
+            newObj._isReturn = false;
+            newObj._input = {
+                _isHtml : false,
+                _btnOkLabel : '확인',
+                _btnCancelLabel : '취소',
+                _isRight : false,
+                _isTimer : false,
+                _isAddOption : false,
+                _isAddClassNm : false,
+                _isUseClose : false,
+                _isUseBackCancel : false,
+                _isParam : false,
+            }                
+            return newObj;
+        },
+        param : function(input) {
+            let _this = this;
+            _this._input.param = input;
+            if(input) {
+                _this._input._isParam = true;
+            }
+            return _this;
+        },
+        title : function(input) {
+            let _this = this;
+            _this._input.title = input;
+            if(input) {
+                _this._input._isTitle = true;
+            } else {
+                _this._input._isTitle = false;
+            }
+            return _this;
+        },
+        useHtmlText : function() {
+            let _this = this;
+            _this._input._isHtml = true;
+            return _this;
+        },
+        icon : function(input) {
+            let _this = this;
+            _this._input.icon = input;
+            if(input) {
+                if(input.toUpperCase() == 'E') {
+                    _this._input._icon = 'error'
+                } else if(input.toUpperCase() == 'W') {
+                    _this._input._icon = 'warning'
+                } else if(input.toUpperCase() == 'I') {
+                    _this._input._icon = 'info'
+                } else if(input.toUpperCase() == 'Q') {
+                    _this._input._icon = 'question'
+                } else {
+                    _this._input._icon = null;
+                }
+            }
+            return _this;
+        },
+        useClose : function() {
+            let _this = this;
+            _this._input._isUseClose = true;
+            return _this;
+        },
+        useBackCancel : function() {
+            let _this = this;
+            _this._input._isUseBackCancel = true;
+            return _this;
+        },
+        labelOk : function(input) {
+            let _this = this;
+            _this._input.labelOk = input;
+            if(input) {
+                _this._input._btnOkLabel = input;
+            }
+            return _this;
+        },
+        labelCancel : function(input) {
+            let _this = this;
+            _this._input.labelCancel = input;
+            if(input) {
+                _this._input._btnCancelLabel = input;
+            }
+            return _this;
+        },
+        btnBatch : function(input) {
+            let _this = this;
+            _this._input.btnBatch = input;
+            if(input) {
+                if(input.toUpperCase() == 'R') { 
+                    _this._input._isRight = true;
+                }
+            }
+            return _this;
+        },
+        timer : function(input) {
+            let _this = this;
+            _this._input.timer = input;
+            if(input) {
+                _this._input._isTimer = true;
+            }
+            return _this;
+        },
+        addClassNm : function(input) {
+            let _this = this;
+            _this._input.addClassNm = input;
+            if(input) {
+                _this._input._isAddClassNm = true;
+            }
+            return _this;
+        },
+        addOption : function(input) {
+            let _this = this;
+            _this._input.addOption = input;
+            if(input) {
+                _this._input._isAddOption = true;
+            }
+            return _this;
+        },
+        callback : function(input) {
+            let _this = this;
+            _this._callback = input;
+            if(input) {
+                _this._isReturn = true;
+            }
+            return _this;
+        }        
+    }
+    //End of public wica swal
+
     return {
       numberToKoreanUnit,
       amtComma,
@@ -496,6 +782,7 @@ export function cmmn() {
       splitDate,
       getDayOfWeek,
       formatDateAndTime,
-      salert
+      salert,
+      wica,
     }
   }
