@@ -26,7 +26,14 @@ export default function useAuctions() {
     const { callApi } = cmmn();
     
 // 경매 내용 통신 (페이지까지)
-const getAuctions = async (page = 1, isReviews = false ) => {
+const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
+    console.log(status);
+    const apiList = [];
+
+    if(status != 'all'){
+        apiList.push(`auctions.status:${status}`)
+    }
+
     if(isReviews){
         return callApi({
             _type: 'get',
@@ -47,7 +54,8 @@ const getAuctions = async (page = 1, isReviews = false ) => {
             _type: 'get',
             _url:`/api/auctions`,
             _param: {
-                _page:`${page}`
+                _page:`${page}`,
+                _where: apiList,
             }
         }).then(async result => {
             console.log(result);

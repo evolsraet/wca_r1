@@ -266,7 +266,8 @@ export default [
         // redirect: {
         //     name: 'admin.index'
         // },
-        beforeEnter: requireLogin,
+        //beforeEnter: requireLogin,
+        beforeEnter: requireAct(['act.super','act.admin']),
         children: [
             {
                 name: 'admin.index',

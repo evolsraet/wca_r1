@@ -453,7 +453,7 @@ TODO:
                                 <!-- if. 경매 ing 있을때 -->
                                 <div
                                     class="col-6 col-md-4 mb-4 pt-2 shadow-hover"
-                                    v-for="auction in filteredAuctions"
+                                    v-for="auction in auctionsData"
                                     :key="auction.id"
                                     @click="navigateToDetail(auction)"
                                     :style="getAuctionStyle(auction)"
@@ -835,6 +835,7 @@ function toggleModal() { // 모달 토글
 
 function setFilter(status) { // 필터 설정
   currentStatus.value = status;
+  getAuctions(1,false,currentStatus.value);
 }
 
 function handleClose() { // 모달 닫기
@@ -845,12 +846,13 @@ const hasCompletedAuctions = computed(() => { // 완료된 경매 여부
   return auctionsData.value.some(auction => auction.status === 'done');
 });
 
+/** 
 const filteredAuctions = computed(() => { // 필터된 경매 목록
   if (currentStatus.value === 'all') {
     return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag', 'ask', 'cancel'].includes(auction.status));
   }
   return auctionsData.value.filter(auction => auction.status === currentStatus.value);
-});
+});*/
 
 const filteredDone = computed(() => { // 필터된 경매 목록
     return auctionsData.value.filter(auction => ['done'].includes(auction.status));
@@ -859,7 +861,7 @@ const filteredDone = computed(() => { // 필터된 경매 목록
 function loadPage(page) { // 페이지 로드
   if (page < 1 || page > pagination.value.last_page) return;
   currentPage.value = page;
-  getAuctions(page);
+  getAuctions(page,false,currentStatus.value);
 }
 
 function navigateToDetail(auction) { // 경매 상세 페이지로 이동
