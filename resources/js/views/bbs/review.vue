@@ -13,8 +13,8 @@
                         <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
                     <div v-if="activeTab === 'available'" class="row">
-                        <div class="col-md-3 p-2 mb-2" v-if="auctionsData.length > 0">
-                            <div class="p-2 card my-auction" v-for="auction in auctionsData" :key="auction.id" @click="navigateToDetail(auction.id)"> 
+                        <div class="col-md-3 p-2 mb-2" v-if="auctionsData.length > 0" v-for="auction in auctionsData" :key="auction.id" @click="navigateToDetail(auction.id)">
+                            <div class="p-2 card my-auction"> 
                                 <div class="review-image">
                                     <p class="review-date">{{ splitDate(auction.updated_at) }} ({{ getDayOfWeek(auction.updated_at) }})</p>
                                     <div class="card-img-top-placeholder"></div> 
@@ -302,16 +302,30 @@ onMounted(async () => {
     width: 100% !important;
 }
 }
-@media(min-width:541px) and (max-width: 991px){
+@media(min-width:641px) and (max-width: 991px){
     .col-md-3 {
         flex: 0 0 auto;
         width: 49.3333% !important;
     }
 }
+@media(min-width:541px) and (max-width: 640px){
+    .col-md-3 {
+        flex: 0 0 auto;
+        width: 47.3333% !important;
+    }
+}
 @media (min-width: 768px){
 .col-md-3 {
     flex: 0 0 auto;
-    width: 33%;
+    width: 25%;
+}
+}
+@media (max-width: 640px){
+.mov-review > .row {
+    display: flex;
+    flex-direction: row !important;
+    align-content: center;
+    gap: 20px;
 }
 }
 </style>
