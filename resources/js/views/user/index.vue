@@ -27,7 +27,7 @@
             </div>
         </div>
     </div>
-    <div class="container">
+    <div>
         <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-4">
             <h2 class="fw-bolder lh-base">내 차 판매는 <br>위카에서!</h2>
             <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">더 알아보기</router-link>
@@ -38,46 +38,55 @@
                 <div class="layout-container02 mt-5">
                     <!-- 딜러 프로필 요약 정보 -->
                     <div class="content p-2">
-                        <div class="row row-cols-1 row-cols-md-2">
-                            <div class="apply-top text-start mb-0">
+                        <div class="apply-top text-start mb-0">
                             <h3 class="review-title">이용후기</h3>
                             <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
-                            </div>
-                            <div v-if="reviewsData.length > 0" class="complete-car" v-for="review in reviewsData.slice(0,2)" :key="review">
-                                <div class="card my-auction mt-3">
-                                    <input class="toggle-heart" type="checkbox">
-                                    <label class="heart-toggle"></label>
-                                    <div>
-                                        <div class="card-img-top-ty02 border-rad"></div>
-                                        <div class="card-body">
+                        </div>
+                        <div v-if="reviewsData.length > 0" class="container">
+                            <div class="row">
+                                <div class="col-md-6 p-2" v-for="review in reviewsData.slice(0,2)" :key="review.id">
+                                    <div class="card my-auction mt-3">
+                                        <input class="toggle-heart" type="checkbox">
+                                        <label class="heart-toggle"></label>
+                                        <div>
+                                            <div class="card-img-top-ty02 border-rad"></div>
+                                            <div class="card-body">
+                                                <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                                                <p>2020년 / 2.4km / 무사고</p>
                                                 <p class="card-text tc-light-gray">(차량 기종 들어갈 예정) {{ review.id }}</p>
                                                 <p class="card-text tc-light-gray">담당 딜러: {{ review.dealer.name }} 님</p>
-                                                <div class="rating">
+                                                <div>
+                                                    <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
+                                                </div>
+                                                <div>
+                                            <!--  시안상 별점 없음  <div class="rating">
                                                     <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
                                                         <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
                                                         <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
                                                     </label>
                                                 </div>
-                                                <p>{{ review.content }}</p>
-                                            <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                        </div>    
+                                                <p>{{ review.content }}</p>-->
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div v-else>
-                                <div class="complete-car">
+                        </div>
+
+                            <div class="row row-cols-1 row-cols-md-1" v-else>
                                     <div class="card my-auction mt-3">
+                                        <div class="card-body">
                                         <div class="none-complete">
                                             <span class="tc-light-gray">아직 작성된 이용후기가 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
+</div>
                     <div class="border-0" :style="cardStyle" @click="toggleCard">
                         <div class="card-body">
-                            <div class="enter-view">
+                            <div v-if="!isMobileView" class="enter-view">
                                 <h5>내 매물관리</h5>
                                 <router-link :to="{ name: 'auction.index' }" class="btn-apply">전체보기</router-link>
                             </div>
@@ -234,10 +243,16 @@
             margin-top: 0px !important;
         }
     }
+    @media (max-width: 1200px){
+        .container {
+            padding-right: 0px;
+            padding-left: 0px;
+        }
+    }
     @media (max-width: 991px){
-.container {
-     --bs-gutter-x: 0rem;
-}
+    .container {
+        --bs-gutter-x: 0rem;
+    }
 .card-body {
             padding: 0px;
         }
@@ -278,7 +293,7 @@
 }
 
 
-@media (min-width: 768px) {
+@media (max-width: 768px) {
     .row-cols-md-2 .complete-car {
         flex: 0 0 50%;
         max-width: 50%;
@@ -292,12 +307,23 @@
     object-position: center;
     border-radius: 10px;
 }
+@media (max-width: 767px){
+    .col-md-6 {
+        flex: 0 0 auto;
+        width: 50%;
+    }
+}
+@media (max-width: 400px){
+    .col-md-6 {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+}
 @media (min-width: 768px) {
     .card-img-top-ty02 {
         height: 250px; 
     }
 }
-
     .bid-bc {
         background: none;
     }
@@ -326,7 +352,6 @@
     .layout-container02 {
     display: grid;
     grid-template-columns: repeat(2, 1fr); /* 2열 설정 */
-    grid-template-rows: repeat(2, 1fr); /* 2행 설정 */
     gap: 20px; /* 행과 열 사이의 간격 */
 }
     
@@ -398,7 +423,10 @@
         border-radius: 6px !important;
     }
     
-    
+    @media (min-width: 992px){
+
+        .col-md-6 {}
+    }
     </style>
     
     
