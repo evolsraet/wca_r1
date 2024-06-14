@@ -60,8 +60,8 @@
                     </div>
                     
                     <div v-if="activeTab === 'written'"  class="row">
-                        <div class="col-md-3 p-2 mb-2" v-if="reviewsData.length > 0">
-                            <div class="card my-auction p-2" v-for="review in reviewsData" :key="review">
+                        <div class="col-md-3 p-2 mb-2" v-if="reviewsData.length > 0" v-for="review in reviewsData" :key="review">
+                            <div class="card my-auction p-2">
                                 <div class="review-image02">
                                     <p class="review-date">{{ splitDate(review.updated_at) }} ({{ getDayOfWeek(review.updated_at) }})</p>
                                     <div class="card-img-top-placeholder mt-2"></div> 
