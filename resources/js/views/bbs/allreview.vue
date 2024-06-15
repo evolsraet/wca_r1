@@ -12,7 +12,7 @@
         </div>
       </div>
     </div>
-    <div class="review">
+    <div class="review container">
       <div class="review-content mov-review my-5">
         <div class="apply-top text-start">
           <h3 class="review-title">다른 사람들의 이용후기에요</h3>
