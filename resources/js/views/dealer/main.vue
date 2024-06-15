@@ -82,7 +82,7 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="enter-view text-start mt-5 mb-2">
+                 <!--   <div class="enter-view text-start mt-5 mb-2">
                         <h3 class="review-title">클레임 현황</h3>
                         <router-link :to="{ name: 'index.claim' }" class="btn-apply mt-0">전체보기</router-link>
                     </div>
@@ -110,9 +110,9 @@
                     </table>
                     <AlarmModal ref="alarmModal" />
                      </div>
+                </div>-->
                 </div>
-                </div>
-                <div class="card completed-card border-0" :style="cardStyle" @click="toggleCard">
+                <div class="container my-4" :style="cardStyle" @click="toggleCard">
                     <div class="card-body">
                         <div class="enter-view mt-3">
                             <h5>낙찰 완료 차량</h5>
@@ -120,23 +120,22 @@
                         </div>
                         <span class="tc-light-gray">24시간 내 응대해 주세요!</span>
                         <!-- 차량이 존재 할 경우-->
-                        <div v-if="filteredViewBids.length > 0">
-                            <div class="complete-car" v-for="bid in filteredViewBids" :key="bid.id">
+                        <div v-if="filteredViewBids.length > 0" class="container">
+                            <div class="row">
+                            <div class="col-md-6 p-2" v-for="bid in filteredViewBids" :key="bid.id">
                                 <div class="card my-auction mt-3">
-                                    <input class="toggle-heart" type="checkbox">
-                                    <label class="heart-toggle"></label>
                                     <div class="card-img-top-placeholder border-rad"></div>
                                     <div class="card-body">
-                                        
-                                        <h5 class="card-title"><span class="blue-box">무사고</span>{{bid.auctionDetails.car_no}}</h5>
-                                        <div class="enter-view">
-                                            <p class="card-text tc-light-gray">{{bid.auctionDetails.car_no}}</p>
-                                            <span class="red-box-type02 pass-red" @click="navigateToDetail(bid)">자세히 보기</span>
-                                        </div>
+                                        <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                                        <p>2020년 / 2.4km / 무사고</p>
+                                        <p class="tc-light-gray">현대 쏘나타 (DN8)</p>
+                                       <!-- <p class="card-text tc-light-gray">{{bid.auctionDetails.car_no}}</p>-->
+                                        <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                    </div>
                         <!-- 선택 완료된 차량이 없는경우-->
                         <div v-else>
                             <div class="complete-car">
@@ -254,7 +253,9 @@ p {
     margin-top: 0;
     margin-bottom: 0rem !important;
 }
-
+.layout-container02{
+    grid-template-columns: 1fr 1fr !important;
+}
 @media (max-width: 640px){
     .layout-container02 {
         display: flex !important;
