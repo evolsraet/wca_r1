@@ -7,7 +7,8 @@
         <form @submit.prevent="submitForm">
             <div class="container mov-wide">
                     <div  v-for="auction in auctionsData" :key="auction.id">
-                        <div class="container-img mov-info02">
+                        <div class="container-img ">
+                            <h5 class="my-3">후기 작성</h5>
                             <div class="left-img">
                                 <div v-if ="!isMobileView" class="d-flex flex-row">
                                     <div class="w-50">
@@ -27,50 +28,36 @@
                                 <div class="detail detail2"></div>
                             </div>
                         </div>
-                        <div class="enter-view align-items-baseline mt-3 bold-18-font">  
+                        <div class="mx-2 enter-view align-items-baseline mt-3 bold-18-font">  
                             <input type="hidden" id="user_id" :v-model="rv.user_id">
                             <input type="hidden" id="auction_id" :v-model="rv.auction_id">
                             <input type="hidden" id="dealer_id" :v-model="rv.dealer_id">
-                            <p class="card-title fs-5"><span class="blue-box">무사고</span>{{auction.car_no}}</p>
-                            </div>
-                            <p class="mt-2 card-text tc-light-gray fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
+                            <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                        </div>
+                        <div class="mx-2 tc-light-gray">
+                        <p> {{ carInfo.year }}년 / 2.4km / 무사고</p>
+                        <p>현대 쏘나타 (DN8)</p>
+                        <br>
+                        <p>매물번호 / 564514</p>
+                        <p>딜 러 명 / {{ auction.dealer_name }}</p>
+                        </div>
+                      <!--  <p class="card-title fs-5"><span class="blue-box">무사고</span>{{auction.car_no}}</p>-->
+                            <!--<p class="mt-2 card-text tc-light-gray fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
                             <div class="enter-view mt-2">
                                 <p class="card-text tc-light-gray fs-5 mov-text">딜러명<span class="process ms-3">{{ auction.dealer_name }}</span></p>
                                 <p class="card-text tc-light-gray fs-5 web-text">12 삼 4567</p>
                                 <a href="#"><span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">상세보기</span></a>
-                            </div>
-                            <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>2024년 2월 13일 오후 6시 00분</span></p>
-                                <div class="container card-style p-0 mt-5">
-                                <div class="card card-custom card-custom-ty">
-                                    <div class="row flex-row">
-                                    <div class="col col-line">
-                                        <div class="item-label">년식</div>
-                                        <div class="item-value mb-0">{{ carInfo.year }} 년형</div>
-                                    </div>
-                                    <div class="col col-line">
-                                        <div class="item-label">주행거리</div>
-                                        <div class="item-value mb-0">103,000km</div>
-                                    </div>
-                                    <div class="col col-line">
-                                        <div class="item-label">내사 피해</div>
-                                        <div class="item-value mb-0">1건</div>
-                                    </div>
-                                    <div class="col col-line">
-                                        <div class="item-label">타사 피해</div>
-                                        <div class="item-value mb-0">3건</div>
-                                    </div>
-                                </div>
-                                </div>
-                                </div>
+                            </div>-->
+                            <p class="mt-5 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(auction.final_price) }}</span></p>
                             </div>
                             <div class="">
                                 <bottom-sheet initial="half" :dismissable="true">
                         <div class="sheet-content p-0">
                             <div class="mt-1" @click.stop="">
                                 
-                                <h5 calss="text-center">거래는 어떠셨나요?</h5>
+                                <h5 calss="text-center mb-4">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
-                                    <div class="rating">
+                                    <div class="rating my-3">
                                         <label class="rating__label rating__label--full" for="star1">
                                             <input type="radio" id="star1" class="rating__input" name="rating" value="">
                                             <span class="star-icon ms-2"></span>
@@ -99,7 +86,7 @@
                                         <span class="d-flex mx-2 rating-score tc-red"></span>
                                     </div>
                                 </div>
-                                <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content"></textarea>
+                                <textarea class="custom-textarea mt-2" rows="6" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content"></textarea>
                                 
                                 <div class="btn-group mt-3 mb-4">
                                     <button class="btn btn-primary"> 작성 완료 </button>
@@ -127,6 +114,8 @@ import { initReviewSystem } from '@/composables/review'; // 별점 js
 import useAuctions from "@/composables/auctions";
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue'
 import AlarmModal from '@/views/modal/AlarmModal.vue';
+import { cmmn } from '@/hooks/cmmn';
+const { amtComma } = cmmn();
 
 const isMobileView = ref(window.innerWidth <= 640);
 const route = useRoute();
@@ -223,7 +212,7 @@ onBeforeUnmount(() => {
             flex-wrap: wrap;
         }
         .col {
-            flex: 1 1 25%; /* 기본적으로 각 항목이 차지할 넓이 설정 */
+            flex: 1 1 25%; 
             box-sizing: border-box;
             padding: 8px;
         }
@@ -237,23 +226,23 @@ onBeforeUnmount(() => {
         @media (max-width: 600px) {
             .row {
                 display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 작은 화면에서 격자 배치 */
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); 
                 gap: 8px;
             }
             .col {
-                flex: 1 1 100%; /* 작은 화면에서는 각 항목이 전체 너비를 차지 */
+                flex: 1 1 100%; 
             }
             .card-style .col-line:not(:last-child)::after {
             display: none;
             }
             .col {
-                flex: 1 1 50%; /* 작은 화면에서는 각 항목이 전체 너비를 차지 */
-                border-bottom: 1px solid #dddddd; /* 작은 화면에서 아래쪽에 선 추가 */
+                flex: 1 1 50%; 
+                border-bottom: 1px solid #dddddd;
                 padding-bottom: 16px;
                 margin-bottom: 16px;
             }
             .col:last-child {
-                border-bottom: none; /* 마지막 항목은 아래쪽 선을 제거 */
+                border-bottom: none; 
                 margin-bottom: 0;
             }
         }
@@ -261,5 +250,48 @@ onBeforeUnmount(() => {
   .container-xl, .container-lg, .container-md, .container-sm, .container {
     max-width: 1140px;
   }
+}
+.mov-wide{
+    width:auto !important;
+}
+@media (min-width: 992px) {
+            .container.mov-wide {
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+                justify-content: space-between;
+                gap: 10px; 
+            }
+
+            .container.mov-wide > div:first-child {
+                flex: 1.5;
+            }
+
+            .sheet {
+                position: static; 
+                flex: 0.5;
+                display: flex;
+                flex-direction: column;
+                max-height: none;
+                border-radius: 0; 
+                overflow: visible;
+                height: auto !important;
+                margin-top: 60px;
+            }
+            .header{
+                pointer-events: none; 
+            }
+        }
+.auction-deadline {
+    width: 100%;
+    height: 40px;
+    background-color: #f5f5f6;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between !important;
+    gap: 5px;
+    border-radius: 6px;
+    padding: 35px;
 }
 </style>

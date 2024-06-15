@@ -22,8 +22,11 @@
                                       <div v-else>
                                           <span v-if="auctionDetail.data.status === 'ing'" class="mx-2 timer"><img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock"><span v-if="timeLeft.days != '0' ">{{ timeLeft.days }}일 &nbsp; </span>{{ timeLeft.hours }} : {{ timeLeft.minutes }} : {{ timeLeft.seconds }}</span>
                                           <span v-if="auctionDetail.data.status === 'done'" class="mx-2 auction-done">경매완료</span>   
+                                          <span v-if="auctionDetail.data.status === 'cancel'" class="mx-2 auction-done">경매취소</span>   
+                                         <div v-if="auctionDetail.data.status !== 'cancel'">
                                           <input class="toggle-heart" type="checkbox" checked />
                                           <label class="heart-toggle"></label>
+                                        </div>
                                           <div :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
                                             <div v-if ="!isMobileView" class="d-flex flex-row">
                                                 <div class="w-50">
@@ -596,11 +599,9 @@
                           </div>
 
                           [사용자] - 경매 완료 -->
-                        <BottomSheet02>
-                                <h5 class="text-center p-2" v-if="auctionDetail.data.status === 'done'">거래는 어떠셨나요?</h5>
-                                <p class="auction-deadline mt-4" v-else>선택이 완료 되었습니다.</p>
+                        <BottomSheet02 v-if="auctionDetail.data.status === 'done'">
+                                <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
                                 <router-link
-                                  v-if="auctionDetail.data.status === 'done'"
                                   :to="{ name: 'user.create-review' }"
                                   type="button"
                                   class="tc-wh btn btn-primary w-100"
@@ -1690,5 +1691,11 @@ transition: opacity 0.5s;
 }
 .fade-enter, .fade-leave-to{
 opacity: 0;
+}
+
+@media (max-width: 500px){
+.container {
+    --bs-gutter-x: 0rem;
+}
 }
 </style>

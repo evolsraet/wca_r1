@@ -1794,7 +1794,7 @@ video {
 .allpage{
     position: absolute;
     display: flex;
-    top: 336px;
+    top: 356px;
     bottom: 0px;
     right: 12px;
     height: 25px;
@@ -2938,9 +2938,6 @@ input[type="checkbox"] {
     background-color: #dee2e6;
     transform: translateY(-50%);
 }
-.container-img {
-    display: block;
-}
 .card-custom-ty{
     margin:0px !important;
     margin-top: 1rem !important;
@@ -3044,9 +3041,6 @@ input[type="checkbox"] {
 }
 .web-text{
     display: block; 
-}
-.container-img {
-    display: flex;
 }
 .left-img, .right-img {
     padding: 5px;
