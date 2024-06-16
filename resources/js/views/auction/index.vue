@@ -413,12 +413,19 @@ TODO:
 
             <!-- 메인 컨텐츠 -->
             <div class="col-md-9 auction-main">
+                <div class="d-flex gap-2">
                 <div class="apply-top text-start">
                     <div class="search-type">
-                        <input type="text" placeholder="모델명,차량번호,지역">
-                        <button type="button" class="search-btn">검색</button>
+                        <input type="text" class="border-6" placeholder="모델명,차량번호,지역">
+                        <button type="button" class="search-btn start-0">검색</button>
                     </div>
                 </div>
+                <div class="filter-content">
+                <!-- 페이지의 나머지 내용 -->
+                <button @click="toggleModal" class="animCircle filter-button tc-light-gray mx-2"> 필터</button>
+                <FilterModal v-if="showModal" @close="handleClose"/>
+                </div> 
+            </div>
                 <div class="container mb-3" v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
                     <div class="registration-content">
                         <div class="text-start status-selector">
@@ -432,7 +439,7 @@ TODO:
                         <label for="completed" class="mx-2">완료</label>
                         </div>
 
-                        <div class="text-end select-option">
+                      <!--  <div class="text-end select-option">
                             <select class="form-select select-rank" aria-label="최근 등록 순">
                                 <option selected>최근 등록 순</option>
                                 <option value="1">가격 낮은 순</option>
@@ -440,7 +447,7 @@ TODO:
                                 <option value="3">연식 오래된 순</option>
                                 <option value="4">연식 최신 순</option>
                             </select>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
                 <div :class="['container my-4', { 'pulling': isPulling && distance > 0, 'is-spinning': isSpinning }]" ref="pullContainer" @touchstart.passive="handleTouchStart" @touchmove.passive="handleTouchMove" @touchend="handleTouchEnd" v-if="currentTab === 'allInfo'">
@@ -480,9 +487,9 @@ TODO:
                                                 <div class="participate-badge" v-if="isDealerParticipating(auction)">참여</div>
                                             </div>
                                         </div>
-                                        <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
-                                        <div v-if="isDealer">
-                                            <div v-if="auction.status === 'chosen'" class="time-remaining">경매 종료</div>
+                                      <!--  <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>-->
+                                       <!--  <div v-if="isDealer">-->
+                                          <!-- <div v-if="auction.status === 'chosen'" class="time-remaining">경매 종료</div>
                                         </div>
                                         <div v-else>
                                             <div v-if="auction.status === 'chosen'" class="wait-selection">선택완료</div>
@@ -490,7 +497,7 @@ TODO:
                                             <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
                                             <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
                                             <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
-                                        </div>
+                                        </div>-->
                                         <div class="card-body">
                                             <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
                                             <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
@@ -653,11 +660,6 @@ TODO:
                         </li>
                     </ul>
                 </nav>
-                <div class="filter-content">
-                <!-- 페이지의 나머지 내용 -->
-                <button @click="toggleModal" class="animCircle filter-button" :style="buttonStyle"> 필터</button>
-                <FilterModal v-if="showModal" @close="handleClose"/>
-                </div>  
             </div>
         </div>
     </div>
@@ -669,7 +671,6 @@ export default {
     return {
       isExpanded: false, // 하단 메뉴 확장 상태
       scrollY: 0, // 스크롤 위치 저장
-      buttonStyle: { opacity: 1 }, // 버튼 스타일 (불투명도)
       scrollTimeout: null, // 스크롤 타임아웃 저장
       selectedYear: new Date().getFullYear(), // 선택된 연도 (현재 연도)
       years: [] // 연도 목록 저장
@@ -693,13 +694,6 @@ export default {
     },
     submitReview() { // 리뷰 제출 시 메뉴 높이 토글
       this.toggleMenuHeight();
-    },
-    handleScroll() { // 스크롤 시 버튼 스타일 변경
-      clearTimeout(this.scrollTimeout);
-      this.buttonStyle.opacity = 0.5;
-      this.scrollTimeout = setTimeout(() => {
-        this.buttonStyle.opacity = 1;
-      }, 150);
     },
     generateYearRange(start, end) { // 연도 범위 생성
       const years = [];
@@ -902,6 +896,11 @@ const favoriteAuctions = computed(() => {
 
 
 <style scoped>
+.card-img-top-placeholder {
+    border-bottom-right-radius: 6px;
+    border-bottom-left-radius: 6px;
+}
+
 .refresh-indicator {
     text-align: center;
     overflow: hidden; 
@@ -924,4 +923,11 @@ const favoriteAuctions = computed(() => {
 @keyframes spin {
   100% { transform: rotate(1080deg); } 
 }
+@media (max-width: 449px){
+.col-md-4 {
+    flex: 0 0 auto;
+    width: 100% !important;
+}
+}
 </style>
+ 

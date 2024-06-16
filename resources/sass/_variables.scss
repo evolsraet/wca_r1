@@ -335,40 +335,6 @@ h5{
 .tc-wh{
     color: #fff !important;
 }
-.animCircle::before {
-    content: '';
-    display: block;
-    position: absolute;
-    border-radius: 16px;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    width: 72px;
-    height: 30px;
-    background-image: linear-gradient(150deg, $primary-sub02, $primary-sub 25%, sub-color02 50%, $primary 75%, $primary);
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: all 0.25s ease-in-out;
-    animation: social-button-beat 1.5s ease-out infinite;
-}
-.animCircle::after {
-    content: '';
-    display: block;
-    position: absolute;
-    border-radius: 16px;
-    top: 0;
-    left: 0;
-    width: 72px;
-    height: 30px;
-    z-index: -1;
-    background-image: linear-gradient(150deg, $sub-color, $sub-color , $primary 50%, $primary 75%, $primary);
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: all 0.25s ease-in-out;
-    animation: social-button-beat 1.5s ease-out 0.4s infinite;
-}
 .wd-100{
     width: 100% !important;
 }
