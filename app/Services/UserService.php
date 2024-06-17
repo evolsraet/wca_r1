@@ -161,7 +161,7 @@ class UserService
             // 역할 지정
             // 기본 패키지는 복수지만, 현 서비스에서는 하나만 지정한다
             if (auth()->user()->hasPermissionTo('act.admin') && $data) {
-                if ($data['role']) {
+                if (isset($data['role'])) {
                     $role = Role::findByName($data);
                     $item->syncRoles($role);
                 }
