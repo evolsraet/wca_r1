@@ -477,7 +477,12 @@ TODO:
                                                 <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
                                             </div>
                                         </div>
-                                        <div v-else :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
+                                        <div v-else style="height: 200px; width: 100%;">
+                                        <div  :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
+                                        </div>
+                                        <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>   
+                                          <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
+                                          <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span>     
                                             <span v-if="auction.status === 'ing' && auction.timeLeft" class="mx-2 timer">
                                                 <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
                                                 <span v-if="auction.timeLeft.days != '0' ">{{ auction.timeLeft.days }}일 &nbsp; </span>{{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}

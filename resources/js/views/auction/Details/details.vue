@@ -1,389 +1,342 @@
 <template>
-  <!--
-      TODO: 미구현 
-            조회수는 경매완료 되면 동결 , final_at , choice_at, done_at(?) => 시간 초.
-  -->
   <div class="container-fluid" v-if="auctionDetail">
-      <!--차량 정보 조회 내용 : 제조사,최초등록일,배기량, 추가적으로 용도변경이력 튜닝이력 리콜이력 추가 필요-->
-      <div v-if="!showReauctionView && auctionDetail.data.status !== 'wait'">
-          <div class="web-content-style">
-              <div class="container mov-wide">
+    <div v-if="!showReauctionView && auctionDetail.data.status !== 'wait'">
+      <div class="web-content-style">
+        <div class="container mov-wide">
+          <div>
+            <div>
+              <div class="mb-4">
+                <div class="card my-auction">
                   <div>
-                      <div>
-                          <div class="mb-4">
-                              <!--    <p class="card-text tc-light-gray fs-5">{{ auctionDetail.data.car_no }}</p>-->
-                              <div class="card my-auction">
-                                  <div>
-                                      <div class="mb-3" v-if="auctionDetail.data.status === 'ask' || auctionDetail.data.status === 'diag'">
-                                          <div class="diag-img">
-                                              <p class="diag-text tc-light-gray mb-4">위카가 꼼꼼하게 진단 중이에요</p>
-                                          </div>
-                                      </div>
-                                      <div v-else>
-                                          <span v-if="auctionDetail.data.status === 'ing'" class="mx-2 timer"><img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock"><span v-if="timeLeft.days != '0' ">{{ timeLeft.days }}일 &nbsp; </span>{{ timeLeft.hours }} : {{ timeLeft.minutes }} : {{ timeLeft.seconds }}</span>
-                                          <span v-if="auctionDetail.data.status === 'done'" class="mx-2 auction-done">경매완료</span>   
-                                          <span v-if="auctionDetail.data.status === 'cancel'" class="mx-2 auction-done">경매취소</span>   
-                                         <div v-if="auctionDetail.data.status !== 'cancel'">
-                                          <input class="toggle-heart" type="checkbox" checked />
-                                          <label class="heart-toggle"></label>
-                                        </div>
-                                          <div :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
-                                            <div v-if ="!isMobileView" class="d-flex flex-row">
-                                                <div class="w-50">
-                                                    <div class="card-img-top-ty02"></div>
-                                                </div>
-                                                <div class="w-50 d-flex flex-column">
-                                                    <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
-                                                    <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
-                                                </div>
-                                            </div>
-                                            <div v-if = "isMobileView">
-                                              <div class="card-img-top-ty02"></div>
-                                            </div>
-                                          </div>
-                                          <div class="allpage">
-                                              <p class="more-page">1/1</p>
-                                          </div>
-                                        <!--  <div v-if="auctionDetail.data.status === 'cancel'" class="time-remaining">경매 취소</div>-->
-                                          <div v-if="isDealer">
-                                           <!--     <div v-if="auctionDetail.data.status === 'chosen'" class="time-remaining">경매 종료</div>-->
-                                          </div>
-                                          <div v-else>
-                                         <!--       <div v-if="auctionDetail.data.status === 'chosen'" class="time-remaining">선택 완료</div>-->
-                                          </div>
-                                          <h4 v-if="auctionDetail.data.status === 'done'" class="wait-selection">낙찰가 {{ amtComma&nbsp(auctionDetail.data.final_price) }}</h4>
-                                          <div class="p-3 pb-1 d-flex gap-3 justify-content-between">
-                                          <div></div>
-                                            <!--TODO: 실차주 딜러 차주 판매 추가 하기-->
-                                             <!-- <p class="bid-icon tc-light-gray normal-16-font">딜러 판매</p>
-                                              <p class="bid-icon tc-light-gray normal-16-font">실차주 판매</p>-->
-
-                                              <div class="d-flex gap-3 justify-content-end mb-1">
-                                                  <div class="tc-light-gray icon-hit">조회수 {{ auctionDetail.data.hit }}</div>
-                                                  <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
-                                                  <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids_count }}</p>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                                  <div class="card-body p-3 pt-0">
-                                      <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                      <p>{{ carDetails.year }} 년 / 2.4km / 무사고</p>
-                                      <p class="tc-light-gray">현대 소나타 (DN8)</p>
-                                      <div class="enter-view">
-                                          <AlarmModal ref="alarmModal" />
-                                      </div>
-                                      <div class="d-flex">
-                                  <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                  <h5 v-if="auctionDetail.data.hope_price !== null"><span class="gray-box">재경매</span></h5>
-                                  </div>
-                                      <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
-                                          <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
-                                          <MessageModal v-if="showMessage" :show="showMessage" message="진단평가가 완료되면 자동으로 경매가 진행돼요" :duration="3000" />
-                                      </div>
-
-                                  </div>
-                            <!--      <div v-if="isUser && auctionDetail.data.status === 'ing'" class="p-3">
-                                    <template v-if="auctionDetail.data.hope_price !== null">
-                                      <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
-                                        <p>현재 희망가</p>
-                                        <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
-                                      </div>
-                                    </template>
-                                    <template v-else>
-                                      <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
-                                        <p>현재 최고 입찰액</p>
-                                        <p class="icon-coins">{{ amtComma(heightPrice)}}</p>
-                                      </div>
-                                    </template>
-                                  </div>-->
-                                  <div v-if="isDealer && auctionDetail.data.status === 'ing' " class="p-3">
-                                
-                                        <div v-if=" auctionDetail.data.hope_price !== null">
-                                          <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
-                                              <p>현재 희망가</p>
-                                              <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
-                                            </div>
-                                        </div>
-                                    
-                                  </div>
-                              </div>
-                          </div>
+                    <div class="mb-3" v-if="auctionDetail.data.status === 'ask' || auctionDetail.data.status === 'diag'">
+                      <div class="diag-img">
+                        <p class="diag-text tc-light-gray mb-4">위카가 꼼꼼하게 진단 중이에요</p>
                       </div>
+                    </div>
+                    <div v-else>
+                      <span v-if="auctionDetail.data.status === 'ing'" class="mx-2 timer">
+                        <img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
+                        <span v-if="timeLeft.days != '0'">{{ timeLeft.days }}일 &nbsp;</span>{{ timeLeft.hours }} : {{ timeLeft.minutes }} : {{ timeLeft.seconds }}
+                      </span>
+                      <span v-if="auctionDetail.data.status === 'done'" class="mx-2 auction-done">경매완료</span>
+                      <span v-if="auctionDetail.data.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
+                      <span v-if="auctionDetail.data.status === 'chosen'" class="mx-2 auction-done">선택완료</span>
+                      <div v-if="auctionDetail.data.status !== 'cancel'">
+                        <input class="toggle-heart" type="checkbox" checked />
+                        <label class="heart-toggle"></label>
+                      </div>
+                      <div :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
+                        <div v-if="!isMobileView" class="d-flex flex-row">
+                          <div class="w-50">
+                            <div class="card-img-top-ty02"></div>
+                          </div>
+                          <div class="w-50 d-flex flex-column">
+                            <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
+                            <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+                          </div>
+                        </div>
+                        <div v-if="isMobileView">
+                          <div class="card-img-top-ty02"></div>
+                        </div>
+                      </div>
+                      <h4 v-if="auctionDetail.data.status === 'done'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
+                      <div class="p-3 pb-1 d-flex gap-3 justify-content-between">
+                        <div></div>
+                        <div class="d-flex gap-3 justify-content-end mb-1">
+                          <div class="tc-light-gray icon-hit">조회수 {{ auctionDetail.data.hit }}</div>
+                          <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
+                          <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids_count }}</p>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <!--     <div class="bold-18-font">
-                      <div v-if="auctionDetail.data.status === 'ing'">
-                          <p class="auction-deadline">경매 마감일<span> {{ auctionDetail.data.final_at }}</span></p>
-                      </div>
-                      <div v-else-if="auctionDetail.data.status === 'done'">
-                          <p class="auction-deadline">낙찰가 {{ auctionDetail.data.final_price }} 만원</p>
-                      </div>
-                      <div v-else-if="auctionDetail.data.status === 'ask'">
-                          <p class="auction-deadline">신청 완료</p>
-                      </div>
-                  </div>-->
-                  <!--   <div class="container card-style">
-                     <div class="card card-custom">
-                          <div class="row">
-                              <div class="col-6">
-                                  <div class="item-label">년식</div>
-                                  <div class="item-value">{{ carDetails.year }}</div>
-                              </div>
-                              <div class="col-6">
-                                  <div class="item-label">주행거리</div>
-                                  <div class="item-value">103,000km</div>
-                              </div>
-                          </div>
-                          <div class="row">
-                              <div class="col-6">
-                                  <div class="item-label">내사 피해</div>
-                                  <div class="item-value">1건</div>
-                              </div>
-                              <div class="col-6">
-                                  <div class="item-label">타사 피해</div>
-                                  <div class="item-value">3건</div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>-->
-                  <div class="container p-4">
-                      <h5>차량 정보</h5>
-                      <ul class="machine-inform-title">
-                          <li class="tc-light-gray">차량번호</li>
-                          <li class="info-num">{{ carDetails.no }}</li>
-                          <li class="car-icon"></li>
-                      </ul>
-                      <ul class="machine-inform">
-                          <li class="tc-light-gray">제조사</li>
-                          <li class="sub-title"></li>
-                      </ul>
-                      <ul class="machine-inform">
-                          <li class="tc-light-gray">모델</li>
-                          <li class="sub-title">{{ carDetails.model }}</li>
-                      </ul>
-                      <ul class="machine-inform">
-                          <li class="tc-light-gray">세부모델</li>
-                          <li class="sub-title">{{ carDetails.modelSub }}</li>
-                      </ul>
-                      <ul class="machine-inform">
-                          <li class="tc-light-gray">등급</li>
-                          <li class="sub-title">{{ carDetails.grade }}</li>
-                      </ul>
-                      <ul class="machine-inform">
-                          <li class="tc-light-gray">세부등급</li>
-                          <li class="sub-title">{{ carDetails.gradeSub }}</li>
-                      </ul>
-                      <ul class="machine-inform-title">
-                          <li class="tc-light-gray">최초등록일</li>
-                          <li class="info-num"></li>
-                          <li class="car-aside-icon"></li>
-                      </ul>
-                      <ul class="machine-inform">
-                          <li class="tc-light-gray">년식</li>
-                          <li class="sub-title">{{ carDetails.year }}</li>
-                      </ul>
-                      <ul class="machine-inform">
-                          <li class="tc-light-gray">차량유형</li>
-                          <li class="sub-title">종합 승용차</li>
-                      </ul>
-                      <ul class="machine-inform-title">
-                          <li class="tc-light-gray">배기량</li>
-                          <li class="info-num">2000cc</li>
-                          <li class="gasoline-icon"></li>
-                      </ul>
-                      <ul class="machine-inform">
-                          <li class="tc-light-gray">연료</li>
-                          <li class="sub-title">{{ carDetails.fuel }}</li>
-                      </ul>
-                      <ul class="machine-inform">
-                          <li class="tc-light-gray">미션</li>
-                          <li class="sub-title">{{ carDetails.mission }}</li>
-                      </ul>
-                      <ul class="machine-inform-title">
-                          <li class="tc-light-gray">용도변경이력</li>
-                          <li class="info-num">-</li>
-                          <li class="clean-icon"></li>
-                      </ul>
-                      <ul class="machine-inform">
-                          <li class="tc-light-gray">튜닝이력</li>
-                          <li class="sub-title">1회</li>
-                      </ul>
-                      <ul class="machine-inform">
-                          <li class="tc-light-gray">리콜이력</li>
-                          <li class="sub-title">-</li>
-                      </ul>
-                      <ul class="machine-inform-title">
-                          <li class="tc-light-gray">옵션정보</li>
-                      </ul>
-                      <div class="option-icons">
-                          <div class="option-row">
-                              <div class="option-icon">
-                                  <div class="icon smart-key-ac"></div>
-                                  <p>스마트키</p>
-                              </div>
-                              <div class="option-icon">
-                                  <div class="icon navigation-ac"></div>
-                                  <p>네비게이션</p>
-                              </div>
-                              <div class="option-icon">
-                                  <div class="icon rear-camera-ac"></div>
-                                  <p>후방카메라</p>
-                              </div>
-                          </div>
-                          <div class="option-row">
-                              <div class="option-icon">
-                                  <div class="icon sunroof"></div>
-                                  <p>선루프</p>
-                              </div>
-                              <div class="option-icon">
-                                  <div class="icon headlamp-ac"></div>
-                                  <p>헤드램프</p>
-                              </div>
-                              <div class="option-icon">
-                                  <div class="icon auto-aircon-ac"></div>
-                                  <p>자동에어컨</p>
-                              </div>
-                          </div>
-                          <div class="option-row">
-                              <div class="option-icon">
-                                  <div class="icon electric-seat-ac"></div>
-                                  <p>전동</p>
-                              </div>
-                              <div class="option-icon">
-                                  <div class="icon family"></div>
-                                  <p>가죽</p>
-                              </div>
-                              <div class="option-icon">
-                                  <div class="icon heated-seat-ac"></div>
-                                  <p>열선</p>
-                              </div>
-                              <div class="option-icon">
-                                  <div class="icon ventilated-seat"></div>
-                                  <p>통풍</p>
-                              </div>
-                          </div>
-                          <div class="option-row">
-                              <div class="option-icon">
-                                  <div class="icon parking-sensor"></div>
-                                  <p>주차 감지 센서</p>
-                              </div>
-                              <div class="option-icon">
-                                  <div class="icon electric-side-mirror-ac"></div>
-                                  <p>전동 사이드미러</p>
-                              </div>
-                          </div>
-                      </div>
-
-                      <ul class="machine-inform-title">
-                          <li class="tc-light-gray">추가옵션</li>
-                          <li class="info-num">-</li>
-                      </ul>
+                  <div class="card-body p-3 pt-0">
+                    <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                    <p>{{ carDetails.year }} 년 / 2.4km / 무사고</p>
+                    <p class="tc-light-gray">현대 소나타 (DN8)</p>
+                    <div class="enter-view">
+                      <AlarmModal ref="alarmModal" />
+                    </div>
+                    <div class="d-flex">
+                      <h5 class="card-title"><span class="blue-box">무사고</span></h5>
+                      <h5 v-if="auctionDetail.data.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                    </div>
+                    <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
+                      <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
+                      <MessageModal v-if="showMessage" :show="showMessage" message="진단평가가 완료되면 자동으로 경매가 진행돼요" :duration="3000" />
+                    </div>
                   </div>
-                  <div class="contour-style"></div>
-                  <div class="container px-4 py-5">
-                      <h5>이력</h5>
-                      <div class="p-4 rounded text-body-emphasis bg-body-secondary">
-                          <ul class="mt-0 machine-inform-title">
-                              <li class="tc-light-gray">용도 변경이력</li>
-                              <li class="info-num">-</li>
-                          </ul>
-                          <ul class="mt-0 machine-inform-title">
-                              <li class="tc-light-gray">소유자 변경</li>
-                              <li class="info-num">1</li>
-                          </ul>
-                          <ul class="mt-0 machine-inform-title">
-                              <li class="tc-light-gray">압류/저당</li>
-                              <li class="info-num">-</li>
-                          </ul>
-                          <ul class="mt-0 mb-0 machine-inform-title">
-                              <li class="tc-light-gray">특수사고 이력</li>
-                              <li class="info-num">전손 0 침수0 도난0</li>
-                          </ul>
+                  <div v-if="isUser && auctionDetail.data.status === 'ing'" class="p-3">
+                    <template v-if="auctionDetail.data.hope_price !== null">
+                      <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
+                        <p>현재 희망가</p>
+                        <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
                       </div>
-                      <h5 class="mt-5">내차피해 (<span class="tc-red">1</span>건)</h5>
-                      <div class="o_table_mobile">
-                          <div class="tbl_basic">
-                              <table>
-                                  <tbody>
-                                      <tr>
-                                          <th>일시</th>
-                                          <th>부품</th>
-                                          <th>공임</th>
-                                          <th>조회</th>
-                                          <th>날짜</th>
-                                      </tr>
-                                      <tr>
-                                          <td>2024-03-22</td>
-                                          <td>12,000</td>
-                                          <td>10,000</td>
-                                          <td>7</td>
-                                          <td>2022-05-01</td>
-                                      </tr>
-                                  </tbody>
-                              </table>
-                          </div>
+                    </template>
+                    <template v-else>
+                      <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
+                        <p>현재 최고 입찰액</p>
+                        <p class="icon-coins">{{ amtComma(heightPrice)}}</p>
                       </div>
-                      <h5 class="mt-5">타차피해 (<span class="tc-red">1</span>건)</h5>
-                      <div class="o_table_mobile">
-                          <div class="tbl_basic">
-                              <table>
-                                  <tbody>
-                                      <tr>
-                                          <th>일시</th>
-                                          <th>부품</th>
-                                          <th>공임</th>
-                                          <th>조회</th>
-                                          <th>날짜</th>
-                                      </tr>
-                                      <tr>
-                                          <td>2024-03-22</td>
-                                          <td>12,000</td>
-                                          <td>10,000</td>
-                                          <td>7</td>
-                                          <td>2022-05-01</td>
-                                      </tr>
-                                      <tr>
-                                          <td>2024-03-22</td>
-                                          <td>12,000</td>
-                                          <td>10,000</td>
-                                          <td>7</td>
-                                          <td>2022-05-01</td>
-                                      </tr>
-                                      <tr>
-                                          <td>2024-03-22</td>
-                                          <td>12,000</td>
-                                          <td>10,000</td>
-                                          <td>7</td>
-                                          <td>2022-05-01</td>
-                                      </tr>
-                                  </tbody>
-                              </table>
-                          </div>
-                      </div>
-                      <h5 class="mt-5">기타</h5>
-                      <div class="form-group">
-                          <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo }}</textarea>
-                      </div>
-                      <ul class="machine-inform-title">
-                          <li class="tc-light-gray">거래지역</li>
-                          <li class="info-num">경기>성남시 중원구</li>
-                      </ul>
-                      <ul class="machine-inform-title">
-                          <li class="tc-light-gray">기타이력</li>
-                          <li class="info-num">-</li>
-                      </ul>
-                      <ul class="machine-inform-title">
-                          <li class="tc-light-gray">차량명의</li>
-                          <li class="info-num">개인</li>
-                      </ul>
+                    </template>
                   </div>
+                  <div v-if="isDealer && auctionDetail.data.status === 'ing'" class="p-3">
+                    <div v-if="auctionDetail.data.hope_price !== null">
+                      <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
+                        <p>현재 희망가</p>
+                        <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <!-- bottom sheet Start-->
-          <!--      <bottom-sheet initial="half" :dismissable="true">
-                <div class="sheet-content">
-                      #####################
-                      사용자 바텀시트
-                  #########################-->
+            </div>
+          </div>
+          <div class="container p-4">
+            <h5>차량 정보</h5>
+            <ul class="machine-inform-title">
+              <li class="tc-light-gray">차량번호</li>
+              <li class="info-num">{{ carDetails.no }}</li>
+              <li class="car-icon"></li>
+            </ul>
+            <ul class="machine-inform">
+              <li class="tc-light-gray">제조사</li>
+              <li class="sub-title"></li>
+            </ul>
+            <ul class="machine-inform">
+              <li class="tc-light-gray">모델</li>
+              <li class="sub-title">{{ carDetails.model }}</li>
+            </ul>
+            <ul class="machine-inform">
+              <li class="tc-light-gray">세부모델</li>
+              <li class="sub-title">{{ carDetails.modelSub }}</li>
+            </ul>
+            <ul class="machine-inform">
+              <li class="tc-light-gray">등급</li>
+              <li class="sub-title">{{ carDetails.grade }}</li>
+            </ul>
+            <ul class="machine-inform">
+              <li class="tc-light-gray">세부등급</li>
+              <li class="sub-title">{{ carDetails.gradeSub }}</li>
+            </ul>
+            <ul class="machine-inform-title">
+              <li class="tc-light-gray">최초등록일</li>
+              <li class="info-num"></li>
+              <li class="car-aside-icon"></li>
+            </ul>
+            <ul class="machine-inform">
+              <li class="tc-light-gray">년식</li>
+              <li class="sub-title">{{ carDetails.year }}</li>
+            </ul>
+            <ul class="machine-inform">
+              <li class="tc-light-gray">차량유형</li>
+              <li class="sub-title">종합 승용차</li>
+            </ul>
+            <ul class="machine-inform-title">
+              <li class="tc-light-gray">배기량</li>
+              <li class="info-num">2000cc</li>
+              <li class="gasoline-icon"></li>
+            </ul>
+            <ul class="machine-inform">
+              <li class="tc-light-gray">연료</li>
+              <li class="sub-title">{{ carDetails.fuel }}</li>
+            </ul>
+            <ul class="machine-inform">
+              <li class="tc-light-gray">미션</li>
+              <li class="sub-title">{{ carDetails.mission }}</li>
+            </ul>
+            <ul class="machine-inform-title">
+              <li class="tc-light-gray">용도변경이력</li>
+              <li class="info-num">-</li>
+              <li class="clean-icon"></li>
+            </ul>
+            <ul class="machine-inform">
+              <li class="tc-light-gray">튜닝이력</li>
+              <li class="sub-title">1회</li>
+            </ul>
+            <ul class="machine-inform">
+              <li class="tc-light-gray">리콜이력</li>
+              <li class="sub-title">-</li>
+            </ul>
+            <ul class="machine-inform-title">
+              <li class="tc-light-gray">옵션정보</li>
+            </ul>
+            <div class="option-icons">
+              <div class="option-row">
+                <div class="option-icon">
+                  <div class="icon smart-key-ac"></div>
+                  <p>스마트키</p>
+                </div>
+                <div class="option-icon">
+                  <div class="icon navigation-ac"></div>
+                  <p>네비게이션</p>
+                </div>
+                <div class="option-icon">
+                  <div class="icon rear-camera-ac"></div>
+                  <p>후방카메라</p>
+                </div>
+              </div>
+              <div class="option-row">
+                <div class="option-icon">
+                  <div class="icon sunroof"></div>
+                  <p>선루프</p>
+                </div>
+                <div class="option-icon">
+                  <div class="icon headlamp-ac"></div>
+                  <p>헤드램프</p>
+                </div>
+                <div class="option-icon">
+                  <div class="icon auto-aircon-ac"></div>
+                  <p>자동에어컨</p>
+                </div>
+              </div>
+              <div class="option-row">
+                <div class="option-icon">
+                  <div class="icon electric-seat-ac"></div>
+                  <p>전동</p>
+                </div>
+                <div class="option-icon">
+                  <div class="icon family"></div>
+                  <p>가죽</p>
+                </div>
+                <div class="option-icon">
+                  <div class="icon heated-seat-ac"></div>
+                  <p>열선</p>
+                </div>
+                <div class="option-icon">
+                  <div class="icon ventilated-seat"></div>
+                  <p>통풍</p>
+                </div>
+              </div>
+              <div class="option-row">
+                <div class="option-icon">
+                  <div class="icon parking-sensor"></div>
+                  <p>주차 감지 센서</p>
+                </div>
+                <div class="option-icon">
+                  <div class="icon electric-side-mirror-ac"></div>
+                  <p>전동 사이드미러</p>
+                </div>
+              </div>
+            </div>
+            <ul class="machine-inform-title">
+              <li class="tc-light-gray">추가옵션</li>
+              <li class="info-num">-</li>
+            </ul>
+          </div>
+          <div class="contour-style"></div>
+          <div class="container px-4 py-5">
+            <h5>이력</h5>
+            <div class="p-4 rounded text-body-emphasis bg-body-secondary">
+              <ul class="mt-0 machine-inform-title">
+                <li class="tc-light-gray">용도 변경이력</li>
+                <li class="info-num">-</li>
+              </ul>
+              <ul class="mt-0 machine-inform-title">
+                <li class="tc-light-gray">소유자 변경</li>
+                <li class="info-num">1</li>
+              </ul>
+              <ul class="mt-0 machine-inform-title">
+                <li class="tc-light-gray">압류/저당</li>
+                <li class="info-num">-</li>
+              </ul>
+              <ul class="mt-0 mb-0 machine-inform-title">
+                <li class="tc-light-gray">특수사고 이력</li>
+                <li class="info-num">전손 0 침수 0 도난 0</li>
+              </ul>
+            </div>
+            <h5 class="mt-5">내차피해 (<span class="tc-red">1</span>건)</h5>
+            <div class="o_table_mobile">
+              <div class="tbl_basic">
+                <table>
+                  <tbody>
+                    <tr>
+                      <th>일시</th>
+                      <th>부품</th>
+                      <th>공임</th>
+                      <th>조회</th>
+                      <th>날짜</th>
+                    </tr>
+                    <tr>
+                      <td>2024-03-22</td>
+                      <td>12,000</td>
+                      <td>10,000</td>
+                      <td>7</td>
+                      <td>2022-05-01</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <h5 class="mt-5">타차피해 (<span class="tc-red">1</span>건)</h5>
+            <div class="o_table_mobile">
+              <div class="tbl_basic">
+                <table>
+                  <tbody>
+                    <tr>
+                      <th>일시</th>
+                      <th>부품</th>
+                      <th>공임</th>
+                      <th>조회</th>
+                      <th>날짜</th>
+                    </tr>
+                    <tr>
+                      <td>2024-03-22</td>
+                      <td>12,000</td>
+                      <td>10,000</td>
+                      <td>7</td>
+                      <td>2022-05-01</td>
+                    </tr>
+                    <tr>
+                      <td>2024-03-22</td>
+                      <td>12,000</td>
+                      <td>10,000</td>
+                      <td>7</td>
+                      <td>2022-05-01</td>
+                    </tr>
+                    <tr>
+                      <td>2024-03-22</td>
+                      <td>12,000</td>
+                      <td>10,000</td>
+                      <td>7</td>
+                      <td>2022-05-01</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <h5 class="mt-5">기타</h5>
+            <div class="form-group">
+              <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo }}</textarea>
+            </div>
+            <ul class="machine-inform-title">
+              <li class="tc-light-gray">거래지역</li>
+              <li class="info-num">경기>성남시 중원구</li>
+            </ul>
+            <ul class="machine-inform-title">
+              <li class="tc-light-gray">기타이력</li>
+              <li class="info-num">-</li>
+            </ul>
+            <ul class="machine-inform-title">
+              <li class="tc-light-gray">차량명의</li>
+              <li class="info-num">개인</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- bottom sheet Start-->
+    <div class="sheet-content">
+      <!--  [사용자] - 경매 완료 -->
+      <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isUser">
+        <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
+        <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">
+          후기 남기기
+        </router-link>
+      </BottomSheet02>
+    </div>
+                       
 
                     <!--    <div v-if="isUser">
                           -----[사용자]diag (진단평가)알때------->
@@ -596,288 +549,189 @@
                                       <p class="text-start">{{ selectedDealer.userData.dealer.introduce || '소개 정보 없음' }}</p>
                                   </div>
                               </div>
-                          </div>
+                          </div>-->
 
-                          [사용자] - 경매 완료 -->
-                        <BottomSheet02 v-if="auctionDetail.data.status === 'done'">
-                                <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
-                                <router-link
-                                  :to="{ name: 'user.create-review' }"
-                                  type="button"
-                                  class="tc-wh btn btn-primary w-100"
-                                >
-                                  후기 남기기
-                                </router-link>
-                        </BottomSheet02>
-
+          
                      <!--  바텀 시트 show or black-->
-             <!--       <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
-
-                      <div v-if="isDealer">
-                         ------------------ [딜러] - 경매 완료 -------------------->
-                        <!--    <div v-if="auctionDetail.data.status === 'chosen' || auctionDetail.data.status === 'done'" @click.stop="">
-                            <div class="steps-container mb-3">
-                                  <div class="step completed">
-                                      <div class="label completed">
-                                          STEP01
-                                      </div>
-                                      <div class="label label-style tc-light-gray">매물 준비</div>
-                                  </div>
-                                  <div class="line completed"></div>
-                                  <div class="step completed">
-                                      <div class="label completed">
-                                          STEP02
-                                      </div>
-                                      <div class="label label-style tc-light-gray completing-text">경매</div>
-                                  </div>
-                                  <div class="line completed"></div>
-                                  <div class="step completed">
-                                      <div class="label completed">
-                                          STEP03
-                                      </div>
-                                      <div class="label label-style02 tc-light-gray">완료</div>
-                                  </div>
-                              </div> 
-                            <hr>
-                              <h5 class="text-center mt-4"> 불편 사항이 있으신가요?</h5>
-                              <router-link :to="{ name: 'index.claim' }" type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</router-link >
+                     <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
+                        <div v-if="isDealer">
+                          <div v-if="auctionDetail.data.status === 'done' && isDealer">
+                              <div @click.stop="">
+                                <h5 class="text-center mt-4"> 불편 사항이 있으신가요?</h5>
+                                <router-link :to="{ name: 'index.claim' }" type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</router-link>
                                 <a href="#" class="d-flex justify-content-center tc-light-gray" @click.prevent="openClaimModal">클레임 규정 확인</a>
-                              
                                 <ClaimModal v-if="isClaimModalOpen" :isOpen="isClaimModalOpen" @close="closeClaimModal" />
-                           
                               </div>
-                            
-
-                              <div v-if="auctionDetail.data.status === 'wait'" @click.stop="">
-                            <div class="steps-container mb-3">
-                                  <div class="step completed">
-                                      <div class="label completed">
-                                          STEP01
-                                      </div>
-                                      <div class="label label-style tc-light-gray">매물 준비</div>
-                                  </div>
-                                  <div class="line completed"></div>
-                                  <div class="step completed">
-                                      <div class="label completed">
-                                          STEP02
-                                      </div>
-                                      <div class="label label-style tc-light-gray completing-text">경매</div>
-                                  </div>
-                                  <div class="line "></div>
-                                  <div class="step ">
-                                      <div class="label ">
-                                          STEP03
-                                      </div>
-                                      <div class="label label-style02 tc-light-gray">완료</div>
-                                  </div>
-                              </div> 
+                            </div>
+                            <div v-if="auctionDetail.data.status === 'wait'" @click.stop="">
+                              <BottomSheet02 >
+                              <div class="steps-container mb-3">
+                                <div class="step completed">
+                                  <div class="label completed">STEP01</div>
+                                  <div class="label label-style tc-light-gray">매물 준비</div>
+                                </div>
+                                <div class="line completed"></div>
+                                <div class="step completed">
+                                  <div class="label completed">STEP02</div>
+                                  <div class="label label-style tc-light-gray completing-text">경매</div>
+                                </div>
+                                <div class="line"></div>
+                                <div class="step">
+                                  <div class="label">STEP03</div>
+                                  <div class="label label-style02 tc-light-gray">완료</div>
+                                </div>
+                              </div>
                               <p class="auction-deadline text-center mt-2">경매 선택 중 입니다.</p>
-                              </div>
+                            </BottomSheet02>
+                            </div>
 
-                          ----------------- [딜러] - 입찰 바텀 뷰 -------------------->
-                     <!--       <div v-if="!succesbidhope && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price !==null" @click.stop="">
-                            <div class="steps-container">
-                                  <div class="step completed">
-                                      <div class="label completed">STEP01</div>
-                                      <div class="label label-style tc-light-gray">매물 준비</div>
-                                  </div>
-                                  <div class="line completed"></div>
-                                  <div class="step completing">
-                                      <div class="label completed">STEP02</div>
-                                      <div class="label label-style tc-light-gray completing-text">경매</div>
-                                  </div>
-                                  <div class="line"></div>
-                                  <div class="step">
-                                      <div class="label">STEP03</div>
-                                      <div class="label label-style02 tc-light-gray">완료</div>
-                                  </div>
-                              </div>
+                          <div v-if="!succesbidhope && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price !== null" @click.stop="">
+                            <BottomSheet02>
                               <p class="auction-deadline text-center">희망가 재경매를 시작합니다.</p>
                               <p class="tc-red mt-2">경매 마감까지 {{ timeLeft.days }}일 {{ timeLeft.hours }}시간 {{ timeLeft.minutes }}분 {{ timeLeft.seconds }}초 남음</p>
                               <div class="mt-3 d-flex justify-content-end gap-3">
-                                  <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
-                                  <p class="interest-icon tc-light-gray normal-16-font">관심 0</p>
+                                <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
+                                <p class="interest-icon tc-light-gray normal-16-font">관심 0</p>
                               </div>
                               <div>
-                                  <h5 class="text-start mt-3 tc-primary">희망가에 경매하시겠습니까?</h5>
-                                  <div class="input-container mt-4">
-                                    <input type="text" class="styled-input" placeholder="0" v-model="amount" :readonly="auctionDetail.data.hope_price !== null">
-                                  </div>
-                                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ amtComma(amount) }}</p>
-                                  <p class="text-start tc-red mb-2">※ 희망가에 경매 시 즉시 낙찰이 가능합니다.</p>
-                                  <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
+                                <h5 class="text-start mt-3 tc-primary">희망가에 경매하시겠습니까?</h5>
+                                <div class="input-container mt-4">
+                                  <input type="text" class="styled-input" placeholder="0" v-model="amount" :readonly="auctionDetail.data.hope_price !== null">
+                                </div>
+                                <p class="d-flex justify-content-end tc-light-gray p-2">{{ amtComma(amount) }}</p>
+                                <p class="text-start tc-red mb-2">※ 희망가에 경매 시 즉시 낙찰이 가능합니다.</p>
+                                <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
                               </div>
+                            </BottomSheet02>
                           </div>
-                          <div v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price ==null" @click.stop="">
-                              <div class="steps-container">
-                                  <div class="step completed">
-                                      <div class="label completed">STEP01</div>
-                                      <div class="label label-style tc-light-gray">매물 준비</div>
-                                  </div>
-                                  <div class="line completed"></div>
-                                  <div class="step completing">
-                                      <div class="label completed">STEP02</div>
-                                      <div class="label label-style tc-light-gray completing-text">경매</div>
-                                  </div>
-                                  <div class="line"></div>
-                                  <div class="step">
-                                      <div class="label">STEP03</div>
-                                      <div class="label label-style02 tc-light-gray">완료</div>
-                                  </div>
-                              </div>
-                              <p class="auction-deadline text-center">경매를 시작합니다.</p>
-                              <p class="tc-red mt-2">경매 마감까지 {{ timeLeft.days }}일 {{ timeLeft.hours }}시간 {{ timeLeft.minutes }}분 {{ timeLeft.seconds }}초  남음</p>
+
+                          <BottomSheet02 v-if=" auctionDetail.data.status === 'ing'">
+                            <div v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null" @click.stop="">
                               <div class="mt-3 d-flex justify-content-end gap-3">
-                                  <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
-                                  <p class="interest-icon tc-light-gray normal-16-font">관심 0</p>
+                                <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
+                                <p class="interest-icon tc-light-gray normal-16-font">관심 0</p>
                               </div>
                               <div>
-                                  <h5 class="text-start mt-3">나의 입찰 금액을 입력해주세요</h5>
-                                  <div class="input-container mt-4">
-                                      <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
-                                  </div>
-                                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
-                                  <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
+                                <h5 class="text-start mt-3">나의 입찰 금액을 입력해주세요</h5>
+                                <div class="input-container mt-4">
+                                  <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
+                                </div>
+                                <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
+                                <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
                               </div>
-                          </div>
-                          <div v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
-                                  <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
-                                  <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
-                                  </div>
-                          ----------------- [딜러] - 입찰 완료후 바텀 메뉴 -------------------->
-                           <!-- <div class="p-4" v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id))&& auctionDetail.data.hope_price == null" @click.stop="">
+                            </div>
+
+                            <div v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
+                              <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
+                              <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
+                            </div>
+
+                            <div class="p-4" v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price == null" @click.stop="">
                               <h5 class="mx-3 text-center">{{ minutesLeft }}</h5>
                               <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ amtComma(myBidPrice) }}</span></p>
                               <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 0 명</h5>
-                              <button
-                                type="button"
-                                class="my-3 w-100 btn"
-                                :class="{'btn-outline-primary': auctionDetail.data.hope_price === null, 'primary-disable': auctionDetail.data.hope_price !== null}"
-                                @click="handleCancelBid">
+                              <button type="button" class="my-3 w-100 btn" :class="{'btn-outline-primary': auctionDetail.data.hope_price === null, 'primary-disable': auctionDetail.data.hope_price !== null}" @click="handleCancelBid">
                                 입찰 취소
                               </button>
-
-                                수수료 보증금이 부족할때 나오는 메뉴
-                                  <div class="bottom-message">
-                                      성사수수료 보즘금이 부족해요
-                                  </div>-->
-                       <!--     </div>
-                          <div v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
-                                  <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
-                                  <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
-                                  </div>
-                          
-                                  <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
-                         
+                              <div class="bottom-message">성사수수료 보즘금이 부족해요</div>
                             </div>
-                            ----------------- [딜러] - 입찰 완료후 바텀 메뉴 -------------------->
-                          <!--    <div v-if="isDealer && auctionDetail.data.status === 'ing' && (succesbid || succesbidhope || auctionDetail.data.bids.some(bid => bid.user_id === user.id))&& auctionDetail.data.hope_price !== null" @click.stop="">
-                                <h5 class="mx-3 text-center">{{ minutesLeft }}</h5>
-                                <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ amtComma(myBidPrice) }}</span></p>
-                                <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 0 명</h5>
-                                  수수료 보증금이 부족할때 나오는 메뉴
-                                    <div class="bottom-message">
-                                        성사수수료 보즘금이 부족해요
-                                    </div>-->
-                                    <!--  <h5 class="text-center mt-5">희망가에 입찰 완료 되었습니다.</h5>
-                                    <p class="text-center tc-red mb-2">※ 희망가에 입찰이 완료되었습니다. 수정이 불가능합니다.</p>
-                                    <button
-                                type="button"
-                                class="my-3 w-100 btn"
-                                :class="{'btn-outline-primary': auctionDetail.data.hope_price === null, 'primary-disable': auctionDetail.data.hope_price !== null}"
-                                @click.prevent="openAlarmGuidModal">
+
+                            <div v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
+                              <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
+                              <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
+                            </div>
+
+                            <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
+
+                            <div v-if="isDealer && auctionDetail.data.status === 'ing' && (succesbid || succesbidhope || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price !== null" @click.stop="">
+                              <h5 class="mx-3 text-center">{{ minutesLeft }}</h5>
+                              <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ amtComma(myBidPrice) }}</span></p>
+                              <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 0 명</h5>
+                              <div class="bottom-message">성사수수료 보즘금이 부족해요</div>
+                              <h5 class="text-center mt-5">희망가에 입찰 완료 되었습니다.</h5>
+                              <p class="text-center tc-red mb-2">※ 희망가에 입찰이 완료되었습니다. 수정이 불가능합니다.</p>
+                              <button type="button" class="my-3 w-100 btn" :class="{'btn-outline-primary': auctionDetail.data.hope_price === null, 'primary-disable': auctionDetail.data.hope_price !== null}" @click.prevent="openAlarmGuidModal">
                                 입찰 취소
                               </button>
                             </div>
-                         
-                              <AlarmGuidModal ref="alarmGuidModal" />
-                       
-                      </div>
-                  </bottom-sheet> -->
-        </div>
-          </div>
-    
-      <div class="container" v-if="isUser && auctionDetail.data.status === 'wait'">
-          <div class="wd-100 bid-content p-4">
-              <div class="d-flex justify-content-between">
-                  <p class="bold-20-font">현재 6명이 입찰했어요.</p>
-                  <p class="mt-1"><span class="cancelbox">경매취소</span></p>
-              </div>
-          </div>
-          <div class="container p-3 mt-3">
-              <h5>딜러 선택하기</h5>
-              <p class="tc-light-gray">입찰 금액이 가장 높은 순으로 5명까지만 표시돼요.</p>
-              <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
-          </div>
-          <div class="bid-bc p-2">
-              <ul  v-for="(bid, index) in sortedTopBids" :key="bid.user_id" class="px-0 inspector_list max_width_900">
-                <li @click="handleClick(bid, $event, index+1)">
-                      <div class="d-flex gap-4 align-items-center justify-content-between">
-                          <div class="img_box">
-                              <img src="../../../../img/myprofile_ex.png" alt="딜러 사진" class="mb-2 align-text-top">
-                          </div>
-                          <div class="txt_box me-auto">
-                              <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
-                              <p class="txt">{{bid.price}} 만원</p>
-                          </div>
-                          <p class="restar mb-4 normal-16-font me-auto">4.5점</p>
-                          <p class="btn-apply-ty03"></p>
-                      </div>
-                  </li>
-              </ul>
-          </div>
-          <ConnectDealerModal v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
-          <BottomSheet02 v-if="!showReauctionView" initial="half" :dismissable="true">
-            <button type="button" class="btn btn-dark" @click="toggleView">재경매</button>
-        </BottomSheet02> 
-      </div>
-      <!-- 재경매 버튼 눌렀을 때 view -->
-      <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView" class="p-0 filter-content ">
-        <div>
-        <button type="button" class="mb-1 btn-close" @click="backView"></button>
-              <h5 class="my-4">재경매할 금액을<br>입력해 주세요.</h5>
 
-            <div>
-                  <!--<ul class="machine-inform">
-                      <li class="tc-light-gray">현재 시세</li>
-                      <li class="sub-title">{{ carDetails.priceNow }}</li>
-                  </ul>
-                  <ul class="machine-inform">
-                      <li class="tc-light-gray">입찰가</li>
-                      <li class="sub-title">입찰가(데모)</li>
-                  </ul>-->
-                <div v-if="auctionDetail.data.hope_price != null" class="form-group dealer-check mt-0 mb-0">
-                    <label for="sell">희망가 수정
-                        <span class="tooltip-toggle normal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
-                    </label>
-                    <div class="check_box">
-                        <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
-                        <label for="sell">희망가 판매</label>
-                    </div>
-                </div>
+                            <AlarmGuidModal ref="alarmGuidModal" />
+                          </BottomSheet02>
+                        </div>
 
-                <div v-else class="form-group dealer-check mt-0 mb-0">
-                    <label for="sell">희망가로 판매할까요?
-                        <span class="tooltip-toggle normal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
-                    </label>
-                    <div class="check_box">
-                        <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
-                        <label for="sell">희망가 판매</label>
-                    </div>
-                </div>
-            </div>
-              <div class="input-container mt-4">
-                  <input type="text" class="styled-input" placeholder="희망가 입력(선택)" v-model="amount" @input="updateKoreanAmount" :readonly="isReadonly">
-              </div>
-              <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
-              <div class="btn-group mt-3 mb-2">
-                  <button type="button" class="btn btn-primary" @click="reauction">재경매</button>
-                      <modal v-if="reauctionModal" :isVisible="reauctionModal" />
-              </div>
-          </div>
-        </BottomSheet03> 
-      </div>
+                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait'">
+                          <div class="wd-100 bid-content p-4">
+                            <div class="d-flex justify-content-between">
+                              <p class="bold-20-font">현재 6명이 입찰했어요.</p>
+                              <p class="mt-1" @click="openModal"><span class="cancelbox">경매취소</span></p>
+                            </div>
+                          </div>
+                          <div class="container p-3 mt-3">
+                          <h5>딜러 선택하기</h5>
+                          <p class="tc-light-gray">입찰 금액이 가장 높은 순으로 5명까지만 표시돼요.</p>
+                          <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
+                        </div>
+                        <div class="bid-bc p-2">
+                          <ul v-for="(bid, index) in sortedTopBids" :key="bid.user_id" class="px-0 inspector_list max_width_900">
+                            <li @click="handleClick(bid, $event, index+1)">
+                              <div class="d-flex gap-4 align-items-center justify-content-between">
+                                <div class="img_box">
+                                  <img src="../../../../img/myprofile_ex.png" alt="딜러 사진" class="mb-2 align-text-top">
+                                </div>
+                                <div class="txt_box me-auto">
+                                  <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
+                                  <p class="txt">{{bid.price}} 만원</p>
+                                </div>
+                                <p class="restar mb-4 normal-16-font me-auto">4.5점</p>
+                                <p class="btn-apply-ty03"></p>
+                              </div>
+                            </li>
+                          </ul>
+                          <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
+                        </div>
+                        <ConnectDealerModal v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
+                        <BottomSheet02 v-if="!showReauctionView" initial="half" :dismissable="true">
+                          <button type="button" class="btn btn-dark" @click="toggleView">재경매</button>
+                        </BottomSheet02>
+                      </div>
+
+                    <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView" class="p-0 filter-content">
+                      <div class="p-4">
+                        <button type="button" class="mb-1 btn-close" @click="backView"></button>
+                        <h5 class="my-4 mb-5">재경매할 금액을<br>입력해 주세요.</h5>
+                        <div>
+                          <div v-if="auctionDetail.data.hope_price != null" class="form-group dealer-check mt-0 mb-0">
+                            <label for="sell">희망가 수정
+                              <span class="tooltip-toggle normal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
+                            </label>
+                            <div class="check_box">
+                              <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
+                              <label for="sell">희망가 판매</label>
+                            </div>
+                          </div>
+                          <div v-else class="form-group dealer-check mt-0 mb-5">
+                            <label for="sell">희망가로 판매할까요?
+                              <span class="tooltip-toggle normal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
+                            </label>
+                            <div class="check_box">
+                              <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
+                              <label for="sell">희망가 판매</label>
+                            </div>
+                          </div>
+                        </div>
+                        <div class="input-container mt-4">
+                          <input type="text" class="styled-input" placeholder="희망가 입력(선택)" v-model="amount" @input="updateKoreanAmount" :readonly="isReadonly">
+                        </div>
+                        <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
+                        <div class="btn-group mt-3 mb-2">
+                          <button type="button" class="btn btn-primary" @click="reauction">재경매</button>
+                          <modal v-if="reauctionModal" :isVisible="reauctionModal" />
+                        </div>
+                      </div>
+                    </BottomSheet03>
+                  </div>
 </template>
+
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
