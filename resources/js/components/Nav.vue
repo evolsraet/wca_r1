@@ -282,7 +282,7 @@
                             <li class="nav-item my-member ms-auto">
                                 <a class="tc-wh p-1 pb-0 mx-2" href="#">{{ user.name }} 님</a>
                             </li>
-                            <li><a class="mx-3 nav-link tc-wh logout" href="/login" @click="logout">로그아웃</a></li>
+                            <li><a class="mx-3 nav-link tc-light-gray logout" href="/login" @click="logout">로그아웃</a></li>
                         </template>
                     <!-- 게스트 일때 -->
                     <template v-else-if="!user?.name">
