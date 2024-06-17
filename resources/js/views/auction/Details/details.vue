@@ -584,7 +584,7 @@
                             </BottomSheet02>
                             </div>
 
-                          <div v-if="!succesbidhope && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price !== null" @click.stop="">
+                  <!--       <div v-if="!succesbidhope && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price !== null" @click.stop="">
                             <BottomSheet02>
                               <p class="auction-deadline text-center">희망가 재경매를 시작합니다.</p>
                               <p class="tc-red mt-2">경매 마감까지 {{ timeLeft.days }}일 {{ timeLeft.hours }}시간 {{ timeLeft.minutes }}분 {{ timeLeft.seconds }}초 남음</p>
@@ -602,46 +602,57 @@
                                 <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
                               </div>
                             </BottomSheet02>
-                          </div>
+                          </div>-->
 
-                          <BottomSheet02 v-if=" auctionDetail.data.status === 'ing'">
-                            <div v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null" @click.stop="">
-                              <div class="mt-3 d-flex justify-content-end gap-3">
-                                <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
-                                <p class="interest-icon tc-light-gray normal-16-font">관심 0</p>
-                              </div>
+                          <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
+                            <div  @click.stop="">
+                              <p class="text-center tc-red my-2">현재 {{ auctionDetail.data.bids.length }}명이 입찰했어요.</p>
+                              <button type="button" class="btn btn-primary w-100 align-items-center d-flex justify-content-center gap-3" @click="showbidView">입찰하기<p class="icon-up-wh"></p></button>
+                            </div>
+                          </BottomSheet02>
+                          <BottomSheet03 initial="half" :dismissable="true"  v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && bidSession">
+                            <div @click.stop="">
+                              <div class="d-flex justify-content-between">
+                                  <button type="button" class="mb-1 btn-close" @click="backView"></button>
+                                  <div class="mt-3 d-flex justify-content-end gap-3">
+                                    <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
+                                    <p class="interest-icon tc-light-gray normal-16-font">관심 0</p>
+                                  </div>
+                                </div>
                               <div>
-                                <h5 class="text-start mt-3">나의 입찰 금액을 입력해주세요</h5>
-                                <div class="input-container mt-4">
+                                <h5 class="text-start process my-4">입찰 금액을 <br> 입력해주세요</h5>
+                                <div class="input-container mt-5">
                                   <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
                                 </div>
                                 <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
-                                <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
+                                <button type="button" class="tc-wh btn btn-primary w-100 my-4" @click="submitAuctionBid">입찰 완료</button>
                               </div>
                             </div>
-
-                            <div v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
+                          </BottomSheet03>
+                          <BottomSheet initial="half" v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
+                            <div>
                               <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
                               <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
                             </div>
-
+            
                             <div class="p-4" v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price == null" @click.stop="">
                               <h5 class="mx-3 text-center">{{ minutesLeft }}</h5>
                               <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ amtComma(myBidPrice) }}</span></p>
                               <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 0 명</h5>
                               <button type="button" class="my-3 w-100 btn" :class="{'btn-outline-primary': auctionDetail.data.hope_price === null, 'primary-disable': auctionDetail.data.hope_price !== null}" @click="handleCancelBid">
-                                입찰 취소
+                                입찰 취소하기
                               </button>
                               <div class="bottom-message">성사수수료 보즘금이 부족해요</div>
                             </div>
-
+                            
                             <div v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
                               <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
                               <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
                             </div>
-
+                          </BottomSheet>
+                            
                             <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
-
+                            
                             <div v-if="isDealer && auctionDetail.data.status === 'ing' && (succesbid || succesbidhope || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price !== null" @click.stop="">
                               <h5 class="mx-3 text-center">{{ minutesLeft }}</h5>
                               <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ amtComma(myBidPrice) }}</span></p>
@@ -650,12 +661,11 @@
                               <h5 class="text-center mt-5">희망가에 입찰 완료 되었습니다.</h5>
                               <p class="text-center tc-red mb-2">※ 희망가에 입찰이 완료되었습니다. 수정이 불가능합니다.</p>
                               <button type="button" class="my-3 w-100 btn" :class="{'btn-outline-primary': auctionDetail.data.hope_price === null, 'primary-disable': auctionDetail.data.hope_price !== null}" @click.prevent="openAlarmGuidModal">
-                                입찰 취소
+                                입찰 취소하기
                               </button>
                             </div>
-
                             <AlarmGuidModal ref="alarmGuidModal" />
-                          </BottomSheet02>
+                            
                         </div>
 
                         <div class="container" v-if="isUser && auctionDetail.data.status === 'wait'">
@@ -694,9 +704,9 @@
                         </BottomSheet02>
                       </div>
 
-                    <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView" class="p-0 filter-content">
-                      <div class="p-4">
-                        <button type="button" class="mb-1 btn-close" @click="backView"></button>
+                    <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView &&isUser" class="p-0 filter-content">
+                      <div>
+                        <button type="button" class="mb-1 btn-close" @click="DealerbackView"></button>
                         <h5 class="my-4 mb-5">재경매할 금액을<br>입력해 주세요.</h5>
                         <div>
                           <div v-if="auctionDetail.data.hope_price != null" class="form-group dealer-check mt-0 mb-0">
@@ -724,10 +734,10 @@
                         <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
                         <div class="btn-group mt-3 mb-2">
                           <button type="button" class="btn btn-primary" @click="reauction">재경매</button>
-                          <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                         </div>
                       </div>
                     </BottomSheet03>
+                    <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                   </div>
 </template>
 <script setup>
@@ -763,6 +773,7 @@ const isClaimModalOpen = ref(false);
 const lastBidId = ref(null);
 const usersInfo = ref({});
 const alarmModal = ref(null);
+const bidSession =ref(false);
 const alarmGuidModal = ref(null);
 const isSellChecked = ref(false);
 const { getUser } = useUsers();
@@ -979,11 +990,16 @@ const toggleView = () => {
   showReauctionView.value = true;
   console.log(showReauctionView.value);
 };
+const showbidView = () =>{
+  bidSession.value=true;
+}
 const backView = () => {
   showReauctionView.value = false;
   console.log(showReauctionView.value);
 };
-
+const DealerbackView = () =>{
+  bidSession.value = false;
+}
 
 // 사용자 정보를 가져오는 함수
 const getDealer = async (user_Id) => {

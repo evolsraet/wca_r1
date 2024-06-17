@@ -2,7 +2,7 @@
   <!-- 끌어올리기 내리기 불가능한 모달 bottom-sheet -->
   <div class="sheet-wrap">
     <div ref="overlay" class="overlay" v-if="showBottomSheet" @click="closeSheet"></div>
-    <div ref="sheet" class="sheet" :class="{ 'half': showBottomSheet }">
+    <div ref="sheet" class="sheet" :class="{ 'half': showBottomSheet, 'animate-slide-up': showBottomSheet }">
       <header class="handle-head">
       </header>
       <div class="p-3" ref="content" :class="{ 'no-scroll': showHead }" @mousedown.stop @touchstart.stop>
@@ -11,6 +11,7 @@
     </div>
   </div>
 </template>
+
 
 <script>
 export default {
@@ -23,7 +24,7 @@ export default {
     return {
       showHead: false,
       showBottomSheet: false,
-      sheetHeight: 20 
+      sheetHeight: 10 
     };
   },
   methods: {
@@ -33,25 +34,30 @@ export default {
       } else {
         this.showBottomSheet = true;
         this.showHead = false;
-        this.sheetHeight = window.innerHeight * 0.5;
+        this.sheetHeight = window.innerHeight * 0.4;
         this.$refs.sheet.style.height = `${this.sheetHeight}px`;
       }
     },
+    closeSheet() {
+      this.showBottomSheet = false;
+      this.sheetHeight = 10;
+      this.$refs.sheet.style.height = `${this.sheetHeight}px`;
+    }
   },
   mounted() {
     if (this.initial === 'half') {
       this.showBottomSheet = true;
-      this.sheetHeight = window.innerHeight * 0.5;
+      this.sheetHeight = window.innerHeight * 0.4;
       this.$refs.sheet.style.height = `${this.sheetHeight}px`;
     } else {
       this.showHead = true;
-      this.sheetHeight = 20;
+      this.sheetHeight = 10;
       this.$refs.sheet.style.height = `${this.sheetHeight}px`;
     }
   }
 };
-
 </script>
+
 <style scoped>
 .sheet-wrap {
   position: fixed;
@@ -82,10 +88,11 @@ export default {
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
   box-shadow: 0 -2px 11px rgba(0, 0, 0, 0.1), 0 -2px 7px rgba(0, 0, 0, 0.08);
-  max-height: 100vh;
+  max-height: 80vh;
   transition: height 0.3s ease;
   overflow: hidden;
   z-index: 2; 
+  transform: translateY(100%);
 }
 
 .sheet.head {
@@ -93,7 +100,20 @@ export default {
 }
 
 .sheet.half {
-  height: 50vh;
+  height: 40vh;
+}
+
+.sheet.animate-slide-up {
+  animation: slide-up 0.3s ease-out forwards;
+}
+
+@keyframes slide-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 .handle {
