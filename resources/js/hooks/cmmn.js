@@ -220,7 +220,6 @@ export function cmmn() {
                         if(urlParams) urlParams += '&';
                         urlParams += 'doesnthave='+urlParamsWith;
                     }
-                    
                 } else if(isPost) {
                     urlParams = input._param;
                 } else if(isPut) {
@@ -264,8 +263,306 @@ export function cmmn() {
         }
         return returnData;
     }
-    //End of callApi
     
+    
+    /***
+    
+        return wicac.conn()
+        .url(`/api/reviews/${id}`)
+        .param({
+            'id' : 1
+        }) 
+        .where([
+            'w1=1',
+            'w2=1',
+        ])
+        .with([
+            'auction',
+            'dealer',
+        ]) 
+        .doesnthave([
+            'd1=1',
+            'd2=2',
+        ])
+        .order([
+            ['auction','asc'],
+            ['auction','desc']
+        ])
+        .page(10)
+        .callback(function(result) {
+            console.log('wicac.conn callback ' , result);
+            return result.data;ㅠㅜ
+        })
+        .get();
+        .post();
+        .put();
+        .delete();
+
+     */
+    const wicac = {
+        _input : null,
+        _callback : null,
+        _isReturn : false,
+        conn : function() {
+            let newObj = Object.create(this);
+            newObj._input = {
+                _url : null,
+                _param : null,
+                _where : null,
+                _with : null,
+                _doesnthave : null,
+                _order : null,
+                _page : 1,
+                _isUrl : false,
+                _isParam : false,
+                _isWhere : false,
+                _isWith : false,
+                _isDoesnthave : false,
+                _isOrder : false,
+                _isPage : false,
+                _isPost : false,
+                _isGet : false,
+                _isPut : false,
+                _isDelete : false,
+                _rstData : {
+                    isError : false,
+                    isSuccess : false,
+                    isAlert : false,
+                    data : null,
+                    msg : '',
+                    status : 200,
+                    rawData : null,
+                },
+            };
+            return newObj;
+        },
+        url : function(input) {
+            let _this = this;
+            _this._input._url = input;
+            if(input) {
+                _this._input._isUrl = true;
+            }
+            return _this;
+        },
+        param : function(input) {
+            let _this = this;
+            _this._input._param = input;
+            if(input) {
+                _this._input._isParam = true;
+            }
+            return _this;
+        },
+        where : function(input) {
+            let _this = this;
+            _this._input._where = input;
+            if(input && input != null && input.length) {
+                _this._input._isWhere = true;
+            }
+            return _this;
+        },
+        with : function(input) {
+            let _this = this;
+            _this._input._with = input;
+            if(input) {
+                _this._input._isWith = true;
+            }
+            return _this;
+        },
+        doesnthave : function(input) {
+            let _this = this;
+            _this._input._doesnthave = input;
+            if(input) {
+                _this._input._isDoesnthave = true;
+            }
+            return _this;
+        },
+        order : function(input) {
+            let _this = this;
+            _this._input._order = input;
+            if(input) {
+                _this._input._isOrder = true;
+            }
+            return _this;
+        },
+        page : function(input) {
+            let _this = this;
+            _this._input._page = input;
+            if(input) {
+                _this._input._isPage = true;
+            }
+            return _this;
+        },        
+        get : function() {
+            let _this = this;
+            _this._input._isGet = true;
+            return this.call().then(result => {
+                if(_this._isReturn) {
+                    return _this._callback(result);
+                }
+                return result;
+            });
+        },
+        post : function() {
+            let _this = this;
+            _this._input._isPost = true;
+            return this.call().then(result => {
+                if(_this._isReturn) {
+                    return _this._callback(result);
+                }
+                return result;
+            });
+        },
+        put : function() {
+            let _this = this;
+            _this._input._isPut = true;
+            return this.call().then(result => {
+                if(_this._isReturn) {
+                    return _this._callback(result);
+                }
+                return result;
+            });
+        },
+        delete : function() {
+            let _this = this;
+            _this._input._isDelete = true;
+            return this.call().then(result => {
+                if(_this._isReturn) {
+                    return _this._callback(result);
+                }
+                return result;
+            });
+        },
+        parseParam : function(_input,urlParams) {
+            if(_input._isWhere) {
+                let urlParamsWhere = '';
+                _input._where.forEach(function(item){
+                    if(urlParamsWhere) urlParamsWhere += '|';
+                    urlParamsWhere += item;
+                });
+                if(urlParams) urlParams += '&';
+                urlParams += 'where='+urlParamsWhere;
+            }
+            if(_input._isWith) {
+                let urlParamsWith = '';
+                _input._with.forEach(function(item){
+                    if(urlParamsWith) urlParamsWith += ',';
+                    urlParamsWith += item;
+                });
+                if(urlParams) urlParams += '&';
+                urlParams += 'with='+urlParamsWith;
+            }
+            if(_input._isPage) {
+                if(urlParams) urlParams += '&';
+                urlParams += 'page='+_input._page;    
+            }
+            if(_input._isDoesnthave){
+                let urlParamsDoesnthave = '';
+                _input._doesnthave.forEach(function(item){
+                    if(urlParamsDoesnthave) urlParamsDoesnthave += ',';
+                    urlParamsDoesnthave += item;
+                });
+                if(urlParams) urlParams += '&';
+                urlParams += 'doesnthave='+urlParamsDoesnthave;
+            }
+            if(_input._isOrder){
+                let urlParamsOrder1 = '';
+                let urlParamsOrder2 = '';
+                _input._order.forEach(function(item){
+                    if(urlParamsOrder1) urlParamsOrder1 += ',';
+                    if(urlParamsOrder2) urlParamsOrder2 += ',';
+                    urlParamsOrder1 += item[0];
+                    urlParamsOrder2 += item[1];
+                });
+                if(urlParams) urlParams += '&';
+                urlParams += 'order_column='+urlParamsOrder1+'&order_direction='+urlParamsOrder2;
+            }
+            if(urlParams) urlParams = '?' + urlParams;
+            return urlParams;
+        },
+        call : async function() {
+            let _this = this;
+            let _input = _this._input;
+            if(!_input._isUrl) {
+                _input._rstData.isError = true;
+                _input._rstData.msg = 'not exist _url';
+                return _input._rstData;
+            }
+            if(_input._isGet) {
+                let urlParams = '';
+                if(_input._isParam) {
+                    let urlParamsData = '';
+                    Object.keys(_input._param).forEach(function(key) {
+                        if(urlParamsData) urlParamsData += '&';
+                        urlParamsData += key +'='+ _input._param[key];
+                    });
+                    urlParams += urlParamsData;
+                }
+                urlParams = this.parseParam(_input, urlParams);
+                console.log('cmmn wicac GET [ ' + _this._input._url+urlParams + ' ]');
+                await axios.get(_this._input._url+urlParams).then(response => {      
+                    _input._rstData = parseApiCompleted(_input._rstData,response);                                 
+                })
+                .catch(error => {            
+                    _input._rstData = parseApiError(_input._rstData,error);                    
+                });
+                return _input._rstData;
+            } else if(_input._isPost) {
+                let urlParamsData = '';
+                if(_input._isParam) {
+                    urlParamsData = _input._param;
+                }
+                let urlParams = '';
+                urlParams = this.parseParam(_input, urlParams);
+                console.log('cmmn wicac POST [ ' + _this._input._url+urlParams +' ]', urlParamsData);
+                await axios.post(_this._input._url+urlParams,urlParamsData).then(response => {            
+                    _input._rstData = parseApiCompleted(_input._rstData,response);
+                })
+                .catch(error => {            
+                    _input._rstData = parseApiError(_input._rstData,error);
+                });  
+                return _input._rstData;              
+            } else if(_input._isPut) {
+                let urlParamsData = '';
+                if(_input._isParam) {
+                    urlParamsData = _input._param;
+                }
+                let urlParams = '';
+                urlParams = this.parseParam(_input, urlParams);
+                console.log('cmmn wicac PUT [ ' + _this._input._url+urlParams +' ]', urlParamsData);
+                await axios.put(_this._input._url+urlParams,urlParamsData).then(response => {            
+                    _input._rstData = parseApiCompleted(_input._rstData,response);
+                })
+                .catch(error => {            
+                    _input._rstData = parseApiError(_input._rstData,error);
+                });
+                return _input._rstData;
+            } else if(_input._isDelete) {
+                let urlParamsData = '';
+                if(_input._isParam) {
+                    urlParamsData = _input._param;
+                }
+                urlParams = this.parseParam(_input, urlParams);
+                console.log('cmmn wicac DELETE [ ' + _this._input._url+urlParams +' ]', urlParamsData);
+                await axios.delete(_this._input._url+urlParams,urlParamsData).then(response => {            
+                    _input._rstData = parseApiCompleted(_input._rstData,response);
+                })
+                .catch(error => {            
+                    _input._rstData = parseApiError(_input._rstData,error);
+                });
+                return _input._rstData;
+            }            
+        },
+        callback : function(input) {
+            let _this = this;
+            _this._callback = input;
+            if(input) {
+                _this._isReturn = true;
+            }
+            return _this;
+        }    
+    }
+    //End of callApi
+
     function splitDate (date){
         return date.split(' ')[0];
     }
@@ -784,5 +1081,6 @@ export function cmmn() {
       formatDateAndTime,
       salert,
       wica,
+      wicac
     }
   }
