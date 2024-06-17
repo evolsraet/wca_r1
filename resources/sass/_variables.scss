@@ -53,7 +53,10 @@ h5{
 .custom-highlight {
     background: linear-gradient(transparent 50%, rgba($primary, 0.1) 40%);
 }
-
+/* 딜러 메인 컬러*/
+.primary-background{
+    background-color: rgba($primary, 0.020);
+}
 /* 버튼 스타일 */
 .primary-btn {
     width: 100%;
@@ -308,14 +311,14 @@ h5{
 .no-bidding{
     color: #fff;
     height: 30px;
-    padding: 4px 14px;
+    padding: 4px 15px;
     border-radius: 6px;
     background-color: #aaaebe;
 }
 .bidding{
     color: #fff;
     height: 30px;
-    padding: 4px 14px;
+    padding: 4px 15px;
     border-radius: 6px;
     background-color: $primary;
 }

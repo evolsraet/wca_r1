@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
-                      <!-- <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>--> 
+                        <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
                         <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
                     <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                     <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
-                       <!-- <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>-->
+                       <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
                         <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
                     <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
@@ -265,22 +265,25 @@
                 </div>
             <!-- web nav bar -->
             <div class="collapse navbar-collapse">
-                <ul class="navbar-nav mt-2 mt-lg-0 gap-1 ms-auto">
-                 <!-- 사용자 일때 -->
-                 <template v-if="isUser">
-                        <li class="nav-item">
-                            <router-link to="/" class="nav-link" aria-current="page">내차조회</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link :to="{ name: 'auction.index'}" class="nav-link" aria-current="page">내 매물관리</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link :to="{ name: 'user.review'}" class="nav-link">이용후기</router-link>
-                        </li>
-                        <li class="my-member">
-                            <img src="../../img/myprofile_ex.png" class="nav-profile" alt="Profile Image"><a class="nav-link" href="#">{{ user.name }}</a>
-                        </li>
-                    </template>
+                    <ul class="mov-navbar navbar-nav mt-2 mt-lg-0 w-100 d-flex align-items-center">
+                        <!-- 사용자 일때 -->
+                        <template v-if="isUser">
+                            <div class="d-flex">
+                                <li class="nav-item">
+                                    <router-link to="/" class="nav-link" aria-current="page">내차조회</router-link>
+                                </li>
+                                <li class="nav-item">
+                                    <router-link :to="{ name: 'auction.index'}" class="nav-link" aria-current="page">내 매물관리</router-link>
+                                </li>
+                                <li class="nav-item">
+                                    <router-link :to="{ name: 'user.review'}" class="nav-link">이용후기</router-link>
+                                </li>
+                            </div>
+                            <li class="nav-item my-member ms-auto">
+                                <a class="tc-wh p-1 pb-0 mx-2" href="#">{{ user.name }} 님</a>
+                            </li>
+                            <li><a class="mx-3 nav-link tc-light-gray logout" href="/login" @click="logout">로그아웃</a></li>
+                        </template>
                     <!-- 게스트 일때 -->
                     <template v-else-if="!user?.name">
                         <li class="nav-item">
@@ -321,9 +324,9 @@
                         </li>
                     </template>
                     <!-- 로그인 시 -->
-                    <ul v-if="user?.name" class="navbar-nav mt-lg-0 ms-auto">
+                <!--    <ul v-if="user?.name" class="navbar-nav mt-lg-0 ms-auto">
                         <li><a class="nav-link tc-light-gray logout" href="/login" @click="logout">로그아웃</a></li>
-                    </ul>
+                    </ul>-->
                 </ul>
             </div>
             <a class="navbar-toggler p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -630,7 +633,7 @@ a.navbar-toggler.p-2 {
     a.navbar-toggler.p-2 {
         display: block !important;
     }
-    ul.navbar-nav.mt-2.mt-lg-0.gap-1.ms-auto {
+   .mov-navbar {
         display: none !important;
     }
 }

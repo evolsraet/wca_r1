@@ -2,17 +2,14 @@
     TODO: 조회시 조회수 2,3개 올라가는 문제 onmount문제? 같음
 -->
 <template>
-    <div class="container my-4">
+    <div>
         <div class="regiest-content">
             <div class="layout-container02">
                 <!-- 딜러 프로필 요약 정보 -->
-                <div class="banner-top">
-                    <div class="top-info">
-                        현재 진행중인 경매<p class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</p> 건
-                    </div>
-                    <div class="styled-div">
+                <div class="banner-top primary-background">
+                    <div>
                         <div class="profile dealer-mp">
-                            <div class="dealer-info">
+                           <!-- <div class="dealer-info">
                                 <img src="../../../img/myprofile_ex.png" alt="Profile Image" class="main-profile">
                                 <div class="deal-info">
                                     <p class="tc-light-gray">{{ user.dealer.company }}</p>
@@ -23,19 +20,23 @@
                                         <p v-else-if="user.status === 'ok'" class="bidding mt-3"><span>입찰 가능</span></p>
                                     </div>
                                 </div>
+                            </div>-->
+
+                        <div>
+                            <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span>건 있습니다</p>
+                            <div class="w-50">
+                                <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1"><span>입찰 불가</span></p>
+                                <p v-else-if="user.status === 'ok'" class="bidding mt-1 mb-1"><span>입찰 가능</span></p>
                             </div>
-                            <div class="footer mob-info">
-                                <p class="tc-light-gray mt-3 me-5">입찰가능 유효시간 2024.03.20</p>
-                            </div>
-                            <div class="auction-info">
-                                <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span>건 있습니다</p>
+                            <p class="tc-light-gray mb-3 mt-2">입찰가능 유효시간 2024.03.20</p>
+                        </div>
+                            <div>
                                 <div style="display: flex; align-items: flex-end;">
                                     <div class="car-image"></div>
-                                    <p class="tc-light-gray mb-3">입찰가능 유효시간 2024.03.20</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="slide-up-ani activity-info bold-18-font process">
+                        <div class="slide-up-ani activity-info bold-18-font process mb-0">
                             <router-link :to="{  name: 'auction.index' }" class="item">
                             <p><span class="tc-red slide-up mb-0" ref="item1">0</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
@@ -55,8 +56,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="content">
-                    <div class="enter-view text-start mb-2">
+                <div class="container content">
+                    <div class="container enter-view text-start mb-2">
                         <h3 class="review-title">공지사항</h3>
                         <router-link :to="{ name: 'index.notices' }" class="btn-apply mt-0">전체보기</router-link>
                     </div>
@@ -113,7 +114,7 @@
                 </div>-->
                 </div>
                 <div class="container my-4" :style="cardStyle" @click="toggleCard">
-                    <div class="card-body">
+                    <div class="container card-body">
                         <div class="enter-view mt-3">
                             <h5>낙찰 완료 차량</h5>
                             <router-link :to="{ name: 'dealer.bids' }" class="btn-apply">전체보기</router-link>

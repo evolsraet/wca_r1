@@ -445,7 +445,7 @@ onMounted(() => {
 @media (max-width: 991px) {
   .font-title {
     font-size: 1.8rem;
-    line-height: 2rem;
+    line-height: 2.8rem;
     -webkit-text-stroke: 0.01875rem currentcolor;
 }
         }
