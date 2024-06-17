@@ -287,19 +287,16 @@
                     <!-- 게스트 일때 -->
                     <template v-else-if="!user?.name">
                         <li class="nav-item">
-                            <router-link to="/" class="nav-link" aria-current="page">내차조회</router-link>
+                            <router-link to="/" class="nav-link mx-3" aria-current="page">내차조회</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'index.allreview'}" class="nav-link">이용후기</router-link>
+                            <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3">이용후기</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'index.introduce'}" class="nav-link" to="/register">서비스소개</router-link>
+                            <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register">서비스소개</router-link>
                         </li>
-                        <li class="nav-item">
-                            <router-link class="nav-link" to="/login">로그인</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link class="nav-link" to="/register">회원가입</router-link>
+                        <li class="nav-item my-member-guest ms-auto ">
+                            <img src="../../img/Icon-person.png" class="nav-profile-login" alt="LoginImg" height="25px" width="25px"><router-link class="nav-link me-0 tc-light-gray" to="/login">로그인</router-link>
                         </li>
                     </template>
                     <!-- 딜러 일때 -->

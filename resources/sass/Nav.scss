@@ -74,6 +74,16 @@
     height: 38px;
     background-color: darken($primary, 15%);
 }
+.my-member-guest{
+    display: flex;
+    border-radius: 12px;
+    justify-content: center;
+    align-items: center;
+    padding: 2px;
+    height: 45px;
+    margin-right: 0px !important;
+    background-color:#f7f8fb;
+}
 .menu-item {
     display: flex;
     align-items: center; 
@@ -212,6 +222,14 @@
     border-radius: 50%;
     object-fit: cover;
 }
+.nav-profile-login{
+    width: 28px;
+    height: auto;
+    margin-left: 5px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 .logout{
     font-size: 12px;
     margin-top: 5px;
