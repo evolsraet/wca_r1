@@ -265,7 +265,7 @@
                 </div>
             <!-- web nav bar -->
             <div class="collapse navbar-collapse">
-                    <ul class="mov-navbar navbar-nav mt-2 mt-lg-0 w-100 d-flex align-items-center">
+                    <ul class="mx-3 mov-navbar navbar-nav mt-2 mt-lg-0 w-100 d-flex align-items-center">
                         <!-- 사용자 일때 -->
                         <template v-if="isUser">
                             <div class="d-flex">
@@ -282,7 +282,7 @@
                             <li class="nav-item my-member ms-auto">
                                 <a class="tc-wh p-1 pb-0 mx-2" href="#">{{ user.name }} 님</a>
                             </li>
-                            <li><a class="mx-3 nav-link tc-light-gray logout" href="/login" @click="logout">로그아웃</a></li>
+                            <li><a class="mx-3 nav-link tc-wh logout" href="/login" @click="logout">로그아웃</a></li>
                         </template>
                     <!-- 게스트 일때 -->
                     <template v-else-if="!user?.name">
@@ -319,9 +319,10 @@
                         <li class="nav-item">
                             <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh">공지사항</router-link>
                         </li>
-                        <li class="my-member"  @click="redirectByName('dealer.profile')" >
-                            <img src="../../img/myprofile_ex.png" class="nav-profile" alt="Profile Image"><a :to="{ name: 'dealer.profile' }"  class="nav-link tc-wh" href="#">{{ user.name }}</a>
+                        <li class="nav-item my-member-dealer ms-auto"  @click="redirectByName('dealer.profile')" >
+                            <img src="../../img/myprofile_ex.png" class="nav-profile" alt="Profile Image"><a :to="{ name: 'dealer.profile' }"  class="tc-wh p-1 pb-0 mx-2 me-3" href="#">{{ user.name }}</a>
                         </li>
+                        <li><a class="mx-3 nav-link tc-wh logout" href="/login" @click="logout">로그아웃</a></li>
                     </template>
                     <!-- 로그인 시 -->
                 <!--    <ul v-if="user?.name" class="navbar-nav mt-lg-0 ms-auto">

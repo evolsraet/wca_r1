@@ -65,6 +65,15 @@
     background-color: $primary;
 
 }
+.my-member-dealer{
+    display: flex;
+    border-radius: 25px;
+    justify-content: center;
+    align-items: center;
+    padding: 0px;
+    height: 38px;
+    background-color: darken($primary, 15%);
+}
 .menu-item {
     display: flex;
     align-items: center; 
@@ -197,7 +206,7 @@
     z-index: 1020;
 }
 .nav-profile{
-    width: 30px;
+    width: 36px;
     height: auto;
     margin-left: 5px;
     border-radius: 50%;

@@ -23,7 +23,7 @@
           <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
         <h5 class="font-title">위카와 함께해요.</h5>
       </div>
-     <!--<p class="tc-light-gray font-sub-title">13,314명이 위카와 함께 했어요!</p>-->
+     <p class="tc-light-gray font-sub-title">13,314명이 위카와 함께 했어요!</p>
     </div>
   </div>
   </div>
@@ -399,9 +399,9 @@ onBeforeUnmount(() => {
 }
 .css-ifyyt1 {
   display: grid;
-  padding: 7rem 17px 9rem;
-  color: rgb(39, 46, 64);
-  align-content: space-evenly;
+    padding: 16rem 17px 5rem;
+    color: rgb(39, 46, 64);
+    align-content: space-evenly;
 }
 .css-kzs0t {
   transition: opacity 0.8s ease-in-out 0s, transform 0.8s ease-in-out 0s;
