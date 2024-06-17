@@ -61,6 +61,13 @@
                       <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                       <h5 v-if="auctionDetail.data.hope_price !== null"><span class="gray-box">재경매</span></h5>
                     </div>
+                    <div v-if="showNotification" class="container">
+                      <div class="notification-container show container">
+                        <router-link :to="{ name: 'index.claim' }" class="btn wait-selection shadow-sm d-flex align-items-center justify-content-between gap-5">
+                          클레임 신청<p class="icon-right-wh"></p>
+                        </router-link>
+                      </div>
+                    </div>
                     <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
                       <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
                       <MessageModal v-if="showMessage" :show="showMessage" message="진단평가가 완료되면 자동으로 경매가 진행돼요" :duration="3000" />
@@ -555,14 +562,6 @@
                      <!--  바텀 시트 show or black-->
                      <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
                         <div v-if="isDealer">
-                          <div v-if="auctionDetail.data.status === 'done' && isDealer">
-                              <div @click.stop="">
-                                <h5 class="text-center mt-4"> 불편 사항이 있으신가요?</h5>
-                                <router-link :to="{ name: 'index.claim' }" type="button" class="my-3 btn btn-outline-danger w-100">클레임 신청하기</router-link>
-                                <a href="#" class="d-flex justify-content-center tc-light-gray" @click.prevent="openClaimModal">클레임 규정 확인</a>
-                                <ClaimModal v-if="isClaimModalOpen" :isOpen="isClaimModalOpen" @close="closeClaimModal" />
-                              </div>
-                            </div>
                             <div v-if="auctionDetail.data.status === 'wait'" @click.stop="">
                               <BottomSheet02 >
                               <div class="steps-container mb-3">
@@ -731,7 +730,6 @@
                     </BottomSheet03>
                   </div>
 </template>
-
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -759,7 +757,7 @@ import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
 
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
 
-
+const showNotification = ref(false);
 const isMobileView = ref(window.innerWidth <= 640);
 const isClaimModalOpen = ref(false);
 const lastBidId = ref(null);
@@ -1268,6 +1266,7 @@ const startPolling = () => {
 let timer;
 const currentTime = ref(new Date());
 onMounted(async () => {
+
   timer = setInterval(() => {
     currentTime.value = new Date();
   }, 1000);
@@ -1279,7 +1278,7 @@ onMounted(async () => {
   };
   console.log("Component mounted, fetching auctions");
   await getAuctions();
-  await fetchAuctionDetail(); // Ensure this is awaited to get the latest auction detail before checking the condition
+  await fetchAuctionDetail();
 
   if(auctionDetail.value?.data?.status === 'ing' && isUser.value){
     startPolling();
@@ -1294,6 +1293,13 @@ onMounted(async () => {
   }
   window.addEventListener('resize', checkScreenWidth);
     checkScreenWidth();
+
+  if (auctionDetail.value.data.status === 'done' && isDealer.value) {
+    showNotification.value = true;
+    setTimeout(() => {
+      showNotification.value = false;
+    }, 5000);
+  }
 });
 
 onUnmounted(() => {
