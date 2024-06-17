@@ -12,7 +12,7 @@ video {
 }
 .login-card {
 	border-radius: 20px;
-	padding: 10px;
+	padding: 20px;
 	display: flex;
 	justify-content: center;
 	.card-body {
@@ -136,6 +136,8 @@ video {
     height: 100px;
     margin: 19px auto;
     border-radius: 6px;
+    border-bottom-right-radius: 0px !important;
+    border-bottom-left-radius: 0px !important;
     background-color: #ffffff;
 }
 
@@ -208,8 +210,8 @@ video {
 
 .car-image {
     background-image: url('../img/car-objects.png');
-    width: 92px;
-    height: 92px;
+    width: 132px;
+    height: 132px;
     background-repeat: no-repeat;
     background-size: contain;
     background-position: center;
@@ -488,6 +490,9 @@ video {
     .container {
         --bs-gutter-x: 1.5rem;
     }
+    .profile.dealer-mp {
+        flex-direction: row !important;
+    }
     .layout-container {
     grid-template-columns: none !important;
     }
@@ -535,9 +540,6 @@ video {
             margin-top: 0px;
             border-radius: 6px;
             background-color: #f5f5f6;
-        }
-        .banner-top {
-            padding: 10px;
         }
         .activity-info {
             border-radius: 0px;
@@ -960,7 +962,7 @@ video {
     display: grid;
     grid-template-rows: auto 1fr;
     grid-template-columns: 2fr 1fr;
-    gap: 40px;
+    gap: 15px;
 }
 
 .btn-apply {
@@ -3228,7 +3230,7 @@ input[type="checkbox"] {
 
 .tbl_basic table {width: 100%;border-collapse: collapse; font-size:14px;}
 .tbl_basic table tr th, .tbl_basic table tr td { text-align:center; }
-.tbl_basic table tr th {padding:8px 5px; border-radius: 6px; background: #f5f5f6; color: gray; border-style:solid none;}
+.tbl_basic table tr th {padding:8px 5px; background: #f5f5f6; color: gray; border-style:solid none;}
 .tbl_basic table tr td {padding:7px 5px; }
 @media screen and (max-width: 481px) 
 {
@@ -3311,8 +3313,8 @@ input[type="checkbox"] {
     background-repeat: no-repeat; 
 }
 .icon-up-wh {
-    width: 13px;
-    height: 15px;
+    width: 15px;
+    height: 22px;
     background-image: url('../img/Icon-up-wh.png'); 
     background-size: cover;
     background-position: center; 

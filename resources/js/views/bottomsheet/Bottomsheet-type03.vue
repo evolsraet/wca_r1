@@ -1,7 +1,7 @@
 <template>
   <!-- 끌어올리기 내리기 불가능한 모달 bottom-sheet -->
   <div class="sheet-wrap">
-    <div ref="overlay" class="overlay" v-if="showBottomSheet" @click="closeSheet"></div>
+    <div ref="overlay" class="overlay" v-if="showBottomSheet"></div>
     <div ref="sheet" class="sheet" :class="{ 'half': showBottomSheet, 'animate-slide-up': showBottomSheet }">
       <header class="handle-head">
       </header>
@@ -12,8 +12,7 @@
   </div>
 </template>
 
-
-<script>
+<script>  
 export default {
   name: 'BottomSheet',
   props: {
@@ -34,7 +33,7 @@ export default {
       } else {
         this.showBottomSheet = true;
         this.showHead = false;
-        this.sheetHeight = window.innerHeight * 0.4;
+        this.sheetHeight = window.innerHeight * 0.45;
         this.$refs.sheet.style.height = `${this.sheetHeight}px`;
       }
     },
@@ -47,7 +46,7 @@ export default {
   mounted() {
     if (this.initial === 'half') {
       this.showBottomSheet = true;
-      this.sheetHeight = window.innerHeight * 0.4;
+      this.sheetHeight = window.innerHeight * 0.45;
       this.$refs.sheet.style.height = `${this.sheetHeight}px`;
     } else {
       this.showHead = true;

@@ -17,13 +17,13 @@ const props = defineProps({
   dismissable: Boolean
 });
 
-const showHead = ref(true); // Initially show head
+const showHead = ref(true); 
 const showBottomSheet = ref(false);
 const isDragging = ref(false);
 const startY = ref(0);
 const currentY = ref(0);
 const deltaY = ref(0);
-const sheetHeight = ref(200); // Initial height set to head height
+const sheetHeight = ref(200); 
 let animationFrame = null;
 
 const sheet = ref(null);
@@ -72,7 +72,7 @@ const endDrag = () => {
   document.removeEventListener('touchmove', onDrag);
   document.removeEventListener('touchend', endDrag);
 
-  if (sheetHeight.value - deltaY.value > window.innerHeight * 0.1) {
+  if (sheetHeight.value - deltaY.value > window.innerHeight * 0.2) {
     expandSheet();
   } else {
     collapseSheet();
@@ -90,7 +90,7 @@ const expandSheet = () => {
 const collapseSheet = () => {
   showBottomSheet.value = false;
   showHead.value = true;
-  sheetHeight.value = 20;
+  sheetHeight.value = 30;
   sheet.value.style.height = `${sheetHeight.value}px`;
 };
 
@@ -122,13 +122,13 @@ onMounted(() => {
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
   box-shadow: 0 -2px 11px rgba(0, 0, 0, 0.1), 0 -2px 7px rgba(0, 0, 0, 0.08);
-  max-height: 200px;
+  max-height: 280px;
   transition: height 0.3s ease;
   overflow: hidden;
 }
 
 .sheet.head {
-  height: 200px;
+  height: 300px;
 }
 
 .sheet.half {

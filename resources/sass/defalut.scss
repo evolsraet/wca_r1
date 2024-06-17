@@ -18,12 +18,10 @@ input, textarea, select {color:inherit; font:inherit; vertical-align:middle; -we
 *::-ms-clear {display:none;}
 * {box-sizing:border-box;}
 p {
-    margin-top: 1rem;    
-    margin-bottom: 1rem; 
+    margin-bottom: 0rem !important;
     line-height: 1.8;    
 }
 h5 {
-    margin-top: 1rem;    
-    margin-bottom: 1rem; 
     line-height: 1.8;    
+    font-size: 1em !important;
 }

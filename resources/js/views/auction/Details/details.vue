@@ -42,7 +42,7 @@
                       <h4 v-if="auctionDetail.data.status === 'done'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
                       <div class="p-3 pb-1 d-flex gap-3 justify-content-between">
                         <div></div>
-                        <div class="d-flex gap-3 justify-content-end mb-1">
+                        <div class="d-flex gap-3 justify-content-end align-items-center mb-1">
                           <div class="tc-light-gray icon-hit">조회수 {{ auctionDetail.data.hit }}</div>
                           <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
                           <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids_count }}</p>
@@ -62,7 +62,7 @@
                       <h5 v-if="auctionDetail.data.hope_price !== null"><span class="gray-box">재경매</span></h5>
                     </div>
                     <div v-if="showNotification" class="container">
-                      <div class="notification-container show container">
+                      <div class="notification-container show container px-3">
                         <router-link :to="{ name: 'index.claim' }" class="btn wait-selection shadow-sm d-flex align-items-center justify-content-between gap-5">
                           클레임 신청<p class="icon-right-wh"></p>
                         </router-link>
@@ -74,7 +74,8 @@
                     </div>
                   </div>
                   <div v-if="isUser && auctionDetail.data.status === 'ing'" class="p-3">
-                    <template v-if="auctionDetail.data.hope_price !== null">
+                    언제나 입찰가능하게 추가 (ing 일떄도 가능)
+                 <!--   <template v-if="auctionDetail.data.hope_price !== null">
                       <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
                         <p>현재 희망가</p>
                         <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
@@ -85,7 +86,7 @@
                         <p>현재 최고 입찰액</p>
                         <p class="icon-coins">{{ amtComma(heightPrice)}}</p>
                       </div>
-                    </template>
+                    </template>-->
                   </div>
                   <div v-if="isDealer && auctionDetail.data.status === 'ing'" class="p-3">
                     <div v-if="auctionDetail.data.hope_price !== null">
@@ -613,10 +614,10 @@
                           <BottomSheet03 initial="half" :dismissable="true"  v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && bidSession">
                             <div @click.stop="">
                               <div class="d-flex justify-content-between">
-                                  <button type="button" class="mb-1 btn-close" @click="backView"></button>
-                                  <div class="mt-3 d-flex justify-content-end gap-3">
-                                    <p class="bid-icon tc-light-gray normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
-                                    <p class="interest-icon tc-light-gray normal-16-font">관심 0</p>
+                                  <button type="button" class="mb-1 btn-close" @click="DealerbackView"></button>
+                                  <div class="mt-3 d-flex align-items-center justify-content-end gap-3">
+                                    <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids.length }}</p>
+                                    <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
                                   </div>
                                 </div>
                               <div>
@@ -629,17 +630,18 @@
                               </div>
                             </div>
                           </BottomSheet03>
-                          <BottomSheet initial="half" v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
-                            <div>
-                              <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
-                              <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
-                            </div>
-            
-                            <div class="p-4" v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price == null" @click.stop="">
-                              <h5 class="mx-3 text-center">{{ minutesLeft }}</h5>
-                              <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ amtComma(myBidPrice) }}</span></p>
-                              <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 0 명</h5>
-                              <button type="button" class="my-3 w-100 btn" :class="{'btn-outline-primary': auctionDetail.data.hope_price === null, 'primary-disable': auctionDetail.data.hope_price !== null}" @click="handleCancelBid">
+                          <BottomSheet02 initial="half" class="p-2 pt-0" v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
+                            <div class="d-flex justify-content-between align-items-baseline">
+                              <h5>나의 입찰 금액</h5>
+                                <div class="mt-3 d-flex align-items-center justify-content-end gap-3">
+                                  <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids.length }}</p>
+                                    <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
+                                </div>
+                              </div>
+                            <div v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price == null" @click.stop="">
+                              <p class="auction-deadline align-items-center my-4 p-4 justify-content-between">&nbsp<span class="bold-20-font">{{ amtComma(myBidPrice) }}</span></p>
+                              <p class="tc-light-gray text-center">앞으로 3회 더 취소할 수 있어요</p>
+                              <button type="button" class="my-3 w-100 btn shadow-sm border" @click="handleCancelBid">
                                 입찰 취소하기
                               </button>
                               <div class="bottom-message">성사수수료 보즘금이 부족해요</div>
@@ -649,7 +651,7 @@
                               <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
                               <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
                             </div>
-                          </BottomSheet>
+                          </BottomSheet02>
                             
                             <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
                             
@@ -706,7 +708,7 @@
 
                     <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView &&isUser" class="p-0 filter-content">
                       <div>
-                        <button type="button" class="mb-1 btn-close" @click="DealerbackView"></button>
+                        <button type="button" class="mb-1 btn-close" @click="backView"></button>
                         <h5 class="my-4 mb-5">재경매할 금액을<br>입력해 주세요.</h5>
                         <div>
                           <div v-if="auctionDetail.data.hope_price != null" class="form-group dealer-check mt-0 mb-0">
@@ -1017,9 +1019,7 @@ const getDealer = async (user_Id) => {
     return { name: 'Unknown' };
   }
 };
-const submitHopePrice = () => {
-  console.log("입력된 희망가:", hopePrice.value);
-};
+
 
 // auctionDetail이 변경될 때마다 각 bid에 userData를 추가하는 함수
 watchEffect(async () => {
@@ -1314,7 +1314,7 @@ onMounted(async () => {
     showNotification.value = true;
     setTimeout(() => {
       showNotification.value = false;
-    }, 5000);
+    }, 7000);
   }
 });
 
