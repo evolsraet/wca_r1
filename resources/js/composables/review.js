@@ -7,7 +7,7 @@ import { cmmn } from '@/hooks/cmmn';
 let starScore = 0;
 
 export function initReviewSystem() {
-    const { callApi , salert } = cmmn();
+    const { callApi , salert , wica } = cmmn();
     const router = useRouter();
 
 
@@ -177,131 +177,94 @@ export function initReviewSystem() {
             review
         }
         console.log(JSON.stringify(form));
-        salert({
-            _swal: swal, //필수 지정
-            _title: '작성하시겠습니까?',
-            _type: 'C',
-            _isHtml: true, 
-            _icon: 'Q',
-        },function(result){
+
+        wica.ntcn(swal)
+        .title('작성하시겠습니까?') // 알림 제목
+        .icon('Q') //E:error , W:warning , I:info , Q:question
+        .callback(function(result) {
             if(result.isOk){
+                //console.log(result);
                 axios.post(`/api/reviews`, form)
                     .then(response => {
-                        salert({
-                            _type: 'A',
-                            _swal: swal, //필수 지정
-                            _msg: '이용후기가 정상적으로 작성되었습니다.',
-                            _icon: 'I',
-                        },function(result){
-                            if(result.isOk){
-                                router.push({name: 'user.review'});     
+                        wica.ntcn(swal)
+                        .icon('I') //E:error , W:warning , I:info , Q:question
+                        .callback(function(result) {
+                            if(result.isOk){                                
+                                router.push({name: 'user.review'});                            
                             }
-                        });
+                        })
+                        .alert('이용후기가 정상적으로 작성되었습니다.');
                     })
                     .catch(error => {
-                        salert({
-                            _type: 'A',
-                            _swal: swal, //필수 지정
-                            _title: '오류가 발생하였습니다.',
-                            _msg: '관리자에게 문의해주세요.',
-                            _icon: 'E',
-    
-                        },function(result){
-                            console.log(result);
-                        })
+                        wica.ntcn(swal)
+                        .title('오류가 발생하였습니다.')
+                        .icon('E') //E:error , W:warning , I:info , Q:question
+                        .alert('관리자에게 문의해주세요.');
                     })
             }
-            //console.log('salert', result);
-        });
+        }).confirm();
     }
     
     // 작성한 이용후기 삭제하기 - 관리자
     const adminDeleteReview = async (id) => {
-        salert({
-            _swal: swal, //필수 지정
-            _title: '삭제하시겠습니까?',
-            _msg: '삭제된 정보는 복구할 수 없습니다.',
-            _type: 'C',
-            _isHtml: true, 
-            _icon: 'W',
-        },function(result){
+        wica.ntcn(swal)
+        .param({ _id : id }) // 리턴값에 전달 할 데이터
+        .title('삭제하시겠습니까?') // 알림 제목
+        .icon('W') //E:error , W:warning , I:info , Q:question
+        .callback(function(result) {
             if(result.isOk){
+                console.log(result);
                 axios.delete(`/api/reviews/${id}`)
                     .then(response => {
-                        salert({
-                            _type: 'A',
-                            _swal: swal, //필수 지정
-                            _msg: '이용후기가 정상적으로 삭제되었습니다.',
-                            _icon: 'I',
-                        },function(result){
-                            console.log("이용후기");
+                        wica.ntcn(swal)
+                        .icon('I') //E:error , W:warning , I:info , Q:question
+                        .callback(function(result) {
                             if(result.isOk){                                
                                 getAllReview(1);                                
                             }
-                        });
+                        })
+                        .alert('이용후기가 정상적으로 삭제되었습니다.');
                     })
                     .catch(error => {
-                        salert({
-                            _type: 'A',
-                            _swal: swal, //필수 지정
-                            _title: '오류가 발생하였습니다.',
-                            _msg: '관리자에게 문의해주세요.',
-                            _icon: 'E',
-
-                        },function(result){
-                            console.log(result);
-                        })
+                        wica.ntcn(swal)
+                        .title('오류가 발생하였습니다.')
+                        .icon('E') //E:error , W:warning , I:info , Q:question
+                        .alert('관리자에게 문의해주세요.');
                     })
             }
-            //console.log('salert', result);
-        }); 
-        
-
+        })
+        .confirm('삭제된 정보는 복구할 수 없습니다.');   
     }
      
     // 작성한 이용후기 삭제하기 - 사용자
     const userDeleteReview = async (id , userId) => {
-        console.log(userId);
-        salert({
-            _swal: swal, //필수 지정
-            _title: '삭제하시겠습니까?',
-            _msg: '삭제된 정보는 복구할 수 없습니다.',
-            _type: 'C',
-            _isHtml: true, 
-            _icon: 'W',
-        },function(result){
+        wica.ntcn(swal)
+        .param({ _id : id }) // 리턴값에 전달 할 데이터
+        .title('삭제하시겠습니까?') // 알림 제목
+        .icon('W') //E:error , W:warning , I:info , Q:question
+        .callback(function(result) {
             if(result.isOk){
+                console.log(result);
                 axios.delete(`/api/reviews/${id}`)
                     .then(response => {
-                        salert({
-                            _type: 'A',
-                            _swal: swal, //필수 지정
-                            _msg: '이용후기가 정상적으로 삭제되었습니다.',
-                            _icon: 'I',
-                        },function(result){
-                            console.log("이용후기");
+                        wica.ntcn(swal)
+                        .icon('I') //E:error , W:warning , I:info , Q:question
+                        .callback(function(result) {
                             if(result.isOk){                                
-                                getUserReview(userId, 1);                                
+                                getUserReview(userId, 1);                                 
                             }
-                        });
+                        })
+                        .alert('이용후기가 정상적으로 삭제되었습니다.');
                     })
                     .catch(error => {
-                        salert({
-                            _type: 'A',
-                            _swal: swal, //필수 지정
-                            _title: '오류가 발생하였습니다.',
-                            _msg: '관리자에게 문의해주세요.',
-                            _icon: 'E',
-
-                        },function(result){
-                            console.log(result);
-                        })
+                        wica.ntcn(swal)
+                        .title('오류가 발생하였습니다.')
+                        .icon('E') //E:error , W:warning , I:info , Q:question
+                        .alert('관리자에게 문의해주세요.');
                     })
             }
-            //console.log('salert', result);
-        }); 
-        
-
+        })
+        .confirm('삭제된 정보는 복구할 수 없습니다.');   
     }
 
     //작성한 이용후기 수정하기 - 사용자, 관리자 공통
@@ -320,50 +283,35 @@ export function initReviewSystem() {
             return;
         }
 
-        salert({
-            _swal: swal, //필수 지정
-            _title: '수정하시겠습니까?',
-            _type: 'C',
-            _isHtml: true, 
-            _icon: 'Q',
-        },function(result){
+        wica.ntcn(swal)
+        .title('수정하시겠습니까?') // 알림 제목
+        .icon('Q') //E:error , W:warning , I:info , Q:question
+        .callback(function(result) {
             if(result.isOk){
+                //console.log(result);
                 axios.put(`/api/reviews/${id}`, form)
                     .then(response => {
-                        salert({
-                            _type: 'A',
-                            _swal: swal, //필수 지정
-                            _msg: '이용후기가 정상적으로 수정되었습니다.',
-                            _icon: 'I',
-                            _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
-                        },function(result){
-                            if(result.isOk){
+                        wica.ntcn(swal)
+                        .icon('I') //E:error , W:warning , I:info , Q:question
+                        .callback(function(result) {
+                            if(result.isOk){                                
                                 if(role === 'user'){
                                     router.push({name: 'user.review'});
                                 } else if(role === 'admin'){
                                     router.push({name: 'review.index'});
-                                }
-                                
-                                    
+                                }                 
                             }
-                        });
+                        })
+                        .alert('이용후기가 정상적으로 수정되었습니다.');
                     })
                     .catch(error => {
-                        salert({
-                            _type: 'A',
-                            _swal: swal, //필수 지정
-                            _title: '오류가 발생하였습니다.',
-                            _msg: '관리자에게 문의해주세요.',
-                            _icon: 'E',
-                            _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
-    
-                        },function(result){
-                            console.log(result);
-                        })
+                        wica.ntcn(swal)
+                        .title('오류가 발생하였습니다.')
+                        .icon('E') //E:error , W:warning , I:info , Q:question
+                        .alert('관리자에게 문의해주세요.');
                     })
             }
-            //console.log('salert', result);
-        });
+        }).confirm();
         
     }
    

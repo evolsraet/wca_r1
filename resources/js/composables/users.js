@@ -145,9 +145,9 @@ export default function useUsers() {
                             _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
                         },function(result){
                             if(result.isOk){
-                                //location.reload();
-                                router.push({name: 'users.index'})
-                                getUsers()
+                                location.reload();
+                                //router.push({name: 'users.index'})
+                                //getUsers(1)
                                 
                             }
                         });
