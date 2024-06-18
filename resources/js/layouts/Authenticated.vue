@@ -1,7 +1,7 @@
 <template>
-    <AdminNavbar />
+    <AdminNavbar v-if="isMobile" />
     <div class="d-flex align-items-stretch w-100">
-        <AdminSidebar />
+        <AdminSidebar v-if="!isMobile" />
         <div class="container-fluid">
             <Breadcrumb class="row justify-content-center mt-4" :crumbs="crumbs" @selected="selected" />
             <!-- <h2 class="fw-semibold">
@@ -18,7 +18,7 @@
 </template>
 
 <script setup>
-import {computed} from "vue";
+import { computed, ref, onMounted, onUnmounted } from "vue";
 import { useRoute } from "vue-router";
 import AdminNavbar from "../components/includes/AdminNavbar.vue";
 import AdminSidebar from "../components/includes/AdminSidebar.vue";
@@ -28,28 +28,42 @@ const route = useRoute();
 
 const crumbs = computed(() => {
     let pathArray = route.path.split('/')
-      pathArray.shift()
-      const breadCrumbs = [{ "href": "/admin", "disabled": false, "text": "Dashboard" }]
-      // needed to handle the intermediary entries for nested vue routes
-      let breadcrumb = ''
-      let lastIndexFound = 0
-      for (let i = 0; i < pathArray.length; ++i) {
+    pathArray.shift()
+    const breadCrumbs = [{ "href": "/admin", "disabled": false, "text": "Dashboard" }]
+    // needed to handle the intermediary entries for nested vue routes
+    let breadcrumb = ''
+    let lastIndexFound = 0
+    for (let i = 0; i < pathArray.length; ++i) {
         breadcrumb = `${breadcrumb}${'/'}${pathArray[i]}`
         if (route.matched[i] &&
-          Object.hasOwnProperty.call(route.matched[i], 'meta') &&
-          Object.hasOwnProperty.call(route.matched[i].meta, 'breadCrumb')) {
-          breadCrumbs.push({
-            href: i !== 0 && pathArray[i - (i - lastIndexFound)]
-              ? '/' + pathArray[i - (i - lastIndexFound)] + breadcrumb
-              : breadcrumb,
-            disabled: i + 1 === pathArray.length,
-            text: route.matched[i].meta.breadCrumb || pathArray[i]
-          })
-          lastIndexFound = i
-          breadcrumb = ''
+            Object.hasOwnProperty.call(route.matched[i], 'meta') &&
+            Object.hasOwnProperty.call(route.matched[i].meta, 'breadCrumb')) {
+            breadCrumbs.push({
+                href: i !== 0 && pathArray[i - (i - lastIndexFound)]
+                    ? '/' + pathArray[i - (i - lastIndexFound)] + breadcrumb
+                    : breadcrumb,
+                disabled: i + 1 === pathArray.length,
+                text: route.matched[i].meta.breadCrumb || pathArray[i]
+            })
+            lastIndexFound = i
+            breadcrumb = ''
         }
-      }
-      return breadCrumbs
+    }
+    return breadCrumbs
+});
+
+const isMobile = ref(window.innerWidth <= 767.98);
+
+const handleResize = () => {
+    isMobile.value = window.innerWidth <= 767.98;
+};
+
+onMounted(() => {
+    window.addEventListener('resize', handleResize);
+});
+
+onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
 });
 
 function selected(crumb) {
@@ -114,6 +128,14 @@ function selected(crumb) {
         max-width: 20px;
         font-weight: 900;
         overflow: hidden;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+    .navbar-brand {
+        display: flex;
     }
 }
 </style>

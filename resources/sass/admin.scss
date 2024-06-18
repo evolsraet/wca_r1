@@ -1,0 +1,104 @@
+
+.admin-icon {
+    display: inline-block;
+    width: 20px; 
+    height: 20px; 
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle; 
+  }
+  
+  .admin-icon-small-02 {
+    width: 16px !important;
+    height: 16px !important;
+}
+
+  .admin-icon-small {
+    width: 22px !important;
+    height: 16px !important;
+  }
+  
+  .admin-icon-medium {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .admin-icon-large {
+    width: 65px !important; 
+    height: 65px !important;
+  }
+  
+  .admin-icon-primary {
+    filter: brightness(0) saturate(100%) invert(21%) sepia(83%) saturate(5891%) hue-rotate(198deg) brightness(96%) contrast(104%);
+  }
+  
+  .admin-icon-secondary {
+    filter: brightness(0) saturate(100%) invert(31%) sepia(96%) saturate(677%) hue-rotate(323deg) brightness(93%) contrast(101%);
+  }
+  
+  .admin-icon-profile{
+    background-image: url('../img/admin/profile.png');  
+  }
+  .admin-icon-dashboard {
+    background-image: url('../img/admin/dashIcon.png');
+    width: 16px !important;
+    height: 16px !important;
+  }
+  .admin-icon-settings {
+    background-image: url('../img/admin/settings.png');
+  }
+  .admin-icon-users {
+    background-image: url('../img/admin/disabled/person.png');
+  }
+  
+  .admin-icon-coin {
+    background-image: url('../img/admin/disabled/coin.png');
+    width: 18px !important;
+    height: 16px !important;
+  }
+  
+  .admin-icon-car {
+    background-image: url('../img/admin/disabled/awesome-car.png');
+  }
+  
+  .admin-icon-review {
+    background-image: url('../img/admin/disabled/review.png');
+  }
+.admin-icon-pass{
+    background-image: url('../img/admin/disabled/right.png');
+    width: 10px !important;
+    height: 14px !important;
+}
+.side-navbar-link {
+    .admin-icon {
+      transition: background-image 0.3s ease, transform 0.3s ease;
+    }
+  
+    &:hover, 
+    &:focus {
+      color: $primary !important;
+  
+      .admin-icon-users {
+        background-image: url('../img/admin/activate/person.png');
+      }
+      .admin-icon-coin {
+        background-image: url('../img/admin/activate/coin.png');
+        width: 18px !important;
+        height: 16px !important;
+      }
+      .admin-icon-car {
+        background-image: url('../img/admin/activate/awesome-car.png');
+      }
+      .admin-icon-review {
+        background-image: url('../img/admin/activate/review.png');
+      }
+      .admin-icon-pass {
+        background-image: url('../img/admin/activate/right.png');
+        width: 10px !important;
+        height: 14px !important;
+        transform: translateX(5px);
+      }
+    }
+  }
+  
