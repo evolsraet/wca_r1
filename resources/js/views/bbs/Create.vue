@@ -3,16 +3,16 @@
         * mov-text : 모바일 일때 보이는 뷰
         * web-text: : 웹 화면에서 보이는뷰
     --> 
-    <div class="container">
+    <div class="p-3">
         <form @submit.prevent="submitForm">
             <div class="container mov-wide">
                     <div  v-for="auction in auctionsData" :key="auction.id">
-                        <div class="container-img ">
+                        <div class="container-img">
                             <h5 class="my-3">후기 작성</h5>
                             <div class="left-img">
                                 <div v-if ="!isMobileView" class="d-flex flex-row">
                                     <div class="w-50">
-                                        <div class="card-img-top-ty02"></div>
+                                        <div class="card-img-top-ty02 review-img"></div>
                                     </div>
                                     <div class="w-50 d-flex flex-column">
                                         <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
@@ -34,7 +34,7 @@
                             <input type="hidden" id="dealer_id" :v-model="rv.dealer_id">
                             <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                         </div>
-                        <div class="mx-2 tc-light-gray">
+                        <div class="mx-2 tc-light-gray my-4">
                         <p> {{ carInfo.year }}년 / 2.4km / 무사고</p>
                         <p>현대 쏘나타 (DN8)</p>
                         <br>
@@ -48,20 +48,20 @@
                                 <p class="card-text tc-light-gray fs-5 web-text">12 삼 4567</p>
                                 <a href="#"><span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">상세보기</span></a>
                             </div>-->
-                            <p class="mt-5 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(auction.final_price) }}</span></p>
+                            <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(auction.final_price) }}</span></p>
                             </div>
-                            <div class="">
+                            <div class="right-container">
                                 <bottom-sheet initial="half" :dismissable="true">
                         <div class="sheet-content p-0">
-                            <div class="mt-1" @click.stop="">
+                            <div class="mt-3" @click.stop="">
                                 
-                                <h5 calss="text-center mb-4">거래는 어떠셨나요?</h5>
+                                <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
                                     <div class="rating my-3">
                                         <label class="rating__label rating__label--full" for="star1">
                                             <input type="radio" id="star1" class="rating__input" name="rating" value="">
                                             <span class="star-icon ms-2"></span>
-                                            <span class="rating-description">그저그래요</span>
+                                            <span class="rating-description">별로에요</span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star2">
                                             <input type="radio" id="star2" class="rating__input" name="rating" value="">
@@ -83,13 +83,13 @@
                                             <span class="star-icon"></span>
                                             <span class="rating-description">최고에요!</span>
                                         </label>
-                                        <span class="d-flex mx-2 rating-score tc-red"></span>
                                     </div>
+                                    <span class="d-flex mx-2 rating-score tc-red"></span>
                                 </div>
                                 <textarea class="custom-textarea mt-2" rows="6" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content"></textarea>
                                 
                                 <div class="btn-group mt-3 mb-4">
-                                    <button class="btn btn-primary"> 작성 완료 </button>
+                                    <button class="btn btn-primary mt-2"> 작성 완료 </button>
                                 </div>
                             </div>
                         </div>
@@ -100,7 +100,7 @@
         </form>
         <AlarmModal ref="alarmModal" />
     </div>
-
+    <Footer />
 </template>
 <script>
     export default {
@@ -114,6 +114,7 @@ import { initReviewSystem } from '@/composables/review'; // 별점 js
 import useAuctions from "@/composables/auctions";
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue'
 import AlarmModal from '@/views/modal/AlarmModal.vue';
+import Footer from "@/views/layout/footer.vue"
 import { cmmn } from '@/hooks/cmmn';
 const { amtComma } = cmmn();
 
@@ -192,6 +193,16 @@ onBeforeUnmount(() => {
 }); 
 </script>
 <style scoped>
+@media (max-width:451px) {
+    .rating{
+    display: flex;
+    justify-content: space-evenly;
+    flex-direction: row;
+}
+}
+.review-img{
+    height: 377px !important;
+}
 .bottom-sheet::before {
     content: "";
     position: absolute;
@@ -276,7 +287,7 @@ onBeforeUnmount(() => {
                 border-radius: 0; 
                 overflow: visible;
                 height: auto !important;
-                margin-top: 60px;
+                margin-top: 55px;
             }
             .header{
                 pointer-events: none; 

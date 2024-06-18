@@ -11,7 +11,7 @@
                         <div class="left-img">
                             <div v-if ="!isMobileView" class="d-flex flex-row">
                                     <div class="w-50">
-                                        <div class="card-img-top-ty02"></div>
+                                        <div class="card-img-top-ty02 review-img"></div>
                                     </div>  
                                     <div class="w-50 d-flex flex-column">
                                         <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
@@ -37,7 +37,7 @@
                         <p class="card-text tc-light-gray fs-5 mov-text">딜러명<span class="process ms-3">{{review.dealer.name}} 딜러</span></p>
                         <p class="card-text tc-light-gray fs-5 web-text">12 삼 4567</p>
                     </div>--> 
-                    <div class="mx-2 tc-light-gray">
+                    <div class="mx-2 tc-light-gray my-4">
                         <p> {{ carInfo.year }}년 / 2.4km / 무사고</p>
                         <p>현대 쏘나타 (DN8)</p>
                         <br>
@@ -45,7 +45,7 @@
                         <p>딜 러 명 / {{review.dealer.name}}</p>
                         </div>
                    <!-- <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>{{ formatDateAndTime(review.auction.final_at )}}</span></p>-->
-                   <p class="mt-3 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(review.auction.final_price) }}</span></p>
+                   <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(review.auction.final_price) }}</span></p>
                    <div class="container card-style p-0 mt-5">
                     </div>
                 </div>
@@ -56,14 +56,14 @@
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
                                     <input type="hidden" :v-model="rv.star">
-                                    <div class="rating">
+                                    <div class="rating my-3">
                                         <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
                                             <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
                                             <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
                                             <span class="rating-description" :value="index"></span>
                                         </label>
-                                        <span class="d-flex mx-2 rating-score tc-red"></span>
                                     </div>
+                                    <span class="d-flex mx-2 rating-score tc-red"></span>
                                 </div>
                                 <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content">{{ review.content }}</textarea>
                                 <div class="btn-group mt-3">
@@ -77,6 +77,7 @@
         </form>
         <AlarmModal ref="alarmModal" />
     </div>
+    <Footer />
 </template>
 
 <script>
@@ -91,6 +92,7 @@ import { useRoute } from 'vue-router';
 import { initReviewSystem } from '@/composables/review'; // 별점 js
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
+import Footer from "@/views/layout/footer.vue"
 import { cmmn } from '@/hooks/cmmn';
 const { amtComma } = cmmn();
 
@@ -155,8 +157,18 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+@media (max-width:451px) {
+        .rating{
+        display: flex;
+        justify-content: space-evenly;
+        flex-direction: row;
+    }
+}
 .mov-wide{
     width:auto !important;
+}
+.review-img{
+    height: 377px !important;
 }
 @media (min-width: 992px) {
             .container.mov-wide {
@@ -180,7 +192,7 @@ onMounted(async () => {
                 border-radius: 0; 
                 overflow: visible;
                 height: auto !important;
-                margin-top: 60px;
+                margin-top: 55px;
             }
             .header{
                 pointer-events: none; 

@@ -143,7 +143,7 @@ export function initReviewSystem() {
             const value = des.getAttribute('value');
             switch (value) {
                 case '1':
-                    des.textContent = '그저그래요';
+                    des.textContent = '별로에요';
                     break;
                 case '2':
                     des.textContent = '괜찮아요';

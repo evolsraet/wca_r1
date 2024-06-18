@@ -5,57 +5,47 @@
     --> 
     <div class="container">
         <form>
-            <div class="create-review" v-for="review in reviewsData" :key="review">
+            <div class="container mov-wide" v-for="review in reviewsData" :key="review">
                     <div class="left-container">
-                        <div class="container-img mov-info02">
+                        <div class="container-img">
                             <div class="left-img">
-                                <img src="../../../img/car_example2.png" alt="전체 이미지0 ">
+                                <div v-if ="!isMobileView" class="d-flex flex-row">
+                                    <div class="w-50">
+                                        <div class="card-img-top-ty02 review-img"></div>
+                                    </div>
+                                    <div class="w-50 d-flex flex-column">
+                                        <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
+                                        <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+                                    </div>
+                                </div>
+                                <div v-if = "isMobileView">
+                                    <div class="card-img-top-ty02"></div>
+                                </div>
                             </div>
-                            <div class="right-img web-text">
+                            <div class="web-text">
                                 <div class="detail detail1"></div>
                                 <div class="detail detail2"></div>
                             </div>
                         </div>
-                        <div class="enter-view align-items-baseline mt-3 bold-18-font">  
-                            <p class="card-title fs-5"><span class="blue-box">무사고</span></p>
+                        <div class="mx-2 enter-view align-items-baseline mt-3 bold-18-font">  
+                            <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                             </div>
-                            <p class="mt-2 card-text tc-light-gray fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
-                            <div class="enter-view mt-2">
-                                <p class="card-text tc-light-gray fs-5 mov-text">딜러명<span class="process ms-3">{{ review.auction.dealer_name }}</span></p>
-                                <p class="card-text tc-light-gray fs-5 web-text">12 삼 4567</p>
-                                <a href="#"><span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">상세보기</span></a>
-                                </div>
-                                <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>2024년 2월 13일 오후 6시 00분</span></p>
-                                <div class="container card-style p-0 mt-5">
-                                <div class="card card-custom card-custom-ty">
-                                    <div class="row flex-row">
-                                    <div class="col col-line">
-                                        <div class="item-label">년식</div>
-                                        <div class="item-value mb-0"> {{ carInfo.year }} 년형</div>
-                                    </div>
-                                    <div class="col col-line">
-                                        <div class="item-label">주행거리</div>
-                                        <div class="item-value mb-0">103,000km</div>
-                                    </div>
-                                    <div class="col col-line">
-                                        <div class="item-label">내사 피해</div>
-                                        <div class="item-value mb-0">1건</div>
-                                    </div>
-                                    <div class="col col-line">
-                                        <div class="item-label">타사 피해</div>
-                                        <div class="item-value mb-0">3건</div>
-                                    </div>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
-                            <div class="right-container">
-                                <bottom-sheet initial="half" :dismissable="true">
+                            <div class="mx-2 tc-light-gray my-4">
+                            <p> {{ carInfo.year }}년 / 2.4km / 무사고</p>
+                            <p>현대 쏘나타 (DN8)</p>
+                            <br>
+                            <p>매물번호 / 564514</p>
+                            <p>딜 러 명 / {{review.auction.dealer_name}}</p>
+                        </div>
+                        <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(review.auction.final_price) }}</span></p>
+                    </div>
+                    <div class="right-container">
+                        <bottom-sheet initial="half" :dismissable="true" class="mt-2">
                         <div class="sheet-content p-0">
-                            <div class="mt-3"  @click.stop="">
+                            <div class="mt-3 mb-5"  @click.stop="">
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
-                                    <div class="rating">
+                                    <div class="rating my-3">
                                         <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
                                             <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
                                             <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
@@ -64,7 +54,7 @@
                                         <span class="d-flex mx-2 rating-score tc-red"></span>
                                     </div>
                                 </div>
-                                <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." readonly>{{ review.content }}</textarea>
+                                <textarea class="custom-textarea mt-2" rows="8" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." readonly>{{ review.content }}</textarea>
                             </div>
                         </div>
                     </bottom-sheet>
@@ -73,6 +63,7 @@
         </form>
         <AlarmModal ref="alarmModal" />
     </div>
+    <Footer />
 </template>
 <script>
     export default {
@@ -80,11 +71,15 @@
     }
 </script>
 <script setup>
-import { ref, onMounted, nextTick } from 'vue';
+import { ref, onMounted, nextTick,onBeforeUnmount } from 'vue';
 import { routerViewLocationKey, useRoute } from 'vue-router'; 
 import { initReviewSystem } from '@/composables/review'; // 별점 js
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue'
 import AlarmModal from '@/views/modal/AlarmModal.vue';
+import Footer from "@/views/layout/footer.vue"
+import { cmmn } from '@/hooks/cmmn';
+const { amtComma } = cmmn();
+const isMobileView = ref(window.innerWidth <= 640);
 const route = useRoute();
 const reviewId = parseInt(route.params.id); 
 const showBottomSheet = ref(true); //바텀 시트
@@ -111,8 +106,15 @@ function toggleSheet() {
     }
     showBottomSheet.value = !showBottomSheet.value;
 }
+const checkScreenWidth = () => {
+    if (typeof window !== 'undefined') {
+      isMobileView.value = window.innerWidth <= 640;
+    }
+  };
 
 onMounted(async () => {
+    window.addEventListener('resize', checkScreenWidth);
+    checkScreenWidth();
     const response = await getUserReviewInfo(reviewId);
     console.log(response);
     reviewsData.value = [response]; 
@@ -121,6 +123,9 @@ onMounted(async () => {
     setInitialStarRating(response.star);
 });
 
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScreenWidth);
+}); 
 </script>
 <style scoped>
 .bottom-sheet::before {
@@ -175,6 +180,55 @@ onMounted(async () => {
             .col:last-child {
                 border-bottom: none; /* 마지막 항목은 아래쪽 선을 제거 */
                 margin-bottom: 0;
+            }
+        }
+        @media (min-width: 1200px) {
+  .container-xl, .container-lg, .container-md, .container-sm, .container {
+    max-width: 1140px;
+  }
+}
+
+.mov-wide{
+    width:auto !important;
+}
+.auction-deadline {
+    width: 100%;
+    height: 40px;
+    background-color: #f5f5f6;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between !important;
+    gap: 5px;
+    border-radius: 6px;
+    padding: 35px;
+}
+@media (min-width: 992px) {
+            .container.mov-wide {
+                display: flex;
+                flex-direction: row;
+                align-items: stretch;
+                justify-content: space-between;
+                gap: 10px; 
+            }
+
+            .container.mov-wide > div:first-child {
+                flex: 1.5;
+            }
+
+            .sheet {
+                position: static; 
+                flex: 0.5;
+                display: flex;
+                flex-direction: column;
+                max-height: none;
+                border-radius: 0; 
+                overflow: visible;
+                height: auto !important;
+                margin-top: 55px;
+            }
+            .header{
+                pointer-events: none; 
             }
         }
 </style>

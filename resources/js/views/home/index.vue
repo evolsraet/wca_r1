@@ -276,19 +276,12 @@
   onMounted(() => {
   getHomeReview();
   nextTick(() => {
-    const banner = bannerRef.value;
-    const reviewContent = reviewContentRef.value;
+
     const animatedSectionElement = animatedSection.value;
     const loginCard = loginCardRef.value;
     setTimeout(() => {
       loginCard.classList.add('enter-active');
     }, 200);
-    setTimeout(() => {
-      banner.classList.add('enter-active');
-    }, 100);
-    setTimeout(() => {
-      reviewContent.classList.add('enter-active');
-    }, 500);
     setTimeout(() => {
       if (animatedSectionElement) {
         animatedSectionElement.classList.add('enter-active');

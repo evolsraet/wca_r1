@@ -270,13 +270,13 @@
                         <template v-if="isUser">
                             <div class="d-flex">
                                 <li class="nav-item">
-                                    <router-link to="/" class="nav-link" aria-current="page">내차조회</router-link>
+                                    <router-link to="/" class="nav-link mx-3" aria-current="page">내차조회</router-link>
                                 </li>
                                 <li class="nav-item">
-                                    <router-link :to="{ name: 'auction.index'}" class="nav-link" aria-current="page">내 매물관리</router-link>
+                                    <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3" aria-current="page">내 매물관리</router-link>
                                 </li>
                                 <li class="nav-item">
-                                    <router-link :to="{ name: 'user.review'}" class="nav-link">이용후기</router-link>
+                                    <router-link :to="{ name: 'user.review'}" class="nav-link mx-3">이용후기</router-link>
                                 </li>
                             </div>
                             <li class="nav-item my-member ms-auto">
@@ -302,19 +302,19 @@
                     <!-- 딜러 일때 -->
                     <template v-else-if="isDealer">
                         <li class="nav-item">
-                            <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh" to="/register" >입찰하기</router-link>
+                            <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh mx-3" to="/register" >입찰하기</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh">선택 완료 차량</router-link>
+                            <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh mx-3">선택 완료 차량</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh">과거 낙찰 이력</router-link>
+                            <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3">과거 낙찰 이력</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'index.claim'}" class="nav-link tc-wh">클레임</router-link>
+                            <router-link :to="{ name: 'index.claim'}" class="nav-link tc-wh mx-3">클레임</router-link>
                         </li>
                         <li class="nav-item">
-                            <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh">공지사항</router-link>
+                            <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3">공지사항</router-link>
                         </li>
                         <li class="nav-item my-member-dealer ms-auto"  @click="redirectByName('dealer.profile')" >
                             <img src="../../img/myprofile_ex.png" class="nav-profile" alt="Profile Image"><a :to="{ name: 'dealer.profile' }"  class="tc-wh p-1 pb-0 mx-2 me-3" href="#">{{ user.name }}</a>
