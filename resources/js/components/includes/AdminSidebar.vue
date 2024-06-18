@@ -13,7 +13,7 @@
                     <span class="d-none d-sm-inline tc-light-gray"><div class="admin-icon admin-icon-settings admin-icon-small-02 me-1 mb-1"></div>수정</span>
                 </a>
             </div>
-            <router-link to="/admin" class="btn shadow-sm bg-secondary tc-wh bg-opacity-50 w-100"><span class="admin-icon admin-icon-dashboard me-2"></span>대시보드</router-link>
+            <router-link to="/admin" class="btn shadow-sm bg-secondary tc-wh bg-opacity-50 w-100 admin-dashboard"><span class="admin-icon admin-icon-dashboard me-2"></span>대시보드</router-link>
         </div>
         <div class="pt-3 sidebar-sticky">
             <ul id="menu" class="nav flex-column mb-2">

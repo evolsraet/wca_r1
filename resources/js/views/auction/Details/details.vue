@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid" v-if="auctionDetail">
-    <div v-if="!showReauctionView && auctionDetail.data.status !== 'wait'">
+    <div v-if="!auctionChosn&& !showReauctionView && auctionDetail.data.status !== 'wait'">
       <div class="web-content-style">
         <div class="container mov-wide">
           <div>
@@ -87,7 +87,16 @@
                         <p class="icon-coins">{{ amtComma(heightPrice)}}</p>
                       </div>
                     </template>-->
+
+                    <!--TODO: bid가 1명이라도 있을때 알림뜨기-->
+             
+                      <button class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking" @click="auctionIngChosen">
+                        <p>딜러 선택이 가능해요!</p>
+                        <p>바로가기</p>
+                      </button>
+
                   </div>
+
                   <div v-if="isDealer && auctionDetail.data.status === 'ing'" class="p-3">
                     <div v-if="auctionDetail.data.hope_price !== null">
                       <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
@@ -670,7 +679,7 @@
                             
                         </div>
 
-                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait'">
+                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' || auctionChosn ">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
                               <p class="bold-20-font">현재 6명이 입찰했어요.</p>
@@ -768,7 +777,7 @@ import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
 
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
-
+const auctionChosn = ref(false);
 const showNotification = ref(false);
 const isMobileView = ref(window.innerWidth <= 640);
 const isClaimModalOpen = ref(false);
@@ -897,7 +906,9 @@ const animateHeightPrice = (newPrice) => {
   );
 };
 
-
+const auctionIngChosen = () => {
+  auctionChosn.value=true;
+}
 // auctionDetail의 변경사항을 감지하여 amount 값을 업데이트합니다.
 watch(
   () => auctionDetail.value?.data?.hope_price,

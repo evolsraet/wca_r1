@@ -265,4 +265,13 @@ p {
         flex-wrap: nowrap;
     }
 }
+@media (max-width: 991px){
+.layout-container02 {
+    grid-template-columns: none !important;
+    display: flex !important;
+    gap: 2rem !important;
+    flex-direction: column;
+    flex-wrap: nowrap;
+}
+}
 </style>

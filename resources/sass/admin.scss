@@ -65,11 +65,35 @@
   .admin-icon-review {
     background-image: url('../img/admin/disabled/review.png');
   }
-.admin-icon-pass{
-    background-image: url('../img/admin/disabled/right.png');
-    width: 10px !important;
-    height: 14px !important;
+  .admin-icon-pass{
+      background-image: url('../img/admin/disabled/right.png');
+      width: 10px !important;
+      height: 14px !important;
+  }
+  .admin-icon-dashboard-top{
+    background-image: url('../img/admin/top-dash.png');
+    width: 25px !important;
+    height: 24px !important;
 }
+  .admin-icon-my{
+    background-image: url('../img/admin/my.png');
+    width: 25px !important;
+    height: 24px !important;
+  }
+  .admin-icon-menu-top{
+    background-image: url('../img/admin/menu.png');
+    width: 40px !important;
+    height: 38px !important;
+  }
+.admin-icon-dashboard {
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    @extend .shadow-lg;
+    @extend .bg-black;
+  }
+}
+
 .side-navbar-link {
     .admin-icon {
       transition: background-image 0.3s ease, transform 0.3s ease;
