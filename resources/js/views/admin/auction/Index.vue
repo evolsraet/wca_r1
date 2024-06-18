@@ -135,6 +135,7 @@
     });
     
     function setFilter(status) { // 필터 설정
+        currentPage.value = 1;
         currentStatus.value = status;
         fetchAuctions();
     }
