@@ -287,7 +287,7 @@ onBeforeUnmount(() => {
                 border-radius: 0; 
                 overflow: visible;
                 height: auto !important;
-                margin-top: 55px;
+                margin-top: 35px;
             }
             .header{
                 pointer-events: none; 
