@@ -115,6 +115,7 @@
                         <span class="d-none d-sm-inline ps-2">회원 관리</span>
                     </router-link>
                 </li>
+                <!--
                 <li class="nav-item">
                     <router-link :to="{ name: 'deposit.index' }" class="nav-link">
                         <svg
@@ -131,7 +132,7 @@
                         </svg>
                         <span class="d-none d-sm-inline ps-2">입금 관리</span>
                     </router-link>
-                </li>
+                </li>-->
                 <li class="nav-item">
                     <router-link :to="{ name: 'auctions.index' }" class="nav-link">
                         <svg
@@ -166,6 +167,7 @@
                         <span class="d-none d-sm-inline ps-2">후기 관리</span>
                     </router-link>
                 </li>
+                <!--
                 <li class="nav-item">
                     <router-link :to="{ name: 'posts.index' }" class="nav-link">
                         <svg
@@ -183,7 +185,7 @@
                         </svg>
                         <span class="d-none d-sm-inline ps-2">공지 관리</span>
                     </router-link>
-                </li>
+                </li>-->
                 <!--<li v-if="can('role.admin')" class="nav-item">
                     <router-link
                         :to="{ name: 'categories.index' }"

@@ -23,8 +23,39 @@ export default function useAuctions() {
         no: "",
         forceRefresh: "" 
     });
-    const { callApi , salert } = cmmn();
-    
+    const { callApi , salert , wicac } = cmmn();
+
+
+    const adminGetAuctions = async (
+        page = 1,
+        column = '',
+        direction = '',
+        status = 'all'
+    ) => {
+        console.log(page);
+        const apiList = [];
+
+        if(status != 'all'){
+            apiList.push(`auctions.status:${status}`)
+        }
+
+        return wicac.conn()
+        .url(`/api/auctions`)
+        .where(apiList)
+        .order([
+            [`${column}`,`${direction}`]
+        ])
+        .page(`${page}`)
+        .callback(function(result) {
+            console.log('wicac.conn callback ' , result.data);
+            auctionsData.value = result.data;
+            pagination.value = result.rawData.data.meta;
+            return result.data;
+        })
+        .get();
+
+    }
+
 // 경매 내용 통신 (페이지까지)
 const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
     console.log(status);
@@ -421,7 +452,7 @@ const deleteAuction = async (id) => {
                     })
                 })
         }
-        console.log('salert', result);
+        //console.log('salert', result);
     }); 
 
     
@@ -430,6 +461,7 @@ const deleteAuction = async (id) => {
 
 
     return {
+        adminGetAuctions,
         AuctionCarInfo,
         chosenDealer,
         AuctionReauction,

@@ -49,11 +49,12 @@
                                 <span class="menu-text">회원 관리</span>
                                 <div class="icon right-icon"></div>
                             </router-link >
+                            <!--
                             <router-link :to="{ name: 'deposit.index' }" class="menu-item mb-4"@click="toggleNavbar">
                                 <div class="icon icon-awsome"></div>
                                 <span class="menu-text">입금 관리</span>
                                 <div class="icon right-icon"></div>
-                            </router-link >
+                            </router-link >-->
                             <router-link :to="{ name: 'auctions.index' }" class="menu-item mb-4"@click="toggleNavbar">
                                 <div class="icon icon-nav-car"></div>
                                 <span class="menu-text">매물 관리</span>
@@ -64,11 +65,12 @@
                                 <span class="menu-text">후기 관리</span>
                                 <div class="icon right-icon"></div>
                             </router-link >
+                            <!--
                             <router-link :to="{ name: 'posts.index' }" class="menu-item mt-0 mb-4" @click="toggleNavbar">
                                 <div class="icon icon-ratings"></div>
                                 <span class="menu-text">공지 관리</span>
                                 <div class="icon right-icon"></div>
-                            </router-link>
+                            </router-link>-->
                         </div>
                         <div class="footer-content">
                             <p class="tc-light-gray fs-6">계정</p>

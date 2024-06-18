@@ -1,13 +1,14 @@
 <template>
     <div class="p-3 row justify-content-center my-2">
         <div class="col-md-12"></div>
+        <!--
         <div class="search-type2 mb-5">
             <div class="border-xsl">
                 <div class="image-icon-excel"></div>
             </div>
             <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
             <button type="button" class="search-btn">검색</button>
-        </div>
+        </div>-->
         <div class="container mb-3">
             <div class="d-flex justify-content-end">
                 <div class="text-start status-selector">
@@ -112,25 +113,21 @@
     import useCategories from '@/composables/categories';
     import { useAbility } from '@casl/vue';
     
-    const search_category = ref('');
-    const search_id = ref('');
-    const search_title = ref('');
-    const search_content = ref('');
-    const search_global = ref('');
     const orderColumn = ref('created_at');
     const orderDirection = ref('desc');
-    const { auctionsData, pagination, getAuctions, deleteAuction,getStatusLabel } = useAuctions();
+    const { auctionsData, pagination, adminGetAuctions, deleteAuction,getStatusLabel } = useAuctions();
     const { categoryList, getCategoryList } = useCategories();
     const { can } = useAbility();
     const currentStatus = ref('all'); 
     const currentPage = ref(1); // 현재 페이지 번호
+    /**
     const fetchAuctions = async (page = 1) => {
         try {
             await getAuctions(1,false,currentStatus.value);
         } catch (error) {
             console.error('Error fetching auctions:', error);
         }
-    };
+    }; */
     
     onMounted(() => {
         fetchAuctions();
@@ -139,30 +136,28 @@
     
     function setFilter(status) { // 필터 설정
         currentStatus.value = status;
-        getAuctions(1,false,currentStatus.value);
+        fetchAuctions();
     }
 
     function loadPage(page) { // 페이지 로드
         if (page < 1 || page > pagination.value.last_page) return;
         currentPage.value = page;
-        getAuctions(page,false,currentStatus.value);
+        fetchAuctions();
     }
 
     const updateOrdering = (column) => {
         orderColumn.value = column;
         orderDirection.value = orderDirection.value === 'asc' ? 'desc' : 'asc';
-        fetchAuctions(
-            1,
-            search_category.value,
-            search_id.value,
-            search_title.value,
-            search_content.value,
-            search_global.value,
-            orderColumn.value,
-            orderDirection.value
-        );
+        fetchAuctions();
     };
-    
+    function fetchAuctions() {
+        adminGetAuctions(   currentPage.value,
+                            orderColumn.value,
+                            orderDirection.value,
+                            currentStatus.value
+                        );
+                     }   
+    /**
     watch(search_category, (current) => {s
         fetchAuctions(
             1,
@@ -215,7 +210,7 @@
                 current
             );
         }, 200)
-    );
+    ); */
     </script>
     
     
