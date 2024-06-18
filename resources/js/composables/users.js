@@ -7,7 +7,7 @@ export default function useUsers() {
     const user = ref({
         name: ''
     })
-    const { callApi , salert } = cmmn();
+    const { callApi , wica , wicac} = cmmn();
     const router = useRouter()
     const validationErrors = ref({})
     const isLoading = ref(false)
@@ -39,6 +39,8 @@ export default function useUsers() {
         page = 1,
         stat = 'all',
         role = 'all',
+        column = '',
+        direction = ''
     ) => {
         const apiList = [];
         if(stat != 'all'){
@@ -47,19 +49,22 @@ export default function useUsers() {
         if(role != 'all'){
             apiList.push(`users.roles:${role}`)
         }
-
         console.log(apiList);
-        return callApi({
-            _type: 'get',
-            _url:`/api/users`,
-            _param: {
-                _where:apiList,
-                _page:`${page}`
-            }
-        }).then(async result => {
+
+        return wicac.conn()
+        .url(`/api/users`)
+        .where(apiList)
+        .order([
+            [`${column}`,`${direction}`]
+        ])
+        .page(`${page}`)
+        .callback(function(result) {
+            console.log('wicac.conn callback ' , result);
             users.value = result.data;
             pagination.value = result.rawData.data.meta;
-        });
+            return result.data;
+        })
+        .get();
 
     }
 
@@ -102,27 +107,37 @@ export default function useUsers() {
             .finally(() => isLoading.value = false)
     }
 
-    const updateUser = async (user) => {
-        console.log(JSON.stringify(user));
+    const updateUser = async (user,id) => {
+        const form = {
+            user
+        }
         if (isLoading.value) return;
-
-        isLoading.value = true
-        validationErrors.value = {}
-
-        axios.put('/api/users/' + user.id, user)
-            .then(response => {
-                router.push({name: 'users.index'})
-                swal({
-                    icon: 'success',
-                    title: 'User updated successfully'
-                })
-            })
-            .catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
-            })
-            .finally(() => isLoading.value = false)
+        wica.ntcn(swal)
+        .title('수정하시겠습니까?') // 알림 제목
+        .icon('Q') //E:error , W:warning , I:info , Q:question
+        .callback(function(result) {
+            if(result.isOk){
+                //console.log(result);
+                axios.put('/api/users/' + id, form)
+                    .then(response => {
+                        wica.ntcn(swal)
+                        .icon('I') //E:error , W:warning , I:info , Q:question
+                        .callback(function(result) {
+                            if(result.isOk){                                
+                                router.push({name: 'users.index'});                    
+                            }
+                        })
+                        .alert('회원정보가 정상적으로 수정되었습니다.');
+                    })
+                    .catch(error => {
+                        if (error.response?.data) {
+                            validationErrors.value = error.response.data.errors
+                        }
+                    })
+                    .finally(() => isLoading.value = false)
+            }
+        }).confirm();
+           
     }
 
     const deleteUser = async (id) => {

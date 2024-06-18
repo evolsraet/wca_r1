@@ -10,15 +10,17 @@
                     </router-link>
 --> 
                 </div>
-                <div class="search-type2 mb-2">
-                        <div class="border-xsl">
-                        <div class="image-icon-excel">
+                <!--
+                    <div class="search-type2 mb-2" style="display: flex; align-items: center;">
+                        <div class="border-xsl" style="margin-right: 10px;">
+                            <div class="image-icon-excel">
+                                
+                            </div>
+                        </div>
+                        <input type="text" placeholder="회원 검색" id="searchUserName" style="width: auto !important; margin-right: 10px;"/>
+                        <button type="button" class="search-btn" @click="setUserName">검색</button>
+                    </div>-->
 
-                        </div>
-                    </div>
-                    <input type="text" placeholder="회원 검색" v-model="search_global" style="width: auto !important;">
-                            <button type="button" class="search-btn">검색</button>
-                        </div>
                     <div class="container mb-3">
                     <div class="d-flex justify-content-end responsive-flex-end">
                         <div class="text-start status-selector">
@@ -125,7 +127,7 @@
                                     <th class="px-6 py-3 ">
                                         <div
                                             class="flex flex-row justify-content-center"
-                                            @click="updateOrdering('title')"
+                                            @click="updateOrdering('name')"
                                         >
                                             <div
                                                 class="font-medium text-uppercase"
@@ -235,39 +237,46 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="post in users" :key="post.id">
-                                    <td class="px-6 py-4 text-sm">
-                                        {{ post.created_at }}
+                                <template v-if="users.length>0">
+                                    <tr v-for="post in users" :key="post.id">
+                                        <td class="px-6 py-4 text-sm">
+                                            {{ post.created_at }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">
+                                            {{ post.name }}    
+                                        <div :class="{'blue-box ms-2': post.status === 'ok', 'blue-box02 ms-2': post.status === 'ask', 'red-box ms-2': post.status === 'reject'}">
+                                        {{ post.status === 'ok' ? '정상' : post.status === 'ask' ? '심사중' : post.status === 'reject' ? '가입거부' : '' }}
+                                        </div>
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">
+                                            {{ post.email }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">
+                                            {{ (post.roles || []).includes('dealer') ? '딜러' : '일반' }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">
+                                            <router-link
+                                                :to="{
+                                                    name: 'users.edit',
+                                                    params: { id: post.id },
+                                                }"
+                                                class="badge bg-primary tc-wh"
+                                                >수정
+                                            </router-link>
+                                            <a
+                                                href="#"
+                                                @click.prevent="deleteUser(post.id)"
+                                                class="ms-2 badge bg-danger tc-wh"
+                                                >삭제</a
+                                            >
+                                        </td>
+                                    </tr>
+                                </template>
+                                <template v-else>
+                                    <td class="px-6 py-4 text-sm" style="text-align: center;" colspan="5">
+                                        회원 목록이 없습니다.
                                     </td>
-                                    <td class="px-6 py-4 text-sm">
-                                        {{ post.name }}    
-                                    <div :class="{'blue-box ms-2': post.status === 'ok', 'blue-box02 ms-2': post.status === 'ask'}">
-                                    {{ post.status === 'ok' ? '정상' : post.status === 'ask' ? '심사중' : '' }}
-                                    </div>
-                                    </td>
-                                    <td class="px-6 py-4 text-sm">
-                                        {{ post.email }}
-                                    </td>
-                                    <td class="px-6 py-4 text-sm">
-                                        {{ (post.roles || []).includes('dealer') ? '딜러' : '일반' }}
-                                    </td>
-                                    <td class="px-6 py-4 text-sm">
-                                        <router-link
-                                            :to="{
-                                                name: 'users.edit',
-                                                params: { id: post.id },
-                                            }"
-                                            class="badge bg-primary tc-wh"
-                                            >수정
-                                        </router-link>
-                                        <a
-                                            href="#"
-                                            @click.prevent="deleteUser(post.id)"
-                                            class="ms-2 badge bg-danger tc-wh"
-                                            >삭제</a
-                                        >
-                                    </td>
-                                </tr>
+                                </template>
                             </tbody>
                         </table>
                     </div>
@@ -294,9 +303,6 @@ import { ref, onMounted, watch, computed} from "vue";
 import useUsers from "../../../composables/users";
 import { useAbility } from "@casl/vue";
 
-const search_id = ref("");
-const search_title = ref("");
-const search_global = ref("");
 const orderColumn = ref("created_at");
 const orderDirection = ref("desc");
 const { users, getUsers, deleteUser, adminGetUsers , pagination } = useUsers();
@@ -308,25 +314,43 @@ onMounted(async () => {
     adminGetUsers(1,currentStatus.value,currentRoleStatus.value);                  
 });
 
-async function loadPage(page) { // 페이지 로드
+function loadPage(page) {
     if (page < 1 || page > pagination.value.last_page) return;
     currentPage.value = page;
-    adminGetUsers(page,currentStatus.value,currentRoleStatus.value);
+    fetchUsers();
 }
 
-function setUserFilter(status) { // 필터 설정
+function setUserFilter(status) {
     currentRoleStatus.value = status;
-    adminGetUsers(1,currentStatus.value,currentRoleStatus.value);
+    fetchUsers();
 }
-function setStatusFilter(status) { // 필터 설정
+
+function setStatusFilter(status) {
     currentStatus.value = status;
-    adminGetUsers(1,currentStatus.value,currentRoleStatus.value);
+    fetchUsers();
 }
+
+function setUserName() {
+    fetchUsers();
+}
+
 const updateOrdering = (column) => {
     orderColumn.value = column;
     orderDirection.value = orderDirection.value === "asc" ? "desc" : "asc";
-    adminGetUsers(1,currentStatus.value,currentRoleStatus.value);
+    fetchUsers();
 };
+
+function fetchUsers() {
+    adminGetUsers(
+        currentPage.value,
+        currentStatus.value,
+        currentRoleStatus.value,
+        orderColumn.value,
+        orderDirection.value
+    );
+}
+
+/** 
 watch(search_id, (current, previous) => {
     getUsers(1, current, search_title.value, search_global.value);
 });
@@ -338,7 +362,8 @@ watch(
     _.debounce((current, previous) => {
         getUsers(1, search_id.value, search_title.value, current);
     }, 200)
-);
+);*/
+
 </script>
 <style scoped>
 .sidebar {
