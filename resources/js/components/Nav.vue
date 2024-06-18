@@ -279,10 +279,13 @@
                                     <router-link :to="{ name: 'user.review'}" class="nav-link mx-3">이용후기</router-link>
                                 </li>
                             </div>
-                            <li class="nav-item my-member ms-auto">
+                            <li class="nav-item my-member ms-auto" @click="toggleSettingsMenu">
                                 <a class="tc-wh p-1 pb-0 mx-2" href="#">{{ user.name }} 님</a>
                             </li>
                             <li><a class="mx-3 nav-link tc-light-gray logout" href="/login" @click="logout">로그아웃</a></li>
+                            <div v-if="showSettings" :class="['settings-menu','setting-web', { show: showSettings }]">
+                                 <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                            </div>
                         </template>
                     <!-- 게스트 일때 -->
                     <template v-else-if="!user?.name">
@@ -316,10 +319,13 @@
                         <li class="nav-item">
                             <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3">공지사항</router-link>
                         </li>
-                        <li class="nav-item my-member-dealer ms-auto"  @click="redirectByName('dealer.profile')" >
+                        <li class="nav-item my-member-dealer ms-auto" @click="toggleSettingsMenu" >
                             <img src="../../img/myprofile_ex.png" class="nav-profile" alt="Profile Image"><a :to="{ name: 'dealer.profile' }"  class="tc-wh p-1 pb-0 mx-2 me-3" href="#">{{ user.name }}</a>
                         </li>
                         <li><a class="mx-3 nav-link tc-wh logout" href="/login" @click="logout">로그아웃</a></li>
+                        <div v-if="showSettings" :class="['settings-menu','setting-web', { show: showSettings }]">
+                       <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                    </div>
                     </template>
                     <!-- 로그인 시 -->
                 <!--    <ul v-if="user?.name" class="navbar-nav mt-lg-0 ms-auto">
@@ -696,7 +702,9 @@ a.navbar-toggler.p-2 {
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     border-radius: 6px;
 }
-
+.setting-web{
+    right:170px;
+}
 .settings-menu.show {
     transform: translateY(0);
     opacity: 1;

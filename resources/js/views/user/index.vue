@@ -107,13 +107,13 @@
                                                                     <img src="../../../img/car_example.png" alt="딜러 사진" class="mb-2 align-text-top">
                                                                 </div>
                                                                 <h5 class="mb-0">{{ auction.car_no }}</h5>
-                                                                <p v-if="auction.status === 'chosen'" class="ml-auto"><span class="blue-box02">선택완료</span></p>
-                                                                <p v-if="auction.status === 'cancel'" class="ml-auto"><span class="blue-box02">경매 취소</span></p>
+                                                                <p v-if="auction.status === 'chosen'" class="ml-auto"><span class="blue-box02 bg-opacity-50">선택완료</span></p>
+                                                                <p v-if="auction.status === 'cancel'" class="ml-auto"><span class="box bg-secondary">경매 취소</span></p>
                                                                 <p v-if="auction.status === 'wait'" class="ml-auto"><span class="blue-box02">딜러 선택</span></p>
-                                                                <p v-if="auction.status === 'diag'" class="ml-auto"><span class="blue-box02">진단 대기</span></p>
-                                                                <p v-if="auction.status === 'ask'" class="ml-auto"><span class="blue-box02">신청 완료</span></p>
-                                                                <p v-if="auction.status === 'ing'" class="ml-auto"><span class="blue-box02">경매진행</span></p>
-                                                                <p v-if="auction.status === 'done'" class="ml-auto"><span class="blue-box02">경매완료</span></p>
+                                                                <p v-if="auction.status === 'diag'" class="ml-auto"><span class="box bg-success bg-opacity-75">진단 대기</span></p>
+                                                                <p v-if="auction.status === 'ask'" class="ml-auto"><span class="box bg-warning bg-opacity-75">신청 완료</span></p>
+                                                                <p v-if="auction.status === 'ing'" class="ml-auto"><span class="box bg-danger">경매진행</span></p>
+                                                                <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">경매완료</span></p>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -226,6 +226,9 @@
             padding: 5px 5px 5px !important;
         }
         .blue-box02{
+            margin-right:0px !important;
+        }
+        .box{
             margin-right:0px !important;
         }
     }
@@ -422,7 +425,11 @@
         width: auto !important;
         border-radius: 6px !important;
     }
-    
+    .box {
+        padding: 0 15px !important;
+        width: auto !important;
+        border-radius: 6px !important;
+    }
     @media (min-width: 992px){
 
         .col-md-6 {}
