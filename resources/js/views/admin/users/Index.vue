@@ -321,16 +321,14 @@ function loadPage(page) {
 }
 
 function setUserFilter(status) {
+    currentPage.value = 1;
     currentRoleStatus.value = status;
     fetchUsers();
 }
 
 function setStatusFilter(status) {
+    currentPage.value = 1;
     currentStatus.value = status;
-    fetchUsers();
-}
-
-function setUserName() {
     fetchUsers();
 }
 
