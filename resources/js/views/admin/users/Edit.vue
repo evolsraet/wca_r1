@@ -40,7 +40,7 @@
                             </div>
                             
                         </div>
-                        <!-- Role -->
+                        <!-- Role 
                         <div class="mb-3">
                             <label for="user-category" class="form-label" >
                                 권한
@@ -65,15 +65,15 @@
                                 </div>
                             </div>
                            
-                        </div>
+                        </div>-->
                         <div class="mb-3">
                             <label for="email" class="form-label">승인여부</label>
                             <div class="text-start status-selector">
-                                <input type="radio" name="status" v-model="user.stat" value="ok">
+                                <input type="radio" name="status" v-model="user.status" value="ok" id="ok">
                                 <label for="ok" class="mx-2">정상</label>
-                                <input type="radio" name="status" value="ask" v-model="user.stat" id="ask">
+                                <input type="radio" name="status" value="ask" v-model="user.status" id="ask">
                                 <label for="ask">심사중</label>
-                                <input type="radio" name="status" value="reject" v-model="user.stat" id="reject">
+                                <input type="radio" name="status" value="reject" v-model="user.status" id="reject">
                                 <label for="reject" class="mx-2">거절</label>
                             </div>
                             
@@ -127,42 +127,35 @@ const { validate, errors, resetForm } = useForm({ validationSchema: schema });
 // Define actual fields for validation
 const { value: name } = useField("name", null, { initialValue: "" });
 const { value: email } = useField("email", null, { initialValue: "" });
-const { value: stat } = useField("stat", null, { initialValue: "" });
-const { value: password } = useField("password", null, { initialValue: "" });
-const { value: role } = useField("role", null, {
-    initialValue: "",
-    label: "role",
-});
-
+const { value: status } = useField("status", null, { initialValue: "" });
 
 const user = reactive({
-    id: route.params.id,
     name,
     email,
-    password,
-    role,
-    stat,
+    status,
+    //role
 });
 
 onMounted(async () => {
     const response = await getUser(route.params.id);
     await getRoleList();
 
+    /** 
     for (const roleName of response.roles) {
         const findRoleId = roleList.value.find(role => role.name === roleName);
         user.role = findRoleId.id;
-    }
+    }*/
 
     user.name = response.name;
     user.email = response.email;
-    user.password = response.password;
-    user.stat = response.status;
+    user.status = response.status;
 });
 
 function submitForm() {
     validate().then((form) => {
+        console.log(user);
         console.log(JSON.stringify(user));
-        if (form.valid) updateUser(user,);
+        if (form.valid) updateUser(user,route.params.id);
     });
 }
 

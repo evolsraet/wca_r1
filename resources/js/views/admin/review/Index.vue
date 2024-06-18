@@ -11,38 +11,38 @@
                         </div>
                     </router-link>
                     <div class="proceeding"></div>
+                    <!--
                     <div class="search-type2 mb-5">
                         <div class="border-xsl">
-                            <div class="image-icon-excel">
-                                
+                            <div class="image-icon-excel"></div>
                         </div>
-                    </div>
-                    <input type="text" placeholder="검색어"  v-model="search_title" style="width: auto !important;">
-                            <button type="button" class="search-btn">검색</button>
-                        </div>
+                        <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
+                        <button type="button" class="search-btn">검색</button>
+                    </div>-->
+                    <!--
                     <div class="container mb-3">
-                    <div class="d-flex justify-content-end">
-                        <div class="text-start status-selector">
-                        <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
-                        <label for="all" class="mx-2">전체</label>
+                        <div class="d-flex justify-content-end">
+                            <div class="text-start status-selector">
+                            <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
+                            <label for="all" class="mx-2">전체</label>
 
-                        <input type="radio" name="status" value="user" id="user" hidden @change="setFilter('user')">
-                        <label for="ongoing">일반</label>
+                            <input type="radio" name="status" value="user" id="user" hidden @change="setFilter('user')">
+                            <label for="ongoing">일반</label>
 
-                        <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setFilter('dealer')">
-                        <label for="completed" class="mx-2">딜러</label>
-                    </div>
-                    <div class="text-end select-option">
-                            <select class="form-select select-rank" aria-label="최근 등록 순">
-                                <option selected>최근 등록 순</option>
-                                <option value="1">가격 낮은 순</option>
-                                <option value="2">가격 높은 순</option>
-                                <option value="3">연식 오래된 순</option>
-                                <option value="4">연식 최신 순</option>
-                            </select>
+                            <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setFilter('dealer')">
+                            <label for="completed" class="mx-2">딜러</label>
                         </div>
-                    </div>
-                    </div>
+                        <div class="text-end select-option">
+                                <select class="form-select select-rank" aria-label="최근 등록 순">
+                                    <option selected>최근 등록 순</option>
+                                    <option value="1">가격 낮은 순</option>
+                                    <option value="2">가격 높은 순</option>
+                                    <option value="3">연식 오래된 순</option>
+                                    <option value="4">연식 최신 순</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>-->
                     <div class="o_table_mobile my-5">
                     <div class="tbl_basic tbl_dealer">
                         <table class="table">
@@ -130,44 +130,51 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="review in reviewsData" :key="review">
+                                <template v-if="reviewsData.length>0">
+                                        <tr v-for="review in reviewsData" :key="review">
+                                        <td class="px-6 py-4 text-sm">
+                                            {{ review.created_at }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">
+                                            <div class="blue-box"
+                                                
+                                            >
+                                                {{ review.id }}
+                                            </div>
+                                        </td>
+                                <!--     <td class="px-6 py-4 text-sm">
+                                            <img
+                                                :src="post.original_image"
+                                                alt="image"
+                                                height="70"
+                                            />
+                                        </td>--> 
                                     <td class="px-6 py-4 text-sm">
-                                        {{ review.created_at }}
+                                            {{ review.content }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">
+                                            <router-link
+                                                href="#"
+                                                :to="{ 
+                                                    name: 'review.approve', params: { id: review.id } 
+                                                }"
+                                                class="ms-2 badge bg-danger tc-wh"
+                                                >수정
+                                            </router-link>
+                                            <a
+                                                href="#"
+                                                @click.prevent="adminDeleteReview(review.id)"
+                                                class="ms-2 badge bg-danger tc-wh"
+                                                >삭제</a
+                                            >
+                                        </td>
+                                    </tr>
+                                </template>
+                                <template v-else>
+                                    <td class="px-6 py-4 text-sm" style="text-align: center;" colspan="4">
+                                        작성된 이용 후기가 없습니다.
                                     </td>
-                                    <td class="px-6 py-4 text-sm">
-                                        <div class="blue-box"
-                                            
-                                        >
-                                            {{ review.id }}
-                                        </div>
-                                    </td>
-                              <!--     <td class="px-6 py-4 text-sm">
-                                        <img
-                                            :src="post.original_image"
-                                            alt="image"
-                                            height="70"
-                                        />
-                                    </td>--> 
-                                   <td class="px-6 py-4 text-sm">
-                                        {{ review.content }}
-                                    </td>
-                                    <td class="px-6 py-4 text-sm">
-                                        <router-link
-                                            href="#"
-                                            :to="{ 
-                                                name: 'review.approve', params: { id: review.id } 
-                                            }"
-                                            class="ms-2 badge bg-danger tc-wh"
-                                            >수정
-                                        </router-link>
-                                        <a
-                                            href="#"
-                                            @click.prevent="adminDeleteReview(review.id)"
-                                            class="ms-2 badge bg-danger tc-wh"
-                                            >삭제</a
-                                        >
-                                    </td>
-                                </tr>
+                                </template>
                             </tbody>
                         </table>
                     </div>
@@ -195,36 +202,40 @@ import useCategories from "@/composables/categories";
 import { useAbility } from "@casl/vue";
 import { initReviewSystem } from '@/composables/review';
 
-const search_category = ref("");
-const search_id = ref("");
-const search_title = ref("");
-const search_content = ref("");
-const search_global = ref("");
 const orderColumn = ref("created_at");
 const orderDirection = ref("desc");
-const { posts, getPosts, deletePost } = usePosts();
 const { categoryList, getCategoryList } = useCategories();
 const { can } = useAbility();
-const { getAllReview , adminDeleteReview , reviewsData , reviewPagination } = initReviewSystem(); 
+const { adminGetReviews , adminDeleteReview , reviewsData , reviewPagination } = initReviewSystem(); 
 const currentStatus = ref('all');
 const currentPage = ref(1);
 
 onMounted(async () => {
-    await getAllReview(1);
-    console.log(reviewsData.value);
-    getPosts();
+    fetchReviews();
     getCategoryList();
 });
 
-function setFilter(status) { // 필터 설정
-  currentStatus.value = status;
-}
 
 async function loadPage(page) { // 페이지 로드
     if (page < 1 || page > reviewPagination.value.last_page) return;
     currentPage.value = page;
-    await getAllReview(page);
+    fetchReviews();
 }
+
+
+
+const updateOrdering = (column) => {
+    orderColumn.value = column;
+    orderDirection.value = orderDirection.value === "asc" ? "desc" : "asc";
+    fetchReviews();
+};
+
+function fetchReviews() {
+    adminGetReviews(    currentPage.value,
+                        orderColumn.value,
+                        orderDirection.value,
+                );
+            }   
 
 /** 
 const filterReviews = computed(() => {
@@ -237,21 +248,7 @@ const filterReviews = computed(() => {
         );
     }
 });*/
-
-const updateOrdering = (column) => {
-    orderColumn.value = column;
-    orderDirection.value = orderDirection.value === "asc" ? "desc" : "asc";
-    getPosts(
-        1,
-        search_category.value,
-        search_id.value,
-        search_title.value,
-        search_content.value,
-        search_global.value,
-        orderColumn.value,
-        orderDirection.value
-    );
-};
+/** 
 watch(search_category, (current, previous) => {
     getPosts(
         1,
@@ -304,7 +301,7 @@ watch(
             current
         );
     }, 200)
-);
+);*/
 </script>
 <style scoped>
 .text-overflow{

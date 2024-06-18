@@ -7,7 +7,7 @@ import { cmmn } from '@/hooks/cmmn';
 let starScore = 0;
 
 export function initReviewSystem() {
-    const { callApi , salert , wica } = cmmn();
+    const { callApi , wicac , wica } = cmmn();
     const router = useRouter();
 
 
@@ -346,6 +346,27 @@ export function initReviewSystem() {
         });
     }
 
+    const adminGetReviews = async (
+        page = 1,
+        column = '',
+        direction = '',
+    ) => {
+        
+        return wicac.conn()
+        .url(`/api/reviews`)
+        .order([
+            [`${column}`,`${direction}`]
+        ])
+        .page(`${page}`)
+        .callback(function(result) {
+            console.log('wicac.conn callback ' , result.data);
+            reviewsData.value = result.data;
+            reviewPagination.value = result.rawData.data.meta;
+            return result.data;
+        })
+        .get();
+
+    }
     // 작성한 이용후기 불러오기 (전체 리뷰 불러오기)
     const getAllReview = async (page = 1) => {
         return callApi({
@@ -409,6 +430,7 @@ export function initReviewSystem() {
    
 
     return {
+        adminGetReviews,
         reviewPagination,
         submitReview,
         getUserReview,
