@@ -109,7 +109,11 @@ class UserService
             $data = $request->input('user');
             $data = $this->checkJson($data);
             $data = $this->beforeData($data);
-            $dealerData = $this->checkJson($data);
+
+            $dealerData = $this->checkJson($data['dealer']);
+
+            // 삭제
+            unset($data['dealer']);
 
             if ($data) {
                 $item->update($data);

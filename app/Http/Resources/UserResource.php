@@ -24,9 +24,23 @@ class UserResource extends JsonResource
             // $parentArray[]
         }
 
-        // if (Str::contains($request->get('with', ''), 'dealer')) {
-        $additionalArray['dealer'] = new DealerResource($this->dealer);
-        // }
+        // // if (Str::contains($request->get('with', ''), 'dealer')) {
+        // $additionalArray['dealer'] = new DealerResource($this->dealer);
+        // // }
+
+        // with 부분 리소스로 리턴
+        $withRelations = $request->query('with');
+        if ($withRelations) {
+            $relations = explode(',', $withRelations);
+            foreach ($relations as $relation) {
+                if ($this->relationLoaded($relation)) {
+                    $resourceClass = '\\App\\Http\\Resources\\' . ucfirst($relation) . 'Resource';
+                    if (class_exists($resourceClass)) {
+                        $parentArray[$relation] = new $resourceClass($this->$relation);
+                    }
+                }
+            }
+        }
 
         // 파일들
         $additionalArray['files'] = count($this->getMedia('*')) > 0 ? $this->getMedia('*') : null;
