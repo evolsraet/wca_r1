@@ -19,19 +19,19 @@
                     <label for="done" class="mx-2">경매완료</label>
 
                     <input type="radio" name="status" value="chosen" id="chosen"  @change="setFilter('chosen')">
-                    <label for="chosen">선택완료</label>
+                    <label for="chosen" class="mx-2">선택완료</label>
 
                     <input type="radio" name="status" value="wait" id="wait"  @change="setFilter('wait')">
-                    <label for="wait">선택대기</label>
+                    <label for="wait" class="mx-2">선택대기</label>
 
                     <input type="radio" name="status" value="ing" id="ing"  @change="setFilter('ing')">
-                    <label for="ing">경매진행</label>
+                    <label for="ing" class="mx-2">경매진행</label>
 
                     <input type="radio" name="status" value="diag" id="diag"  @change="setFilter('diag')">
-                    <label for="diag">진단대기</label>
+                    <label for="diag" class="mx-2">진단대기</label>
 
                     <input type="radio" name="status" value="ask" id="ask"  @change="setFilter('ask')">
-                    <label for="ask">신청완료</label>
+                    <label for="ask" class="mx-2">신청완료</label>
 
                 </div>
             </div>

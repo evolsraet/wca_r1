@@ -137,3 +137,232 @@
       margin-right: 10px;
       margin-bottom: 5px;
   }
+.select-none span{
+  cursor: pointer;
+}
+
+/* 대시보드 scss*/
+
+#dashadmin {
+  .card-container {
+    font-size: 1.3rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .section {
+    text-align: center;
+    margin: 10px;
+    flex: 1 1 200px;
+  }
+
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 250px;
+  }
+
+  .title {
+    margin-bottom: 10px;
+  }
+
+  .subtext {
+    margin-top: 10px;
+    color: #888;
+  }
+
+  .divider {
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+  }
+
+  @media (max-width: 1153px) {
+    .card-container {
+      justify-content: center;
+    }
+
+    .section {
+      flex: 1 1 45%;
+      margin: 10px 5px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .section {
+      flex: 1 1 100%;
+      margin: 10px 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    h4 {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    .col-2 {
+      flex: 0 0 auto;
+      width: 27.666667%;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .form-select {
+      width: 100px !important;
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      display: none;
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #f0f0f0;
+        td {
+          padding: 10px;
+          &:first-child {
+            color: #888;
+          }
+          &.content {
+            width: 70%;
+          }
+          &.actions {
+            text-align: right;
+            a {
+              margin: 0 5px;
+              color: #888;
+              text-decoration: none;
+              &.delete {
+                color: red;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .auction-deadline {
+    width: 100%;
+    height: 38px;
+    background-color: #f7f8fb;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: space-between;
+    padding: 25px;
+    border-radius: 6px;
+  }
+
+  .tab-nav {
+    ul {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0 auto;
+      width: 100%;
+      justify-content: flex-start;
+      li {
+        flex: 0 0 auto;
+        text-align: center;
+        display: flex;
+        justify-content: flex-start;
+        a {
+          width: auto;
+          font-size: 1.3rem;
+          &.active {
+            color: red;
+            font-weight: bold;
+            border-bottom: 1px solid red;
+            width: 78px;
+            display: flex;
+            text-align: center;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
+    }
+  }
+
+  .review-content {
+    .card:hover {
+      box-shadow: 4px 3px 13px -1px rgba(27, 50, 142, 0.2) !important;
+    }
+  }
+
+  .my-info {
+    width: 100%;
+    height: 80%;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #fff;
+    padding: 30px;
+    gap: 6px;
+  }
+
+  .dealinfo-content {
+    width: 100%;
+    height: auto;
+    padding: 0 20px 20px 20px;
+    margin-top: 0px;
+    background-color: #f7f8fb;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    flex-direction: column;
+    h5 {
+      margin: 15px;
+      width: auto;
+    }
+  }
+
+  .profile-card {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+
+    .profile-picture {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background-color: #f7f8fb;
+      margin-right: 15px;
+    }
+
+    .profile-details {
+      flex: 1;
+    }
+  }
+
+  .membership {
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    padding: 2px 5px;
+    font-size: 12px;
+    display: inline-block;
+  }
+
+  .form-select {
+    width: 150px;
+  }
+}
