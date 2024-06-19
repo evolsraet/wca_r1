@@ -12,15 +12,22 @@
                     <span class="admin-icon admin-icon-dashboard-top process mx-3 mt-2"></span>
                     <p class="process mx-1 mt-1">대시보드</p>
                 </button>
-                <button type="button" to="/admin" aria-label="Toggle navigation" @click="toggleSettingsMenu"  :class="{ 'rotate': showSettings }">
-                    <span class="admin-icon admin-icon-my process ms-3"></span>
-                    <p class="process ms-3 mt-2">마이</p>
+                <button
+                type="button"
+                to="/admin"
+                aria-label="Toggle navigation"
+                @click="toggleSettingsMenu"
+                :class="{ 'rotate': showSettings }"
+                >
+                <span class="admin-icon admin-icon-my process ms-3"></span>
+                <p class="process ms-3 mt-2">마이</p>
                 </button>
             </div>
         </div>
     </nav>
-    <div v-if="showSettings" :class="['settings-menu','setting-web', { show: showSettings }]">
-            <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+    <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
+      <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+      <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
     </div>
     <div :class="['menu-container', { show: isMenuOpen || !isAdminPage }]" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-lg-0">
@@ -66,7 +73,7 @@ import { computed, ref } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import useAuth from "@/composables/auth";
-
+const showSettings = ref(false);
 const store = useStore();
 const user = computed(() => store.state.auth.user);
 const { processing, logout } = useAuth();
@@ -197,4 +204,26 @@ function toggledash() {
 .sticky-top{
     position: relative !important;
 }
+
+.settings-menu {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    width: 150px;
+    right: 10px;
+    top: 74px;
+    z-index: 1023;
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    border-radius: 6px;
+}
+.setting-web{
+    right:170px;
+}
+.settings-menu.show {
+    transform: translateY(0);
+    opacity: 1;
+}
+
 </style>
