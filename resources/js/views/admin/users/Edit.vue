@@ -1,7 +1,8 @@
 <template>
+<h4><span class="admin-icon admin-icon-menu"></span>회원관리</h4>
     <div class="row justify-content-center my-5">
         <div class="col-md-10">
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 shadow-none">
                 <div class="card-body">
                     <form @submit.prevent="submitForm">
                         <div class="mb-3">
@@ -173,11 +174,11 @@
                         <div class="mt-4">
                             <button
                                 :disabled="isLoading"
-                                class="btn btn-primary"
+                                class="w-100 btn btn-primary"
                             >
                                 <div v-show="isLoading" class=""></div>
                                 <span v-if="isLoading">Processing...</span>
-                                <span v-else>Save</span>
+                                <span v-else>저장</span>
                             </button>
                         </div>
                     </form>
@@ -313,3 +314,20 @@ function editPostCodeReceive(elementName) {
     })
 }
 </script>
+<style>
+h4 {
+    position: relative;
+    padding-bottom: 15px;
+}
+
+h4::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px; 
+    background-color: #f7f8fb;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+</style>

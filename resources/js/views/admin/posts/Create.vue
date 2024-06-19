@@ -1,8 +1,7 @@
 <template>
     <form @submit.prevent="submitForm">
-        <div class="row my-5">
-            <div class="col-md-8">
-                <div class="card border-0 shadow-sm">
+        <div class="row my-5 mov-wide m-auto">
+                <div class="card border-0 shadow-none">
                     <div class="card-body">
                         <div class="d-flex justify-content-between">
                             <h6 class="mt-3">카테고리</h6>
@@ -63,20 +62,6 @@
                 <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload" id="file_user_photo">
                 <div class="text-start tc-light-gray">사진 파일: {{ fileName }}</div>
             </div>
-            <div class="col-md-4">
-                <div class="card border-0 shadow-sm">
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <div class="text-danger mt-1">
-                                <div v-for="message in validationErrors?.thumbnail">
-                                    {{ message }}
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </form>
 </template>
 <script setup>
