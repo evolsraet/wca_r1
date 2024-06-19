@@ -243,13 +243,13 @@
   import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
 
   const carName = ref('');
-const emoji = ref('');
+  const emoji = ref('');
 
-const updateCarName = () => {
-  const result = setRandomPlaceholder();
-  carName.value = result.carName;
-  emoji.value = result.emoji;
-};
+  const updateCarName = () => {
+    const result = setRandomPlaceholder();
+    carName.value = result.carName;
+    emoji.value = result.emoji;
+  };
 
   const loginCardRef = ref(null);
   const bannerRef = ref(null);
