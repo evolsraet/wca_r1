@@ -6,7 +6,18 @@
           <div>
             <div class="mb-4">
               <div class="card my-auction">
-                <div class="card-img-top-ty01"></div>
+                <div v-if="!isMobileView" class="d-flex flex-row">
+                    <div class="w-50">
+                        <div class="card-img-top-ty02 review-img"></div>
+                    </div>
+                    <div class="w-50 d-flex flex-column">
+                        <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
+                        <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+                    </div>
+                </div>
+                <div v-if="isMobileView">
+                    <div class="card-img-top-ty02"></div>
+                </div>
                 <div class="card-body">
                   <p class="tc-light-gray">차량번호</p>
                   <input v-model="auction.car_no" id="car_no" class="form-control"/>
@@ -308,14 +319,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, watchEffect} from 'vue';
+import { ref, onMounted, reactive, watchEffect ,onBeforeUnmount} from 'vue';
 import { useRoute } from 'vue-router';
 import file from "@/components/file.vue";
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import hideIcon from '../../../../../resources/img/Icon-black-down.png';
 import showIcon from '../../../../../resources/img/Icon-black-up.png';
-
+const isMobileView = ref(window.innerWidth <= 640);
+const checkScreenWidth = () => {
+    if (typeof window !== 'undefined') {
+      isMobileView.value = window.innerWidth <= 640;
+    }
+  };
 const route = useRoute();
 const { getAuctionById, updateAuctionStatus, isLoading, updateAuction } = useAuctions();
 const auctionId = parseInt(route.params.id); 
@@ -406,6 +422,8 @@ function editPostCode(elementName) {
 }
 
 onMounted(async () => {
+  window.addEventListener('resize', checkScreenWidth);
+  checkScreenWidth();
   await fetchAuctionDetails();
   const data = auctionDetails.value.data;
   document.getElementById("status").value = data.status;
@@ -425,7 +443,9 @@ onMounted(async () => {
 });
 
 
-
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScreenWidth);
+}); 
 </script>
 
 <style scoped>
