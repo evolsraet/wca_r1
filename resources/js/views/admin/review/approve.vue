@@ -43,7 +43,7 @@
                         <p>매물번호 / 564514</p>
                         <p>딜 러 명 / {{review.dealer.name}}</p>
                     </div>
-                    <p class="mt-4 auction-deadline tc-light-gray">판매가<span>{{ amtComma(review.auction.final_price) }}</span></p>
+                    <p class="mt-4 auction-deadline tc-light-gray">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>
                     <div class="card-body">
                         <p class="tc-light-gray">별점</p>
                         <input v-model="rv.star" class="form-control bg-secondary bg-opacity-10" />
@@ -132,11 +132,11 @@ onMounted(async () => {
     reviewData.value = [response];
     //carInfo.value = await getCarInfo(response.auction.owner_name, response.auction.car_no);
     await nextTick();
-    setInitialStarRating(response.star);
+    //setInitialStarRating(response.star);
     initReviewSystem();
     watchEffect(() => {
         rv.auction_id = response.auction_id,
-        rv.dealer_id = response.dealer_id,
+        rv.dealer_id = response.dealer.id,
         rv.star = response.star;
         rv.user_id = response.user_id,
         rv.content = response.content
