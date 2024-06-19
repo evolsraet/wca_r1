@@ -36,7 +36,8 @@
   .admin-icon-secondary {
     filter: brightness(0) saturate(100%) invert(31%) sepia(96%) saturate(677%) hue-rotate(323deg) brightness(93%) contrast(101%);
   }
-  
+  /* 사이드 바 아이콘 스타일*/
+
   .admin-icon-profile{
     background-image: url('../img/admin/profile.png');  
   }
@@ -70,6 +71,8 @@
       width: 10px !important;
       height: 14px !important;
   }
+    /* topbar 아이콘 스타일*/
+
   .admin-icon-dashboard-top{
     background-image: url('../img/admin/top-dash.png');
     width: 25px !important;
@@ -85,12 +88,12 @@
     width: 40px !important;
     height: 38px !important;
   }
+  
 .admin-icon-dashboard {
   transition: box-shadow 0.3s ease;
 
   &:hover {
     @extend .shadow-lg;
-    @extend .bg-black;
   }
 }
 
@@ -126,3 +129,11 @@
     }
   }
   
+    /* Menu 아이콘 스타일*/
+  .admin-icon-menu{
+      background-image: url('../img/admin/menu_Icon.png');
+      width: 18px !important;
+      height: 20px !important;
+      margin-right: 10px;
+      margin-bottom: 5px;
+  }

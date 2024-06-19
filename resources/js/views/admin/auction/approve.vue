@@ -2,11 +2,22 @@
   <div class="container-fluid" v-if="auctionDetails">
     <form @submit.prevent="updateAuction(auctionId, auction)">
       <div>
-        <div class="container my-4">
+        <div class="container my-4 mov-wide">
           <div>
             <div class="mb-4">
               <div class="card my-auction">
-                <div class="card-img-top-ty01"></div>
+                <div v-if="!isMobileView" class="d-flex flex-row">
+                    <div class="w-50">
+                        <div class="card-img-top-ty02 review-img"></div>
+                    </div>
+                    <div class="w-50 d-flex flex-column">
+                        <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
+                        <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+                    </div>
+                </div>
+                <div v-if="isMobileView">
+                    <div class="card-img-top-ty02"></div>
+                </div>
                 <div class="card-body">
                   <p class="tc-light-gray">차량번호</p>
                   <input v-model="auction.car_no" id="car_no" class="form-control"/>
@@ -88,6 +99,11 @@
               </div>
             </div>
           </div>
+          <div class="mt-3" @click.stop="">
+              <div class="btn-group mt-3">
+                <button class="btn btn-primary tc-wh"> 등록 </button>
+              </div>
+            </div>
           <div @click="toggleVisibility" class="d-flex justify-content-between align-items-center p-3 border-bottom">
             <h5>차량정보</h5>
             <img :src="isVisible ? hideIcon : showIcon" :alt="isVisible ? '숨기기' : '더보기'" class="toggle-icon" width="20px" height="10px" />
@@ -296,15 +312,6 @@
             </div>
           </transition>
         </div>
-        <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
-          <div class="sheet-content">
-            <div class="mt-3" @click.stop="">
-              <div class="btn-group mt-3">
-                <button class="btn btn-primary tc-wh"> 등록 </button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </form>
     
@@ -312,14 +319,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, watchEffect} from 'vue';
+import { ref, onMounted, reactive, watchEffect ,onBeforeUnmount} from 'vue';
 import { useRoute } from 'vue-router';
 import file from "@/components/file.vue";
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import hideIcon from '../../../../../resources/img/Icon-black-down.png';
 import showIcon from '../../../../../resources/img/Icon-black-up.png';
-
+const isMobileView = ref(window.innerWidth <= 640);
+const checkScreenWidth = () => {
+    if (typeof window !== 'undefined') {
+      isMobileView.value = window.innerWidth <= 640;
+    }
+  };
 const route = useRoute();
 const { getAuctionById, updateAuctionStatus, isLoading, updateAuction } = useAuctions();
 const auctionId = parseInt(route.params.id); 
@@ -410,6 +422,8 @@ function editPostCode(elementName) {
 }
 
 onMounted(async () => {
+  window.addEventListener('resize', checkScreenWidth);
+  checkScreenWidth();
   await fetchAuctionDetails();
   const data = auctionDetails.value.data;
   document.getElementById("status").value = data.status;
@@ -429,7 +443,9 @@ onMounted(async () => {
 });
 
 
-
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScreenWidth);
+}); 
 </script>
 
 <style scoped>
@@ -457,4 +473,13 @@ onMounted(async () => {
   opacity: 1;
   overflow: hidden;
 }
+
+.card-body {
+  margin-bottom: 10px;
+}
+
+.card-body:last-child {
+  margin-bottom: 0; 
+}
+
 </style>

@@ -1,7 +1,8 @@
 <template>
+<h4><span class="admin-icon admin-icon-menu"></span>회원관리</h4>
     <div class="row justify-content-center my-5">
         <div class="col-md-10">
-            <div class="card border-0 shadow-sm">
+            <div class="card border-0 shadow-none">
                 <div class="card-body">
                     <form @submit.prevent="submitForm">
                         <div class="mb-3">
@@ -28,7 +29,7 @@
                                 >가입일</label
                             >
                             <input
-                                v-model = "user.created_at"
+                                v-model = "created_at"
                                 type="text"
                                 class="form-control"
                                 readonly
@@ -37,7 +38,7 @@
                         <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input
-                                v-model = "user.email"
+                                v-model = "email"
                                 type="email"
                                 class="form-control"
                                 readonly
@@ -94,13 +95,13 @@
                             </div>
                             
                         </div>
-                        <div v-if="user.dealer">
+                        <div v-if="dealer_info">
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
                                     >소속상사</label
                                 >
                                 <input
-                                    v-model = "user.company"
+                                    v-model = "dealer.company"
                                     type="text"
                                     class="form-control"
                                 />
@@ -108,20 +109,20 @@
                             <div class="form-group">
                                 <label for="user-title" class="form-label">소속상사 주소</label>
                                 <input
-                                    v-model="user.company_post"
+                                    v-model="dealer.company_post"
                                     type="text"
                                     class="form-control"
                                     placeholder="post"
                                 />
                                 <input
-                                    v-model="user.company_addr1"
+                                    v-model="dealer.company_addr1"
                                     type="text"
                                     class="form-control"
                                     placeholder="주소"
                                     @click="editPostCode('daumPostcodeInput')"
                                 />
                                 <input
-                                    v-model="user.company_addr2"
+                                    v-model="dealer.company_addr2"
                                     type="text"
                                     class="form-control"
                                     placeholder="상세주소"
@@ -133,20 +134,20 @@
                             <div class="form-group">
                                 <label for="user-title" class="form-label">인수차량 도착지 주소</label>
                                 <input
-                                    v-model="user.receive_post"
+                                    v-model="dealer.receive_post"
                                     type="text"
                                     class="form-control"
                                     placeholder="post"
                                 />
                                 <input
-                                    v-model="user.receive_addr1"
+                                    v-model="dealer.receive_addr1"
                                     type="text"
                                     class="form-control"
                                     @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')"
                                     placeholder="주소"
                                 />
                                 <input
-                                    v-model="user.receive_addr2"
+                                    v-model="dealer.receive_addr2"
                                     type="text"
                                     class="form-control"
                                     placeholder="상세주소"
@@ -161,7 +162,7 @@
                                     >소개</label
                                 >
                                 <textarea
-                                    v-model = "user.dealer.introduce"
+                                    v-model = "dealer.introduce"
                                     type="text"
                                     class="form-control no-resize mt-2"
                                 ></textarea>
@@ -173,11 +174,11 @@
                         <div class="mt-4">
                             <button
                                 :disabled="isLoading"
-                                class="btn btn-primary"
+                                class="w-100 btn btn-primary"
                             >
                                 <div v-show="isLoading" class=""></div>
                                 <span v-if="isLoading">Processing...</span>
-                                <span v-else>Save</span>
+                                <span v-else>저장</span>
                             </button>
                         </div>
                     </form>
@@ -210,24 +211,20 @@ const {
     isLoading,
 } = useUsers();
 
+let created_at;
+let email;
+let dealer_info;
+
 // Define a validation schema
 const schema = {
-    name: "required",
-    email: "required",
-    company: "required",
-    company_post: "required",
-    company_addr1: "required",
-    company_addr2: "required",
-    receive_post: "required",
-    receive_addr1: "required",
-    receive_addr2: "required",
+    name: { required },
+    status: { required },
 };
 
 // Create a form context with the validation schema
 const { validate, errors, resetForm } = useForm({ validationSchema: schema });
 // Define actual fields for validation
 const { value: name } = useField("name", null, { initialValue: "" });
-const { value: email } = useField("email", null, { initialValue: "" });
 const { value: status } = useField("status", null, { initialValue: "" });
 const { value: company } = useField("company", null, { initialValue: "" });
 const { value: company_post } = useField("company_post", null, { initialValue: "" });
@@ -237,13 +234,13 @@ const { value: receive_post } = useField("receive_post", null, { initialValue: "
 const { value: receive_addr1 } = useField("receive_addr1", null, { initialValue: "" });
 const { value: receive_addr2 } = useField("receive_addr2", null, { initialValue: "" });
 const introduce = ref("");
-const created_at = ref("");
 
 const user = reactive({
     name,
-    created_at,
-    email,
     status,
+    dealer:''
+});
+const dealer = reactive({
     company,
     company_post,
     company_addr1,
@@ -252,9 +249,7 @@ const user = reactive({
     receive_post,
     receive_addr1,
     receive_addr2
-    //role
-});
-
+})
 onMounted(async () => {
     const response = await getUser(route.params.id);
     await getRoleList();
@@ -266,24 +261,21 @@ onMounted(async () => {
     }*/
     watchEffect(() => {
         user.name = response.name;
-        user.created_at = response.created_at;
-        user.email = response.email;
+        created_at = response.created_at;
+        email = response.email;
         user.status = response.status;
         user.phone = response.phone;
         if(response.dealer){
-            user.dealer = response.dealer;
-            user.company = response.dealer.company;
-            user.company_post = response.dealer.company_post;
-            user.company_addr1 = response.dealer.company_addr1;
-            user.company_addr2 = response.dealer.company_addr2;
-            user.introduce = response.dealer.introduce;
-            user.receive_post = response.dealer.receive_post;
-            user.receive_addr1 = response.dealer.receive_addr1;
-            user.receive_addr2 = response.dealer.receive_addr2;
-
-        } else{
-            user.dealer = null;
-        }
+            dealer_info = response.dealer;
+            dealer.company = response.dealer.company;
+            dealer.company_post = response.dealer.company_post;
+            dealer.company_addr1 = response.dealer.company_addr1;
+            dealer.company_addr2 = response.dealer.company_addr2;
+            dealer.introduce = response.dealer.introduce;
+            dealer.receive_post = response.dealer.receive_post;
+            dealer.receive_addr1 = response.dealer.receive_addr1;
+            dealer.receive_addr2 = response.dealer.receive_addr2;
+        } 
 
     })
 
@@ -292,8 +284,17 @@ onMounted(async () => {
 
 function submitForm() {
     validate().then((form) => {
-        console.log(user);
-        console.log(JSON.stringify(user));
+        if(dealer_info){
+            user.dealer = dealer;
+            schema.company = { required };
+            schema.company_post = { required };
+            schema.company_addr1 = { required };
+            schema.company_addr2 = { required };
+            schema.receive_post = { required };
+            schema.receive_addr1 = { required };
+            schema.receive_addr2 = { required };
+
+        }
         if (form.valid) updateUser(user,route.params.id);
     });
 }
@@ -301,15 +302,32 @@ function submitForm() {
 function editPostCode(elementName) {
   openPostcode(elementName)
     .then(({ zonecode, address }) => {
-        user.company_post = zonecode;
-        user.company_addr1 = address;
+        dealer.company_post = zonecode;
+        dealer.company_addr1 = address;
     })
 }
 function editPostCodeReceive(elementName) {
     openPostcode(elementName)
     .then(({ zonecode, address }) => {
-        user.receive_post = zonecode;
-        user.receive_addr1 = address;
+        dealer.receive_post = zonecode;
+        dealer.receive_addr1 = address;
     })
 }
 </script>
+<style>
+h4 {
+    position: relative;
+    padding-bottom: 15px;
+}
+
+h4::after {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 2px; 
+    background-color: #f7f8fb;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+</style>

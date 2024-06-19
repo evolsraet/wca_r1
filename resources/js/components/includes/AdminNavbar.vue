@@ -12,13 +12,16 @@
                     <span class="admin-icon admin-icon-dashboard-top process mx-3 mt-2"></span>
                     <p class="process mx-1 mt-1">대시보드</p>
                 </button>
-                <button type="button" to="/admin" aria-label="Toggle navigation">
+                <button type="button" to="/admin" aria-label="Toggle navigation" @click="toggleSettingsMenu"  :class="{ 'rotate': showSettings }">
                     <span class="admin-icon admin-icon-my process ms-3"></span>
                     <p class="process ms-3 mt-2">마이</p>
                 </button>
             </div>
         </div>
     </nav>
+    <div v-if="showSettings" :class="['settings-menu','setting-web', { show: showSettings }]">
+            <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+    </div>
     <div :class="['menu-container', { show: isMenuOpen || !isAdminPage }]" id="navbarSupportedContent">
         <ul class="navbar-nav ms-auto mb-lg-0">
             <div class="navbar-nav flex-row justify-content-center gap-5 bold-18-font"> 
@@ -75,7 +78,9 @@ const isMenuOpen = ref(false);
 function toggleMenu() {
     isMenuOpen.value = !isMenuOpen.value;
 }
-
+function toggleSettingsMenu() {
+  showSettings.value = !showSettings.value;
+}
 function toggleNavbar() {
     isMenuOpen.value = false;
 }
@@ -188,5 +193,8 @@ function toggledash() {
     bottom: -2px;
     height: 5px;
     background-color: red;
+}
+.sticky-top{
+    position: relative !important;
 }
 </style>
