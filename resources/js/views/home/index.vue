@@ -23,7 +23,7 @@
           <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
         <h5 class="font-title">위카와 함께해요.</h5>
       </div>
-     <p class="tc-light-gray font-sub-title">13,314명이 위카와 함께 했어요!</p>
+     <p class="tc-light-gray font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>
     </div>
   </div>
   </div>
@@ -240,7 +240,17 @@
   import LawGid from '@/views/modal/LawGid.vue';
   import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
   import { initReviewSystem } from '@/composables/review';
-  
+  import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
+
+  const carName = ref('');
+const emoji = ref('');
+
+const updateCarName = () => {
+  const result = setRandomPlaceholder();
+  carName.value = result.carName;
+  emoji.value = result.emoji;
+};
+
   const loginCardRef = ref(null);
   const bannerRef = ref(null);
   const reviewContentRef = ref(null);
@@ -274,6 +284,7 @@
   const { getHomeReview, reviewsData, splitDate } = initReviewSystem();
   
   onMounted(() => {
+    updateCarName();
   getHomeReview();
   nextTick(() => {
 

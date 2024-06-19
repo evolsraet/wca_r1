@@ -17,7 +17,7 @@
           <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
         <h5 class="font-title">위카와 함께해요.</h5>
       </div>
-      <!--<p class="tc-light-gray font-sub-title">13,314명이 위카와 함께 했어요!</p>-->
+      <p class="tc-light-gray font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>
     </div>
   </div>
 </div>
@@ -232,6 +232,16 @@ import Swal from 'sweetalert2';
 import LawGid from '@/views/modal/LawGid.vue';
 import useAuth from '@/composables/auth';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
+import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
+
+const carName = ref('');
+  const emoji = ref('');
+
+  const updateCarName = () => {
+    const result = setRandomPlaceholder();
+    carName.value = result.carName;
+    emoji.value = result.emoji;
+  };
 
 const isModalOpen = ref(false);
 const modalContent = ref('');
@@ -324,6 +334,7 @@ const submitLogin = async () => {
 };
 
 onMounted(() => {
+  updateCarName();
   store.commit('auth/CLEAR_ERROR_MESSAGE'); // 페이지 로드 시 오류 메시지 초기화
   nextTick(() => {
     const loginCard = loginCardRef.value;
