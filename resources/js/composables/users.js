@@ -107,11 +107,12 @@ export default function useUsers() {
             .finally(() => isLoading.value = false)
     }
 
-    const updateUser = async (user,id) => {
+    const updateUser = async (user,dealer,id) => {
         const form = {
-            user
+            user,
+            dealer
         }
-        //console.log(JSON.stringify(form));
+        console.log(JSON.stringify(form));
         if (isLoading.value) return;
         wica.ntcn(swal)
         .title('수정하시겠습니까?') // 알림 제목
