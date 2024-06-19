@@ -119,10 +119,59 @@
                                         </div>
                                     </th> -->
                                     <th class="px-6 py-3 bg-gray-50 text-left">
-                                        <span
-                                            class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
-                                            >내용</span
+                                        <div
+                                            class="flex flex-row items-center justify-content-center justify-between cursor-pointer"
+                                            @click="
+                                                updateOrdering('content')
+                                            "
                                         >
+                                            <div
+                                                class="leading-4 font-medium text-gray-500 uppercase tracking-wider"
+                                                :class="{
+                                                    'font-bold text-blue-600':
+                                                        orderColumn ===
+                                                        'content',
+                                                }"
+                                            >
+                                                내용
+                                            </div>
+                                            <div class="select-none">
+                                                <span
+                                                    :class="{
+                                                        'text-blue-600':
+                                                            orderDirection ===
+                                                                'asc' &&
+                                                            orderColumn ===
+                                                                'content',
+                                                        hidden:
+                                                            orderDirection !==
+                                                                '' &&
+                                                            orderDirection !==
+                                                                'asc' &&
+                                                            orderColumn ===
+                                                                'content',
+                                                    }"
+                                                    >&uarr;</span
+                                                >
+                                                <span
+                                                    :class="{
+                                                        'text-blue-600':
+                                                            orderDirection ===
+                                                                'desc' &&
+                                                            orderColumn ===
+                                                                'content',
+                                                        hidden:
+                                                            orderDirection !==
+                                                                '' &&
+                                                            orderDirection !==
+                                                                'desc' &&
+                                                            orderColumn ===
+                                                                'content',
+                                                    }"
+                                                    >&darr;</span
+                                                >
+                                            </div>
+                                        </div>
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 text-left">
                                         수정/삭제
