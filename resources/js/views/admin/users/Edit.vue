@@ -238,7 +238,6 @@ const introduce = ref("");
 const user = reactive({
     name,
     status,
-    dealer:''
 });
 const dealer = reactive({
     company,
@@ -285,7 +284,6 @@ onMounted(async () => {
 function submitForm() {
     validate().then((form) => {
         if(dealer_info){
-            user.dealer = dealer;
             schema.company = { required };
             schema.company_post = { required };
             schema.company_addr1 = { required };
@@ -295,7 +293,7 @@ function submitForm() {
             schema.receive_addr2 = { required };
 
         }
-        if (form.valid) updateUser(user,route.params.id);
+        if (form.valid) updateUser(user,dealer,route.params.id);
     });
 }
 
