@@ -111,6 +111,7 @@ export default function useUsers() {
         const form = {
             user
         }
+        //console.log(JSON.stringify(form));
         if (isLoading.value) return;
         wica.ntcn(swal)
         .title('수정하시겠습니까?') // 알림 제목
@@ -141,48 +142,33 @@ export default function useUsers() {
     }
 
     const deleteUser = async (id) => {
-        salert({
-            _swal: swal, //필수 지정
-            _title: '삭제하시겠습니까?',
-            _msg: '삭제된 정보는 복구할 수 없습니다.',
-            _type: 'C',
-            _isHtml: true, 
-            _icon: 'W',
-        },function(result){
+        wica.ntcn(swal)
+        .param({ _id : id }) // 리턴값에 전달 할 데이터
+        .title('삭제하시겠습니까?') // 알림 제목
+        .icon('W') //E:error , W:warning , I:info , Q:question
+        .callback(function(result) {
             if(result.isOk){
+                console.log(result);
                 axios.delete('/api/users/' + id)
                     .then(response => {
-                        salert({
-                            _type: 'A',
-                            _swal: swal, //필수 지정
-                            _msg: '회원정보가 정상적으로 삭제되었습니다.',
-                            _icon: 'I',
-                            _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
-                        },function(result){
-                            if(result.isOk){
-                                location.reload();
-                                //router.push({name: 'users.index'})
-                                //getUsers(1)
-                                
+                        wica.ntcn(swal)
+                        .icon('I') //E:error , W:warning , I:info , Q:question
+                        .callback(function(result) {
+                            if(result.isOk){                                
+                                location.reload();                          
                             }
-                        });
+                        })
+                        .alert('이용후기가 정상적으로 삭제되었습니다.');
                     })
                     .catch(error => {
-                        salert({
-                            _type: 'A',
-                            _swal: swal, //필수 지정
-                            _title: '오류가 발생하였습니다.',
-                            _msg: '관리자에게 문의해주세요.',
-                            _icon: 'E',
-                            _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
-
-                        },function(result){
-                            console.log(result);
-                        })
+                        wica.ntcn(swal)
+                        .title('오류가 발생하였습니다.')
+                        .icon('E') //E:error , W:warning , I:info , Q:question
+                        .alert('관리자에게 문의해주세요.');
                     })
             }
-            //console.log('salert', result);
-        }); 
+        })
+        .confirm('삭제된 정보는 복구할 수 없습니다.');   
         
     }
 
