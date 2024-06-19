@@ -274,7 +274,7 @@ trait CrudTrait
             $item = $item->findOrFail($id);
             $data = request()->get($this->getModelName());
 
-            foreach ($data as $key => $row) {
+            foreach ((array) $data as $key => $row) {
                 // 하위 모델 자동 저장
                 if (is_array($row)) {
                     $item->{$key}->update($row);

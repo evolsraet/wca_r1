@@ -67,7 +67,7 @@ class AuctionTest extends TestCase
 
     public function test_경매수정(): void
     {
-        $user = User::role('user')->has('auction')->first();
+        $user = User::role('user')->has('auctions')->first();
         // dd([
         //     $user->id,
         //     Auction::where('user_id', $user->id)->first()->toArray(),

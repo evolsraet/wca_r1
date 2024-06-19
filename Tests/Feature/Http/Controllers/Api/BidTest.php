@@ -60,7 +60,7 @@ class BidTest extends TestCase
 
     public function test_입찰수정(): void
     {
-        $user = User::has('bid')->first();
+        $user = User::has('bids')->first();
         $bid = Bid::where('user_id', $user->id)->first();
 
         $data = [

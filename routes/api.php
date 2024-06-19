@@ -28,12 +28,13 @@ Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);
 Route::apiResource('reviews', ReviewController::class)->only(['index', 'show']);
 Route::apiResource('reviews', ReviewController::class)->except(['index', 'show'])->middleware('auth:sanctum');
 
+Route::apiResource('likes', LikeController::class);
+
 Route::group(['middleware' => 'auth:sanctum'], function () {
     // Route::put('auctions/statusUpdate/{id}', [AuctionController::class, 'statusUpdate']);
 
     Route::apiResource('auctions', AuctionController::class);
     Route::apiResource('bids', BidController::class);
-    // Route::apiResource('likes', LikeController::class);
 
     Route::get('users/me', [UserController::class, 'me']);   // 본인가져오기
     Route::get('users/abilities', [UserController::class, 'abilities']);
