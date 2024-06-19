@@ -111,7 +111,8 @@ class UserService
             $data = $this->beforeData($data);
 
             // $dealerData = null;
-            $dealerData = $this->checkJson($data);
+            $dealerData = $this->checkJson($request->input('dealer'));
+
             // if (isset($data['dealer'])) {
             //     $dealerData = $this->checkJson($data['dealer']);
             //     unset($data['dealer']);
