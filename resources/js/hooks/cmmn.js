@@ -28,9 +28,11 @@ export function cmmn() {
      * 주소 검색
      *  <input v-model="auction.addr_post" class="form-control" type="hidden" id="addr_post">
         <input v-model="auction.addr1" class="form-control" id="addr1" @click="editPostCode('daumPostcodeInput')">
-     *  <div id="daumPostcodeInput" style="display: none;">
-            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" @click="closePostcode('daumPostcodeInput')">
+     *  <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
         </div>
+        //style 붙여야 깨지지 않음. 닫기 버튼 이미지 붙여야 함
+
      * function editPostCode(elementName) {
         openPostcode(elementName)
             .then(({ zonecode, address }) => {
@@ -46,16 +48,21 @@ export function cmmn() {
         return new Promise((resolve) => {
             const loadAndShowPostcode = () => {
                 element.style.display = 'block';
-    
+                var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
                 const postCode = new daum.Postcode({
                     oncomplete: data => resolve({ zonecode: data.zonecode, address: data.address }),
                     onclose: state => {
                         if (state === 'COMPLETE_CLOSE') {
                             element.style.display = 'none';
                         }
-                    }
+                    },
+                    onresize: function(size) {
+                        element.style.height = size.height+'px';
+                    },
+                    width: '100%',
+                    height: '100%'
                 });
-    
+                
                 postCode.embed(element);
             };
     
