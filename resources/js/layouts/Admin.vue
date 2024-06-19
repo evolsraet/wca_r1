@@ -44,7 +44,7 @@
             {{ currentPageTitle }}
         </h2>
         <!-- Page Content -->
-        <div class="main">
+        <div class="pt-3">
             <router-view></router-view>
         </div>
     </div>

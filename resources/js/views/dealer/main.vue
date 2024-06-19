@@ -56,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="container content">
+                <div class="container content p-4">
                     <div class="container enter-view text-start mb-2">
                         <h3 class="review-title">공지사항</h3>
                         <router-link :to="{ name: 'index.notices' }" class="btn-apply mt-0">전체보기</router-link>
@@ -113,7 +113,7 @@
                      </div>
                 </div>-->
                 </div>
-                <div class="container my-4" :style="cardStyle" @click="toggleCard">
+                <div class="container p-3 my-4" :style="cardStyle" @click="toggleCard">
                     <div class="container card-body">
                         <div class="enter-view mt-3">
                             <h5>낙찰 완료 차량</h5>

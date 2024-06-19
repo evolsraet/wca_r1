@@ -2,7 +2,7 @@
   <div class="container-fluid" v-if="auctionDetails">
     <form @submit.prevent="updateAuction(auctionId, auction)">
       <div>
-        <div class="container my-4">
+        <div class="container my-4 mov-wide">
           <div>
             <div class="mb-4">
               <div class="card my-auction">
@@ -88,6 +88,11 @@
               </div>
             </div>
           </div>
+          <div class="mt-3" @click.stop="">
+              <div class="btn-group mt-3">
+                <button class="btn btn-primary tc-wh"> 등록 </button>
+              </div>
+            </div>
           <div @click="toggleVisibility" class="d-flex justify-content-between align-items-center p-3 border-bottom">
             <h5>차량정보</h5>
             <img :src="isVisible ? hideIcon : showIcon" :alt="isVisible ? '숨기기' : '더보기'" class="toggle-icon" width="20px" height="10px" />
@@ -296,15 +301,6 @@
             </div>
           </transition>
         </div>
-        <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
-          <div class="sheet-content">
-            <div class="mt-3" @click.stop="">
-              <div class="btn-group mt-3">
-                <button class="btn btn-primary tc-wh"> 등록 </button>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </form>
     
@@ -457,4 +453,13 @@ onMounted(async () => {
   opacity: 1;
   overflow: hidden;
 }
+
+.card-body {
+  margin-bottom: 10px;
+}
+
+.card-body:last-child {
+  margin-bottom: 0; 
+}
+
 </style>

@@ -3,12 +3,12 @@
     <div class="d-flex align-items-stretch w-100">
         <AdminSidebar v-if="!isMobile" />
         <div class="container-fluid">
-            <Breadcrumb class="row justify-content-center mt-4" :crumbs="crumbs" @selected="selected" />
+            <!--<Breadcrumb class="row justify-content-center mt-4" :crumbs="crumbs" @selected="selected" />-->
             <!-- <h2 class="fw-semibold">
                 {{ crumbs }}
             </h2> -->
             <!-- Page Content -->
-            <div class="main">
+            <div class="pt-4">
                 <Suspense>
                 <router-view></router-view>
                 </Suspense>
