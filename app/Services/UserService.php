@@ -110,10 +110,12 @@ class UserService
             $data = $this->checkJson($data);
             $data = $this->beforeData($data);
 
-            $dealerData = $this->checkJson($data['dealer']);
-
-            // 삭제
-            unset($data['dealer']);
+            // $dealerData = null;
+            $dealerData = $this->checkJson($data);
+            // if (isset($data['dealer'])) {
+            //     $dealerData = $this->checkJson($data['dealer']);
+            //     unset($data['dealer']);
+            // }
 
             if ($data) {
                 $item->update($data);
