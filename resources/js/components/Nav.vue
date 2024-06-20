@@ -23,8 +23,8 @@
                         </div>
                     </div>
                     <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
-                        <router-link to="/profile" class="menu-item mt-0" @click="toggleNavbar">내 정보</router-link>
-                        <router-link to="/edit-profile" class="menu-item mt-0" @click="toggleNavbar">내 정보 수정</router-link>
+                        <a href="/profile" class="menu-item mt-0">내 정보</a>
+                        <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
                         <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
                     <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
@@ -121,7 +121,7 @@
                         </div>
                     </div>
                     <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
-                       <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                       <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
                         <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
                     <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
@@ -294,7 +294,7 @@
                             </li>
                             <li><a class="mx-3 nav-link tc-light-gray logout" href="/login" @click="logout">로그아웃</a></li>
                             <div v-if="showSettings" :class="['settings-menu','setting-web', { show: showSettings }]">
-                                 <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                                 <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
                             </div>
                         </template>
                     <!-- 게스트 일때 -->
@@ -334,7 +334,8 @@
                         </li>
                         <li><a class="mx-3 nav-link tc-wh logout" href="/login" @click="logout">로그아웃</a></li>
                         <div v-if="showSettings" :class="['settings-menu','setting-web', { show: showSettings }]">
-                       <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                            <a href="/profile" class="menu-item mt-0">내 정보</a>
+                       <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
                     </div>
                     </template>
                     <!-- 로그인 시 -->
