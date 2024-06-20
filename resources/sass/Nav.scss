@@ -157,6 +157,15 @@
     background-position: center; 
 
 }
+.icon-location-memu{
+    width: 27px;
+    height: 20px;
+    background-image: url('../img/Icon-location-menu.png');
+    background-repeat: no-repeat; 
+    background-size: contain;
+    background-position: center; 
+
+}
 .icon-side{
     width: 27px;
     height: 20px;
@@ -256,7 +265,7 @@
 }
 
 .navbar-collapse.show {
-    width: auto !important;
+    width: 70vw !important;
 }
 
 .middle-content{

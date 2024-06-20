@@ -130,6 +130,12 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
             {
+                path: '/addr',
+                name: 'dealer.address',
+                component: () => import('../views/dealer/address.vue'),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+            },
+            {
                 path: 'posts',
                 name: 'public-posts.index',
                 component: () => import('../views/posts/index.vue'),

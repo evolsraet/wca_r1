@@ -58,6 +58,15 @@
                                                 <span class="tc-light-gray font-1">새 매물 둘러보기</span>
                                             </div>
                                         </router-link>
+                                        <router-link :to="{ name: 'dealer.address'}" class="menu-item mt-0" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                                <div class="icon icon-location-memu"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text process">주소 관리</span>
+                                                <span class="tc-light-gray font-1">탁송 주소 관리</span>
+                                            </div>
+                                        </router-link>
                                         <router-link :to="{ name: 'dealer.bids'}" class="menu-item mt-0" @click="toggleNavbar">
                                             <div class="sd-menu">
                                                 <div class="icon icon-awsome"></div>

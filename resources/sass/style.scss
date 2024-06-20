@@ -2163,6 +2163,7 @@ video {
 	padding: 5px;
 	margin-left: 30px;
 	justify-content: flex-start;
+}
 	.building {
 		width: 15px ;
 		height: 15px ;
@@ -2203,7 +2204,6 @@ video {
 		margin: 0;
 		font-size: 15px;
 	}
-}
 .profile.dealer-mp {
     display: flex;
     justify-content: space-around !important;
@@ -3301,7 +3301,14 @@ input[type="checkbox"] {
     background-color: $primary-hover; 
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
-
+.plus-Icon-wh {
+    width: 23px; 
+    height: 23px; 
+    background-image: url('../img/plus-Icon-wh.png'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+}
 .image-icon-pen {
     width: 23px; 
     height: 23px; 
