@@ -100,7 +100,7 @@ export default {
   right: 0;
   left: 0;
   overflow: hidden;
-  z-index: 10;
+  z-index: 100;
 }
 
 .overlay {

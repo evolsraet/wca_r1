@@ -116,7 +116,7 @@
                     </div>
                     <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
                         <div class="top-content ">
-                            <div v-if="userHasAuction" class="p-4">
+                         <!--  <div v-if="userHasAuction" class="p-4">
                                 <h4>경매 진행 상황</h4>
                                 <p class="tc-light-gray mb-3">가장 최근에 등록한 매물로 알려드려요.</p>
                                 <ul class="timeline">
@@ -153,7 +153,7 @@
                                     </li>
                                 </ul>
                                 </div>
-                            <div v-else class="menu-illustration02 p-3">
+-->                            <div class="menu-illustration02 p-3">
                                 <div class="sub-board-style02">
                                     <div class="text-start">
                                         <p class="tc-light-gray">경매를 시작해볼까요?</p>
@@ -653,7 +653,7 @@ a.navbar-toggler.p-2 {
 
 .logo-content {
     background-color: #f7f8fb;
-    width: 50vh;
+    width: -webkit-fill-available;
     height: 65px;
     position: fixed;
     bottom: 0;

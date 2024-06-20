@@ -149,6 +149,16 @@ export default [
               
             },
             {
+                path: '/completion',
+                name: 'AuctionCompletionPage',
+                component: () => import('../views/consignment/consignment.vue'),
+              },
+              {
+                path: '/completion-suc',
+                name: 'completionsuccess',
+                component: () => import('../views/consignment/success.vue'),
+              },
+            {
                 path: '/dealermodal',
                 name: 'dealermodal',
                 component: () => import('../views/modal/auction/connectDealer.vue'),

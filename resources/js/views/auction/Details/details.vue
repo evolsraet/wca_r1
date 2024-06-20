@@ -350,6 +350,12 @@
           </div>
 
           <div v-if="auctionDetail.data.status !== 'done' && isDealer" class="sheet-content">
+            <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
+                <div  @click.stop="">
+                  <p class="text-center tc-red my-2">현재 {{ auctionDetail.data.bids.length }}명이 입찰했어요.</p>
+                  <button type="button" class="btn btn-primary w-100 align-items-center d-flex justify-content-center gap-3" @click="showbidView">입찰하기<p class="icon-up-wh"></p></button>
+                </div>
+              </BottomSheet02>
             <BottomSheet02 initial="half" class="p-2 pt-0" v-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
               <div class="d-flex justify-content-between align-items-baseline">
                 <h5>나의 입찰 금액</h5>
@@ -641,12 +647,7 @@
                             </BottomSheet02>
                           </div>-->
 
-                          <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
-                            <div  @click.stop="">
-                              <p class="text-center tc-red my-2">현재 {{ auctionDetail.data.bids.length }}명이 입찰했어요.</p>
-                              <button type="button" class="btn btn-primary w-100 align-items-center d-flex justify-content-center gap-3" @click="showbidView">입찰하기<p class="icon-up-wh"></p></button>
-                            </div>
-                          </BottomSheet02>
+                      
                           <BottomSheet03 initial="half" :dismissable="true"  v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && bidSession">
                             <div @click.stop="">
                               <div class="d-flex justify-content-between">
@@ -717,7 +718,7 @@
                         </div>
                         <ConnectDealerModal v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
                         <BottomSheet02 v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
-                          <button type="button" class="btn btn-dark" @click="toggleView">재경매</button>
+                          <button type="button" class="btn btn-dark d-flex align-items-center justify-content-center gap-1" @click="toggleView">재경매 하기<p class="icon-up-wh"></p></button>
                         </BottomSheet02>
                         <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView &&isUser" class="p-0 filter-content">
                         <div>
@@ -1084,7 +1085,7 @@ const selectDealer = async (bid, index) => {
   }
 };
 const handleClick = async (bid, event, index) => {
-  // Ensure we are only acting on clicks to the li itself and not the children
+
   if (event.currentTarget === event.target || event.currentTarget.contains(event.target)) {
     await selectDealer(bid, index);
   }

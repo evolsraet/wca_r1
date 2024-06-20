@@ -76,7 +76,7 @@ h5{
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.26);
 }
 .btn-outline-primary:hover{
-    color:white !important;
+    color:rgba($primary, 0.990) !important; 
 }
 .primary-btn:hover{
     background-color: $primary-hover;
