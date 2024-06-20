@@ -1,15 +1,12 @@
 <template>
     <div class="p-3 row justify-content-center my-2">
         <router-link
-                        :to="{ name: 'review.create' }"
-                        class="border-red-write"
-                    >
-                    <div class="plus-Icon-wh">
-
-                        </div>
-                    </router-link>
-        <div class="col-md-12">
-        </div>
+            :to="{ name: 'addr.create' }"
+            class="border-red-write"
+        >
+            <div class="plus-Icon-wh"></div>
+        </router-link>
+        <div class="col-md-12"></div>
         <div class="search-type2 mb-5">
             <div class="border-xsl">
                 <div class="image-icon-excel"></div>
@@ -17,8 +14,7 @@
             <input type="text" placeholder="명칭 또는 주소 입력" style="width: auto !important;">
             <button type="button" class="search-btn">검색</button>
         </div>
-        <div class="container mb-3">
-        </div>
+        <div class="container mb-3"></div>
         <div class="o_table_mobile my-5">
             <div class="tbl_basic tbl_dealer">
                 <table class="table">
@@ -29,7 +25,7 @@
                                     <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider">등록일</div>
                                 </div>
                             </th>
-                            <th class="px-6 py-3  bg-gray-50 text-left">
+                            <th class="px-6 py-3 bg-gray-50 text-left">
                                 <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">지점</span>
                             </th>
                             <th class="px-6 py-3 text-left">
