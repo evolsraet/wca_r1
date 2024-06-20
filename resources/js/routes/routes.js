@@ -130,9 +130,21 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.user']),
             },
             {
+                path: '/addr-create',
+                name: 'addr.create',
+                component: () => import('../views/dealer/addr/Create.vue'),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+            },
+            {
+                path: '/addr-update',
+                name: 'addr.update',
+                component: () => import('../views/dealer/addr/Update.vue'),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+            },
+            {
                 path: '/addr',
                 name: 'dealer.address',
-                component: () => import('../views/dealer/address.vue'),
+                component: () => import('../views/dealer/addr/address.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
