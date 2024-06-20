@@ -1,6 +1,6 @@
 <template>
     <div class="container mov-wide web-content-style02">
-        <div class="container mt-3 p-2">
+        <div class="container my-5 p-2">
             <SkeletonLoader v-if="isLoading" />
             <template v-else>
                 <h5>차량 정보 조회 되었어요</h5>
@@ -70,8 +70,7 @@
                 </ul>
             </template>
         </div>
-        <div  class="sheet-content mt-4">
-         <bottom-sheet initial="half" :dismissable="true">
+         <BottomSheet02 initial="half" :dismissable="true">
                 <div>
                     <div class="top-content-style wd-100">
                         <p class="tc-light-gray bold-18-font">현재 시세 <span class="normal-14-font">(무사고 기준)</span></p>
@@ -118,9 +117,8 @@
                         </div>
                     </div>
                 </div>
-            </bottom-sheet>
+            </BottomSheet02>
             </div>
-    </div>
 </template>
 
 <script setup>
@@ -131,7 +129,7 @@ import { useRouter } from 'vue-router';
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from "vuex";
-import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
+import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import useAuctions from '@/composables/auctions';
 const previousCarDetails = ref({});
 const isRefreshDisabled = ref(false); // 버튼 비활성화 상태 변수
@@ -358,5 +356,12 @@ const applyAuction = () => {
 }
 .fade-enter, .fade-leave-to {
     opacity: 0;
+}
+@media (min-width: 992px){
+.sheet {
+    height: auto !important;
+    transition: none;
+}
+
 }
 </style>

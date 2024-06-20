@@ -279,7 +279,6 @@ onBeforeUnmount(() => {
                 flex: 0.5;
                 display: flex;
                 flex-direction: column;
-                max-height: none;
                 border-radius: 0; 
                 overflow: visible;
                 height: auto !important;

@@ -322,10 +322,6 @@
   display: block;
 }
 
-.custom-hr {
-  border: none;
-  border-top: 3px solid #d7d7d7;
-}
 
 .image-preview {
   max-width: 100%;

@@ -197,7 +197,6 @@ onBeforeUnmount(() => {
 @media (min-width: 992px) {
   .sheet {
     height: auto !important;
-    max-height: none;
     transition: none;
   }
 .handle{

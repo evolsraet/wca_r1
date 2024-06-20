@@ -177,10 +177,11 @@
                                     >소개</label
                                 >
                                 <textarea
-                                    v-model = "dealer.introduce"
-                                    type="text"
-                                    class="form-control no-resize mt-2"
-                                ></textarea>
+                                v-model="dealer.introduce"
+                                class="form-control no-resize mt-2"
+                                :style="{ height: `${height}px`, overflowY: 'hidden' }"
+                                @input="autoResize"
+                            ></textarea>
                             </div>
                         </div>
                         <!-- Buttons -->
@@ -202,6 +203,7 @@
         </div>
     </div>
 </template>
+
 <script setup>
 import { onMounted, reactive, ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
@@ -215,6 +217,7 @@ import { watch } from "vue";
 defineRule("required", required);
 defineRule("min", min);
 
+const height = ref(100);
 const route = useRoute();
 const { roleList, getRoleList } = useRoles();
 const { openPostcode , closePostcode} = cmmn();
@@ -311,7 +314,11 @@ function submitForm() {
         if (form.valid) updateUser(user,dealer,route.params.id);
     });
 }
-
+function autoResize(event) {
+    event.target.style.height = 'auto'; 
+    event.target.style.height = `${event.target.scrollHeight}px`; 
+    height.value = event.target.scrollHeight; 
+}
 function editPostCode(elementName) {
   openPostcode(elementName)
     .then(({ zonecode, address }) => {

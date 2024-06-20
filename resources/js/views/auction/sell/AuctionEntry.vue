@@ -332,3 +332,10 @@ onMounted(() => {
   document.head.appendChild(script);
 });
 </script>
+<style scoped>
+@media (min-width: 992px){
+  .mov-wide {
+      width: 40vh !important;
+  }
+}
+</style>
