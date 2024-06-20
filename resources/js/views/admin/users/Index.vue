@@ -318,6 +318,7 @@ function loadPage(page) {
     if (page < 1 || page > pagination.value.last_page) return;
     currentPage.value = page;
     fetchUsers();
+    window.scrollTo(0,0);
 }
 
 function setUserFilter(status) {

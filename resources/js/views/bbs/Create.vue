@@ -48,7 +48,7 @@
                                 <p class="card-text tc-light-gray fs-5 web-text">12 삼 4567</p>
                                 <a href="#"><span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">상세보기</span></a>
                             </div>-->
-                            <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(auction.final_price) }}</span></p>
+                            <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(auction.win_bid.price) }}</span></p>
                             </div>
                             <div class="right-container">
                                 <bottom-sheet initial="half" :dismissable="true">
@@ -108,7 +108,7 @@
     }
 </script>
 <script setup>
-import { ref, onMounted , reactive ,onBeforeUnmount} from 'vue';
+import { ref, onMounted , reactive ,onBeforeUnmount , nextTick} from 'vue';
 import { useRoute } from 'vue-router'; 
 import { initReviewSystem } from '@/composables/review'; // 별점 js
 import useAuctions from "@/composables/auctions";
@@ -165,27 +165,23 @@ function toggleSheet() {
     showBottomSheet.value = !showBottomSheet.value;
 }
 
-const findAuctionDetail = async () => {
-    try {
-        const response = await getAuctionById(auctionId);
+onMounted(async() => { 
+    
+    const response = await getAuctionById(auctionId);
 
-        rv.user_id = response.data.user_id;
-        rv.auction_id = response.data.id;
-        rv.dealer_id = response.data.win_bid.user_id;
+    rv.user_id = response.data.user_id;
+    rv.auction_id = response.data.id;
+    rv.dealer_id = response.data.win_bid.user_id;
 
-        //차량정보 불러오기
-        carInfo.value = await getCarInfo(response.data.owner_name, response.data.car_no);
-        auctionsData.value = [response.data]; 
-        initReviewSystem(); 
-    } catch (error) {
-        console.error('Error fetching auction data:', error);
-    }
-};
-
-onMounted(() => { 
-    findAuctionDetail();
+    //차량정보 불러오기
+    carInfo.value = await getCarInfo(response.data.owner_name, response.data.car_no);
+    auctionsData.value = [response.data]; 
+    
     window.addEventListener('resize', checkScreenWidth);
     checkScreenWidth();
+
+    await nextTick();
+    initReviewSystem();    
 });
 
 onBeforeUnmount(() => {

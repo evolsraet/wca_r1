@@ -863,6 +863,7 @@ function loadPage(page) { // 페이지 로드
   if (page < 1 || page > pagination.value.last_page) return;
   currentPage.value = page;
   getAuctions(page,false,currentStatus.value);
+  window.scrollTo(0,0);
 }
 
 function navigateToDetail(auction) { // 경매 상세 페이지로 이동

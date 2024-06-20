@@ -269,6 +269,7 @@ async function loadPage(page) { // 페이지 로드
     if (page < 1 || page > reviewPagination.value.last_page) return;
     currentPage.value = page;
     fetchReviews();
+    window.scrollTo(0,0);
 }
 
 
