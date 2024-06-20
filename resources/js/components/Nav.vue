@@ -256,7 +256,7 @@
                                                 <span class="tc-light-gray font-1"> 다양한 판매 후기</span>
                                             </div>
                                         </router-link>
-                                        <router-link :to="{ name: 'dealer.profile' }" class="menu-item mt-1 mb-3" @click="toggleNavbar">
+                                        <router-link :to="{ name: 'index.introduce' }" class="menu-item mt-1 mb-3" @click="toggleNavbar">
                                             <div class="sd-menu">
                                             <div class="icon icon-nav-bulb"></div>
                                             </div>

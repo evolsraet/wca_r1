@@ -45,7 +45,7 @@
                 <div>
                 <p class="text-start card-text">{{ card.text }}</p>
                 </div>
-                <p class="auction-deadline justify-content-sm-center tc-light-gray">판매가<span>12000만원</span></p>
+                <p class="auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(card.price) }}</span></p>
               </div>
             </div>
           </div>
@@ -84,14 +84,16 @@ import { initReviewSystem } from '@/composables/review';
 import { useRouter } from 'vue-router';
 import 'swiper/css';
 import 'swiper/css/pagination';
+import { cmmn } from '@/hooks/cmmn';
 
+const { amtComma } = cmmn();
 const router = useRouter();
 const store = useStore();
 const user = computed(() => store.getters["auth/user"]);
 const isUser = computed(() => user.value?.roles?.includes('user'));
 const showBottomSheet = ref(true);
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
-const { getHomeReview , reviewsData , splitDate, reviewPagination } = initReviewSystem(); 
+const { getAllReview , reviewsData , splitDate, reviewPagination } = initReviewSystem(); 
 
 const cards = ref([]);
 
@@ -113,7 +115,7 @@ const toggleSheet = () => {
 const inputCardsValue = () => {
   cards.value = reviewsData.value.map(review => ({
     title: review.id,
-    dealer: review.dealer.name,
+    price: review.auction.win_bid.price,
     id: review.id,
     rating: review.star,
     date: review.created_at,
@@ -136,7 +138,8 @@ async function loadPage(page) { // 페이지 로드
 
 
 onMounted(async () => {
-  await getHomeReview();
+  await getAllReview(1);
+  console.log(reviewsData);
   inputCardsValue();
 });
 
