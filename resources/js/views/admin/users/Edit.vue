@@ -85,6 +85,12 @@
                         </div>-->
                         <div class="mb-3">
                             <label for="email" class="form-label">승인여부</label>
+                            <select class="form-select" :v-model="user.status" @change="changeStatus($event)" id="status">
+                                <option value="ok">정상</option>
+                                <option value="ask">심사중</option>
+                                <option value="reject">거절</option>
+                            </select>
+                            <!--
                             <div class="text-start status-selector">
                                 <input type="radio" name="status" v-model="user.status" value="ok" id="ok">
                                 <label for="ok" class="mx-2">정상</label>
@@ -92,7 +98,7 @@
                                 <label for="ask">심사중</label>
                                 <input type="radio" name="status" value="reject" v-model="user.status" id="reject">
                                 <label for="reject" class="mx-2">거절</label>
-                            </div>
+                            </div>-->
                             
                         </div>
                         <div v-if="dealer_info">
@@ -262,7 +268,7 @@ onMounted(async () => {
         user.name = response.name;
         created_at = response.created_at;
         email = response.email;
-        user.status = response.status;
+        document.getElementById("status").value = response.status;
         user.phone = response.phone;
         if(response.dealer){
             dealer_info = response.dealer;
@@ -310,6 +316,10 @@ function editPostCodeReceive(elementName) {
         dealer.receive_post = zonecode;
         dealer.receive_addr1 = address;
     })
+}
+
+function changeStatus(event) {
+  user.status = event.target.value;
 }
 </script>
 <style>
