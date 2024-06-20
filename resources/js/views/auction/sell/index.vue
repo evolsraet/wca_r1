@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container mov-wide">
         <div class="main-contenter mt-3 p-2">
             <SkeletonLoader v-if="isLoading" />
             <template v-else>
@@ -70,6 +70,7 @@
                 </ul>
             </template>
         </div>
+        <div  class="sheet-content">
          <bottom-sheet initial="half" :dismissable="true">
                 <div>
                     <div class="top-content-style wd-100">
@@ -118,6 +119,7 @@
                     </div>
                 </div>
             </bottom-sheet>
+            </div>
     </div>
 </template>
 
@@ -279,6 +281,30 @@ const applyAuction = () => {
 </script>
 
 <style scoped>
+@media (min-width: 992px){
+.mov-wide {
+    width: 50vh;
+}
+}
+@media (min-width: 992px){
+    .handle{
+      display: none;
+    }
+    .sheet-content{
+      width: 100% !important;
+      padding: 0px !important;
+    }
+    .sheet{
+    position: relative !important;
+    border-radius: 10px !important;
+}
+    .web-content-style02{
+        display: flex;
+        gap: 20px;
+        padding: 15px;
+        justify-content: center;
+    }
+  }
 .bottom-sheet::before {
     content: "";
     position: absolute;

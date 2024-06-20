@@ -3,7 +3,7 @@
     <div ref="overlay" class="overlay" v-if="showBottomSheet"></div>
     <div
       ref="sheet"
-      class="sheet"
+      class="sheet container"
       :class="{ 
         'half': showBottomSheet, 
         'animate-slide-up': showBottomSheet, 
@@ -194,7 +194,6 @@ export default {
 @media (min-width: 992px) {
   .sheet {
     top: 50%;
-    left: 32%;
     transform: translate(-50%, -50%);
     height: auto;
     max-height: none;

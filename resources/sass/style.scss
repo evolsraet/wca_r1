@@ -3827,4 +3827,19 @@ input[type="checkbox"] {
     transform: translateX(-50%) translateY(0);
   }
 
-  
+  .video-container02 .video_type03 {
+    opacity: 0.3;/* 투명도 50% 적용 */
+}
+.video-container02 {
+    position: absolute;
+    left: -240px;
+    bottom: 0;
+}
+.overlay-style {
+    height: 100vh;
+  }
+  @media (max-height: 810px) {
+    .overlay-style {
+      height: auto;
+    }
+  }

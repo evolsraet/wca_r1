@@ -280,9 +280,7 @@ display: flex;
 justify-content: space-between;
 gap: 20px;
 }
-.overlay-style {
-height: 100vh;
-}
+
 
 .grid-container {
 display: flex;

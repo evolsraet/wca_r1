@@ -90,9 +90,9 @@
 
                     <!--TODO: bid가 1명이라도 있을때 알림뜨기-->
              
-                      <button class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking" @click="auctionIngChosen">
+                      <button class="bg-sub-color01 bold-18-font modal-bid d-flex p-3 justify-content-between blinking" @click="auctionIngChosen">
                         <p>딜러 선택이 가능해요!</p>
-                        <p>바로가기</p>
+                        <p class="d-flex align-items-center gap-2">바로가기<p class="icon-right-wh"></p></p>
                       </button>
 
                   </div>
@@ -340,7 +340,7 @@
             </ul>
           </div>
         </div>
-        <div v-if="isUser && auctionDetail.data.status !== 'chosen' && auctionDetail.data.status !== 'wait'&& auctionDetail.data.status !== 'diag' && auctionDetail.data.status !=='ing'" class="sheet-content">
+        <div v-if="isUser && auctionDetail.data.status !== 'chosen' && auctionDetail.data.status !== 'wait'&& auctionDetail.data.status !== 'diag' && auctionDetail.data.status !=='ing' && auctionDetail.data.status !=='cancel'" class="sheet-content">
             <BottomSheet02 v-if="auctionDetail.data.status === 'done'">
               <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
               <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">

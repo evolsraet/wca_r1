@@ -9,9 +9,13 @@
       </div>
       <div class="register-content">
       <div v-if="!isMobileView">
-          <div class="any-content">
-          <div class="review-any"></div>
-        </div>
+       <!--   <div class="any-content">
+          <div class="review-any"></div>-->
+          <div class="video-container02">
+          <video width="90%" class="video_type03" autoplay loop muted style="opacity: 0.5;">
+              <source src="../../../img/video/title.mp4" type="video/mp4">
+          </video>
+      </div>
         <div :class="animationClass" ref="animatedSection">
         <div class="css-ifyyt1 gap-5">
           <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
@@ -381,17 +385,11 @@ onMounted(() => {
   justify-content: space-between;
   gap: 20px;
 }
-.overlay-style {
-  height: 100vh;
-}
 
 .register-content {
   display: flex;
   justify-content: space-between;
   gap: 20px;
-}
-.overlay-style {
-  height: 100vh;
 }
 
 .review-any {
