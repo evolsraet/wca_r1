@@ -422,7 +422,7 @@ onMounted(() => {
 }
 .css-ifyyt1 {
   display: grid;
-  padding: 7rem 17px 9rem;
+  padding: 18vh 17px 5vh;
   color: rgb(39, 46, 64);
   align-content: space-evenly;
 }

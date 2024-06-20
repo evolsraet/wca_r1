@@ -1438,20 +1438,28 @@ video {
   }
 
   
-
  .my-auction .participate-badge {
+    width: 15px !important;
+    height: 15px !important;
+    background-image: url('../img/Icon-hand.png');
+    margin-top: 8px; 
+    padding: 10px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
     position: absolute;
-    top: 153px;
-    right: 0;
+    top: 33px;
+    left: 10px;
     background-color: #4263ea;
     color: #fff;
-    padding: 0.25em 0.6em;
-    border-radius: 7px;
-    width: 60px;
+    padding: 10px;
+    border-radius: 50%;
+    width: auto;
     font-size: 13px;
     font-weight: bold;
     text-align: center;
 }
+
 .my-auction .progress{height: 10px; border-radius: 0px;}
 .my-auction .progress-bar{width: 95%;}
 .my-auction .time-remaining {
@@ -3511,7 +3519,6 @@ input[type="checkbox"] {
 .icon.heated-seat-ac {
     background-image: url('../img/opction/activation/b-vehicle3.png');
 }
-
 
 .icon.ventilated-seat {
     background-image: url('../img/opction/vehicle4.png');

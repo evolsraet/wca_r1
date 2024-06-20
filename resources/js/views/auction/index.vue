@@ -469,7 +469,7 @@ TODO:
                                         <div v-if="isDealer"> 
                                             <input class="toggle-heart" type="checkbox" v-model="auction.isFavorited"  @click.stop/>
                                             <label class="heart-toggle"></label>
-                                            <div class="participate-badge" v-if="isDealerParticipating(auction)">참여</div>
+                                          
                                         </div>
                                         <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
                                         <div v-if="auction.status === 'ask' || auction.status === 'diag'">
@@ -482,15 +482,17 @@ TODO:
                                         </div>
                                         <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>   
                                           <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
-                                          <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span>     
+                                          <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span> 
+                                          <div class="d-flex">    
                                             <span v-if="auction.status === 'ing' && auction.timeLeft" class="mx-2 timer">
                                                 <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
                                                 <span v-if="auction.timeLeft.days != '0' ">{{ auction.timeLeft.days }}일 &nbsp; </span>{{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
                                             </span>
-                                            <span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>
                                             <div v-if="isDealer"> 
-                                                <div class="participate-badge" v-if="isDealerParticipating(auction)">참여</div>
+                                                <div class="participate-badge" v-if="isDealerParticipating(auction)"><span class="hand-icon"></span></div>
                                             </div>
+                                            </div>
+                                            <span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>
                                         </div>
                                       <!--  <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>-->
                                        <!--  <div v-if="isDealer">-->

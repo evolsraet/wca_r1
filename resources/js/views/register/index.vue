@@ -495,9 +495,7 @@ body {
 .register-content {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
     margin-top: 2rem;
-    padding: 10px;
 }
 
 .video-container {
@@ -793,7 +791,7 @@ div.main i {
 
 .css-ifyyt1 {
     display: grid;
-    padding: 7rem 17px 9rem;
+    padding: 18vh 17px 5vh;
     color: rgb(39, 46, 64);
     align-content: space-evenly;
 }

@@ -180,4 +180,17 @@ export default {
 .content.no-scroll {
   overflow: hidden;
 }
+@media (min-width: 992px) {
+  .sheet {
+    height: auto !important;
+    max-height: none;
+    transition: none;
+  }
+.handle{
+  display: none;
+}
+  .handle-head {
+    cursor: default;
+  }
+}
 </style>

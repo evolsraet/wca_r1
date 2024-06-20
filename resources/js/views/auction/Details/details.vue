@@ -1,8 +1,8 @@
 <template>
   <div class="container-fluid" v-if="auctionDetail">
-    <div v-if="!auctionChosn&& !showReauctionView && auctionDetail.data.status !== 'wait'">
-      <div class="web-content-style">
-        <div class="container mov-wide">
+    <div v-if="!auctionChosn&& !showReauctionView && auctionDetail.data.status !== 'wait'" class="mov-wide">
+      <div class="web-content-style02">
+        <div class="container">
           <div>
             <div>
               <div class="mb-4">
@@ -74,7 +74,7 @@
                     </div>
                   </div>
                   <div v-if="isUser && auctionDetail.data.status === 'ing'" class="p-3">
-                    언제나 입찰가능하게 추가 (ing 일떄도 가능)
+             
                  <!--   <template v-if="auctionDetail.data.hope_price !== null">
                       <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
                         <p>현재 희망가</p>
@@ -340,20 +340,47 @@
             </ul>
           </div>
         </div>
+        <div v-if="isUser && auctionDetail.data.status !== 'chosen' && auctionDetail.data.status !== 'wait'&& auctionDetail.data.status !== 'diag' && auctionDetail.data.status !=='ing'" class="sheet-content">
+            <BottomSheet02 v-if="auctionDetail.data.status === 'done'">
+              <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
+              <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">
+                후기 남기기
+              </router-link>
+            </BottomSheet02>
+          </div>
+
+          <div v-if="auctionDetail.data.status !== 'done' && isDealer" class="sheet-content">
+            <BottomSheet02 initial="half" class="p-2 pt-0" v-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
+              <div class="d-flex justify-content-between align-items-baseline">
+                <h5>나의 입찰 금액</h5>
+                <div class="mt-3 d-flex align-items-center justify-content-end gap-3">
+                  <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids.length }}</p>
+                  <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
+                </div>
+              </div>
+              <div v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price == null" @click.stop="">
+                <p class="auction-deadline align-items-center my-4 p-4 justify-content-between">
+                  <span class="bold-20-font">{{ amtComma(myBidPrice) }}</span>
+                </p>
+                <p class="tc-light-gray text-center">앞으로 3회 더 취소할 수 있어요</p>
+                <button type="button" class="my-3 w-100 btn shadow-sm border" @click="handleCancelBid">
+                  입찰 취소하기
+                </button>
+                <div class="bottom-message">성사수수료 보증금이 부족해요</div>
+              </div>
+              
+              <div v-else>
+                <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
+                <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
+              </div>
+            </BottomSheet02>
+          </div>
+
+        <!-- bottom sheet Start-->
       </div>
     </div>
 
-    <!-- bottom sheet Start-->
-    <div class="sheet-content">
-      <!--  [사용자] - 경매 완료 -->
-      <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isUser">
-        <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
-        <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">
-          후기 남기기
-        </router-link>
-      </BottomSheet02>
-    </div>
-                       
+    
 
                     <!--    <div v-if="isUser">
                           -----[사용자]diag (진단평가)알때------->
@@ -639,28 +666,7 @@
                               </div>
                             </div>
                           </BottomSheet03>
-                          <BottomSheet02 initial="half" class="p-2 pt-0" v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
-                            <div class="d-flex justify-content-between align-items-baseline">
-                              <h5>나의 입찰 금액</h5>
-                                <div class="mt-3 d-flex align-items-center justify-content-end gap-3">
-                                  <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids.length }}</p>
-                                    <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
-                                </div>
-                              </div>
-                            <div v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price == null" @click.stop="">
-                              <p class="auction-deadline align-items-center my-4 p-4 justify-content-between">&nbsp<span class="bold-20-font">{{ amtComma(myBidPrice) }}</span></p>
-                              <p class="tc-light-gray text-center">앞으로 3회 더 취소할 수 있어요</p>
-                              <button type="button" class="my-3 w-100 btn shadow-sm border" @click="handleCancelBid">
-                                입찰 취소하기
-                              </button>
-                              <div class="bottom-message">성사수수료 보즘금이 부족해요</div>
-                            </div>
-                            
-                            <div v-else-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
-                              <h5 class="text-center mt-4">입찰이 완료되었습니다.</h5>
-                              <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
-                            </div>
-                          </BottomSheet02>
+
                             
                             <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
                             
@@ -710,46 +716,45 @@
                           <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
                         </div>
                         <ConnectDealerModal v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
-                        <BottomSheet02 v-if="!showReauctionView" initial="half" :dismissable="true">
+                        <BottomSheet02 v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
                           <button type="button" class="btn btn-dark" @click="toggleView">재경매</button>
                         </BottomSheet02>
-                      </div>
-
-                    <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView &&isUser" class="p-0 filter-content">
-                      <div>
-                        <button type="button" class="mb-1 btn-close" @click="backView"></button>
-                        <h5 class="my-4 mb-5">재경매할 금액을<br>입력해 주세요.</h5>
+                        <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView &&isUser" class="p-0 filter-content">
                         <div>
-                          <div v-if="auctionDetail.data.hope_price != null" class="form-group dealer-check mt-0 mb-0">
-                            <label for="sell">희망가 수정
-                              <span class="tooltip-toggle normal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
-                            </label>
-                            <div class="check_box">
-                              <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
-                              <label for="sell">희망가 판매</label>
+                          <button type="button" class="mb-1 btn-close" @click="backView"></button>
+                          <h5 class="my-4 mb-5">재경매할 금액을<br>입력해 주세요.</h5>
+                          <div>
+                            <div v-if="auctionDetail.data.hope_price != null" class="form-group dealer-check mt-0 mb-0">
+                              <label for="sell">희망가 수정
+                                <span class="tooltip-toggle normal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
+                              </label>
+                              <div class="check_box">
+                                <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
+                                <label for="sell">희망가 판매</label>
+                              </div>
+                            </div>
+                            <div v-else class="form-group dealer-check mt-0 mb-5">
+                              <label for="sell">희망가로 판매할까요?
+                                <span class="tooltip-toggle normal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
+                              </label>
+                              <div class="check_box">
+                                <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
+                                <label for="sell">희망가 판매</label>
+                              </div>
                             </div>
                           </div>
-                          <div v-else class="form-group dealer-check mt-0 mb-5">
-                            <label for="sell">희망가로 판매할까요?
-                              <span class="tooltip-toggle normal-14-font" aria-label="희망가 판매시, 해당가격에서 입찰한 딜러에게 자동으로 낙찰됩니다." tabindex="0"></span>
-                            </label>
-                            <div class="check_box">
-                              <input type="checkbox" id="sell" class="form-control" v-model="isSellChecked">
-                              <label for="sell">희망가 판매</label>
-                            </div>
+                          <div class="input-container mt-4">
+                            <input type="text" class="styled-input" placeholder="희망가 입력(선택)" v-model="amount" @input="updateKoreanAmount" :readonly="isReadonly">
+                          </div>
+                          <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
+                          <div class="btn-group mt-3 mb-2">
+                            <button type="button" class="btn btn-primary" @click="reauction">재경매</button>
                           </div>
                         </div>
-                        <div class="input-container mt-4">
-                          <input type="text" class="styled-input" placeholder="희망가 입력(선택)" v-model="amount" @input="updateKoreanAmount" :readonly="isReadonly">
-                        </div>
-                        <p class="d-flex justify-content-end tc-light-gray p-2">{{ koreanAmount }}</p>
-                        <div class="btn-group mt-3 mb-2">
-                          <button type="button" class="btn btn-primary" @click="reauction">재경매</button>
-                        </div>
+                      </BottomSheet03>
+                      <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                       </div>
-                    </BottomSheet03>
-                    <modal v-if="reauctionModal" :isVisible="reauctionModal" />
-                  </div>
+                    </div>
 </template>
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount } from 'vue';
@@ -1413,10 +1418,29 @@ const handleCancelBid = async () => {
 
 
 <style scoped>
-
+  @media (min-width: 992px){
+    .handle{
+      display: none;
+    }
+    .sheet-content{
+      width: 100% !important;
+      padding: 0px !important;
+    }
+    .sheet{
+    position: relative !important;
+    border-radius: 10px !important;
+}
+    .web-content-style02{
+        display: flex;
+        gap: 20px;
+        padding: 15px;
+        justify-content: center;
+    }
+  }
 @media (min-width: 992px) {
   .mov-wide {
-    width: 80vh;
+    width: 100vh;
+    margin: auto;
   }
 }
 .w-30{

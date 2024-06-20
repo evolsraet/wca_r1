@@ -37,7 +37,7 @@
                                                <div class="icon right-icon"></div>
                                            </div>
                                        </div>
-                                   <div v-else class="text-start">
+                                   <div v-else class="text-start tc-primary">
                                        <p>아직 경매가 진행 중이에요</p>
                                        <div class="d-flex align-items-center">
                                            <router-link :to="{ name: 'auction.index'}" class="tc-primary bold-18-font"@click="toggleNavbar">진행 중 경매 확인</router-link>

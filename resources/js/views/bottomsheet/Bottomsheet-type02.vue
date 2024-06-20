@@ -1,5 +1,5 @@
 <template>
-  <div ref="sheet" class="sheet" :class="{ 'head': showHead, 'half': showBottomSheet, 'dragging': isDragging }">
+  <div ref="sheet" class="sheet container" :class="{ 'head': showHead, 'half': showBottomSheet, 'dragging': isDragging }">
     <header class="handle-head" @mousedown="startDrag" @touchstart="startDrag" @click="toggleSheet">
       <span class="handle"></span>
     </header>
@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
 
 const props = defineProps({
   initial: String,
@@ -44,6 +44,7 @@ const closeSheet = () => {
 };
 
 const startDrag = (event) => {
+  if (window.innerWidth >= 992) return; // Disable dragging on larger screens
   isDragging.value = true;
   startY.value = event.touches ? event.touches[0].clientY : event.clientY;
   document.body.style.overflow = 'hidden';
@@ -94,15 +95,27 @@ const collapseSheet = () => {
   sheet.value.style.height = `${sheetHeight.value}px`;
 };
 
-onMounted(() => {
-  if (props.initial === 'half') {
+const handleResize = () => {
+  if (window.innerWidth >= 992) {
     expandSheet();
   } else {
-    collapseSheet();
+    if (props.initial === 'half') {
+      expandSheet();
+    } else {
+      collapseSheet();
+    }
   }
+};
+
+onMounted(() => {
+  handleResize();
+  window.addEventListener('resize', handleResize);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', handleResize);
 });
 </script>
-
 <style scoped>
 .sheet-wrap {
   position: fixed;
@@ -179,5 +192,19 @@ onMounted(() => {
 
 .content.no-scroll {
   overflow: hidden;
+}
+
+@media (min-width: 992px) {
+  .sheet {
+    height: auto !important;
+    max-height: none;
+    transition: none;
+  }
+.handle{
+  display: none;
+}
+  .handle-head {
+    cursor: default;
+  }
 }
 </style>
