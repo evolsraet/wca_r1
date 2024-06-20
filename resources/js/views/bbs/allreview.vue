@@ -131,6 +131,7 @@ async function loadPage(page) { // 페이지 로드
   currentPage.value = page;
   await getHomeReview(page); // getHomeReview 호출을 대기
   inputCardsValue();
+  window.scrollTo(0,0);
 }
 
 
