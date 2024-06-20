@@ -56,7 +56,7 @@
                         </div>
                     </div>
                 </div>
-                <button type="button" class="btn btn-fileupload" @click="triggerFileUpload">
+                <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
                     파일 첨부
                 </button>
                 <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload" id="file_user_photo">

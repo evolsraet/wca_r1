@@ -12,7 +12,7 @@
         </div>
       </div>
       <input type="file" ref="fileInputRef" style="display:none" @change="handleFileChange" multiple>
-      <button type="button" class="btn btn-fileupload" @click="triggerFileInput">
+      <button type="button" class="btn btn-fileupload w-100" @click="triggerFileInput">
         파일 첨부
       </button>
     </div>

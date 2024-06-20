@@ -1,6 +1,6 @@
 <template>
-    <div class="container mov-wide">
-        <div class="main-contenter mt-3 p-2">
+    <div class="container mov-wide web-content-style02">
+        <div class="container mt-3 p-2">
             <SkeletonLoader v-if="isLoading" />
             <template v-else>
                 <h5>차량 정보 조회 되었어요</h5>
@@ -70,7 +70,7 @@
                 </ul>
             </template>
         </div>
-        <div  class="sheet-content">
+        <div  class="sheet-content mt-4">
          <bottom-sheet initial="half" :dismissable="true">
                 <div>
                     <div class="top-content-style wd-100">
@@ -96,7 +96,7 @@
                             <InfoModal v-if="showModal" @close="closeModal" @refresh="startLoading"/>
                     
                         <div class="flex items-center justify-end mt-5">
-                            <router-link :to="{ path: '/selldt' }" class="btn primary-btn ">경매 신청하기</router-link>
+                            <router-link :to="{ path: '/selldt' }" class="btn primary-btn w-100">경매 신청하기</router-link>
                         </div>
                     </div>
                     <div v-if="!user?.name">
@@ -114,7 +114,7 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-end my-5">
-                            <router-link :to="{ path: '/selldt' }" class="btn primary-disable" @click="applyAuction">경매 신청하기</router-link>
+                            <router-link :to="{ path: '/selldt' }" class="btn primary-disable w-100" @click="applyAuction">경매 신청하기</router-link>
                         </div>
                     </div>
                 </div>
@@ -281,10 +281,15 @@ const applyAuction = () => {
 </script>
 
 <style scoped>
-@media (min-width: 992px){
-.mov-wide {
-    width: 50vh;
-}
+
+
+@media (min-width: 992px) {
+  .web-content-style02[data-v-d5e42825] {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    justify-content: center;
+  }
 }
 @media (min-width: 992px){
     .handle{

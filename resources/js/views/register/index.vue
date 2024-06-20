@@ -101,7 +101,7 @@
                                                     <div class="form-group">
                                                         <label for="dealerPhoto">사진 (본인 확인용)</label>
                                                         <img id="imagePreview" style="max-width: 50%; display: none;">
-                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUpload">
+                                                        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
                                                             파일 첨부
                                                         </button>
                                                         <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
@@ -147,19 +147,19 @@
                                                         </div>
                                                         <p class="mt-4">사업자 등록증</p>
                                                         <input type="file" @change="handleFileUploadBiz" ref="fileInputRefBiz" style="display:none">
-                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadBiz">
+                                                        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
                                                             파일 첨부
                                                         </button>
                                                         <div class="text-start mb-3 tc-light-gray" v-if="registerForm.file_user_biz_name">사업자 등록증 : {{ registerForm.file_user_biz_name }}</div>
                                                         <p>매도용인감정보</p>
                                                         <input type="file" @change="handleFileUploadSign" ref="fileInputRefSign" style="display:none">
-                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadSign">
+                                                        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
                                                             파일 첨부
                                                         </button>
                                                         <div class="text-start mb-3 tc-light-gray" v-if="registerForm.file_user_sign_name">매도용인감정보 : {{ registerForm.file_user_sign_name }}</div>
                                                         <p>매매업체 대표증 or 종사원증</p>
                                                         <input type="file" @change="handleFileUploadCert" ref="fileInputRefCert" style="display:none">
-                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadCert">
+                                                        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
                                                             파일 첨부
                                                         </button>
                                                         <div class="text-start mb-5 tc-light-gray" v-if="registerForm.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ registerForm.file_user_cert_name }}</div>

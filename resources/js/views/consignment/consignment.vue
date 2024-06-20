@@ -86,7 +86,7 @@
         <h4>매도용 인감증명서를 첨부해 주세요</h4>
         <div class="form-group">
           <img id="imagePreview" :src="imageSrc" class="image-preview mx-2 my-4" v-if="imageSrc" />
-          <button type="button" class="btn btn-fileupload mt-4 w-100" @click="triggerFileUpload">
+          <button type="button" class="btn btn-fileupload w-100 mt-4 w-100" @click="triggerFileUpload">
             파일 첨부
           </button>
           <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display: none;" id="file_user_photo">
