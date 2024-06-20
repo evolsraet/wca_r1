@@ -3847,3 +3847,15 @@ input[type="checkbox"] {
     border: none;
     border-top: 3px solid #d7d7d7;
   }
+
+  /* 기본 라벨 스타일 */
+.status-selector label {
+    cursor: pointer;
+    color: #b9b9b9; /* 기본 색상 */
+    transition: color 0.3s; 
+}
+
+/* 선택된 라벨의 스타일 */
+.status-selector input:checked + label {
+    color: #000; /* 진한 색상 */
+}
