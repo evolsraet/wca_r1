@@ -129,8 +129,12 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="dealeradress">소속상사 주소</label>
-                                                        <input type="text" v-model="registerForm.dealerCompanyPost" placeholder="post" @click="editPostCode('daumPostcodeInput')">
-                                                        <input type="text" v-model="registerForm.dealercompany_addr1" placeholder="주소" class="searchadress">
+                                                        <input type="text" v-model="registerForm.dealerCompanyPost" placeholder="post" readonly>
+                                                        <div>
+                                                            <input type="text" v-model="registerForm.dealercompany_addr1" placeholder="주소" class="searchadress" readonly>
+                                                            <span><button type="button" @click="editPostCode('daumPostcodeInput')">주소버튼</button></span>
+                                                        </div>
+                                                        
                                                         <input type="text" v-model="registerForm.dealercompany_addr2" placeholder="상세주소">
                                                         <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                                                             <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
@@ -166,8 +170,12 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="deliveryAdress">인수차량 도착지 주소</label>
-                                                        <input type="text" v-model="registerForm.dealerReceivePost" placeholder="post" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">
-                                                        <input type="text" v-model="registerForm.dealerReceiveAddr1" placeholder="주소">
+                                                        <input type="text" v-model="registerForm.dealerReceivePost" placeholder="post" readonly>
+                                                        <div>
+                                                            <input type="text" v-model="registerForm.dealerReceiveAddr1" placeholder="주소" readonly>
+                                                            <span><button type="button" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">주소버튼</button></span>
+                                                        </div>
+                                                        
                                                         <input type="text" v-model="registerForm.dealerReceiveAddr2" placeholder="상세주소">
                                                         <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                                                             <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">

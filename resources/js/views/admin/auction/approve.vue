@@ -51,8 +51,11 @@
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">우편주소</p>
-                  <input v-model="auction.addr_post" class="form-control" type="hidden" id="addr_post">
-                  <input v-model="auction.addr1" class="form-control" id="addr1" @click="editPostCode('daumPostcodeInput')">
+                  <input v-model="auction.addr_post" class="form-control" readonly>
+                  <div>
+                    <input v-model="auction.addr1" class="form-control" readonly>
+                    <span><button type="button"@click="editPostCode('daumPostcodeInput')">주소버튼</button></span>
+                  </div>
                   <div id="daumPostcodeInput" style="display: none;">
                     <img src="//t1.daumcdn.net/postcode/resource/images/close.png" @click="closePostcode('daumPostcodeInput')">
                   </div>

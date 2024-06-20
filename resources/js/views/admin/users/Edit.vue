@@ -114,19 +114,24 @@
                             </div>
                             <div class="form-group">
                                 <label for="user-title" class="form-label">소속상사 주소</label>
+
                                 <input
                                     v-model="dealer.company_post"
                                     type="text"
                                     class="form-control"
                                     placeholder="post"
+                                    readonly
                                 />
-                                <input
-                                    v-model="dealer.company_addr1"
-                                    type="text"
-                                    class="form-control"
-                                    placeholder="주소"
-                                    @click="editPostCode('daumPostcodeInput')"
-                                />
+                                <div>
+                                    <input
+                                        v-model="dealer.company_addr1"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="주소"
+                                        readonly
+                                    />
+                                    <span><button type="button" @click="editPostCode('daumPostcodeInput')">주소버튼</button></span>
+                                </div>
                                 <input
                                     v-model="dealer.company_addr2"
                                     type="text"
@@ -144,14 +149,18 @@
                                     type="text"
                                     class="form-control"
                                     placeholder="post"
+                                    readonly
                                 />
-                                <input
-                                    v-model="dealer.receive_addr1"
-                                    type="text"
-                                    class="form-control"
-                                    @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')"
-                                    placeholder="주소"
-                                />
+                                <div>
+                                    <input
+                                        v-model="dealer.company_addr1"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="주소"
+                                        readonly
+                                    />
+                                    <span><button type="button" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">주소버튼</button></span>
+                                </div>
                                 <input
                                     v-model="dealer.receive_addr2"
                                     type="text"
