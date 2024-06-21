@@ -106,6 +106,12 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
             },  
             {
+                path: '/edit-profile',
+                name: 'edit-profile',
+                component: () => import('../views/profile/index.vue'),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
+            },  
+            {
                 path: '/sell',
                 name: 'sell',
                 component: () => import('../views/auction/sell/index.vue'),
