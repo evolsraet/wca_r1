@@ -793,7 +793,13 @@ export function cmmn() {
 
     //public wica swal
     /**
-    
+      width: 700,
+            //    padding: 150,
+            //    background: '#fff url(https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg)',
+            //    imageUrl: 'https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg',
+            //    imageWidth: 200,
+            //    imageHeight: 200,
+            //    imageAlt: 'Custom image',
         wica.ntcn(swal)
         .param({}) // 리턴값에 전달 할 데이터
         .title('') // 알림 제목

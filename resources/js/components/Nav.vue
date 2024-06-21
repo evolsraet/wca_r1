@@ -224,7 +224,7 @@
                             <div class="menu-illustration p-3">
                                 <div class="sub-board-style">
                                     <div class="text-start">
-                                        <p>내 차 팔까?</p>
+                                        <p class="tc-primary">내 차 팔까?</p>
                                         <div class="d-flex align-items-center">
                                             <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font" @click="toggleNavbar">로그인하기</router-link>
                                             <div class="icon right-icon"></div>

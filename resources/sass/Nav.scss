@@ -265,9 +265,18 @@
 }
 
 .navbar-collapse.show {
-    width: 70vw !important;
+    width: 50vw !important;
 }
-
+@media (max-width: 767px){
+    .navbar-collapse.show {
+        width: 75vw !important;
+    }
+}
+@media (max-width: 320px){
+    .navbar-collapse.show {
+        width: 100vw !important;
+    }
+}
 .middle-content{
     margin-top: 6rem !important;
 }

@@ -66,58 +66,36 @@
                                                 등록일
                                             </div>
                                             <div class="select-none">
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                    }"
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                    }"
-                                                    >&darr;</span
-                                                >
+                                                <span v-if="orderingState.created_at.direction === 'asc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState.created_at.direction === 'desc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&darr;</span>
+                                                <span v-else-if="orderingState.created_at.direction === '' && orderingState.created_at.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                             </div>
                                         </div>
                                     </th>
-                                    <th class="px-6 py-3 bg-gray-50 text-left">
-                                        <span
-                                            class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
-                                            >후기번호</span
+                                    <th class="px-6 py-3 bg-gray-50 justify-content-center">
+                                        <div
+                                            class="flex flex-row items-center justify-content-center justify-between cursor-pointer"
+                                            @click="
+                                                updateOrdering('id')
+                                            "
                                         >
-                                    </th>
-                                    <!--<th class="px-6 py-3 text-left">
-                                        <div class="flex flex-row justify-content-center">
                                             <div
-                                                class="font-medium text-uppercase"
+                                                class="leading-4 font-medium text-gray-500 uppercase tracking-wider"
+                                                :class="{
+                                                    'font-bold text-blue-600':
+                                                        orderColumn ===
+                                                        'id',
+                                                }"
                                             >
-                                                Thumbnail
+                                                후기번호
+                                            </div>
+                                            <div class="select-none">
+                                                <span v-if="orderingState.id.direction === 'asc' && orderingState.id.column === 'id'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState.id.direction === 'desc' && orderingState.id.column === 'id'" class="text-blue-600">&darr;</span>
+                                                <span v-else-if="orderingState.id.direction === '' && orderingState.id.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                             </div>
                                         </div>
-                                    </th> -->
+                                    </th>
                                     <th class="px-6 py-3 bg-gray-50 text-left">
                                         <div
                                             class="flex flex-row items-center justify-content-center justify-between cursor-pointer"
@@ -136,40 +114,9 @@
                                                 내용
                                             </div>
                                             <div class="select-none">
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'content',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'content',
-                                                    }"
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'content',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'content',
-                                                    }"
-                                                    >&darr;</span
-                                                >
+                                                <span v-if="orderingState.content.direction === 'asc' && orderingState.content.column === 'content'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState.content.direction === 'desc' && orderingState.content.column === 'content'" class="text-blue-600">&darr;</span>
+                                                <span v-else-if="orderingState.content.direction === '' && orderingState.content.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                             </div>
                                         </div>
                                     </th>
@@ -259,7 +206,11 @@ const { can } = useAbility();
 const { adminGetReviews , adminDeleteReview , reviewsData , reviewPagination } = initReviewSystem(); 
 const currentStatus = ref('all');
 const currentPage = ref(1);
-
+const orderingState = {
+    created_at: { direction: '', column: '', hit: 0 },
+    id: { direction: '', column: '', hit: 0 },
+    content: { direction: '', column: '', hit: 0 },
+};
 onMounted(async () => {
     fetchReviews();
     getCategoryList();
@@ -276,8 +227,20 @@ async function loadPage(page) { // 페이지 로드
 
 
 const updateOrdering = (column) => {
-    orderColumn.value = column;
-    orderDirection.value = orderDirection.value === "asc" ? "desc" : "asc";
+    let columnState = orderingState[column];
+
+    columnState.hit += 1;
+    
+    if (columnState.hit == 3) {
+        columnState.column = '';
+        columnState.direction = '';
+        columnState.hit = 0;
+    } else {
+        columnState.column = column;
+        columnState.direction = columnState.direction === 'asc' ? 'desc' : 'asc';
+    }
+    orderColumn.value = columnState.column;
+    orderDirection.value = columnState.direction;
     fetchReviews();
 };
 

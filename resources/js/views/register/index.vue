@@ -129,10 +129,10 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="dealeradress">소속상사 주소</label>
-                                                        <input type="text" v-model="registerForm.dealerCompanyPost" placeholder="post" readonly>
+                                                        <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="registerForm.dealerCompanyPost" placeholder="post" readonly>
                                                         <div>
                                                             <input type="text" v-model="registerForm.dealercompany_addr1" placeholder="주소" class="searchadress" readonly>
-                                                            <span><button type="button" @click="editPostCode('daumPostcodeInput')">주소버튼</button></span>
+                                                            <!--<span><button type="button" @click="editPostCode('daumPostcodeInput')">주소버튼</button></span>-->
                                                         </div>
                                                         
                                                         <input type="text" v-model="registerForm.dealercompany_addr2" placeholder="상세주소">

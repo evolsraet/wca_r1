@@ -181,12 +181,14 @@ export function initReviewSystem() {
         wica.ntcn(swal)
         .title('작성하시겠습니까?') // 알림 제목
         .icon('Q') //E:error , W:warning , I:info , Q:question
+        .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
         .callback(function(result) {
             if(result.isOk){
                 //console.log(result);
                 axios.post(`/api/reviews`, form)
                     .then(response => {
                         wica.ntcn(swal)
+                        .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
                         .icon('I') //E:error , W:warning , I:info , Q:question
                         .callback(function(result) {
                             if(result.isOk){                                
@@ -217,6 +219,7 @@ export function initReviewSystem() {
                 axios.delete(`/api/reviews/${id}`)
                     .then(response => {
                         wica.ntcn(swal)
+                        .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
                         .icon('I') //E:error , W:warning , I:info , Q:question
                         .callback(function(result) {
                             if(result.isOk){                                
@@ -242,19 +245,24 @@ export function initReviewSystem() {
         .param({ _id : id }) // 리턴값에 전달 할 데이터
         .title('삭제하시겠습니까?') // 알림 제목
         .icon('W') //E:error , W:warning , I:info , Q:question
+        .labelOk('삭제') //확인 버튼 라벨 변경시
+        .labelCancel('취소') //취소 버튼 라벨 변경시
+        .addClassNm('review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
         .callback(function(result) {
             if(result.isOk){
                 console.log(result);
                 axios.delete(`/api/reviews/${id}`)
                     .then(response => {
                         wica.ntcn(swal)
+                        .title('이용후기가 삭제되었습니다.')
+                        .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
                         .icon('I') //E:error , W:warning , I:info , Q:question
                         .callback(function(result) {
                             if(result.isOk){                                
                                 getUserReview(userId, 1);                                 
                             }
                         })
-                        .alert('이용후기가 정상적으로 삭제되었습니다.');
+                        .alert('');
                     })
                     .catch(error => {
                         wica.ntcn(swal)
@@ -286,6 +294,7 @@ export function initReviewSystem() {
         wica.ntcn(swal)
         .title('수정하시겠습니까?') // 알림 제목
         .icon('Q') //E:error , W:warning , I:info , Q:question
+        .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
         .callback(function(result) {
             if(result.isOk){
                 //console.log(result);
@@ -293,6 +302,7 @@ export function initReviewSystem() {
                     .then(response => {
                         wica.ntcn(swal)
                         .icon('I') //E:error , W:warning , I:info , Q:question
+                        .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
                         .callback(function(result) {
                             if(result.isOk){                                
                                 if(role === 'user'){

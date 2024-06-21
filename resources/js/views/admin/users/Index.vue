@@ -87,40 +87,9 @@
                                                 가입일
                                             </div>
                                             <div class="select-none">
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                    }"
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'created_at',
-                                                    }"
-                                                    >&darr;</span
-                                                >
+                                                <span v-if="orderingState.created_at.direction === 'asc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState.created_at.direction === 'desc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&darr;</span>
+                                                <span v-else-if="orderingState.created_at.direction === '' && orderingState.created_at.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                             </div>
                                         </div>
                                     </th>
@@ -133,46 +102,15 @@
                                                 class="font-medium text-uppercase"
                                                 :class="{
                                                     'font-bold text-blue-600':
-                                                        orderColumn === 'title',
+                                                        orderColumn === 'name',
                                                 }"
                                             >
                                                 회원명/상태
                                             </div>
                                             <div class="select-none">
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                    }"
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'title',
-                                                    }"
-                                                    >&darr;</span
-                                                >
+                                                <span v-if="orderingState.name.direction === 'asc' && orderingState.name.column === 'name'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState.name.direction === 'desc' && orderingState.name.column === 'name'" class="text-blue-600">&darr;</span>
+                                                <span v-else-if="orderingState.name.direction === '' && orderingState.name.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                             </div>
                                         </div>
                                     </th>
@@ -191,40 +129,9 @@
                                                 이메일
                                             </div>
                                             <div class="select-none">
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'email',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'asc' &&
-                                                            orderColumn ===
-                                                                'email',
-                                                    }"
-                                                    >&uarr;</span
-                                                >
-                                                <span
-                                                    :class="{
-                                                        'text-blue-600':
-                                                            orderDirection ===
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'email',
-                                                        hidden:
-                                                            orderDirection !==
-                                                                '' &&
-                                                            orderDirection !==
-                                                                'desc' &&
-                                                            orderColumn ===
-                                                                'email',
-                                                    }"
-                                                    >&darr;</span
-                                                >
+                                                <span v-if="orderingState.email.direction === 'asc' && orderingState.email.column === 'email'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState.email.direction === 'desc' && orderingState.email.column === 'email'" class="text-blue-600">&darr;</span>
+                                                <span v-else-if="orderingState.email.direction === '' && orderingState.email.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                             </div>
                                         </div>
                                     </th>
@@ -311,6 +218,12 @@ const { can } = useAbility();
 const currentRoleStatus = ref('all');
 const currentStatus = ref('all');
 const currentPage = ref(1);
+const orderingState = {
+    created_at: { direction: '', column: '', hit: 0 },
+    name: { direction: '', column: '', hit: 0 },
+    email: { direction: '', column: '', hit: 0 },
+};
+
 onMounted(async () => {
     adminGetUsers(1,currentStatus.value,currentRoleStatus.value);                  
 });
@@ -335,9 +248,22 @@ function setStatusFilter(status) {
 }
 
 const updateOrdering = (column) => {
-    orderColumn.value = column;
-    orderDirection.value = orderDirection.value === "asc" ? "desc" : "asc";
-    fetchUsers();
+    let columnState = orderingState[column];
+
+    columnState.hit += 1;
+    
+    if (columnState.hit == 3) {
+        columnState.column = '';
+        columnState.direction = '';
+        columnState.hit = 0;
+    } else {
+        columnState.column = column;
+        columnState.direction = columnState.direction === 'asc' ? 'desc' : 'asc';
+    }
+    orderColumn.value = columnState.column;
+    orderDirection.value = columnState.direction;
+
+    fetchUsers(); 
 };
 
 function fetchUsers() {
