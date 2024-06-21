@@ -1022,16 +1022,24 @@ const openModal = () => {
                   '<p class="overlay_text03">경매자가 마음에 들지 않으시다면<br>재경매를 진행 할 수 있어요.</p>'+
                 '</div>';
   wica.ntcn(swal)
-     .useHtmlText() // HTML 태그 인 경우 활성화
-      .labelCancel()
-      .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
-      .addOption({ padding: 20, height: 265 }) // swal 기타 옵션 추가
-      .callback(function (result) {
-    })
-    .confirm(text);
+  .useHtmlText() // HTML 태그 인 경우 활성화
+  .labelOk('재경매') // 확인 버튼 라벨 변경
+  .labelCancel('경매 취소') // 취소 버튼 라벨 변경
+  .btnBatch('R') // 확인 버튼 위치 지정, 기본은 L
+  .addClassNm('cancel-modal') // 클래스명 변경, 기본 클래스명: wica-salert
+  .addOption({ padding: 20 }) // swal 기타 옵션 추가
+  .callback(function (result) {
+    if (result.isOk) {
+      toggleView();
+    } else if (!result.isOk) {
+      handleConfirmDelete();
+    } else {
+      console.error('Unexpected result:', result);
+    }
+  })
+  .confirm(text);
 
-}
-
+};
 const closeModal = () => {
   isModalVisible.value = false;
 };
@@ -1057,11 +1065,11 @@ const handleConfirmDelete = async () => {
             .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
             .addOption({ padding: 20, height: 265 }) // swal 기타 옵션 추가
             .callback(function (result) {
-            })
+              window.location.href = '/auction';
+
+              })
             .confirm(text);
         });
-
-        window.location.href = '/auction';
       } 
     }
   } catch (error) {

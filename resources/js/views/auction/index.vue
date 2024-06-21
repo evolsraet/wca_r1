@@ -420,7 +420,7 @@ TODO:
                         <button type="button" class="search-btn start-0">검색</button>
                     </div>
                 </div>
-                <div class="filter-content">
+                <div v-if="isDealer" class="filter-content">
                 <!-- 페이지의 나머지 내용 -->
                 <button @click="toggleModal" class="animCircle filter-button tc-light-gray mx-2"> 필터</button>
                 <FilterModal v-if="showModal" @close="handleClose"/>
