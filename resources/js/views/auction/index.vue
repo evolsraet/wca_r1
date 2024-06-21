@@ -36,10 +36,10 @@ TODO:
      
        <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded" @click.stop="">후기 남기기</div>
     </div>-->
-    <div class="container my-3 auction-content">
-        <div class="row content-main mt-5">
+    <div class="container my-3 auction-content ">
+        <div class="content-main mt-5" :class="{'row': isDealer}">  
             <!-- 사이드바 -->
-            <div class="sider-content col-md-3 mov-info02">
+            <div v-if="isDealer" class="sider-content col-md-3 mov-info02 ">
                 <div class="side-content">
                     <h5>제조사 모델</h5>
                     <div class="mt-4">
@@ -412,7 +412,7 @@ TODO:
             </div>
 
             <!-- 메인 컨텐츠 -->
-            <div class="col-md-9 auction-main">
+            <div class="col-md-9 auction-main" :class="{'auction-wide': isUser}">
                 <div class="d-flex gap-2">
                 <div class="apply-top text-start">
                     <div class="search-type">
@@ -490,7 +490,6 @@ TODO:
                                                     <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
                                                 </div>
                                             </div>
-                                            <div v-else style="height: 200px; width: 100%;">
                                             <div  :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
                                             </div>
                                             <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>   
@@ -503,7 +502,6 @@ TODO:
                                                 </span>
                                                 <div v-if="isDealer"> 
                                                     <div class="participate-badge" v-if="isDealerParticipating(auction)"><span class="hand-icon"></span></div>
-                                                </div>
                                                 </div>
                                                 <span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>
                                             </div>
@@ -958,6 +956,13 @@ const favoriteAuctions = computed(() => {
 .col-md-4 {
     flex: 0 0 auto;
     width: 100% !important;
+}
+}
+
+@media (min-width: 768px){
+.auction-wide {
+    flex: 0 0 auto;
+    width: 100%;
 }
 }
 </style>
