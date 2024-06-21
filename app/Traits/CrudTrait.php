@@ -319,7 +319,7 @@ trait CrudTrait
             $this->afterProcess(__FUNCTION__, request(), null); // Item is deleted, so passing null
 
             DB::commit();
-            return response()->api(null, null, 'ok', 200); // Consider using HTTP 204 for successful deletion with no content
+            return response()->api(null, '삭제되었습니다.', 'ok', 200); // Consider using HTTP 204 for successful deletion with no content
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;

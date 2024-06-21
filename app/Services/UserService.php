@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Role;
+// use Spatie\Permission\Models\Role;
 use App\Models\User;
 use App\Traits\CrudTrait;
 use Illuminate\Http\Request;
@@ -94,9 +95,13 @@ class UserService
         }
     }
 
+    public function tests()
+    {
+        return Role::findByName('user');
+    }
+
     public function update($id, Request $request)
     {
-
         DB::beginTransaction();
 
         try {
@@ -169,7 +174,11 @@ class UserService
             // 기본 패키지는 복수지만, 현 서비스에서는 하나만 지정한다
             if (auth()->user()->hasPermissionTo('act.admin') && $data) {
                 if (isset($data['role'])) {
-                    $role = Role::findByName($data);
+                    // 이름으로 역할 찾기
+                    $role = Role::where('name', $data['role'])->first();
+                    // 아이디로 역할 찾기 (예시)
+                    // $role = Role::findByName($data['role']);
+
                     $item->syncRoles($role);
                 }
             }
