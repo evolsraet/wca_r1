@@ -10,8 +10,8 @@ class CreateLikesTable extends Migration
     {
         Schema::create('likes', function (Blueprint $table) {
             $table->id();
-            $table->string('likeable_type')->nullable();
-            $table->string('likeable_id')->nullable();
+            $table->string('likeable_type');
+            $table->string('likeable_id');
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             // Unique index for composite key
             $table->unique(['likeable_type', 'likeable_id', 'user_id'], 'likeable_likes_unique');

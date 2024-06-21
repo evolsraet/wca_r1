@@ -28,6 +28,7 @@ Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);
 Route::apiResource('reviews', ReviewController::class)->only(['index', 'show']);
 Route::apiResource('reviews', ReviewController::class)->except(['index', 'show'])->middleware('auth:sanctum');
 
+Route::post('likes/toggle/{likeable_type_model}/{likeable_id}', [LikeController::class, 'toggle']);
 Route::apiResource('likes', LikeController::class);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {

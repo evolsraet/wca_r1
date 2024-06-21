@@ -136,6 +136,11 @@ trait CrudTrait
             foreach ((array) $exploded as $row) :
                 $row = explode(':', $row);
 
+                //$row[1] 이 like 일때, $row[2] 에 '%' 가 포함되어있지 않으면 앞뒤로 '%' 문자 더해주기
+                if ($row[1] == 'like' && strpos($row[2], '%') === false) {
+                    $row[2] = '%' . $row[2] . '%';
+                }
+
                 switch ($row[0]) {
                     case 'users.roles':
                         $result = $result->role($row[1]);
@@ -211,7 +216,7 @@ trait CrudTrait
 
     public function store(Request $request)
     {
-        $this->beforeProcess(__FUNCTION__, request());
+        $this->beforeProcess(__FUNCTION__, $request);
         $modelClass = $this->getModelClass();
 
         DB::beginTransaction();
@@ -248,7 +253,7 @@ trait CrudTrait
                 }
             }
 
-            $this->afterProcess(__FUNCTION__, request(), $item);
+            $this->afterProcess(__FUNCTION__, $request, $item);
 
             DB::commit();
             return response()->api(new $this->resourceClass($item));

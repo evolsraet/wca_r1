@@ -29,7 +29,7 @@ class LikeFactory extends Factory
                 ->exists();
 
             // 로그 파일에 진행 상황 기록
-            Log::error("User ID: {$user->id}, Auction ID: {$auction->id}, Exists: {$exists}");
+            Log::info("LikeFactory: {$auction->id}-{$user->id}, Exists: {$exists}");
         } while ($exists); // 이미 조합이 존재하면 반복
         return [
             'likeable_type' => Auction::class,
