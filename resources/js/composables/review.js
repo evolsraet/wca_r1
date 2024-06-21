@@ -23,15 +23,14 @@ export function initReviewSystem() {
         opacityHover = '0.5';
 
     let stars = document.querySelectorAll('.rating .star-icon');
-
+    let scoreDisplay = document.querySelector('.rating-score'); // 점수를 표시할 span 요소
     checkedRate();
 
 
     rateWrap.forEach(wrap => {
-        const scoreDisplay = wrap.querySelector('.rating-score'); // 점수를 표시할 span 요소
+        
         wrap.addEventListener('mouseenter', () => {
             stars = wrap.querySelectorAll('.star-icon');
-
             stars.forEach((starIcon, idx) => {
                 starIcon.addEventListener('mouseenter', () => {
                     if (wrap.classList.contains('readonly') == false) {
@@ -127,7 +126,8 @@ export function initReviewSystem() {
     const setInitialStarRating = (starRating) => {
         const stars = document.querySelectorAll('.rating__input'); 
         const scoreDisplay = document.querySelector('.rating-score'); // 점수를 표시할 span 요소
-        scoreDisplay.textContent = `( ${starRating} 점 )`; 
+
+        scoreDisplay.textContent = `( ${starRating} 점 )`;
 
         const reviewStarValue = document.getElementById('reviewStarValue');
         if(reviewStarValue){

@@ -1,6 +1,6 @@
 <template>
-    <div class="container">
-        <div class="main-contenter mt-3 p-2">
+    <div class="container mov-wide web-content-style02">
+        <div class="container my-5 p-2">
             <SkeletonLoader v-if="isLoading" />
             <template v-else>
                 <h5>차량 정보 조회 되었어요</h5>
@@ -70,7 +70,7 @@
                 </ul>
             </template>
         </div>
-         <bottom-sheet initial="half" :dismissable="true">
+         <BottomSheet02 initial="half" :dismissable="true">
                 <div>
                     <div class="top-content-style wd-100">
                         <p class="tc-light-gray bold-18-font">현재 시세 <span class="normal-14-font">(무사고 기준)</span></p>
@@ -95,7 +95,7 @@
                             <InfoModal v-if="showModal" @close="closeModal" @refresh="startLoading"/>
                     
                         <div class="flex items-center justify-end mt-5">
-                            <router-link :to="{ path: '/selldt' }" class="btn primary-btn ">경매 신청하기</router-link>
+                            <router-link :to="{ path: '/selldt' }" class="btn primary-btn w-100">경매 신청하기</router-link>
                         </div>
                     </div>
                     <div v-if="!user?.name">
@@ -113,12 +113,12 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-end my-5">
-                            <router-link :to="{ path: '/selldt' }" class="btn primary-disable" @click="applyAuction">경매 신청하기</router-link>
+                            <router-link :to="{ path: '/selldt' }" class="btn primary-disable w-100" @click="applyAuction">경매 신청하기</router-link>
                         </div>
                     </div>
                 </div>
-            </bottom-sheet>
-    </div>
+            </BottomSheet02>
+            </div>
 </template>
 
 <script setup>
@@ -129,7 +129,7 @@ import { useRouter } from 'vue-router';
 import { ref, onMounted, computed } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from "vuex";
-import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
+import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import useAuctions from '@/composables/auctions';
 const previousCarDetails = ref({});
 const isRefreshDisabled = ref(false); // 버튼 비활성화 상태 변수
@@ -279,6 +279,35 @@ const applyAuction = () => {
 </script>
 
 <style scoped>
+
+
+@media (min-width: 992px) {
+  .web-content-style02[data-v-d5e42825] {
+    display: flex;
+    gap: 20px;
+    padding: 15px;
+    justify-content: center;
+  }
+}
+@media (min-width: 992px){
+    .handle{
+      display: none;
+    }
+    .sheet-content{
+      width: 100% !important;
+      padding: 0px !important;
+    }
+    .sheet{
+    position: relative !important;
+    border-radius: 10px !important;
+}
+    .web-content-style02{
+        display: flex;
+        gap: 20px;
+        padding: 15px;
+        justify-content: center;
+    }
+  }
 .bottom-sheet::before {
     content: "";
     position: absolute;
@@ -327,5 +356,12 @@ const applyAuction = () => {
 }
 .fade-enter, .fade-leave-to {
     opacity: 0;
+}
+@media (min-width: 992px){
+.sheet {
+    height: auto !important;
+    transition: none;
+}
+
 }
 </style>

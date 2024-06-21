@@ -106,7 +106,7 @@
                                     <th class="px-6 py-3 bg-gray-50 text-left">
                                         <span
                                             class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider"
-                                            >매물번호</span
+                                            >후기번호</span
                                         >
                                     </th>
                                     <!--<th class="px-6 py-3 text-left">
@@ -207,13 +207,14 @@
                                                 :to="{ 
                                                     name: 'review.approve', params: { id: review.id } 
                                                 }"
-                                                class="ms-2 badge bg-danger tc-wh"
-                                                >수정
+                                                class="ms-2 fs-6 badge edit "
+                                                >수정 
                                             </router-link>
+                                            <span>|</span>
                                             <a
                                                 href="#"
                                                 @click.prevent="adminDeleteReview(review.id)"
-                                                class="ms-2 badge bg-danger tc-wh"
+                                                class="ms-2 fs-6 badge delete "
                                                 >삭제</a
                                             >
                                         </td>
@@ -269,6 +270,7 @@ async function loadPage(page) { // 페이지 로드
     if (page < 1 || page > reviewPagination.value.last_page) return;
     currentPage.value = page;
     fetchReviews();
+    window.scrollTo(0,0);
 }
 
 

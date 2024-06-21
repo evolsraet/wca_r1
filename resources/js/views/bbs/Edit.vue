@@ -38,14 +38,14 @@
                         <p class="card-text tc-light-gray fs-5 web-text">12 삼 4567</p>
                     </div>--> 
                     <div class="mx-2 tc-light-gray my-4">
-                        <p> {{ carInfo.year }}년 / 2.4km / 무사고</p>
+                        <p> 년 / 2.4km / 무사고</p>
                         <p>현대 쏘나타 (DN8)</p>
                         <br>
                         <p>매물번호 / 564514</p>
                         <p>딜 러 명 / {{review.dealer.name}}</p>
                         </div>
                    <!-- <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>{{ formatDateAndTime(review.auction.final_at )}}</span></p>-->
-                   <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(review.auction.final_price) }}</span></p>
+                   <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>
                    <div class="container card-style p-0 mt-5">
                     </div>
                 </div>

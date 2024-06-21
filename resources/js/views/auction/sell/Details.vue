@@ -1,21 +1,44 @@
 <template>
-    <div class="container">
-        <div class="d-flex flex-column">
+    <div class="container mov-wide">
+      <div class="d-flex flex-column">
         <div class="mt-3">
-            <p class="mx-2 top-title">이런 단계를 거쳐요</p>
+          <h4 class="ms-5 my-5">이런 단계를 거쳐요</h4>
         </div>
         <div>
-            <div class="introduce-action">
+          <div class="introduce-action">
             <img src="../../../../img/auction-detil.png" alt="Auction Detail" class="auction-detail-img">
-            </div>
-            <div class="mb-4 p-3 flex items-center justify-end">
-                <router-link :to="{ path: '/selldt2' }" class="btn primary-btn">다음</router-link>
-            </div>
+          </div>
+          <div class="mb-4 p-5 flex items-center justify-end container justify-content-center">
+            <button @click="infomodal" class="btn primary-btn btn-style w-100">다음</button>
+          </div>
         </div>
+      </div>
+      <AlarmGuidModal :isOpen="modalinfo" @close="closeModal" />
     </div>
-</div>
-</template>
-
-
-<script>
-</script>
+  </template>
+  
+  <script setup>
+  import { ref } from 'vue';
+  import { useRoute, useRouter } from 'vue-router';
+  import { useStore } from 'vuex';
+  import { gsap } from 'gsap';
+  import useUsers from '@/composables/users';
+  import AlarmGuidModal from '@/views/consignment/AlarmGuidModal.vue';
+  
+  const modalinfo = ref(false);
+  
+  const infomodal = () => {
+    modalinfo.value = true;
+  };
+  
+  const closeModal = () => {
+    modalinfo.value = false;
+  };
+  </script>
+  
+  <style>
+  .btn-style {
+    width: 422px;
+  }
+  </style>
+  

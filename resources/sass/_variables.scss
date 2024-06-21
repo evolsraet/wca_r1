@@ -49,7 +49,9 @@ h5{
 .grayscale_img {
     filter: grayscale(70%);
 }
-
+.bg-sub-color01{
+background-color: $sub-color01 !important;
+}
 .custom-highlight {
     background: linear-gradient(transparent 50%, rgba($primary, 0.1) 40%);
 }
@@ -76,7 +78,7 @@ h5{
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.26);
 }
 .btn-outline-primary:hover{
-    color:white !important;
+    color:rgba($primary, 0.990) !important; 
 }
 .primary-btn:hover{
     background-color: $primary-hover;
@@ -324,14 +326,14 @@ h5{
 .no-bidding{
     color: #fff;
     height: 30px;
-    padding: 4px 15px;
+    padding: 3px 15px;
     border-radius: 6px;
     background-color: #aaaebe;
 }
 .bidding{
     color: #fff;
     height: 30px;
-    padding: 4px 15px;
+    padding: 2px 17px;
     border-radius: 6px;
     background-color: $primary;
 }
@@ -390,4 +392,17 @@ h5{
 .d-sm-flex {
     display: flex !important;
 }
+}
+
+.hp-100{
+    height: 100px !important;
+}
+.hp-75{
+    height: 75px !important;
+}
+.hp-50{
+    height: 50px !important;
+}
+.hp-25{
+    height: 25px !important;
 }

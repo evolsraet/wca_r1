@@ -93,13 +93,14 @@
                                     :to="{ 
                                         name: 'auction.approve', params: { id: auction.id } 
                                     }"
-                                    class="ms-2 badge bg-danger tc-wh"
+                                    class="ms-2 fs-6 badge edit"
                                     >수정
                                 </router-link>
+                                <span>|</span>
                                 <a
                                     href="#"
                                     @click.prevent="deleteAuction(auction.id)"
-                                    class="ms-2 badge bg-danger tc-wh"
+                                    class="ms-2 fs-6 badge delete "
                                     >삭제</a
                                 >
                             </td>
@@ -116,13 +117,13 @@
             <nav v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
                 <ul class="pagination justify-content-center">
                     <li class="page-item" :class="{ disabled: !pagination.prev }">
-                    <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
+                    <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1,fetchAuctions)"></a>
                     </li>
                     <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
-                    <a class="page-link" @click="loadPage(n)">{{ n }}</a>
+                    <a class="page-link" @click="loadPage(n,fetchAuctions)">{{ n }}</a>
                     </li>
                     <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                    <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
+                    <a class="page-link next-style" @click="loadPage(pagination.current_page + 1,fetchAuctions)"></a>
                     </li>
                 </ul>
             </nav>
@@ -136,7 +137,7 @@
     import useAuctions from '@/composables/auctions';
     import useCategories from '@/composables/categories';
     import { useAbility } from '@casl/vue';
-    
+
     const orderColumn = ref('created_at');
     const orderDirection = ref('desc');
     const { auctionsData, pagination, adminGetAuctions, deleteAuction,getStatusLabel } = useAuctions();
@@ -144,7 +145,6 @@
     const { can } = useAbility();
     const currentStatus = ref('all'); 
     const currentPage = ref(1); // 현재 페이지 번호
-    
     /**
     const fetchAuctions = async (page = 1) => {
         try {
@@ -165,10 +165,12 @@
         fetchAuctions();
     }
 
+
     function loadPage(page) { // 페이지 로드
         if (page < 1 || page > pagination.value.last_page) return;
         currentPage.value = page;
         fetchAuctions();
+        window.scrollTo(0,0);
     }
 
     const updateOrdering = (column) => {

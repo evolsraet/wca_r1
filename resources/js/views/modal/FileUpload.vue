@@ -19,7 +19,7 @@
                                 </div>
                             </div>
                             </div>
-                            <button class="btn btn-fileupload mt-3 mb-5" @click="triggerSingleFileUpload">단일 파일 첨부</button>
+                            <button class="btn btn-fileupload mt-3 mb-5 w-100" @click="triggerSingleFileUpload">단일 파일 첨부</button>
                             <input type="file" accept="image/*" @change="handleSingleFileChange" ref="singleFileInput" style="display: none;">
                         </div>
 
@@ -34,7 +34,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-fileupload mt-3 mb-5" @click="triggerDocumentUpload">위임장 파일 첨부</button>
+                        <button class="btn btn-fileupload mt-3 mb-5 w-100" @click="triggerDocumentUpload">위임장 파일 첨부</button>
                         <input type="file" multiple accept="image/*" @change="handleDocumentImagesChange" ref="documentInput" style="display: none;" />
                     </div>
                         <h5>추가 서류가 필요해요</h5>
@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                         </div>
-                        <button class="btn btn-fileupload mt-3" @click="triggerAdditionalUpload">추가 서류 파일 첨부</button>
+                        <button class="btn btn-fileupload mt-3 w-100" @click="triggerAdditionalUpload">추가 서류 파일 첨부</button>
                         <input type="file" multiple accept="image/*" @change="handleAdditionalImagesChange" ref="additionalInput" style="display: none;" />
                         <router-link :to="{ name: 'auction.index' }" class="link process my-member justify-content-end">정보갱신하기</router-link>
                     </div>
@@ -106,7 +106,7 @@
             </div>
             <div class="flex items-center justify-end my-5">
            <!-- 임시 닫기-->
-            <p class="btn primary-btn normal-16-font mt-5" @click="handleCloseClick">파일 첨부</p></div>
+            <p class="btn primary-btn normal-16-font mt-5 w-100" @click="handleCloseClick">파일 첨부</p></div>
         </div>
             </div>
         </div>

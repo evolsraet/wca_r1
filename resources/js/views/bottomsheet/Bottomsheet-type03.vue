@@ -1,18 +1,30 @@
 <template>
-  <!-- 끌어올리기 내리기 불가능한 모달 bottom-sheet -->
   <div class="sheet-wrap">
     <div ref="overlay" class="overlay" v-if="showBottomSheet"></div>
-    <div ref="sheet" class="sheet" :class="{ 'half': showBottomSheet, 'animate-slide-up': showBottomSheet }">
-      <header class="handle-head">
-      </header>
-      <div class="p-3" ref="content" :class="{ 'no-scroll': showHead }" @mousedown.stop @touchstart.stop>
+    <div
+      ref="sheet"
+      class="sheet container"
+      :class="{ 
+        'half': showBottomSheet, 
+        'animate-slide-up': showBottomSheet, 
+        'modal-center': isDesktop 
+      }"
+    >
+      <header class="handle-head"></header>
+      <div
+        class="p-3"
+        ref="content"
+        :class="{ 'no-scroll': showHead }"
+        @mousedown.stop
+        @touchstart.stop
+      >
         <slot></slot>
       </div>
     </div>
   </div>
 </template>
 
-<script>  
+<script>
 export default {
   name: 'BottomSheet',
   props: {
@@ -23,7 +35,8 @@ export default {
     return {
       showHead: false,
       showBottomSheet: false,
-      sheetHeight: 10 
+      sheetHeight: 10,
+      isDesktop: window.innerWidth >= 992
     };
   },
   methods: {
@@ -33,26 +46,48 @@ export default {
       } else {
         this.showBottomSheet = true;
         this.showHead = false;
-        this.sheetHeight = window.innerHeight * 0.45;
-        this.$refs.sheet.style.height = `${this.sheetHeight}px`;
+        if (!this.isDesktop) {
+          this.sheetHeight = window.innerHeight * 0.45;
+          this.$refs.sheet.style.height = `${this.sheetHeight}px`;
+        }
       }
     },
     closeSheet() {
       this.showBottomSheet = false;
       this.sheetHeight = 10;
-      this.$refs.sheet.style.height = `${this.sheetHeight}px`;
+      if (!this.isDesktop) {
+        this.$refs.sheet.style.height = `${this.sheetHeight}px`;
+      }
+    },
+    updateView() {
+      this.isDesktop = window.innerWidth >= 992;
+      if (this.isDesktop) {
+        this.$refs.sheet.style.height = 'auto';
+      } else if (this.showBottomSheet) {
+        this.sheetHeight = window.innerHeight * 0.45;
+        this.$refs.sheet.style.height = `${this.sheetHeight}px`;
+      }
     }
   },
   mounted() {
+    window.addEventListener('resize', this.updateView);
+    this.updateView();
     if (this.initial === 'half') {
       this.showBottomSheet = true;
-      this.sheetHeight = window.innerHeight * 0.45;
-      this.$refs.sheet.style.height = `${this.sheetHeight}px`;
+      if (!this.isDesktop) {
+        this.sheetHeight = window.innerHeight * 0.45;
+        this.$refs.sheet.style.height = `${this.sheetHeight}px`;
+      }
     } else {
       this.showHead = true;
       this.sheetHeight = 10;
-      this.$refs.sheet.style.height = `${this.sheetHeight}px`;
+      if (!this.isDesktop) {
+        this.$refs.sheet.style.height = `${this.sheetHeight}px`;
+      }
     }
+  },
+  beforeDestroy() {
+    window.removeEventListener('resize', this.updateView);
   }
 };
 </script>
@@ -65,7 +100,7 @@ export default {
   right: 0;
   left: 0;
   overflow: hidden;
-  z-index: 10;
+  z-index: 100;
 }
 
 .overlay {
@@ -75,7 +110,7 @@ export default {
   right: 0;
   left: 0;
   background: rgba(0, 0, 0, 0.5);
-  z-index: 1; 
+  z-index: 1;
 }
 
 .sheet {
@@ -90,7 +125,7 @@ export default {
   max-height: 80vh;
   transition: height 0.3s ease;
   overflow: hidden;
-  z-index: 2; 
+  z-index: 2;
   transform: translateY(100%);
 }
 
@@ -154,5 +189,26 @@ export default {
 
 .content.no-scroll {
   overflow: hidden;
+}
+
+@media (min-width: 992px) {
+  .sheet {
+    top: 50%;
+    transform: translate(-50%, -50%);
+    height: auto;
+    max-height: none;
+    width: auto;
+    max-width: 800px;
+    transition: none;
+  }
+  .handle {
+    display: none;
+  }
+  .handle-head {
+    cursor: default;
+  }
+}
+.filter-content{
+  display: block;
 }
 </style>

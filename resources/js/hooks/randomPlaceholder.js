@@ -1,3 +1,4 @@
+// utils.js
 export function setRandomPlaceholder() {
     const placeholders = [
         "더 뉴 그랜저",
@@ -47,9 +48,20 @@ export function setRandomPlaceholder() {
         "제네시스 GV80"
     ];
 
+    const emojis = ["🚗", "🚙", "🚐", "🚕", "🚖", "🚘", "🚍", "🚔", "🚓", "🚑", "🚒", "🚚"];
+
+    const randomCarIndex = Math.floor(Math.random() * placeholders.length);
+    const randomEmojiIndex = Math.floor(Math.random() * emojis.length);
+
+    const carName = placeholders[randomCarIndex];
+    const emoji = emojis[randomEmojiIndex];
+
     const searchInput = document.getElementById('search-input');
     if (searchInput) {
-        const randomIndex = Math.floor(Math.random() * placeholders.length);
-        searchInput.placeholder = placeholders[randomIndex];
+        searchInput.placeholder = carName;
     }
+
+
+
+    return { carName, emoji };
 }

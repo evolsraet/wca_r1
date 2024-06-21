@@ -23,7 +23,8 @@
                         </div>
                     </div>
                     <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
-                        <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                        <a href="/profile" class="menu-item mt-0">내 정보</a>
+                        <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
                         <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
                     <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
@@ -37,7 +38,7 @@
                                                <div class="icon right-icon"></div>
                                            </div>
                                        </div>
-                                   <div v-else class="text-start">
+                                   <div v-else class="text-start tc-primary">
                                        <p>아직 경매가 진행 중이에요</p>
                                        <div class="d-flex align-items-center">
                                            <router-link :to="{ name: 'auction.index'}" class="tc-primary bold-18-font"@click="toggleNavbar">진행 중 경매 확인</router-link>
@@ -56,6 +57,15 @@
                                             <div class="d-flex flex-column">
                                                 <span class="menu-text process">입찰하기</span>
                                                 <span class="tc-light-gray font-1">새 매물 둘러보기</span>
+                                            </div>
+                                        </router-link>
+                                        <router-link :to="{ name: 'dealer.address'}" class="menu-item mt-0" @click="toggleNavbar">
+                                            <div class="sd-menu">
+                                                <div class="icon icon-location-memu"></div>
+                                            </div>
+                                            <div class="d-flex flex-column">
+                                                <span class="menu-text process">주소 관리</span>
+                                                <span class="tc-light-gray font-1">탁송 주소 관리</span>
                                             </div>
                                         </router-link>
                                         <router-link :to="{ name: 'dealer.bids'}" class="menu-item mt-0" @click="toggleNavbar">
@@ -111,12 +121,12 @@
                         </div>
                     </div>
                     <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
-                       <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                       <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
                         <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                     </div>
                     <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
                         <div class="top-content ">
-                            <div v-if="userHasAuction" class="p-4">
+                         <!--  <div v-if="userHasAuction" class="p-4">
                                 <h4>경매 진행 상황</h4>
                                 <p class="tc-light-gray mb-3">가장 최근에 등록한 매물로 알려드려요.</p>
                                 <ul class="timeline">
@@ -153,7 +163,7 @@
                                     </li>
                                 </ul>
                                 </div>
-                            <div v-else class="menu-illustration02 p-3">
+-->                            <div class="menu-illustration02 p-3">
                                 <div class="sub-board-style02">
                                     <div class="text-start">
                                         <p class="tc-light-gray">경매를 시작해볼까요?</p>
@@ -246,7 +256,7 @@
                                                 <span class="tc-light-gray font-1"> 다양한 판매 후기</span>
                                             </div>
                                         </router-link>
-                                        <router-link :to="{ name: 'dealer.profile' }" class="menu-item mt-1 mb-3" @click="toggleNavbar">
+                                        <router-link :to="{ name: 'index.introduce' }" class="menu-item mt-1 mb-3" @click="toggleNavbar">
                                             <div class="sd-menu">
                                             <div class="icon icon-nav-bulb"></div>
                                             </div>
@@ -284,7 +294,7 @@
                             </li>
                             <li><a class="mx-3 nav-link tc-light-gray logout" href="/login" @click="logout">로그아웃</a></li>
                             <div v-if="showSettings" :class="['settings-menu','setting-web', { show: showSettings }]">
-                                 <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                                 <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
                             </div>
                         </template>
                     <!-- 게스트 일때 -->
@@ -320,11 +330,12 @@
                             <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3">공지사항</router-link>
                         </li>
                         <li class="nav-item my-member-dealer ms-auto" @click="toggleSettingsMenu" >
-                            <img src="../../img/myprofile_ex.png" class="nav-profile" alt="Profile Image"><a :to="{ name: 'dealer.profile' }"  class="tc-wh p-1 pb-0 mx-2 me-3" href="#">{{ user.name }}</a>
+                            <img src="../../img/profile_dom.png" class="nav-profile" alt="Profile Image"><a :to="{ name: 'dealer.profile' }"  class="tc-wh p-1 pb-0 mx-2 me-3" href="#">{{ user.name }}</a>
                         </li>
                         <li><a class="mx-3 nav-link tc-wh logout" href="/login" @click="logout">로그아웃</a></li>
                         <div v-if="showSettings" :class="['settings-menu','setting-web', { show: showSettings }]">
-                       <router-link to="/edit-profile" class="menu-item mt-0">내 정보 수정</router-link>
+                            <a href="/profile" class="menu-item mt-0">내 정보</a>
+                       <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
                     </div>
                     </template>
                     <!-- 로그인 시 -->
@@ -653,7 +664,7 @@ a.navbar-toggler.p-2 {
 
 .logo-content {
     background-color: #f7f8fb;
-    width: 50vh;
+    width: -webkit-fill-available;
     height: 65px;
     position: fixed;
     bottom: 0;

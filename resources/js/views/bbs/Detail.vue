@@ -35,9 +35,9 @@
                             <p>현대 쏘나타 (DN8)</p>
                             <br>
                             <p>매물번호 / 564514</p>
-                            <p>딜 러 명 / {{review.auction.dealer_name}}</p>
+                            <p>딜 러 명 / {{review.dealer.name}}</p>
                         </div>
-                        <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(review.auction.final_price) }}</span></p>
+                        <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>
                     </div>
                     <div class="right-container">
                         <bottom-sheet initial="half" :dismissable="true" class="mt-2">

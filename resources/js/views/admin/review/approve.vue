@@ -43,10 +43,19 @@
                         <p>매물번호 / 564514</p>
                         <p>딜 러 명 / {{review.dealer.name}}</p>
                     </div>
-                    <p class="mt-4 auction-deadline tc-light-gray">판매가<span>{{ amtComma(review.auction.final_price) }}</span></p>
+                    <p class="mt-4 auction-deadline tc-light-gray">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>
                     <div class="card-body">
                         <p class="tc-light-gray">별점</p>
-                        <input v-model="rv.star" class="form-control bg-secondary bg-opacity-10" />
+                        <div class="wrap">
+                            <select class="form-select" :v-model="rv.star" id="starSelect" @change="changeStar($event)">
+                                <option value="1">1점</option>
+                                <option value="2">2점</option>
+                                <option value="3">3점</option>
+                                <option value="4">4점</option>
+                                <option value="5">5점</option>
+                            </select>
+                        </div>
+                        <!--<input v-model="rv.star" class="form-control bg-secondary bg-opacity-10" />-->
                     </div>
                     <div class="card-body">
                         <p class="tc-light-gray">후기</p>
@@ -117,6 +126,10 @@ function submitForm(){
     editReview(reviewId, rv, 'admin');
 }
 
+function changeStar(event) {
+  rv.star = event.target.value;
+}
+
 const rv = reactive({
     user_id:route.params.id,
     auction_id:'',
@@ -132,14 +145,14 @@ onMounted(async () => {
     reviewData.value = [response];
     //carInfo.value = await getCarInfo(response.auction.owner_name, response.auction.car_no);
     await nextTick();
-    setInitialStarRating(response.star);
+    //setInitialStarRating(response.star);
     initReviewSystem();
     watchEffect(() => {
-        rv.auction_id = response.auction_id,
-        rv.dealer_id = response.dealer_id,
-        rv.star = response.star;
-        rv.user_id = response.user_id,
-        rv.content = response.content
+        rv.auction_id = response.auction_id;
+        rv.dealer_id = response.dealer.id;
+        document.getElementById("starSelect").value = response.star;
+        rv.user_id = response.user_id;
+        rv.content = response.content;
     })
 
 });

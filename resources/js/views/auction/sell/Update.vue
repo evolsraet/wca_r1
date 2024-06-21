@@ -34,12 +34,12 @@
             <input type="text" id="adddt" v-model="addrdt" placeholder="상세주소">
           </div>
           <h5><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
-          <button type="button" class="btn btn-fileupload mt-3" @click="triggerFileUpload">
+          <button type="button" class="btn btn-fileupload w-100 mt-3" @click="triggerFileUpload">
             파일 첨부
           </button>
           <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
           <div class="flex items-center justify-end mt-5">
-            <router-link to="/sell" class="btn primary-btn normal-16-font">정보 수정하기</router-link>
+            <router-link to="/sell" class="btn primary-btn w-100 normal-16-font">정보 수정하기</router-link>
           </div>
         </form>
       </div>

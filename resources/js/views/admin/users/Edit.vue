@@ -85,6 +85,12 @@
                         </div>-->
                         <div class="mb-3">
                             <label for="email" class="form-label">승인여부</label>
+                            <select class="form-select" :v-model="user.status" @change="changeStatus($event)" id="status">
+                                <option value="ok">정상</option>
+                                <option value="ask">심사중</option>
+                                <option value="reject">거절</option>
+                            </select>
+                            <!--
                             <div class="text-start status-selector">
                                 <input type="radio" name="status" v-model="user.status" value="ok" id="ok">
                                 <label for="ok" class="mx-2">정상</label>
@@ -92,7 +98,7 @@
                                 <label for="ask">심사중</label>
                                 <input type="radio" name="status" value="reject" v-model="user.status" id="reject">
                                 <label for="reject" class="mx-2">거절</label>
-                            </div>
+                            </div>-->
                             
                         </div>
                         <div v-if="dealer_info">
@@ -108,19 +114,24 @@
                             </div>
                             <div class="form-group">
                                 <label for="user-title" class="form-label">소속상사 주소</label>
+
                                 <input
                                     v-model="dealer.company_post"
                                     type="text"
                                     class="form-control"
                                     placeholder="post"
+                                    readonly
                                 />
-                                <input
-                                    v-model="dealer.company_addr1"
-                                    type="text"
-                                    class="form-control"
-                                    placeholder="주소"
-                                    @click="editPostCode('daumPostcodeInput')"
-                                />
+                                <div>
+                                    <input
+                                        v-model="dealer.company_addr1"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="주소"
+                                        readonly
+                                    />
+                                    <span><button type="button" @click="editPostCode('daumPostcodeInput')">주소버튼</button></span>
+                                </div>
                                 <input
                                     v-model="dealer.company_addr2"
                                     type="text"
@@ -138,14 +149,18 @@
                                     type="text"
                                     class="form-control"
                                     placeholder="post"
+                                    readonly
                                 />
-                                <input
-                                    v-model="dealer.receive_addr1"
-                                    type="text"
-                                    class="form-control"
-                                    @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')"
-                                    placeholder="주소"
-                                />
+                                <div>
+                                    <input
+                                        v-model="dealer.company_addr1"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="주소"
+                                        readonly
+                                    />
+                                    <span><button type="button" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">주소버튼</button></span>
+                                </div>
                                 <input
                                     v-model="dealer.receive_addr2"
                                     type="text"
@@ -162,10 +177,11 @@
                                     >소개</label
                                 >
                                 <textarea
-                                    v-model = "dealer.introduce"
-                                    type="text"
-                                    class="form-control no-resize mt-2"
-                                ></textarea>
+                                v-model="dealer.introduce"
+                                class="form-control no-resize mt-2"
+                                :style="{ height: `${height}px`, overflowY: 'hidden' }"
+                                @input="autoResize"
+                            ></textarea>
                             </div>
                         </div>
                         <!-- Buttons -->
@@ -187,6 +203,7 @@
         </div>
     </div>
 </template>
+
 <script setup>
 import { onMounted, reactive, ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
@@ -200,6 +217,7 @@ import { watch } from "vue";
 defineRule("required", required);
 defineRule("min", min);
 
+const height = ref(100);
 const route = useRoute();
 const { roleList, getRoleList } = useRoles();
 const { openPostcode , closePostcode} = cmmn();
@@ -238,7 +256,6 @@ const introduce = ref("");
 const user = reactive({
     name,
     status,
-    dealer:''
 });
 const dealer = reactive({
     company,
@@ -263,7 +280,7 @@ onMounted(async () => {
         user.name = response.name;
         created_at = response.created_at;
         email = response.email;
-        user.status = response.status;
+        document.getElementById("status").value = response.status;
         user.phone = response.phone;
         if(response.dealer){
             dealer_info = response.dealer;
@@ -285,7 +302,6 @@ onMounted(async () => {
 function submitForm() {
     validate().then((form) => {
         if(dealer_info){
-            user.dealer = dealer;
             schema.company = { required };
             schema.company_post = { required };
             schema.company_addr1 = { required };
@@ -295,10 +311,14 @@ function submitForm() {
             schema.receive_addr2 = { required };
 
         }
-        if (form.valid) updateUser(user,route.params.id);
+        if (form.valid) updateUser(user,dealer,route.params.id);
     });
 }
-
+function autoResize(event) {
+    event.target.style.height = 'auto'; 
+    event.target.style.height = `${event.target.scrollHeight}px`; 
+    height.value = event.target.scrollHeight; 
+}
 function editPostCode(elementName) {
   openPostcode(elementName)
     .then(({ zonecode, address }) => {
@@ -312,6 +332,10 @@ function editPostCodeReceive(elementName) {
         dealer.receive_post = zonecode;
         dealer.receive_addr1 = address;
     })
+}
+
+function changeStatus(event) {
+  user.status = event.target.value;
 }
 </script>
 <style>

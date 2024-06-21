@@ -15,15 +15,19 @@
         </div>
         <div class="register-content">
           <div v-if="!isMobileView">
-          <div class="any-content">
-          <div class="review-any"></div>
+       <!--   <div class="any-content">
+          <div class="review-any"></div>-->
+          <div class="video-container02">
+          <video width="90%" class="video_type03" autoplay loop muted style="opacity: 0.5;">
+              <source src="../../../img/video/title.mp4" type="video/mp4">
+          </video>
         </div>
         <div :class="animationClass" ref="animatedSection">
         <div class="css-ifyyt1 gap-5">
           <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
         <h5 class="font-title">위카와 함께해요.</h5>
       </div>
-     <p class="tc-light-gray font-sub-title">13,314명이 위카와 함께 했어요!</p>
+     <p class="tc-light-gray font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>
     </div>
   </div>
   </div>
@@ -240,7 +244,17 @@
   import LawGid from '@/views/modal/LawGid.vue';
   import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
   import { initReviewSystem } from '@/composables/review';
-  
+  import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
+
+  const carName = ref('');
+  const emoji = ref('');
+
+  const updateCarName = () => {
+    const result = setRandomPlaceholder();
+    carName.value = result.carName;
+    emoji.value = result.emoji;
+  };
+
   const loginCardRef = ref(null);
   const bannerRef = ref(null);
   const reviewContentRef = ref(null);
@@ -274,6 +288,7 @@
   const { getHomeReview, reviewsData, splitDate } = initReviewSystem();
   
   onMounted(() => {
+    updateCarName();
   getHomeReview();
   nextTick(() => {
 
@@ -360,9 +375,6 @@ onBeforeUnmount(() => {
   justify-content: space-between;
   gap: 20px;
 }
-.overlay-style {
-  height: 100vh;
-}
 
 .review-any {
   width: 100%;
@@ -392,7 +404,7 @@ onBeforeUnmount(() => {
 }
 .css-ifyyt1 {
   display: grid;
-    padding: 16rem 17px 5rem;
+  padding: 18vh 17px 5vh;
     color: rgb(39, 46, 64);
     align-content: space-evenly;
 }

@@ -254,15 +254,16 @@
   
   .detail-content02 {
     background: #fff;
-    width: 95%;
-    max-height: 80%;
+    width: 100%;
+    max-width: 500px;
+    max-height: 88%;
     border-radius: 25px;
     transition: transform 0.3s ease-in-out;
     transform: translateY(-14px);
   }
   
   .detail-content02.active {
-    transform: translateY(-14px);
+    transform: translateY(-4px);
   }
   
   .nav-header {

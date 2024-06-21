@@ -101,7 +101,7 @@
                                                     <div class="form-group">
                                                         <label for="dealerPhoto">사진 (본인 확인용)</label>
                                                         <img id="imagePreview" style="max-width: 50%; display: none;">
-                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUpload">
+                                                        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
                                                             파일 첨부
                                                         </button>
                                                         <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
@@ -129,8 +129,12 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="dealeradress">소속상사 주소</label>
-                                                        <input type="text" v-model="registerForm.dealerCompanyPost" placeholder="post" @click="editPostCode('daumPostcodeInput')">
-                                                        <input type="text" v-model="registerForm.dealercompany_addr1" placeholder="주소" class="searchadress">
+                                                        <input type="text" v-model="registerForm.dealerCompanyPost" placeholder="post" readonly>
+                                                        <div>
+                                                            <input type="text" v-model="registerForm.dealercompany_addr1" placeholder="주소" class="searchadress" readonly>
+                                                            <span><button type="button" @click="editPostCode('daumPostcodeInput')">주소버튼</button></span>
+                                                        </div>
+                                                        
                                                         <input type="text" v-model="registerForm.dealercompany_addr2" placeholder="상세주소">
                                                         <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                                                             <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
@@ -147,27 +151,31 @@
                                                         </div>
                                                         <p class="mt-4">사업자 등록증</p>
                                                         <input type="file" @change="handleFileUploadBiz" ref="fileInputRefBiz" style="display:none">
-                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadBiz">
+                                                        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
                                                             파일 첨부
                                                         </button>
                                                         <div class="text-start mb-3 tc-light-gray" v-if="registerForm.file_user_biz_name">사업자 등록증 : {{ registerForm.file_user_biz_name }}</div>
                                                         <p>매도용인감정보</p>
                                                         <input type="file" @change="handleFileUploadSign" ref="fileInputRefSign" style="display:none">
-                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadSign">
+                                                        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
                                                             파일 첨부
                                                         </button>
                                                         <div class="text-start mb-3 tc-light-gray" v-if="registerForm.file_user_sign_name">매도용인감정보 : {{ registerForm.file_user_sign_name }}</div>
                                                         <p>매매업체 대표증 or 종사원증</p>
                                                         <input type="file" @change="handleFileUploadCert" ref="fileInputRefCert" style="display:none">
-                                                        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadCert">
+                                                        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
                                                             파일 첨부
                                                         </button>
                                                         <div class="text-start mb-5 tc-light-gray" v-if="registerForm.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ registerForm.file_user_cert_name }}</div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="deliveryAdress">인수차량 도착지 주소</label>
-                                                        <input type="text" v-model="registerForm.dealerReceivePost" placeholder="post" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">
-                                                        <input type="text" v-model="registerForm.dealerReceiveAddr1" placeholder="주소">
+                                                        <input type="text" v-model="registerForm.dealerReceivePost" placeholder="post" readonly>
+                                                        <div>
+                                                            <input type="text" v-model="registerForm.dealerReceiveAddr1" placeholder="주소" readonly>
+                                                            <span><button type="button" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">주소버튼</button></span>
+                                                        </div>
+                                                        
                                                         <input type="text" v-model="registerForm.dealerReceiveAddr2" placeholder="상세주소">
                                                         <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                                                             <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
@@ -495,9 +503,7 @@ body {
 .register-content {
     display: flex;
     justify-content: space-between;
-    gap: 20px;
     margin-top: 2rem;
-    padding: 10px;
 }
 
 .video-container {
@@ -793,7 +799,7 @@ div.main i {
 
 .css-ifyyt1 {
     display: grid;
-    padding: 7rem 17px 9rem;
+    padding: 18vh 17px 5vh;
     color: rgb(39, 46, 64);
     align-content: space-evenly;
 }

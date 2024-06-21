@@ -10,7 +10,7 @@
             <div class="facturer">
               <div class="profile ps-2 pt-0 pb-2 ms-0">
                 <div class="dealer-info">
-                  <img src="../../../../img/myprofile_ex.png" alt="Profile Image" class="main-profile">
+                  <img src="../../../../img/profile_dom.png" alt="Profile Image" class="main-profile">
                   <div class="d-flex justify-content-center flex-column flex-nowrap align-center">
                     <h4>{{ userData?.dealer.name }}</h4>
                     <p>{{ userData?.dealer?.company }}</p>

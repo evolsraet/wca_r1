@@ -51,8 +51,11 @@
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">우편주소</p>
-                  <input v-model="auction.addr_post" class="form-control" type="hidden" id="addr_post">
-                  <input v-model="auction.addr1" class="form-control" id="addr1" @click="editPostCode('daumPostcodeInput')">
+                  <input v-model="auction.addr_post" class="form-control" readonly>
+                  <div>
+                    <input v-model="auction.addr1" class="form-control" readonly>
+                    <span><button type="button"@click="editPostCode('daumPostcodeInput')">주소버튼</button></span>
+                  </div>
                   <div id="daumPostcodeInput" style="display: none;">
                     <img src="//t1.daumcdn.net/postcode/resource/images/close.png" @click="closePostcode('daumPostcodeInput')">
                   </div>
@@ -94,8 +97,9 @@
                   <input v-model="auction.final_price" id="finalPrice" class="form-control">
                 </div>
                 <div></div>
+                <!--
                 <p class="tc-light-gray ms-2">진단평가 자료 정보</p>
-                <file v-if="auctionDetails.data.status === 'ask'" @file-attached="handleFileAttachment" />
+                <file v-if="auctionDetails.data.status === 'ask'" @file-attached="handleFileAttachment" />-->
               </div>
             </div>
           </div>
@@ -103,12 +107,14 @@
               <div class="btn-group mt-3">
                 <button class="btn btn-primary tc-wh"> 등록 </button>
               </div>
-            </div>
+          </div>
+          <!--
           <div @click="toggleVisibility" class="d-flex justify-content-between align-items-center p-3 border-bottom">
             <h5>차량정보</h5>
             <img :src="isVisible ? hideIcon : showIcon" :alt="isVisible ? '숨기기' : '더보기'" class="toggle-icon" width="20px" height="10px" />
-          </div>
+          </div>-->
         </div>
+
         <div>
           <transition name="slide">
             <div v-show="isVisible" class="container card-style">
@@ -138,7 +144,7 @@
           </transition>
           <transition name="slide">
             <div v-show="isVisible" class="container p-4">
-              <!-- 나머지 콘텐츠 -->
+              
               <ul class="machine-inform-title">
                 <li class="tc-light-gray">차량번호</li>
                 <li class="info-num"></li>

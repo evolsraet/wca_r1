@@ -7,12 +7,12 @@
                 <div class="styled-div">
                     <div class="profile">
                         <div class="dealer-info">
-                            <img src="../../../../img/myprofile_ex.png" alt="Profile Image" class="main-profile">
+                            <img src="../../../../img/profile_dom.png" width="100%" alt="Profile Image" class="main-profile">
                             <div class="deal-info">
                                 <p class="tc-light-gray">{{ user.dealer.company }} </p>
                                 <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
-                                <p class="restar">(4.5점)</p>
-                                <p class="no-bidding mt-3"><span>입찰 불가</span></p>
+                                <p class="restar">4.5점</p>
+                                <p class="no-bidding"><span>입찰 불가</span></p>
                             </div>
                         </div>
                     </div>

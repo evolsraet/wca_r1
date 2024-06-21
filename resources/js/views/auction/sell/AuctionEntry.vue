@@ -1,7 +1,7 @@
 <template>
-  <div class="container">
+  <div class="container mov-wide">
     <div class="main-contenter mt-4">
-      <h5 class="top-title">경매 할 차량을 등록해볼까요?</h5>
+      <h4 class="top-title">경매 할 차량을 등록해볼까요?</h4>
     </div>
     <div class="form-body mt-5">
       <form @submit.prevent="auctionEntry">
@@ -54,13 +54,13 @@
         </div>
         <h5><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
         <input type="file" @change="handleFileUploadOwner" ref="fileInputRefOwner" style="display:none">
-        <button type="button" class="btn btn-fileupload" @click="triggerFileUploadOwner">
+        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
           파일 첨부
         </button>
         <div class="text-start tc-light-gray" v-if="fileUserOwnerName">위임장 / 소유자 인감 증명서: {{ fileUserOwnerName }}</div>
         <!-- 파일 첨부 -->
         <div class="flex items-center justify-end mt-5">
-          <button type="submit" class="btn primary-btn normal-16-font">경매 신청하기</button>
+          <button type="submit" class="btn primary-btn normal-16-font w-100">경매 신청하기</button>
         </div>
           <Modal v-if="showAuctionModal" @close="handleAuctionClose" />
       </form>
@@ -332,3 +332,10 @@ onMounted(() => {
   document.head.appendChild(script);
 });
 </script>
+<style scoped>
+@media (min-width: 992px){
+  .mov-wide {
+      width: 40vh !important;
+  }
+}
+</style>

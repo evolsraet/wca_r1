@@ -69,13 +69,14 @@
                                     :to="{ 
                                         name: 'deposit.approve', params: { id: auction.id } 
                                     }"
-                                    class="ms-2 badge bg-danger tc-wh"
+                                    class="ms-2 fs-6 badge edit"
                                     >수정
                                 </router-link>
+                                <span>|</span>
                                 <a
                                     href="#"
                                     @click.prevent="deleteAuction(auction.id)"
-                                    class="ms-2 badge bg-danger tc-wh"
+                                    class="ms-2 fs-6 badge delete"
                                     >삭제</a
                                 >
                             </td>
