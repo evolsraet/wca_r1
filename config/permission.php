@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'default_guard_name' => 'web', // 기본 가드 이름을 'web'으로 설정
 
     'models' => [
 
