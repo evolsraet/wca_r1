@@ -48,8 +48,9 @@
                                         등록일
                                     </div>
                                     <div class="select-none">
-                                        <span :class="{ 'text-blue-600': orderDirection === 'asc' && orderColumn === 'created_at', hidden: orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'created_at' }">&uarr;</span>
-                                        <span :class="{ 'text-blue-600': orderDirection === 'desc' && orderColumn === 'created_at', hidden: orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'created_at' }">&darr;</span>
+                                        <span v-if="orderingState.created_at.direction === 'asc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&uarr;</span>
+                                        <span v-else-if="orderingState.created_at.direction === 'desc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&darr;</span>
+                                        <span v-else-if="orderingState.created_at.direction === '' && orderingState.created_at.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                     </div>
                                 </div>
                             </th>
@@ -59,12 +60,13 @@
                                         매물번호
                                     </div>
                                     <div class="select-none">
-                                        <span :class="{ 'text-blue-600': orderDirection === 'asc' && orderColumn === 'car_no', hidden: orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'car_no' }">&uarr;</span>
-                                        <span :class="{ 'text-blue-600': orderDirection === 'desc' && orderColumn === 'car_no', hidden: orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'car_no' }">&darr;</span>
+                                        <span v-if="orderingState.car_no.direction === 'asc' && orderingState.car_no.column === 'car_no'" class="text-blue-600">&uarr;</span>
+                                        <span v-else-if="orderingState.car_no.direction === 'desc' && orderingState.car_no.column === 'car_no'" class="text-blue-600">&darr;</span>
+                                        <span v-else-if="orderingState.car_no.direction === '' && orderingState.car_no.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                     </div>
                                 </div>
-                                
                             </th>
+
                             <th class="px-6 py-3 text-left">
                                 상태
                             </th>
@@ -137,14 +139,18 @@
     import useAuctions from '@/composables/auctions';
     import useCategories from '@/composables/categories';
     import { useAbility } from '@casl/vue';
-
-    const orderColumn = ref('created_at');
-    const orderDirection = ref('desc');
+    let hit = 0;
+    const orderColumn = ref('');
+    const orderDirection = ref('');
     const { auctionsData, pagination, adminGetAuctions, deleteAuction,getStatusLabel } = useAuctions();
     const { categoryList, getCategoryList } = useCategories();
     const { can } = useAbility();
     const currentStatus = ref('all'); 
     const currentPage = ref(1); // 현재 페이지 번호
+    const orderingState = {
+        created_at: { direction: '', column: '', hit: 0 },
+        car_no: { direction: '', column: '', hit: 0 },
+    };
     /**
     const fetchAuctions = async (page = 1) => {
         try {
@@ -174,10 +180,25 @@
     }
 
     const updateOrdering = (column) => {
-        orderColumn.value = column;
-        orderDirection.value = orderDirection.value === 'asc' ? 'desc' : 'asc';
-        fetchAuctions();
+        let columnState = orderingState[column];
+
+        columnState.hit += 1;
+        
+        if (columnState.hit == 3) {
+            columnState.column = '';
+            columnState.direction = '';
+            columnState.hit = 0;
+        } else {
+            columnState.column = column;
+            columnState.direction = columnState.direction === 'asc' ? 'desc' : 'asc';
+        }
+        orderColumn.value = columnState.column;
+        orderDirection.value = columnState.direction;
+
+        fetchAuctions(); 
     };
+
+
     function fetchAuctions() {
         adminGetAuctions(   currentPage.value,
                             orderColumn.value,
