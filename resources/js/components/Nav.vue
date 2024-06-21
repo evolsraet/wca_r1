@@ -330,7 +330,7 @@
                             <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3">공지사항</router-link>
                         </li>
                         <li class="nav-item my-member-dealer ms-auto" @click="toggleSettingsMenu" >
-                            <img src="../../img/myprofile_ex.png" class="nav-profile" alt="Profile Image"><a :to="{ name: 'dealer.profile' }"  class="tc-wh p-1 pb-0 mx-2 me-3" href="#">{{ user.name }}</a>
+                            <img src="../../img/profile_dom.png" class="nav-profile" alt="Profile Image"><a :to="{ name: 'dealer.profile' }"  class="tc-wh p-1 pb-0 mx-2 me-3" href="#">{{ user.name }}</a>
                         </li>
                         <li><a class="mx-3 nav-link tc-wh logout" href="/login" @click="logout">로그아웃</a></li>
                         <div v-if="showSettings" :class="['settings-menu','setting-web', { show: showSettings }]">

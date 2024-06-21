@@ -3,7 +3,7 @@
       <div v-if="!fileuploadvue" class="card p-3 my-4">
         <div class="profile ms-0 p-0">
           <div class="dealer-info">
-            <img src="../../../img/myprofile_ex.png" alt="Profile Image" class="main-profile" />
+            <img src="../../../img/profile_dom.png" alt="Profile Image" class="main-profile" />
             <div class="deal-info">
               <p class="tc-light-gray">낙찰액</p>
               <h4>3,200만원</h4>

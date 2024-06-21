@@ -686,11 +686,11 @@
                             
                         </div>
 
-                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' || auctionChosn ">
+                        <div class="container mov-wide" v-if="isUser && auctionDetail.data.status === 'wait' || auctionChosn ">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
                               <p class="bold-20-font">현재 6명이 입찰했어요.</p>
-                              <p class="mt-1" @click="openModal"><span class="cancelbox">경매취소</span></p>
+                              <button class="mt-1" @click="openModal"><span class="cancelbox">경매취소</span></button>
                             </div>
                           </div>
                           <div class="container p-3 mt-3">
@@ -703,7 +703,7 @@
                             <li @click="handleClick(bid, $event, index+1)">
                               <div class="d-flex gap-4 align-items-center justify-content-between">
                                 <div class="img_box">
-                                  <img src="../../../../img/myprofile_ex.png" alt="딜러 사진" class="mb-2 align-text-top">
+                                  <img src="../../../../img/profile_dom.png" alt="딜러 사진" class="mb-2 align-text-top">
                                 </div>
                                 <div class="txt_box me-auto">
                                   <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
@@ -717,7 +717,7 @@
                           <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
                         </div>
                         <ConnectDealerModal v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
-                        <BottomSheet02 v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
+                        <BottomSheet02 class="mov-wide" v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
                           <button type="button" class="btn btn-dark d-flex align-items-center justify-content-center gap-1" @click="toggleView">재경매 하기<p class="icon-up-wh"></p></button>
                         </BottomSheet02>
                         <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView &&isUser" class="p-0 filter-content">
