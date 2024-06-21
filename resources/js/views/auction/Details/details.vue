@@ -39,7 +39,7 @@
                           <div class="card-img-top-ty02"></div>
                         </div>
                       </div>
-                      <h4 v-if="auctionDetail.data.status === 'done'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
+                      <h4 v-if="auctionDetail.data.status === 'done' || auctionDetail.data.status === 'chosen'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
                       <div class="p-3 pb-1 d-flex gap-3 justify-content-between">
                         <div></div>
                         <div class="d-flex gap-3 justify-content-end align-items-center mb-1">
