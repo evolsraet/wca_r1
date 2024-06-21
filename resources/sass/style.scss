@@ -2382,8 +2382,20 @@ video {
     margin-left: auto; 
 }
 
+.black-right-icon{
+    width: 11px;
+    height: 14px;
+    background-image: url('../img/Icon-right-black.png');
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+    display: inline-block;
+    transition: transform 0.3s ease; 
+}
 
-
+.anymation:hover .black-right-icon {
+    transform: translateX(10px); 
+  }
 
 .machine-inform-title li.info-num, .machine-inform li.sub-title {
     flex: 1.5; 
@@ -3887,16 +3899,32 @@ input[type="checkbox"] {
     background-color: #000 !important;
     border-radius: 6px !important;
     height: 45px;
-    width: auto;
+    width: 60%;
   }
   .cancel-modal-cancelButton{
+    display: inline-block;
+    font-weight: 400;
+    color: #6c757d !important; 
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid #6c757d !important; 
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
     background-color: #fff !important;
-    outline: #495057 !important;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); 
     width: 40%;
-    border-radius: 6px !important;
-    height: 45px;
-    width: auto;
   }
+  .cancel-modal-cancelButton:hover{
+    color: #fff;
+    background-color: #6c757d; 
+    border-color: #6c757d;
+  }
+
   .swal2-html-container{
     margin: 0px !important;
   }
@@ -3905,8 +3933,92 @@ input[type="checkbox"] {
     flex-wrap: nowrap;
     width: 100%;
     margin: 0px !important;
-    max-width: 390px;
-    width: 390px;
     height: 100%;
     margin: 0 auto;
   }
+  
+  .primary-check-confirmButton{
+    background-color:$primary !important;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); 
+    width: 100%;
+  }
+.primary-check-actions{
+    width: 100% !important;
+    margin: 0px !important;
+}
+.primary-check-cancelButton{
+    display: none !important;
+}
+
+
+/* 리뷰 모달 커스텀*/
+.review-custom-icon{
+    border-color: #ff0000 !important;
+    color: #ff0000 !important;
+    width: 2em !important;
+    height: 2em !important;
+}
+.review-custom-icon .swal2-icon-content{
+    font-size: 1.75em !important;
+}
+.review-custom-title{
+    margin: 10px 0 10px 0 !important;
+    padding: 0px !important;
+}
+.review-custom-actions{
+    width: 50% !important;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+.review-custom-confirmButton{
+    background-color: $primary !important;
+    width: 50%;
+}
+.review-custom-cancelButton{
+    display: inline-block;
+    font-weight: 400;
+    color: #363636 !important; 
+    text-align: center;
+    vertical-align: middle;
+    user-select: none;
+    background-color: transparent;
+    border: 1px solid #afafaf !important; 
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    background-color: #f5f5f5 !important;
+    line-height: 1.5;
+    border-radius: 0.25rem;
+    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); 
+    width: 50%;
+}
+.cmm-review-custom-icon{
+    width: 3em !important;
+    height: 3em !important;
+    border-color: $sub-color01 !important;
+    color: $sub-color01 !important; 
+}
+.cmm-review-custom-icon .swal2-icon-content{
+    font-size: 1.75em !important;
+}
+.cmm-review-custom-title{
+    margin: 15px 0 15px 0 !important;
+    padding: 0px !important;
+    font-size: 1.5em !important;
+}
+.cmm-review-custom-actions{
+    width: 50% !important; 
+    flex-direction: row !important;
+    flex-wrap: nowrap !important;
+}
+
+.cmm-review-custom-confirmButton {
+    background-color: $sub-color01 !important;
+    width: 100% !important;
+}
+.cmm-review-custom-cancelButton{
+    width: 50% !important;
+    border: 1px solid #afafaf !important;
+    background-color: #f5f5f5 !important; 
+    color: #363636 !important; 
+}

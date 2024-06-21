@@ -758,7 +758,7 @@
                     </div>
 </template>
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount ,inject} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { gsap } from 'gsap';
@@ -806,7 +806,11 @@ const succesbid = ref(false);
 const succesbidhope = ref(false);
 const amount = ref('');
 const koreanAmount = ref('원');
-const { numberToKoreanUnit , amtComma } = cmmn();
+
+const swal = inject('$swal');
+
+
+const { numberToKoreanUnit , amtComma , wica} = cmmn();
 const myBidPrice = computed(() => {
   const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id);
   return myBid ? myBid.price : '0';
@@ -915,7 +919,7 @@ const animateHeightPrice = (newPrice) => {
 const auctionIngChosen = () => {
   auctionChosn.value=true;
 }
-// auctionDetail의 변경사항을 감지하여 amount 값을 업데이트합니다.
+
 watch(
   () => auctionDetail.value?.data?.hope_price,
   (newVal, oldVal) => {
@@ -938,11 +942,33 @@ watch(
   { immediate: true } // 이 옵션을 통해 컴포넌트가 마운트될 때 즉시 실행됩니다.
 );
 
+
+/* 위카 진단평가 확인하기 모달 */ 
 const openAlarmModal = () => {
-  console.log("openAlarmModal called");
-  if (alarmModal.value) {
+  const text= '  <div class="enroll_box" style="position: relative;">'+
+                 ' <img src="http://localhost:5173/resources/img/electric-car.png" alt="자동차 이미지" width="160" height="160">'+
+                  '<p class="overlay_text04">해당 서비스는 개발 중 상태입니다.</p>'+
+              '  </div>';
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20, height: 265 }) // swal 기타 옵션 추가
+    .callback(function (result) {
+      if (result.isOk) {
+        // 확인 버튼을 눌렀을 때의 동작
+        reAuction();
+      } else if (!result.isOk) {
+        // 취소 버튼을 눌렀을 때의 동작
+        cancelAuction();
+      } else {
+        console.error('Unexpected result:', result);
+      }
+    })
+    .confirm(text);
+
+  /*if (alarmModal.value) {
     alarmModal.value.openModal();
-  }
+  }*/
 };
 
 const openAlarmGuidModal = () => {
@@ -986,20 +1012,58 @@ const reauction = async () => {
   }
 };
 
-
+/* 사용자 경매 취소 눌렀을시의 모달 */ 
 const openModal = () => {
-  isModalVisible.value = true;
+//isModalVisible.value = true;
   selectedAuctionId.value = auctionDetail.value?.data.id;
-};
+  const text= ' <div class="enroll_box" style="position: relative;">'+
+                  '<img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">'+
+                  '<p class="overlay_text02">경매를 취소하시겠습니까?</p>'+
+                  '<p class="overlay_text03">경매자가 마음에 들지 않으시다면<br>재경매를 진행 할 수 있어요.</p>'+
+                '</div>';
+  wica.ntcn(swal)
+     .useHtmlText() // HTML 태그 인 경우 활성화
+      .labelCancel()
+      .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+      .addOption({ padding: 20, height: 265 }) // swal 기타 옵션 추가
+      .callback(function (result) {
+    })
+    .confirm(text);
+
+}
 
 const closeModal = () => {
   isModalVisible.value = false;
 };
 
+/* 경매 취소 행동부분 */ 
 const handleConfirmDelete = async () => {
-  closeModal();
   try {
-    await updateAuctionStatus(selectedAuctionId.value, 'cancel');
+    const Auctioncancel = await updateAuctionStatus(selectedAuctionId.value, 'cancel');
+    console.log(Auctioncancel);
+    if (Auctioncancel.isError) {
+      // 에러 처리 로직
+      console.error("Auction cancellation error");
+    } else {
+      const text = '<div class="enroll_box" style="position: relative;">' +
+                   '<img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">' +
+                   '<p class="overlay_text04">경매가 취소되었습니다.</p>' +
+                   '</div>';
+      if (Auctioncancel.isSuccess) {
+        await new Promise((resolve, reject) => {
+          wica.ntcn(swal)
+            .useHtmlText() // HTML 태그 인 경우 활성화
+            .labelCancel()
+            .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+            .addOption({ padding: 20, height: 265 }) // swal 기타 옵션 추가
+            .callback(function (result) {
+            })
+            .confirm(text);
+        });
+
+        window.location.href = '/auction';
+      } 
+    }
   } catch (error) {
     console.error(error);
   }

@@ -793,7 +793,7 @@ export function cmmn() {
 
     //public wica swal
     /**
-                  width: 700,
+      width: 700,
             //    padding: 150,
             //    background: '#fff url(https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg)',
             //    imageUrl: 'https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg',

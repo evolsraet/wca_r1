@@ -2,7 +2,7 @@
   <div class="container">
     <div class="review">
     </div>
-    <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet" v-if="isUser && !showFullView">
+   <!-- <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet" v-if="isUser && !showFullView">
       <div class="sheet-content">
         <div class="mt-3" @click.stop="">
           <h5 class="text-center">만족스러운 거래였나요?</h5>
@@ -11,12 +11,12 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
     <div class="container">
       <div class="mov-review my-5">
         <div class="apply-top text-start">
           <h3 class="review-title">다른 사람들의 이용후기에요</h3>
-          <div class="search-type">
+          <div class="search-type m-0">
             <input type="text" placeholder="모델명,차량번호,지역">
             <button type="button" class="search-btn">검색</button>
           </div>

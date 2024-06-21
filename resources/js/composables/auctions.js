@@ -356,8 +356,24 @@ const updateAuctionStatus = async (id, status) => {
             status: status
         }
     };
-
-    try {
+    return wicac.conn()
+    .url(`/api/auctions/${id}`)
+    .param(data) 
+    .callback(function(result) {
+        console.log('wicac.conn callback ' , result);
+        /*
+        if(result.isSuccess){
+            auction.value = result.data;
+        }else{
+            console.log(result.msg);
+        }
+        */
+        isLoading.value = false;
+        return result;
+    })
+    .put();
+    
+    /*try {
         console.log(`status : ${status} auction id : ${id}`);
         const response = await axios.put(`/api/auctions/${id}`, data);
         console.log('response:', response.data);
@@ -376,7 +392,7 @@ const updateAuctionStatus = async (id, status) => {
         });
     } finally {``
         isLoading.value = false;
-    }
+    }*/
 };
 
  const updateAuctionPrice = async (auctionId, amount) => {
