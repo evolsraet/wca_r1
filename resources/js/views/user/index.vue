@@ -37,7 +37,7 @@
             <div class="container my-4">
                 <div class="layout-container02 mt-5">
                     <!-- 딜러 프로필 요약 정보 -->
-                    <div class="content p-4">
+                    <div class=" p-4">
                         <div class="apply-top text-start mb-0">
                             <h3 class="review-title">이용후기</h3>
                             <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
