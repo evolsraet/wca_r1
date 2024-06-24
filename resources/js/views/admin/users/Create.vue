@@ -181,6 +181,47 @@
                                         class="form-control no-resize mt-2"
                                     ></textarea>
                                 </div>
+                                <div class="mb-3">
+                                    <label for="user-title" class="form-label"
+                                        >사진(본인 확인용)</label
+                                    >
+                                    <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
+                                        파일 첨부
+                                    </button>
+                                    <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
+                                    <div class="text-start tc-light-gray" v-if="dealer.file_user_photo_name">사진 파일 : {{ dealer.file_user_photo_name }}</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="user-title" class="form-label"
+                                        >사업자 등록증</label
+                                    >
+                                    <input type="file" @change="handleFileUploadBiz" ref="fileInputRefBiz" style="display:none">
+                                    <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
+                                        파일 첨부
+                                    </button>
+                                    <div class="text-start mb-3 tc-light-gray" v-if="dealer.file_user_biz_name">사업자 등록증 : {{ dealer.file_user_biz_name }}</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="user-title" class="form-label"
+                                        >매도용인감정보</label
+                                    >
+                                    <input type="file" @change="handleFileUploadSign" ref="fileInputRefSign" style="display:none">
+                                    <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
+                                        파일 첨부
+                                    </button>
+                                    <div class="text-start mb-3 tc-light-gray" v-if="dealer.file_user_sign_name">매도용인감정보 : {{ dealer.file_user_sign_name }}</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="user-title" class="form-label"
+                                        >매매업체 대표증 or 종사원증</label
+                                    >
+                                    <input type="file" @change="handleFileUploadCert" ref="fileInputRefCert" style="display:none">
+                                    <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
+                                        파일 첨부
+                                    </button>
+                                    <div class="text-start mb-5 tc-light-gray" v-if="dealer.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ dealer.file_user_cert_name }}</div>
+                                </div>
+
                             </div>
                             <!-- Buttons -->
     
@@ -224,6 +265,11 @@
         isLoading,
     } = useUsers();
     
+    const fileInputRefBiz = ref(null);
+    const fileInputRefSign = ref(null);
+    const fileInputRefCert = ref(null);
+    const fileInputRef = ref(null);
+
     let created_at;
     let email;
 
@@ -269,7 +315,15 @@
         introduce,
         receive_post,
         receive_addr1,
-        receive_addr2
+        receive_addr2,
+        file_user_photo:"",
+        file_user_photo_name:"",
+        file_user_biz:"",
+        file_user_biz_name:"",
+        file_user_sign:"",
+        file_user_sign_name:"",
+        file_user_cert:"",
+        file_user_cert_name:"",
     })
     
     function submitForm() {
@@ -308,6 +362,76 @@
         userRoles.value = event.target.value;
         user.role = event.target.value;
     }
+
+    function triggerFileUpload() {
+    if (fileInputRef.value) {
+        fileInputRef.value.click();
+    } else {
+        console.error("파일을 찾을수 없습니다.");
+    }
+}
+
+function triggerFileUploadBiz() {
+    if (fileInputRefBiz.value) {
+        fileInputRefBiz.value.click();
+        console.log(fileInputRefBiz.value);
+    } else {
+        console.error("사업자등록증 파일을 찾을 수 없습니다.");
+    }
+}
+
+function triggerFileUploadSign() {
+    if (fileInputRefSign.value) {
+        fileInputRefSign.value.click();
+    } else {
+        console.error("인감 정보 파일을 찾을 수 없습니다.");
+    }
+}
+
+function triggerFileUploadCert() {
+    if (fileInputRefCert.value) {
+        fileInputRefCert.value.click();
+    } else {
+        console.error("대표증 또는 종사원증 파일을 찾을 수 없습니다.");
+    }
+}
+
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        dealer.file_user_photo = file;
+        dealer.file_user_photo_name = file.name;
+        console.log("File:", file.name);
+    }
+}
+
+function handleFileUploadBiz(event) {
+    const file = event.target.files[0];
+    if (file) {
+        dealer.file_user_biz = file;
+        dealer.file_user_biz_name = file.name;
+        console.log("Business registration file:", file.name);
+    }
+}
+
+function handleFileUploadSign(event) {
+    const file = event.target.files[0];
+    if (file) {
+        dealer.file_user_sign = file;
+        dealer.file_user_sign_name = file.name;
+        console.log("Signature file:", file.name);
+    }
+}
+
+function handleFileUploadCert(event) {
+    const file = event.target.files[0];
+    if (file) {
+        dealer.file_user_cert = file;
+        dealer.file_user_cert_name = file.name;
+        console.log("Certification file:", file.name);
+    }
+}
+
     </script>
     <style>
     h4 {
