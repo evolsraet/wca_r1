@@ -149,6 +149,7 @@
                                         class="form-control"
                                         placeholder="post"
                                         readonly
+                                        @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')"
                                     />
                                     <div>
                                         <input
@@ -158,7 +159,7 @@
                                             placeholder="주소"
                                             readonly
                                         />
-                                        <span><button type="button" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">주소버튼</button></span>
+                                       <!-- <span><button type="button" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">주소버튼</button></span>-->
                                     </div>
                                     <input
                                         v-model="dealer.receive_addr2"
