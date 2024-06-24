@@ -4,10 +4,13 @@
             <img src="../../../img/main_banner.png" class="styled-img" alt="배너 이미지">
             <div class="content d-flex">
                 <div>
-                    <h2 class="fw-bolder mb-4 lh-base">내 차 판매는 <br>위카에서!</h2>
+                    <h2 class="fw-bolder mb-4 lh-base animated-text">내 차 판매는 <br>위카에서!</h2>
                     <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">더 알아보기</router-link>
                 </div>
-                <div class="app-style">
+                <div>
+                    <p>&nbsp;</p>
+                </div>
+              <!--  <div class="app-style">
                     <div class="input-container-search">
                         <p class="icon-search-img"></p>
                             <input type="text" class="styled-input" id="search-input" placeholder="더 뉴 그랜저">
@@ -23,13 +26,13 @@
                         <div class="tag">진단평가</div>
                     </div>
                 </div>
-                </div>
+                </div>-->
             </div>
         </div>
     </div>
     <div>
         <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 mt-2">
-            <h2 class="fw-bolder lh-base">내 차 판매는 <br>위카에서!</h2>
+            <h2 class="fw-bolder lh-base animated-text">내 차 판매는 <br>위카에서!</h2>
             <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply p-0 m-0">더 알아보기</router-link>
         </div>
         <div class="regiest-content">
@@ -432,6 +435,18 @@
 
         .col-md-6 {}
     }
+
+    .animated-text {
+        opacity: 0;
+        transform: translateY(20px);
+        animation: slideUp 1s forwards;
+        animation-delay: 0.5s;
+    }
+    
+    @keyframes slideUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
     </style>
-    
-    
