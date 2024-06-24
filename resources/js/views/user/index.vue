@@ -457,9 +457,9 @@ border-radius: 6px !important;
     }
 }
 
-.delay-0 { animation-delay: 1.2s; }
-.delay-1 { animation-delay: 1.4s; }
-.delay-2 { animation-delay: 1.6s; }
-.delay-3 { animation-delay: 1.8s; }
-.delay-4 { animation-delay: 2s; }
+.scrollable-content .complete-car:nth-child(1) .animated-auction { animation-delay: 1.2s; }
+.scrollable-content .complete-car:nth-child(2) .animated-auction { animation-delay: 1.4s; }
+.scrollable-content .complete-car:nth-child(3) .animated-auction { animation-delay: 1.6s; }
+.scrollable-content .complete-car:nth-child(4) .animated-auction { animation-delay: 1.8s; }
+.scrollable-content .complete-car:nth-child(5) .animated-auction { animation-delay: 2s; }
 </style>
