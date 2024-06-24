@@ -5,7 +5,7 @@
             <div class="content d-flex">
                 <div>
                     <h2 class="fw-bolder mb-4 lh-base animated-text">내 차 판매는 <br>위카에서!</h2>
-                    <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply animated-button">더 알아보기</router-link>
+                    <router-link :to="{ name: 'auction.index' }" href="" class="btn-apply animated-button">더 알아보기</router-link>
                 </div>
                 <div>
                     <p>&nbsp;</p>
@@ -16,7 +16,7 @@
     <div>
         <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 mt-2">
             <h2 class="fw-bolder lh-base animated-text">내 차 판매는 <br>위카에서!</h2>
-            <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply p-0 m-0 animated-button">더 알아보기</router-link>
+            <router-link :to="{ name: 'auction.index' }" href="" class="btn-apply p-0 m-0 animated-button">더 알아보기</router-link>
         </div>
         <div class="regiest-content">
             <div class="container my-4">

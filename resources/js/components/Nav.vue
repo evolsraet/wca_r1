@@ -6,6 +6,7 @@
       <div class="container nav-font">
         <button v-if="isDetailPage && isUser" @click="goBack" class="btn btn-back back-btn-icon"></button>
         <button v-else-if="isDetailPage && isDealer" @click="goBack" class="btn btn-back wh-btn-icon"></button>
+       <!-- <p v-if="isDetailPage && isMobile">123</p>-->
         <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand-dealer"></router-link>
         <router-link v-else-if="isUser" to="/user" class="navbar-brand logo-container"></router-link>
         <router-link v-else to="/" class="navbar-brand"></router-link>
@@ -309,7 +310,7 @@
   import { useStore } from 'vuex';
   import useAuth from '@/composables/auth';
   import useAuctions from '@/composables/auctions';
-  
+  const isMobile = ref(false);
   const { getAuctions, auctionsData } = useAuctions();
   const { logout } = useAuth();
   const router = useRouter();
@@ -340,7 +341,7 @@
   const redirectByName = (routeName) => {
     router.push({ name: routeName });
   };
-  
+
   const homePath = computed(() => {
     if (isDealer.value) {
       return { name: 'dealer.index' };
@@ -465,8 +466,13 @@
     router.afterEach(() => {
       toggleOverlay(false);
     });
+    const updateIsMobile = () => {
+    isMobile.value = window.innerWidth <= 991;
+  };
+  updateIsMobile();
+  window.addEventListener('resize', updateIsMobile);
   });
-  
+
   function toggleOverlay(show) {
     const overlay = document.querySelector('.overlay');
     if (show) {
@@ -627,7 +633,7 @@
   
   @media (min-width: 768px) {
     .navbar-expand-md .navbar-collapse {
-      display: grid !important;
+    display:grid !important;
       flex-basis: auto;
       align-items: center;
     }
