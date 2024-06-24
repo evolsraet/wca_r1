@@ -29,10 +29,10 @@
                             <p><span class="tc-red">{{ filteredViewBids.length }}</span>건</p>
                             <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
                         </div>
-                        <div class="item">
+                     <!--   <div class="item">
                             <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
                             <p class="purchase-icon tc-light-gray normal-16-font">매입</p>
-                        </div>
+                        </div>-->
                     </div>
                 </div>
             </div>
