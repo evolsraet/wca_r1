@@ -675,7 +675,7 @@ TODO:
                 -->
                 <!-- Pagination -->
                 <nav v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
-                    <ul class="pagination justify-content-center">
+                    <ul class="pagination justify-content-center mb-5">
                         <li class="page-item" :class="{ disabled: !pagination.prev }">
                         <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
                         </li>
