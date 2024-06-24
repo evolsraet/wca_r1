@@ -229,7 +229,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, computed, onBeforeUnmount,inject } from 'vue';
+import { ref, onMounted, nextTick, computed, onBeforeUnmount, inject } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
@@ -242,13 +242,13 @@ import { cmmn } from '@/hooks/cmmn';
 const swal = inject('$swal');
 const { wica } = cmmn();
 const carName = ref('');
-  const emoji = ref('');
+const emoji = ref('');
 
-  const updateCarName = () => {
-    const result = setRandomPlaceholder();
-    carName.value = result.carName;
-    emoji.value = result.emoji;
-  };
+const updateCarName = () => {
+  const result = setRandomPlaceholder();
+  carName.value = result.carName;
+  emoji.value = result.emoji;
+};
 
 const isModalOpen = ref(false);
 const modalContent = ref('');
@@ -266,10 +266,10 @@ const openModal = (type) => {
   isModalOpen.value = true;
 };
 const checkScreenWidth = () => {
-    if (typeof window !== 'undefined') {
-      isMobileView.value = window.innerWidth <= 640;
-    }
-  };
+  if (typeof window !== 'undefined') {
+    isMobileView.value = window.innerWidth <= 640;
+  }
+};
 const openAlarmModal = () => {
   const text= '  <div class="enroll_box" style="position: relative;">'+
                  ' <img src="http://localhost:5173/resources/img/electric-car.png" alt="자동차 이미지" width="160" height="160">'+
@@ -278,20 +278,12 @@ const openAlarmModal = () => {
   wica.ntcn(swal)
     .useHtmlText() // HTML 태그 인 경우 활성화
     .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
-    .addOption({ padding: 20, height: 265 }) // swal 기타 옵션 추가
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
     .callback(function (result) {
-  
+
     })
     .confirm(text);
-
-  /*if (alarmModal.value) {
-    alarmModal.value.openModal();
-  }*/
 };
-/*console.log("openAlarmModal called");
-if (alarmModal.value) {
-  alarmModal.value.openModal();
-}*/
 
 const closeModal = () => {
   isModalOpen.value = false;
@@ -318,8 +310,8 @@ const submitLogin = async () => {
     } else if (userData.roles.includes('dealer')) {
       router.push({ name: "dealer.index" });
     }else if (userData.roles.includes('user')) {
-                router.push({ name: "user.index" });
-          }  else {
+      router.push({ name: "user.index" });
+    }  else {
       router.push({ name: "home" });
     }
   } catch (error) {
@@ -357,6 +349,10 @@ const submitLogin = async () => {
   }
 };
 
+const animationClass = computed(() => {
+  return loginCardRef.value ? 'enter-active' : '';
+});
+
 onMounted(() => {
   updateCarName();
   store.commit('auth/CLEAR_ERROR_MESSAGE'); // 페이지 로드 시 오류 메시지 초기화
@@ -367,14 +363,14 @@ onMounted(() => {
     }, 200);
   });
   window.addEventListener('resize', checkScreenWidth);
-    checkScreenWidth();
+  checkScreenWidth();
 });
 
-
-  onBeforeUnmount(() => {
+onBeforeUnmount(() => {
   window.removeEventListener('resize', checkScreenWidth);
-}); 
+});
 </script>
+
 
 <style scoped>
 .rating__label .star-icon {

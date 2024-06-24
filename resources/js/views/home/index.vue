@@ -237,6 +237,7 @@
   </template>
   
   <script setup>
+  // Other imports
   import { useStore } from "vuex";
   import { computed, ref, onMounted, onBeforeUnmount, nextTick } from "vue";
   import useAuth from '@/composables/auth';
@@ -248,7 +249,6 @@
 
   const carName = ref('');
   const emoji = ref('');
-
   const updateCarName = () => {
     const result = setRandomPlaceholder();
     carName.value = result.carName;
@@ -261,57 +261,59 @@
   const animatedSection = ref(null);
   const isModalOpen = ref(false);
   const modalContent = ref('');
-  
+
   const store = useStore();
   const user = computed(() => store.getters['auth/user']);
-  
+
   const { carInfoForm, submitCarInfo, processing } = useAuctions();
-  
+
   const isMobileView = ref(window.innerWidth <= 640);
   const animationClass = ref('css-kzs0t hidden');
-  
+
+  const expanded = ref(false); // Define the expanded property
+
   const openModal = (type) => {
     modalContent.value = type;
     isModalOpen.value = true;
   };
-  
+
   const closeModal = () => {
     isModalOpen.value = false;
   };
-  
+
   const checkScreenWidth = () => {
     if (typeof window !== 'undefined') {
       isMobileView.value = window.innerWidth <= 640;
     }
   };
-  
+
   const { getHomeReview, reviewsData, splitDate } = initReviewSystem();
-  
+
   onMounted(() => {
     updateCarName();
-  getHomeReview();
-  nextTick(() => {
-
-    const animatedSectionElement = animatedSection.value;
-    const loginCard = loginCardRef.value;
-    setTimeout(() => {
-      loginCard.classList.add('enter-active');
-    }, 200);
-    setTimeout(() => {
-      if (animatedSectionElement) {
-        animatedSectionElement.classList.add('enter-active');
-        animatedSectionElement.classList.remove('hidden');
-      }
-    }, 600);
+    getHomeReview();
+    nextTick(() => {
+      const animatedSectionElement = animatedSection.value;
+      const loginCard = loginCardRef.value;
+      setTimeout(() => {
+        loginCard.classList.add('enter-active');
+      }, 200);
+      setTimeout(() => {
+        if (animatedSectionElement) {
+          animatedSectionElement.classList.add('enter-active');
+          animatedSectionElement.classList.remove('hidden');
+        }
+      }, 600);
+    });
+    window.addEventListener('resize', checkScreenWidth);
+    checkScreenWidth();
   });
-  window.addEventListener('resize', checkScreenWidth);
-  checkScreenWidth();
-});
 
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', checkScreenWidth);
-});
+  onBeforeUnmount(() => {
+    window.removeEventListener('resize', checkScreenWidth);
+  });
 </script>
+
   
   <style scoped>
 .bottom-sheet {
