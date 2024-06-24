@@ -78,13 +78,15 @@ background-color: $sub-color01 !important;
     box-shadow: 0 3px 7px rgba(0, 0, 0, 0.26);
 }
 .btn-outline-primary:hover{
-    color:rgba($primary, 0.990) !important; 
+    color:#fff !important; 
 }
 .primary-btn:hover{
     background-color: $primary-hover;
     border-color: $primary-hover;
 }
-
+.pointer{
+    cursor: pointer !important;
+}
 .review-btn {
     display: block; 
     width: 100%; 

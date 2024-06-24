@@ -7,8 +7,8 @@
       </div>
       <div class="right">
         <p class="mb-4">
-          <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
-          <span @click="openModal('terms')" class="link-style">이용약관</span>
+          <span @click="openModal('privacy')" class="link-style pointer">개인정보 처리방침</span> |
+          <span @click="openModal('terms')" class="link-style pointer">이용약관</span>
         </p>
         <img src="../../../img/footerlogo.png" width="64px" height="21px" class="mt-2">
       </div>
