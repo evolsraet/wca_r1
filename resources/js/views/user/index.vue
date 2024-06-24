@@ -46,8 +46,6 @@
                             <div class="row">
                                 <div class="col-md-6 p-2" v-for="review in reviewsData.slice(0,2)" :key="review.id">
                                     <div class="card my-auction mt-3">
-                                        <input class="toggle-heart" type="checkbox">
-                                        <label class="heart-toggle"></label>
                                         <div>
                                             <div class="card-img-top-ty02 border-rad"></div>
                                             <div class="card-body">
