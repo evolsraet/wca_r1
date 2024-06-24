@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use Illuminate\Support\Str;
+use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class UserResource extends JsonResource
@@ -13,6 +14,9 @@ class UserResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+
+    use WithTrait;
+
     public function toArray($request)
     {
         $parentArray = parent::toArray($request);
@@ -28,19 +32,8 @@ class UserResource extends JsonResource
         // $additionalArray['dealer'] = new DealerResource($this->dealer);
         // // }
 
-        // with 부분 리소스로 리턴
-        $withRelations = $request->query('with');
-        if ($withRelations) {
-            $relations = explode(',', $withRelations);
-            foreach ($relations as $relation) {
-                if ($this->relationLoaded($relation)) {
-                    $resourceClass = '\\App\\Http\\Resources\\' . ucfirst($relation) . 'Resource';
-                    if (class_exists($resourceClass)) {
-                        $parentArray[$relation] = new $resourceClass($this->$relation);
-                    }
-                }
-            }
-        }
+        // 관계 리소스로 리턴
+        $this->relationResource($request, $parentArray);
 
         // 파일들
         $additionalArray['files'] = count($this->getMedia('*')) > 0 ? $this->getMedia('*') : null;

@@ -15,6 +15,9 @@ class CategoryResource extends JsonResource
      */
     public function toArray($request)
     {
+        // 관계 리소스로 리턴
+        $this->relationResource($request, $parentArray);
+
         return [
             'id'   => $this->id,
             'name' => $this->name,

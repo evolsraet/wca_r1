@@ -30,7 +30,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-
         // Request 매크로 등록
         Request::macro('dbFilter', function ($modelPrefix, $allData) {
             // 초기화된 결과 배열

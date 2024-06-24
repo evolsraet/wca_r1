@@ -73,21 +73,23 @@ class AuctionService
         if ($method == 'index' || $method == 'show') {
             if (auth()->user()->hasPermissionTo('act.admin')) {
                 // 관리자 권한을 가진 사용자인 경우 아무 작업도 수행하지 않습니다.
-            } elseif (auth()->user()->hasPermissionTo('act.dealer')) {
-                // 딜러 권한을 가진 사용자인 경우 입찰 정보를 포함하여 'ing' 상태인 경매만 조회하거나
+            } elseif (auth()->user()->hasRole('dealer')) {
+                // 딜러 권한을 가진 사용자인 경우
+                // 입찰 정보를 포함하여 'ing' 상태인 경매만 조회하거나
                 // 사용자의 입찰 정보가 있는 경매를 조회합니다.
-                $result->with('bids')->where(function ($query) {
-                    $query->where('status', 'ing')->orWhereHas('bids', function ($qry) {
-                        $qry->where('user_id', auth()->user()->id);
-                    });
-                });
+
+                // $result->with(['bid' => function ($query) {
+                //     $query->where('user_id', auth()->user()->id);
+                // }])->get()->transform(function ($auction) {
+                //     // 각 auction 객체의 bids 관계를 BidResource 컬렉션으로 변환하고, toArray를 호출합니다.
+                //     $auction->bid = \App\Http\Resources\BidResource::($auction->bid)->toArray(request());
+                //     return $auction;
+                // });
             } else {
                 // 일반 사용자인 경우 자신이 등록한 경매만 조회합니다.
                 $result->where('user_id', auth()->user()->id);
             }
         } elseif ($method == 'store') {
-            // TODO: 선택대기에서 선택완료로 변경 시 choice_at
-
             $request = validator($request, [
                 'final_at' => 'required|date|after:today',
             ], [

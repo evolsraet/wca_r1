@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use App\Models\Bid;
+use App\Http\Resources\BidResource;
+use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class AuctionResource extends JsonResource
@@ -13,6 +15,9 @@ class AuctionResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
+
+    use WithTrait;
+
     public function toArray($request)
     {
         $parentArray = parent::toArray($request);
@@ -21,21 +26,8 @@ class AuctionResource extends JsonResource
             // 'bids' => BidResource::collection(),
         ];
 
-        // with 부분 리소스로 리턴
-        $withRelations = $request->query('with');
-        if ($withRelations) {
-            $relations = explode(',', $withRelations);
-            foreach ($relations as $relation) {
-                if ($this->relationLoaded($relation)) {
-                    $resourceClass = '\\App\\Http\\Resources\\' . ucfirst($relation) . 'Resource';
-                    if (class_exists($resourceClass)) {
-                        $parentArray[$relation] = new $resourceClass($this->$relation);
-                    }
-                }
-            }
-        }
-
-        // 더 업데이트
+        // 관계 리소스로 리턴
+        $this->relationResource($request, $parentArray);
 
         // 날짜 필드를 Y-m-d 포맷으로 변환
         $timestampFields = ['created_at', 'updated_at', 'deleted_at'];
@@ -45,11 +37,10 @@ class AuctionResource extends JsonResource
             }
         }
 
-
+        $addArray['bids_count'] = Bid::where('auction_id', $parentArray['id'])->count();
 
         // 상위 5개 입찰건
         if ($parentArray['status'] != 'ask') {
-            $addArray['bids_count'] = Bid::where('auction_id', $parentArray['id'])->count();
 
             $bidsQuery = Bid::where('auction_id', $parentArray['id'])
                 ->orderBy('price', 'desc')
@@ -63,16 +54,7 @@ class AuctionResource extends JsonResource
                 }
             }
 
-            if (auth()->user()->hasRole('admin') or auth()->user()->id == $parentArray['user_id']) {
-                // 관리자나 본인이면 모두
-                $addArray['top_bids'] = BidResource::collection($bidsQuery);
-            } else {
-                // 아니면 갯수만 공개
-                $addArray['top_bids_text'] = '갯수만 공개';
-                $addArray['top_bids'] = BidResource::collection($bidsQuery)->map(function ($bid) {
-                    return (new BidResource($bid))->makeHidden(['price', 'user_id']);
-                });
-            }
+            $addArray['top_bids'] = BidResource::collection($bidsQuery);
         }
 
 

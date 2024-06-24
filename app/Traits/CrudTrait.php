@@ -81,6 +81,20 @@ trait CrudTrait
 
         $modelClass = $this->getModelClass();
         $result = $modelClass::query();
+
+        // 미들 프로세스 이전사용 되는 쿼리는, 그 전에 추가하여 미들 프로세스에서 변경 할 수 있도록 한다.
+
+        // 연관 데이터 로딩
+        // 예: 1:1 단수 (dealer), 1:N 복수 (roles)
+        // ?with=dealer,roles
+        $result = $result->when(request('with'), function ($query) {
+            $relations = request('with') ? explode(',', request('with')) : [];
+            $validRelations = array_filter($relations, function ($relation) {
+                return method_exists($this->modelClass, $relation);
+            });
+            $query->with($validRelations);
+        });
+
         $this->middleProcess(__FUNCTION__, request(), $result);
 
         $result = $result->when(request('search_id'), function ($query) {
@@ -97,16 +111,7 @@ trait CrudTrait
             });
 
 
-        // 연관 데이터 로딩
-        // 예: 1:1 단수 (dealer), 1:N 복수 (roles)
-        // ?with=dealer,roles
-        $result = $result->when(request('with'), function ($query) {
-            $relations = request('with') ? explode(',', request('with')) : [];
-            $validRelations = array_filter($relations, function ($relation) {
-                return method_exists($this->modelClass, $relation);
-            });
-            $query->with($validRelations);
-        });
+
 
         // 연관데이터 없는것들
         // with 와 사용법 동일

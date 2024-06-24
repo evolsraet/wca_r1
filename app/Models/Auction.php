@@ -48,7 +48,11 @@ class Auction extends Model implements HasMedia
 
     public function bids()
     {
-        return $this->hasMany(Bid::class);
+        if (auth()->user()->hasRole('dealer')) {
+            return $this->hasMany(Bid::class)->where('user_id', auth()->user()->id);
+        } else {
+            return $this->hasMany(Bid::class);
+        }
     }
 
     // 리소스에서 제공
