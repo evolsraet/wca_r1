@@ -68,19 +68,21 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, computed, nextTick, watch } from 'vue';
+import { ref, onMounted, computed, nextTick, watch,inject } from 'vue';
 import { useStore } from 'vuex';
 import Modal from '@/views/modal/modal.vue';
 import BankModal from '@/views/modal/bank/BankModal.vue';
 import useAuctions from '@/composables/auctions';
 import { regions, updateDistricts } from '@/hooks/selectBOX.js';
 import Swal from 'sweetalert2';
+import { cmmn } from '@/hooks/cmmn';
 
+const { wica} = cmmn();
 // Auction 관련 데이터와 함수 가져오기
 const { createAuction } = useAuctions();
 const store = useStore();
 const user = computed(() => store.getters['auth/user']);
-
+const swal = inject('$swal');
 // 반응형 변수들 선언
 const ownerName = ref(''); // 소유자 이름
 const isVerified = ref(false); // 본인 인증 상태
@@ -150,7 +152,19 @@ const auctionEntry = async () => {
   };
   try {
     await createAuction({ auction: auctionData });
-    showAuctionModal.value = true; // 성공 시 모달 표시
+   const textOk= '<div class="enroll_box" style="position: relative;">'+
+                '<img src="http://localhost:5173/resources/img/modal/car-objects-blur.png" alt="자동차 이미지" width="160" height="160">'+
+              '<p class="overlay_text02">경매 신청이 완료되었습니다.</p>'+
+                '<p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>'+
+              '</div>';
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20}) // swal 기타 옵션 추가
+    .callback(function (result) {
+              window.location.href = '/auction';
+      })
+    .confirm(textOk);
   } catch (error) {
     Swal.fire({
       icon: 'error',

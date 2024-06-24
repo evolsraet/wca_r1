@@ -340,7 +340,7 @@
             </ul>
           </div>
         </div>
-        <div v-if="isUser && auctionDetail.data.status !== 'chosen' && auctionDetail.data.status !== 'wait'&& auctionDetail.data.status !== 'diag' && auctionDetail.data.status !=='ing' && auctionDetail.data.status !=='cancel'" class="sheet-content">
+        <div v-if="isUser && auctionDetail.data.status !== 'chosen' && auctionDetail.data.status !== 'wait'&&  auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'diag' && auctionDetail.data.status !=='ing' && auctionDetail.data.status !=='cancel'" class="sheet-content">
             <BottomSheet02 v-if="auctionDetail.data.status === 'done'">
               <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
               <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">

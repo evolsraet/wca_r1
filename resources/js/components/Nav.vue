@@ -247,7 +247,6 @@
                   {{ user.name }} 님
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><router-link to="/profile" class="dropdown-item">내 정보</router-link></li>
                   <li><router-link to="/edit-profile" class="dropdown-item">내 정보 수정</router-link></li>
                   <li><a class="dropdown-item" href="/login" @click="logout">로그아웃</a></li>
                 </ul>
