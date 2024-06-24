@@ -98,36 +98,36 @@
 }
 
 .side-navbar-link {
-    .admin-icon {
+  .admin-icon {
       transition: background-image 0.3s ease, transform 0.3s ease;
-    }
-  
-    &:hover, 
-    &:focus {
+  }
+
+  &:hover, 
+  &.router-link-exact-active {
       color: $primary !important;
-  
+
       .admin-icon-users {
-        background-image: url('../img/admin/activate/person.png');
+          background-image: url('../img/admin/activate/person.png');
       }
       .admin-icon-coin {
-        background-image: url('../img/admin/activate/coin.png');
-        width: 18px !important;
-        height: 16px !important;
+          background-image: url('../img/admin/activate/coin.png');
+          width: 18px !important;
+          height: 16px !important;
       }
       .admin-icon-car {
-        background-image: url('../img/admin/activate/awesome-car.png');
+          background-image: url('../img/admin/activate/awesome-car.png');
       }
       .admin-icon-review {
-        background-image: url('../img/admin/activate/review.png');
+          background-image: url('../img/admin/activate/review.png');
       }
       .admin-icon-pass {
-        background-image: url('../img/admin/activate/right.png');
-        width: 10px !important;
-        height: 14px !important;
-        transform: translateX(5px);
+          background-image: url('../img/admin/activate/right.png');
+          width: 10px !important;
+          height: 14px !important;
+          transform: translateX(5px);
       }
-    }
   }
+}
   
     /* Menu 아이콘 스타일*/
   .admin-icon-menu{

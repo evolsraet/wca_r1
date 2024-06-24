@@ -1,6 +1,6 @@
 <template>
  <div class="container mt-auto mb-auto" id="dashadmin">
-        <div class="card-container">
+        <div class="card-container mt-4">
             <div class="section">
                 <h5 class="text-start">회원 491</h5>
                 <div class="card">

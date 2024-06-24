@@ -182,7 +182,6 @@ function toggledash() {
 
 .menu-item {
     position: relative;
-    color: black !important;
     text-decoration: none;
 }
 
@@ -190,7 +189,11 @@ function toggledash() {
 .menu-item.active .tc-gray {
     color: black !important;
 }
-
+.settings-menu.show .menu-item.active::after,
+.settings-menu.show .menu-item:hover::after{
+    content: '';
+    background-color: rgba(255, 255, 255, 0) !important;
+}
 .menu-item:hover::after,
 .menu-item.active::after {
     content: '';
