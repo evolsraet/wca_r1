@@ -8,7 +8,7 @@
                 {{ crumbs }}
             </h2> -->
             <!-- Page Content -->
-            <div class="pt-4">
+            <div class="pt-4 p-3">
                 <Suspense>
                 <router-view></router-view>
                 </Suspense>

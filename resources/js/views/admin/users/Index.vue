@@ -45,11 +45,12 @@
                     </div>
                     </div>
                     </div>
-                    
+                    <div class="d-flex align-items-center justify-content-end">
+                        <button class="btn btn-primary" @click="navigateToCreate">
+                            회원 등록
+                        </button>
+                     </div>
                     <div class="o_table_mobile my-5">
-                    <button class="btn btn-primary" @click="navigateToCreate">
-                        회원 등록
-                    </button>
                     <div class="tbl_basic tbl_dealer">
                         <table class="table">
                             <thead>

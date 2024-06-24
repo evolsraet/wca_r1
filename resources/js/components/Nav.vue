@@ -1,5 +1,5 @@
 <template>
-    <div class="overlay" style="display: none;"></div>
+    <div id="UsersNav" class="overlay" style="display: none;"></div>
     <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, 'p-2']">
       <div v-if="isAuctionDetailPage"></div>
       <div class="container nav-font">

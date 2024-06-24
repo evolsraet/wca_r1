@@ -3242,23 +3242,23 @@ input[type="checkbox"] {
 
 }
 
-.nav-item .nav-link {
+#UsersNav .nav-item .nav-link {
     transition: font-weight 0.3s ease, border-bottom 0.3s ease;
     border-bottom: 2px solid transparent; 
 }
-.mov-navbar .my-member-guest .nav-link{
+#UsersNav .mov-navbar .my-member-guest .nav-link{
     border-bottom: 0px solid transparent !important; 
 }
-.nav-item:hover .nav-link {
+#UsersNav .nav-item:hover .nav-link {
     font-weight: 800;
     border-bottom: 2px solid currentColor; 
     padding-bottom: 3px; 
 }
-.mov-navbar .my-member-guest:hover .nav-link {
+#UsersNav .mov-navbar .my-member-guest:hover .nav-link {
     font-weight: 800;
     border-bottom: 0px solid currentColor !important;  
 }
-.active-link {
+#UsersNav .active-link {
     font-weight: 800;
     border-bottom: 2px solid currentColor !important;
     padding-bottom: 3px; 
