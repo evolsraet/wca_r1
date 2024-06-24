@@ -583,7 +583,7 @@ TODO:
                         >
                             <div class="card my-auction">
                                 <div class="card-img-top-placeholder grayscale_img"></div>
-                                <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
+                                <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
                                     <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
