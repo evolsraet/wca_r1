@@ -74,10 +74,11 @@
                             </div>
                             <!-- 차량이 존재 할 경우 -->
                             <div v-if="auctionsData.length > 0" class="scrollable-content">
-                                <div v-for="auction in auctionsData"
+                                <div v-for="(auction, index) in auctionsData"
                                     :key="auction.id"
                                     @click="navigateToDetail(auction)"
-                                    :style="getAuctionStyle(auction)">
+                                    :style="getAuctionStyle(auction)"
+                                    :class="['animated-auction', `delay-${index}`]">
                                     <div class="complete-car">
                                         <div class="my-auction">
                                             <div class="bid-bc p-2">
@@ -117,9 +118,8 @@
                             <!-- 선택 완료된 차량이 없는경우-->
                             <div v-else>
                                 <div class="complete-car">
-                                    <div class=" my-auction none-content">
-                                        <div class="none-complete-img">
-                                        </div>
+                                    <div class="my-auction none-content">
+                                        <div class="none-complete-img"></div>
                                         <div class="d-flex align-items-center flex-column gap-3">   
                                             <div class="tc-light-gray d-flex align-items-center flex-column gap-5">                                    
                                                 <h4>등록된 차가 없어요</h4>
@@ -430,6 +430,12 @@ border-radius: 6px !important;
     animation-delay: 1s;
 }
 
+.animated-auction {
+    opacity: 0;
+    transform: scale(0.9);
+    animation: scaleUp 0.5s forwards;
+}
+
 @keyframes slideUp {
     to {
         opacity: 1;
@@ -443,4 +449,17 @@ border-radius: 6px !important;
         transform: translateX(0);
     }
 }
+
+@keyframes scaleUp {
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.delay-0 { animation-delay: 1.2s; }
+.delay-1 { animation-delay: 1.4s; }
+.delay-2 { animation-delay: 1.6s; }
+.delay-3 { animation-delay: 1.8s; }
+.delay-4 { animation-delay: 2s; }
 </style>
