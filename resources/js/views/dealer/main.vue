@@ -25,8 +25,8 @@
                         <div>
                             <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span>건 있습니다</p>
                             <div class="w-50">
-                                <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1"><span>입찰 불가</span></p>
-                                <p v-else-if="user.status === 'ok'" class="bidding mt-1 mb-1"><span>입찰 가능</span></p>
+                                <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1 shadow-sm"><span>입찰 불가</span></p>
+                                <p v-else-if="user.status === 'ok'" class="bidding mt-1 mb-1 shadow-sm"><span>입찰 가능</span></p>
                             </div>
                             <p class="tc-light-gray mb-3 mt-2">입찰가능 유효시간 2024.03.20</p>
                         </div>
@@ -62,6 +62,12 @@
                         <router-link :to="{ name: 'index.notices' }" class="btn-apply mt-0">전체보기</router-link>
                     </div>
                     <table class="table custom-border">
+                        <thead style="display: none;">
+                            <tr>
+                                <th class="tc-light-gray">날짜</th>
+                                <th>제목</th>
+                            </tr>
+                        </thead>
                         <tbody>
                             <tr>
                                 <td class="tc-light-gray note-date">2024-03-21</td>
@@ -83,6 +89,7 @@
                             </tr>
                         </tbody>
                     </table>
+
                  <!--   <div class="enter-view text-start mt-5 mb-2">
                         <h3 class="review-title">클레임 현황</h3>
                         <router-link :to="{ name: 'index.claim' }" class="btn-apply mt-0">전체보기</router-link>

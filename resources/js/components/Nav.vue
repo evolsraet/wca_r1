@@ -268,28 +268,28 @@
             </template>
             <template v-else-if="isDealer">
               <li class="nav-item">
-                <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh mx-3" to="/register">입찰하기</router-link>
+                <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh mx-3" to="/register" exact-active-class="active-link">입찰하기</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh mx-3">선택 완료 차량</router-link>
+                <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">선택 완료 차량</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3">과거 낙찰 이력</router-link>
+                <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">과거 낙찰 이력</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'index.claim'}" class="nav-link tc-wh mx-3">클레임</router-link>
+                <router-link :to="{ name: 'index.claim'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">클레임</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3">공지사항</router-link>
+                <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3" exact-active-class="active-link">공지사항</router-link>
               </li>
-              <li class="nav-item my-member-dealer ms-auto dropdown">
-                <a class="tc-wh p-1 pb-0 mx-2 me-3 dropdown-toggle" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <li class="nav-item my-member-dealer ms-auto dropdown dropdown-arrow">
+                <a class="tc-wh p-1 pb-0 me-3 dropdown-toggle" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <img src="../../img/profile_dom.png" class="nav-profile" alt="Profile Image">{{ user.name }}
                 </a>
-                <ul class="dropdown-menu" aria-labelledby="dealerDropdown">
-                  <li><router-link to="/profile" class="dropdown-item">내 정보</router-link></li>
-                  <li><router-link to="/edit-profile" class="dropdown-item">내 정보 수정</router-link></li>
-                  <li><a class="dropdown-item" href="/login" @click="logout">로그아웃</a></li>
+                <ul class="dropdown-menu p-2" aria-labelledby="dealerDropdown">
+                  <li class="my-2"><router-link to="/profile" class="dropdown-item">내 정보</router-link></li>
+                  <li class="my-2"><router-link to="/edit-profile" class="dropdown-item">내 정보 수정</router-link></li>
+                  <li class="my-2"><a class="dropdown-item" href="/login" @click="logout">로그아웃</a></li>
                 </ul>
               </li>
             </template>

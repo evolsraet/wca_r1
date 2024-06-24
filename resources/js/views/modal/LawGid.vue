@@ -11,7 +11,7 @@
             <div class="modal-body">
                 <div class="nav-header"><button type="button" class="btn-close" @click="closeModal"></button></div>
                 <div class="demo"></div>
-              <div class="content p-0 mt-0">
+              <div class="content text-start p-0 mt-0">
                 <div>
                   <h5>1. 개인정보의 수집 및 이용 목적</h5>
                   <p>회사는 다음의 목적을 위해 개인정보를 수집 및 이용합니다:</p>
@@ -80,7 +80,7 @@
             <div class="modal-body">
                 <div class="nav-header"><button type="button" class="btn-close" @click="closeModal"></button></div>
                 <div class="demo"></div>
-            <div class="content p-0 mt-0">
+            <div class="content text-start p-0 mt-0">
               <div>
                 <h5>1. 이용약관의 목적</h5>
                 <p>이 약관은 회사가 제공하는 모든 서비스(이하 "서비스")의 이용 조건 및 절차, 회사와 회원 간의 권리, 의무 및 책임 사항, 기타 필요한 사항을 규정함을 목적으로 합니다.</p>

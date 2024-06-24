@@ -67,7 +67,7 @@
           <!-- board list area -->
              <div class="o_table_mobile my-5 mt-4">
                     <div class="tbl_basic tbl_dealer">
-                        <div class="overflow-auto select-dealer">
+                        <div class="select-dealer">
                     <table >
                         <thead>
                         <tr>
@@ -104,7 +104,6 @@
   </div>
   <Footer/>
 </template>
-
 <script setup>
 import { useStore } from "vuex";
 import { computed } from "vue";

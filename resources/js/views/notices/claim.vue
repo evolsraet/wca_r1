@@ -79,7 +79,7 @@
                   <!-- board seach area -->
                   <div class="o_table_mobile my-5">
                     <div class="tbl_basic tbl_dealer">
-                        <div class="overflow-auto select-dealer">
+                        <div class="select-dealer">
                           <table>
                               <tbody>
                                   <tr>
@@ -109,11 +109,14 @@
   
   <script setup>
   import { useStore } from "vuex";
-  import { computed , ref } from "vue";
+  import { computed , ref,inject } from "vue";
   import { useRouter } from 'vue-router';
+  import Swal from 'sweetalert2';
   import AlarmModal from '@/views/modal/AlarmModal.vue';
   import Footer from "@/views/layout/footer.vue"
-  
+  import { cmmn } from '@/hooks/cmmn';
+  const swal = inject('$swal');
+  const { wica } = cmmn();
   const router = useRouter();
   const store = useStore();
   const user = computed(() => store.getters["auth/user"]);
@@ -123,10 +126,30 @@
 
 
   const openAlarmModal = () => {
-console.log("openAlarmModal called");
-if (alarmModal.value) {
-  alarmModal.value.openModal();
-}
+    const text= '  <div class="enroll_box" style="position: relative;">'+
+                 ' <img src="http://localhost:5173/resources/img/electric-car.png" alt="자동차 이미지" width="160" height="160">'+
+                  '<p class="overlay_text04">해당 서비스는 개발 중 상태입니다.</p>'+
+              '  </div>';
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20, height: 265 }) // swal 기타 옵션 추가
+    .callback(function (result) {
+      if (result.isOk) {
+        // 확인 버튼을 눌렀을 때의 동작
+        reAuction();
+      } else if (!result.isOk) {
+        // 취소 버튼을 눌렀을 때의 동작
+        cancelAuction();
+      } else {
+        console.error('Unexpected result:', result);
+      }
+    })
+    .confirm(text);
+
+  /*if (alarmModal.value) {
+    alarmModal.value.openModal();
+  }*/
 };
   </script>
 
