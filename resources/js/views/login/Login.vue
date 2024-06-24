@@ -240,7 +240,7 @@ import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
 import { cmmn } from '@/hooks/cmmn';
 
 const swal = inject('$swal');
-const { wica} = cmmn();
+const { wica } = cmmn();
 const carName = ref('');
   const emoji = ref('');
 

@@ -9,7 +9,7 @@ TODO:
     <!-- 서브 네비게이션 바 -->
     <div class="sub-nav row ">
         <div class="col-12 p-0">
-            <div v-if="isUser" class="nav-container mt-3">
+            <div v-if="isUser" class="nav-container usernav mt-3">
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav">
                         <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
@@ -964,6 +964,9 @@ const favoriteAuctions = computed(() => {
     flex: 0 0 auto;
     width: 100%;
 }
+}
+.usernav{
+    padding-right: 53% !important;
 }
 </style>
  

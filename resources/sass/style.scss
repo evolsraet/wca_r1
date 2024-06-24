@@ -1284,30 +1284,16 @@ video {
     outline: none; 
 }
 
-.search-type .search-btn {
-    cursor: pointer; 
-    position: absolute;
-    right: 5px; 
-    top: 1px; 
-    height: 40px; 
-    border: none; 
-    background-color: transparent; 
-    background-image: url('../img/search.png');
-    background-repeat: no-repeat;
-    background-position: center; 
-    background-size: 20px 20px;
-    font-size: 0; 
-}
 
 .input-container {
     position: relative;
-    width: 100%; /* Ensure the container takes the full width */
+    width: 100%;
 }
 
 .form-control {
     width: 100%;
-    padding-right: 45px; /* Add space for the button inside the input */
-    box-sizing: border-box; /* Ensure padding is included in the element's total width */
+    padding-right: 45px; 
+    box-sizing: border-box; 
 }
 
 .search-btn {
@@ -1943,6 +1929,7 @@ video {
     position: absolute;
     right: 5px;
     top: 1px;
+    transform: translateY(0%) !important;
     width: 40px;
     height: 40px;
     border: none;
