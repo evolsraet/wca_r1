@@ -14,14 +14,6 @@
                                 type="text"
                                 class="form-control"
                             />
-                            <div class="text-danger mt-1">
-                                {{ errors.name }}
-                            </div>
-                            <div class="text-danger mt-1">
-                                <div v-for="message in validationErrors?.name">
-                                    {{ message }}
-                                </div>
-                            </div>
 
                         </div>
                         <div class="mb-3">
@@ -90,18 +82,15 @@
                                 <option value="ask">심사중</option>
                                 <option value="reject">거절</option>
                             </select>
-                            <!--
-                            <div class="text-start status-selector">
-                                <input type="radio" name="status" v-model="user.status" value="ok" id="ok">
-                                <label for="ok" class="mx-2">정상</label>
-                                <input type="radio" name="status" value="ask" v-model="user.status" id="ask">
-                                <label for="ask">심사중</label>
-                                <input type="radio" name="status" value="reject" v-model="user.status" id="reject">
-                                <label for="reject" class="mx-2">거절</label>
-                            </div>-->
-                            
                         </div>
-                        <div v-if="dealer_info">
+                        <div class="mb-3">
+                            <label for="email" class="form-label">회원유형</label>
+                            <select class="form-select" :v-model="user.role" @change="changeRoles($event)" id="role">
+                                <option value="user">일반</option>
+                                <option value="dealer">딜러</option>
+                            </select>
+                        </div>
+                        <div v-if="user.role == 'dealer'">
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
                                     >소속상사</label
@@ -171,17 +160,56 @@
                                     <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
                                 </div>
                             </div>
-
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
                                     >소개</label
                                 >
                                 <textarea
-                                v-model="dealer.introduce"
-                                class="form-control no-resize mt-2"
-                                :style="{ height: `${height}px`, overflowY: 'hidden' }"
-                                @input="autoResize"
-                            ></textarea>
+                                    v-model = "dealer.introduce"
+                                    type="text"
+                                    class="form-control no-resize mt-2"
+                                ></textarea>
+                            </div>
+                            
+                            <div class="mb-3">
+                                <label for="user-title" class="form-label"
+                                    >사진(본인 확인용)</label
+                                >
+                                <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
+                                    파일 첨부
+                                </button>
+                                <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
+                                <div class="text-start tc-light-gray" v-if="dealer.file_user_photo_name">사진 파일 : {{ dealer.file_user_photo_name }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="user-title" class="form-label"
+                                    >사업자 등록증</label
+                                >
+                                <input type="file" @change="handleFileUploadBiz" ref="fileInputRefBiz" style="display:none">
+                                <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
+                                    파일 첨부
+                                </button>
+                                <div class="text-start mb-3 tc-light-gray" v-if="dealer.file_user_biz_name">사업자 등록증 : {{ dealer.file_user_biz_name }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="user-title" class="form-label"
+                                    >매도용인감정보</label
+                                >
+                                <input type="file" @change="handleFileUploadSign" ref="fileInputRefSign" style="display:none">
+                                <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
+                                    파일 첨부
+                                </button>
+                                <div class="text-start mb-3 tc-light-gray" v-if="dealer.file_user_sign_name">매도용인감정보 : {{ dealer.file_user_sign_name }}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="user-title" class="form-label"
+                                    >매매업체 대표증 or 종사원증</label
+                                >
+                                <input type="file" @change="handleFileUploadCert" ref="fileInputRefCert" style="display:none">
+                                <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
+                                    파일 첨부
+                                </button>
+                                <div class="text-start mb-5 tc-light-gray" v-if="dealer.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ dealer.file_user_cert_name }}</div>
                             </div>
                         </div>
                         <!-- Buttons -->
@@ -203,7 +231,6 @@
         </div>
     </div>
 </template>
-
 <script setup>
 import { onMounted, reactive, ref, watchEffect } from "vue";
 import { useRoute } from "vue-router";
@@ -217,55 +244,72 @@ import { watch } from "vue";
 defineRule("required", required);
 defineRule("min", min);
 
-const height = ref(100);
 const route = useRoute();
 const { roleList, getRoleList } = useRoles();
 const { openPostcode , closePostcode} = cmmn();
 
 const {
+    storeUser,
     updateUser,
     getUser,
     validationErrors,
     isLoading,
 } = useUsers();
 
+const fileInputRefBiz = ref(null);
+const fileInputRefSign = ref(null);
+const fileInputRefCert = ref(null);
+const fileInputRef = ref(null);
+
 let created_at;
 let email;
-let dealer_info;
 
 // Define a validation schema
 const schema = {
     name: { required },
     status: { required },
+    role: { required },
 };
+
 
 // Create a form context with the validation schema
 const { validate, errors, resetForm } = useForm({ validationSchema: schema });
 // Define actual fields for validation
 const { value: name } = useField("name", null, { initialValue: "" });
+/**
 const { value: status } = useField("status", null, { initialValue: "" });
+const { value: role } = useField("role", null, { initialValue: "" });
 const { value: company } = useField("company", null, { initialValue: "" });
 const { value: company_post } = useField("company_post", null, { initialValue: "" });
 const { value: company_addr1 } = useField("company_addr1", null, { initialValue: "" });
 const { value: company_addr2 } = useField("company_addr2", null, { initialValue: "" });
 const { value: receive_post } = useField("receive_post", null, { initialValue: "" });
 const { value: receive_addr1 } = useField("receive_addr1", null, { initialValue: "" });
-const { value: receive_addr2 } = useField("receive_addr2", null, { initialValue: "" });
+const { value: receive_addr2 } = useField("receive_addr2", null, { initialValue: "" }); */
 const introduce = ref("");
-
 const user = reactive({
     name,
-    status,
+    status:"",
+    role:""
 });
 const dealer = reactive({
-    company,
-    company_post,
-    company_addr1,
-    company_addr2,
-    introduce,
-    receive_post,
-    receive_addr1,
-    receive_addr2
+    company:"",
+    company_post:"",
+    company_addr1:"",
+    company_addr2:"",
+    introduce:"",
+    receive_post:"",
+    receive_addr1:"",
+    receive_addr2:"",
+    file_user_photo:"",
+    file_user_photo_name:"",
+    file_user_biz:"",
+    file_user_biz_name:"",
+    file_user_sign:"",
+    file_user_sign_name:"",
+    file_user_cert:"",
+    file_user_cert_name:"",
+
 })
 onMounted(async () => {
     const response = await getUser(route.params.id);
@@ -281,9 +325,11 @@ onMounted(async () => {
         created_at = response.created_at;
         email = response.email;
         document.getElementById("status").value = response.status;
+        document.getElementById("role").value = response.roles[0];
+        user.status = response.status;
+        user.role = response.roles[0];
         user.phone = response.phone;
         if(response.dealer){
-            dealer_info = response.dealer;
             dealer.company = response.dealer.company;
             dealer.company_post = response.dealer.company_post;
             dealer.company_addr1 = response.dealer.company_addr1;
@@ -300,8 +346,11 @@ onMounted(async () => {
 });
 
 function submitForm() {
+    /**
     validate().then((form) => {
-        if(dealer_info){
+        console.log(user);
+        
+        if(user.role == 'dealer'){
             schema.company = { required };
             schema.company_post = { required };
             schema.company_addr1 = { required };
@@ -310,15 +359,13 @@ function submitForm() {
             schema.receive_addr1 = { required };
             schema.receive_addr2 = { required };
 
-        }
+        } 
+        console.log(JSON.stringify(user));
         if (form.valid) updateUser(user,dealer,route.params.id);
-    });
+    });*/
+    updateUser(user,dealer,route.params.id);
 }
-function autoResize(event) {
-    event.target.style.height = 'auto'; 
-    event.target.style.height = `${event.target.scrollHeight}px`; 
-    height.value = event.target.scrollHeight; 
-}
+
 function editPostCode(elementName) {
   openPostcode(elementName)
     .then(({ zonecode, address }) => {
@@ -337,6 +384,80 @@ function editPostCodeReceive(elementName) {
 function changeStatus(event) {
   user.status = event.target.value;
 }
+
+function changeRoles(event) {
+  user.role = event.target.value;
+}
+
+function triggerFileUpload() {
+    if (fileInputRef.value) {
+        fileInputRef.value.click();
+    } else {
+        console.error("파일을 찾을수 없습니다.");
+    }
+}
+
+function triggerFileUploadBiz() {
+    if (fileInputRefBiz.value) {
+        fileInputRefBiz.value.click();
+        console.log(fileInputRefBiz.value);
+    } else {
+        console.error("사업자등록증 파일을 찾을 수 없습니다.");
+    }
+}
+
+function triggerFileUploadSign() {
+    if (fileInputRefSign.value) {
+        fileInputRefSign.value.click();
+    } else {
+        console.error("인감 정보 파일을 찾을 수 없습니다.");
+    }
+}
+
+function triggerFileUploadCert() {
+    if (fileInputRefCert.value) {
+        fileInputRefCert.value.click();
+    } else {
+        console.error("대표증 또는 종사원증 파일을 찾을 수 없습니다.");
+    }
+}
+
+function handleFileUpload(event) {
+    const file = event.target.files[0];
+    if (file) {
+        dealer.file_user_photo = file;
+        dealer.file_user_photo_name = file.name;
+        console.log("File:", file.name);
+    }
+}
+
+function handleFileUploadBiz(event) {
+    const file = event.target.files[0];
+    if (file) {
+        dealer.file_user_biz = file;
+        dealer.file_user_biz_name = file.name;
+        console.log("Business registration file:", file.name);
+    }
+}
+
+function handleFileUploadSign(event) {
+    const file = event.target.files[0];
+    if (file) {
+        dealer.file_user_sign = file;
+        dealer.file_user_sign_name = file.name;
+        console.log("Signature file:", file.name);
+    }
+}
+
+function handleFileUploadCert(event) {
+    const file = event.target.files[0];
+    if (file) {
+        dealer.file_user_cert = file;
+        dealer.file_user_cert_name = file.name;
+        console.log("Certification file:", file.name);
+    }
+}
+
 </script>
 <style>
 h4 {
