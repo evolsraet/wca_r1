@@ -119,11 +119,9 @@
                 </div>
             </BottomSheet02>
             </div>
-            <Footer />
 </template>
 
 <script setup>
-import Footer from "@/views/layout/footer.vue"
 import InfoModal from '@/views/modal/infoModal.vue';
 import SkeletonLoader from '@/views/loader/SkeletonLoader.vue';
 import useAuth from "@/composables/auth";
