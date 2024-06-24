@@ -28,9 +28,9 @@
         </div>
     </div>
     <div>
-        <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-4">
+        <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 mt-2">
             <h2 class="fw-bolder lh-base">내 차 판매는 <br>위카에서!</h2>
-            <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">더 알아보기</router-link>
+            <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply p-0 m-0">더 알아보기</router-link>
         </div>
         <div class="regiest-content">
             
@@ -122,7 +122,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <router-link :to="{ name: 'home' }"   class="bid-bc p-2">
+                                <router-link :to="{ name: 'home' }"   class="bid-bc p-3">
                                             <ul class="px-0 inspector_list max_width_900">
                                                 <li>
                                                     <div>

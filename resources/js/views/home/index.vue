@@ -156,7 +156,7 @@
               <template #default>
                
                 <form @submit.prevent="submitCarInfo" class="d-flex flex-column">
-                  <div class="row mb-1">
+                  <div class="row mb-1 mt-1">
                     <div class="col-12">
                       <div>
                         <input type="text" class="form-control border-0 border-bottom my-4" placeholder="소유자가 누구인가요?" v-model="carInfoForm.owner">
