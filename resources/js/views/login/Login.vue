@@ -111,7 +111,7 @@
               <!-- 로그인 폼 -->
               <form @submit.prevent="submitLogin">
                 <div class="">
-                  <div class="video-container d-sm-flex">
+                  <div class="video-container d-sm-flex mb-3">
                         <video autoplay loop muted>
                           <source src="../../../img/video/mainvideo.mp4" type="video/mp4">
                         </video>

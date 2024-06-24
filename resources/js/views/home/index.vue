@@ -7,7 +7,7 @@
       <!-- 회원가입 권장 섹션 -->
       <div class="main-contenter">
         <div class="my-5 app-specific-size">
-          <div class="video-container d-sm-flex">
+          <div class="video-container d-sm-flex mb-3">
             <video autoplay loop muted>
               <source src="../../../img/video/mainvideo.mp4" type="video/mp4">
             </video>
