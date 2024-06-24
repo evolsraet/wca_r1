@@ -55,7 +55,6 @@
                                 <option value="5">5점</option>
                             </select>
                         </div>
-                        <!--<input v-model="rv.star" class="form-control bg-secondary bg-opacity-10" />-->
                     </div>
                     <div class="card-body">
                         <p class="tc-light-gray">후기</p>
