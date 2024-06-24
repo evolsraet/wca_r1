@@ -61,11 +61,17 @@ class AuctionResource extends JsonResource
                 if ($parentArray['bid_id']) {
                     $addArray['win_bid'] = new BidResource(Bid::find($parentArray['bid_id']));
                 }
-                $addArray['top_bids'] = $bidsQuery->makeHidden(['user_id']);
-            } elseif ($parentArray['status'] == 'ing') {
-                $addArray['top_bids'] = $bidsQuery->makeHidden(['price', 'user_id']);
+            }
+
+            if (auth()->user()->hasRole('admin') or auth()->user()->id == $parentArray['user_id']) {
+                // 관리자나 본인이면 모두
+                $addArray['top_bids'] = BidResource::collection($bidsQuery);
             } else {
-                $addArray['top_bids'] = $bidsQuery;
+                // 아니면 갯수만 공개
+                $addArray['top_bids_text'] = '갯수만 공개';
+                $addArray['top_bids'] = BidResource::collection($bidsQuery)->map(function ($bid) {
+                    return (new BidResource($bid))->makeHidden(['price', 'user_id']);
+                });
             }
         }
 

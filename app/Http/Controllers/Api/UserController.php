@@ -18,6 +18,10 @@ class UserController extends Controller
     public function __construct(UserService $userService)
     {
         $this->service = $userService;
+
+        // print_r('userControllerTrait-');
+        // print_r(config('auth.defaults.guard'));
+        // die();
     }
 
     public function test(Request $request)
@@ -37,6 +41,13 @@ class UserController extends Controller
             $request->file(),
         ]);
         return $this->service->store($request);
+    }
+
+    public function defaultGuard()
+    {
+        return response()->api([
+            config('auth.defaults.guard')
+        ]);
     }
 
     /**

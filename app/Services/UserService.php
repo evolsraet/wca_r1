@@ -95,13 +95,12 @@ class UserService
         }
     }
 
-    public function tests()
-    {
-        return Role::findByName('user');
-    }
-
     public function update($id, Request $request)
     {
+        // print_r('userServiceUpdate-');
+        // print_r(config('auth.defaults.guard'));
+        // die();
+
         DB::beginTransaction();
 
         try {
@@ -170,13 +169,14 @@ class UserService
                 $item->load('dealer');
             }
 
+
             // 역할 지정
             // 기본 패키지는 복수지만, 현 서비스에서는 하나만 지정한다
             if (auth()->user()->hasPermissionTo('act.admin') && $data) {
                 if (isset($data['role'])) {
                     // 이름으로 역할 찾기
                     $role = Role::where('name', $data['role'])->first();
-                    // 아이디로 역할 찾기 (예시)
+                    // error - findByName($name, $guard = 디폴트 auth.defaults.guard) 인데, 어느순간 sanctum 으로 변경되어 사용이 불가하다.
                     // $role = Role::findByName($data['role']);
 
                     $item->syncRoles($role);

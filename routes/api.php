@@ -28,6 +28,11 @@ Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);
 Route::apiResource('reviews', ReviewController::class)->only(['index', 'show']);
 Route::apiResource('reviews', ReviewController::class)->except(['index', 'show'])->middleware('auth:sanctum');
 
+Route::put('defaultGuard', function () {
+    return response()->json(['defaultGuard' => config('auth.defaults.guard')]);
+});
+Route::put('users/defaultGuard', [UserController::class, 'defaultGuard']);
+
 Route::post('likes/toggle/{likeable_type_model}/{likeable_id}', [LikeController::class, 'toggle']);
 Route::apiResource('likes', LikeController::class);
 

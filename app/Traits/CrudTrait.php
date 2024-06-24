@@ -265,6 +265,10 @@ trait CrudTrait
 
     public function update($id, Request $request)
     {
+        // print_r('crudTrait');
+        // print_r(config('auth.defaults.guard'));
+        // die();
+
         $this->beforeProcess(__FUNCTION__, request());
 
         $modelClass = $this->getModelClass();

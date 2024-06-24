@@ -3,8 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Support\Facades\Response;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -15,7 +16,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        // // 컨피그 로그
+        // $this->app->singleton('config', function ($app) {
+        //     $configArray = $app['config']->all();
+        //     return new \App\Extends\ConfigSetLog($configArray);
+        // });
     }
 
     /**
@@ -25,6 +30,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+
         // Request 매크로 등록
         Request::macro('dbFilter', function ($modelPrefix, $allData) {
             // 초기화된 결과 배열

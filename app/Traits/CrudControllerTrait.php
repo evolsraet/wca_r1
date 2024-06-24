@@ -26,6 +26,11 @@ trait CrudControllerTrait
 
     public function update($id, Request $request)
     {
+        // web 에서 sanctum 으로 바뀌는 시점
+        // print_r('crudControllerTrait-');
+        // print_r(config('auth.defaults.guard'));
+        // die();
+
         return $this->service->update($id, $request);
     }
 
