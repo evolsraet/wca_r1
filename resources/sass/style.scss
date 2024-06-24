@@ -1636,9 +1636,11 @@ video {
 
 .nav-link:hover,
 .nav-link:focus {
-    color: #000;
+    color: $primary;
 }
-
+.active-link{
+    color: $primary;
+}
 /*---------------------
     딜러 -선택 항목페이지
 -----------------------*/
@@ -3023,7 +3025,7 @@ input[type="checkbox"] {
     line-height: 20px;
 }
 .logo-container{
-    height: 55px; /* 부모 요소의 높이를 지정 */
+    height: 55px; 
     width: 120px; 
 }
 @media screen and (max-width:1200px) {
@@ -3244,13 +3246,18 @@ input[type="checkbox"] {
     transition: font-weight 0.3s ease, border-bottom 0.3s ease;
     border-bottom: 2px solid transparent; 
 }
-
+.mov-navbar .my-member-guest .nav-link{
+    border-bottom: 0px solid transparent !important; 
+}
 .nav-item:hover .nav-link {
     font-weight: 800;
     border-bottom: 2px solid currentColor; 
     padding-bottom: 3px; 
 }
-
+.mov-navbar .my-member-guest:hover .nav-link {
+    font-weight: 800;
+    border-bottom: 0px solid currentColor !important;  
+}
 .active-link {
     font-weight: 800;
     border-bottom: 2px solid currentColor !important;
@@ -3261,6 +3268,12 @@ input[type="checkbox"] {
 /*----------------------------------
     공통 : 드롭다운 메뉴 
 ------------------------------------*/
+.settings-menu a:hover{
+    background-color: #f9f9f9;
+    padding-left: 18px;
+    color:$primary;
+    transition: all .2s ease-in-out;
+}
 .dropdown-item:hover, .dropdown-item:focus {
     background-color: #f9f9f9;
     padding-left: 18px;

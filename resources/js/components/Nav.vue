@@ -232,13 +232,13 @@
             <template v-if="isUser">
               <div class="d-flex">
                 <li class="nav-item">
-                  <router-link to="/" class="nav-link mx-3" aria-current="page">내차조회</router-link>
+                  <router-link to="/" class="nav-link mx-3" aria-current="page" exact-active-class="active-link">내차조회</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3" aria-current="page">내 매물관리</router-link>
+                  <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3" aria-current="page" exact-active-class="active-link">내 매물관리</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'user.review'}" class="nav-link mx-3">이용후기</router-link>
+                  <router-link :to="{ name: 'user.review'}" class="nav-link mx-3" exact-active-class="active-link">이용후기</router-link>
                 </li>
               </div>
               <li class="nav-item my-member ms-auto dropdown">
@@ -254,16 +254,16 @@
             </template>
             <template v-else-if="!user?.name">
               <li class="nav-item">
-                <router-link to="/" class="nav-link mx-3" aria-current="page">내차조회</router-link>
+                <router-link :to="{ name: 'home'}" class="nav-link mx-3" exact-active-class="active-link">내차조회</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3">이용후기</router-link>
+                <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3" exact-active-class="active-link">이용후기</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register">서비스소개</router-link>
+                <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
               </li>
               <li class="nav-item my-member-guest ms-auto">
-                <img src="../../img/Icon-person.png" class="nav-profile-login" alt="LoginImg" height="25px" width="25px"><router-link class="nav-link me-0 tc-light-gray" to="/login">로그인</router-link>
+                <img src="../../img/Icon-person.png" class="nav-profile-login" alt="LoginImg" height="25px" width="25px"><router-link class="nav-link me-0 tc-light-gray pb-0" to="/login" exact-active-class="active-link">로그인</router-link>
               </li>
             </template>
             <template v-else-if="isDealer">
@@ -651,7 +651,7 @@
     z-index: 1000;
     transform: translateY(-20px);
     opacity: 0;
-    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s cubic-bezier(0.25, 1, 0.5, 1);
     border-radius: 6px;
   }
   
