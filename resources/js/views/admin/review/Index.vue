@@ -2,15 +2,7 @@
     <div class="p-3 row justify-content-center my-2">
         <div class="col-md-12">
         </div>
-        <router-link
-                        :to="{ name: 'posts.create' }"
-                        class="border-red-write"
-                    >
-                    <div class="image-icon-pen">
-
-                        </div>
-                    </router-link>
-                    <div class="proceeding"></div>
+                <div class="proceeding"></div>
                     <!--
                     <div class="search-type2 mb-5">
                         <div class="border-xsl">

@@ -28,16 +28,16 @@
         </div>
     </div>
     <div>
-        <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-4">
+        <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 mt-2">
             <h2 class="fw-bolder lh-base">내 차 판매는 <br>위카에서!</h2>
-            <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply">더 알아보기</router-link>
+            <router-link :to="{ name: 'index.allreview' }" href="" class="btn-apply p-0 m-0">더 알아보기</router-link>
         </div>
         <div class="regiest-content">
             
             <div class="container my-4">
                 <div class="layout-container02 mt-5">
                     <!-- 딜러 프로필 요약 정보 -->
-                    <div class="content p-2">
+                    <div class=" p-4">
                         <div class="apply-top text-start mb-0">
                             <h3 class="review-title">이용후기</h3>
                             <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
@@ -122,7 +122,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <router-link :to="{ name: 'home' }"   class="bid-bc p-2">
+                                <router-link :to="{ name: 'home' }"   class="bid-bc p-3">
                                             <ul class="px-0 inspector_list max_width_900">
                                                 <li>
                                                     <div>
@@ -332,8 +332,8 @@
     }
     
     .scrollable-content {
-        max-height: 400px; 
-        overflow-y: auto;
+        height: auto;
+        overflow-y: hidden;
         padding: 50px 70px 50px 70px;
         background-color: #f7f8fb;
     }

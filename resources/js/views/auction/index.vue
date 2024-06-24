@@ -490,7 +490,7 @@ TODO:
                                                     <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
                                                 </div>
                                             </div>
-                                            <div  :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
+                                            <div v-if="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
                                             </div>
                                             <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>   
                                             <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">경매취소</span>

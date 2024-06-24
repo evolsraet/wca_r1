@@ -1,557 +1,498 @@
 <template>
-<div class="overlay" style="display: none;"></div> 
-    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass,'p-2']">
-        <div v-if="isAuctionDetailPage">
-        </div>
-        <div class="container nav-font">
-            <button v-if="isDetailPage && isUser" @click="goBack" class="btn btn-back back-btn-icon">
-            </button>
-            <button  v-else-if="isDetailPage && isDealer" @click="goBack" class="btn btn-back wh-btn-icon">
-            </button>
-            <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand-dealer"></router-link>
-            <router-link v-else-if="isUser" to="/user" class="navbar-brand logo-container"></router-link>
-            <router-link v-else to="/" class="navbar-brand"></router-link>
-            <!-- movnav bar -->
-            <!-- dealer navbar-->
-            <div class="collapse navbar-collapse navbar-collshow" id="navbarSupportedContent">
-                <div v-if="isDealer" class="navbar-nav nav-style">
-                    <div class="nav-header d-flex justify-content-between align-items-center ">
-                        <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close" @click="toggleNavbar"></button>
-                        <div class="d-flex align-items-center ">
-                        <span class="p-2 process">{{ user.name }} 님</span>
-                        <i class="fas fa-cog settings-icon mb-1" @click="toggleSettingsMenu" :class="{ 'rotate': showSettings }"></i>
-                        </div>
-                    </div>
-                    <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
-                        <a href="/profile" class="menu-item mt-0">내 정보</a>
-                        <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
-                        <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
-                    </div>
-                    <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
-                        <div class="top-content ">
-                            <div class="menu-illustration p-3">
-                               <div class="sub-board-style">
-                                   <div v-if="fetchFilteredViewBids.value" class="text-start">
-                                           <p>경매가 종료됐어요!</p>
-                                           <div class="d-flex align-items-center">
-                                               <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font"@click="toggleNavbar">선택완료차량 확인</router-link>
-                                               <div class="icon right-icon"></div>
-                                           </div>
-                                       </div>
-                                   <div v-else class="text-start tc-primary">
-                                       <p>아직 경매가 진행 중이에요</p>
-                                       <div class="d-flex align-items-center">
-                                           <router-link :to="{ name: 'auction.index'}" class="tc-primary bold-18-font"@click="toggleNavbar">진행 중 경매 확인</router-link>
-                                           <div class="icon right-icon"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                            <div class="footer-content">
-                                    <div class="p-2">
-                                        <router-link :to="{ name: 'auction.index'}" class="menu-item mt-0" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                                <div class="icon icon-tag"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text process">입찰하기</span>
-                                                <span class="tc-light-gray font-1">새 매물 둘러보기</span>
-                                            </div>
-                                        </router-link>
-                                        <router-link :to="{ name: 'dealer.address'}" class="menu-item mt-0" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                                <div class="icon icon-location-memu"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text process">주소 관리</span>
-                                                <span class="tc-light-gray font-1">탁송 주소 관리</span>
-                                            </div>
-                                        </router-link>
-                                        <router-link :to="{ name: 'dealer.bids'}" class="menu-item mt-0" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                                <div class="icon icon-awsome"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text process">낙찰 차량관리</span>
-                                                <span class="tc-light-gray font-1">경매 낙찰차량 확인</span>
-                                            </div>
-                                        </router-link>
-                                        <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mt-0" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                                <div class="icon icon-nav-car"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text process">과거 낙찰 이력</span>
-                                                <span class="tc-light-gray font-1">경매 완료 매물</span>
-                                            </div>
-                                        </router-link>
-                                        <router-link :to="{ name: 'index.claim' }" class="menu-item process mt-0" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                                <div class="icon icon-document"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text">클레임</span>
-                                                <span class="tc-light-gray font-1">낙찰 차량에 문제가 있으신가요?</span>
-                                            </div>
-                                        </router-link>
-                                        <router-link :to="{ name: 'index.notices' }" class="menu-item mt-0 process mb-4" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                                <div class="icon icon-dash"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text">공지사항</span>
-                                                <span class="tc-light-gray font-1">새소식</span>
-                                            </div>
-                                        </router-link>
-                                    </div>
-                                </div>
-                                <div class="logo-content">
-                                    <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
-                                </div>
-                            </div>
-                   </div>
-                <!-- user -->
-                <div v-else-if="isUser" class="navbar-nav">
-                    <div class="nav-header d-flex justify-content-between align-items-center ">
-                        <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close" @click="toggleNavbar"></button>
-                        <div class="d-flex align-items-center ">
-                        <span class="p-2 process">{{ user.name }} 님</span>
-                        <i class="fas fa-cog settings-icon mb-1" @click="toggleSettingsMenu" :class="{ 'rotate': showSettings }"></i>
-                        </div>
-                    </div>
-                    <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
-                       <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
-                        <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
-                    </div>
-                    <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
-                        <div class="top-content ">
-                         <!--  <div v-if="userHasAuction" class="p-4">
-                                <h4>경매 진행 상황</h4>
-                                <p class="tc-light-gray mb-3">가장 최근에 등록한 매물로 알려드려요.</p>
-                                <ul class="timeline">
-                                    <li :class="{'active': isDiagnosing, 'completed': isDiagnosisCompleted}">
-                                    <div class="circle">1</div>
-                                    <span>위카 진단평가 진행</span>
-                                    </li>
-                                    <div class="small-circles" :class="{'completed': isDiagnosisCompleted}">
-                                    <div class="small-circle"></div>
-                                    <div class="small-circle"></div>
-                                    <div class="small-circle"></div>
-                                    </div>
-                                    <li :class="{'active': isAuctioning, 'completed': !isAuctioning && isAuctionCompleted}">
-                                    <div class="circle">2</div>
-                                    <span>경매 시작<span v-if="isAuctioning" class="mx-2 time"><img src="../../img/Icon-clock-red.png" alt="Clock Icon" class="icon-clock">01:42:24</span></span>
-                                    </li>
-                                    <div class="small-circles" :class="{'completed': isAuctionCompleted}">
-                                    <div class="small-circle"></div>
-                                    <div class="small-circle"></div>
-                                    <div class="small-circle"></div>
-                                    </div>
-                                    <li :class="{'active': isSelectingDealer, 'completed': !isSelectingDealer && isDealerSelectionCompleted}">
-                                    <div class="circle">3</div>
-                                    <span >낙찰 딜러 선정<span v-if="isSelectingDealer" class="mx-2 date tc-light-gray"><img src="../../img/Icon-clock.png" alt="Clock Icon" class="icon-clock">D-3</span></span>
-                                    </li>
-                                    <div class="small-circles" :class="{'completed': isDealerSelectionCompleted}">
-                                    <div class="small-circle"></div>
-                                    <div class="small-circle"></div>
-                                    <div class="small-circle"></div>
-                                    </div>
-                                    <li :class="{'active': isCompleted, 'completed': isCompleted}">
-                                    <div class="circle">4</div>
-                                    <span>선택 완료</span>
-                                    </li>
-                                </ul>
-                                </div>
--->                            <div class="menu-illustration02 p-3">
-                                <div class="sub-board-style02">
-                                    <div class="text-start">
-                                        <p class="tc-light-gray">경매를 시작해볼까요?</p>
-                                        <div class="d-flex align-items-center">
-                                            <router-link :to="{ name: 'home' }" class="process bold-18-font" @click="toggleNavbar">내 차 팔기</router-link>
-                                            <div class="icon right-icon-nav"></div>
-                                        </div>
-                                    </div>
-                                    <!-- 이미지 추가 -->
-                                    <img src="../../img/car-key.png" alt="Description of Image" class="sub-board-image">
-                                </div>
-                            </div>
-                        </div>
-                            <div class="footer-content">
-                                <div class="under-line"></div>
-                                    <div class="p-2">
-                                      <router-link :to="{ name: 'home' }" class="menu-item mt-0" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                            <div class="icon icon-nav-car"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text">내 차 팔기</span>
-                                                <span class="tc-light-gray font-1">위카가 척척</span>
-                                            </div>
-                                        </router-link>
-                                        <router-link :to="{ name: 'auction.index'}" class="menu-item mt-1" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                            <div class="icon icon-nav-bulb"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text">내 매물관리</span>
-                                                <span class="tc-light-gray font-1">경매 진행중인 매물</span>
-                                            </div>
-                                        </router-link>
-                                        <router-link :to="{ name: 'user.review'}" class="menu-item mt-1 mb-4" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                            <div class="icon icon-ratings"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text">이용후기</span>
-                                                <span class="tc-light-gray font-1"> 다양한 판매 후기</span>
-                                            </div>
-                                        </router-link>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="logo-content">
-                                <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
-                            </div>
-                    </div>
-                
-                <div v-else class="navbar-nav">
-                    <div class="nav-header">
-                        <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close"></button>
-                    </div>
-                    <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
-                        <div class="top-content ">
-                            <div class="menu-illustration p-3">
-                                <div class="sub-board-style">
-                                    <div class="text-start">
-                                        <p class="tc-primary">내 차 팔까?</p>
-                                        <div class="d-flex align-items-center">
-                                            <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font" @click="toggleNavbar">로그인하기</router-link>
-                                            <div class="icon right-icon"></div>
-                                        </div>
-                                    </div>
-                                    <!-- 이미지 추가 -->
-                                    <img src="../../img/login-object.png" alt="Description of Image" class="sub-board-image">
-                                </div>
-                            </div>
-                        </div>
-                            <div class="footer-content">
-                                <div class="under-line"></div>
-                                    <div class="p-2">
-                                        <router-link :to="{ name: 'home' }" class="menu-item mt-0" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                            <div class="icon icon-nav-car"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text">차량 조회</span>
-                                                <span class="tc-light-gray font-1">내 차량 조회</span>
-                                            </div>
-                                        </router-link>
-                                        <router-link :to="{ name: 'index.allreview' }" class="menu-item mt-1" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                            <div class="icon icon-ratings"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text">이용후기</span>
-                                                <span class="tc-light-gray font-1"> 다양한 판매 후기</span>
-                                            </div>
-                                        </router-link>
-                                        <router-link :to="{ name: 'index.introduce' }" class="menu-item mt-1 mb-3" @click="toggleNavbar">
-                                            <div class="sd-menu">
-                                            <div class="icon icon-nav-bulb"></div>
-                                            </div>
-                                            <div class="d-flex flex-column">
-                                                <span class="menu-text">서비스 소개</span>
-                                                <span class="tc-light-gray font-1">위카 란?</span>
-                                            </div>
-                                        </router-link>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="logo-content">
-                                <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
-                            </div>
-                    </div>
+    <div class="overlay" style="display: none;"></div>
+    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, 'p-2']">
+      <div v-if="isAuctionDetailPage"></div>
+      <div class="container nav-font">
+        <button v-if="isDetailPage && isUser" @click="goBack" class="btn btn-back back-btn-icon"></button>
+        <button v-else-if="isDetailPage && isDealer" @click="goBack" class="btn btn-back wh-btn-icon"></button>
+        <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand-dealer"></router-link>
+        <router-link v-else-if="isUser" to="/user" class="navbar-brand logo-container"></router-link>
+        <router-link v-else to="/" class="navbar-brand"></router-link>
+        <div class="collapse navbar-collapse navbar-collshow" id="navbarSupportedContent">
+          <div v-if="isDealer" class="navbar-nav nav-style">
+            <div class="nav-header d-flex justify-content-between align-items-center">
+              <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close" @click="toggleNavbar"></button>
+              <div class="d-flex align-items-center position-relative">
+                <span class="p-2 process">{{ user.name }} 님</span>
+                <i class="fas fa-cog settings-icon mb-1" @click="toggleSettingsMenu" :class="{ 'rotate': showSettings }"></i>
+                <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
+                  <a href="/profile" class="menu-item mt-0">내 정보</a>
+                  <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
+                  <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                 </div>
-            <!-- web nav bar -->
-            <div class="collapse navbar-collapse">
-                    <ul class="mx-3 mov-navbar navbar-nav mt-2 mt-lg-0 w-100 d-flex align-items-center">
-                        <!-- 사용자 일때 -->
-                        <template v-if="isUser">
-                            <div class="d-flex">
-                                <li class="nav-item">
-                                    <router-link to="/" class="nav-link mx-3" aria-current="page">내차조회</router-link>
-                                </li>
-                                <li class="nav-item">
-                                    <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3" aria-current="page">내 매물관리</router-link>
-                                </li>
-                                <li class="nav-item">
-                                    <router-link :to="{ name: 'user.review'}" class="nav-link mx-3">이용후기</router-link>
-                                </li>
-                            </div>
-                            <li class="nav-item my-member ms-auto" @click="toggleSettingsMenu">
-                                <a class="tc-wh p-1 pb-0 mx-2" href="#">{{ user.name }} 님</a>
-                            </li>
-                            <li><a class="mx-3 nav-link tc-light-gray logout" href="/login" @click="logout">로그아웃</a></li>
-                            <div v-if="showSettings" :class="['settings-menu','setting-web', { show: showSettings }]">
-                                 <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
-                            </div>
-                        </template>
-                    <!-- 게스트 일때 -->
-                    <template v-else-if="!user?.name">
-                        <li class="nav-item">
-                            <router-link to="/" class="nav-link mx-3" aria-current="page">내차조회</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3">이용후기</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register">서비스소개</router-link>
-                        </li>
-                        <li class="nav-item my-member-guest ms-auto ">
-                            <img src="../../img/Icon-person.png" class="nav-profile-login" alt="LoginImg" height="25px" width="25px"><router-link class="nav-link me-0 tc-light-gray" to="/login">로그인</router-link>
-                        </li>
-                    </template>
-                    <!-- 딜러 일때 -->
-                    <template v-else-if="isDealer">
-                        <li class="nav-item">
-                            <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh mx-3" to="/register" >입찰하기</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh mx-3">선택 완료 차량</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3">과거 낙찰 이력</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link :to="{ name: 'index.claim'}" class="nav-link tc-wh mx-3">클레임</router-link>
-                        </li>
-                        <li class="nav-item">
-                            <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3">공지사항</router-link>
-                        </li>
-                        <li class="nav-item my-member-dealer ms-auto" @click="toggleSettingsMenu" >
-                            <img src="../../img/profile_dom.png" class="nav-profile" alt="Profile Image"><a :to="{ name: 'dealer.profile' }"  class="tc-wh p-1 pb-0 mx-2 me-3" href="#">{{ user.name }}</a>
-                        </li>
-                        <li><a class="mx-3 nav-link tc-wh logout" href="/login" @click="logout">로그아웃</a></li>
-                        <div v-if="showSettings" :class="['settings-menu','setting-web', { show: showSettings }]">
-                            <a href="/profile" class="menu-item mt-0">내 정보</a>
-                       <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
-                    </div>
-                    </template>
-                    <!-- 로그인 시 -->
-                <!--    <ul v-if="user?.name" class="navbar-nav mt-lg-0 ms-auto">
-                        <li><a class="nav-link tc-light-gray logout" href="/login" @click="logout">로그아웃</a></li>
-                    </ul>-->
-                </ul>
+              </div>
             </div>
-            <a class="navbar-toggler p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span :class="{'toggle-nav-wh': isDealer, 'toggle-nav-black': !isDealer}"></span>
-            </a>
+            <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
+              <div class="top-content">
+                <div class="menu-illustration p-3">
+                  <div class="sub-board-style">
+                    <div v-if="fetchFilteredViewBids.value" class="text-start">
+                      <p>경매가 종료됐어요!</p>
+                      <div class="d-flex align-items-center">
+                        <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font" @click="toggleNavbar">선택완료차량 확인</router-link>
+                        <div class="icon right-icon"></div>
+                      </div>
+                    </div>
+                    <div v-else class="text-start tc-primary">
+                      <p>아직 경매가 진행 중이에요</p>
+                      <div class="d-flex align-items-center">
+                        <router-link :to="{ name: 'auction.index'}" class="tc-primary bold-18-font" @click="toggleNavbar">진행 중 경매 확인</router-link>
+                        <div class="icon right-icon"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="footer-content">
+                <div class="p-2">
+                  <router-link :to="{ name: 'auction.index'}" class="menu-item mt-0" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-tag"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text process">입찰하기</span>
+                      <span class="tc-light-gray font-1">새 매물 둘러보기</span>
+                    </div>
+                  </router-link>
+                  <router-link :to="{ name: 'dealer.address'}" class="menu-item mt-0" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-location-memu"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text process">주소 관리</span>
+                      <span class="tc-light-gray font-1">탁송 주소 관리</span>
+                    </div>
+                  </router-link>
+                  <router-link :to="{ name: 'dealer.bids'}" class="menu-item mt-0" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-awsome"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text process">낙찰 차량관리</span>
+                      <span class="tc-light-gray font-1">경매 낙찰차량 확인</span>
+                    </div>
+                  </router-link>
+                  <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mt-0" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-nav-car"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text process">과거 낙찰 이력</span>
+                      <span class="tc-light-gray font-1">경매 완료 매물</span>
+                    </div>
+                  </router-link>
+                  <router-link :to="{ name: 'index.claim' }" class="menu-item process mt-0" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-document"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">클레임</span>
+                      <span class="tc-light-gray font-1">낙찰 차량에 문제가 있으신가요?</span>
+                    </div>
+                  </router-link>
+                  <router-link :to="{ name: 'index.notices' }" class="menu-item mt-0 process mb-4" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-dash"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">공지사항</span>
+                      <span class="tc-light-gray font-1">새소식</span>
+                    </div>
+                  </router-link>
+                </div>
+              </div>
+              <div class="logo-content">
+                <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
+              </div>
+            </div>
+          </div>
+          <div v-else-if="isUser" class="navbar-nav">
+            <div class="nav-header d-flex justify-content-between align-items-center">
+              <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close" @click="toggleNavbar"></button>
+              <div class="d-flex align-items-center position-relative">
+                <span class="p-2 process">{{ user.name }} 님</span>
+                <i class="fas fa-cog settings-icon mb-1" @click="toggleSettingsMenu" :class="{ 'rotate': showSettings }"></i>
+                <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
+                  <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
+                  <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
+                </div>
+              </div>
+            </div>
+            <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
+              <div class="top-content">
+                <div class="menu-illustration02 p-3">
+                  <div class="sub-board-style02">
+                    <div class="text-start">
+                      <p class="tc-light-gray">경매를 시작해볼까요?</p>
+                      <div class="d-flex align-items-center">
+                        <router-link :to="{ name: 'home' }" class="process bold-18-font" @click="toggleNavbar">내 차 팔기</router-link>
+                        <div class="icon right-icon-nav"></div>
+                      </div>
+                    </div>
+                    <img src="../../img/car-key.png" alt="Description of Image" class="sub-board-image">
+                  </div>
+                </div>
+              </div>
+              <div class="footer-content">
+                <div class="under-line"></div>
+                <div class="p-2">
+                  <router-link :to="{ name: 'home' }" class="menu-item mt-0" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-nav-car"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">내 차 팔기</span>
+                      <span class="tc-light-gray font-1">위카가 척척</span>
+                    </div>
+                  </router-link>
+                  <router-link :to="{ name: 'auction.index'}" class="menu-item mt-1" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-nav-bulb"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">내 매물관리</span>
+                      <span class="tc-light-gray font-1">경매 진행중인 매물</span>
+                    </div>
+                  </router-link>
+                  <router-link :to="{ name: 'user.review'}" class="menu-item mt-1 mb-4" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-ratings"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">이용후기</span>
+                      <span class="tc-light-gray font-1"> 다양한 판매 후기</span>
+                    </div>
+                  </router-link>
+                </div>
+              </div>
+              <div class="logo-content">
+                <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
+              </div>
+            </div>
+          </div>
+          <div v-else class="navbar-nav">
+            <div class="nav-header">
+              <button type="button" class="btn-close" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-label="Close"></button>
+            </div>
+            <div class="toggle-nav-content" :class="{ 'has-gradient': showScrollGradient }">
+              <div class="top-content">
+                <div class="menu-illustration p-3">
+                  <div class="sub-board-style">
+                    <div class="text-start">
+                      <p class="tc-primary">내 차 팔까?</p>
+                      <div class="d-flex align-items-center">
+                        <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font" @click="toggleNavbar">로그인하기</router-link>
+                        <div class="icon right-icon"></div>
+                      </div>
+                    </div>
+                    <img src="../../img/login-object.png" alt="Description of Image" class="sub-board-image">
+                  </div>
+                </div>
+              </div>
+              <div class="footer-content">
+                <div class="under-line"></div>
+                <div class="p-2">
+                  <router-link :to="{ name: 'home' }" class="menu-item mt-0" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-nav-car"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">차량 조회</span>
+                      <span class="tc-light-gray font-1">내 차량 조회</span>
+                    </div>
+                  </router-link>
+                  <router-link :to="{ name: 'index.allreview' }" class="menu-item mt-1" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-ratings"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">이용후기</span>
+                      <span class="tc-light-gray font-1"> 다양한 판매 후기</span>
+                    </div>
+                  </router-link>
+                  <router-link :to="{ name: 'index.introduce' }" class="menu-item mt-1 mb-3" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-nav-bulb"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">서비스 소개</span>
+                      <span class="tc-light-gray font-1">위카 란?</span>
+                    </div>
+                  </router-link>
+                </div>
+              </div>
+              <div class="logo-content">
+                <img src="../../img/newicon/logo_2.png" alt="자동차 이미지" width="64" height="21">
+              </div>
+            </div>
+          </div>
         </div>
+        <div class="collapse navbar-collapse">
+          <ul class="mx-3 mov-navbar navbar-nav mt-2 mt-lg-0 w-100 d-flex align-items-center">
+            <template v-if="isUser">
+              <div class="d-flex">
+                <li class="nav-item">
+                  <router-link to="/" class="nav-link mx-3" aria-current="page">내차조회</router-link>
+                </li>
+                <li class="nav-item">
+                  <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3" aria-current="page">내 매물관리</router-link>
+                </li>
+                <li class="nav-item">
+                  <router-link :to="{ name: 'user.review'}" class="nav-link mx-3">이용후기</router-link>
+                </li>
+              </div>
+              <li class="nav-item my-member ms-auto dropdown">
+                <a class="tc-wh p-1 pb-0 mx-2 dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  {{ user.name }} 님
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                  <li><router-link to="/profile" class="dropdown-item">내 정보</router-link></li>
+                  <li><router-link to="/edit-profile" class="dropdown-item">내 정보 수정</router-link></li>
+                  <li><a class="dropdown-item" href="/login" @click="logout">로그아웃</a></li>
+                </ul>
+              </li>
+            </template>
+            <template v-else-if="!user?.name">
+              <li class="nav-item">
+                <router-link to="/" class="nav-link mx-3" aria-current="page">내차조회</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3">이용후기</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register">서비스소개</router-link>
+              </li>
+              <li class="nav-item my-member-guest ms-auto">
+                <img src="../../img/Icon-person.png" class="nav-profile-login" alt="LoginImg" height="25px" width="25px"><router-link class="nav-link me-0 tc-light-gray" to="/login">로그인</router-link>
+              </li>
+            </template>
+            <template v-else-if="isDealer">
+              <li class="nav-item">
+                <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh mx-3" to="/register">입찰하기</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh mx-3">선택 완료 차량</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3">과거 낙찰 이력</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link :to="{ name: 'index.claim'}" class="nav-link tc-wh mx-3">클레임</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3">공지사항</router-link>
+              </li>
+              <li class="nav-item my-member-dealer ms-auto dropdown">
+                <a class="tc-wh p-1 pb-0 mx-2 me-3 dropdown-toggle" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <img src="../../img/profile_dom.png" class="nav-profile" alt="Profile Image">{{ user.name }}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dealerDropdown">
+                  <li><router-link to="/profile" class="dropdown-item">내 정보</router-link></li>
+                  <li><router-link to="/edit-profile" class="dropdown-item">내 정보 수정</router-link></li>
+                  <li><a class="dropdown-item" href="/login" @click="logout">로그아웃</a></li>
+                </ul>
+              </li>
+            </template>
+          </ul>
+        </div>
+        <a class="navbar-toggler p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span :class="{'toggle-nav-wh': isDealer, 'toggle-nav-black': !isDealer}"></span>
+        </a>
+      </div>
     </nav>
-</template>
-
-<script setup>
-import { ref, computed, onMounted, watch } from 'vue';
-import { useRouter, useRoute } from 'vue-router';
-import { useStore } from 'vuex';
-import useAuth from '@/composables/auth';
-import useAuctions from '@/composables/auctions';
-
-const { getAuctions, auctionsData } = useAuctions();
-const { logout } = useAuth();
-const router = useRouter();
-const route = useRoute();
-const showSettings = ref(false);
-const store = useStore();
-const isNavbarShown = ref(false);
-const showScrollGradient = ref(false);
-let scrollTimeout = null;
-const auctionDetailsLoaded = ref(false);
-
-function toggleSettingsMenu() {
-  showSettings.value = !showSettings.value;
-}
-const user = computed(() => store.getters['auth/user']);
-
-const isDealer = computed(() => user.value?.roles?.includes('dealer'));
-const isUser = computed(() => user.value?.roles?.includes('user'));
-const navbarClass = computed(() => (isDealer.value ? 'bg-primary' : 'bg-white'));
-const textClass = computed(() => (isDealer.value ? 'text-white' : 'text-dark'));
-
-const redirectByName = (routeName) => {
+  </template>
+  
+  <script setup>
+  import { ref, computed, onMounted, watch } from 'vue';
+  import { useRouter, useRoute } from 'vue-router';
+  import { useStore } from 'vuex';
+  import useAuth from '@/composables/auth';
+  import useAuctions from '@/composables/auctions';
+  
+  const { getAuctions, auctionsData } = useAuctions();
+  const { logout } = useAuth();
+  const router = useRouter();
+  const route = useRoute();
+  const showSettings = ref(false);
+  const showSettingsmov = ref(false);
+  const store = useStore();
+  const isNavbarShown = ref(false);
+  const showScrollGradient = ref(false);
+  let scrollTimeout = null;
+  const auctionDetailsLoaded = ref(false);
+  
+  function toggleSettingsMenuMov() {
+    showSettingsmov.value = !showSettingsmov.value;
+  }
+  
+  function toggleSettingsMenu() {
+    showSettings.value = !showSettings.value;
+  }
+  
+  const user = computed(() => store.getters['auth/user']);
+  
+  const isDealer = computed(() => user.value?.roles?.includes('dealer'));
+  const isUser = computed(() => user.value?.roles?.includes('user'));
+  const navbarClass = computed(() => (isDealer.value ? 'bg-primary' : 'bg-white'));
+  const textClass = computed(() => (isDealer.value ? 'text-white' : 'text-dark'));
+  
+  const redirectByName = (routeName) => {
     router.push({ name: routeName });
-};
-
-const homePath = computed(() => {
+  };
+  
+  const homePath = computed(() => {
     if (isDealer.value) {
-        return { name: 'dealer.index' }; 
+      return { name: 'dealer.index' };
     } else if (isUser.value) {
-        return { name: 'user.index' }; 
+      return { name: 'user.index' };
     } else {
-        return { name: 'home' };
+      return { name: 'home' };
     }
-});
-
-const fetchFilteredViewBids = async () => {
+  });
+  
+  const fetchFilteredViewBids = async () => {
     console.log('Original Bids:', bidsData.value);
     const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
     console.log('Bids with Details:', bidsWithDetails);  // Bids with Details 데이터 출력
     filteredViewBids.value = bidsWithDetails.filter(bid => {
-        console.log('Checking Bid:', bid);  // 각 Bid 데이터 출력
-        return bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id;
+      console.log('Checking Bid:', bid);  // 각 Bid 데이터 출력
+      return bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id;
     });
     console.log('Bids with Auction Details:', filteredViewBids.value);
-};
-
-
-const userHasAuction = computed(() => {
+  };
+  
+  const userHasAuction = computed(() => {
     return auctionsData.value.some(auction => auction.user_id === user.value.id);
-});
-
-const latestAuction = computed(() => {
-    // 데이터 배열이 비어 있으면 null을 반환
+  });
+  
+  const latestAuction = computed(() => {
     if (auctionsData.value.length === 0) return null;
-
-    // 데이터를 복사하여 생성된 날짜 기준으로 정렬
     const sortedAuctions = [...auctionsData.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-
-    // 가장 최근의 경매 반환
     return sortedAuctions[0];
-});
-
-
-
-const isDiagnosing = computed(() => latestAuction.value && latestAuction.value.status === 'diag'|| latestAuction.value.status === 'ask');
-const isAuctioning = computed(() => latestAuction.value && latestAuction.value.status === 'ing');
-const isSelectingDealer = computed(() => latestAuction.value && latestAuction.value.status === 'wait');
-const isCompleted = computed(() => latestAuction.value && latestAuction.value.status === 'chosen' || latestAuction.value && latestAuction.value.status === 'done');
-
-const isDiagnosisCompleted = computed(() => ['ing', 'wait', 'chosen'].includes(latestAuction.value?.status));
-const isAuctionCompleted = computed(() => ['wait', 'chosen'].includes(latestAuction.value?.status));
-const isDealerSelectionCompleted = computed(() => latestAuction.value?.status === 'chosen');
-
-// 현재 경로를 기준으로 상세 페이지인지 확인
-const isDetailPage = computed(() => {
+  });
+  
+  const isDiagnosing = computed(() => latestAuction.value && latestAuction.value.status === 'diag' || latestAuction.value.status === 'ask');
+  const isAuctioning = computed(() => latestAuction.value && latestAuction.value.status === 'ing');
+  const isSelectingDealer = computed(() => latestAuction.value && latestAuction.value.status === 'wait');
+  const isCompleted = computed(() => latestAuction.value && latestAuction.value.status === 'chosen' || latestAuction.value && latestAuction.value.status === 'done');
+  
+  const isDiagnosisCompleted = computed(() => ['ing', 'wait', 'chosen'].includes(latestAuction.value?.status));
+  const isAuctionCompleted = computed(() => ['wait', 'chosen'].includes(latestAuction.value?.status));
+  const isDealerSelectionCompleted = computed(() => latestAuction.value?.status === 'chosen');
+  
+  const isDetailPage = computed(() => {
     return /^\/auction\/\d+$/.test(route.path) || route.path === '/selldt' || route.path === '/selldt2';
-});
-
-// 특정 페이지 경로 확인 (AuctionDetail 페이지)
-const isAuctionDetailPage = computed(() => {
-  return route.name === 'AuctionDetail';
-});
-
-// 뒤로 가기 함수
-const goBack = () => {
+  });
+  
+  const isAuctionDetailPage = computed(() => {
+    return route.name === 'AuctionDetail';
+  });
+  
+  const goBack = () => {
     router.back();
-};
-
-// 라우터 시 메뉴바 닫기
-function toggleNavbar() {
+  };
+  
+  function toggleNavbar() {
     const content = document.querySelector('.toggle-nav-content');
     content.classList.remove('visible');
     clearTimeout(scrollTimeout);
-
+  
     document.querySelector('.btn-close').click();
     showSettings.value = false;
     if (content) {
-        content.scrollTop = 0;
+      content.scrollTop = 0;
     }
     toggleOverlay(false);
-}
-
-function checkScrollGradient() {
+  }
+  
+  function checkScrollGradient() {
     const content = document.querySelector('.toggle-nav-content');
     if (content.scrollHeight > content.clientHeight) {
-        clearTimeout(scrollTimeout);
-        scrollTimeout = setTimeout(() => {
-            showScrollGradient.value = content.scrollTop + content.clientHeight < content.scrollHeight;
-            if (showScrollGradient.value) {
-                content.classList.add('visible');
-            } else {
-                content.classList.remove('visible');
-            }
-        }, 200);
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        showScrollGradient.value = content.scrollTop + content.clientHeight < content.scrollHeight;
+        if (showScrollGradient.value) {
+          content.classList.add('visible');
+        } else {
+          content.classList.remove('visible');
+        }
+      }, 200);
     } else {
-        showScrollGradient.value = false;
-        content.classList.remove('visible');
+      showScrollGradient.value = false;
+      content.classList.remove('visible');
     }
-}
-
-onMounted(() => {
+  }
+  
+  onMounted(() => {
     const content = document.querySelector('.toggle-nav-content');
     content.addEventListener('scroll', checkScrollGradient);
     checkScrollGradient();
     if (isUser.value || isDealer.value) {
-        getAuctions();
+      getAuctions();
     }
-
+  
     const navbar = document.querySelector('.navbar-collapse');
     navbar.addEventListener('transitionend', () => {
-        if (isNavbarShown.value) {
-            checkScrollGradient();
-        } else {
-            const content = document.querySelector('.toggle-nav-content');
-            content.classList.remove('visible');
-        }
+      if (isNavbarShown.value) {
+        checkScrollGradient();
+      } else {
+        const content = document.querySelector('.toggle-nav-content');
+        content.classList.remove('visible');
+      }
     });
-    
-    // Listen to the collapse navbar button
+  
     const navbarButton = document.querySelector('.navbar-toggler');
     navbarButton.addEventListener('click', () => {
-        isNavbarShown.value = !isNavbarShown.value;
-        toggleOverlay(isNavbarShown.value);
+      isNavbarShown.value = !isNavbarShown.value;
+      toggleOverlay(isNavbarShown.value);
     });
-
+  
     const closeButton = document.querySelector('.btn-close');
     closeButton.addEventListener('click', () => {
-        isNavbarShown.value = false;
-        toggleOverlay(isNavbarShown.value);
-        toggleNavbar();
+      isNavbarShown.value = false;
+      toggleOverlay(isNavbarShown.value);
+      toggleNavbar();
     });
-    
+  
     const overlay = document.querySelector('.overlay');
     overlay.addEventListener('click', () => {
-        isNavbarShown.value = false;
-        toggleOverlay(isNavbarShown.value);
-        toggleNavbar();
+      isNavbarShown.value = false;
+      toggleOverlay(isNavbarShown.value);
+      toggleNavbar();
     });
-
-    // Watch for route changes to hide the overlay
+  
     router.afterEach(() => {
-        toggleOverlay(false);
+      toggleOverlay(false);
     });
-});
-
-function toggleOverlay(show) {
+  });
+  
+  function toggleOverlay(show) {
     const overlay = document.querySelector('.overlay');
     if (show) {
-        overlay.style.display = 'block';
-        setTimeout(() => {
-            overlay.style.opacity = '1';
-        }, 10); 
+      overlay.style.display = 'block';
+      setTimeout(() => {
+        overlay.style.opacity = '1';
+      }, 10);
     } else {
-        overlay.style.opacity = '0';
-        setTimeout(() => {
-            overlay.style.display = 'none';
-        }, 300); 
+      overlay.style.opacity = '0';
+      setTimeout(() => {
+        overlay.style.display = 'none';
+      }, 300);
     }
-}
-</script>
-
-
-
-<style scoped>
-.toggle-nav-content {
+  }
+  </script>
+  
+  <style scoped>
+  .toggle-nav-content {
     display: flex;
     flex-direction: column;
-    overflow-y: auto; 
+    overflow-y: auto;
     justify-content: space-between;
     height: 84vh !important;
-    position: relative; 
-}
-
-.has-gradient::after {
+    position: relative;
+  }
+  
+  .has-gradient::after {
     content: '';
     position: fixed;
     bottom: 54px;
@@ -562,28 +503,28 @@ function toggleOverlay(show) {
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
-}
-
-.has-gradient.visible::after {
+  }
+  
+  .has-gradient.visible::after {
     opacity: 1;
-}
-
-.middle-content-ty02 {
+  }
+  
+  .middle-content-ty02 {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     flex-grow: 1;
-}
-
-.footer-content {
+  }
+  
+  .footer-content {
     margin-top: auto;
     width: 100%;
-    position: relative; /* Add position relative for gradient overlay */
-}
-
-.has-gradient.footer-content::after {
+    position: relative;
+  }
+  
+  .has-gradient.footer-content::after {
     content: '';
-    position: fixed; /* fixed로 설정 */
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
@@ -592,77 +533,77 @@ function toggleOverlay(show) {
     pointer-events: none;
     opacity: 0;
     transition: opacity 0.3s ease-in-out;
-}
-
-.has-gradient.footer-content.visible::after {
+  }
+  
+  .has-gradient.footer-content.visible::after {
     opacity: 1;
-}
-
-.menu-illustration,
-.menu-footer {
+  }
+  
+  .menu-illustration,
+  .menu-footer {
     width: 100%;
-}
-
-.menu-illustration {
+  }
+  
+  .menu-illustration {
     position: relative;
-}
-
-.menu-illustration img {
+  }
+  
+  .menu-illustration img {
     width: auto;
     height: 100%;
-}
-
-.menu-illustration02 {
+  }
+  
+  .menu-illustration02 {
     position: relative;
-}
-
-.menu-illustration02 img {
+  }
+  
+  .menu-illustration02 img {
     width: 55px;
     height: auto;
-}
-
-.login-prompt {
+  }
+  
+  .login-prompt {
     display: block;
     width: 100%;
     text-align: right;
     font-size: 22px;
     font-weight: 600;
     margin: 20px 0;
-}
-
-.register-linker {
+  }
+  
+  .register-linker {
     margin-top: 15px;
     display: flex;
     justify-content: space-between;
-}
-
-.font-1 {
+  }
+  
+  .font-1 {
     font-size: 1rem;
-}
-
-a.navbar-toggler.p-2 {
+  }
+  
+  a.navbar-toggler.p-2 {
     display: none !important;
-}
-
-@media (max-width: 991px) {
+  }
+  
+  @media (max-width: 991px) {
     a.navbar-toggler.p-2 {
-        display: block !important;
+      display: block !important;
     }
-   .mov-navbar {
-        display: none !important;
+    .mov-navbar {
+      display: none !important;
     }
-}
-
-.btn-back {
+  }
+  
+  .btn-back {
     width: 25px;
     height: 25px;
     border: none;
     font-size: 1.5rem;
     padding: 0;
     cursor: pointer;
-}
-
-.logo-content {
+  }
+  
+  .logo-content {
     background-color: #f7f8fb;
     width: -webkit-fill-available;
     height: 65px;
@@ -671,9 +612,9 @@ a.navbar-toggler.p-2 {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.sd-menu {
+  }
+  
+  .sd-menu {
     width: 48px;
     height: 48px;
     background-color: #f7f8fb;
@@ -681,60 +622,81 @@ a.navbar-toggler.p-2 {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-@media (min-width: 768px) {
+  }
+  
+  @media (min-width: 768px) {
     .navbar-expand-md .navbar-collapse {
-        display: grid !important;
-        flex-basis: auto;
-        align-items: center;
+      display: grid !important;
+      flex-basis: auto;
+      align-items: center;
     }
-}
-
-.settings-icon {
+  }
+  
+  .settings-icon {
     cursor: pointer;
     transition: transform 0.3s ease-in-out;
-}
-
-.settings-icon.rotate {
+  }
+  
+  .settings-icon.rotate {
     transform: rotate(360deg);
-}
-
-.settings-menu {
+  }
+  
+  .settings-menu {
     position: absolute;
     background-color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
     width: 150px;
-    right: 10px;
+    right: 0;
+    top: 45px;
+    z-index: 1000;
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+    border-radius: 6px;
+  }
+  
+  .settings-menuty02 {
+    position: absolute;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    width: 150px;
+    right: 224px;
     top: 60px;
     z-index: 1000;
     transform: translateY(-20px);
     opacity: 0;
     transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
     border-radius: 6px;
-}
-.setting-web{
-    right:170px;
-}
-.settings-menu.show {
+  }
+  
+  .settings-menuty02.show {
     transform: translateY(0);
     opacity: 1;
-}
-
-.timeline {
+  }
+  
+  .setting-web {
+    right: 170px;
+  }
+  
+  .settings-menu.show {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  .timeline {
     list-style: none;
     padding: 0;
     margin: 0;
     position: relative;
-}
-
-.timeline li {
+  }
+  
+  .timeline li {
     display: flex;
     align-items: center;
     position: relative;
-}
-
-.timeline li .circle {
+  }
+  
+  .timeline li .circle {
     width: 26px;
     height: 26px;
     border-radius: 50%;
@@ -746,21 +708,20 @@ a.navbar-toggler.p-2 {
     color: white;
     z-index: 1;
     background-color: #cacaca;
-}
-
-.timeline li.upcoming .circle {
+  }
+  
+  .timeline li.upcoming .circle {
     background-color: #d3d3d3;
-}
-
-.timeline li span {
+  }
+  
+  .timeline li span {
     display: flex;
     align-items: center;
-}
-
-.timeline li.completed ~ li .small-circle,
-.timeline li.active ~ li .small-circle {
-    background-color: #d3d3d3; /* Gray for upcoming */
-}
-
-
-</style>
+  }
+  
+  .timeline li.completed ~ li .small-circle,
+  .timeline li.active ~ li .small-circle {
+    background-color: #d3d3d3;
+  }
+  </style>
+  

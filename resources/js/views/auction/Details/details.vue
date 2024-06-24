@@ -39,7 +39,7 @@
                           <div class="card-img-top-ty02"></div>
                         </div>
                       </div>
-                      <h4 v-if="auctionDetail.data.status === 'done'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
+                      <h4 v-if="auctionDetail.data.status === 'done' || auctionDetail.data.status === 'chosen'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
                       <div class="p-3 pb-1 d-flex gap-3 justify-content-between">
                         <div></div>
                         <div class="d-flex gap-3 justify-content-end align-items-center mb-1">
@@ -1005,7 +1005,20 @@ const reauction = async () => {
 
   try {
     await AuctionReauction(id, data);
-    reauctionModal.value = true;
+    //reauctionModal.value = true;
+      const textOk= '<div class="enroll_box" style="position: relative;">'+
+                '<img src="http://localhost:5173/resources/img/modal/car-objects-blur.png" alt="자동차 이미지" width="160" height="160">'+
+              '<p class="overlay_text02">경매 신청이 완료되었습니다.</p>'+
+                '<p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>'+
+              '</div>';
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20}) // swal 기타 옵션 추가
+    .callback(function (result) {
+              window.location.href = '/auction';
+      })
+    .confirm(textOk);
   } catch (error) {
     console.error('Error re-auctioning:', error);
     alert('재경매에 실패했습니다.');

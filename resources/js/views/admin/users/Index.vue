@@ -20,9 +20,10 @@
                         <input type="text" placeholder="회원 검색" id="searchUserName" style="width: auto !important; margin-right: 10px;"/>
                         <button type="button" class="search-btn" @click="setUserName">검색</button>
                     </div>-->
-
+                    
                     <div class="container mb-3">
                     <div class="d-flex justify-content-end responsive-flex-end">
+                        
                         <div class="text-start status-selector">
                         <input type="radio" name="status" value="all" id="all" hidden checked @change="setUserFilter('all')">
                         <label for="all" class="mx-2">전체</label>
@@ -33,7 +34,7 @@
                         <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setUserFilter('dealer')">
                         <label for="dealer" class="mx-2">딜러</label>
                     </div>
-
+                    
                     <div class="text-end select-option">
                         <select class="form-select select-rank" @change="event => setStatusFilter(event.target.value)">
                             <option value="all" selected>전체</option>
@@ -44,7 +45,11 @@
                     </div>
                     </div>
                     </div>
+                    
                     <div class="o_table_mobile my-5">
+                    <button class="btn btn-primary" @click="navigateToCreate">
+                        회원 등록
+                    </button>
                     <div class="tbl_basic tbl_dealer">
                         <table class="table">
                             <thead>
@@ -210,7 +215,9 @@
 import { ref, onMounted, watch, computed} from "vue";
 import useUsers from "../../../composables/users";
 import { useAbility } from "@casl/vue";
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const orderColumn = ref("created_at");
 const orderDirection = ref("desc");
 const { users, getUsers, deleteUser, adminGetUsers , pagination } = useUsers();
@@ -246,6 +253,10 @@ function setStatusFilter(status) {
     currentStatus.value = status;
     fetchUsers();
 }
+function navigateToCreate() {
+    router.push({ name: 'users.create' });
+}
+
 
 const updateOrdering = (column) => {
     let columnState = orderingState[column];
