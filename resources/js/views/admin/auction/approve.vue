@@ -300,7 +300,7 @@
                 </div>
                 <h5 class="mt-5">기타</h5>
                 <div class="form-group">
-                  <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetails.data.memo }}</textarea>
+                  <textarea class="custom-textarea mt-2" readonly style="resize: none;">{{ auctionDetails.data.memo }}</textarea>
                 </div>
                 <ul class="machine-inform-title">
                   <li class="tc-light-gray">거래지역</li>

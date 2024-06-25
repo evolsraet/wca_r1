@@ -45,7 +45,7 @@
                 <div>
                 <p class="text-start card-text">{{ card.text }}</p>
                 </div>
-                <p class="auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(card.price) }}</span></p>
+                <!--<p class="auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(card.price) }}</span></p>-->
               </div>
             </div>
           </div>
@@ -82,8 +82,6 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { useStore } from "vuex";
 import { initReviewSystem } from '@/composables/review';
 import { useRouter } from 'vue-router';
-import 'swiper/css';
-import 'swiper/css/pagination';
 import { cmmn } from '@/hooks/cmmn';
 
 const { amtComma } = cmmn();
@@ -115,7 +113,6 @@ const toggleSheet = () => {
 const inputCardsValue = () => {
   cards.value = reviewsData.value.map(review => ({
     title: review.id,
-    price: review.auction.win_bid.price,
     id: review.id,
     rating: review.star,
     date: review.created_at,
@@ -131,14 +128,14 @@ function navigateToDetail(reviewId) {
 async function loadPage(page) { // 페이지 로드
   if (page < 1 || page > reviewPagination.value.last_page) return;
   currentPage.value = page;
-  await getHomeReview(page); // getHomeReview 호출을 대기
+  await getAllReview(page,true); 
   inputCardsValue();
   window.scrollTo(0,0);
 }
 
 
 onMounted(async () => {
-  await getAllReview(1);
+  await loadPage(1);
   console.log(reviewsData);
   inputCardsValue();
 });

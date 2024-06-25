@@ -179,7 +179,7 @@
                                     <textarea
                                         v-model = "dealer.introduce"
                                         type="text"
-                                        class="form-control no-resize mt-2"
+                                        class="custom-textarea mt-2"
                                     ></textarea>
                                 </div>
                                 <div class="mb-3">
