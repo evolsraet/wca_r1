@@ -77,7 +77,7 @@
                         <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
                     <div v-if="user?.name">
-                        <div class="d-flex justify-content-between mt-4">
+                        <div class="d-flex justify-content-between mt-4 align-items-center pointer">
                             <p>차량 정보가 다르신가요?
                                 <span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span>
                             </p>
@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div v-if="!user?.name">
-                        <div class="d-flex justify-content-between mt-5">
+                        <div class="d-flex justify-content-between mt-5 align-items-center">
                             <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="로그인을 하면 자세한 정보를 볼수있어요." tabindex="0"></span></p>
                             <p class="tc-light-gray link">정보갱신하기</p>
                         </div>

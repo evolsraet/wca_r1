@@ -9,19 +9,19 @@ TODO:
     <!-- 서브 네비게이션 바 -->
     <div class="sub-nav row ">
         <div class="col-12 p-0">
-            <div v-if="isUser" class="nav-container usernav mt-3">
+            <div v-if="isUser" class="px-4 container mt-3">
                 <nav class="navbar navbar-expand navbar-light">
-                    <div class="navbar-nav">
+                    <div class="navbar-nav gap-2">
                         <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link"@click="setCurrentTab('auctionDone')" :class="{ active: currentTab === 'auctionDone' }">판매한 차량<span class="interest mx-1">{{filteredDone.length}}</span></a>
+                        <a class="nav-item nav-link pe-0"@click="setCurrentTab('auctionDone')" :class="{ active: currentTab === 'auctionDone' }">판매한 차량<span class="interest mx-2">{{filteredDone.length}}</span></a>
                     </div>
                 </nav>
             </div>
-            <div v-if="isDealer" class="nav-container mt-3">
+            <div v-if="isDealer" class="px-4 container mt-3">
                 <nav class="navbar navbar-expand navbar-light">
-                    <div class="navbar-nav">
+                    <div class="navbar-nav gap-2">
                         <a class="nav-item nav-link"@click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-1">{{ favoriteAuctions.length }}</span></a><!-- 관심 차량 숫자표기 -->
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-2">{{ favoriteAuctions.length }}</span></a><!-- 관심 차량 숫자표기 -->
                     </div>
                 </nav>
             </div>
@@ -969,7 +969,13 @@ const favoriteAuctions = computed(() => {
 }
 }
 .usernav{
-    padding-right: 53% !important;
+    padding-right: 55% !important;
+}
+@media (max-width: 768px){
+    .usernav{
+    padding-right: 35% !important;
+    padding-left: 5%;
+}
 }
 </style>
  

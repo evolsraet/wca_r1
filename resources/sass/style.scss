@@ -1817,7 +1817,6 @@ video {
     height: 16px;
     margin-right: 6px;
     vertical-align: middle;
-    margin-bottom: 2px;
 }
 
 .allpage{
@@ -3425,6 +3424,7 @@ input[type="checkbox"] {
     background-size: cover;
     background-position: center; 
     background-repeat: no-repeat; 
+    display: inline-block;
 }
 .icon-edit-img{
     width: 20px;
@@ -3432,7 +3432,8 @@ input[type="checkbox"] {
     background-image: url('../img/Icon-feather-edit.png'); 
     background-size: cover;
     background-position: center; 
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
+    display: inline-block; 
 }
 .icon-auction-plus{
     width: 20px;
@@ -3872,6 +3873,7 @@ input[type="checkbox"] {
 .bid-bc ul li:hover .txt_box .name,
 .bid-bc ul li:hover .restar {
     color: #4263ea;
+    font-weight: bolder;
     transition: color 0.5s ease; 
 }
 

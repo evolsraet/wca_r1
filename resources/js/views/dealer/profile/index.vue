@@ -26,7 +26,7 @@
                             <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
                         </div>
                         <div class="item">
-                            <p><span class="tc-red">{{ filteredViewBids.length }}</span>건</p>
+                            <p><span class="tc-red">{{ filteredViewBids.length }}</span> 건</p>
                             <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
                         </div>
                      <!--   <div class="item">
