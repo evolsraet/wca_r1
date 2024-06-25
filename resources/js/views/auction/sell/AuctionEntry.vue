@@ -362,4 +362,8 @@ onMounted(() => {
       width: 40vh !important;
   }
 }
+.search-btn {
+  right: auto !important;
+  transform: translateY(-119%) translateX(-117%) !important
+}
 </style>

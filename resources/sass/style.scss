@@ -4010,11 +4010,11 @@ input[type="checkbox"] {
     margin: 0 auto;
   }
   
-  .primary-check-confirmButton{
-    background-color:$primary !important;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); 
-    width: 100%;
-  }
+.primary-check-confirmButton{
+background-color:$primary !important;
+box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); 
+width: 100%;
+}
 .primary-check-actions{
     width: 100% !important;
     margin: 0px !important;
@@ -4028,11 +4028,17 @@ input[type="checkbox"] {
 
 
 /* 리뷰 모달 커스텀*/
+.review-custom-confirmButton{
+    border-color: #ff0000 !important;
+    color: #fff !important;
+    box-shadow: 0 1rem 1rem rgba(94, 94, 94, 0.15) !important;  
+}
 .review-custom-icon{
     border-color: #ff0000 !important;
     color: #ff0000 !important;
     width: 2em !important;
     height: 2em !important;
+    box-shadow: 0 1rem 1rem rgba(0, 0, 0, .15) !important; 
 }
 .review-custom-icon .swal2-icon-content{
     font-size: 1.75em !important;
