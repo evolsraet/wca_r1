@@ -1039,8 +1039,8 @@ video {
   .btn-apply-ty03:after {
     content: "";
     display: block;
-    width: 10px;
-    height: 18px;
+    width: 36px;
+    height: 16px;
     background-image: url('../img/Icon-right.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -3886,9 +3886,9 @@ input[type="checkbox"] {
 
 .bid-bc ul li:hover .btn-apply-ty03::after {
     background-image: url('../img/Icon-right-blue.png');
-    width: 35px;
-    height: 40px;
-    transform: translateX(5px); 
+    width: 45px;
+    height: 41px;
+    transform: translateX(10px);
     transition: transform 1s ease-out;
 }
 

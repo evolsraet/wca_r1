@@ -688,7 +688,7 @@
                         <div class="container mov-wide" v-if="isUser && auctionDetail.data.status === 'wait' || auctionChosn ">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
-                              <p class="bold-20-font">현재 6명이 입찰했어요.</p>
+                              <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
                               <button class="mt-1" @click="openModal"><span class="cancelbox">경매취소</span></button>
                             </div>
                           </div>
@@ -708,9 +708,14 @@
                                   <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
                                   <p class="txt">{{bid.price}} 만원</p>
                                 </div>
-                                <p class="restar mb-4 normal-16-font me-auto">4.5점</p>
+                                <p class="restar normal-16-font me-auto">4.5점</p>
                                 <p class="btn-apply-ty03"></p>
                               </div>
+                            </li>
+                          </ul>
+                          <ul v-if="!sortedTopBids || !sortedTopBids.length" class="px-0 inspector_list max_width_900 mt-3">
+                            <li>
+                              <p class="tc-light-gray text-center border-none">선택 가능한 딜러가 없습니다.</p>
                             </li>
                           </ul>
                           <!-- 취소 모달 -->

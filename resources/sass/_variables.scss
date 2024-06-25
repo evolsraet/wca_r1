@@ -122,7 +122,9 @@ background-color: $sub-color01 !important;
 .btn-primary {
     box-shadow: 0 3px 12px 0 rgba(117, 18, 22, 0.2);
 }
-
+.border-none{
+    border: none !important;
+}
 .pagination {
     .page-link {
       background-color: #ffffff !important;   
