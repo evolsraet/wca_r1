@@ -28,11 +28,17 @@
           </div>
           <!-- 주소 입력 -->
           <div class="form-group mb-5">
-            <label for="addr">주소</label>
-            <input type="text" id="addr_post" v-model="addrPost" placeholder="우편주소" @click="openPostcodePopup">
-            <input type="text" id="addr" v-model="addr" placeholder="주소">
-            <input type="text" id="adddt" v-model="addrdt" placeholder="상세주소">
-          </div>
+            <input type="text" @click="editPostCode('daumPostcodeInput')" class="tc-light-gray" v-model="addrPost" placeholder="post" readonly>
+            <div>
+                <input type="text" v-model="addr" placeholder="주소" class="searchadress tc-light-gray" readonly>
+                <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
+            </div>
+            
+            <input type="text" v-model="adddt" placeholder="상세주소">
+            <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
+            </div>
+        </div>
           <h5><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
           <button type="button" class="btn btn-fileupload w-100 mt-3" @click="triggerFileUpload">
             파일 첨부
@@ -51,6 +57,9 @@ import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { regions, updateDistricts } from '@/hooks/selectBOX.js';
 import useAuctions from '@/composables/auctions';
+import { cmmn } from '@/hooks/cmmn';
+
+const { openPostcode , closePostcode} = cmmn();
 const { carInfoForm, updateAuction, processing, validationErrors } = useAuctions();
 
 const ownerName = ref('');
@@ -96,21 +105,13 @@ function triggerFileUpload() {
   fileInputRef.value?.click();
 }
 
-// Daum Postcode API를 활용한 주소 검색 팝업 열기
-const openPostcodePopup = () => {
-  new daum.Postcode({
-    oncomplete: data => {
-      addr_post.value = data.zonecode; // 우편번호
-      addr1.value = data.address; // 주소
-      auction.addr_post = addr_post.value;
-      auction.addr1 = addr1.value;
-    }
-  }).open({
-    left: (window.screen.width / 2) - 200, // 화면의 중앙으로 조절
-    top: (window.screen.height / 2) - 300 // 화면의 중앙으로 조절
-  });
-};
-
+function editPostCode(elementName) {
+  openPostcode(elementName)
+    .then(({ zonecode, address }) => {
+        addrPost.value = zonecode;
+        addr.value = address;
+    })
+}
 
 function handleFileUpload(event) {
   const file = event.target.files[0];
@@ -130,9 +131,5 @@ onMounted(() => {
       carNumber.value = carDetails.no;  // 차량 번호 설정
     }
   }
-    const script = document.createElement('script');
-    script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
-    script.onload = () => console.log('Daum Postcode script loaded');
-    document.head.appendChild(script);
 });
 </script>

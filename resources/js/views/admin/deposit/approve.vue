@@ -449,10 +449,6 @@ const openPostcodePopup = () => {
 
 onMounted(async () => {
   await fetchAuctionDetails();
-  const script = document.createElement('script');
-  script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
-  script.onload = () => console.log('Daum Postcode script loaded');
-  document.head.appendChild(script);
   
   auction.car_no = auctionDetails.value.data.car_no;
   auction.owner_name = auctionDetails.value.data.owner_name;
