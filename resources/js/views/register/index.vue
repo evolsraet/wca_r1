@@ -884,5 +884,7 @@ animation: ellipsis 1.5s steps(4, end) infinite;
             }
 }
 
-
+.search-btn {
+    right: 22px !important;
+}
 </style>
