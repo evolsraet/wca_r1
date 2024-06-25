@@ -51,13 +51,13 @@
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">우편주소</p>
-                  <input v-model="auction.addr_post" class="form-control" readonly>
+                  <input v-model="auction.addr_post" class="form-control tc-light-gray" readonly>
                   <div>
-                    <input v-model="auction.addr1" class="form-control" readonly>
-                    <span><button type="button"@click="editPostCode('daumPostcodeInput')">주소버튼</button></span>
+                    <input v-model="auction.addr1" class="form-control tc-light-gray" readonly>
+                    <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                   </div>
-                  <div id="daumPostcodeInput" style="display: none;">
-                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" @click="closePostcode('daumPostcodeInput')">
+                  <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
                   </div>
                 </div>
                 <div class="card-body">

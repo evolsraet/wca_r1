@@ -10,11 +10,10 @@
                                 >이름</label
                             >
                             <input
-                                v-model = "user.name"
+                                v-model = "editForm.name"
                                 type="text"
                                 class="form-control"
                             />
-
                         </div>
                         <div class="mb-3">
                             <label for="user-title" class="form-label"
@@ -23,7 +22,7 @@
                             <input
                                 v-model = "created_at"
                                 type="text"
-                                class="form-control"
+                                class="form-control tc-light-gray"
                                 readonly
                             />
                         </div>
@@ -32,7 +31,7 @@
                             <input
                                 v-model = "email"
                                 type="email"
-                                class="form-control"
+                                class="form-control tc-light-gray"
                                 readonly
                             />
                             
@@ -42,7 +41,7 @@
                                 >전화번호</label
                             >
                             <input
-                                v-model = "user.phone"
+                                v-model = "editForm.phone"
                                 type="text"
                                 class="form-control"
                             />
@@ -77,7 +76,7 @@
                         </div>-->
                         <div class="mb-3">
                             <label for="email" class="form-label">승인여부</label>
-                            <select class="form-select" :v-model="user.status" @change="changeStatus($event)" id="status">
+                            <select class="form-select" :v-model="editForm.status" @change="changeStatus($event)" id="status">
                                 <option value="ok">정상</option>
                                 <option value="ask">심사중</option>
                                 <option value="reject">거절</option>
@@ -85,18 +84,18 @@
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">회원유형</label>
-                            <select class="form-select" :v-model="user.role" @change="changeRoles($event)" id="role">
+                            <select class="form-select" :v-model="editForm.role" @change="changeRoles($event)" id="role">
                                 <option value="user">일반</option>
                                 <option value="dealer">딜러</option>
                             </select>
                         </div>
-                        <div v-if="user.role == 'dealer'">
+                        <div v-if="editForm.role == 'dealer'">
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
                                     >소속상사</label
                                 >
                                 <input
-                                    v-model = "dealer.company"
+                                    v-model = "editForm.company"
                                     type="text"
                                     class="form-control"
                                 />
@@ -105,25 +104,25 @@
                                 <label for="user-title" class="form-label">소속상사 주소</label>
                                 
                                 <input
-                                v-model="dealer.company_post"
+                                v-model="editForm.company_post"
                                 type="text"
-                                    class="form-control"
+                                    class="form-control tc-light-gray"
                                     placeholder="post"
                                     readonly
                                     />
                                     <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                                 <div>
                                     <input
-                                        v-model="dealer.company_addr1"
+                                        v-model="editForm.company_addr1"
                                         type="text"
-                                        class="form-control"
+                                        class="form-control tc-light-gray"
                                         placeholder="주소"
                                         readonly
                                     />
                                    <!-- <span><button type="button" @click="editPostCode('daumPostcodeInput')">주소버튼</button></span>-->
                                 </div>
                                 <input
-                                    v-model="dealer.company_addr2"
+                                    v-model="editForm.company_addr2"
                                     type="text"
                                     class="form-control"
                                     placeholder="상세주소"
@@ -135,25 +134,25 @@
                             <div class="form-group">
                                 <label for="user-title" class="form-label">인수차량 도착지 주소</label>
                                 <input
-                                    v-model="dealer.receive_post"
+                                    v-model="editForm.receive_post"
                                     type="text"
-                                    class="form-control"
+                                    class="form-control tc-light-gray"
                                     placeholder="post"
                                     readonly
                                 />
                                 <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
                                 <div>
                                     <input
-                                        v-model="dealer.company_addr1"
+                                        v-model="editForm.receive_addr1"
                                         type="text"
-                                        class="form-control"
+                                        class="form-control tc-light-gray"
                                         placeholder="주소"
                                         readonly
                                     />
                                   <!--  <span><button type="button" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">주소버튼</button></span>-->
                                 </div>
                                 <input
-                                    v-model="dealer.receive_addr2"
+                                    v-model="editForm.receive_addr2"
                                     type="text"
                                     class="form-control"
                                     placeholder="상세주소"
@@ -167,7 +166,7 @@
                                     >소개</label
                                 >
                                 <textarea
-                                    v-model = "dealer.introduce"
+                                    v-model = "editForm.introduce"
                                     type="text"
                                     class="form-control no-resize mt-2"
                                 ></textarea>
@@ -181,7 +180,7 @@
                                     파일 첨부
                                 </button>
                                 <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
-                                <div class="text-start tc-light-gray" v-if="dealer.file_user_photo_name">사진 파일 : {{ dealer.file_user_photo_name }}</div>
+                                <div class="text-start tc-light-gray" v-if="editForm.file_user_photo_name">사진 파일 : {{ editForm.file_user_photo_name }}</div>
                             </div>
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
@@ -191,7 +190,7 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
                                     파일 첨부
                                 </button>
-                                <div class="text-start mb-3 tc-light-gray" v-if="dealer.file_user_biz_name">사업자 등록증 : {{ dealer.file_user_biz_name }}</div>
+                                <div class="text-start mb-3 tc-light-gray" v-if="editForm.file_user_biz_name">사업자 등록증 : {{ editForm.file_user_biz_name }}</div>
                             </div>
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
@@ -201,7 +200,7 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
                                     파일 첨부
                                 </button>
-                                <div class="text-start mb-3 tc-light-gray" v-if="dealer.file_user_sign_name">매도용인감정보 : {{ dealer.file_user_sign_name }}</div>
+                                <div class="text-start mb-3 tc-light-gray" v-if="editForm.file_user_sign_name">매도용인감정보 : {{ editForm.file_user_sign_name }}</div>
                             </div>
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
@@ -211,7 +210,7 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
                                     파일 첨부
                                 </button>
-                                <div class="text-start mb-5 tc-light-gray" v-if="dealer.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ dealer.file_user_cert_name }}</div>
+                                <div class="text-start mb-5 tc-light-gray" v-if="editForm.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ editForm.file_user_cert_name }}</div>
                             </div>
                         </div>
                         <!-- Buttons -->
@@ -241,7 +240,6 @@ import useUsers from "@/composables/users";
 import { useForm, useField, defineRule } from "vee-validate";
 import { required, min } from "@/validation/rules";
 import { cmmn } from '@/hooks/cmmn';
-import { watch } from "vue";
 
 defineRule("required", required);
 defineRule("min", min);
@@ -251,7 +249,7 @@ const { roleList, getRoleList } = useRoles();
 const { openPostcode , closePostcode} = cmmn();
 
 const {
-    storeUser,
+    editForm,
     updateUser,
     getUser,
     validationErrors,
@@ -268,17 +266,16 @@ let email;
 
 // Define a validation schema
 const schema = {
-    name: { required },
-    status: { required },
-    role: { required },
+    name: { required: "이름은 필수 항목입니다."},
+
 };
 
-
+/**
 // Create a form context with the validation schema
 const { validate, errors, resetForm } = useForm({ validationSchema: schema });
 // Define actual fields for validation
 const { value: name } = useField("name", null, { initialValue: "" });
-/**
+
 const { value: status } = useField("status", null, { initialValue: "" });
 const { value: role } = useField("role", null, { initialValue: "" });
 const { value: company } = useField("company", null, { initialValue: "" });
@@ -289,30 +286,10 @@ const { value: receive_post } = useField("receive_post", null, { initialValue: "
 const { value: receive_addr1 } = useField("receive_addr1", null, { initialValue: "" });
 const { value: receive_addr2 } = useField("receive_addr2", null, { initialValue: "" }); */
 const introduce = ref("");
-const user = reactive({
-    name,
-    status:"",
-    role:""
-});
 const dealer = reactive({
-    company:"",
-    company_post:"",
-    company_addr1:"",
-    company_addr2:"",
-    introduce:"",
-    receive_post:"",
-    receive_addr1:"",
-    receive_addr2:"",
-    file_user_photo:"",
-    file_user_photo_name:"",
-    file_user_biz:"",
-    file_user_biz_name:"",
-    file_user_sign:"",
-    file_user_sign_name:"",
-    file_user_cert:"",
-    file_user_cert_name:"",
 
 })
+
 onMounted(async () => {
     const response = await getUser(route.params.id);
     await getRoleList();
@@ -323,23 +300,23 @@ onMounted(async () => {
         user.role = findRoleId.id;
     }*/
     watchEffect(() => {
-        user.name = response.name;
+        editForm.name = response.name;
         created_at = response.created_at;
         email = response.email;
         document.getElementById("status").value = response.status;
         document.getElementById("role").value = response.roles[0];
-        user.status = response.status;
-        user.role = response.roles[0];
-        user.phone = response.phone;
+        editForm.status = response.status;
+        editForm.role = response.roles[0];
+        editForm.phone = response.phone;
         if(response.dealer){
-            dealer.company = response.dealer.company;
-            dealer.company_post = response.dealer.company_post;
-            dealer.company_addr1 = response.dealer.company_addr1;
-            dealer.company_addr2 = response.dealer.company_addr2;
-            dealer.introduce = response.dealer.introduce;
-            dealer.receive_post = response.dealer.receive_post;
-            dealer.receive_addr1 = response.dealer.receive_addr1;
-            dealer.receive_addr2 = response.dealer.receive_addr2;
+            editForm.company = response.dealer.company;
+            editForm.company_post = response.dealer.company_post;
+            editForm.company_addr1 = response.dealer.company_addr1;
+            editForm.company_addr2 = response.dealer.company_addr2;
+            editForm.introduce = response.dealer.introduce;
+            editForm.receive_post = response.dealer.receive_post;
+            editForm.receive_addr1 = response.dealer.receive_addr1;
+            editForm.receive_addr2 = response.dealer.receive_addr2;
         } 
 
     })
@@ -364,31 +341,31 @@ function submitForm() {
         } 
         console.log(JSON.stringify(user));
         if (form.valid) updateUser(user,dealer,route.params.id);
-    });*/
-    updateUser(user,dealer,route.params.id);
+    }); */
+    updateUser(editForm,route.params.id);
 }
 
 function editPostCode(elementName) {
   openPostcode(elementName)
     .then(({ zonecode, address }) => {
-        dealer.company_post = zonecode;
-        dealer.company_addr1 = address;
+        editForm.company_post = zonecode;
+        editForm.company_addr1 = address;
     })
 }
 function editPostCodeReceive(elementName) {
     openPostcode(elementName)
     .then(({ zonecode, address }) => {
-        dealer.receive_post = zonecode;
-        dealer.receive_addr1 = address;
+        editForm.receive_post = zonecode;
+        editForm.receive_addr1 = address;
     })
 }
 
 function changeStatus(event) {
-  user.status = event.target.value;
+    editForm.status = event.target.value;
 }
 
 function changeRoles(event) {
-  user.role = event.target.value;
+    editForm.role = event.target.value;
 }
 
 function triggerFileUpload() {
@@ -427,17 +404,17 @@ function triggerFileUploadCert() {
 function handleFileUpload(event) {
     const file = event.target.files[0];
     if (file) {
-        dealer.file_user_photo = file;
-        dealer.file_user_photo_name = file.name;
-        console.log("File:", file.name);
+        editForm.file_user_photo = file;
+        editForm.file_user_photo_name = file.name;
+        //console.log("File:", file.name);
     }
 }
 
 function handleFileUploadBiz(event) {
     const file = event.target.files[0];
     if (file) {
-        dealer.file_user_biz = file;
-        dealer.file_user_biz_name = file.name;
+        editForm.file_user_biz = file;
+        editForm.file_user_biz_name = file.name;
         console.log("Business registration file:", file.name);
     }
 }
@@ -445,8 +422,8 @@ function handleFileUploadBiz(event) {
 function handleFileUploadSign(event) {
     const file = event.target.files[0];
     if (file) {
-        dealer.file_user_sign = file;
-        dealer.file_user_sign_name = file.name;
+        editForm.file_user_sign = file;
+        editForm.file_user_sign_name = file.name;
         console.log("Signature file:", file.name);
     }
 }
@@ -454,8 +431,8 @@ function handleFileUploadSign(event) {
 function handleFileUploadCert(event) {
     const file = event.target.files[0];
     if (file) {
-        dealer.file_user_cert = file;
-        dealer.file_user_cert_name = file.name;
+        editForm.file_user_cert = file;
+        editForm.file_user_cert_name = file.name;
         console.log("Certification file:", file.name);
     }
 }

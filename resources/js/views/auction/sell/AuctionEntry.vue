@@ -34,10 +34,16 @@
         </div>
         <!-- 주소 입력 -->
         <div class="form-group mb-5">
-          <label for="addr">주소</label>
-          <input type="text" id="addr_post" v-model="addrPost" placeholder="우편주소" @click="openPostcodePopup">
-          <input type="text" id="addr" v-model="addr" placeholder="주소">
-          <input type="text" id="adddt" v-model="addrdt" placeholder="상세주소">
+            <input type="text" @click="editPostCode('daumPostcodeInput')" class="tc-light-gray" v-model="addrPost" placeholder="post" readonly>
+            <div>
+                <input type="text" v-model="addr" placeholder="주소" class="searchadress tc-light-gray" readonly>
+                <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
+            </div>
+            
+            <input type="text" v-model="adddt" placeholder="상세주소">
+            <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
+            </div>
         </div>
         <!-- 은행 선택 -->
         <div class="form-group mt-4">
@@ -77,6 +83,7 @@ import { regions, updateDistricts } from '@/hooks/selectBOX.js';
 import Swal from 'sweetalert2';
 import { cmmn } from '@/hooks/cmmn';
 
+const { openPostcode , closePostcode} = cmmn();
 const { wica} = cmmn();
 // Auction 관련 데이터와 함수 가져오기
 const { createAuction } = useAuctions();
@@ -326,6 +333,14 @@ watch(showDetails, val => {
   }
 });
 
+function editPostCode(elementName) {
+  openPostcode(elementName)
+    .then(({ zonecode, address }) => {
+        addrPost.value = zonecode;
+        addr.value = address;
+    })
+}
+
 // 컴포넌트가 마운트될 때 실행되는 함수
 onMounted(() => {
   const carDetailsJSON = localStorage.getItem('carDetails');
@@ -339,11 +354,6 @@ onMounted(() => {
     }
   }
 
-  // Daum Postcode script 동적으로 로드
-  const script = document.createElement('script');
-  script.src = "//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
-  script.onload = () => console.log('Daum Postcode script loaded');
-  document.head.appendChild(script);
 });
 </script>
 <style scoped>
