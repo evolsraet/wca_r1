@@ -383,4 +383,7 @@ const applyAuction = () => {
 }
 
 }
+.sheet{
+    max-height: none;
+}
 </style>
