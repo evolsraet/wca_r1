@@ -27,17 +27,23 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 Route::get('users/me', [UserController::class, 'me']);   // 본인가져오기
 Route::get('users/abilities', [UserController::class, 'abilities']);
 // Route::post('users/test', [UserController::class, 'test']);   // 회원가입은 인증없이
-Route::apiResource('users', UserController::class)->except(['store', 'test'])->middleware('auth:sanctum');
+Route::apiResource('users', UserController::class)
+    ->middleware('auth:sanctum')
+    ->withoutMiddleware('auth:sanctum', ['store', 'test']);
 
 // auction
 Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);
-Route::apiResource('auctions', AuctionController::class)->middleware('auth:sanctum');
+Route::apiResource('auctions', AuctionController::class)
+    ->middleware('auth:sanctum');
 
 // bid
-Route::apiResource('bids', BidController::class)->middleware('auth:sanctum');
+Route::apiResource('bids', BidController::class)
+    ->middleware('auth:sanctum');
 
 // review
-Route::apiResource('reviews', ReviewController::class)->except(['index', 'show'])->middleware('auth:sanctum');
+Route::apiResource('reviews', ReviewController::class)
+    ->middleware('auth:sanctum')
+    ->withoutMiddleware('auth:sanctum', ['index', 'show']);
 
 // like
 Route::post('likes/toggle/{likeable_type_model}/{likeable_id}', [LikeController::class, 'toggle'])->middleware('auth:sanctum');

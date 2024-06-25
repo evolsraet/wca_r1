@@ -78,7 +78,9 @@ class AuctionService
                 // 입찰 정보를 포함하여 'ing' 상태인 경매만 조회하거나
                 // 사용자의 입찰 정보가 있는 경매를 조회합니다.
 
-                // auctions.status 가 ing 이거나, auction->bids 중 의 bid.user_id 가 auth()->user()->id 인 건이 있는 auction 만 조회
+                // 1. status가 ing인 경매 항목.
+                // 2. bids 관계에서 user_id가 현재 인증된 사용자의 ID인 경매 항목.
+
                 $result->where('status', 'ing')
                     ->orWhereHas('bids', function ($query) {
                         $query->where('user_id', auth()->user()->id);
@@ -97,11 +99,12 @@ class AuctionService
                 $result->where('user_id', auth()->user()->id);
             }
         } elseif ($method == 'store') {
-            $request = validator($request, [
-                'final_at' => 'required|date|after:today',
-            ], [
-                'final_at.after' => '경매 종료 시간은 오늘 이후여야 합니다.',
-            ])->validate();
+            // 경매일을 자동지정
+            // $request = validator($request, [
+            //     'final_at' => 'required|date|after:today',
+            // ], [
+            //     'final_at.after' => '경매 종료 시간은 오늘 이후여야 합니다.',
+            // ])->validate();
 
             // 경매 등록 메소드인 경우 사용자 ID와 상태를 설정합니다.
             $result->user_id = auth()->user()->id;
@@ -110,6 +113,11 @@ class AuctionService
             // 경매 업데이트 메소드인 경우 자신의 정보만 수정할 수 있도록 제한합니다.
             $this->modifyOnlyMe($result);
             unset($result->user_id);
+
+            // print_r('middle');
+            // print_r($result->toArray());
+            // print_r($result->getDirty());
+            // die();
         } elseif ($method == 'destroy') {
             // 경매 삭제 메소드인 경우 자신의 정보만 삭제할 수 있도록 제한합니다.
             $this->modifyOnlyMe($result);
@@ -122,6 +130,12 @@ class AuctionService
         if ($method == 'show') {
             // Auction 의 hit 를 +1 하기
             $result->increment('hit');
+        } elseif ($method == 'update') {
+
+            // print_r('after');
+            // print_r($result->toArray());
+            // print_r($result->getChanges());
+            // die();
         }
     }
 }

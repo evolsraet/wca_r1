@@ -114,6 +114,9 @@ class UserService
             $data = $this->checkJson($data);
             $data = $this->beforeData($data);
 
+            print_r($data);
+            die();
+
             // $dealerData = null;
             $dealerData = $this->checkJson($request->input('dealer'));
 

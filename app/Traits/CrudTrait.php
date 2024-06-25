@@ -292,6 +292,7 @@ trait CrudTrait
                 // 하위 모델 자동 저장
                 if (is_array($row)) {
                     $item->{$key}->update($row);
+                    unset($data->$key);
                 } else {
                     $item->$key = $row;
                 }
