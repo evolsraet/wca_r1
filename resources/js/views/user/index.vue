@@ -4,8 +4,8 @@
             <img src="../../../img/main_banner.png" class="styled-img" alt="배너 이미지">
             <div class="content d-flex">
                 <div>
-                    <h2 class="fw-bolder mb-4 lh-base animated-text">내 차 판매는 <br>위카에서!</h2>
-                    <router-link :to="{ name: 'auction.index' }" href="" class="btn-apply animated-button">더 알아보기</router-link>
+                    <h1 class="fw-bolder mb-4 lh-base animated-text">내 차 판매는 <br>위카에서!</h1>
+                    <!--<router-link :to="{ name: 'auction.index' }" href="" class="btn-apply animated-button">더 알아보기</router-link>-->
                 </div>
                 <div>
                     <p>&nbsp;</p>
@@ -22,7 +22,7 @@
             <div class="container my-4">
                 <div class="layout-container02 mt-5">
                     <!-- 딜러 프로필 요약 정보 -->
-                    <div class="p-4">
+                    <div class="p-2">
                         <div class="apply-top text-start mb-0">
                             <h3 class="review-title">이용후기</h3>
                             <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
@@ -73,7 +73,7 @@
                                 <router-link :to="{ name: 'auction.index' }" class="btn-apply">전체보기</router-link>
                             </div>
                             <!-- 차량이 존재 할 경우 -->
-                            <div v-if="auctionsData.length > 0" class="scrollable-content">
+                            <div v-if="auctionsData.length > 0" class="scrollable-content mt-4">
                                 <div v-for="(auction, index) in auctionsData"
                                     :key="auction.id"
                                     @click="navigateToDetail(auction)"
@@ -117,7 +117,7 @@
                             </div>
                             <!-- 선택 완료된 차량이 없는경우-->
                             <div v-else>
-                                <div class="complete-car">
+                                <div class="complete-car mt-4">
                                     <div class="my-auction none-content">
                                         <div class="none-complete-img"></div>
                                         <div class="d-flex align-items-center flex-column gap-3">   
@@ -313,10 +313,10 @@ background: none;
 }
 
 .scrollable-content {
-height: auto;
-overflow-y: hidden;
-padding: 50px 70px 50px 70px;
-background-color: #f7f8fb;
+    height: auto;
+    overflow-y: hidden;
+    padding: 30px 30px 30px 30px;
+    background-color: #f7f8fb;
 }
 
 .styled-div .content {
