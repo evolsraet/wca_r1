@@ -168,7 +168,7 @@
                                 <textarea
                                     v-model = "editForm.introduce"
                                     type="text"
-                                    class="form-control no-resize mt-2"
+                                    class="custom-textarea mt-2"
                                 ></textarea>
                             </div>
                             
