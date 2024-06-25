@@ -487,5 +487,7 @@ onBeforeUnmount(() => {
 .card-body:last-child {
   margin-bottom: 0; 
 }
-
+.search-btn {
+  transform: translateY(-241%) !important; 
+}
 </style>
