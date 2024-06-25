@@ -1,4 +1,4 @@
-import { ref, inject } from 'vue'
+import { ref, reactive, inject } from 'vue'
 import { useRouter } from 'vue-router'
 import { cmmn } from '@/hooks/cmmn';
 
@@ -14,6 +14,29 @@ export default function useUsers() {
     const swal = inject('$swal')
     const pagination = ref({});
     
+    const editForm = reactive({
+        name:"",
+        status:"",
+        role:"",
+        company:"",
+        company_post:"",
+        company_addr1:"",
+        company_addr2:"",
+        introduce:"",
+        receive_post:"",
+        receive_addr1:"",
+        receive_addr2:"",
+        receive_addr2:"",
+        file_user_photo:"",
+        file_user_photo_name:"",
+        file_user_biz:"",
+        file_user_sign:"",
+        file_user_sign_name:"",
+        file_user_cert:"",
+        file_user_cert_name:"",
+    
+    });
+
     const getUsers = async (
         page = 1,
         search_id = '',
@@ -90,7 +113,7 @@ export default function useUsers() {
                 serializedPost.append(item, user[item])
             }
         }
-
+        
         axios.post('/api/users', serializedPost)
             .then(response => {
                 router.push({name: 'users.index'})
@@ -107,40 +130,83 @@ export default function useUsers() {
             .finally(() => isLoading.value = false)
     }
 
-    const updateUser = async (user,dealer,id) => {
-        const form = {
-            user,
-            dealer
-        }
-        console.log(JSON.stringify(form));
+    const updateUser = async (editForm, id) => {
+        console.log(JSON.stringify(editForm));
         if (isLoading.value) return;
+        let payload = {
+            user: {
+                name: editForm.name,
+                status: editForm.status,
+                role: editForm.role
+            },
+            dealer: {
+                company: editForm.company,
+                company_post: editForm.company_post,
+                company_addr1: editForm.company_addr1,
+                company_addr2: editForm.company_addr2,
+                introduce: editForm.introduce,
+                receive_post: editForm.receive_post,
+                receive_addr1: editForm.receive_addr1,
+                receive_addr2: editForm.receive_addr2,
+            }
+        };
+    
+        console.log(JSON.stringify(payload));
+        const formData = new FormData();
+        formData.append('user', JSON.stringify(payload.user));
+        formData.append('dealer', JSON.stringify(payload.dealer));
+    
+        if (editForm.file_user_photo) {
+            console.log(editForm.file_user_photo);
+            formData.append('file_user_photo', editForm.file_user_photo);
+        }
+        if (editForm.file_user_biz) {
+            console.log("@@");
+            formData.append('file_user_biz', editForm.file_user_biz);
+        }
+        if (editForm.file_user_cert) {
+            console.log("@@@");
+            formData.append('file_user_cert', editForm.file_user_cert);
+        }
+        if (editForm.file_user_sign) {
+            console.log("@@@@");
+            formData.append('file_user_sign', editForm.file_user_sign);
+        }
+        for (const x of formData) {
+            console.log(x);
+           };
+           
         wica.ntcn(swal)
-        .title('수정하시겠습니까?') // 알림 제목
-        .icon('Q') //E:error , W:warning , I:info , Q:question
-        .callback(function(result) {
-            if(result.isOk){
-                //console.log(result);
-                axios.put('/api/users/' + id, form)
+            .title('수정하시겠습니까?') // 알림 제목
+            .icon('Q') //E:error , W:warning , I:info , Q:question
+            .callback(function(result) {
+                if (result.isOk) {
+                    // console.log(result);
+                    axios.put('/api/users/' + id, formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
                     .then(response => {
                         wica.ntcn(swal)
-                        .icon('I') //E:error , W:warning , I:info , Q:question
-                        .callback(function(result) {
-                            if(result.isOk){                                
-                                router.push({name: 'users.index'});                    
-                            }
-                        })
-                        .alert('회원정보가 정상적으로 수정되었습니다.');
+                            .icon('I') //E:error , W:warning , I:info , Q:question
+                            .callback(function(result) {
+                                if (result.isOk) {
+                                    router.push({ name: 'users.index' });
+                                }
+                            })
+                            .alert('회원정보가 정상적으로 수정되었습니다.');
                     })
                     .catch(error => {
                         if (error.response?.data) {
-                            validationErrors.value = error.response.data.errors
+                            validationErrors.value = error.response.data.errors;
                         }
                     })
-                    .finally(() => isLoading.value = false)
-            }
-        }).confirm();
-           
-    }
+                    .finally(() => isLoading.value = false);
+                }
+            }).confirm();
+    };
+    
 
     const deleteUser = async (id) => {
         wica.ntcn(swal)
@@ -174,6 +240,7 @@ export default function useUsers() {
     }
 
     return {
+        editForm,
         users,
         user,
         getUsers,
