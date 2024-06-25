@@ -114,37 +114,30 @@ class UserService
             $data = $this->checkJson($data);
             $data = $this->beforeData($data);
 
+            $data['dealer'] = $this->checkJson($request->input('dealer'));
+
+            // print_r($request->all());
             // print_r($data);
             // die();
 
             // $dealerData = null;
-            $dealerData = $this->checkJson($request->input('dealer'));
+            // $dealerData = $this->checkJson($request->input('dealer'));
 
             // if (isset($data['dealer'])) {
             //     $dealerData = $this->checkJson($data['dealer']);
             //     unset($data['dealer']);
             // }
 
-            if ($data) {
-                $item->update($data);
-            }
-
             $model = new User;
-            $file_result = [];
-            foreach ($model->files as $key => $row) {
-                if ($request->hasFile($key)) {
-                    $file_result[] = $item->addMediaFromRequest($key)->preservingOriginal()->toMediaCollection($key);
-                }
-            }
 
-            if ($item->hasRole('dealer') && $dealerData) {
+            if ($item->hasRole('dealer') && $data['dealer']) {
                 // $item->dealer()->updateOrCreate 는 제대로 기능안함. create 만 하려고함
                 if ($item->dealer()) {
                     // 기존 Dealer 업데이트
-                    $item->dealer()->update($dealerData);
+                    $item->dealer()->update($data['dealer']);
                     // TODO: 변경불가 사항 업데이트 시 상태변경 (누구에게 알림?)
                 } else {
-                    $validator = Validator::make($dealerData, [
+                    $validator = Validator::make($data['dealer'], [
                         'name' => 'required',
                         'phone' => 'required',
                         'birthday' => 'required',
@@ -165,13 +158,26 @@ class UserService
                     }
 
                     // 새 Dealer 생성
-                    $item->dealer()->create($dealerData);
+                    $item->dealer()->create($data['dealer']);
                     // TODO: 알림 : 누구에게?
+
                 }
 
                 $item->load('dealer');
             }
+            unset($data['dealer']);
 
+
+            if ($data) {
+                $item->update($data);
+            }
+
+            $file_result = [];
+            foreach ($model->files as $key => $row) {
+                if ($request->hasFile($key)) {
+                    $file_result[] = $item->addMediaFromRequest($key)->preservingOriginal()->toMediaCollection($key);
+                }
+            }
 
             // 역할 지정
             // 기본 패키지는 복수지만, 현 서비스에서는 하나만 지정한다

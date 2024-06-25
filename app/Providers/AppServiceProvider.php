@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Validators\FieldCommentValidator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Validation\Factory as ValidationFactory;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,8 +30,17 @@ class AppServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function boot()
+    public function boot(ValidationFactory $validationFactory)
     {
+        $validationFactory->resolver(function ($translator, $data, $rules, $messages, $customAttributes) {
+            $validator = new FieldCommentValidator($translator, $data, $rules, $messages, $customAttributes);
+            // 모델 객체에서 테이블 이름을 자동으로 설정합니다.
+            if (isset($data['model']) && method_exists($data['model'], 'getTable')) {
+                $validator->setTable($data['model']->getTable());
+            }
+            return $validator;
+        });
+
         // Request 매크로 등록
         Request::macro('dbFilter', function ($modelPrefix, $allData) {
             // 초기화된 결과 배열

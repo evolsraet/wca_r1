@@ -75,9 +75,6 @@ class AuctionService
                 // 관리자 권한을 가진 사용자인 경우 아무 작업도 수행하지 않습니다.
             } elseif (auth()->user()->hasRole('dealer')) {
                 // 딜러 권한을 가진 사용자인 경우
-                // 입찰 정보를 포함하여 'ing' 상태인 경매만 조회하거나
-                // 사용자의 입찰 정보가 있는 경매를 조회합니다.
-
                 // 1. status가 ing인 경매 항목.
                 // 2. bids 관계에서 user_id가 현재 인증된 사용자의 ID인 경매 항목.
 
@@ -99,12 +96,18 @@ class AuctionService
                 $result->where('user_id', auth()->user()->id);
             }
         } elseif ($method == 'store') {
-            // 경매일을 자동지정
-            // $request = validator($request, [
-            //     'final_at' => 'required|date|after:today',
-            // ], [
-            //     'final_at.after' => '경매 종료 시간은 오늘 이후여야 합니다.',
-            // ])->validate();
+            // TODO: 본인인증 검증 추가
+            $request = validator(array_merge((array) $request, ['model' => $result]), [
+                'owner_name' => 'required',
+                'car_no' => 'required',
+                'region' => 'required',
+                'addr_post' => 'required',
+                'addr1' => 'required',
+                'addr2' => 'required',
+            ])->validate();
+
+            // TODO: 유저 Put 데이터 확인 : 240625 안 씨
+            // TODO: bids 유저 인데, 딜러 아디 안와 : 240625
 
             // 경매 등록 메소드인 경우 사용자 ID와 상태를 설정합니다.
             $result->user_id = auth()->user()->id;
@@ -113,6 +116,8 @@ class AuctionService
             // 경매 업데이트 메소드인 경우 자신의 정보만 수정할 수 있도록 제한합니다.
             $this->modifyOnlyMe($result);
             unset($result->user_id);
+
+            // TODO: 상황별 업데이트 처리
 
             // print_r('middle');
             // print_r($result->toArray());

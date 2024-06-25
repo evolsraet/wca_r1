@@ -291,7 +291,7 @@ trait CrudTrait
             foreach ((array) $data as $key => $row) {
                 // 하위 모델 자동 저장
                 if (is_array($row)) {
-                    $item->{$key}->update($row);
+                    $item->{$key}()->upsert($row, ['id'], array_keys($row));
                     unset($data->$key);
                 } else {
                     $item->$key = $row;
