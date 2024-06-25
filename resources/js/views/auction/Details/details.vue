@@ -714,8 +714,10 @@
                               </div>
                             </li>
                           </ul>
+                          <!-- 취소 모달 -->
                           <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
                         </div>
+                         <!-- 딜러 선택시 모달 -->
                         <ConnectDealerModal v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
                         <BottomSheet02 class="mov-wide" v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
                           <button type="button" class="btn btn-dark d-flex align-items-center justify-content-center gap-1" @click="toggleView">재경매 하기<p class="icon-up-wh"></p></button>
@@ -1224,11 +1226,22 @@ const completeAuction = async () => {
   try {
     await chosenDealer(id, data);
     auctionDetail.value.data.status = 'chosen';
-    completeAuctionModal.value = true; // 경매 완료 모달 표시
-  } catch (error) {
-    console.error('Error completing auction:', error);
-    alert('경매에 실패했습니다.');
-  }
+    const textOk= '<div class="enroll_box" style="position: relative;">' +
+                   '<img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">' +
+                   '<p class="overlay_text04">선택이 완료되었습니다.</p>' +
+                   '</div>';
+    wica.ntcn(swal)
+      .useHtmlText() // HTML 태그 인 경우 활성화
+      .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+      .addOption({ padding: 20}) // swal 기타 옵션 추가
+      .callback(function (result) {
+                window.location.href = '/auction';
+        })
+      .confirm(textOk);
+    } catch (error) {
+      console.error('Error completing auction:', error);
+      alert('경매에 실패했습니다.');
+    }
 };
 
 const closeCompleteAuctionModal = () => {

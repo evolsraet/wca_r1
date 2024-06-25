@@ -500,7 +500,11 @@ TODO:
                                                     <span v-if="auction.timeLeft.days != '0' ">{{ auction.timeLeft.days }}일 &nbsp; </span>{{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
                                                 </span>
                                                 <div v-if="isDealer"> 
-                                                    <div class="participate-badge" v-if="isDealerParticipating(auction)"><span class="hand-icon"></span></div>
+                                                    <div class="participate-badge" v-if="isDealerParticipating(auction)">
+                                                        <span class="hand-icon">
+                                                            <img src="../../../img/Icon-hand.png" alt="Hand Icon">
+                                                        </span>
+                                                    </div>
                                                 </div>
                                                 <span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>
                                             </div>
@@ -583,7 +587,7 @@ TODO:
                         >
                             <div class="card my-auction">
                                 <div class="card-img-top-placeholder grayscale_img"></div>
-                                <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
+                                <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
                                     <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
@@ -675,7 +679,7 @@ TODO:
                 -->
                 <!-- Pagination -->
                 <nav v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
-                    <ul class="pagination justify-content-center mb-5">
+                    <ul class="pagination justify-content-center">
                         <li class="page-item" :class="{ disabled: !pagination.prev }">
                         <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
                         </li>

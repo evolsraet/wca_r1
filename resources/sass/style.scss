@@ -1453,26 +1453,27 @@ video {
   }
 
   
- .my-auction .participate-badge {
-    width: 15px !important;
-    height: 15px !important;
-    background-image: url('../img/Icon-hand.png');
-    margin-top: 8px; 
-    padding: 10px;
-    background-repeat: no-repeat;
-    background-size: contain;
-    background-position: center;
+  .my-auction .participate-badge {
     position: absolute;
-    top: 33px;
+    top: 40px;
     left: 10px;
+}
+
+.hand-icon {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
     background-color: #4263ea;
-    color: #fff;
-    padding: 10px;
     border-radius: 50%;
-    width: auto;
-    font-size: 13px;
-    font-weight: bold;
     text-align: center;
+    vertical-align: middle;
+    line-height: 22px;
+}
+.hand-icon img {
+    width: 17px;
+    height: 19px;
+    display: inline-block;
+    vertical-align: middle;
 }
 
 .my-auction .progress{height: 10px; border-radius: 0px;}
