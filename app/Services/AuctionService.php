@@ -78,13 +78,20 @@ class AuctionService
                 // 입찰 정보를 포함하여 'ing' 상태인 경매만 조회하거나
                 // 사용자의 입찰 정보가 있는 경매를 조회합니다.
 
-                // $result->with(['bid' => function ($query) {
-                //     $query->where('user_id', auth()->user()->id);
-                // }])->get()->transform(function ($auction) {
-                //     // 각 auction 객체의 bids 관계를 BidResource 컬렉션으로 변환하고, toArray를 호출합니다.
-                //     $auction->bid = \App\Http\Resources\BidResource::($auction->bid)->toArray(request());
-                //     return $auction;
-                // });
+                // auctions.status 가 ing 이거나, auction->bids 중 의 bid.user_id 가 auth()->user()->id 인 건이 있는 auction 만 조회
+                $result->where('status', 'ing')
+                    ->orWhereHas('bids', function ($query) {
+                        $query->where('user_id', auth()->user()->id);
+                    })
+                    ->with(['bids' => function ($query) {
+                        $query->where('user_id', auth()->user()->id);
+                    }])
+                    ->get()
+                    ->transform(function ($auction) {
+                        // 각 auction 객체의 bids 관계를 BidResource 컬렉션으로 변환하고, toArray를 호출합니다.
+                        $auction->bids = \App\Http\Resources\BidResource::collection($auction->bids)->toArray(request());
+                        return $auction;
+                    });
             } else {
                 // 일반 사용자인 경우 자신이 등록한 경매만 조회합니다.
                 $result->where('user_id', auth()->user()->id);
