@@ -155,7 +155,7 @@
             <bottom-sheet initial="half" :dismissable="true">
               <template #default>
                
-                <form @submit.prevent="submitCarInfo" class="d-flex flex-column">
+                <form @submit.prevent="submitCarInfo" class="d-flex flex-column justify-content-center">
                   <div class="row mb-1 mt-1">
                     <div class="col-12">
                       <div>
@@ -191,7 +191,7 @@
           <div v-else class="card login-card border-0 overlay-style layover-style login-any" :class="{ 'expanded': expanded }" ref="loginCardRef">
             <div class="card-body">
               <!-- 조회 폼 -->
-              <form @submit.prevent="submitCarInfo" class="d-flex flex-column">
+              <form @submit.prevent="submitCarInfo" class="d-flex flex-column justify-content-center">
                 <div class="row mb-4 mt-4">
                   <div class="col-12">
                       <div class="video-container d-sm-flex">
