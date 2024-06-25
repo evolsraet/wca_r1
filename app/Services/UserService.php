@@ -33,6 +33,10 @@ class UserService
             $data = $this->checkJson($data);
             $dealerData = $this->checkJson($request->input('dealer'));
 
+            // print_r($request->all());
+            // print_r($data);
+            // die();
+
             // Validator 인스턴스 생성
             $validator = Validator::make($data, [
                 'name' => 'required|max:255',
@@ -116,6 +120,7 @@ class UserService
 
             $data['dealer'] = $this->checkJson($request->input('dealer'));
 
+            // print_r('업데이트 메소드');
             // print_r($request->all());
             // print_r($data);
             // die();

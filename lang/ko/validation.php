@@ -128,5 +128,6 @@ return [
         'email' => '이메일',
         'name' => '이름',
         'password' => '비밀번호',
+        'phone' => '연락처',
     ],
 ];
