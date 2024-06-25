@@ -106,9 +106,6 @@ class AuctionService
                 'addr2' => 'required',
             ])->validate();
 
-            // TODO: 유저 Put 데이터 확인 : 240625 안 씨
-            // TODO: bids 유저 인데, 딜러 아디 안와 : 240625
-
             // 경매 등록 메소드인 경우 사용자 ID와 상태를 설정합니다.
             $result->user_id = auth()->user()->id;
             $result->status = 'ask';
