@@ -70,7 +70,6 @@
                     </div>
                     <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
                       <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
-                      <MessageModal v-if="showMessage" :show="showMessage" message="진단평가가 완료되면 자동으로 경매가 진행돼요" :duration="3000" />
                     </div>
                   </div>
                   <div v-if="isUser && auctionDetail.data.status === 'ing'" class="p-3">
@@ -899,7 +898,7 @@ const sortedTopBids = computed(() => {
 
 const heightPrice = ref(0);
 // 숫자 애니메이션 함수
-const animateHeightPrice = (newPrice) => {
+/*const animateHeightPrice = (newPrice) => {
   const heightPriceElement = document.querySelector('.icon-coins');
   const startValue = parseInt(heightPriceElement.innerText.replace(/[^0-9]/g, ''), 10);
   const endValue = newPrice;
@@ -916,7 +915,7 @@ const animateHeightPrice = (newPrice) => {
       }
     }
   );
-};
+};*/
 
 const auctionIngChosen = () => {
   auctionChosn.value=true;
@@ -1376,11 +1375,11 @@ const fetchBidsInfo = async (topBids) => {
          heightPrice.value = newHeightPrice;
          console.log("?",auctionDetail.value.data.status);
          console.log(auctionDetail.value.data.hope_price);
-         if (auctionDetail.value.data.status === 'ing' && auctionDetail.value.data.hope_price === null) {
+       /*  if (auctionDetail.value.data.status === 'ing' && auctionDetail.value.data.hope_price === null) {
           animateHeightPrice(newHeightPrice);
         }else if(auctionDetail.value.data.hope_price !== 'null'){
           animateHeightPrice(auctionDetail.value.data.hope_price);
-        }
+        }*/
       }
       console.log("Height price updated:", heightPrice.value);
     }
