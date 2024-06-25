@@ -33,7 +33,7 @@ class BidResource extends JsonResource
 
         // 관계 리소스로 리턴
         $this->relationResource($request, $parentArray);
-
+        // $addArray['auth()->user()->id'] = auth()->user()->id == $parentArray['user_id'];
         if (auth()->user()->hasRole('admin') or auth()->user()->id == $parentArray['user_id']) {
             // 관리자나 본인이면 모두
         } else {

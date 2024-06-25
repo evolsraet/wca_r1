@@ -18,7 +18,6 @@ class UserController extends Controller
     public function __construct(UserService $userService)
     {
         $this->service = $userService;
-
         // print_r('userControllerTrait-');
         // print_r(config('auth.defaults.guard'));
         // die();
