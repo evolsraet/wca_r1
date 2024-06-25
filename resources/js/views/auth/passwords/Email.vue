@@ -19,10 +19,11 @@
                                 </div>
                                 <!-- Buttons -->
                                 <div class="flex items-center justify-end mt-4">
-                                    <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
-                                        {{ $t('send_password_reset_link') }}
+                                    <button class="btn btn-primary" :class="{ 'opacity-25': processing },'w-100'" :disabled="processing">
+                                        비밀번호 초기화
                                     </button>
                                 </div>
+                                <p class="tc-light-gray text-center mt-3">비밀번호 초기화 링크를 메일로 보내드립니다.</p>
                             </div>
                         </form>
                     </div>

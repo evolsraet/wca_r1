@@ -106,6 +106,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+.search-type3 .search-btn{
+    right: 13px !important;
+}
 .pd-10{
     padding: 10px;
 }
