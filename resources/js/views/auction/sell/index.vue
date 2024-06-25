@@ -70,7 +70,7 @@
                 </ul>
             </template>
         </div>
-         <BottomSheet02 initial="half" :dismissable="true">
+         <BottomSheet02 initial="half" :dismissable="true" class="mt-5">
                 <div>
                     <div class="top-content-style wd-100">
                         <p class="tc-light-gray bold-18-font">현재 시세 <span class="normal-14-font">(무사고 기준)</span></p>
