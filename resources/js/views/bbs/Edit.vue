@@ -44,7 +44,7 @@
                         <p>매물번호 / 564514</p>
                         <p>딜 러 명 / {{review.dealer.name}}</p>
                         </div>
-                   <!-- <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>{{ formatDateAndTime(review.auction.final_at )}}</span></p>-->
+                   <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>{{ formatDateAndTime(review.auction.final_at )}}</span></p>
                    <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>
                    <div class="container card-style p-0 mt-5">
                     </div>

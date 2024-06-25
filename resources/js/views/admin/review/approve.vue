@@ -32,18 +32,26 @@
                         <input type="hidden" id="auction_id" :v-model="rv.auction_id">
                         <input type="hidden" id="dealer_id" :v-model="rv.dealer_id">
                     </div>
-                    <div class="mx-2">
-                        <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
-                        <p class="card-title">차량 번호: {{review.auction.car_no}}</p>
+                    <div class="card-body">
+                        <p class="tc-light-gray">차량명(추가예정)</p>
+                        <input class="form-control tc-light-gray" readonly/>
                     </div>
-                    <div class="mx-2 tc-light-gray ">
-                        <p> 2020년 / 2.4km / 무사고</p>
-                        <p>현대 쏘나타 (DN8)</p>
-                        <br>
-                        <p>매물번호 / 564514</p>
-                        <p>딜 러 명 / {{review.dealer.name}}</p>
+                    <div class="card-body">
+                        <p class="tc-light-gray">차량번호</p>
+                        <input v-model="car_no" class="form-control tc-light-gray" readonly/>
                     </div>
-                    <p class="mt-4 auction-deadline tc-light-gray">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>
+                    <div class="card-body">
+                        <p class="tc-light-gray">매물번호(추가예정)</p>
+                        <input class="form-control tc-light-gray" readonly/>
+                    </div>
+                    <div class="card-body">
+                        <p class="tc-light-gray">딜러명</p>
+                        <input v-model="dealer_name" class="form-control tc-light-gray" readonly/>
+                    </div>
+                    <div class="card-body">
+                        <p class="tc-light-gray">판매가</p>
+                        <input v-model="price" class="form-control tc-light-gray" readonly/>
+                    </div>
                     <div class="card-body">
                         <p class="tc-light-gray">별점</p>
                         <div class="wrap">
@@ -58,27 +66,10 @@
                     </div>
                     <div class="card-body">
                         <p class="tc-light-gray">후기</p>
-                        <textarea class="custom-textarea mt-2 h-25" rows="2" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content">{{ review.content }}</textarea>
+                        <textarea class="custom-textarea mt-2" rows="2" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content"></textarea>
                     </div>
                     <button class="mt-5 btn btn-primary w-100"> 수정 완료 </button>
                 </div>
-                <!--  <div class="right-container">
-                        <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet">
-                        <div class="sheet-content">
-                            <div class="mt-3"  @click.stop="">
-                                <h5 calss="text-center">거래는 어떠셨나요?</h5>
-                                <div class="wrap">
-                                    <input type="hidden" :v-model="rv.star">
-                                    <div class="rating">
-                                        <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
-                                            <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
-                                            <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
-                                            <span class="rating-description" :value="index"></span>
-                                        </label>
-                                        <span class="d-flex mx-2 rating-score tc-red"></span>
-                                    </div>
-                                </div>
-                                <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content">{{ review.content }}</textarea>   -->
                 <div class="btn-group mt-3">
                 </div>
             </div>
@@ -109,6 +100,10 @@ const checkScreenWidth = () => {
       isMobileView.value = window.innerWidth <= 640;
     }
   };
+const car_no = ref("");
+const dealer_name = ref("");
+const price = ref("");
+
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {
     const bottomSheet = document.querySelector('.bottom-sheet');   
@@ -147,6 +142,9 @@ onMounted(async () => {
     //setInitialStarRating(response.star);
     initReviewSystem();
     watchEffect(() => {
+        car_no.value = response.auction.car_no,
+        price.value = amtComma(response.auction.win_bid.price),
+        dealer_name.value = response.dealer.name,
         rv.auction_id = response.auction_id;
         rv.dealer_id = response.dealer.id;
         document.getElementById("starSelect").value = response.star;
