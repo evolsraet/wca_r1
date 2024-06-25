@@ -783,7 +783,9 @@ const padZero = (num) => {
 };
 
 const calculateTimeLeft = (auction) => {
-  if (auction.status !== 'ing' || !auction.final_at) {
+const finalAtDate = new Date(auction.final_at);
+const diff = finalAtDate.getTime() - currentTime.value.getTime();
+  if (auction.status !== 'ing' || !auction.final_at || diff < 0) {
     return {
       days: 0,
       hours: '00',
@@ -791,10 +793,10 @@ const calculateTimeLeft = (auction) => {
       seconds: '00'
     };
   }
-    const finalAtDate = new Date(auction.final_at);
+
     //console.log(auction.final_at);
  // const finalAtDate = new Date(auction.final_at.replace(' ', 'T') + 'Z');
-  const diff = finalAtDate.getTime() - currentTime.value.getTime();
+
   return {
     days: Math.floor(diff / (24 * 3600000)),
     hours: padZero(Math.floor((diff % (24 * 3600000)) / 3600000)),

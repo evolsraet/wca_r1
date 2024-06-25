@@ -3,12 +3,13 @@ import { useRouter } from "vue-router";
 import { AbilityBuilder, createMongoAbility } from "@casl/ability";
 import { ABILITY_TOKEN } from "@casl/vue";
 import store from "../store";
+import { cmmn } from '@/hooks/cmmn';
 
 let user = reactive({
     name: "",
     email: "",
 });
-
+const { callApi , wica , wicac} = cmmn();
 export default function useAuth() {
     const processing = ref(false);
     const validationErrors = ref({});
@@ -143,6 +144,7 @@ export default function useAuth() {
         console.log("전체 데이터:" , payload.user.role);
         console.log("역할:" , payload);
         const formData = new FormData();
+        
         formData.append('user',JSON.stringify(payload.user));
         formData.append('dealer',JSON.stringify(payload.dealer));
 
@@ -158,7 +160,30 @@ export default function useAuth() {
         if(registerForm.file_user_sign){
             formData.append('file_user_sign', registerForm.file_user_sign);
         }
+        for (const x of formData) {
+            console.log(x);
+        };
+        wicac.conn()
+        .url(`/api/users`)
+        .param(formData)
+        .multipart()            
+        .callback(async function(result) {
+            console.log('wicac.conn callback ' , result);
+            if(result.isError) {
+                validationErrors.value = result.msg;
+            } else {
+                swal({
+                    icon: "success",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                //console.log(response);
+                await router.push({ name: "auth.login" });
+            }
+        })
+        .post();
 
+        /**
         await axios
             .post("/api/users", formData,{
                 headers:{ 
@@ -180,7 +205,9 @@ export default function useAuth() {
                     validationErrors.value = error.response.data.errors;
                 }
             })
-            .finally(() => (processing.value = false));
+            .finally(() => (processing.value = false));  */
+             
+
     };
 
     const submitForgotPassword = async () => {

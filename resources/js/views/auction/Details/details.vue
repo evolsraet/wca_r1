@@ -1479,8 +1479,8 @@ const padZero = (num) => {
   return num < 10 ? '0' + num : num; // 숫자가 10보다 작을 경우 앞에 '0' 추가
 };
 const timeLeft = computed(() => {
-  if (auctionDetail.value?.data?.status === 'ing') {
-    const diff = finalAt().getTime() - currentTime.value.getTime(); // 마감 시간과 현재 시간의 차이 계산
+  const diff = finalAt().getTime() - currentTime.value.getTime(); // 마감 시간과 현재 시간의 차이 계산
+  if (auctionDetail.value?.data?.status === 'ing' && diff > 0 ) {
     const days = Math.floor(diff / (24 * 3600000)); // 밀리초를 일로 변환
     const hours = padZero(Math.floor((diff % (24 * 3600000)) / 3600000)); // 남은 밀리초를 시간으로 변환하고 두 자리로 포맷팅
     const minutes = padZero(Math.floor((diff % 3600000) / 60000)); // 남은 밀리초를 분으로 변환하고 두 자리로 포맷팅
@@ -1488,7 +1488,6 @@ const timeLeft = computed(() => {
 
     return { days, hours, minutes, seconds }; // 객체 형태로 일, 시, 분, 초 반환
   } else {
-
     return { days: '00', hours: '00', minutes: '00', seconds: '00' }; // 기본값 반환
   }
 });
