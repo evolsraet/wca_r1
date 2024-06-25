@@ -135,9 +135,15 @@ export function cmmn() {
                 if(error.response.data) {
                     //code :
                     if (error.response.data.status === 'fail') {
-                        rstData.msg = error.response.data.message;
-                        if(error.response.statusText != 'Bad Request') {
-                            rstData.isAlert = true;
+                        if(error.response.status == 422) {
+                            rstData.msg = error.response.data.errors;
+                        } else {
+                            rstData.msg = error.response.data.message;
+                            if(error.response.statusText != 'Bad Request') {
+                                rstData.isAlert = true;       
+                            } else {
+                                rstData.msg = error.response.data.errors;
+                            }
                         }
                     } else {
                         rstData.msg = error.response.data.errors;
@@ -276,6 +282,7 @@ export function cmmn() {
     
         return wicac.conn()
         .url(`/api/reviews/${id}`)
+        .multipart()
         .param({
             'id' : 1
         }) 
@@ -298,7 +305,7 @@ export function cmmn() {
         .page(10)
         .callback(function(result) {
             console.log('wicac.conn callback ' , result);
-            return result.data;ㅠㅜ
+            return result.data;
         })
         .get();
         .post();
@@ -331,6 +338,7 @@ export function cmmn() {
                 _isGet : false,
                 _isPut : false,
                 _isDelete : false,
+                _isMultipart : false,
                 _rstData : {
                     isError : false,
                     isSuccess : false,
@@ -357,6 +365,11 @@ export function cmmn() {
             if(input) {
                 _this._input._isParam = true;
             }
+            return _this;
+        },
+        multipart : function() {
+            let _this = this;
+            _this._input._isMultipart = true;
             return _this;
         },
         where : function(input) {
@@ -520,8 +533,16 @@ export function cmmn() {
                 }
                 let urlParams = '';
                 urlParams = this.parseParam(_input, urlParams);
-                console.log('cmmn wicac POST [ ' + _this._input._url+urlParams +' ]', urlParamsData);
-                await axios.post(_this._input._url+urlParams,urlParamsData).then(response => {            
+                let urlHeaders = null;
+                if(_input._isMultipart){
+                    urlHeaders = {
+                        headers : {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    };
+                }
+                console.log('cmmn wicac POST'+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ]', urlParamsData);
+                await axios.post(_this._input._url+urlParams,urlParamsData,urlHeaders).then(response => {            
                     _input._rstData = parseApiCompleted(_input._rstData,response);
                 })
                 .catch(error => {            
@@ -535,7 +556,15 @@ export function cmmn() {
                 }
                 let urlParams = '';
                 urlParams = this.parseParam(_input, urlParams);
-                console.log('cmmn wicac PUT [ ' + _this._input._url+urlParams +' ]', urlParamsData);
+                let urlHeaders = null;
+                if(_input._isMultipart){
+                    urlHeaders = {
+                        headers : {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    };
+                }
+                console.log('cmmn wicac PUT'+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ]', urlParamsData);
                 await axios.put(_this._input._url+urlParams,urlParamsData).then(response => {            
                     _input._rstData = parseApiCompleted(_input._rstData,response);
                 })
