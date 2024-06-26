@@ -68,7 +68,7 @@
                         <p class="tc-light-gray">후기</p>
                         <textarea class="custom-textarea mt-2" rows="2" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content"></textarea>
                     </div>
-                    <button class="mt-5 btn btn-primary w-100"> 수정 완료 </button>
+                    <button class="mt-5 btn btn-primary w-100">저장</button>
                 </div>
                 <div class="btn-group mt-3">
                 </div>
@@ -148,6 +148,7 @@ onMounted(async () => {
         rv.auction_id = response.auction_id;
         rv.dealer_id = response.dealer.id;
         document.getElementById("starSelect").value = response.star;
+        rv.star = response.star;
         rv.user_id = response.user_id;
         rv.content = response.content;
     })

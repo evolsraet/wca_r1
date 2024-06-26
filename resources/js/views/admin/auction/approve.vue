@@ -105,7 +105,7 @@
           </div>
           <div class="mt-3" @click.stop="">
               <div class="btn-group mt-3">
-                <button class="btn btn-primary tc-wh"> 등록 </button>
+                <button class="btn btn-primary tc-wh"> 저장 </button>
               </div>
           </div>
           <!--

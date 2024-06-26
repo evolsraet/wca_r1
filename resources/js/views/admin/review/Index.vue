@@ -3,38 +3,43 @@
         <div class="col-md-12">
         </div>
                 <div class="proceeding"></div>
-                    <!--
+
+
                     <div class="search-type2 mb-5">
+                        <!--
                         <div class="border-xsl">
                             <div class="image-icon-excel"></div>
                         </div>
                         <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
-                        <button type="button" class="search-btn">검색</button>
-                    </div>-->
-                    <!--
+                        <button type="button" class="search-btn">검색</button>-->
+                    </div>
+
                     <div class="container mb-3">
+                        
                         <div class="d-flex justify-content-end">
+                            <!--
                             <div class="text-start status-selector">
-                            <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
-                            <label for="all" class="mx-2">전체</label>
+                                <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
+                                <label for="all" class="mx-2">전체</label>
 
-                            <input type="radio" name="status" value="user" id="user" hidden @change="setFilter('user')">
-                            <label for="ongoing">일반</label>
+                                <input type="radio" name="status" value="user" id="user" hidden @change="setFilter('user')">
+                                <label for="ongoing">일반</label>
 
-                            <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setFilter('dealer')">
-                            <label for="completed" class="mx-2">딜러</label>
-                        </div>
+                                <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setFilter('dealer')">
+                                <label for="completed" class="mx-2">딜러</label>
+                            </div>-->
                         <div class="text-end select-option">
-                                <select class="form-select select-rank" aria-label="최근 등록 순">
-                                    <option selected>최근 등록 순</option>
-                                    <option value="1">가격 낮은 순</option>
-                                    <option value="2">가격 높은 순</option>
-                                    <option value="3">연식 오래된 순</option>
-                                    <option value="4">연식 최신 순</option>
+                                <select class="form-select select-rank" aria-label="별점" @change="event => setStarFilter(event.target.value)">
+                                    <option selected>전체</option>
+                                    <option value="1">1점</option>
+                                    <option value="2">2점</option>
+                                    <option value="3">3점</option>
+                                    <option value="4">4점</option>
+                                    <option value="5">5점</option>
                                 </select>
                             </div>
                         </div>
-                    </div>-->
+                    </div>
                     <div class="o_table_mobile my-5">
                     <div class="tbl_basic tbl_dealer">
                         <table class="table">
@@ -79,12 +84,65 @@
                                                         'id',
                                                 }"
                                             >
-                                                후기번호
+                                                회원명
                                             </div>
+                                            <!--
                                             <div class="select-none">
                                                 <span v-if="orderingState.id.direction === 'asc' && orderingState.id.column === 'id'" class="text-blue-600">&uarr;</span>
                                                 <span v-else-if="orderingState.id.direction === 'desc' && orderingState.id.column === 'id'" class="text-blue-600">&darr;</span>
                                                 <span v-else-if="orderingState.id.direction === '' && orderingState.id.column === ''" class="text-blue-600">&uarr;&darr;</span>
+                                            </div>-->
+                                        </div>
+                                    </th>
+                                    <th class="px-6 py-3 bg-gray-50 justify-content-center">
+                                        <div
+                                            class="flex flex-row items-center justify-content-center justify-between cursor-pointer"
+                                            @click="
+                                                updateOrdering('id')
+                                            "
+                                        >
+                                            <div
+                                                class="leading-4 font-medium text-gray-500 uppercase tracking-wider"
+                                                :class="{
+                                                    'font-bold text-blue-600':
+                                                        orderColumn ===
+                                                        'id',
+                                                }"
+                                            >
+                                                딜러명
+                                            
+                                            </div>
+                                            <!--
+                                            <div class="select-none">
+                                                <span v-if="orderingState.id.direction === 'asc' && orderingState.id.column === 'id'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState.id.direction === 'desc' && orderingState.id.column === 'id'" class="text-blue-600">&darr;</span>
+                                                <span v-else-if="orderingState.id.direction === '' && orderingState.id.column === ''" class="text-blue-600">&uarr;&darr;</span>
+                                            </div>-->
+                                        </div>
+                                    </th>
+                                    <th class="px-6 py-3 bg-gray-50 justify-content-center">
+                                        <div
+                                            class="flex flex-row items-center justify-content-center justify-between cursor-pointer"
+                                            @click="
+                                                updateOrdering('star')
+                                            "
+                                        >
+                                            <div
+                                                class="leading-4 font-medium text-gray-500 uppercase tracking-wider"
+                                                :class="{
+                                                    'font-bold text-blue-600':
+                                                        orderColumn ===
+                                                        'star',
+                                                }"
+                                            >
+                                                별점
+                                            
+                                            </div>
+                                            
+                                            <div class="select-none">
+                                                <span v-if="orderingState.star.direction === 'asc' && orderingState.star.column === 'star'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState.star.direction === 'desc' && orderingState.star.column === 'star'" class="text-blue-600">&darr;</span>
+                                                <span v-else-if="orderingState.star.direction === '' && orderingState.star.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                             </div>
                                         </div>
                                     </th>
@@ -124,11 +182,13 @@
                                             {{ review.created_at }}
                                         </td>
                                         <td class="px-6 py-4 text-sm">
-                                            <div class="blue-box"
-                                                
-                                            >
-                                                {{ review.id }}
-                                            </div>
+                                            {{ review.dealer.name }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">
+                                            {{ review.user.name }}
+                                        </td>
+                                        <td class="px-6 py-4 text-sm">
+                                            {{ review.star }}점
                                         </td>
                                 <!--     <td class="px-6 py-4 text-sm">
                                             <img
@@ -137,7 +197,7 @@
                                                 height="70"
                                             />
                                         </td>--> 
-                                    <td class="px-6 py-4 text-sm">
+                                    <td class="over-text px-6 py-4 text-sm">
                                             {{ review.content }}
                                         </td>
                                         <td class="px-6 py-4 text-sm">
@@ -160,7 +220,7 @@
                                     </tr>
                                 </template>
                                 <template v-else>
-                                    <td class="px-6 py-4 text-sm" style="text-align: center;" colspan="4">
+                                    <td class="px-6 py-4 text-sm" style="text-align: center;" colspan="6">
                                         작성된 이용 후기가 없습니다.
                                     </td>
                                 </template>
@@ -198,10 +258,12 @@ const { can } = useAbility();
 const { getAllReview , adminDeleteReview , reviewsData , reviewPagination } = initReviewSystem(); 
 const currentStatus = ref('all');
 const currentPage = ref(1);
+const currentStar = ref('');
 const orderingState = {
     created_at: { direction: '', column: '', hit: 0 },
     id: { direction: '', column: '', hit: 0 },
     content: { direction: '', column: '', hit: 0 },
+    star: { direction: '', column: '', hit: 0 },
 };
 onMounted(async () => {
     fetchReviews();
@@ -216,7 +278,14 @@ async function loadPage(page) { // 페이지 로드
     window.scrollTo(0,0);
 }
 
-
+function setStarFilter(star) {
+    currentPage.value = 1;
+    currentStar.value = star;
+    fetchReviews();
+}
+function navigateToCreate() {
+    router.push({ name: 'users.create' });
+}
 
 const updateOrdering = (column) => {
     let columnState = orderingState[column];
@@ -241,6 +310,7 @@ function fetchReviews() {
                         false,
                         orderColumn.value,
                         orderDirection.value,
+                        currentStar.value
                 );
             }   
 

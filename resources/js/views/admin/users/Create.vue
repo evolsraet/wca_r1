@@ -228,7 +228,7 @@
                                 >
                                     <div v-show="isLoading" class=""></div>
                                     <span v-if="isLoading">Processing...</span>
-                                    <span v-else>저장</span>
+                                    <span v-else>등록</span>
                                 </button>
                             </div>
                         </form>

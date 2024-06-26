@@ -368,15 +368,22 @@ export function initReviewSystem() {
             isHomeReview = false,
             column = 'created_at',
             direction = 'desc',
+            star = ''
         ) => {
 
         const apiList = ['dealer'];
+        const whereList = [];
         if(!isHomeReview){
             apiList.push('auction');
+            apiList.push('user');
+        }
+        if(star != ''){
+            whereList.push(`reviews.star:${star}`)
         }
         return wicac.conn()
             .url(`/api/reviews`)
             .with(apiList)
+            .where(whereList)
             .page(`${page}`)
             .order([
                 [`${column}`,`${direction}`]

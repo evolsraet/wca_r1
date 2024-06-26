@@ -155,58 +155,74 @@ export default function useUsers() {
         const formData = new FormData();
         formData.append('user', JSON.stringify(payload.user));
         formData.append('dealer', JSON.stringify(payload.dealer));
-    
+        //formData.append('_method', 'PUT');
+        
         if (editForm.file_user_photo) {
-            console.log(editForm.file_user_photo);
             formData.append('file_user_photo', editForm.file_user_photo);
         }
         if (editForm.file_user_biz) {
-            console.log("@@");
             formData.append('file_user_biz', editForm.file_user_biz);
         }
         if (editForm.file_user_cert) {
-            console.log("@@@");
             formData.append('file_user_cert', editForm.file_user_cert);
         }
         if (editForm.file_user_sign) {
-            console.log("@@@@");
             formData.append('file_user_sign', editForm.file_user_sign);
         }
         for (const x of formData) {
             console.log(x);
-           };
-           
+        };
+
         wica.ntcn(swal)
             .title('수정하시겠습니까?') // 알림 제목
             .icon('Q') //E:error , W:warning , I:info , Q:question
-            .callback(function(result) {
+            .callback(async function(result) {
                 if (result.isOk) {
-                    // console.log(result);
-                    axios.put('/api/users/' + id, formData, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
+                    wicac.conn()
+                    .url(`/api/users/${id}`)
+                    .param(formData)
+                    .multipart()
+                    .callback(async function(result) {
+                        console.log('wicac.conn callback ' , result);
+                        if(result.isError) {
+                            validationErrors.value = result.msg;
+                        } else {
+                            swal({
+                                icon: "success",
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                            //console.log(response);
+                            await router.push({ name: "users.index" });
                         }
                     })
-                    .then(response => {
-                        wica.ntcn(swal)
-                            .icon('I') //E:error , W:warning , I:info , Q:question
-                            .callback(function(result) {
-                                if (result.isOk) {
-                                    router.push({ name: 'users.index' });
-                                }
-                            })
-                            .alert('회원정보가 정상적으로 수정되었습니다.');
-                    })
-                    .catch(error => {
-                        if (error.response?.data) {
-                            validationErrors.value = error.response.data.errors;
-                        }
-                    })
-                    .finally(() => isLoading.value = false);
+                    .post();
                 }
             }).confirm();
     };
     
+    /**console.log(result);
+    await axios.put(`/api/users/${id}`, formData,{
+        headers:{ 
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+    .then(response => {
+        wica.ntcn(swal)
+            .icon('I') //E:error , W:warning , I:info , Q:question
+            .callback(function(result) {
+                if (result.isOk) {
+                    router.push({ name: 'users.index' });
+                }
+            })
+            .alert('회원정보가 정상적으로 수정되었습니다.');
+    })
+    .catch(error => {
+        if (error.response?.data) {
+            validationErrors.value = error.response.data.errors;
+        }
+    })
+    .finally(() => isLoading.value = false); */
 
     const deleteUser = async (id) => {
         wica.ntcn(swal)
