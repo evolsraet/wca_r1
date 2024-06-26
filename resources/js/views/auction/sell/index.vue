@@ -294,9 +294,9 @@ function toggleDetailContent() {
 
 const applyAuction = () => {
     const text = '<div class="enroll_box" style="position: relative;">' +
-                   '<img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">' +
-                   '<p class="overlay_text04">로그인이 필요한 서비스 입니다.</p>' +
-                   '</div>';
+                 '<img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">' +
+                 '<p class="overlay_text04">로그인이 필요한 서비스 입니다.</p>' +
+                 '</div>';
     wica.ntcn(swal)
         .useHtmlText() // HTML 태그 인 경우 활성화
         .labelCancel()
