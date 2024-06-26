@@ -132,7 +132,7 @@ import { useStore } from "vuex";
 import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
-
+import drift from '../../../../../resources/img/drift.png';
 
 const swal = inject('$swal');
 const { wica } = cmmn();
@@ -147,11 +147,11 @@ const validationErrors = ref({});
 const isLoading = ref(true); 
 const openModal = () => {
     //showModal.value = true;
-    const text= '  <div class="enroll_box" style="position: relative;">'+
-                 ' <img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">'+
-                  '<p class="overlay_text02">정보를 갱신 하시겠습니까?</p>'+
-                  '<p class="overlay_text03">일 1회 갱신 가능합니다. <br>갱신한 정보는 1주간 보관됩니다.</p>'+
-              '  </div>';
+    const text= `<div class="enroll_box" style="position: relative;">
+                 <img src="${drift}" alt="자동차 이미지" width="160" height="160">
+                  <p class="overlay_text02">정보를 갱신 하시겠습니까?</p>
+                  <p class="overlay_text03">일 1회 갱신 가능합니다. <br>갱신한 정보는 1주간 보관됩니다.</p>
+              </div>`;
   wica.ntcn(swal)
     .useHtmlText() // HTML 태그 인 경우 활성화
     .labelOk('갱신하기') // 확인 버튼 라벨 변경
@@ -293,10 +293,10 @@ function toggleDetailContent() {
 }
 
 const applyAuction = () => {
-    const text = '<div class="enroll_box" style="position: relative;">' +
-                 '<img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">' +
-                 '<p class="overlay_text04">로그인이 필요한 서비스 입니다.</p>' +
-                 '</div>';
+    const text = `<div class="enroll_box" style="position: relative;">
+                 <img src="${drift}" alt="자동차 이미지" width="160" height="160">
+                 <p class="overlay_text04">로그인이 필요한 서비스 입니다.</p>
+                 </div>`;
     wica.ntcn(swal)
         .useHtmlText() // HTML 태그 인 경우 활성화
         .labelCancel()
