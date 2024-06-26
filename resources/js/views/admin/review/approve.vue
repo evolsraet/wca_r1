@@ -34,23 +34,23 @@
                     </div>
                     <div class="card-body">
                         <p class="tc-light-gray">차량명(추가예정)</p>
-                        <input class="form-control tc-light-gray" readonly/>
+                        <input class="input-dis form-control tc-light-gray" readonly/>
                     </div>
                     <div class="card-body">
                         <p class="tc-light-gray">차량번호</p>
-                        <input v-model="car_no" class="form-control tc-light-gray" readonly/>
+                        <input v-model="car_no" class="input-dis form-control tc-light-gray" readonly/>
                     </div>
                     <div class="card-body">
                         <p class="tc-light-gray">매물번호(추가예정)</p>
-                        <input class="form-control tc-light-gray" readonly/>
+                        <input class="input-dis form-control tc-light-gray" readonly/>
                     </div>
                     <div class="card-body">
                         <p class="tc-light-gray">딜러명</p>
-                        <input v-model="dealer_name" class="form-control tc-light-gray" readonly/>
+                        <input v-model="dealer_name" class="input-dis form-control tc-light-gray" readonly/>
                     </div>
                     <div class="card-body">
                         <p class="tc-light-gray">판매가</p>
-                        <input v-model="price" class="form-control tc-light-gray" readonly/>
+                        <input v-model="price" class="input-dis form-control tc-light-gray" readonly/>
                     </div>
                     <div class="card-body">
                         <p class="tc-light-gray">별점</p>

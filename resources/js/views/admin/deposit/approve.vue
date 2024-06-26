@@ -38,15 +38,15 @@
                   </div>
                   <div class="card-body">
                     <p class="tc-light-gray">낙찰 금액</p>
-                    <input value="40,000,000 원" class="form-control bg-secondary bg-opacity-10" readonly/>
+                    <input value="40,000,000 원" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
                   </div>
                   <div class="card-body">
                     <p class="tc-light-gray">입금 총액</p>
-                    <input value="35,000,000 원" class="form-control bg-secondary bg-opacity-10" readonly/>
+                    <input value="35,000,000 원" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
                   </div>
                   <div class="card-body">
                     <p class="tc-light-gray">미수금</p>
-                    <input value="5,000,000 원"  class="tc-red form-control bg-secondary bg-opacity-10" readonly/>
+                    <input value="5,000,000 원"  class="input-dis tc-red form-control bg-secondary bg-opacity-10" readonly/>
                   </div>
                   
               <!--       <div class="container-receipt mt-5">
