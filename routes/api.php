@@ -27,6 +27,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 Route::get('users/me', [UserController::class, 'me']);   // 본인가져오기
 Route::get('users/abilities', [UserController::class, 'abilities']);
 // Route::post('users/test', [UserController::class, 'test']);   // 회원가입은 인증없이
+Route::post('users/confirmPassword', [UserController::class, 'confirmPassword'])->middleware('auth:sanctum');
 Route::apiResource('users', UserController::class)
     ->middleware('auth:sanctum')
     ->withoutMiddleware('auth:sanctum', ['store', 'test']);

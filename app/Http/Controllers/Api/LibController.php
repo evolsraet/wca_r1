@@ -75,7 +75,7 @@ class LibController extends Controller
             $count = $mediaService->deleteMediaByUuids($uuids);
 
             DB::commit();
-            return response()->api("{$count}개의 파일이 삭제되었습니다.");
+            return response()->api(null, "{$count}개의 파일이 삭제되었습니다.");
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;

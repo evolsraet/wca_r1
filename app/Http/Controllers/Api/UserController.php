@@ -10,6 +10,7 @@ use App\Traits\CrudControllerTrait;
 use Database\Factories\UserFactory;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
 {
@@ -47,6 +48,18 @@ class UserController extends Controller
         return response()->api([
             config('auth.defaults.guard')
         ]);
+    }
+
+    public function confirmPassword(Request $request)
+    {
+        $inputPassword = $request->input('password');
+        $user = $request->user();
+
+        if (Hash::check($inputPassword, auth()->user()->password)) {
+            return response()->api(null, '비밀번호가 일치합니다.', 'ok', 200);
+        } else {
+            return response()->api(null, '비밀번호가 일치하지 않습니다.', 'fail', 401);
+        }
     }
 
     /**
