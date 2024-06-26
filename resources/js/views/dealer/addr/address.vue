@@ -64,6 +64,10 @@
 </template>
 
 <style scoped>
+.search-type2 .search-btn {
+    right: 13px;
+    top: 63px !important;
+}
 .text-overflow {
     max-width: 130px; 
     overflow: hidden; 

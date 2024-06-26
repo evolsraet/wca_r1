@@ -77,7 +77,7 @@
                         <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
                     <div v-if="user?.name">
-                        <div class="d-flex justify-content-between mt-4">
+                        <div class="d-flex justify-content-between mt-4 align-items-center pointer">
                             <p>차량 정보가 다르신가요?
                                 <span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span>
                             </p>
@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div v-if="!user?.name">
-                        <div class="d-flex justify-content-between mt-5">
+                        <div class="d-flex justify-content-between mt-5 align-items-center">
                             <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="로그인을 하면 자세한 정보를 볼수있어요." tabindex="0"></span></p>
                             <p class="tc-light-gray link">정보갱신하기</p>
                         </div>
@@ -126,11 +126,15 @@ import InfoModal from '@/views/modal/infoModal.vue';
 import SkeletonLoader from '@/views/loader/SkeletonLoader.vue';
 import useAuth from "@/composables/auth";
 import { useRouter } from 'vue-router';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed ,inject } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from "vuex";
 import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import useAuctions from '@/composables/auctions';
+import { cmmn } from '@/hooks/cmmn';
+
+const swal = inject('$swal');
+const { wica } = cmmn();
 const previousCarDetails = ref({});
 const isRefreshDisabled = ref(false); // 버튼 비활성화 상태 변수
 const isRefreshing = ref(false); // 로딩 상태 변수
@@ -141,17 +145,32 @@ const processing = ref(false);
 const validationErrors = ref({});
 const isLoading = ref(true); 
 const openModal = () => {
-    showModal.value = true;
+    //showModal.value = true;
+    const text= '  <div class="enroll_box" style="position: relative;">'+
+                 ' <img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">'+
+                  '<p class="overlay_text02">정보를 갱신 하시겠습니까?</p>'+
+                  '<p class="overlay_text03">일 1회 갱신 가능합니다. <br>갱신한 정보는 1주간 보관됩니다.</p>'+
+              '  </div>';
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .labelOk('갱신하기') // 확인 버튼 라벨 변경
+    .labelCancel('취소') // 취소 버튼 라벨 변경
+    .btnBatch('R') // 확인 버튼 위치 지정, 기본은 L
+    .addClassNm('review-custom') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .callback(function (result) {
+        if (result.isOk) {
+            startLoading();
+        }
+    })
+    .confirm(text);
 };
 const { submitCarInfo, refreshCarInfo } = useAuctions();
 
-const closeModal = () => {
-    showModal.value = false;
-};
+
 
 const startLoading = async () => {
     isLoading.value = true;
-    closeModal();
     await new Promise(resolve => setTimeout(resolve, 2000));
     await handleRefresh();
     isLoading.value = false;
@@ -261,7 +280,6 @@ const checkRefreshAvailability = () => {
             isRefreshDisabled.value = true;
             refreshText.value = "정보 갱신완료";
 
-            // Schedule the re-enabling of the refresh button
             setTimeout(() => {
                 isRefreshDisabled.value = false;
                 refreshText.value = "정보갱신하기";
@@ -275,6 +293,8 @@ function toggleDetailContent() {
 
 const applyAuction = () => {
     alert('로그인이 필요한 서비스입니다.');
+    localStorage.setItem('guestClickedAuction', 'true');  // 게스트 플래그 생성
+    router.push({ name: 'login' });  // 로그인 페이지로 리디렉션
 }
 </script>
 
@@ -363,5 +383,8 @@ const applyAuction = () => {
     transition: none;
 }
 
+}
+.sheet{
+    max-height: none;
 }
 </style>

@@ -343,56 +343,52 @@ export function initReviewSystem() {
 
     }
 
-    //작성한 이용후기별 불러오기
-    const getUserReviewInfo = async (id) => {
-        return callApi({
-            _type: 'get',
-            _url:`/api/reviews/${id}`,
-            _param: {
-                _with:['auction','dealer']
-            }
-        }).then(async result => {
-            return result.data;
-        });
-    }
-
-    const adminGetReviews = async (
-        page = 1,
-        column = '',
-        direction = '',
+    //작성한 이용후기별 불러오기(로그인 전 리뷰는 auction 불러오지 않음.)
+    const getUserReviewInfo = async (
+        id,
+        isHomeReview = false
     ) => {
-        
+        const apiList = ['dealer'];
+        if(!isHomeReview){
+            apiList.push('auction');
+        }
+
         return wicac.conn()
-        .url(`/api/reviews`)
-        .order([
-            [`${column}`,`${direction}`]
-        ])
-        .page(`${page}`)
+        .url(`/api/reviews/${id}`)
+        .with(apiList)
         .callback(function(result) {
-            console.log('wicac.conn callback ' , result.data);
-            reviewsData.value = result.data;
-            reviewPagination.value = result.rawData.data.meta;
             return result.data;
         })
         .get();
-
-    }
-    // 작성한 이용후기 불러오기 (전체 리뷰 불러오기)
-    const getAllReview = async (page = 1) => {
-        return callApi({
-            _type: 'get',
-            _url:`/api/reviews`,
-            _param: {
-                _with:['auction'],
-                _page:`${page}`
-            }
-        }).then(async result => {
-            reviewsData.value = result.data;
-            console.log(reviewsData.value);
-            reviewPagination.value = result.rawData.data.meta;
-        });
     }
 
+    // 작성한 이용후기 전체 불러오기 (전체 리뷰 불러오기 , 로그인 전 리뷰는 auction 불러오지 않음.)
+    const getAllReview = async (
+            page = 1,
+            isHomeReview = false,
+            column = 'created_at',
+            direction = 'desc',
+        ) => {
+
+        const apiList = ['dealer'];
+        if(!isHomeReview){
+            apiList.push('auction');
+        }
+        return wicac.conn()
+            .url(`/api/reviews`)
+            .with(apiList)
+            .page(`${page}`)
+            .order([
+                [`${column}`,`${direction}`]
+            ])
+            .callback(function(result) {
+                console.log('wicac.conn callback ' , result.data);
+                reviewsData.value = result.data;
+                reviewPagination.value = result.rawData.data.meta;
+            })
+            .get();
+    }
+        
     // 홈 화면 리뷰 불러오기 (auction 정보 포함하지 않음.)
     const getHomeReview = async (page = 1) => {
         try {      
@@ -406,7 +402,7 @@ export function initReviewSystem() {
             console.log(error);
         }
     }
-
+    
     function formattedAmount(amount) {
         let amountInThousands = Math.floor(amount / 10000); 
         let formattedAmount = amountInThousands.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -440,7 +436,6 @@ export function initReviewSystem() {
    
 
     return {
-        adminGetReviews,
         reviewPagination,
         submitReview,
         getUserReview,

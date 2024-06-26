@@ -195,7 +195,7 @@ const orderColumn = ref("created_at");
 const orderDirection = ref("desc");
 const { categoryList, getCategoryList } = useCategories();
 const { can } = useAbility();
-const { adminGetReviews , adminDeleteReview , reviewsData , reviewPagination } = initReviewSystem(); 
+const { getAllReview , adminDeleteReview , reviewsData , reviewPagination } = initReviewSystem(); 
 const currentStatus = ref('all');
 const currentPage = ref(1);
 const orderingState = {
@@ -237,7 +237,8 @@ const updateOrdering = (column) => {
 };
 
 function fetchReviews() {
-    adminGetReviews(    currentPage.value,
+    getAllReview(    currentPage.value,
+                        false,
                         orderColumn.value,
                         orderDirection.value,
                 );

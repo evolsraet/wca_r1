@@ -51,9 +51,9 @@
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">우편주소</p>
-                  <input v-model="auction.addr_post" class="form-control tc-light-gray" readonly>
+                  <input v-model="auction.addr_post" class="input-dis form-control" readonly>
                   <div>
-                    <input v-model="auction.addr1" class="form-control tc-light-gray" readonly>
+                    <input v-model="auction.addr1" class="input-dis form-control" readonly>
                     <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                   </div>
                   <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
@@ -300,7 +300,7 @@
                 </div>
                 <h5 class="mt-5">기타</h5>
                 <div class="form-group">
-                  <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetails.data.memo }}</textarea>
+                  <textarea class="input-dis custom-textarea mt-2" readonly style="resize: none;">{{ auctionDetails.data.memo }}</textarea>
                 </div>
                 <ul class="machine-inform-title">
                   <li class="tc-light-gray">거래지역</li>
@@ -487,5 +487,7 @@ onBeforeUnmount(() => {
 .card-body:last-child {
   margin-bottom: 0; 
 }
-
+.search-btn {
+  transform: translateY(-241%) !important; 
+}
 </style>

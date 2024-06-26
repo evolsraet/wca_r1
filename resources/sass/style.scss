@@ -616,7 +616,7 @@ video {
     background-size: contain; 
     background-repeat: no-repeat;
     background-position: center; 
-    height: 50px; 
+    height: 40px; 
     width: auto; 
     display: block; 
     min-width: 100px; 
@@ -1039,8 +1039,8 @@ video {
   .btn-apply-ty03:after {
     content: "";
     display: block;
-    width: 10px;
-    height: 18px;
+    width: 36px;
+    height: 16px;
     background-image: url('../img/Icon-right.png');
     background-size: contain;
     background-repeat: no-repeat;
@@ -1817,7 +1817,6 @@ video {
     height: 16px;
     margin-right: 6px;
     vertical-align: middle;
-    margin-bottom: 2px;
 }
 
 .allpage{
@@ -3425,6 +3424,7 @@ input[type="checkbox"] {
     background-size: cover;
     background-position: center; 
     background-repeat: no-repeat; 
+    display: inline-block;
 }
 .icon-edit-img{
     width: 20px;
@@ -3432,7 +3432,8 @@ input[type="checkbox"] {
     background-image: url('../img/Icon-feather-edit.png'); 
     background-size: cover;
     background-position: center; 
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
+    display: inline-block; 
 }
 .icon-auction-plus{
     width: 20px;
@@ -3872,6 +3873,7 @@ input[type="checkbox"] {
 .bid-bc ul li:hover .txt_box .name,
 .bid-bc ul li:hover .restar {
     color: #4263ea;
+    font-weight: bolder;
     transition: color 0.5s ease; 
 }
 
@@ -3886,9 +3888,9 @@ input[type="checkbox"] {
 
 .bid-bc ul li:hover .btn-apply-ty03::after {
     background-image: url('../img/Icon-right-blue.png');
-    width: 35px;
-    height: 40px;
-    transform: translateX(5px); 
+    width: 45px;
+    height: 41px;
+    transform: translateX(10px);
     transition: transform 1s ease-out;
 }
 
@@ -4008,11 +4010,11 @@ input[type="checkbox"] {
     margin: 0 auto;
   }
   
-  .primary-check-confirmButton{
-    background-color:$primary !important;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); 
-    width: 100%;
-  }
+.primary-check-confirmButton{
+background-color:$primary !important;
+box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); 
+width: 100%;
+}
 .primary-check-actions{
     width: 100% !important;
     margin: 0px !important;
@@ -4026,11 +4028,17 @@ input[type="checkbox"] {
 
 
 /* 리뷰 모달 커스텀*/
+.review-custom-confirmButton{
+    border-color: #ff0000 !important;
+    color: #fff !important;
+    box-shadow: 0 1rem 1rem rgba(94, 94, 94, 0.15) !important;  
+}
 .review-custom-icon{
     border-color: #ff0000 !important;
     color: #ff0000 !important;
     width: 2em !important;
     height: 2em !important;
+    box-shadow: 0 1rem 1rem rgba(0, 0, 0, .15) !important; 
 }
 .review-custom-icon .swal2-icon-content{
     font-size: 1.75em !important;

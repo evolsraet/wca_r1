@@ -70,7 +70,6 @@
                     </div>
                     <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
                       <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
-                      <MessageModal v-if="showMessage" :show="showMessage" message="진단평가가 완료되면 자동으로 경매가 진행돼요" :duration="3000" />
                     </div>
                   </div>
                   <div v-if="isUser && auctionDetail.data.status === 'ing'" class="p-3">
@@ -689,7 +688,7 @@
                         <div class="container mov-wide" v-if="isUser && auctionDetail.data.status === 'wait' || auctionChosn ">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
-                              <p class="bold-20-font">현재 6명이 입찰했어요.</p>
+                              <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
                               <button class="mt-1" @click="openModal"><span class="cancelbox">경매취소</span></button>
                             </div>
                           </div>
@@ -709,9 +708,14 @@
                                   <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
                                   <p class="txt">{{bid.price}} 만원</p>
                                 </div>
-                                <p class="restar mb-4 normal-16-font me-auto">4.5점</p>
+                                <p class="restar normal-16-font me-auto">4.5점</p>
                                 <p class="btn-apply-ty03"></p>
                               </div>
+                            </li>
+                          </ul>
+                          <ul v-if="!sortedTopBids || !sortedTopBids.length" class="px-0 inspector_list max_width_900 mt-3">
+                            <li>
+                              <p class="tc-light-gray text-center border-none">선택 가능한 딜러가 없습니다.</p>
                             </li>
                           </ul>
                           <!-- 취소 모달 -->
@@ -899,7 +903,7 @@ const sortedTopBids = computed(() => {
 
 const heightPrice = ref(0);
 // 숫자 애니메이션 함수
-const animateHeightPrice = (newPrice) => {
+/*const animateHeightPrice = (newPrice) => {
   const heightPriceElement = document.querySelector('.icon-coins');
   const startValue = parseInt(heightPriceElement.innerText.replace(/[^0-9]/g, ''), 10);
   const endValue = newPrice;
@@ -916,7 +920,7 @@ const animateHeightPrice = (newPrice) => {
       }
     }
   );
-};
+};*/
 
 const auctionIngChosen = () => {
   auctionChosn.value=true;
@@ -1376,11 +1380,11 @@ const fetchBidsInfo = async (topBids) => {
          heightPrice.value = newHeightPrice;
          console.log("?",auctionDetail.value.data.status);
          console.log(auctionDetail.value.data.hope_price);
-         if (auctionDetail.value.data.status === 'ing' && auctionDetail.value.data.hope_price === null) {
+       /*  if (auctionDetail.value.data.status === 'ing' && auctionDetail.value.data.hope_price === null) {
           animateHeightPrice(newHeightPrice);
         }else if(auctionDetail.value.data.hope_price !== 'null'){
           animateHeightPrice(auctionDetail.value.data.hope_price);
-        }
+        }*/
       }
       console.log("Height price updated:", heightPrice.value);
     }
@@ -1475,8 +1479,8 @@ const padZero = (num) => {
   return num < 10 ? '0' + num : num; // 숫자가 10보다 작을 경우 앞에 '0' 추가
 };
 const timeLeft = computed(() => {
-  if (auctionDetail.value?.data?.status === 'ing') {
-    const diff = finalAt().getTime() - currentTime.value.getTime(); // 마감 시간과 현재 시간의 차이 계산
+  const diff = finalAt().getTime() - currentTime.value.getTime(); // 마감 시간과 현재 시간의 차이 계산
+  if (auctionDetail.value?.data?.status === 'ing' && diff > 0 ) {
     const days = Math.floor(diff / (24 * 3600000)); // 밀리초를 일로 변환
     const hours = padZero(Math.floor((diff % (24 * 3600000)) / 3600000)); // 남은 밀리초를 시간으로 변환하고 두 자리로 포맷팅
     const minutes = padZero(Math.floor((diff % 3600000) / 60000)); // 남은 밀리초를 분으로 변환하고 두 자리로 포맷팅
@@ -1484,7 +1488,6 @@ const timeLeft = computed(() => {
 
     return { days, hours, minutes, seconds }; // 객체 형태로 일, 시, 분, 초 반환
   } else {
-
     return { days: '00', hours: '00', minutes: '00', seconds: '00' }; // 기본값 반환
   }
 });

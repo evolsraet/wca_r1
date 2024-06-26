@@ -116,21 +116,17 @@
                                     
                                     <input
                                         v-model="dealer.company_post"
-                                        type="text"
-                                        class="form-control tc-light-gray"
+                                        class="input-dis form-control"
                                         placeholder="post"
                                         readonly
                                         />
                                         <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
-                                    <div>
                                         <input
                                             v-model="dealer.company_addr1"
-                                            type="text"
-                                            class="form-control tc-light-gray"
+                                            class="input-dis form-control"
                                             placeholder="주소"
                                             readonly
                                         />
-                                    </div>
                                     <input
                                         v-model="dealer.company_addr2"
                                         type="text"
@@ -145,8 +141,7 @@
                                     <label for="user-title" class="form-label">인수차량 도착지 주소</label>
                                     <input
                                         v-model="dealer.receive_post"
-                                        type="text"
-                                        class="form-control tc-light-gray"
+                                        class="input-dis form-control"
                                         placeholder="post"
                                         readonly
                                     />
@@ -154,8 +149,7 @@
                                     <div>
                                         <input
                                             v-model="dealer.receive_addr1"
-                                            type="text"
-                                            class="form-control tc-light-gray"
+                                            class="input-dis form-control"
                                             placeholder="주소"
                                             readonly
                                         />
@@ -179,7 +173,7 @@
                                     <textarea
                                         v-model = "dealer.introduce"
                                         type="text"
-                                        class="form-control no-resize mt-2"
+                                        class="custom-textarea mt-2"
                                     ></textarea>
                                 </div>
                                 <div class="mb-3">

@@ -66,7 +66,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="border-0" :style="cardStyle" @click="toggleCard">
+                    <div class="border-0" @click="toggleCard">
                         <div class="card-body">
                             <div v-if="!isMobileView" class="enter-view">
                                 <h5>내 매물관리</h5>

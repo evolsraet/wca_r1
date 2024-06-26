@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="col-lg-8 mx-auto p-4 py-md-5">
+        <div class="col-lg-8 mx-auto py-md-5">
             <div class="proceeding"></div>
       <p class="fw-bold mb-3">낙찰 이력</p>
       <main>

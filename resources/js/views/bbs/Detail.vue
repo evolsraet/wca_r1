@@ -31,13 +31,13 @@
                             <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                             </div>
                             <div class="mx-2 tc-light-gray my-4">
-                            <p> {{ carInfo.year }}년 / 2.4km / 무사고</p>
+                            <p>년 / 2.4km / 무사고</p>
                             <p>현대 쏘나타 (DN8)</p>
                             <br>
                             <p>매물번호 / 564514</p>
                             <p>딜 러 명 / {{review.dealer.name}}</p>
                         </div>
-                        <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>
+                        <!--<p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>-->
                     </div>
                     <div class="right-container">
                         <bottom-sheet initial="half" :dismissable="true" class="mt-2">
@@ -46,7 +46,7 @@
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
                                     <div class="rating my-3">
-                                        <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
+                                        <label v-for="index in 5" :key="index" :for="'star' + index" class="cursor-dis rating__label rating__label--full">
                                             <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
                                             <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
                                             <span class="rating-description" :value="index"></span>
@@ -115,10 +115,10 @@ const checkScreenWidth = () => {
 onMounted(async () => {
     window.addEventListener('resize', checkScreenWidth);
     checkScreenWidth();
-    const response = await getUserReviewInfo(reviewId);
+    const response = await getUserReviewInfo(reviewId,true);
     console.log(response);
     reviewsData.value = [response]; 
-    carInfo.value = await getCarInfo(response.auction.owner_name, response.auction.car_no);
+    //carInfo.value = await getCarInfo(response.auction.owner_name, response.auction.car_no);
     await nextTick();
     setInitialStarRating(response.star);
 });

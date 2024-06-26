@@ -20,7 +20,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="container my-5">
+                    <div class="container my-5" v-if="loading">
                         <div v-if="filteredBids.length > 0" class="row">
                             <div class="col-md-3 p-2 mb-2 shadow-hover" v-for="bid in filteredBids" :key="bid.id"  @click="navigateToDetail(bid)">
                                 <div class="card my-auction">
@@ -66,6 +66,7 @@ const { bidsData, getBids } = useBid();
 const user = computed(() => store.getters['auth/user']); // 현재 사용자를 가져오는 계산된 속성
 const { amtComma } = cmmn();
 const filteredBids = ref([]);
+const loading = ref(false);
 
 const fetchAuctionDetails = async (bid) => {
     try {
@@ -100,10 +101,14 @@ const fetchFilteredBids = async () => {
 onMounted(async () => {
     await getAuctions();
     await fetchFilteredBids();
+    loading.value  = true;
 });
 </script>
 
 <style scoped>
+.search-type3 .search-btn{
+    right: 13px !important;
+}
 .pd-10{
     padding: 10px;
 }

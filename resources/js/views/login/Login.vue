@@ -301,53 +301,59 @@ const submitLogin = async () => {
     await store.dispatch("auth/getAbilities");
     Swal.fire({
       icon: "success",
-      title: "로그인",
+      title: "로그인 성공",
       showConfirmButton: false,
       timer: 1500,
     });
+
+    // 로컬 스토리지에서 carDetails와 게스트 클릭 플래그 확인
+    const localCarDetails = localStorage.getItem('carDetails');
+    const guestClickedAuction = localStorage.getItem('guestClickedAuction');
+
+    // 페이지 리디렉션 조건
     if (userData.roles.includes('admin')) {
       router.push({ name: "admin.index" });
     } else if (userData.roles.includes('dealer')) {
       router.push({ name: "dealer.index" });
-    }else if (userData.roles.includes('user')) {
+    }else if (guestClickedAuction !== 'true' &&userData.roles.includes('user')) {
       router.push({ name: "user.index" });
-    }  else {
+    } else if (guestClickedAuction === 'true' && userData.roles.includes('user')) {
+      router.push({ name: "sell" });
+      localStorage.removeItem('guestClickedAuction');  // 플래그 삭제
+    } else {
       router.push({ name: "home" });
     }
   } catch (error) {
-    if (!error.response) {
-      // 네트워크 오류
-      Swal.fire({
-        icon: "error",
-        title: "Network Error",
-        text: "Please check your internet connection and try again.",
-        showConfirmButton: true,
-      });
-    } else if (error.response.data.status === 'fail') {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: error.response.data.message,
-        showConfirmButton: true,
-      });
-    } else {
-
-      Swal.fire({
-        icon: "error",
-        text: error.response.data.message || "관리자에게 문의해 주세요.",
-        showConfirmButton: true,
-      });
-      if (error.response?.data) {
-        validationErrors.value = error.response.data.errors;
-      }
-    }
-    console.log(error);
-    console.log(error.response?.data.message);
-    console.log(error.response?.data.errors);
+    handleLoginError(error);
   } finally {
     processing.value = false;
   }
 };
+
+
+function handleLoginError(error) {
+  if (!error.response) {
+    Swal.fire({
+      icon: "error",
+      title: "Network Error",
+      text: "Please check your internet connection and try again.",
+      showConfirmButton: true,
+    });
+  } else {
+    Swal.fire({
+      icon: "error",
+      text: error.response.data.message || "관리자에게 문의해 주세요.",
+      showConfirmButton: true,
+    });
+    if (error.response?.data) {
+      validationErrors.value = error.response.data.errors;
+    }
+  }
+  console.log(error);
+  console.log(error.response?.data.message);
+  console.log(error.response?.data.errors);
+}
+
 
 const animationClass = computed(() => {
   return loginCardRef.value ? 'enter-active' : '';
@@ -355,7 +361,7 @@ const animationClass = computed(() => {
 
 onMounted(() => {
   updateCarName();
-  store.commit('auth/CLEAR_ERROR_MESSAGE'); // 페이지 로드 시 오류 메시지 초기화
+  store.commit('auth/CLEAR_ERROR_MESSAGE'); 
   nextTick(() => {
     const loginCard = loginCardRef.value;
     setTimeout(() => {
