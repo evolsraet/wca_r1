@@ -308,6 +308,19 @@ onMounted(async () => {
         editForm.status = response.status;
         editForm.role = response.roles[0];
         editForm.phone = response.phone;
+        if(response.files.file_user_photo){
+            editForm.file_user_photo_name = response.files.file_user_photo[0].name;
+        }
+        if(response.files.file_user_biz){
+            editForm.file_user_biz_name = response.files.file_user_biz[0].name;
+        }
+        if(response.files.file_user_sign){
+            editForm.file_user_sign_name = response.files.file_user_sign[0].name;
+        }
+        if(response.files.file_user_cert){
+            editForm.file_user_cert_name = response.files.file_user_cert[0].name;
+        }
+        
         if(response.dealer){
             editForm.company = response.dealer.company;
             editForm.company_post = response.dealer.company_post;
