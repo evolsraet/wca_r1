@@ -49,6 +49,7 @@ Route::apiResource('reviews', ReviewController::class)
 Route::post('likes/toggle/{likeable_type_model}/{likeable_id}', [LikeController::class, 'toggle'])->middleware('auth:sanctum');
 Route::apiResource('likes', LikeController::class)->middleware('auth:sanctum');
 
+Route::delete('media', [LibController::class, 'deleteMultipleMedia'])->middleware('auth:sanctum');
 Route::get('lib/fields/{table}', [LibController::class, 'fields'])->middleware('auth:sanctum');
 Route::get('lib/enums/{table}', [LibController::class, 'enums'])->middleware('auth:sanctum');
 

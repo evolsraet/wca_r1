@@ -82,7 +82,15 @@ class UserService
             $file_result = [];
             foreach ($model->files as $key => $row) {
                 if ($request->hasFile($key)) {
-                    $file_result[] = $item->addMediaFromRequest($key)->preservingOriginal()->toMediaCollection($key);
+                    $files = $request->file($key);
+                    // 파일이 배열이 아닌 경우 배열로 변환
+                    if (!is_array($files)) {
+                        $files = [$files];
+                    }
+                    foreach ($files as $file) {
+                        // $files_one 배열에 있는 파일들은 자동으로 기존 파일을 삭제하고 새 파일로 대체됨
+                        $file_result[] = $item->addMedia($file)->preservingOriginal()->toMediaCollection($key);
+                    }
                 }
             }
 
@@ -189,9 +197,18 @@ class UserService
             }
 
             $file_result = [];
+            $logs = [];
             foreach ($model->files as $key => $row) {
                 if ($request->hasFile($key)) {
-                    $file_result[] = $item->addMediaFromRequest($key)->preservingOriginal()->toMediaCollection($key);
+                    $files = $request->file($key);
+                    // 파일이 배열이 아닌 경우 배열로 변환
+                    if (!is_array($files)) {
+                        $files = [$files];
+                    }
+                    foreach ($files as $file) {
+                        // $files_one 배열에 있는 파일들은 자동으로 기존 파일을 삭제하고 새 파일로 대체됨
+                        $file_result[] = $item->addMedia($file)->preservingOriginal()->toMediaCollection($key);
+                    }
                 }
             }
 
@@ -217,7 +234,9 @@ class UserService
         return response()->api(
             (new UserResource($item))
                 ->additional([
-                    'file_data' => $file_result
+                    // 'file_result' => $file_result, // media 로 추가된 부분 응답이 온다
+                    // '_logs' => $logs,
+                    // '_post_files' => $request->files,
                 ])
         );
 
