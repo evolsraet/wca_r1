@@ -40,7 +40,7 @@
                         </div>
                       </div>
                       <h4 v-if="auctionDetail.data.status === 'done' || auctionDetail.data.status === 'chosen'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
-                      <div class="p-3 pb-1 d-flex gap-3 justify-content-between">
+                      <div class="pb-1 d-flex gap-3 justify-content-between">
                         <div></div>
                         <div class="d-flex gap-3 justify-content-end align-items-center mb-1">
                           <div class="tc-light-gray icon-hit">조회수 {{ auctionDetail.data.hit }}</div>
@@ -60,6 +60,25 @@
                     <div class="d-flex">
                       <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                       <h5 v-if="auctionDetail.data.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                    </div>
+                    <div v-if="auctionDetail.data.status ==='chosen'">
+                      <hr>
+                      <h4>탁송 신청 정보</h4>
+                      <div class="fw-medium ">
+                      <p class="mt-4 tc-light-gray ">낙찰딜러: <span class="tc-red">홍길동딜러</span></p>
+                      <p class="tc-light-gray">낙찰액 : <span class="tc-red">3500만원</span></p>
+                      <p class="tc-light-gray">탁송일 : <span class="tc-red">2024년 6월 26일 오후 6:12</span></p>
+                      </div>
+                      <button
+                        class="my-4 btn-primary bold-18-font modal-bid d-flex p-3 justify-content-between blinking"
+                        @click="competionsuccess"
+                      >
+                        <p>탁송 확인</p>
+                        <p class="d-flex align-items-center gap-2">
+                          바로가기
+                          <p class="icon-right-wh"></p>
+                        </p>
+                      </button>
                     </div>
                     <div v-if="showNotification" class="container">
                       <div class="notification-container show container px-3">
@@ -339,7 +358,7 @@
             </ul>
           </div>
         </div>
-        <div v-if="isUser && auctionDetail.data.status !== 'chosen' && auctionDetail.data.status !== 'wait'&&  auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'diag' && auctionDetail.data.status !=='ing' && auctionDetail.data.status !=='cancel'" class="sheet-content">
+        <div v-if="isUser" class="sheet-content">
             <BottomSheet02 v-if="auctionDetail.data.status === 'done'">
               <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
               <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">
@@ -685,7 +704,7 @@
                             
                         </div>
 
-                        <div class="container mov-wide" v-if="isUser && auctionDetail.data.status === 'wait' || auctionChosn ">
+                        <div class="container mov-wide" v-if="isUser && auctionDetail.data.status === 'wait' || auctionChosn &&!connectDealerModal ">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
                               <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
@@ -699,7 +718,7 @@
                         </div>
                         <div class="bid-bc p-2">
                           <ul v-for="(bid, index) in sortedTopBids" :key="bid.user_id" class="px-0 inspector_list max_width_900">
-                            <li @click="handleClick(bid, $event, index+1)">
+                            <li @click="handleClick(bid, $event, index)">
                               <div class="d-flex gap-4 align-items-center justify-content-between">
                                 <div class="img_box">
                                   <img src="../../../../img/profile_dom.png" alt="딜러 사진" class="mb-2 align-text-top">
@@ -722,7 +741,7 @@
                           <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
                         </div>
                          <!-- 딜러 선택시 모달 -->
-                        <ConnectDealerModal v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
+                    
                         <BottomSheet02 class="mov-wide" v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
                           <button type="button" class="btn btn-dark d-flex align-items-center justify-content-center gap-1" @click="toggleView">재경매 하기<p class="icon-up-wh"></p></button>
                         </BottomSheet02>
@@ -762,6 +781,7 @@
                       <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                       </div>
                     </div>
+                       <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
 </template>
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount ,inject} from 'vue';
@@ -774,7 +794,7 @@ import useAuctions from '@/composables/auctions';
 import useBids from '@/composables/bids';
 import modal from '@/views/modal/modal.vue';
 import auctionModal from '@/views/modal/auction/auctionModal.vue';
-import ConnectDealerModal from '@/views/modal/auction/connectDealer.vue';
+import consignment from '@/views/consignment/consignment.vue';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
 import AlarmGuidModal from '@/views/modal/AlarmGuidModal.vue';
 
@@ -927,6 +947,10 @@ const heightPrice = ref(0);
 const auctionIngChosen = () => {
   auctionChosn.value=true;
 }
+const competionsuccess = () => {
+  const id = route.params.id;
+  router.push({ name: 'completionsuccess', params: { id } });
+};
 
 watch(
   () => auctionDetail.value?.data?.hope_price,
@@ -1431,12 +1455,12 @@ onMounted(async () => {
   window.addEventListener('resize', checkScreenWidth);
     checkScreenWidth();
 
-  if (auctionDetail.value.data.status === 'done' && isDealer.value) {
+  /*if (auctionDetail.value.data.status === 'done' && isDealer.value) {
     showNotification.value = true;
     setTimeout(() => {
       showNotification.value = false;
     }, 7000);
-  }
+  }*/
 });
 
 onUnmounted(() => {

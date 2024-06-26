@@ -178,7 +178,7 @@ export default [
                 component: () => import('../views/consignment/consignment.vue'),
               },
               {
-                path: '/completion-suc',
+                path: '/completionsuccess/:id',
                 name: 'completionsuccess',
                 component: () => import('../views/consignment/success.vue'),
               },
