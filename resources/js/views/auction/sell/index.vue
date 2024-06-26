@@ -118,7 +118,7 @@
                     </div>
                 </div>
             </BottomSheet02>
-            </div>
+        </div>
 </template>
 
 <script setup>

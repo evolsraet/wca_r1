@@ -79,6 +79,7 @@
       </nav>
     </div>
   </div>
+  <Footer />
 </template>
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue';
@@ -86,6 +87,7 @@ import { useStore } from "vuex";
 import { initReviewSystem } from '@/composables/review';
 import { useRouter } from 'vue-router';
 import { cmmn } from '@/hooks/cmmn';
+import Footer from "@/views/layout/footer.vue"
 
 const { amtComma } = cmmn();
 const router = useRouter();
