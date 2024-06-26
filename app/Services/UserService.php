@@ -38,19 +38,29 @@ class UserService
             // die();
 
             // Validator 인스턴스 생성
-            $validator = Validator::make($data, [
-                'name' => 'required|max:255',
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'phone' => 'required',
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
-            ]);
+            // $validator = Validator::make($data, [
+            //     'name' => 'required|max:255',
+            //     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+            //     'phone' => 'required',
+            //     'password' => ['required', 'string', 'min:8', 'confirmed'],
+            // ]);
 
             $data = $this->beforeData($data);
 
             // 유효성 검사 실패 시
-            if ($validator->fails()) {
-                return response()->api(null, null, 'fail', 422, ['errors' => $validator->errors()]);
-            }
+            // if ($validator->fails()) {
+            //     return response()->api(null, null, 'fail', 422, ['errors' => $validator->errors()]);
+            // }
+
+            $requestData = (array) $data;
+            $requestData['model'] = new User;  // $result는 모델 인스턴스를 가리킵니다.
+
+            $validatedData = validator($requestData, [
+                'name' => 'required|max:255',
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'phone' => 'required',
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
+            ])->validate();
 
 
             // 본인회원가입 - 사용자일경우
@@ -101,8 +111,9 @@ class UserService
 
     public function update($id, Request $request)
     {
-        // print_r('userServiceUpdate-');
-        // print_r(config('auth.defaults.guard'));
+        // // // TODO: put 에서 파일 안넘어옴
+        // print_r('user_update_');
+        // print_r($request->file());
         // die();
 
         DB::beginTransaction();

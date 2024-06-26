@@ -97,7 +97,10 @@ class AuctionService
             }
         } elseif ($method == 'store') {
             // TODO: 본인인증 검증 추가
-            $request = validator(array_merge((array) $request, ['model' => $result]), [
+            $requestData = (array) $request;
+            $requestData['model'] = $result;  // $result는 모델 인스턴스를 가리킵니다.
+
+            $validatedData = validator($requestData, [
                 'owner_name' => 'required',
                 'car_no' => 'required',
                 'region' => 'required',

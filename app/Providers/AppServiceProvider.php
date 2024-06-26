@@ -33,10 +33,11 @@ class AppServiceProvider extends ServiceProvider
     public function boot(ValidationFactory $validationFactory)
     {
         $validationFactory->resolver(function ($translator, $data, $rules, $messages, $customAttributes) {
+            Log::info("Setting up custom validator.");
             $validator = new FieldCommentValidator($translator, $data, $rules, $messages, $customAttributes);
-            // 모델 객체에서 테이블 이름을 자동으로 설정합니다.
             if (isset($data['model']) && method_exists($data['model'], 'getTable')) {
                 $validator->setTable($data['model']->getTable());
+                Log::info("Model table set in validator: " . $data['model']->getTable());
             }
             return $validator;
         });

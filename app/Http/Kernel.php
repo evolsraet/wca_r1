@@ -21,7 +21,7 @@ class Kernel extends HttpKernel
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
         \App\Http\Middleware\TrimStrings::class,
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
-        \App\Http\Middleware\ParsePutFormData::class, // PUT 에 폼데이터 24.6.25
+        // \App\Http\Middleware\ParsePutFormData::class, // PUT 에 폼데이터 24.6.25 -> 파일 안넘어와서 결국 포기한다
     ];
 
     /**
