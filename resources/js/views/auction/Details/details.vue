@@ -358,8 +358,8 @@
             </ul>
           </div>
         </div>
-        <div v-if="isUser" class="sheet-content">
-            <BottomSheet02 v-if="auctionDetail.data.status === 'done'">
+        <div v-if="isUser && auctionDetail.data.status === 'done'" class="sheet-content">
+            <BottomSheet02>
               <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
               <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">
                 후기 남기기
@@ -367,7 +367,7 @@
             </BottomSheet02>
           </div>
 
-          <div v-if="auctionDetail.data.status !== 'done' && isDealer" class="sheet-content">
+          <div v-if="auctionDetail.data.status !== 'done' &&  isDealer" class="sheet-content">
             <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
                 <div  @click.stop="">
                   <p class="text-center tc-red my-2">현재  {{ auctionDetail.data.bids_count }}명이 입찰했어요.</p>
@@ -1365,8 +1365,10 @@ const errorMessage = ref('');
 
 const fetchAuctionDetail = async () => {
   const auctionId = parseInt(route.params.id);
+  console.log("????????????????????????:", auctionId);
   try {
     auctionDetail.value = await getAuctionById(auctionId);
+    console.log("222222222222:", auctionDetail.value);
     const { car_no, owner_name } = auctionDetail.value.data;
     const carInfoForm = {
       owner: owner_name,
@@ -1437,7 +1439,7 @@ onMounted(async () => {
     position: screenWidth >= 1200 ? 'static' : 'fixed',
     bottom: '0px'
   };
-  console.log("Component mounted, fetching auctions");
+
   await getAuctions();
   await fetchAuctionDetail();
 
@@ -1454,6 +1456,8 @@ onMounted(async () => {
   }
   window.addEventListener('resize', checkScreenWidth);
     checkScreenWidth();
+  
+    console.log("!!!!!!!!!!!!!!!!!!!!:",auctionDetail.value);
 
   /*if (auctionDetail.value.data.status === 'done' && isDealer.value) {
     showNotification.value = true;
@@ -1567,7 +1571,7 @@ const handleCancelBid = async () => {
   }
 @media (min-width: 992px) {
   .mov-wide {
-    width: 100vh;
+    width: 55vw;
     margin: auto;
   }
 }

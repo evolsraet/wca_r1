@@ -361,7 +361,7 @@ function handleFileUpload(event) {
 }
 @media (min-width: 992px){
 .mov-wide {
-    width: 80vh !important;
+  width: 55vw;
 }
 }
 </style>
