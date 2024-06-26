@@ -5,9 +5,9 @@
                 <h5 class="text-start">회원 491</h5>
                 <div class="card">
                     <div class="number d-flex justify-content-around">심사중 <span class="tc-red">31</span></div>
-                    <div class="number d-flex justify-content-around">정상 <span>363</span></div>
+                    <div class="number d-flex justify-content-around">정&nbsp;&nbsp;상 <span>363</span></div>
                     <div class="divider"></div>
-                    <div class="d-flex justify-content-around tc-light-gray">탈퇴 <span>12</span></div>
+                    <div class="d-flex justify-content-around tc-light-gray">탈&nbsp;&nbsp;&nbsp;&nbsp;퇴 <span>12</span></div>
                     <div class="d-flex justify-content-around tc-light-gray">가입거부 <span>3</span></div>
                 </div>
             </div>
@@ -22,17 +22,20 @@
             <div class="section">
                 <h5 class="text-start">매물 491</h5>
                 <div class="card">
-                    <div class="number d-flex justify-content-around">진단중 <span class="tc-red">31</span></div>
+                    <div class="number d-flex justify-content-around">신청 완료<span class="tc-red">31</span></div>
+                    <div class="number d-flex justify-content-around">진단 중<span class="tc-red">31</span></div>
+                    <div class="number d-flex justify-content-around">경매 중<span class="tc-red">31</span></div>
                     <div class="divider"></div>
-                    <div class="d-flex justify-content-around tc-light-gray">진단완료 <span>363</span></div>
+                    <div class="d-flex justify-content-around tc-light-gray">선택 완료<span>363</span></div>
+                    <div class="d-flex justify-content-around tc-light-gray">경매 완료<span>363</span></div>
                 </div>
             </div>
             <div class="section">
                 <h5 class="text-start">후기 491</h5>
                 <div class="card">
-                    <div class="number d-flex justify-content-around">이용후기 <span class="tc-red">316</span></div>
+                    <div class="number d-flex justify-content-around">작성<span class="tc-red">316</span></div>
                     <div class="divider"></div>
-                    <div class="d-flex justify-content-around tc-light-gray">비활성화 <span>33</span></div>
+                    <div class="d-flex justify-content-around tc-light-gray">미작성 <span>33</span></div>
                 </div>
             </div>
         </div>
