@@ -779,6 +779,8 @@ import AlarmModal from '@/views/modal/AlarmModal.vue';
 import AlarmGuidModal from '@/views/modal/AlarmGuidModal.vue';
 
 
+import drift from '../../../../../resources/img/drift.png';
+import carObjects from '../../../../../resources/img/modal/car-objects-blur.png';
 import carInfo from '../../../../../resources/img/electric-car.png';
 import ClaimModal from '@/views/modal/ClaimModal.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
@@ -1012,11 +1014,11 @@ const reauction = async () => {
   try {
     await AuctionReauction(id, data);
     //reauctionModal.value = true;
-      const textOk= '<div class="enroll_box" style="position: relative;">'+
-                '<img src="http://localhost:5173/resources/img/modal/car-objects-blur.png" alt="자동차 이미지" width="160" height="160">'+
-              '<p class="overlay_text02">경매 신청이 완료되었습니다.</p>'+
-                '<p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>'+
-              '</div>';
+      const textOk=`<div class="enroll_box" style="position: relative;">
+              <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
+              <p class="overlay_text02">경매 신청이 완료되었습니다.</p>
+              <p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>
+              </div>`;
   wica.ntcn(swal)
     .useHtmlText() // HTML 태그 인 경우 활성화
     .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
@@ -1035,11 +1037,11 @@ const reauction = async () => {
 const openModal = () => {
 //isModalVisible.value = true;
   selectedAuctionId.value = auctionDetail.value?.data.id;
-  const text= ' <div class="enroll_box" style="position: relative;">'+
-                  '<img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">'+
-                  '<p class="overlay_text02">경매를 취소하시겠습니까?</p>'+
-                  '<p class="overlay_text03">경매자가 마음에 들지 않으시다면<br>재경매를 진행 할 수 있어요.</p>'+
-                '</div>';
+  const text= `<div class="enroll_box" style="position: relative;">
+                  <img src="${drift}" alt="자동차 이미지" width="160" height="160">
+                  <p class="overlay_text02">경매를 취소하시겠습니까?</p>
+                  <p class="overlay_text03">경매자가 마음에 들지 않으시다면<br>재경매를 진행 할 수 있어요.</p>
+                </div>`;
   wica.ntcn(swal)
   .useHtmlText() // HTML 태그 인 경우 활성화
   .labelOk('재경매') // 확인 버튼 라벨 변경
@@ -1072,10 +1074,10 @@ const handleConfirmDelete = async () => {
       // 에러 처리 로직
       console.error("Auction cancellation error");
     } else {
-      const text = '<div class="enroll_box" style="position: relative;">' +
-                   '<img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">' +
-                   '<p class="overlay_text04">경매가 취소되었습니다.</p>' +
-                   '</div>';
+      const text = `<div class="enroll_box" style="position: relative;">
+                   <img src="${drift}" alt="자동차 이미지" width="160" height="160">
+                   <p class="overlay_text04">경매가 취소되었습니다.</p>
+                   </div>`;
       if (Auctioncancel.isSuccess) {
         await new Promise((resolve, reject) => {
           wica.ntcn(swal)
@@ -1230,10 +1232,10 @@ const completeAuction = async () => {
   try {
     await chosenDealer(id, data);
     auctionDetail.value.data.status = 'chosen';
-    const textOk= '<div class="enroll_box" style="position: relative;">' +
-                   '<img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">' +
-                   '<p class="overlay_text04">선택이 완료되었습니다.</p>' +
-                   '</div>';
+    const textOk= `<div class="enroll_box" style="position: relative;">
+                   <img src="${drift}" alt="자동차 이미지" width="160" height="160">
+                   <p class="overlay_text04">선택이 완료되었습니다.</p>
+                   </div>`;
     wica.ntcn(swal)
       .useHtmlText() // HTML 태그 인 경우 활성화
       .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert

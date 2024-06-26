@@ -43,7 +43,7 @@
                         <bottom-sheet initial="half" :dismissable="true" class="mt-2">
                         <div class="sheet-content p-0">
                             <div class="mt-3 mb-5"  @click.stop="">
-                                <h5 calss="text-center">거래는 어떠셨나요?</h5>
+                                <h5 calss="text-center">거래는 어떠셨나요??</h5>
                                 <div class="wrap">
                                     <div class="rating my-3">
                                         <label v-for="index in 5" :key="index" :for="'star' + index" class="cursor-dis rating__label rating__label--full">

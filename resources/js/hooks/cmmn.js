@@ -535,6 +535,7 @@ export function cmmn() {
                 urlParams = this.parseParam(_input, urlParams);
                 let urlHeaders = null;
                 if(_input._isMultipart){
+                    urlParamsData.append('_method', 'PUT');
                     urlHeaders = {
                         headers : {
                             'Content-Type': 'multipart/form-data'

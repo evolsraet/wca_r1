@@ -5,7 +5,7 @@
             <img src="../../../img/modal/car-objects-blur.png" alt="Second Animated Image" class="animated-image-2">
         </div>
         <!-- Page content -->
-        <div class="container overflow-x-hidden">
+        <div class="container">
             <div class="register-content">
                 <div v-if="!isMobileView">
                     <div class="any-content">

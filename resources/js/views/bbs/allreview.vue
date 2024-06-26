@@ -1,4 +1,7 @@
 <template>
+  <!--
+    TODO:allreview에 가격 안나오는문제???
+  -->
   <div class="container">
     <div class="review">
     </div>
@@ -21,16 +24,16 @@
             <button type="button" class="search-btn">검색</button>
           </div>
         </div>
-        <div class="row" >
-          <div class="col-md-4 mb-4" v-if="reviewsData.length > 0" v-for="(card, index) in cards" :key="index">
+        <div class="row">
+          <div class="col-md-4 mb-4 pointer" v-if="reviewsData.length > 0" v-for="(card, index) in cards" :key="index">
             <div class="cardtype02" @click="navigateToDetail(card.id)">
               <h5 class="text-start process">현대 쏘나타 (DN8)</h5>
-              <img src="../../../img/car_example.png" alt="Car">
+                <img src="../../../img/car_example.png" alt="Car">
               <div class="content p-0">
                 <div class="mov-sort d-flex flex-lg-row-reverse align-items-start justify-content-between">
                 <span class="date tc-light-gray">{{ splitDate(card.date) }}</span>
                 <div class="rating m-0">
-                  <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
+                  <label v-for="index in 5" :key="index" :for="'star' + index" class="cursor-dis rating__label rating__label--full">
                       <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
                       <span :class="['star-icon', index <= card.rating ? 'filled' : '']"></span>
                   </label>
@@ -45,7 +48,7 @@
                 <div>
                 <p class="text-start card-text">{{ card.text }}</p>
                 </div>
-                <!--<p class="auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(card.price) }}</span></p>-->
+                <p class="auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ card.price }}</span></p>
               </div>
             </div>
           </div>
@@ -76,6 +79,7 @@
       </nav>
     </div>
   </div>
+  <Footer />
 </template>
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue';
@@ -83,6 +87,7 @@ import { useStore } from "vuex";
 import { initReviewSystem } from '@/composables/review';
 import { useRouter } from 'vue-router';
 import { cmmn } from '@/hooks/cmmn';
+import Footer from "@/views/layout/footer.vue"
 
 const { amtComma } = cmmn();
 const router = useRouter();
@@ -116,10 +121,10 @@ const inputCardsValue = () => {
     id: review.id,
     rating: review.star,
     date: review.created_at,
-    text: review.content
+    text: review.content,
   }));
 }
-
+console.log(cards);
 function navigateToDetail(reviewId) {
   console.log(reviewId);
     router.push({ name: 'user.review-detail', params: { id: reviewId } });
