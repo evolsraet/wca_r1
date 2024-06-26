@@ -525,6 +525,8 @@ TODO:
                                                 <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
                                                     <h5 class="card-title"><span class="blue-box">무사고</span></h5>
+                                                    <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
+                                                    <p class="tc-light-gray">{{ auction.car_no }}</p>
                                                     <h5 v-if="auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
                                                 </div>
                                             </div>
