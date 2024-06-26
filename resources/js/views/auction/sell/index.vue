@@ -280,7 +280,6 @@ const checkRefreshAvailability = () => {
             isRefreshDisabled.value = true;
             refreshText.value = "정보 갱신완료";
 
-            // Schedule the re-enabling of the refresh button
             setTimeout(() => {
                 isRefreshDisabled.value = false;
                 refreshText.value = "정보갱신하기";
@@ -294,6 +293,8 @@ function toggleDetailContent() {
 
 const applyAuction = () => {
     alert('로그인이 필요한 서비스입니다.');
+    localStorage.setItem('guestClickedAuction', 'true');  // 게스트 플래그 생성
+    router.push({ name: 'login' });  // 로그인 페이지로 리디렉션
 }
 </script>
 
