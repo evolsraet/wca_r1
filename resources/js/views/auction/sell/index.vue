@@ -113,13 +113,14 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-end my-5">
-                            <router-link :to="{ path: '/selldt' }" class="btn primary-disable w-100" @click="applyAuction">경매 신청하기</router-link>
+                            <button class="btn btn-primary w-100" @click="applyAuction">경매 신청하기</button>
                         </div>
                     </div>
                 </div>
             </BottomSheet02>
         </div>
 </template>
+
 
 <script setup>
 import InfoModal from '@/views/modal/infoModal.vue';
@@ -183,7 +184,8 @@ const user = computed(() => store.getters["auth/user"]);
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); //바텀 시트 스타일
 const isActive = ref(false); 
-const router = useRoute();
+const route = useRoute(); // 변경된 부분
+const router = useRouter(); // 추가된 부분
 const carDetails = ref({});
 function saveCarNumberToLocalStorage() {
     localStorage.setItem('carNumber', carDetails.value.no);
@@ -300,14 +302,18 @@ const applyAuction = () => {
     wica.ntcn(swal)
         .useHtmlText() // HTML 태그 인 경우 활성화
         .labelCancel()
-        .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+        .labelOk('확인') // 확인 버튼 라벨 변경
+        .labelCancel('취소') // 취소 버튼 라벨 변경
+        .btnBatch('R') // 확인 버튼 위치 지정, 기본은 L
+        .addClassNm('review-custom') // 클래스명 변경, 기본 클래스명: wica-salert
         .addOption({ padding: 20 }) // swal 기타 옵션 추가
         .callback(function (result) {
         if (result.isOk) {
+            localStorage.setItem('guestClickedAuction', 'true');  // 게스트 플래그 생성
+            router.push({ name: 'auth.login' }); // 변경된 부분
         }
     })
     .confirm(text);
-    localStorage.setItem('guestClickedAuction', 'true');  // 게스트 플래그 생성
 }
 </script>
 
