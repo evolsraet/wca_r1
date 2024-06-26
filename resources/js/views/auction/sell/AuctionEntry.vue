@@ -26,7 +26,7 @@
         <div class="form-group">
           <label for="sido1">지역</label>
           <div class="region">
-            <select v-model="selectedRegion" @change="onRegionChange">
+            <select class="w-100" v-model="selectedRegion" @change="onRegionChange">
               <option value="">시/도 선택</option>
               <option v-for="region in regions" :key="region" :value="region">{{ region }}</option>
             </select>
