@@ -227,5 +227,8 @@ watch(
     flex-direction: column;
   }
 }
+.search-type2 .search-btn{
+    top: 63px !important;
+}
     </style>
     
