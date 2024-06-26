@@ -65,12 +65,21 @@ class User extends Authenticatable implements HasMedia
         'deleted_at' => 'datetime',
     ];
 
+    // 업로드 가능한 파일들
     public $files = [
         'file_user_photo' => '사진',
         'file_user_biz'   => '사업자등록증',
         'file_user_sign'  => '매도용인감증명',
         'file_user_cert'  => '매매업체 대표증 / 종사원증',
         'file_user_owner'  => '위임장/소유자 인감증명서',
+    ];
+
+    // 한개만 저장되고 새로 업로드시 삭제될 파일들
+    public $files_one = [
+        'file_user_photo' => '사진',
+        'file_user_biz'   => '사업자등록증',
+        'file_user_sign'  => '매도용인감증명',
+        'file_user_cert'  => '매매업체 대표증 / 종사원증',
     ];
 
     public $enums = [
@@ -169,9 +178,14 @@ class User extends Authenticatable implements HasMedia
     public function registerMediaCollections(): void
     {
         foreach ($this->files as $file => $name) {
-            $this->addMediaCollection($file)
+            $mediaCollection = $this->addMediaCollection($file)
                 ->useFallbackUrl('/images/placeholder.jpg')
                 ->useFallbackPath(public_path('/images/placeholder.jpg'));
+
+            // $files_one 배열에 있는 항목에만 singleFile() 적용
+            if (array_key_exists($file, $this->files_one)) {
+                $mediaCollection->singleFile();
+            }
         }
     }
 

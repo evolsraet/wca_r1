@@ -36,7 +36,19 @@ class UserResource extends JsonResource
         $this->relationResource($request, $parentArray);
 
         // 파일들
-        $additionalArray['files'] = count($this->getMedia('*')) > 0 ? $this->getMedia('*') : null;
+        // $additionalArray['files'] = count($this->getMedia('*')) > 0 ? $this->getMedia('*') : null;
+        // 파일들을 콜렉션 이름별로 그룹화
+        $additionalArray['files'] = $this->getMedia('*')->groupBy('collection_name')
+            ->map(function ($group) {
+                return $group->map(function ($media) {
+                    return $media->toArray();
+                    // return [
+                    //     'uuid' => $media->uuid,
+                    //     'url' => $media->getUrl(),
+                    //     '디버그모드전용' => env('APP_DEBUG') ? $media : null,
+                    // ];
+                });
+            });
 
         // 날짜 필드를 Y-m-d 포맷으로 변환
         foreach ($parentArray as $key => $value) {

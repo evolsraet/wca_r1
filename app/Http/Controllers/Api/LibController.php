@@ -6,6 +6,7 @@ use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Services\MediaService;
 
 class LibController extends Controller
 {
@@ -62,6 +63,22 @@ class LibController extends Controller
             }
         } else {
             throw new \Exception("{$modelName} 모델 클래스를 찾을 수 없습니다.");
+        }
+    }
+
+    public function deleteMultipleMedia(Request $request)
+    {
+        DB::beginTransaction();
+        try {
+            $mediaService = new MediaService;
+            $uuids = $request->input('uuids', []);
+            $count = $mediaService->deleteMediaByUuids($uuids);
+
+            DB::commit();
+            return response()->api("{$count}개의 파일이 삭제되었습니다.");
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
         }
     }
 }
