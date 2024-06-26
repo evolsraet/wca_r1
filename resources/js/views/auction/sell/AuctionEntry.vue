@@ -82,6 +82,7 @@ import useAuctions from '@/composables/auctions';
 import { regions, updateDistricts } from '@/hooks/selectBOX.js';
 import Swal from 'sweetalert2';
 import { cmmn } from '@/hooks/cmmn';
+import carObjects from '../../../../../resources/img/modal/car-objects-blur.png';
 
 const { openPostcode , closePostcode} = cmmn();
 const { wica} = cmmn();
@@ -159,11 +160,11 @@ const auctionEntry = async () => {
   };
   try {
     await createAuction({ auction: auctionData });
-   const textOk= '<div class="enroll_box" style="position: relative;">'+
-                '<img src="http://localhost:5173/resources/img/modal/car-objects-blur.png" alt="자동차 이미지" width="160" height="160">'+
-              '<p class="overlay_text02">경매 신청이 완료되었습니다.</p>'+
-                '<p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>'+
-              '</div>';
+   const textOk= `<div class="enroll_box" style="position: relative;">
+                <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
+              <p class="overlay_text02">경매 신청이 완료되었습니다.</p>
+                <p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>
+              </div>`;
   wica.ntcn(swal)
     .useHtmlText() // HTML 태그 인 경우 활성화
     .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
