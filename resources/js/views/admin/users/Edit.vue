@@ -110,7 +110,9 @@
                                     readonly
                                     />
                                     <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
-                                <div>
+                                    </div>
+                                    <div>
+                                    <div class="form-group">
                                     <input
                                         v-model="editForm.company_addr1"
                                         class="input-dis form-control"
@@ -130,7 +132,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="user-title" class="form-label">인수차량 도착지 주소</label>
+                                <label for="user-title" class="form-label my-3">인수차량 도착지 주소</label>
                                 <input
                                     v-model="editForm.receive_post"
                                     class="input-dis form-control"
@@ -138,6 +140,8 @@
                                     readonly
                                 />
                                 <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
+                                </div>
+                            <div class="form-group">
                                 <div>
                                     <input
                                         v-model="editForm.receive_addr1"
@@ -439,7 +443,9 @@ h4 {
     position: relative;
     padding-bottom: 15px;
 }
-
+.search-btn {
+    transform: translateY(-108%) !important;
+}
 h4::after {
     content: "";
     display: block;
