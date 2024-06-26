@@ -133,6 +133,7 @@ import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 
+
 const swal = inject('$swal');
 const { wica } = cmmn();
 const previousCarDetails = ref({});
@@ -292,9 +293,21 @@ function toggleDetailContent() {
 }
 
 const applyAuction = () => {
-    alert('로그인이 필요한 서비스입니다.');
+    const text = '<div class="enroll_box" style="position: relative;">' +
+                   '<img src="http://localhost:5173/resources/img/drift.png" alt="자동차 이미지" width="160" height="160">' +
+                   '<p class="overlay_text04">로그인이 필요한 서비스 입니다.</p>' +
+                   '</div>';
+    wica.ntcn(swal)
+        .useHtmlText() // HTML 태그 인 경우 활성화
+        .labelCancel()
+        .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+        .addOption({ padding: 20 }) // swal 기타 옵션 추가
+        .callback(function (result) {
+        if (result.isOk) {
+        }
+    })
+    .confirm(text);
     localStorage.setItem('guestClickedAuction', 'true');  // 게스트 플래그 생성
-    router.push({ name: 'login' });  // 로그인 페이지로 리디렉션
 }
 </script>
 
