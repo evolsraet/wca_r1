@@ -45,7 +45,7 @@
                         <div class="d-flex gap-3 justify-content-end align-items-center mb-1">
                           <div class="tc-light-gray icon-hit">조회수 {{ auctionDetail.data.hit }}</div>
                           <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
-                          <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids_count }}</p>
+                          <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids.length }}</p>
                         </div>
                       </div>
                     </div>
