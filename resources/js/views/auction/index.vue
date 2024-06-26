@@ -479,9 +479,9 @@ TODO:
                                         :style="getAuctionStyle(auction)"
                                     >
                                         <div class="card my-auction">
-                                            <div v-if="isDealer"> 
-                                                <input class="toggle-heart" type="checkbox" v-model="auction.isFavorited" @click.stop="toggleFavorite(auction)"/>
-                                                <label class="heart-toggle"></label>
+                                            <div v-if="isDealer">
+                                                <input class="toggle-heart" type="checkbox" :id="'favorite-' + auction.id" v-model="auction.isFavorited" @click.stop="toggleFavorite(auction)"/>
+                                                <label class="heart-toggle" :for="'favorite-' + auction.id" @click.stop></label>
                                             </div>
                                             <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
                                             <div v-if="auction.status === 'ask' || auction.status === 'diag'">

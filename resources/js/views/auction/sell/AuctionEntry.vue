@@ -360,7 +360,7 @@ onMounted(() => {
 <style scoped>
 @media (min-width: 992px){
   .mov-wide {
-      width: 40vh !important;
+      width: 45rem !important;
   }
 }
 .search-btn {
