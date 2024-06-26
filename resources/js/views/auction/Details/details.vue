@@ -45,7 +45,7 @@
                         <div class="d-flex gap-3 justify-content-end align-items-center mb-1">
                           <div class="tc-light-gray icon-hit">조회수 {{ auctionDetail.data.hit }}</div>
                           <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
-                          <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids.length }}</p>
+                          <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids_count }}</p>
                         </div>
                       </div>
                     </div>
@@ -351,7 +351,7 @@
           <div v-if="auctionDetail.data.status !== 'done' && isDealer" class="sheet-content">
             <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
                 <div  @click.stop="">
-                  <p class="text-center tc-red my-2">현재 {{ auctionDetail.data.bids.length }}명이 입찰했어요.</p>
+                  <p class="text-center tc-red my-2">현재  {{ auctionDetail.data.bids_count }}명이 입찰했어요.</p>
                   <button type="button" class="btn btn-primary w-100 align-items-center d-flex justify-content-center gap-3" @click="showbidView">입찰하기<p class="icon-up-wh"></p></button>
                 </div>
               </BottomSheet02>
@@ -359,7 +359,7 @@
               <div class="d-flex justify-content-between align-items-baseline">
                 <h5>나의 입찰 금액</h5>
                 <div class="mt-3 d-flex align-items-center justify-content-end gap-3">
-                  <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids.length }}</p>
+                  <p class="tc-light-gray icon-bid">입찰  {{ auctionDetail.data.bids_count }}</p>
                   <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
                 </div>
               </div>
