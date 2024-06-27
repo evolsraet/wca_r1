@@ -100,8 +100,14 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                <div :class="{'gray-box me-0': auction.status == 'ask'}">
-                                {{ getStatusLabel(auction.status) }}
+                                <div>
+                                    <p v-if="auction.status === 'chosen'" class="ml-auto"><span class="blue-box02 bg-opacity-50">{{ getStatusLabel(auction.status) }}</span></p>
+                                    <p v-if="auction.status === 'cancel'" class="ml-auto"><span class="box bg-secondary">{{ getStatusLabel(auction.status) }}</span></p>
+                                    <p v-if="auction.status === 'wait'" class="ml-auto"><span class="blue-box02">{{ getStatusLabel(auction.status) }}</span></p>
+                                    <p v-if="auction.status === 'diag'" class="ml-auto"><span class="box bg-success bg-opacity-75">{{ getStatusLabel(auction.status) }}</span></p>
+                                    <p v-if="auction.status === 'ask'" class="ml-auto"><span class="box bg-warning bg-opacity-75">{{ getStatusLabel(auction.status) }}</span></p>
+                                    <p v-if="auction.status === 'ing'" class="ml-auto"><span class="box bg-danger">{{ getStatusLabel(auction.status) }}</span></p>
+                                    <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ getStatusLabel(auction.status) }}</span></p>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
