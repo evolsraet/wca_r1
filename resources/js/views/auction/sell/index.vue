@@ -127,7 +127,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center justify-end my-5">
+                        <div class="flex items-center justify-end mb-3 mt-5">
                             <button class="btn btn-primary w-100" @click="applyAuction">경매 신청하기</button>
                         </div>
                     </div>
