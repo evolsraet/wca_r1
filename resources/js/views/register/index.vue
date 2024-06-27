@@ -40,7 +40,7 @@
                                     <form @submit.prevent="submitRegister">
                                         <div class="form-group">
                                             <label for="name">이름</label>
-                                            <input v-model="registerForm.name" id="name" type="name" class="form-control" placeholder="이름">
+                                            <input autocomplete="one-time-code" v-model="registerForm.name" id="name" type="name" class="form-control" placeholder="이름">
                                             <div class="text-danger mt-1">
                                                 <div v-for="message in validationErrors?.name">
                                                     {{ message }}
@@ -49,7 +49,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="email">이메일</label>
-                                            <input type="email" v-model="registerForm.email" @input="checkEmail" id="email" class="form-control" placeholder="example@demo.com">
+                                            <input autocomplete="one-time-code" type="email" v-model="registerForm.email" @input="checkEmail" id="email" class="form-control" placeholder="example@demo.com">
                                             <div class="text-danger mt-1">
                                                 <div v-for="message in validationErrors?.email">
                                                     {{ message }}
@@ -58,7 +58,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="phone">전화번호</label>
-                                            <input type="phone" v-model="registerForm.phone" id="phone" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요">
+                                            <input autocomplete="one-time-code" type="phone" v-model="registerForm.phone" id="phone" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요">
                                             <div class="text-danger mt-1">
                                                 <div v-for="message in validationErrors?.phone">
                                                     {{ message }}
@@ -67,7 +67,7 @@
                                         </div>
                                         <div class="form-group">
                                             <label for="password">비밀번호</label>
-                                            <input v-model="registerForm.password" id="password" type="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합">
+                                            <input autocomplete="one-time-code" v-model="registerForm.password" id="password" type="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합">
                                             <div class="text-danger mt-1">
                                                 <div v-for="message in validationErrors?.password">
                                                     {{ message }}
@@ -76,7 +76,7 @@
                                         </div>
                                         <div class="form-group password-confirmation">
                                             <label for="password-confirm">비밀번호 확인</label>
-                                            <input v-model="registerForm.password_confirmation" id="password_confirmation" type="password" class="form-control" placeholder="비밀번호를 다시 입력해주세요">
+                                            <input autocomplete="one-time-code" v-model="registerForm.password_confirmation" id="password_confirmation" type="password" class="form-control" placeholder="비밀번호를 다시 입력해주세요">
                                             <div class="text-danger mt-1">
                                                 <div v-for="message in validationErrors?.password_confirmation">
                                                     {{ message }}
