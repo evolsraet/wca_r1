@@ -65,6 +65,7 @@ class AppServiceProvider extends ServiceProvider
             $response = [
                 'status' => $status,
                 'message' => $message,
+                'code' => $code,
                 'data' => null,
             ];
 
@@ -86,8 +87,6 @@ class AppServiceProvider extends ServiceProvider
             } elseif ($status != 'ok' && $message == null) {
                 $response['message'] = '에러가 발생했습니다.';
             }
-
-            $additional['code'] = $code;
 
             // 추가 첨부
             if (!empty($additional)) {
