@@ -55,6 +55,13 @@
                   <input v-model="auction.memo" id="memo" class="form-control"/>
                 </div>
                 <div class="card-body">
+                  <p class="tc-light-gray">지역</p>
+                  <select class="form-select" :v-model="auction.region" @change="changeRegion" id="region">
+                    <option value="" selected>시/도 선택</option>
+                    <option v-for="region in regions" :key="region" :value="region">{{ region }}</option>
+                  </select>
+                </div>
+                <div class="card-body">
                   <p class="tc-light-gray">우편주소</p>
                   <input v-model="auction.addr_post" class="input-dis form-control" readonly>
                   <div>
@@ -342,6 +349,7 @@ import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import hideIcon from '../../../../../resources/img/Icon-black-down.png';
 import showIcon from '../../../../../resources/img/Icon-black-up.png';
+import { regions, updateDistricts } from '@/hooks/selectBOX.js';
 const isMobileView = ref(window.innerWidth <= 640);
 const checkScreenWidth = () => {
     if (typeof window !== 'undefined') {
@@ -354,6 +362,7 @@ const auction = reactive({
     bank: '',
     account: '',
     memo: '',
+    region:'',
     addr_post: '',
     status : '',
     addr1: '',
@@ -404,6 +413,10 @@ const updateKoreanAmount = (price) => {
 
 function changeStatus(event) {
   auction.status = event.target.value;
+}
+
+function changeRegion(event) {
+  auction.region = event.target.value;
 }
 
 const toggleVisibility = () => {
@@ -475,6 +488,8 @@ onMounted(async () => {
       auction.owner_name = data.owner_name;
       auction.status = data.status;
       document.getElementById("status").value = data.status;
+      auction.region = data.region;
+      document.getElementById("region").value = data.region;
       auction.bank = data.bank;
       auction.account = data.account;
       auction.memo = data.memo;
