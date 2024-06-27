@@ -6,8 +6,8 @@
           <img src="../../../img/profile_dom.png" alt="Profile Image" class="main-profile" />
           <div class="deal-info">
             <p class="tc-light-gray">낙찰액</p>
-            <h4>{{bid?.price}} {{ userData?.dealer.name }}만원</h4>
-            <p><span class="fw-medium">{{ userData?.dealer.name }}</span>딜러</p>
+            <h4>{{amtComma(bid?.price)}}</h4>
+            <p><span class="fw-medium">{{ userData?.dealer.name }}</span>&nbsp;딜러</p>
             <p class="restar">4.5점</p>
           </div>
         </div>
@@ -77,40 +77,26 @@
       <div class="summary-box d-flex flex-column p-3 mt-3">
         <div class="d-flex justify-content-start gap-5 mb-2">
           <p class="mb-0">낙찰액</p>
-          <p class="mb-0">{{bid?.price}} 만원</p>
+          <p class="mb-0">{{ amtComma(bid?.price) }}</p>
         </div>
         <div class="d-flex justify-content-start gap-5">
           <p class="mb-0">딜<span>&nbsp;&nbsp;&nbsp;&nbsp;</span>러</p>
-          <p class="mb-0"></p>
+          <p class="mb-0">{{ userData?.dealer.name }}</p>
         </div>
         <div class="d-flex justify-content-start gap-5 mt-2">
           <p class="mb-0">탁송일</p>
-          <p class="mb-0">2024년 6월 12일(화)<br> 오전 11:00</p>
+          <p class="mb-0"><span>{{yearLabel}} </span>&nbsp;{{ monthLabel}} {{ selectedDateLabel }} {{ selectedTime }}</p>
         </div>
       </div>
       <button class="btn btn-primary my-3" @click="confirmSelection">완료</button>
     </div>
   </div>
 </template>
-
 <script setup>
-import { ref, onMounted,defineProps, defineEmits} from 'vue';
+import { ref, onMounted, defineProps, defineEmits, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { cmmn } from '@/hooks/cmmn';
 import BankModal from '@/views/modal/bank/BankModal.vue';
-
-const props = defineProps({
-  bid: Object,
-  userData: Object,
-});
-const emit = defineEmits(['close', 'confirm']);
-const closeModal = () => {
-  emit('close');
-};
-
-const confirmSelection = () => {
-  emit('confirm', { bid: props.bid, userData: props.userData });
-};
 
 const days = ref(getNextTwoDays());
 const selectedDay = ref(null);
@@ -118,6 +104,7 @@ const selectedTime = ref(null);
 const morningTimes = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30'];
 const afternoonTimes = ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00'];
 const monthLabel = ref(getMonthLabel());
+const yearLabel = ref(getYearLabel());
 const fileuploadvue = ref(false);
 const selectedBank = ref('');
 const account = ref('');
@@ -131,8 +118,41 @@ const router = useRouter();
 const route = useRoute();
 const { amtComma } = cmmn();
 
-const bid = ref(null);
-const userData = ref(null);
+const selectedBid = ref(null);
+const userInfo = ref(null);
+
+const props = defineProps({
+  bid: Object,
+  userData: Object,
+});
+
+const emit = defineEmits(['close', 'confirm']);
+const closeModal = () => {
+  emit('close');
+};
+
+watch(() => props.userData, (newVal) => {
+  if (newVal) {
+    userInfo.value = newVal;
+  }
+}, { immediate: true });
+
+watch(() => props.bid, (newVal) => {
+  if (newVal) {
+    selectedBid.value = newVal;
+  }
+}, { immediate: true });
+
+const selectedDateLabel = ref('');
+
+const confirmSelection = () => {
+  emit('confirm', {
+    bid: selectedBid.value,
+    userData: userInfo.value,
+    selectedDate: selectedDay.value !== null ? days.value[selectedDay.value].date : null,
+    selectedTime: selectedTime.value
+  });
+};
 
 onMounted(async () => {
   const script = document.createElement('script');
@@ -143,10 +163,8 @@ onMounted(async () => {
   document.body.style.overflowX = 'hidden';
 });
 
-
-
 const navigateToCompletionSuccess = async () => {
-  await selectDealer(bid.value, bid.value.index);
+  await selectDealer(selectedBid.value, selectedBid.value.index);
   router.push({ name: 'completionsuccess' });
 };
 
@@ -158,9 +176,15 @@ const selectDealer = async (bid, index) => {
     const userData = await getUser(bid.user_id);
     userInfo.value = userData;
   } catch (error) {
-    console.error('Error dealer data:', error);
+    console.error('Error fetching dealer data:', error);
   }
 };
+/* 현재 년도에 대한 함수*/
+function getYearLabel() {
+  const today = new Date();
+  const year = today.getFullYear();
+  return `${year}년`;
+}
 
 function getMonthLabel() {
   const today = new Date();
@@ -189,12 +213,12 @@ const toggleView = () => {
 function selectDay(index) {
   selectedDay.value = index;
   selectedTime.value = null; // 선택된 시간을 초기화
+  selectedDateLabel.value = days.value[index].label;
 }
 
 function selectTime(time) {
   if (!isPastTime(time)) {
     selectedTime.value = time;
-    alert(`선택된 시간: ${time}`);
   }
 }
 
@@ -242,7 +266,8 @@ function handleFileUpload(event) {
   }
 }
 </script>
- 
+
+
 <style scoped lang="scss">
 .container {
   width: 400px;
@@ -336,7 +361,6 @@ function handleFileUpload(event) {
   display: block;
 }
 
-
 .image-preview {
   max-width: 100%;
   max-height: 300px;
@@ -356,12 +380,12 @@ function handleFileUpload(event) {
   font-size: 16px;
   color: #333;
 }
-.container{
-    width: auto;
+.container {
+  width: auto;
 }
-@media (min-width: 992px){
-.mov-wide {
-  width: 55vw;
-}
+@media (min-width: 992px) {
+  .mov-wide {
+    width: 55vw;
+  }
 }
 </style>

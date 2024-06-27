@@ -68,7 +68,7 @@
   const handleCompleteClick = () => {
     isCompletedButtonClicked.value = true;
   };
-  
+  /* 임시 */
   const completed = async () => {
     const id = route.params.id;
    // console.log(">>>>>>>>",id)

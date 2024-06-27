@@ -399,8 +399,6 @@
               </div>
             </BottomSheet02>
           </div>
-
-        <!-- bottom sheet Start-->
       </div>
     </div>
 
@@ -704,7 +702,7 @@
                             
                         </div>
 
-                        <div class="container mov-wide" v-if="isUser && auctionDetail.data.status === 'wait' || auctionChosn &&!connectDealerModal ">
+                        <div class="container mov-wide" v-if="isUser && auctionDetail.data.status === 'wait' &&!connectDealerModal || auctionChosn &&!connectDealerModal ">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
                               <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
@@ -781,7 +779,7 @@
                       <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                       </div>
                     </div>
-                       <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
+                  <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
 </template>
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount ,inject} from 'vue';
@@ -1202,7 +1200,6 @@ const selectDealer = async (bid, index) => {
   }
 };
 const handleClick = async (bid, event, index) => {
-
   if (event.currentTarget === event.target || event.currentTarget.contains(event.target)) {
     await selectDealer(bid, index);
   }
@@ -1258,7 +1255,7 @@ const completeAuction = async () => {
     auctionDetail.value.data.status = 'chosen';
     const textOk= `<div class="enroll_box" style="position: relative;">
                    <img src="${drift}" alt="자동차 이미지" width="160" height="160">
-                   <p class="overlay_text04">선택이 완료되었습니다.</p>
+                   <p class="overlay_text04">탁송이 신청되었습니다.</p>
                    </div>`;
     wica.ntcn(swal)
       .useHtmlText() // HTML 태그 인 경우 활성화
