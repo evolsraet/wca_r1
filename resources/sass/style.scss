@@ -2315,6 +2315,36 @@ video {
     height: 160px;
     background-color: #f5f5f6;
 }
+
+
+.none-complete-ty03 span::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    background-image: url('../img/modal/car-objects-blur.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: 1;
+}
+.none-complete-ty03 {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 160px;
+    background-color: #f5f5f6;
+}
+
+.form-control:focus{
+   border: 1px solid rgba($primary, 0.028) !important;
+}
+
+
+
 .middle{
     display: flex;
     margin-top: 35px;
@@ -4048,7 +4078,7 @@ width: 100%;
     padding: 0px !important;
 }
 .review-custom-actions{
-    width: 50% !important;
+    width: 100% !important;
     flex-direction: row;
     flex-wrap: nowrap;
 }

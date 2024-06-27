@@ -1,6 +1,6 @@
 <template>
     <div class="container mov-wide web-content-style02">
-        <div class="container my-5 p-2">
+        <div class="container mt-5 p-2">
             <SkeletonLoader v-if="isLoading" />
             <template v-else>
                 <h5>차량 정보 조회 되었어요</h5>
@@ -77,7 +77,7 @@
                         <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
                     <div v-if="user?.name">
-                        <div class="d-flex justify-content-between mt-4 align-items-center pointer">
+                        <div class="d-flex justify-content-between mt-4 mb-3 align-items-center pointer">
                             <p>차량 정보가 다르신가요?
                                 <span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span>
                             </p>
@@ -91,7 +91,15 @@
                                 </transition>
                             </div> 
                         </div>
-                        
+                        <div class="none-info">
+                            <div class="complete-car">
+                                <div class="card my-auction mt-3">
+                                    <div class="none-complete-ty03">
+                                        <span class="tc-light-gray">차량 조회에 성공하였습니다.</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                             <InfoModal v-if="showModal" @close="closeModal" @refresh="startLoading"/>
                     
                         <div class="flex items-center justify-end mt-5">
@@ -99,9 +107,16 @@
                         </div>
                     </div>
                     <div v-if="!user?.name">
-                        <div class="d-flex justify-content-between mt-5 align-items-center">
+                        <div class="d-flex justify-content-between mt-5 mb-3 align-items-center">
                             <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="로그인을 하면 자세한 정보를 볼수있어요." tabindex="0"></span></p>
-                            <p class="tc-light-gray link">정보갱신하기</p>
+                            <div class="tc-red link refresh-style d-flex justify-content-between" @click="loginerror">
+                                <span>{{ refreshText }}</span>
+                                <transition name="fade">
+                                    <div class="image-container">
+                                        <img src="../../../../img/Icon-refresh.png" :class="{'fa-sync-alt': isRefreshing, 'transition-image': true ,'mx-2':true,'mb-1':true }" alt="Refresh" width="15px"/>
+                                    </div>
+                                </transition>
+                            </div> 
                         </div>
                         <div class="none-info">
                             <div class="complete-car">
@@ -227,7 +242,22 @@ const handleRefresh = async () => {
         isRefreshing.value = false;
     }
 };
+const loginerror = () =>{
+    const text = `<div class="enroll_box mb-2" style="position: relative;">
+                 <img src="${drift}" alt="자동차 이미지" width="160" height="160">
+                 <p class="overlay_text04">로그인이 필요한 서비스 입니다.</p>
+                 </div>`;
+    wica.ntcn(swal)
+        .useHtmlText() // HTML 태그 인 경우 활성화
+        .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+        .addOption({ padding: 20 }) // swal 기타 옵션 추가
+        .callback(function (result) {
+    })
+    .confirm(text);  
 
+}
+
+/* 정보 갱신 */ 
 const openModalIfNeeded = () => {
     if (isRefreshDisabled.value) {
         return;
@@ -298,11 +328,12 @@ const applyAuction = () => {
     const text = `<div class="enroll_box" style="position: relative;">
                  <img src="${drift}" alt="자동차 이미지" width="160" height="160">
                  <p class="overlay_text04">로그인이 필요한 서비스 입니다.</p>
+                 <p>로그인 창으로 이동하시겠습니까?</p>
                  </div>`;
     wica.ntcn(swal)
         .useHtmlText() // HTML 태그 인 경우 활성화
         .labelCancel()
-        .labelOk('확인') // 확인 버튼 라벨 변경
+        .labelOk('확인 ') // 확인 버튼 라벨 변경
         .labelCancel('취소') // 취소 버튼 라벨 변경
         .btnBatch('R') // 확인 버튼 위치 지정, 기본은 L
         .addClassNm('review-custom') // 클래스명 변경, 기본 클래스명: wica-salert
@@ -318,8 +349,30 @@ const applyAuction = () => {
 </script>
 
 <style scoped>
-
-
+.none-complete-ty02{
+    height: 300px;
+}
+.none-complete-ty03{
+    height: 300px;
+}
+@media (max-width: 1335px){
+.mov-wide {
+    width: 75vw;
+}
+}
+@media (max-width: 575px){
+.mov-wide {
+    width: 100%;
+}
+}
+@media (max-width: 991px){
+.none-complete-ty02{
+    height: 150px !important;
+}
+.none-complete-ty03{
+    height: 150px !important;
+}
+}
 @media (min-width: 992px) {
   .web-content-style02[data-v-d5e42825] {
     display: flex;
@@ -400,8 +453,9 @@ const applyAuction = () => {
 .sheet {
     height: auto !important;
     transition: none;
+    border-radius: 25px !important;
+    max-height: none !important;
 }
-
 }
 .sheet{
     max-height: none;

@@ -162,7 +162,7 @@
                         <input type="text" class="form-control border-0 border-bottom my-4" placeholder="소유자가 누구인가요?" v-model="carInfoForm.owner">
                       </div>
                       <div>
-                        <input type="text" class="form-control border-0 border-bottom mb-4" placeholder="차량 번호를 입력해주세요." v-model="carInfoForm.no">
+                        <input type="text" class="form-control border-0 border-bottom mb-4" placeholder="차량 번호를 입력해주세요. ( 12가 1234 )" v-model="carInfoForm.no">
                       </div>
                     </div>
                   </div>
@@ -316,6 +316,9 @@
 
   
   <style scoped>
+  .form-control{
+    padding: 0.875rem 1rem;
+  }
 .bottom-sheet {
   overflow-y: hidden !important;
 }
