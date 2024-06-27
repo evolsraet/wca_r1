@@ -60,6 +60,9 @@ h5{
 .bg-sub-color01{
 background-color: $sub-color01 !important;
 }
+.bg-sub-color{
+    background-color: $sub-color !important;
+}
 .custom-highlight {
     background: linear-gradient(transparent 50%, rgba($primary, 0.1) 40%);
 }

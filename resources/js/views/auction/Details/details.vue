@@ -111,7 +111,7 @@
                       <button v-if="auctionDetail.data.bids_count === 0" class="bg-sub-color01 bold-18-font modal-bid d-flex p-3 justify-content-center blinking">
                           <p class="text-center">경매 진행중 입니다.</p>
                       </button>
-                      <button v-else class="bg-sub-color01 bold-18-font modal-bid d-flex p-3 justify-content-between blinking" @click="auctionIngChosen">
+                      <button v-else class="bg-sub-color bold-18-font modal-bid d-flex p-3 justify-content-between blinking" @click="auctionIngChosen">
                           <p>딜러 선택이 가능해요!</p>
                           <p class="d-flex align-items-center gap-2">바로가기<p class="icon-right-wh"></p></p>
                       </button>
