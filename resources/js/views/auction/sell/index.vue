@@ -103,7 +103,7 @@
                             <InfoModal v-if="showModal" @close="closeModal" @refresh="startLoading"/>
                     
                         <div class="flex items-center justify-end mt-5">
-                            <router-link :to="{ path: '/selldt' }" class="btn primary-btn w-100">경매 신청하기</router-link>
+                            <button class="btn primary-btn w-100"  @click="UserapplyAuction">경매 신청하기</button>
                         </div>
                     </div>
                     <div v-if="!user?.name">
@@ -149,7 +149,7 @@ import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import drift from '../../../../../resources/img/drift.png';
-
+import imgInfo from'../../../../img/auction-detil.png';
 const swal = inject('$swal');
 const { wica } = cmmn();
 const previousCarDetails = ref({});
@@ -322,6 +322,24 @@ const checkRefreshAvailability = () => {
 };
 function toggleDetailContent() {
     isActive.value = !isActive.value;
+}
+const UserapplyAuction = () =>{
+    const text = `
+             <div class="my-3">
+                <h5 class="text-start">이런 단계를 거쳐요</h5>
+            <v src="${imgInfo}" alt="Auction Detail" class="auction-detail-img">
+          </div>`;
+    wica.ntcn(swal)
+        .useHtmlText() // HTML 태그 인 경우 활성화
+        .labelCancel()
+        .useClose()
+        .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+        .addOption({ padding: 20 }) // swal 기타 옵션 추가
+        .callback(function (result) {
+        if (result.isOk) {
+        }
+    })
+    .confirm(text);
 }
 
 const applyAuction = () => {
