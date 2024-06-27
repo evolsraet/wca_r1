@@ -150,6 +150,11 @@ import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import drift from '../../../../../resources/img/drift.png';
 import imgInfo from'../../../../img/auction-detil.png';
+import info1 from '../../../../../resources/img/modal/info3.png';
+import info2 from '../../../../../resources/img/modal/info1.png';
+import info3 from '../../../../../resources/img/modal/info2.png';
+
+
 const swal = inject('$swal');
 const { wica } = cmmn();
 const previousCarDetails = ref({});
@@ -176,6 +181,7 @@ const openModal = () => {
     .addClassNm('review-custom') // 클래스명 변경, 기본 클래스명: wica-salert
     .addOption({ padding: 20 }) // swal 기타 옵션 추가
     .callback(function (result) {
+        
         if (result.isOk) {
             startLoading();
         }
@@ -325,9 +331,9 @@ function toggleDetailContent() {
 }
 const UserapplyAuction = () =>{
     const text = `
-             <div class="my-3">
-                <h5 class="text-start">이런 단계를 거쳐요</h5>
-            <v src="${imgInfo}" alt="Auction Detail" class="auction-detail-img">
+    <h5 class="text-start">이런 단계를 거쳐요</h5>
+             <div class="sellInfo my-3 p-2">
+                <img src="${imgInfo}"alt="Auction Detail" class="auction-detail-img">
           </div>`;
     wica.ntcn(swal)
         .useHtmlText() // HTML 태그 인 경우 활성화
@@ -337,10 +343,65 @@ const UserapplyAuction = () =>{
         .addOption({ padding: 20 }) // swal 기타 옵션 추가
         .callback(function (result) {
         if (result.isOk) {
+            console.log(result);
+            secondModal();
         }
     })
     .confirm(text);
 }
+
+const secondModal = () => {
+    
+    const text = `<div class="content p-2 mt-0"> 
+          <h3 class="mb-2">필요 서류</h3>
+          <h5 class="tc-light-gray fw-normal mb-4">미리 준비하면 더 빠르게 진행돼요!</h5>
+          <div class="text-start my-3 process"> 
+            <h4 class="mb-3">개인</h4>
+            <div class="d-flex justify-content-between">
+              <div class="info-block">
+                <p class="text-start">경매 등록시</p>
+                <img src="${info1}" class="info-img">
+                <div class="text-center">
+                  <p>필요서류 없음</p>
+                  <p class="tc-light-gray">본인 소유 차량이 아닐경우<br>위임장 또는 소유자 인감<br>증명서가 필요합니다.</p>
+                </div>
+              </div>
+              <div class="info-block">
+                <p class="text-start">경매 완료시</p>
+                <img src="${info3}" class="info-img2">
+                <p class="text-center">매도용 인감 증명서</p>
+              </div>
+            </div>
+          </div>
+          <hr class="custom-hr" />
+          <div>
+            <div class="text-start my-3 process"> 
+              <h4 class="mb-3">딜러</h4>
+              <div class="d-flex justify-content-between align-items-end">
+                <div class="info-block">
+                  <p class="text-start">경매 등록시</p>
+                  <img src="${info2}" class="info-img3">
+                </div>
+                <div class="info-block">
+                  <p>차량 이전서류</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          </div>`;
+
+  wica.ntcn(swal)
+    .useClose()
+    .useHtmlText()
+    .addClassNm('primary-check')
+    .addOption({ padding: 20, height: 265 })
+    .callback(function (result) {
+      if (result.isOk) {
+        router.push({ path: '/selldt2' }); 
+      }
+    })
+    .confirm(text);
+};
 
 const applyAuction = () => {
     const text = `<div class="enroll_box" style="position: relative;">
@@ -477,5 +538,8 @@ const applyAuction = () => {
 }
 .sheet{
     max-height: none;
+}
+.sellInfo img{
+    width: 80%;
 }
 </style>
