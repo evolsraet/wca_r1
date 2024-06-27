@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid" v-if="auctionDetail">
-    <div v-if="!auctionChosn&& !showReauctionView && auctionDetail.data.status !== 'wait'" class="mov-wide">
+    <div v-if="!auctionChosn&& !showReauctionView && auctionDetail.data.status !== 'wait'" class="container">
       <div class="web-content-style02">
         <div class="container">
           <div>
@@ -702,7 +702,7 @@
                             
                         </div>
 
-                        <div class="container mov-wide" v-if="isUser && auctionDetail.data.status === 'wait' &&!connectDealerModal || auctionChosn &&!connectDealerModal ">
+                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' &&!connectDealerModal || auctionChosn &&!connectDealerModal ">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
                               <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
@@ -740,7 +740,7 @@
                         </div>
                          <!-- 딜러 선택시 모달 -->
                     
-                        <BottomSheet02 class="mov-wide" v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
+                        <BottomSheet02 class="container" v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
                           <button type="button" class="btn btn-dark d-flex align-items-center justify-content-center gap-1" @click="toggleView">재경매 하기<p class="icon-up-wh"></p></button>
                         </BottomSheet02>
                         <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView &&isUser" class="p-0 filter-content">
@@ -1552,7 +1552,7 @@ const handleCancelBid = async () => {
       display: none;
     }
     .sheet-content{
-      width: 100% !important;
+      width: 80% !important;
       padding: 0px !important;
     }
     .sheet{
@@ -1572,6 +1572,16 @@ const handleCancelBid = async () => {
     margin: auto;
   }
 }
+@media (max-width: 991px) {
+  .container {
+     --bs-gutter-x: 0rem !important;
+       max-width:none !important;
+    }
+}
+
+
+
+
 .w-30{
   width: 30% !important; 
 }
