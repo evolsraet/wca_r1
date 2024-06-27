@@ -10,7 +10,7 @@
                   <div>
                     <div class="mb-3" v-if="auctionDetail.data.status === 'ask' || auctionDetail.data.status === 'diag'">
                       <div class="diag-img">
-                        <p class="diag-text tc-light-gray mb-4">위카가 꼼꼼하게 진단 중이에요</p>
+                        <p class="diag-text tc-light-gray mb-4">{{ wicaLabel.title() }}가 꼼꼼하게 진단 중이에요</p>
                       </div>
                     </div>
                     <div v-else>
@@ -802,7 +802,7 @@ import carObjects from '../../../../../resources/img/modal/car-objects-blur.png'
 import carInfo from '../../../../../resources/img/electric-car.png';
 import ClaimModal from '@/views/modal/ClaimModal.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
-import { cmmn } from '@/hooks/cmmn';
+import { cmmn ,wicaLabel } from '@/hooks/cmmn';
 import { initReviewSystem } from '@/composables/review';
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';

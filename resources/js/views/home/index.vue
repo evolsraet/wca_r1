@@ -25,7 +25,7 @@
         <div :class="animationClass" ref="animatedSection">
         <div class="css-ifyyt1 gap-5">
           <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
-        <h5 class="font-title">위카와 함께해요.</h5>
+        <h5 class="font-title">{{ wicaLabel.title() }}과 함께해요.</h5>
       </div>
      <p class="tc-light-gray font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>
     </div>
@@ -246,7 +246,9 @@
   import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
   import { initReviewSystem } from '@/composables/review';
   import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
+  import { cmmn } from '@/hooks/cmmn';
 
+  const { wica , wicaLabel } = cmmn();
   const carName = ref('');
   const emoji = ref('');
   const updateCarName = () => {

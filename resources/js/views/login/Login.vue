@@ -19,7 +19,7 @@
         <div :class="animationClass" ref="animatedSection">
         <div class="css-ifyyt1 gap-5">
           <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
-        <h5 class="font-title">위카와 함께해요.</h5>
+        <h5 class="font-title">{{ wicaLabel.title() }} 와 함께해요.</h5>
       </div>
       <p class="tc-light-gray font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>
     </div>
@@ -227,7 +227,16 @@
     </div>
   
 </template>
-
+<script>
+console.log(window.Laravel.appName);
+export default {
+  data() {
+    return {
+      appName: window.Laravel.appName
+    };
+  }
+};
+</script>
 <script setup>
 import { ref, onMounted, nextTick, computed, onBeforeUnmount, inject } from 'vue';
 import { useStore } from 'vuex';
@@ -241,7 +250,7 @@ import { cmmn } from '@/hooks/cmmn';
 import carInfo from '../../../../resources/img/electric-car.png';
 
 const swal = inject('$swal');
-const { wica } = cmmn();
+const { wica , wicaLabel } = cmmn();
 const carName = ref('');
 const emoji = ref('');
 

@@ -191,9 +191,20 @@ const onRegionChange = () => {
 // 소유자 본인인증 처리 함수
 const verifyOwner = () => {
   if (ownerName.value.trim() === '') {
-    alert('소유자 이름을 입력해 주세요.');
+    wica.ntcn(swal)
+    .icon('W')
+    .addOption({ padding: 20})
+    .callback(function(result) {
+    })
+    .alert('소유자 이름을 입력해 주세요.');
   } else {
-    alert('본인인증되었습니다.');
+    wica.ntcn(swal)
+    .icon('I')
+    .addClassNm('cmm-review-custom')
+    .addOption({ padding: 20})
+    .callback(function(result) {
+    })
+    .alert('본인인증되었습니다.');
     isVerified.value = true;
   }
 };
@@ -201,9 +212,16 @@ const verifyOwner = () => {
 // 본인인증 후 소유자 정보 수정 여부 확인 함수
 const confirmEditIfDisabled = () => {
   if (isVerified.value) {
-    if (confirm('소유자 정보를 수정하시겠습니까?')) {
-      isVerified.value = false;
-    }
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+        if(result.isOk){
+          isVerified.value = false;
+        }
+      })
+    .alert('소유자 정보를 수정하시겠습니까?');
   }
 };
 

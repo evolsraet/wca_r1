@@ -1117,7 +1117,16 @@ export function cmmn() {
             return _this;
         }        
     }
-    //End of public wica swal
+
+// 위카 명  
+    const wicaLabel = {        
+        title : function() {
+            return window.Laravel.appName;
+        }
+        ,name : function() {
+            return window.Laravel.appName;
+        }
+    } 
 
     return {
       numberToKoreanUnit,
@@ -1131,6 +1140,7 @@ export function cmmn() {
       formatDateAndTime,
       salert,
       wica,
-      wicac
+      wicac,
+      wicaLabel,
     }
   }

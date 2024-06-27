@@ -144,7 +144,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text">내 차 팔기</span>
-                      <span class="tc-light-gray font-1">위카가 척척</span>
+                      <span class="tc-light-gray font-1">{{ wicaLabel.title() }}이 척척</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'auction.index'}" class="menu-item mt-1" @click="toggleNavbar">
@@ -310,6 +310,8 @@
   import { useStore } from 'vuex';
   import useAuth from '@/composables/auth';
   import useAuctions from '@/composables/auctions';
+  import { cmmn } from '@/hooks/cmmn';
+  const { wica , wicaLabel } = cmmn();
   const isMobile = ref(false);
   const { getAuctions, auctionsData } = useAuctions();
   const { logout } = useAuth();
