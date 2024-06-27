@@ -2,7 +2,6 @@
     <div class="p-3 row justify-content-center my-2">
         <div class="col-md-12">
         </div>
-                <div class="proceeding"></div>
 
 
                     <div class="search-type2 mb-5">

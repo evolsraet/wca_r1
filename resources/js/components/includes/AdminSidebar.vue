@@ -68,7 +68,7 @@ const { logout } = useAuth();
 const router = useRouter();
 
 onMounted(() => {
-    router.push({ name: 'users.index' });
+    //router.push({ name: 'users.index' });
 })
 
 </script>
