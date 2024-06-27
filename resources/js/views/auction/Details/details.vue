@@ -25,12 +25,12 @@
                         <input class="toggle-heart" type="checkbox" checked />
                         <label class="heart-toggle"></label>
                       </div>
-                      <div :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
-                        <div v-if="!isMobileView" class="d-flex flex-row">
+                      <div class="gap-1" :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
+                        <div v-if="!isMobileView" class="d-flex flex-row gap-1">
                           <div class="w-50">
                             <div class="card-img-top-ty02"></div>
                           </div>
-                          <div class="w-50 d-flex flex-column">
+                          <div class="w-50 d-flex flex-column gap-1">
                             <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
                             <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
                           </div>
@@ -107,12 +107,14 @@
                     </template>-->
 
                     <!--TODO: bid가 1명이라도 있을때 알림뜨기-->
-             
-                      <button class="bg-sub-color01 bold-18-font modal-bid d-flex p-3 justify-content-between blinking" @click="auctionIngChosen">
-                        <p>딜러 선택이 가능해요!</p>
-                        <p class="d-flex align-items-center gap-2">바로가기<p class="icon-right-wh"></p></p>
-                      </button>
 
+                      <button v-if="auctionDetail.data.bids_count === 0" class="bg-sub-color01 bold-18-font modal-bid d-flex p-3 justify-content-center blinking">
+                          <p class="text-center">경매 진행중 입니다.</p>
+                      </button>
+                      <button v-else class="bg-sub-color01 bold-18-font modal-bid d-flex p-3 justify-content-between blinking" @click="auctionIngChosen">
+                          <p>딜러 선택이 가능해요!</p>
+                          <p class="d-flex align-items-center gap-2">바로가기<p class="icon-right-wh"></p></p>
+                      </button>
                   </div>
 
                   <div v-if="isDealer && auctionDetail.data.status === 'ing'" class="p-3">
@@ -1747,5 +1749,15 @@ opacity: 0;
 .container {
     --bs-gutter-x: 0rem;
 }
+}
+.card-img-top-ty02{
+  border-top-left-radius: 6px;
+  border-bottom-left-radius: 6px;
+}
+.flex-column .card-img-top-ty02{
+  border-top-left-radius: 0px !important;
+  border-bottom-left-radius: 0px !important;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
 }
 </style>
