@@ -48,7 +48,7 @@
                 <div>
                 <p class="text-start card-text">{{ card.text }}</p>
                 </div>
-                <p class="auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ card.price }}</span></p>
+                
               </div>
             </div>
           </div>
