@@ -92,7 +92,7 @@
                                                 <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
                                             </label>
                                         </div>
-                                    <p>{{ review.content }}</p>
+                                    <p class="over-text">{{ review.content }}</p>
                                 </div>
                             </div>
                         </div>
