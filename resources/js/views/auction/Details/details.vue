@@ -802,7 +802,7 @@ import carObjects from '../../../../../resources/img/modal/car-objects-blur.png'
 import carInfo from '../../../../../resources/img/electric-car.png';
 import ClaimModal from '@/views/modal/ClaimModal.vue';
 import bidModal from '@/views/modal/bid/bidModal.vue';
-import { cmmn ,wicaLabel } from '@/hooks/cmmn';
+import { cmmn } from '@/hooks/cmmn';
 import { initReviewSystem } from '@/composables/review';
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
@@ -832,7 +832,7 @@ const succesbid = ref(false);
 const succesbidhope = ref(false);
 const amount = ref('');
 const koreanAmount = ref('원');
-
+const { wicaLabel } = cmmn();
 const swal = inject('$swal');
 
 
@@ -1568,7 +1568,7 @@ const handleCancelBid = async () => {
   }
 @media (min-width: 992px) {
   .mov-wide {
-    width: 55vw;
+    width: 80vw;
     margin: auto;
   }
 }
