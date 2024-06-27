@@ -15,6 +15,11 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
+    <script>
+        window.Laravel = {
+            appName: "{{ config('app.name', 'Laravel') }}"
+        };
+    </script>
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
@@ -29,8 +34,3 @@
     <router-view></router-view>
 </body>
 </html>
-<script>
-    window.Laravel = {
-        appName: "{{ config('app.name', 'Laravel') }}"
-    };
-</script>

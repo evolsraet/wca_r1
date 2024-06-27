@@ -227,16 +227,6 @@
     </div>
   
 </template>
-<script>
-console.log(window.Laravel.appName);
-export default {
-  data() {
-    return {
-      appName: window.Laravel.appName
-    };
-  }
-};
-</script>
 <script setup>
 import {createApp,h, ref, onMounted, nextTick, computed, onBeforeUnmount, inject } from 'vue';
 import { useStore } from 'vuex';
