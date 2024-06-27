@@ -238,7 +238,7 @@ export default {
 };
 </script>
 <script setup>
-import { ref, onMounted, nextTick, computed, onBeforeUnmount, inject } from 'vue';
+import {createApp,h, ref, onMounted, nextTick, computed, onBeforeUnmount, inject } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
@@ -271,10 +271,31 @@ const store = useStore();
 const router = useRouter();
 const errorMessage = computed(() => store.getters['auth/errorMessage']);
 const isMobileView = ref(window.innerWidth <= 640);
+
 const openModal = (type) => {
-  modalContent.value = type;
-  isModalOpen.value = true;
+  const container = document.createElement('div');
+  const app = createApp({
+    render() {
+      return h(LawGid, { content: type });
+    }
+  });
+  
+  app.mount(container);
+  
+  const text = container.innerHTML;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .useClose()
+    .callback(function (result) {
+      // 추가적인 콜백 함수 내용이 필요하다면 여기에 작성
+    })
+    .confirm(text);
+
+  app.unmount(); // Unmount the app after getting the HTML content
 };
+
 const checkScreenWidth = () => {
   if (typeof window !== 'undefined') {
     isMobileView.value = window.innerWidth <= 640;
