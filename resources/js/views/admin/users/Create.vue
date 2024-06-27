@@ -13,6 +13,7 @@
                                     v-model = "user.name"
                                     type="text"
                                     class="form-control"
+                                    autocomplete="one-time-code"
                                 />
                                 <div class="text-danger mt-1">
                                     {{ errors.name }}
@@ -32,6 +33,7 @@
                                     v-model = "user.email"
                                     type="text"
                                     class="form-control"
+                                    autocomplete="one-time-code"
                                 />
                                 <div class="text-danger mt-1">
                                     {{ errors.email }}
@@ -51,6 +53,7 @@
                                     v-model = "user.password"
                                     type="password"
                                     class="form-control"
+                                    autocomplete="one-time-code"
                                 />
                                 <div class="text-danger mt-1">
                                     {{ errors.password }}
@@ -70,6 +73,7 @@
                                     v-model = "user.password_confirmation"
                                     type="password"
                                     class="form-control"
+                                    autocomplete="one-time-code"
                                 />
                                 <div class="text-danger mt-1">
                                     {{ errors.password }}
