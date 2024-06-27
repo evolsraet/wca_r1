@@ -18,6 +18,11 @@
                 <div v-if="isMobileView">
                     <div class="card-img-top-ty02"></div>
                 </div>
+                <!--
+                <div class="card-body">
+                  <p class="tc-light-gray">수정일자</p>
+                  <input v-model="auction.updated_at" id="updatedAt" class="form-control" type="datetime-local">
+                </div>-->
                 <div class="card-body">
                   <p class="tc-light-gray">차량번호</p>
                   <input v-model="auction.car_no" id="car_no" class="form-control"/>
@@ -66,35 +71,40 @@
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">경매마감일</p>
-                  <input v-model="auction.final_at" id="finalAt" class="form-control">
+                  <input v-model="auction.final_at" id="finalAt" class="form-control" type="datetime-local">
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">선택일</p>
-                  <input v-model="auction.choice_at" id="choiceAt" class="form-control">
+                  <input v-model="auction.choice_at" id="choiceAt" class="form-control" type="datetime-local">
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">완료일</p>
-                  <input v-model="auction.done_at" id="doneAt" class="form-control">
+                  <input v-model="auction.done_at" id="doneAt" class="form-control" type="datetime-local">
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">성공수수료</p>
-                  <input v-model="auction.success_fee" id="successFee" class="form-control">
+                  <input v-model="auction.success_fee" id="successFee" class="form-control" @input="updateKoreanAmount('successFee')">
+                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ successFeeKorean }}</p>
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">진단수수료</p>
-                  <input v-model="auction.diag_fee" id="diagFee" class="form-control">
+                  <input v-model="auction.diag_fee" id="diagFee" class="form-control" @input="updateKoreanAmount('diagFee')">
+                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ diagFeeKorean }}</p>
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">총 비용</p>
-                  <input v-model="auction.total_fee" id="totalFee" class="form-control">
+                  <input v-model="auction.total_fee" id="totalFee" class="form-control" @input="updateKoreanAmount('totalFee')">
+                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ totalFeeKorean }}</p>
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">희망가</p>
-                  <input v-model="auction.hope_price" id="hopePrice" class="form-control">
+                  <input v-model="auction.hope_price" id="hopePrice" class="form-control" @input="updateKoreanAmount('hopePrice')">
+                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ hopePriceFeeKorean }}</p>
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">낙찰가</p>
-                  <input v-model="auction.final_price" id="finalPrice" class="form-control">
+                  <input v-model="auction.final_price" id="finalPrice" class="form-control" @input="updateKoreanAmount('finalPrice')">
+                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ finalPriceFeeKorean }}</p>
                 </div>
                 <div></div>
                 <!--
@@ -338,15 +348,6 @@ const checkScreenWidth = () => {
       isMobileView.value = window.innerWidth <= 640;
     }
   };
-const route = useRoute();
-const { getAuctionById, updateAuctionStatus, isLoading, updateAuction } = useAuctions();
-const auctionId = parseInt(route.params.id); 
-const auctionDetails = ref(null);
-const isVisible = ref(false);
-const showBottomSheet = ref(true);
-const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
-const isFileAttached = ref(false);
-const { openPostcode , closePostcode} = cmmn();
 const auction = reactive({ 
     car_no: '',
     owner_name: '',
@@ -366,6 +367,40 @@ const auction = reactive({
     hope_price: '',
     final_price: '',
 }); 
+const route = useRoute();
+const { getAuctionById, updateAuctionStatus, isLoading, updateAuction } = useAuctions();
+const auctionId = parseInt(route.params.id); 
+const auctionDetails = ref(null);
+const isVisible = ref(false);
+const showBottomSheet = ref(true);
+const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
+const isFileAttached = ref(false);
+const { openPostcode , closePostcode, amtComma, formatCurrency } = cmmn();
+const successFeeKorean = ref('0 원');
+const diagFeeKorean = ref('0 원');
+const totalFeeKorean = ref('0 원');
+const hopePriceFeeKorean = ref('0 원');
+const finalPriceFeeKorean = ref('0 원');
+
+
+const updateKoreanAmount = (price) => {
+  if(price == 'successFee'){
+    successFeeKorean.value = formatCurrency(auction.success_fee);
+  }
+  if(price == 'diagFee'){
+    diagFeeKorean.value = formatCurrency(auction.diag_fee);
+  }
+  if(price == 'totalFee'){
+    totalFeeKorean.value = formatCurrency(auction.total_fee);
+  }
+  if(price == 'hopePrice'){
+    hopePriceFeeKorean.value = amtComma(auction.hope_price);
+  }
+  if(price == 'finalPrice'){
+    finalPriceFeeKorean.value = amtComma(auction.final_price);
+  }
+  
+};
 
 function changeStatus(event) {
   auction.status = event.target.value;
@@ -435,6 +470,7 @@ onMounted(async () => {
   document.getElementById("status").value = data.status;
 
   watchEffect(() => {
+      auction.updated_at = data.updated_at;
       auction.car_no = data.car_no;
       auction.owner_name = data.owner_name;
       auction.status = data.status;
@@ -445,6 +481,31 @@ onMounted(async () => {
       auction.addr_post = data.addr_post;
       auction.addr1 = data.addr1;
       auction.addr2 = data.addr2;
+      auction.final_at = data.final_at;
+      auction.choice_at = data.choice_at;
+      auction.done_at = data.done_at;
+      auction.success_fee = data.success_fee;
+      auction.diag_fee = data.diag_fee;
+      auction.total_fee = data.total_fee;
+      auction.hope_price = data.hope_price;
+      auction.final_price = data.final_price;
+
+      if(data.success_fee){
+        successFeeKorean.value = formatCurrency(data.success_fee);
+      }
+      if(data.diag_fee){
+        diagFeeKorean.value = formatCurrency(data.diag_fee);
+      }
+      if(data.total_fee){
+        totalFeeKorean.value = formatCurrency(data.total_fee);
+      }
+      if(data.hope_price){
+        hopePriceFeeKorean.value = amtComma(data.hope_price);
+      }
+      if(data.final_price){
+        finalPriceFeeKorean.value = amtComma(data.final_price);
+      }
+      
   });
 });
 

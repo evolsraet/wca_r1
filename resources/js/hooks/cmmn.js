@@ -20,10 +20,16 @@ export function cmmn() {
       
     }
 
+    //만원 단위
     const amtComma = (amt) => {
         return amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+" 만원";
     }
     
+    //원 단위
+    function formatCurrency(amount) {
+        return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원';
+    }
+
     /**
      * 주소 검색
      *  <input v-model="auction.addr_post" class="form-control" type="hidden" id="addr_post">
@@ -1115,6 +1121,7 @@ export function cmmn() {
 
     return {
       numberToKoreanUnit,
+      formatCurrency,
       amtComma,
       openPostcode,
       closePostcode,
