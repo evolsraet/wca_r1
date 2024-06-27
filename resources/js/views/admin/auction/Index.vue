@@ -11,6 +11,20 @@
         </div>-->
         <div class="container mb-3">
             <div class="d-flex justify-content-end">
+                <div class="text-end select-option">
+                    <select class="form-select select-rank" aria-label="상태" @change="event => setFilter(event.target.value)">
+                        <option value="all" selected>전체</option>
+                        <option value="done">경매완료</option>
+                        <option value="chosen">선택완료</option>
+                        <option value="wait">선택대기</option>
+                        <option value="ing">경매진행</option>
+                        <option value="status">진단대기</option>
+                        <option value="ask">신청완료</option>
+                        <option value="cancel">취소</option>
+                    </select>
+                </div>
+            </div>
+                <!--
                 <div class="text-start status-selector">
                     <input type="radio" name="status" value="all" id="all" checked @change="setFilter('all')">
                     <label for="all" class="mx-2">전체</label>
@@ -33,8 +47,8 @@
                     <input type="radio" name="status" value="ask" id="ask"  @change="setFilter('ask')">
                     <label for="ask" class="mx-2">신청완료</label>
 
-                </div>
-            </div>
+                </div>-->
+
         </div>
         <div class="o_table_mobile my-5">
             <div class="tbl_basic tbl_dealer">
@@ -108,7 +122,7 @@
                             </td>
                         </tr>
                         <tr v-else>
-                            <td colspan="4" class="px-6 py-4 text-sm text-center">No data available</td>
+                            <td colspan="4" class="px-6 py-4 text-sm text-center">등록 된 매물이 없습니다.</td>
                         </tr>
                     </tbody>
                 </table>
