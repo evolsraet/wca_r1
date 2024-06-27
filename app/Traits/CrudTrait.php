@@ -12,6 +12,7 @@ trait CrudTrait
 {
     public $modelClass = null;
     public $resourceClass = null;
+    public $tableName = null;
     public $files = [];
 
     // 동적 모델 및 리소스 클래스 초기화
@@ -27,6 +28,7 @@ trait CrudTrait
 
         $this->modelClass = $modelClass;
         $this->resourceClass = $resourceClass;
+        $this->tableName = (new $modelClass)->getTable();
     }
 
     protected function getModelClass(): string
@@ -68,21 +70,22 @@ trait CrudTrait
         // 전처리
         $this->beforeProcess(__FUNCTION__, request());
 
-        $orderColumn = request('order_column', 'created_at');
-        // if (!in_array($orderColumn, ['id', 'name', 'created_at'])) {
-        //     $orderColumn = 'created_at';
-        // }
-
-        $orderDirection = request('order_direction', 'desc');
-
-        if (!in_array($orderDirection, ['asc', 'desc'])) {
-            $orderDirection = 'desc';
-        }
+        $orderColumns = explode(',', request('order_column', 'id'));
+        $orderDirections = explode(',', request('order_direction', 'desc'));
 
         $modelClass = $this->getModelClass();
+        $modelInstance = new $modelClass; // 모델 인스턴스 생성
         $result = $modelClass::query();
 
-        // 미들 프로세스 이전사용 되는 쿼리는, 그 전에 추가하여 미들 프로세스에서 변경 할 수 있도록 한다.
+        foreach ($orderColumns as $index => $orderColumn) {
+            $orderDirection = $orderDirections[$index] ?? 'desc'; // 기본값 'desc'
+
+            if (strpos($orderColumn, '.') !== false) {
+                $this->applyRelationOrder($modelInstance, $result, $orderColumn, $orderDirection);
+            } else {
+                $result = $result->orderBy($orderColumn, $orderDirection);
+            }
+        }
 
         // 연관 데이터 로딩
         // 예: 1:1 단수 (dealer), 1:N 복수 (roles)
@@ -111,10 +114,8 @@ trait CrudTrait
             });
 
 
-
-
         // 연관데이터 없는것들
-        // with 와 사용법 동일
+        // with 와 사용법 동��
         // ?doesnthave=reviews
         $result = $result->when(request('doesnthave'), function ($query) {
             $relations = request('doesnthave') ? explode(',', request('doesnthave')) : [];
@@ -141,7 +142,7 @@ trait CrudTrait
             foreach ((array) $exploded as $row) :
                 $row = explode(':', $row);
 
-                //$row[1] 이 like 일때, $row[2] 에 '%' 가 포함되어있지 않으면 앞뒤로 '%' 문자 더해주기
+                //$row[1] 이 like 일때, $row[2] 에 '%' 가 포되어있지 않으면 앞뒤로 '%' 문자 더해주기
                 if ($row[1] == 'like' && strpos($row[2], '%') === false) {
                     $row[2] = '%' . $row[2] . '%';
                 }
@@ -171,7 +172,7 @@ trait CrudTrait
                                 });
                             } else {
                                 $result->whereHas($findKey[0], function ($qry) use ($findKey, $row) {
-                                    // findKey[1]는 필드명, row[1]은 값 (기본 연산자는 '=')
+                                    // findKey[1]는 필드명, row[1]은 값 (기본 산자 '=')
                                     $qry->where($findKey[1], '=', $row[1]); // 기본 연산자 '='를 명시적으로 사용
                                 });
                             }
@@ -184,10 +185,35 @@ trait CrudTrait
 
         $this->afterProcess(__FUNCTION__, request(), $result);
 
-        $result = $result->orderBy($orderColumn, $orderDirection)
-            ->paginate($paginate);
+        $result = $result->paginate($paginate);
 
         return response()->api($this->resourceClass::collection($result));
+    }
+
+    private function applyRelationOrder($modelInstance, $query, $orderColumn, $orderDirection)
+    {
+        list($tableName, $columnName) = explode('.', $orderColumn);
+        $relationMethod = Str::camel($tableName);
+
+        if ($this->tableName == $tableName) {
+            $query->orderBy($orderColumn, $orderDirection);
+        } elseif (method_exists($modelInstance, $relationMethod)) {
+            $relation = $modelInstance->$relationMethod();
+
+            if ($relation && method_exists($relation, 'getRelated')) {
+                $relationModel = $relation->getRelated();
+                $foreignKey = $relation->getForeignKeyName();
+                $relatedTable = $relationModel->getTable();
+
+                $query->join($relatedTable, $relatedTable . '.id', '=', $foreignKey)
+                    ->select($modelInstance->getTable() . '.*', $relatedTable . '.' . $columnName . ' AS _related_' . $columnName)
+                    ->orderBy('_related_' . $columnName, $orderDirection);
+            } else {
+                throw new \Exception("Invalid relation method or missing getRelated method.");
+            }
+        } else {
+            throw new \Exception("Relation method {$relationMethod} does not exist on model {$this->modelClass}.");
+        }
     }
 
     public function show($id)
