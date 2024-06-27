@@ -65,6 +65,7 @@ class AppServiceProvider extends ServiceProvider
             $response = [
                 'status' => $status,
                 'message' => $message,
+                'data' => null,
             ];
 
             // 데이터 대입
@@ -86,12 +87,19 @@ class AppServiceProvider extends ServiceProvider
                 $response['message'] = '에러가 발생했습니다.';
             }
 
+            $additional['code'] = $code;
+
             // 추가 첨부
             if (!empty($additional)) {
                 $response = array_merge($response, $additional);
             }
 
-            return response()->json($response, $code);
+
+            // print_r([$response, $code]);
+            // die();
+            // 참고 :: 정상이지만, Laravel Request Docs (LRD) 에서는 항상 200 으로 응답된다.
+            return response()->json($response, (int) $code);
+            // return response()->json($response, 401);
         });
     }
 }

@@ -139,6 +139,8 @@ class UserService
 
             $data['dealer'] = $this->checkJson($request->input('dealer'));
 
+
+
             // print_r('업데이트 메소드');
             // print_r($request->all());
             // print_r($data);
@@ -151,6 +153,8 @@ class UserService
             //     $dealerData = $this->checkJson($data['dealer']);
             //     unset($data['dealer']);
             // }
+
+            // TODO: 비번 있을경우 컨펌
 
             $model = new User;
 

@@ -197,8 +197,6 @@ trait CrudTrait
         $modelClass = $this->getModelClass();
         $result = $modelClass::query();
 
-        $this->middleProcess(__FUNCTION__, request(), $result);
-
         // 연관 데이터 로딩
         // 예: 1:1 단수 (dealer), 1:N 복수 (roles)
         // ?with=dealer,roles
@@ -210,7 +208,9 @@ trait CrudTrait
             $query->with($validRelations);
         });
 
+        $this->middleProcess(__FUNCTION__, request(), $result, $id);
         $result = $result->find($id);
+
         if (!$result) {
             throw (new ModelNotFoundException())->setModel($modelClass, $id);
         }

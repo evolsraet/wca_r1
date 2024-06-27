@@ -58,7 +58,7 @@ class UserController extends Controller
         if (Hash::check($inputPassword, auth()->user()->password)) {
             return response()->api(null, '비밀번호가 일치합니다.', 'ok', 200);
         } else {
-            return response()->api(null, '비밀번호가 일치하지 않습니다.', 'fail', 401);
+            return response()->api(null, '비밀번호가 일치하지 않습니다.', 'fail', 404);
         }
     }
 

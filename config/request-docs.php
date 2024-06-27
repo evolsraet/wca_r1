@@ -39,7 +39,7 @@ return [
         'rules'
     ],
     // Can be overridden as // @LRDresponses 200|400|401
-    'default_responses' => [ "200", "400", "401", "403", "404", "405", "422", "429", "500", "503"],
+    'default_responses' => ["200", "400", "401", "403", "404", "405", "422", "429", "500", "503"],
 
     // By default, LRD group your routes by the first /path.
     // This is a set of regex to group your routes by prefix.

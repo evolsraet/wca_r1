@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Traits\CrudTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Http\Resources\BidResource;
 use App\Http\Resources\AuctionResource;
 
 class AuctionService
@@ -78,19 +79,20 @@ class AuctionService
                 // 1. status가 ing인 경매 항목.
                 // 2. bids 관계에서 user_id가 현재 인증된 사용자의 ID인 경매 항목.
 
-                $result->where('status', 'ing')
-                    ->orWhereHas('bids', function ($query) {
-                        $query->where('user_id', auth()->user()->id);
-                    })
-                    ->with(['bids' => function ($query) {
-                        $query->where('user_id', auth()->user()->id);
-                    }])
-                    ->get()
-                    ->transform(function ($auction) {
-                        // 각 auction 객체의 bids 관계를 BidResource 컬렉션으로 변환하고, toArray를 호출합니다.
-                        $auction->bids = \App\Http\Resources\BidResource::collection($auction->bids)->toArray(request());
-                        return $auction;
-                    });
+                $result->where(function ($query) {
+                    $query->where('status', 'ing')
+                        ->orWhereHas('bids', function ($subQuery) {
+                            $subQuery->where('user_id', auth()->user()->id);
+                        });
+                });
+
+                // $result->with('bids');
+
+                // $result->with(['bids' => function ($query) {
+                //     $query->where('user_id', auth()->user()->id)->get()->map(function ($bid) {
+                //         return new BidResource($bid);
+                //     });
+                // }]);
             } else {
                 // 일반 사용자인 경우 자신이 등록한 경매만 조회합니다.
                 $result->where('user_id', auth()->user()->id);
