@@ -62,9 +62,9 @@
                                                 등록일
                                             </div>
                                             <div class="select-none">
-                                                <span v-if="orderingState.created_at.direction === 'asc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&uarr;</span>
-                                                <span v-else-if="orderingState.created_at.direction === 'desc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&darr;</span>
-                                                <span v-else-if="orderingState.created_at.direction === '' && orderingState.created_at.column === ''" class="text-blue-600">&uarr;&darr;</span>
+                                                <span v-if="orderingState['created_at'].direction === 'asc' && orderingState['created_at'].column === 'created_at'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState['created_at'].direction === 'desc' && orderingState['created_at'].column === 'created_at'" class="text-blue-600">&darr;</span>
+                                                <span v-else class="text-blue-600">&uarr;&darr;</span>
                                             </div>
                                         </div>
                                     </th>
@@ -72,7 +72,7 @@
                                         <div
                                             class="flex flex-row items-center justify-content-center justify-between cursor-pointer"
                                             @click="
-                                                updateOrdering('id')
+                                                updateOrdering('user.name')
                                             "
                                         >
                                             <div
@@ -80,24 +80,24 @@
                                                 :class="{
                                                     'font-bold text-blue-600':
                                                         orderColumn ===
-                                                        'id',
+                                                        'user.name',
                                                 }"
                                             >
                                                 회원명
                                             </div>
-                                            <!--
+                                            
                                             <div class="select-none">
-                                                <span v-if="orderingState.id.direction === 'asc' && orderingState.id.column === 'id'" class="text-blue-600">&uarr;</span>
-                                                <span v-else-if="orderingState.id.direction === 'desc' && orderingState.id.column === 'id'" class="text-blue-600">&darr;</span>
-                                                <span v-else-if="orderingState.id.direction === '' && orderingState.id.column === ''" class="text-blue-600">&uarr;&darr;</span>
-                                            </div>-->
+                                                <span v-if="orderingState['user.name'].direction === 'asc'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState['user.name'].direction === 'desc'" class="text-blue-600">&darr;</span>
+                                                <span v-else class="text-blue-600">&uarr;&darr;</span>
+                                            </div>
                                         </div>
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 justify-content-center">
                                         <div
                                             class="flex flex-row items-center justify-content-center justify-between cursor-pointer"
                                             @click="
-                                                updateOrdering('id')
+                                                updateOrdering('dealer.name')
                                             "
                                         >
                                             <div
@@ -105,18 +105,16 @@
                                                 :class="{
                                                     'font-bold text-blue-600':
                                                         orderColumn ===
-                                                        'id',
+                                                        'dealer.name',
                                                 }"
                                             >
                                                 딜러명
                                             
                                             </div>
-                                            <!--
                                             <div class="select-none">
-                                                <span v-if="orderingState.id.direction === 'asc' && orderingState.id.column === 'id'" class="text-blue-600">&uarr;</span>
-                                                <span v-else-if="orderingState.id.direction === 'desc' && orderingState.id.column === 'id'" class="text-blue-600">&darr;</span>
-                                                <span v-else-if="orderingState.id.direction === '' && orderingState.id.column === ''" class="text-blue-600">&uarr;&darr;</span>
-                                            </div>-->
+                                                <span v-if="orderingState['dealer.name'].direction === 'asc' && orderingState['dealer.name'].column === 'dealer.name'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState['dealer.name'].direction === 'desc' && orderingState['dealer.name'].column === 'dealer.name'" class="text-blue-600">&darr;</span>
+                                                <span v-else class="text-blue-600">&uarr;&darr;</span>                                            </div>
                                         </div>
                                     </th>
                                     <th class="px-6 py-3 bg-gray-50 justify-content-center">
@@ -139,9 +137,9 @@
                                             </div>
                                             
                                             <div class="select-none">
-                                                <span v-if="orderingState.star.direction === 'asc' && orderingState.star.column === 'star'" class="text-blue-600">&uarr;</span>
-                                                <span v-else-if="orderingState.star.direction === 'desc' && orderingState.star.column === 'star'" class="text-blue-600">&darr;</span>
-                                                <span v-else-if="orderingState.star.direction === '' && orderingState.star.column === ''" class="text-blue-600">&uarr;&darr;</span>
+                                                <span v-if="orderingState['star'].direction === 'asc' && orderingState['star'].column === 'star'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState['star'].direction === 'desc' && orderingState['star'].column === 'star'" class="text-blue-600">&darr;</span>
+                                                <span v-else class="text-blue-600">&uarr;&darr;</span>
                                             </div>
                                         </div>
                                     </th>
@@ -163,9 +161,9 @@
                                                 내용
                                             </div>
                                             <div class="select-none">
-                                                <span v-if="orderingState.content.direction === 'asc' && orderingState.content.column === 'content'" class="text-blue-600">&uarr;</span>
-                                                <span v-else-if="orderingState.content.direction === 'desc' && orderingState.content.column === 'content'" class="text-blue-600">&darr;</span>
-                                                <span v-else-if="orderingState.content.direction === '' && orderingState.content.column === ''" class="text-blue-600">&uarr;&darr;</span>
+                                                <span v-if="orderingState['content'].direction === 'asc' && orderingState['content'].column === 'content'" class="text-blue-600">&uarr;</span>
+                                                <span v-else-if="orderingState['content'].direction === 'desc' && orderingState['content'].column === 'content'" class="text-blue-600">&darr;</span>
+                                                <span v-else class="text-blue-600">&uarr;&darr;</span>
                                             </div>
                                         </div>
                                     </th>
@@ -181,10 +179,10 @@
                                             {{ review.created_at }}
                                         </td>
                                         <td class="px-6 py-4 text-sm">
-                                            {{ review.dealer.name }}
+                                            {{ review.user.name }}
                                         </td>
                                         <td class="px-6 py-4 text-sm">
-                                            {{ review.user.name }}
+                                            {{ review.dealer.name }}
                                         </td>
                                         <td class="px-6 py-4 text-sm">
                                             {{ review.star }}점
@@ -259,10 +257,12 @@ const currentStatus = ref('all');
 const currentPage = ref(1);
 const currentStar = ref('');
 const orderingState = {
-    created_at: { direction: '', column: '', hit: 0 },
-    id: { direction: '', column: '', hit: 0 },
-    content: { direction: '', column: '', hit: 0 },
-    star: { direction: '', column: '', hit: 0 },
+    'created_at': { direction: '', column: 'created_at', hit: 0 },
+    'id': { direction: '', column: 'id', hit: 0 },
+    'content': { direction: '', column: 'content', hit: 0 },
+    'star': { direction: '', column: 'star', hit: 0 },
+    'user.name': { direction: '', column: 'user.name', hit: 0 },
+    'dealer.name': { direction: '', column: 'dealer.name', hit: 0 },
 };
 onMounted(async () => {
     fetchReviews();
@@ -288,20 +288,18 @@ function navigateToCreate() {
 
 const updateOrdering = (column) => {
     let columnState = orderingState[column];
-
     columnState.hit += 1;
-    
-    if (columnState.hit == 3) {
-        columnState.column = '';
+
+    if (columnState.hit === 3) {
         columnState.direction = '';
         columnState.hit = 0;
     } else {
-        columnState.column = column;
         columnState.direction = columnState.direction === 'asc' ? 'desc' : 'asc';
     }
+    
     orderColumn.value = columnState.column;
     orderDirection.value = columnState.direction;
-    fetchReviews();
+    fetchReviews(); 
 };
 
 function fetchReviews() {
