@@ -115,7 +115,7 @@
   import AlarmModal from '@/views/modal/AlarmModal.vue';
   import Footer from "@/views/layout/footer.vue"
   import { cmmn } from '@/hooks/cmmn';
-  import carInfo from '../../../../../resources/img/electric-car.png';
+  import carInfo from '../../../../resources/img/electric-car.png';
   const swal = inject('$swal');
   const { wica } = cmmn();
   const router = useRouter();

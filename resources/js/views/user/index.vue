@@ -147,12 +147,14 @@ import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
 import useAuctions from "@/composables/auctions";
 import { initReviewSystem } from '@/composables/review';
 import { cmmn } from '@/hooks/cmmn';
+import { useStore } from 'vuex';
 
 const { auctionsData, getAuctions } = useAuctions();
 const { getUserReview , deleteReviewApi , reviewsData } = initReviewSystem(); 
 const { amtComma } = cmmn();
 const router = useRouter();
 const isMobileView = ref(window.innerWidth <= 640);
+const store = useStore();
 function navigateToDetail(auction) {
     console.log("디테일 :", auction.id);
     router.push({ name: 'AuctionDetail', params: { id: auction.id } });
@@ -170,8 +172,9 @@ function getAuctionStyle(auction) {
 
 onMounted(async() => {
     await getAuctions();
-    //console.log('Auctions Data:', auctionsData);  // Log the data
-    const userId = auctionsData.value[0].user_id;
+    const user =store.getters['auth/user'];
+    const userId = user.id;
+    console.log(userId);
     await getUserReview(userId);
     console.log(reviewsData.value);
     setRandomPlaceholder();

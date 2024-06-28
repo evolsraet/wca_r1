@@ -7,7 +7,7 @@ import { cmmn } from '@/hooks/cmmn';
 let starScore = 0;
 
 export function initReviewSystem() {
-    const { wicac , wica } = cmmn();
+    const { callApi , wicac , wica } = cmmn();
     const router = useRouter();
 
 
@@ -345,7 +345,6 @@ export function initReviewSystem() {
             return result.data; //결과값을 후 처리 할때 필수 선언
         })
         .get();
-
     }
 
     //작성한 이용후기별 불러오기(로그인 전 리뷰는 auction 불러오지 않음.)
@@ -398,6 +397,7 @@ export function initReviewSystem() {
                 reviewsData.value = result.data;
                 reviewPagination.value = result.rawData.data.meta;
             })
+            .log()
             .get();
     }
         
