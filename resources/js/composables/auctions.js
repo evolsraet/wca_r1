@@ -318,51 +318,8 @@ const updateAuction = async (id,auction) => {
                 })
         }
     }).confirm();
-
-    /*
-    salert({
-        _swal: swal, //필수 지정
-        _title: '변경하시겠습니까?',
-        _type: 'C',
-        _isHtml: true, 
-        _icon: 'Q',
-    },function(result){
-        if(result.isOk){
-            axios.put(`/api/auctions/${id}`,auctionForm)
-                .then(response => {
-                    salert({
-                        _type: 'A',
-                        _swal: swal, //필수 지정
-                        _msg: '변경되었습니다.',
-                        _icon: 'I',
-                        _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
-                    },function(result){
-                        if(result.isOk){
-                            //location.reload();
-                            getAuctions()
-                            router.push({name: 'auctions.index'})
-                                
-                        }
-                    });
-                })
-                .catch(error => {
-                    salert({
-                        _type: 'A',
-                        _swal: swal, //필수 지정
-                        _title: '오류가 발생하였습니다.',
-                        _msg: '관리자에게 문의해주세요.',
-                        _icon: 'E',
-                        _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
-
-                    },function(result){
-                        console.log(result);
-                    })
-                })
-        }
-        //console.log('salert', result);
-    });
-    */
 }
+
 //딜러 선택
 const chosenDealer = async (id, data) => {
     if (isLoading.value) return;
