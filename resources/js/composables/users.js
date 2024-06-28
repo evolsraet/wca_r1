@@ -7,7 +7,7 @@ export default function useUsers() {
     const user = ref({
         name: ''
     })
-    const { callApi , wica , wicac} = cmmn();
+    const { wica , wicac} = cmmn();
     const router = useRouter()
     const validationErrors = ref({})
     const isLoading = ref(false)
@@ -63,7 +63,8 @@ export default function useUsers() {
                 users.value = response.data;
                 console.log(users.value);
             })
-   
+        
+            
     }
     
     const adminGetUsers = async (
@@ -101,8 +102,15 @@ export default function useUsers() {
 
     const getUser = async (id) => {
         try {
-            const response = await axios.get('/api/users/' + id);
-            return response.data.data;
+            const result = await wicac.conn()
+            .url(`/api/users/${id}`)
+            .callback(function(result) {
+                return result
+            })
+            .get();
+
+            //const response = await axios.get('/api/users/' + id);
+            return result.data;
         } catch (error) {
             throw error;
         }

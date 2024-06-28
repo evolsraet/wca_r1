@@ -9,7 +9,7 @@ let user = reactive({
     name: "",
     email: "",
 });
-const { callApi , wica , wicac} = cmmn();
+const { wica , wicac} = cmmn();
 export default function useAuth() {
     const processing = ref(false);
     const validationErrors = ref({});
