@@ -160,9 +160,19 @@
                     <div class="col-12">
                       <div>
                         <input type="text" class="form-control border-0 border-bottom my-4" placeholder="소유자가 누구인가요?" v-model="carInfoForm.owner">
+                        <div class="text-danger mt-1">
+                          <div v-for="message in validationErrors?.owner">
+                            {{ message }}
+                          </div>
+                        </div>
                       </div>
                       <div>
                         <input type="text" class="form-control border-0 border-bottom mb-4" placeholder="차량 번호를 입력해주세요. ( 12가 1234 )" v-model="carInfoForm.no">
+                        <div class="text-danger mt-1">
+                          <div v-for="message in validationErrors?.no">
+                            {{ message }}
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -201,9 +211,19 @@
                       </div>
                     <div>
                       <input type="text" class="form-control border-0 border-bottom my-4" placeholder="소유자가 누구인가요?" v-model="carInfoForm.owner">
+                      <div class="text-danger mt-1">
+                          <div v-for="message in validationErrors?.owner">
+                            {{ message }}
+                          </div>
+                        </div>
                     </div>
                     <div>
                       <input type="text" class="form-control border-0 border-bottom mb-4" placeholder="차량 번호를 입력해주세요." v-model="carInfoForm.no">
+                      <div class="text-danger mt-1">
+                        <div v-for="message in validationErrors?.no">
+                          {{ message }}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -269,7 +289,7 @@
   const store = useStore();
   const user = computed(() => store.getters['auth/user']);
 
-  const { carInfoForm, submitCarInfo, processing } = useAuctions();
+  const { carInfoForm, submitCarInfo, processing , validationErrors } = useAuctions();
 
   const isMobileView = ref(window.innerWidth <= 640);
   const animationClass = ref('css-kzs0t hidden');

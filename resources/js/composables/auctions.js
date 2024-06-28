@@ -151,22 +151,26 @@ const getStatusLabel = (status) => {
 // carinfo detail 정보를 가져오고 스토리지 저장 
 const submitCarInfo = async () => {
     if (processing.value) return;  // 이미 처리중이면 다시 처리하지 않음
-    processing.value = true;
+
+    processing.value = false;
     validationErrors.value = {};
 
-    try {
-        const response = await axios.post('/api/auctions/carInfo', carInfoForm);
-        localStorage.setItem('carDetails', JSON.stringify(response.data.data));  // 데이터를 로컬 스토리지에 저장
-        router.push({ name: 'sell' });  // 저장 후 sell 라우트로 이동
-        console.log("data",response.data);
-    } catch (error) {
-        console.error(error);
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;  // 서버로부터 받은 에러 메시지 처리
+    return wicac.conn()
+    //.log() //로그 출력
+    .url('/api/auctions/carInfo') //호출 URL
+    .param(carInfoForm)
+    .callback(function(result) {
+        if(result.isError){
+            validationErrors.value = result.rawData.response.data.errors;          
+            return;
+        }else{
+            localStorage.setItem('carDetails', JSON.stringify(result.data));  // 데이터를 로컬 스토리지에 저장
+            router.push({ name: 'sell' });  // 저장 후 sell 라우트로 이동
         }
-    } finally {
-        processing.value = false;
-    }
+    })
+    .post();
+
+    
 };
 
 const refreshCarInfo = async () => {
