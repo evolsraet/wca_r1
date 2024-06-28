@@ -5,7 +5,7 @@ export default function useLikes() {
     const likesData = ref([]);
     const pagination = ref({});
     const validationErrors = ref({});
-    const { callApi } = cmmn();
+    const { salert, wicac } = cmmn();
 
     const getLikes = async (likeableType = 'Auction', userId = null) => {
         const apiList = [`likes.likeable_type:like:${likeableType}`];
@@ -20,18 +20,18 @@ export default function useLikes() {
 
         while (hasMorePages) {
             try {
-                const response = await callApi({
-                    _type: 'get',
-                    _url: `/api/likes`,
-                    _param: {
-                        _where: apiList,
-                        _page: `${page}`,
-                        _paginate: 50
-                    }
-                });
+                const result = await wicac.conn()
+                    //.log() // 로그 출력
+                    .url(`/api/likes`)
+                    .where(apiList)
+                    .page(`${page}`) // 페이지 0 또는 주석 처리시 기능 안함
+                    .callback(function(result) {
+                        return result;
+                    })
+                    .get();
 
-                allData = allData.concat(response.data);
-                pagination.value = response.rawData.data.meta;
+                allData = allData.concat(result.data);
+                pagination.value = result.rawData.data.meta;
                 hasMorePages = page < pagination.value.last_page;
                 page += 1;
             } catch (error) {
