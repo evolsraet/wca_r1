@@ -37,6 +37,14 @@ export default function useUsers() {
     
     });
 
+    const adminEditForm = reactive({
+        name:"",
+        phone:"",
+        currentPw:"",
+        password:"",
+        password_confirmation:"",
+    });
+
     const getUsers = async (
         page = 1,
         search_id = '',
@@ -150,6 +158,8 @@ export default function useUsers() {
                 receive_addr2: editForm.receive_addr2,
             }
         };
+
+        
     
         console.log(JSON.stringify(payload));
         const formData = new FormData();
@@ -200,6 +210,81 @@ export default function useUsers() {
                 }
             }).confirm();
     };
+
+    const updateMyInfo = async(adminEditForm,id) =>{
+        validationErrors.value = {};
+        if (isLoading.value) return;
+
+        wica.ntcn(swal)
+        .title('수정하시겠습니까?') // 알림 제목
+        .icon('Q') //E:error , W:warning , I:info , Q:question
+        .callback(async function(result) {
+            if(result.isOk){
+                wicac.conn()
+                .url(`/api/users/confirmPassword`)
+                .param({
+                    'password' : adminEditForm.currentPw
+                })
+                .callback(function(result) {
+                    if(result.isSuccess){
+                        //내 정보 변경 진행
+                        myInfoModify(adminEditForm,id);
+                    }else{
+                        wica.ntcn(swal)
+                        .title('비밀번호 불일치')
+                        .icon('E') //E:error , W:warning , I:info , Q:question
+                        .alert('비밀번호가 옳바르지 않습니다.');
+                    }
+                })
+                .post();
+            }
+        }).confirm();
+    };
+
+    const myInfoModify = async(adminEditForm,id) =>{
+        let jsonData = {};
+        if(adminEditForm.password || adminEditForm.password_confirmation){
+            jsonData = {
+                user:{
+                    name: adminEditForm.name,
+                    phone: adminEditForm.phone,
+                    password: adminEditForm.password,
+                    password_confirmation : adminEditForm.password_confirmation
+                }
+            }
+        }else{
+            jsonData = {
+                user:{
+                    name: adminEditForm.name,
+                    phone: adminEditForm.phone
+                }
+            }
+        }
+
+        wicac.conn()
+        .url(`/api/users/${id}`)
+        .param(jsonData)
+        .callback(function(result) {
+            if(result.isSuccess){
+                //내 정보 변경 진행
+                wica.ntcn(swal)
+                .icon('I') //E:error , W:warning , I:info , Q:question
+                .callback(function(result) {
+                    if (result.isOk) {
+                        router.push({ name: 'users.index' });
+                    }
+                })
+                .alert('내 정보가 정상적으로 수정되었습니다.');
+            }else{
+                validationErrors.value = result.msg;
+                wica.ntcn(swal)
+                .title('변경 실패')
+                .icon('E') //E:error , W:warning , I:info , Q:question
+                .alert('내 정보 변경에 실패하였습니다.');
+            }
+        })
+        .put();
+    }
     
     /**console.log(result);
     await axios.put(`/api/users/${id}`, formData,{
@@ -256,6 +341,7 @@ export default function useUsers() {
     }
 
     return {
+        adminEditForm,
         editForm,
         users,
         user,
@@ -263,6 +349,7 @@ export default function useUsers() {
         getUser,
         adminGetUsers,
         storeUser,
+        updateMyInfo,
         updateUser,
         deleteUser,
         validationErrors,

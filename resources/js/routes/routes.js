@@ -441,6 +441,12 @@ export default [
                 component: () => import('../views/admin/review/Index.vue'),
                 meta: { breadCrumb: 'review' }
             },
+            {
+                name: 'myinfo.edit',
+                path: 'myinfo/edit',
+                component: () => import('../views/admin/myInfo/Edit.vue'),
+                meta: { breadCrumb: 'MyInfo Edit' }
+            },
         ]
     },
     {
