@@ -201,7 +201,7 @@
           <div v-else class="card login-card border-0 overlay-style layover-style login-any" :class="{ 'expanded': expanded }" ref="loginCardRef">
             <div class="card-body">
               <!-- 조회 폼 -->
-              <form @submit.prevent="submitCarInfo" class="d-flex flex-column justify-content-center">
+              <form @submit.prevent="submitCarInfoIsOk" class="d-flex flex-column justify-content-center">
                 <div class="row mb-4 mt-4">
                   <div class="col-12">
                       <div class="video-container d-sm-flex">
@@ -267,6 +267,8 @@
   import { initReviewSystem } from '@/composables/review';
   import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
   import { cmmn } from '@/hooks/cmmn';
+  import { routerKey } from "vue-router";
+  import { useRoute, useRouter } from 'vue-router';
 
   
   const swal = inject('$swal');
@@ -295,9 +297,10 @@
   const animationClass = ref('css-kzs0t hidden');
 
   const expanded = ref(false); // Define the expanded property
-
+  const router = useRouter();
   const openModal = (type) => {
   const container = document.createElement('div');
+
   const app = createApp({
     render() {
       return h(LawGid, { content: type });
@@ -335,7 +338,21 @@ const openAlarmModal = () => {
     .confirm(text);
 };
 
-
+const submitCarInfoIsOk = () => {
+  const text= `<div class="enroll_box" style="position: relative;">
+                  <p class="overlay_text04">로그인을 하면 경매 신청이 가능해요.</p>
+               </div>`;
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .callback(function (result) {
+      if(result.isOk){
+        router.push('/login');
+      }
+    })
+    .confirm(text);
+}
   const closeModal = () => {
     isModalOpen.value = false;
   };
