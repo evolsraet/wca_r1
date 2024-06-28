@@ -108,6 +108,7 @@ onMounted(async () => {
 <style scoped>
 .search-type3 .search-btn{
     right: 13px !important;
+    top: 64px !important;
 }
 .pd-10{
     padding: 10px;
