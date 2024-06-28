@@ -133,10 +133,7 @@ export default function useUsers() {
         axios.post('/api/users', serializedPost)
             .then(response => {
                 router.push({name: 'users.index'})
-                swal({
-                    icon: 'success',
-                    title: 'User saved successfully'
-                })
+                wica.ntcn(swal).icon('S').title('정상 처리 되었습니다.').fire();
             })
             .catch(error => {
                 if (error.response?.data) {
@@ -205,11 +202,7 @@ export default function useUsers() {
                         if(result.isError) {
                             validationErrors.value = result.msg;
                         } else {
-                            swal({
-                                icon: "success",
-                                showConfirmButton: false,
-                                timer: 1500,
-                            });
+                            wica.ntcn(swal).icon('S').title('정상 처리 되었습니다.').fire();
                             //console.log(response);
                             await router.push({ name: "users.index" });
                         }

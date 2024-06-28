@@ -147,11 +147,11 @@ const auctionEntry = async () => {
     console.log('finalAt:', finalAt.value);
     console.log('fileUserOwner:', fileUserOwner.value);
 
-    Swal.fire({
-      icon: 'error',
-      title: '필수 정보를 입력해 주세요.',
-      text: '소유자 본인 인증 및 필수 정보를 모두 입력해야 합니다.'
-    });
+    wica.ntcn(swal)
+    .title('필수 정보를 입력해 주세요.')
+    .icon('E')
+    .alert('소유자 본인 인증 및 필수 정보를 모두 입력해야 합니다.');
+
     return;
   }
 
@@ -186,11 +186,12 @@ const auctionEntry = async () => {
       })
       .confirm(textOk);
   } catch (error) {
-    Swal.fire({
-      icon: 'error',
-      title: 'Failed to create auction'
-    });
-    console.error('Failed to create auction:', error);
+
+    wica.ntcn(swal)
+    .title('경매 신청 불가')
+    .icon('E')
+    .alert(error);
+
   }
 };
 

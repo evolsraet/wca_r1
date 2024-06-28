@@ -33,10 +33,7 @@ export default function useProfile() {
                 if (data.success) {
                     store.commit("auth/SET_USER", data.data);
                     // router.push({name: 'profile.index'})
-                    swal({
-                        icon: "success",
-                        title: "Profile updated successfully",
-                    });
+                    wica.ntcn(swal).icon('S').title('정상 처리 되었습니다.').fire();
                 }
             })
             .catch((error) => {

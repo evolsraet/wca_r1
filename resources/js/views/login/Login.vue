@@ -321,12 +321,8 @@ const submitLogin = async () => {
     const userData = await store.dispatch('auth/login', loginForm.value);
     await store.dispatch("auth/getUser");
     await store.dispatch("auth/getAbilities");
-    Swal.fire({
-      icon: "success",
-      title: "로그인 성공",
-      showConfirmButton: false,
-      timer: 1500,
-    });
+
+    wica.ntcn(swal).icon('S').title('로그인 성공').fire();
 
     // 로컬 스토리지에서 carDetails와 게스트 클릭 플래그 확인
     const localCarDetails = localStorage.getItem('carDetails');
@@ -355,18 +351,15 @@ const submitLogin = async () => {
 
 function handleLoginError(error) {
   if (!error.response) {
-    Swal.fire({
-      icon: "error",
-      title: "Network Error",
-      text: "Please check your internet connection and try again.",
-      showConfirmButton: true,
-    });
+    wica.ntcn(swal)
+    .title('네트워크 연결이 실패하였습니다.')
+    .icon('E')
+    .alert('계속 될 경우 관리자에게 문의해주세요.');   
   } else {
-    Swal.fire({
-      icon: "error",
-      text: error.response.data.message || "관리자에게 문의해 주세요.",
-      showConfirmButton: true,
-    });
+    wica.ntcn(swal)
+    .title(error.response.data.message)
+    .icon('E')
+    .alert('계속 될 경우 관리자에게 문의해주세요.');   
     if (error.response?.data) {
       validationErrors.value = error.response.data.errors;
     }

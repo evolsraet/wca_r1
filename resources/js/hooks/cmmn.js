@@ -603,7 +603,7 @@ export function cmmn() {
         .param({}) // 리턴값에 전달 할 데이터
         .title('') // 알림 제목
         .useHtmlText() // HTML 태그 인 경우 활성화
-        .icon('E') //E:error , W:warning , I:info , Q:question
+        .icon('E') //E:error , W:warning , I:info , Q:question , S:success
         .useClose() // 닫기 버튼 활성화
         .useBackCancel() // 창 외부 클릭 닫기 활성화
         .labelOk('') //확인 버튼 라벨 변경시
@@ -615,13 +615,16 @@ export function cmmn() {
         .callback(function(result) {
             console.log(result);
         })
-        .toast('<b style="color:red">msg wica toast</b>');
+        .toast('<b style="color:red">msg wica toast</b>'); 
         .alert('<b style="color:red">msg wica alert</b>');
         .confirm('<b style="color:red">msg wica confirm</b>');
+        .fire('<b style="color:red">msg wica toast</b>'); //toast랑 비슷하며 이미지 넣을 수 있음
 
         # 유형 1
 
             wica.ntcn(swal).toast('이용후기가 정상적으로 삭제되었습니다.');
+
+            wica.ntcn(swal).icon('S').title('로그인 성공').fire();
 
         # 유형 2
 
@@ -700,6 +703,17 @@ export function cmmn() {
                 }
                 if(_this._isReturn) _this._callback(_this._rstData);
             })            
+        },
+        fire : function(txt) {
+            let _this = this;            
+            _this = this.init(_this, txt, true, false);   
+            _this._swal.fire(_this._input.opt)
+            .then(result => {       
+                if (result.isConfirmed) {
+                    _this._rstData.isOk = true;
+                }
+                if(_this._isReturn) _this._callback(_this._rstData);
+            })  
         },
         init : function(_this, txt, isToast, isConfirm) {
             let input = _this._input;
@@ -823,6 +837,10 @@ export function cmmn() {
                     _this._input._icon = 'info'
                 } else if(input.toUpperCase() == 'Q') {
                     _this._input._icon = 'question'
+                } else if(input.toUpperCase() == 'S') {
+                    _this._input._icon = 'success'
+                } else if(input.toUpperCase() == 'F') {
+                    _this._input._icon = 'fail'
                 } else {
                     _this._input._icon = null;
                 }
