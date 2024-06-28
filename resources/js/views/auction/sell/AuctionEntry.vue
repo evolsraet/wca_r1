@@ -40,7 +40,7 @@
                 <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
             </div>
             
-            <input type="text" v-model="adddt" placeholder="상세주소">
+            <input type="text" v-model="addrdt" placeholder="상세주소">
             <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                 <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
             </div>
@@ -119,8 +119,6 @@ const isDragging = ref(false);
 const fileInputRefOwner = ref(null);
 const fileUserOwner = ref(null); // 추가: 파일 저장 변수
 const fileUserOwnerName = ref(''); // 추가: 파일 이름 저장 변수
-
-// 경매 등록 함수
 const auctionEntry = async () => {
   // 필수 정보를 확인
   if (
@@ -134,8 +132,21 @@ const auctionEntry = async () => {
     !account.value.trim() ||
     !addrPost.value.trim() ||
     !finalAt.value.trim()
-   // !fileUserOwner.value // 파일이 업로드되었는지 확인
+    // !fileUserOwner.value // 파일이 업로드되었는지 확인
   ) {
+    // 각 필드의 값을 로그로 출력하여 확인
+    console.log('isVerified:', isVerified.value);
+    console.log('ownerName:', ownerName.value);
+    console.log('carNumber:', carNumber.value);
+    console.log('selectedRegion:', selectedRegion.value);
+    console.log('addr:', addr.value);
+    console.log('addrdt:', addrdt.value);
+    console.log('selectedBank:', selectedBank.value);
+    console.log('account:', account.value);
+    console.log('addrPost:', addrPost.value);
+    console.log('finalAt:', finalAt.value);
+    console.log('fileUserOwner:', fileUserOwner.value);
+
     Swal.fire({
       icon: 'error',
       title: '필수 정보를 입력해 주세요.',
@@ -155,24 +166,25 @@ const auctionEntry = async () => {
     account: account.value,
     memo: memo.value,
     addr_post: addrPost.value,
-  //  file_user_owner: fileUserOwner.value, // 업로드된 파일 추가
-    status:"diag"
+    // file_user_owner: fileUserOwner.value, // 업로드된 파일 추가
+    status: "diag"
   };
+
   try {
     await createAuction({ auction: auctionData });
-   const textOk= `<div class="enroll_box" style="position: relative;">
+    const textOk = `<div class="enroll_box" style="position: relative;">
                 <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
-              <p class="overlay_text02">경매 신청이 완료되었습니다.</p>
+                <p class="overlay_text02">경매 신청이 완료되었습니다.</p>
                 <p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>
               </div>`;
-  wica.ntcn(swal)
-    .useHtmlText() // HTML 태그 인 경우 활성화
-    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
-    .addOption({ padding: 20}) // swal 기타 옵션 추가
-    .callback(function (result) {
-              window.location.href = '/auction';
+    wica.ntcn(swal)
+      .useHtmlText() // HTML 태그 인 경우 활성화
+      .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+      .addOption({ padding: 20 }) // swal 기타 옵션 추가
+      .callback(function (result) {
+        window.location.href = '/auction';
       })
-    .confirm(textOk);
+      .confirm(textOk);
   } catch (error) {
     Swal.fire({
       icon: 'error',
