@@ -62,6 +62,7 @@ const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
 
     if(status != 'all'){
         apiList.push(`auctions.status:${status}`)
+
     }
 
     if(isReviews){
@@ -84,6 +85,7 @@ const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
             auctionsData.value = result.data;
             pagination.value = result.rawData.data.meta;
         })
+
         .get();
         
     } else {
@@ -91,12 +93,14 @@ const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
         wicac.conn()
         //.log() //로그 출력
         .url(`/api/auctions`) //호출 URL
+        .with(['bids'])
         .where(apiList) 
         .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
         .callback(function(result) {
             auctionsData.value = result.data;
             pagination.value = result.rawData.data.meta;
         })
+        .log()
         .get();
 
     }
@@ -105,11 +109,18 @@ const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
     
 // 경매 ID를 이용해 경매 상세 정보를 가져오는 함수
 const getAuctionById = async (id) => {
+    
+    return wicac.conn()
+    .log() //로그 출력
+    .url(`/api/auctions/${id}`) //호출 URL
+    .with(['bids'])
+    //.page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
+    .callback(async function(result) {
 
-    try {
-        // API 경로에서 {auction} 부분을 실제 ID로 치환하여 요청
-        const response = await axios.get(`/api/auctions/${id}`);
-        auction.value = response.data.data;
+        auction.value = result.data;
+        console.log(auction.value);
+        auction.value.dealer_name = null;
+        
         if (auction.value.win_bid) {
             const data = await getUser(auction.value.win_bid.user_id);
             const name = data.dealer.name;
@@ -117,11 +128,11 @@ const getAuctionById = async (id) => {
         } else {
             auction.value.dealer_name = null; 
         }
-        return response.data;
-    } catch (error) {
-        console.error('Error ID:', error);
-        throw error; 
-    }
+        return result;
+    
+    })
+    .get();
+
 };
 // 상태를 
 const statusMap = {
