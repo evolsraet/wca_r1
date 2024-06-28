@@ -339,19 +339,25 @@ const openAlarmModal = () => {
 };
 
 const submitCarInfoIsOk = () => {
-  const text= `<div class="enroll_box" style="position: relative;">
+
+  if(!user.value.name){
+    const text= `<div class="enroll_box" style="position: relative;">
                   <p class="overlay_text04">로그인을 하면 경매 신청이 가능해요.</p>
                </div>`;
-  wica.ntcn(swal)
-    .useHtmlText() // HTML 태그 인 경우 활성화
-    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
-    .addOption({ padding: 20 }) // swal 기타 옵션 추가
-    .callback(function (result) {
-      if(result.isOk){
-        router.push('/login');
-      }
-    })
-    .confirm(text);
+    wica.ntcn(swal)
+      .useHtmlText() // HTML 태그 인 경우 활성화
+      .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+      .addOption({ padding: 20 }) // swal 기타 옵션 추가
+      .callback(function (result) {
+        if(result.isOk){
+          router.push('/login');
+        }
+      })
+      .confirm(text);
+  }
+  else{
+    submitCarInfo();
+  }
 }
   const closeModal = () => {
     isModalOpen.value = false;
