@@ -92,6 +92,7 @@ export function cmmn() {
         element.style.display = 'none';
     }
 
+    //public wica connector
     /***
      
         import { cmmn } from '@/hooks/cmmn';
@@ -549,7 +550,7 @@ export function cmmn() {
         }
         return rstData;
     }
-    //End of callApi
+    //End of public wica connector
 
     function splitDate (date){
         return date.split(' ')[0];

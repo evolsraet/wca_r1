@@ -5,7 +5,7 @@ export default function useLikes() {
     const likesData = ref([]);
     const pagination = ref({});
     const validationErrors = ref({});
-    const { salert, wicac } = cmmn();
+    const { wicac } = cmmn();
 
     const getLikes = async (likeableType = 'Auction', userId = null) => {
         const apiList = [`likes.likeable_type:like:${likeableType}`];

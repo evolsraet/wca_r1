@@ -7,7 +7,7 @@ import { cmmn } from '@/hooks/cmmn';
 let starScore = 0;
 
 export function initReviewSystem() {
-    const { callApi , wicac , wica } = cmmn();
+    const { wicac , wica } = cmmn();
     const router = useRouter();
 
 

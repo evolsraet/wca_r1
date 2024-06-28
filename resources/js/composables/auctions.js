@@ -23,7 +23,7 @@ export default function useAuctions() {
         no: "",
         forceRefresh: "" 
     });
-    const { salert , wicac } = cmmn();
+    const { wicac , wica } = cmmn();
 
 
     const adminGetAuctions = async (
@@ -282,56 +282,44 @@ const AuctionReauction = async (id, data) => {
 };
 //수정
 const updateAuction = async (id,auction) => {
-    
+    console.log('111111');
     const auctionForm = {
         auction
     }
     console.log(JSON.stringify(auctionForm));
 
-
-    salert({
-        _swal: swal, //필수 지정
-        _title: '변경하시겠습니까?',
-        _type: 'C',
-        _isHtml: true, 
-        _icon: 'Q',
-    },function(result){
+    wica.ntcn(swal)
+    .title('변경하시겠습니까?') // 알림 제목
+    .icon('Q') //E:error , W:warning , I:info , Q:question
+    .useHtmlText()
+    .callback(async function(result) {
         if(result.isOk){
             axios.put(`/api/auctions/${id}`,auctionForm)
                 .then(response => {
-                    salert({
-                        _type: 'A',
-                        _swal: swal, //필수 지정
-                        _msg: '변경되었습니다.',
-                        _icon: 'I',
-                        _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
-                    },function(result){
+                    wica.ntcn(swal)
+                    .useHtmlText()
+                    .icon('I')
+                    .callback(function(result) {
                         if(result.isOk){
                             //location.reload();
                             getAuctions()
                             router.push({name: 'auctions.index'})
-                                
                         }
-                    });
+                    }).alert('변경되었습니다');
                 })
                 .catch(error => {
-                    salert({
-                        _type: 'A',
-                        _swal: swal, //필수 지정
-                        _title: '오류가 발생하였습니다.',
-                        _msg: '관리자에게 문의해주세요.',
-                        _icon: 'E',
-                        _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
-
-                    },function(result){
+                    wica.ntcn(swal)
+                    .title('오류가 발생하였습니다.')
+                    .useHtmlText()
+                    .icon('E')
+                    .callback(function(result) {
                         console.log(result);
-                    })
+                    }).alert('관리자에게 문의해주세요.');
                 })
         }
-        //console.log('salert', result);
-    });
-   
+    }).confirm();
 }
+
 //딜러 선택
 const chosenDealer = async (id, data) => {
     if (isLoading.value) return;
@@ -448,47 +436,34 @@ const updateAuctionStatus = async (id, status) => {
 
 const deleteAuction = async (id) => {
 
-    salert({
-        _swal: swal, //필수 지정
-        _title: '삭제하시겠습니까?',
-        _msg: '삭제된 정보는 복구할 수 없습니다.',
-        _type: 'C',
-        _icon: 'W',
-    },function(result){
+    wica.ntcn(swal)
+    .title('삭제하시겠습니까?') // 알림 제목
+    .icon('W') //E:error , W:warning , I:info , Q:question
+    .callback(function(result) {
         if(result.isOk){
             axios.delete(`/api/auctions/${id}`)
                 .then(response => {
-                    salert({
-                        _type: 'A',
-                        _swal: swal, //필수 지정
-                        _msg: '삭제되었습니다.',
-                        _icon: 'I',
-                    },function(result){
+                    wica.ntcn(swal)
+                    .icon('I') //E:error , W:warning , I:info , Q:question
+                    .callback(function(result) {
                         if(result.isOk){
                             getAuctions()
                             router.push({name: 'auctions.index'})                            
                         }
-                    });
+                    })
+                    .alert('삭제되었습니다.');
                 })
                 .catch(error => {
-                    salert({
-                        _type: 'A',
-                        _swal: swal, //필수 지정
-                        _title: '오류가 발생하였습니다.',
-                        _msg: '관리자에게 문의해주세요.',
-                        _icon: 'E',
-                        _isHtml: true, //_msg가 HTML 태그 인 경우 활성화
-
-                    },function(result){
-                        console.log(result);
-                    })
+                    wica.ntcn(swal)
+                    .title('오류가 발생하였습니다.')
+                    .useHtmlText()
+                    .icon('I') //E:error , W:warning , I:info , Q:question
+                    .alert('관리자에게 문의해주세요.');
                 })
         }
-        //console.log('salert', result);
-    }); 
+    })
+    .confirm('삭제된 정보는 복구할 수 없습니다.');
 
-    
-        
 };
 
 
