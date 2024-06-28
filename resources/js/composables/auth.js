@@ -56,12 +56,7 @@ export default function useAuth() {
           const userData = await store.dispatch('auth/login', loginForm.value);
           await store.dispatch("auth/getUser");
           await store.dispatch("auth/getAbilities");
-          Swal.fire({
-            icon: "success",
-            title: "로그인",
-            showConfirmButton: false,
-            timer: 1500,
-          });
+          wica.ntcn(swal).icon('S').title('로그인 성공').fire();
           if (userData.roles.includes('admin')) {
             router.push({ name: "admin.index" });
           } else if (userData.roles.includes('dealer')) {
@@ -74,26 +69,11 @@ export default function useAuth() {
         } catch (error) {
           if (!error.response) {
             // 네트워크 오류
-            Swal.fire({
-              icon: "error",
-              title: "Network Error",
-              text: "네트워크 통신 오류 입니다.",
-              showConfirmButton: true,
-            });
+            wica.ntcn(swal).icon('E').title('네트워크 통신 오류 발생').fire();
           } else if (error.response.data.status === 'fail') {
-            Swal.fire({
-              icon: "error",
-              title: "Error",
-              text: error.response.data.message,
-              showConfirmButton: true,
-            });
+            wica.ntcn(swal).icon('E').title(error.response.data.message).fire();
           } else {
-      
-            Swal.fire({
-              icon: "error",
-              text: error.response.data.message || "관리자에게 문의해 주세요.",
-              showConfirmButton: true,
-            });
+            wica.ntcn(swal).icon('E').title(error.response.data.message).fire('계속 될 경우 관리자에게 문의해주세요.');
             if (error.response?.data) {
               validationErrors.value = error.response.data.errors;
             }
