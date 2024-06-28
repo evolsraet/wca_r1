@@ -67,7 +67,7 @@ const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
     if(isReviews){
 
         return wicac.conn()
-        //.log() //로그 출력
+        .log() //로그 출력
         .url(`/api/auctions`) //호출 URL
         .where([
             'auctions.status:done',
@@ -90,11 +90,9 @@ const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
     } else {
 
         return wicac.conn()
-        //.log() //로그 출력
+        .log() //로그 출력
         .url(`/api/auctions`) //호출 URL
-        .where([
-            `auctions.status:${status}`
-        ]) 
+        .where(apiList) 
         .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
         .callback(function(result) {
             auctionsData.value = result.data;
