@@ -3,8 +3,11 @@
         <div class="regiest-content">
             <!-- 딜러 프로필 요약 정보 -->
             <div class="banner-top ">
-                <div class="top-info">현재 진행중인 경매<p class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }} </p> 건</div>
-                <div class="styled-div">
+                <div class="top-info gap-1 align-items-center">현재 진행중인 경매<p class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }} </p> 건</div>
+                <div class="d-flex justify-content-end">
+                    <a href="/edit-profile" class="btn btn-outline-primary mb-3">내 정보수정</a>
+                </div>
+                <div class="styled-div mt-0">
                     <div class="profile">
                         <div class="dealer-info">
                             <img src="../../../../img/profile_dom.png" width="100%" alt="Profile Image" class="main-profile">
@@ -166,3 +169,11 @@ onMounted(async () => {
     await fetchFilteredViewBids();
 });
 </script>
+<style scoped>
+@media (max-width: 340px) {
+    .profile {
+        padding-left: 5px;
+        padding-right: 7px;
+    }
+}
+</style>
