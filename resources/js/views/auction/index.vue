@@ -753,7 +753,7 @@ import FilterModal from '@/views/modal/filter.vue'; // 필터 모달 컴포넌�
 import { useRouter } from 'vue-router';
 import Footer from "@/views/layout/footer.vue";
 import useLikes from '@/composables/useLikes';
-import usebid from '@/composables/bids.js'; // 역할 관련 함수 가져오기
+import usebid from '@/composables/bids.js'; 
 
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
