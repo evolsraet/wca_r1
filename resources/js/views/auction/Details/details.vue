@@ -986,11 +986,7 @@ const openAlarmModal = () => {
     .addOption({ padding: 20, height: 265 }) // swal 기타 옵션 추가
     .callback(function (result) {
       if (result.isOk) {
-        // 확인 버튼을 눌렀을 때의 동작
-        reAuction();
       } else if (!result.isOk) {
-        // 취소 버튼을 눌렀을 때의 동작
-        cancelAuction();
       } else {
         console.error('Unexpected result:', result);
       }
@@ -1123,8 +1119,26 @@ const handleConfirmDelete = async () => {
 
 const toggleView = () => {
   showReauctionView.value = true;
-  console.log(showReauctionView.value);
+  const textOk = `<div class="enroll_box" style="position: relative;">
+                    <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
+                    <p class="overlay_text04">재경매를 진행하시겠습니까?</p>
+                  </div>`;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그인 경우 활성화
+    .btnBatch('R') // 확인 버튼 위치 지정, 기본은 L
+    .addClassNm('review-custom') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .callback(async function (result) { // callback 함수를 async로 변경
+      if (result.isOk) {
+        await reauction(); // reauction 함수 호출
+      } else {
+        showReauctionView.value = false;
+      }
+    })
+    .confirm(textOk);
 };
+
 const showbidView = () =>{
   bidSession.value=true;
 }
