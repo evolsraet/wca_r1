@@ -277,6 +277,7 @@ const openModal = (type) => {
   wica.ntcn(swal)
     .useHtmlText() // HTML 태그 인 경우 활성화
     .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .addClassNm('intro-modal')
     .useClose()
     .callback(function (result) {
       // 추가적인 콜백 함수 내용이 필요하다면 여기에 작성

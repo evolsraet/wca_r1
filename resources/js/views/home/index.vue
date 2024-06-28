@@ -239,7 +239,7 @@
   <script setup>
   // Other imports
   import { useStore } from "vuex";
-  import { computed, ref, onMounted, onBeforeUnmount, nextTick } from "vue";
+  import {createApp,h, computed, ref, onMounted, onBeforeUnmount, nextTick,inject  } from "vue";
   import useAuth from '@/composables/auth';
   import useAuctions from '@/composables/auctions';
   import LawGid from '@/views/modal/LawGid.vue';
@@ -248,6 +248,8 @@
   import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
   import { cmmn } from '@/hooks/cmmn';
 
+  
+  const swal = inject('$swal');
   const { wica , wicaLabel } = cmmn();
   const carName = ref('');
   const emoji = ref('');
@@ -275,9 +277,44 @@
   const expanded = ref(false); // Define the expanded property
 
   const openModal = (type) => {
-    modalContent.value = type;
-    isModalOpen.value = true;
-  };
+  const container = document.createElement('div');
+  const app = createApp({
+    render() {
+      return h(LawGid, { content: type });
+    }
+  });
+  
+  app.mount(container);
+  
+  const text = container.innerHTML;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .addClassNm('intro-modal')
+    .useClose()
+    .callback(function (result) {
+      // 추가적인 콜백 함수 내용이 필요하다면 여기에 작성
+    })
+    .confirm(text);
+
+  app.unmount(); // Unmount the app after getting the HTML content
+};
+const openAlarmModal = () => {
+  const text= `<div class="enroll_box" style="position: relative;">
+                  <img src="${carInfo}" alt="자동차 이미지" width="160" height="160">
+                  <p class="overlay_text04">해당 서비스는 개발 중 상태입니다.</p>
+               </div>`;
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .callback(function (result) {
+
+    })
+    .confirm(text);
+};
+
 
   const closeModal = () => {
     isModalOpen.value = false;

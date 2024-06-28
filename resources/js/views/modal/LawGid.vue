@@ -1,12 +1,7 @@
 <template>
   <transition name="fade" mode="out-in">
-    <section v-if="content === 'privacy'" class="modal modal-section type-confirm alert-modal-type02" @click.self="closeModal">
-      <div class="modal-dialog" @click.self="closeModal">
-        <div class="modal-content shadow" @click.self="closeModal">
-          <div class="modal-body">
-            <div class="nav-header">
-              <button type="button" class="btn-close" @click="closeModal"></button>
-            </div>
+    <section v-if="content === 'privacy'" @click.self="closeModal">
+          <div>
             <div class="content text-start p-0 mt-0">
               <div>
                 <h5>1. 개인정보의 수집 및 이용 목적</h5>
@@ -56,18 +51,11 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </section>
   </transition>
   <transition name="fade" mode="out-in">
-    <section v-if="content === 'terms'" class="modal modal-section type-confirm alert-modal-type02">
-      <div class="modal-dialog" @click.self="closeModal">
-        <div class="modal-content shadow" @click.self="closeModal">
-          <div class="modal-body">
-            <div class="nav-header">
-              <button type="button" class="btn-close" @click="closeModal"></button>
-            </div>
+    <section v-if="content === 'terms'">
+          <div>
             <div class="content text-start p-0 mt-0">
               <div>
                 <h5>1. 이용약관의 목적</h5>
@@ -126,8 +114,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
     </section>
   </transition>
 </template>
