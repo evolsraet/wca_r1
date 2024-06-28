@@ -500,7 +500,7 @@ TODO:
                                                     <span v-if="auction.timeLeft.days != '0' ">{{ auction.timeLeft.days }}일 &nbsp; </span>{{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
                                                 </span>
                                                 <div v-if="isDealer"> 
-                                                    <div class="participate-badge" v-if="isDealerParticipating(auction)">
+                                                    <div class="participate-badge"  v-if="auction.isDealerParticipating">
                                                         <span class="hand-icon">
                                                             <img src="../../../img/Icon-hand.png" alt="Hand Icon">
                                                         </span>
@@ -745,17 +745,20 @@ export default {
 
 </script>
 <script setup>
-import { ref, computed, onMounted, reactive,onUnmounted } from 'vue';
+import { ref, computed, onMounted, reactive, onUnmounted } from 'vue';
 import { useStore } from "vuex";
 import useAuctions from "@/composables/auctions"; // 경매 관련 함수 가져오기
 import useRoles from '@/composables/roles'; // 역할 관련 함수 가져오기
 import FilterModal from '@/views/modal/filter.vue'; // 필터 모달 컴포넌트 가져오기
 import { useRouter } from 'vue-router';
-import Footer from "@/views/layout/footer.vue"
+import Footer from "@/views/layout/footer.vue";
+import useLikes from '@/composables/useLikes';
+import usebid from '@/composables/bids.js'; // 역할 관련 함수 가져오기
 
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
-
+const {getBids, bidsData } = usebid();
+const { getLikes, likesData, isAuctionFavorited } = useLikes();
 const router = useRouter();
 const currentStatus = ref('all'); // 현재 필터 상태 (기본값: 전체)
 const { role, getRole } = useRoles();
@@ -773,6 +776,13 @@ const isDealer = computed(() => user.value?.roles?.includes('dealer')); // 딜�
 const isUser = computed(() => user.value?.roles?.includes('user')); // 사용자 여부
 const isSpinning = ref(false);
 
+const initializeFavorites = () => {
+    auctionsData.value.forEach(auction => {
+        auction.isFavorited = likesData.value.some(like => like.likeable_id === auction.id);
+    });
+};
+
+
 const pullContainer = ref(null);
 const state = reactive({
   startY: 0,
@@ -785,149 +795,143 @@ const padZero = (num) => {
 };
 
 const calculateTimeLeft = (auction) => {
-const finalAtDate = new Date(auction.final_at);
-const diff = finalAtDate.getTime() - currentTime.value.getTime();
-  if (auction.status !== 'ing' || !auction.final_at || diff < 0) {
+    const finalAtDate = new Date(auction.final_at);
+    const diff = finalAtDate.getTime() - currentTime.value.getTime();
+    if (auction.status !== 'ing' || !auction.final_at || diff < 0) {
+        return {
+            days: 0,
+            hours: '00',
+            minutes: '00',
+            seconds: '00'
+        };
+    }
     return {
-      days: 0,
-      hours: '00',
-      minutes: '00',
-      seconds: '00'
+        days: Math.floor(diff / (24 * 3600000)),
+        hours: padZero(Math.floor((diff % (24 * 3600000)) / 3600000)),
+        minutes: padZero(Math.floor((diff % 3600000) / 60000)),
+        seconds: padZero(Math.floor((diff % 60000) / 1000)),
     };
-  }
-
-    //console.log(auction.final_at);
- // const finalAtDate = new Date(auction.final_at.replace(' ', 'T') + 'Z');
-
-  return {
-    days: Math.floor(diff / (24 * 3600000)),
-    hours: padZero(Math.floor((diff % (24 * 3600000)) / 3600000)),
-    minutes: padZero(Math.floor((diff % 3600000) / 60000)),
-    seconds: padZero(Math.floor((diff % 60000) / 1000)),
-  };
 };
 
 const updateAuctionTimes = () => {
-  auctionsData.value.forEach((auction) => {
-    auction.timeLeft = calculateTimeLeft(auction);
-  });
+    auctionsData.value.forEach((auction) => {
+        auction.timeLeft = calculateTimeLeft(auction);
+    });
 };
 
 
 const handleTouchStart = (e) => {
-  state.startY = e.touches[0].pageY;
-  state.isPulling = true;
+    state.startY = e.touches[0].pageY;
+    state.isPulling = true;
 };
 
 const handleTouchMove = (e) => {
-  if (window.scrollY !== 0) return; // 스크롤이 최상단이 아닐 때는 작동하지 않음
-  const currentY = e.touches[0].pageY;
-  const diff = currentY - state.startY;
-  if (diff > 0) {
-    isPulling.value = true;
-    distance.value = Math.min(diff, 100); // 최대 100px까지 당길 수 있도록 제한
-  }
+    if (window.scrollY !== 0) return; // 스크롤이 최상단이 아닐 때는 작동하지 않음
+    const currentY = e.touches[0].pageY;
+    const diff = currentY - state.startY;
+    if (diff > 0) {
+        isPulling.value = true;
+        distance.value = Math.min(diff, 100); // 최대 100px까지 당길 수 있도록 제한
+    }
 };
 
 const handleTouchEnd = async () => {
-  if (distance.value === 100) { // 최대 100px 당겨졌을 때만 새로고침 수행
-    isSpinning.value = true; // 회전 시작
-    setTimeout(async () => {
-      await getAuctions(); // 데이터 로딩
-      isSpinning.value = false; // 회전 중지
-      isPulling.value = false;
-      distance.value = 0;
-    }, 3000); // 아이콘이 3번 회전하는데 걸리는 시간
-  } else {
-    isPulling.value = false;
-    distance.value = 0;
-  }
+    if (distance.value === 100) { // 최대 100px 당겨졌을 때만 새로고침 수행
+        isSpinning.value = true; // 회전 시작
+        setTimeout(async () => {
+            await getAuctions(); // 데이터 로딩
+            isSpinning.value = false; // 회전 중지
+            isPulling.value = false;
+            distance.value = 0;
+        }, 3000); // 아이콘이 3번 회전하는데 걸리는 시간
+    } else {
+        isPulling.value = false;
+        distance.value = 0;
+    }
 };
 
-// 이미지 스타일 동적 계산
-const imageStyle = computed(() => {
-  const opacity = Math.min(distance.value / 100, 1); // 최대 100px 당겨질 때 1의 불투명도
-  const translateY = Math.max(100 - distance.value, 0); // 당겨질수록 translateY 감소
-  return {
-    opacity: opacity,
-    transform: `translateY(${translateY}px)`, // 스르륵 효과
-    transition: 'opacity 0.3s, transform 0.3s' // 부드러운 전환
-  };
-});
+
 
 function setCurrentTab(tab) {
-  currentTab.value = tab;
+    currentTab.value = tab;
 }
 function toggleModal() { // 모달 토글
-  showModal.value = !showModal.value; 
+    showModal.value = !showModal.value; 
 }
 
 function setFilter(status) { // 필터 설정
-  currentStatus.value = status;
-  getAuctions(1,false,currentStatus.value);
+    currentStatus.value = status;
+    getAuctions(1, false, currentStatus.value);
 }
 
 function handleClose() { // 모달 닫기
-  showModal.value = false;
+    showModal.value = false;
 }
 
 const hasCompletedAuctions = computed(() => { // 완료된 경매 여부
-  return auctionsData.value.some(auction => auction.status === 'done');
+    return auctionsData.value.some(auction => auction.status === 'done');
 });
-
-/** 
-const filteredAuctions = computed(() => { // 필터된 경매 목록
-  if (currentStatus.value === 'all') {
-    return auctionsData.value.filter(auction => ['ing', 'done', 'wait', 'chosen', 'diag', 'ask', 'cancel'].includes(auction.status));
-  }
-  return auctionsData.value.filter(auction => auction.status === currentStatus.value);
-});*/
 
 const filteredDone = computed(() => { // 필터된 경매 목록
     return auctionsData.value.filter(auction => ['done'].includes(auction.status));
 });
 
 function loadPage(page) { // 페이지 로드
-  if (page < 1 || page > pagination.value.last_page) return;
-  currentPage.value = page;
-  getAuctions(page,false,currentStatus.value);
-  window.scrollTo(0,0);
+    if (page < 1 || page > pagination.value.last_page) return;
+    currentPage.value = page;
+    getAuctions(page, false, currentStatus.value);
+    window.scrollTo(0,0);
 }
 
 function navigateToDetail(auction) { // 경매 상세 페이지로 이동
-  console.log("디테일 :", auction.id);
-  router.push({ name: 'AuctionDetail', params: { id: auction.id } });
+    console.log("디테일 :", auction.id);
+    router.push({ name: 'AuctionDetail', params: { id: auction.id } });
 }
 
 function getAuctionStyle(auction) { // 경매 스타일 설정
-  const validStatuses = ['done', 'wait', 'ing', 'diag'];
-  return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
+    const validStatuses = ['done', 'wait', 'ing', 'diag'];
+    return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
+}
+function isDealerParticipating(auctionId) { // 딜러 참여 여부 확인
+    return bidsData.value.some(bid => bid.auction_id === auctionId);
 }
 
-function isDealerParticipating(auction) { // 딜러 참여 여부 확인
-  const currentUserId = user.value.id;
-  return auction.bids.some(bid => bid.user_id === currentUserId);
-}
 let timer;
 onMounted(async () => { // 컴포넌트 마운트 시 초기화 작업
-  if (role.value.name === 'user') {
-    isUser.value = true;
-  }
-  await getAuctions(currentPage.value);
-  updateAuctionTimes();
+    await getBids(); 
+    console.log('Fetched bids data:', bidsData.value);
+    
+    await getLikes();
+    console.log('Fetched likes data:', likesData.value);
+    if (role.value.name === 'user') {
+        isUser.value = true;
+    }
+    await getAuctions(currentPage.value);
+    initializeFavorites();
+    updateAuctionTimes();
+    // 경매 데이터에 딜러 참여 여부를 추가합니다.
+    auctionsData.value.forEach(auction => {
+        auction.isDealerParticipating = isDealerParticipating(auction.id);
+    });
 
-setInterval(() => {
-  currentTime.value = new Date();
-  updateAuctionTimes();
-}, 1000);
+    timer = setInterval(() => {
+        currentTime.value = new Date();
+        updateAuctionTimes();
+    }, 1000);
 });
+
 onUnmounted(() => {
-  clearInterval(timer);
+    clearInterval(timer);
 });
 // 데이터 예시
 const favoriteAuctions = computed(() => {
-  return auctionsData.value.filter(auction => auction.isFavorited);
+    return auctionsData.value.filter(auction => auction.isFavorited);
 });
+
+const toggleFavorite = (auction) => {
+    auction.isFavorited = !auction.isFavorited;
+    // 좋아요 토글에 대한 추가 로직 구현 필요
+};
 </script>
 
 
