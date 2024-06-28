@@ -19,7 +19,7 @@
                 <i class="fas fa-cog settings-icon mb-1" @click="toggleSettingsMenu" :class="{ 'rotate': showSettings }"></i>
                 <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
                   <a href="/profile" class="menu-item mt-0">내 정보</a>
-                  <a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>
+                  <!--<a href="/edit-profile" class="menu-item mt-0">내 정보 수정</a>-->
                   <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
                 </div>
               </div>
@@ -289,7 +289,7 @@
                 </a>
                 <ul class="dropdown-menu p-2" aria-labelledby="dealerDropdown">
                   <li class="my-2"><router-link to="/profile" class="dropdown-item">내 정보</router-link></li>
-                  <li class="my-2"><router-link to="/edit-profile" class="dropdown-item">내 정보 수정</router-link></li>
+                <!--<li class="my-2"><router-link to="/edit-profile" class="dropdown-item">내 정보 수정</router-link></li>-->
                   <li class="my-2"><a class="dropdown-item" href="/login" @click="logout">로그아웃</a></li>
                 </ul>
               </li>

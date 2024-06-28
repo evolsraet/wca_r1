@@ -1,14 +1,15 @@
 <template>
-    <div class="container">
+    <div class="container mov-wide">
         <div class="row justify-content-center my-5">
-            <div class="col-md-6">
+            <div>
+                <h5 class="my-3">비밀번호 초기화</h5>
                 <div class="card border-0 shadow-sm">
-                    <div class="card-body">
+                    <div class="card-body p-4">
                         <form @submit.prevent="submitForgotPassword">
                             <div class="">
                                 <!-- Email -->
                                 <div class="mb-3">
-                                    <label for="email" class="form-label">{{ $t('email') }}</label>
+                                    <label for="email" class="form-label">이메일</label>
                                     <input v-model="forgotForm.email" id="email" type="email" class="form-control" required autofocus autocomplete="username">
                                     <!-- Validation Errors -->
                                     <div class="text-danger mt-1">
@@ -31,11 +32,12 @@
             </div>
         </div>
     </div>
+    <Footer />
 </template>
 
 <script setup>
 import useAuth from '@/composables/auth'
-
+import Footer from "@/views/layout/footer.vue"
 const { forgotForm, validationErrors, processing, submitForgotPassword } = useAuth();
 </script>
 
