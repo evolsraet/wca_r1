@@ -151,6 +151,7 @@ export function cmmn() {
                 _doesnthave : null,
                 _order : null,
                 _page : 1,
+                _searchText : null,
                 _isUrl : false,
                 _isParam : false,
                 _isWhere : false,
@@ -166,6 +167,7 @@ export function cmmn() {
                 _isMultipart : false,
                 _isLog : false,
                 _isLogDetail : false,
+                _isSearchText : false,
                 _rstData : {
                     isError : false,
                     isSuccess : false,
@@ -266,7 +268,16 @@ export function cmmn() {
                 _this._input._isPageLimit = true;
             }
             return _this;
-        },    
+        }, 
+        search : function(input) {
+            let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ search(string) ] 함수 선언 ',input);
+            _this._input._searchText = input;
+            if(input) {                
+                _this._input._isSearchText = true;
+            }
+            return _this;
+        },   
         get : function() {
             let _this = this;
             if(_this._input._isLogDetail) console.log('cmmn wicac [ get() ] 함수 선언 ');
@@ -332,6 +343,11 @@ export function cmmn() {
                 if(urlParams) urlParams += '&';
                 urlParams += 'with='+urlParamsWith;
                 if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] with 처리 ',_input._with,' , with='+urlParamsWith);
+            }
+            if(_input._isSearchText) {
+                if(urlParams) urlParams += '&';
+                urlParams += 'search_text='+_input._searchText;    
+                if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] search 처리 ',_input._searchText);
             }
             if(_input._isPage && _input._page > 0) {
                 if(urlParams) urlParams += '&';
