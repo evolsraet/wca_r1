@@ -25,7 +25,6 @@
                             <div class="col-md-3 p-2 mb-2 shadow-hover" v-for="bid in filteredBids" :key="bid.id"  @click="navigateToDetail(bid)">
                                 <div class="card my-auction">
                                     <div class="card-img-top-placeholder"></div> 
-
                                     <div class="card-body">
                                         <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                                         <p>2020년 / 2.4km / 무사고</p>
@@ -54,21 +53,25 @@
 import { ref, onMounted, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
-import Footer from "@/views/layout/footer.vue"
+import Footer from "@/views/layout/footer.vue";
 import useBid from "@/composables/bids";
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 
-const router = useRouter(); 
-const store = useStore(); // Vuex 스토어 인스턴스
+const router = useRouter();
+const store = useStore();
 const { getAuctions, getAuctionById } = useAuctions();
 const { bidsData, getBids } = useBid();
-const user = computed(() => store.getters['auth/user']); // 현재 사용자를 가져오는 계산된 속성
+const user = computed(() => store.getters['auth/user']);
 const { amtComma } = cmmn();
 const filteredBids = ref([]);
 const loading = ref(false);
 
 const fetchAuctionDetails = async (bid) => {
+    if (!user.value || !user.value.id) {
+        console.error('사용자 정보가 올바르지 않습니다.');
+        return { ...bid, auctionDetails: null };
+    }
     try {
         const auctionDetails = await getAuctionById(bid.auction_id);
         console.log('Auction Details for Bid ID:', bid.id, auctionDetails);
@@ -91,48 +94,55 @@ function navigateToDetail(bid) {
 }
 
 const fetchFilteredBids = async () => {
-    await getBids(); 
-    console.log('All Bids:', bidsData.value); 
+    if (!user.value || !user.value.id) {
+        console.error('사용자 정보가 올바르지 않습니다.');
+        return;
+    }
+    await getBids();
+    console.log('All Bids:', bidsData.value);
     const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
     filteredBids.value = bidsWithDetails.filter(bid => bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id);
-    console.log('Bids with Auction Details:', filteredBids.value); 
+    console.log('Bids with Auction Details:', filteredBids.value);
 };
 
 onMounted(async () => {
+    if (!user.value || !user.value.id) {
+        console.error('사용자 정보가 없습니다.');
+        return;
+    }
     await getAuctions();
     await fetchFilteredBids();
-    loading.value  = true;
+    loading.value = true;
 });
 </script>
 
 <style scoped>
-.search-type3 .search-btn{
+.search-type3 .search-btn {
     right: 13px !important;
     top: 64px !important;
 }
-.pd-10{
+.pd-10 {
     padding: 10px;
 }
-.search-type2 span{
+.search-type2 span {
     font-size: 17px;
 }
-
-@media (min-width: 300px) and (max-width:540px ){
-.col-md-3{
-    flex: 0 0 auto;
-    width: 100% !important;
+@media (min-width: 300px) and (max-width: 540px) {
+    .col-md-3 {
+        flex: 0 0 auto;
+        width: 100% !important;
+    }
 }
-}
-@media(min-width:541px) and (max-width: 991px){
+@media (min-width: 541px) and (max-width: 991px) {
     .col-md-3 {
         flex: 0 0 auto;
         width: 49.3333% !important;
     }
 }
-@media (min-width: 768px){
-.col-md-3 {
-    flex: 0 0 auto;
-    width: 33%;
-}
+@media (min-width: 768px) {
+    .col-md-3 {
+        flex: 0 0 auto;
+        width: 33%;
+    }
 }
 </style>

@@ -480,8 +480,14 @@ TODO:
                                     >
                                         <div class="card my-auction">
                                             <div v-if="isDealer">
-                                                <input class="toggle-heart" type="checkbox" :id="'favorite-' + auction.id" v-model="auction.isFavorited" @click.stop="toggleFavorite(auction)"/>
-                                                <label class="heart-toggle" :for="'favorite-' + auction.id" @click.stop></label>
+                                                <input
+                                                class="toggle-heart"
+                                                type="checkbox"
+                                                :id="'favorite-' + auction.id"
+                                                :checked="auction.isFavorited"
+                                                @click.stop="toggleFavorite(auction)"
+                                            />
+                                            <label class="heart-toggle" :for="'favorite-' + auction.id" @click.stop></label>
                                             </div>
                                             <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
                                             <div v-if="auction.status === 'ask' || auction.status === 'diag'">
@@ -747,9 +753,9 @@ export default {
 <script setup>
 import { ref, computed, onMounted, reactive, onUnmounted } from 'vue';
 import { useStore } from "vuex";
-import useAuctions from "@/composables/auctions"; // 경매 관련 함수 가져오기
-import useRoles from '@/composables/roles'; // 역할 관련 함수 가져오기
-import FilterModal from '@/views/modal/filter.vue'; // 필터 모달 컴포넌트 가져오기
+import useAuctions from "@/composables/auctions"; 
+import useRoles from '@/composables/roles'; 
+import FilterModal from '@/views/modal/filter.vue'; 
 import { useRouter } from 'vue-router';
 import Footer from "@/views/layout/footer.vue";
 import useLikes from '@/composables/useLikes';
@@ -760,20 +766,20 @@ const selectedEndYear = ref(new Date().getFullYear());
 const {getBids, bidsData } = usebid();
 const { getLikes, likesData, isAuctionFavorited } = useLikes();
 const router = useRouter();
-const currentStatus = ref('all'); // 현재 필터 상태 (기본값: 전체)
+const currentStatus = ref('all'); 
 const { role, getRole } = useRoles();
-const currentTab = ref('allInfo'); // 현재 탭 상태 (기본값: 모든 정보)
+const currentTab = ref('allInfo'); 
 const { auctionsData, pagination, getAuctions } = useAuctions();
-const currentPage = ref(1); // 현재 페이지 번호
-const showModal = ref(false); // 모달 표시 상태
-const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); // 관심 있는 경매 수
+const currentPage = ref(1); 
+const showModal = ref(false); 
+const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); 
 const auctionModal = ref(false);
 const isPulling = ref(false);
 const distance = ref(0);
 const store = useStore();
-const user = computed(() => store.getters["auth/user"]); // 사용자 정보
-const isDealer = computed(() => user.value?.roles?.includes('dealer')); // 딜러 여부
-const isUser = computed(() => user.value?.roles?.includes('user')); // 사용자 여부
+const user = computed(() => store.getters["auth/user"]); 
+const isDealer = computed(() => user.value?.roles?.includes('dealer')); 
+const isUser = computed(() => user.value?.roles?.includes('user')); 
 const isSpinning = ref(false);
 
 const initializeFavorites = () => {
@@ -782,6 +788,22 @@ const initializeFavorites = () => {
     });
 };
 
+const toggleFavorite = (auction) => {
+    auction.isFavorited = !auction.isFavorited;
+    if (auction.isFavorited) {
+        addLike(auction.id);
+    } else {
+        removeLike(auction.id);
+    }
+};
+
+const addLike = (auctionId) => {
+    console.log('Like added for auction:', auctionId);
+};
+
+const removeLike = (auctionId) => {
+    console.log('Like removed for auction:', auctionId);
+};
 
 const pullContainer = ref(null);
 const state = reactive({
@@ -819,85 +841,85 @@ const updateAuctionTimes = () => {
     });
 };
 
-
 const handleTouchStart = (e) => {
     state.startY = e.touches[0].pageY;
     state.isPulling = true;
 };
 
 const handleTouchMove = (e) => {
-    if (window.scrollY !== 0) return; // 스크롤이 최상단이 아닐 때는 작동하지 않음
+    if (window.scrollY !== 0) return; 
     const currentY = e.touches[0].pageY;
     const diff = currentY - state.startY;
     if (diff > 0) {
         isPulling.value = true;
-        distance.value = Math.min(diff, 100); // 최대 100px까지 당길 수 있도록 제한
+        distance.value = Math.min(diff, 100); 
     }
 };
 
 const handleTouchEnd = async () => {
-    if (distance.value === 100) { // 최대 100px 당겨졌을 때만 새로고침 수행
-        isSpinning.value = true; // 회전 시작
+    if (distance.value === 100) { 
+        isSpinning.value = true; 
         setTimeout(async () => {
-            await getAuctions(); // 데이터 로딩
-            isSpinning.value = false; // 회전 중지
+            await getAuctions(); 
+            isSpinning.value = false; 
             isPulling.value = false;
             distance.value = 0;
-        }, 3000); // 아이콘이 3번 회전하는데 걸리는 시간
+        }, 3000); 
     } else {
         isPulling.value = false;
         distance.value = 0;
     }
 };
 
-
-
 function setCurrentTab(tab) {
     currentTab.value = tab;
 }
-function toggleModal() { // 모달 토글
+
+function toggleModal() { 
     showModal.value = !showModal.value; 
 }
 
-function setFilter(status) { // 필터 설정
+function setFilter(status) { 
     currentStatus.value = status;
     getAuctions(1, false, currentStatus.value);
 }
 
-function handleClose() { // 모달 닫기
+function handleClose() { 
     showModal.value = false;
 }
 
-const hasCompletedAuctions = computed(() => { // 완료된 경매 여부
+const hasCompletedAuctions = computed(() => { 
     return auctionsData.value.some(auction => auction.status === 'done');
 });
 
-const filteredDone = computed(() => { // 필터된 경매 목록
+const filteredDone = computed(() => { 
     return auctionsData.value.filter(auction => ['done'].includes(auction.status));
 });
 
-function loadPage(page) { // 페이지 로드
+function loadPage(page) { 
     if (page < 1 || page > pagination.value.last_page) return;
     currentPage.value = page;
     getAuctions(page, false, currentStatus.value);
     window.scrollTo(0,0);
 }
 
-function navigateToDetail(auction) { // 경매 상세 페이지로 이동
+function navigateToDetail(auction) { 
     console.log("디테일 :", auction.id);
     router.push({ name: 'AuctionDetail', params: { id: auction.id } });
 }
 
-function getAuctionStyle(auction) { // 경매 스타일 설정
+function getAuctionStyle(auction) { 
     const validStatuses = ['done', 'wait', 'ing', 'diag'];
     return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
 }
-function isDealerParticipating(auctionId) { // 딜러 참여 여부 확인
+
+function isDealerParticipating(auctionId) { 
     return bidsData.value.some(bid => bid.auction_id === auctionId);
 }
 
 let timer;
-onMounted(async () => { // 컴포넌트 마운트 시 초기화 작업
+onMounted(async () => { 
+    await getAuctions(currentPage.value);
     await getBids(); 
     console.log('Fetched bids data:', bidsData.value);
     
@@ -906,10 +928,8 @@ onMounted(async () => { // 컴포넌트 마운트 시 초기화 작업
     if (role.value.name === 'user') {
         isUser.value = true;
     }
-    await getAuctions(currentPage.value);
     initializeFavorites();
     updateAuctionTimes();
-    // 경매 데이터에 딜러 참여 여부를 추가합니다.
     auctionsData.value.forEach(auction => {
         auction.isDealerParticipating = isDealerParticipating(auction.id);
     });
@@ -923,15 +943,10 @@ onMounted(async () => { // 컴포넌트 마운트 시 초기화 작업
 onUnmounted(() => {
     clearInterval(timer);
 });
-// 데이터 예시
+
 const favoriteAuctions = computed(() => {
     return auctionsData.value.filter(auction => auction.isFavorited);
 });
-
-const toggleFavorite = (auction) => {
-    auction.isFavorited = !auction.isFavorited;
-    // 좋아요 토글에 대한 추가 로직 구현 필요
-};
 </script>
 
 

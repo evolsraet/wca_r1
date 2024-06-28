@@ -845,7 +845,6 @@ const myBidPrice = computed(() => {
 });
 let pollingInterval = null;
 const updateKoreanAmount = () => {
-  console.log("Updating Korean amount"); // Check if this logs in the console
   koreanAmount.value = amtComma(amount.value);
 };
 const openClaimModal = () => {
