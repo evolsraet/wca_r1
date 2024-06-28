@@ -106,7 +106,7 @@
                                 <input
                                 v-model="editForm.company_post"
                                     class="input-dis form-control"
-                                    placeholder="post"
+                                    placeholder="우편번호"
                                     readonly
                                     />
                                     <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
@@ -136,7 +136,7 @@
                                 <input
                                     v-model="editForm.receive_post"
                                     class="input-dis form-control"
-                                    placeholder="post"
+                                    placeholder="우편번호"
                                     readonly
                                 />
                                 <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>

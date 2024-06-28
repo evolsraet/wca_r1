@@ -121,7 +121,7 @@
                                     <input
                                         v-model="dealer.company_post"
                                         class="input-dis form-control"
-                                        placeholder="post"
+                                        placeholder="우편번호"
                                         readonly
                                         />
                                         <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
@@ -146,7 +146,7 @@
                                     <input
                                         v-model="dealer.receive_post"
                                         class="input-dis form-control"
-                                        placeholder="post"
+                                        placeholder="우편번호"
                                         readonly
                                     />
                                     <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>

@@ -63,7 +63,7 @@
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">우편주소</p>
-                  <input v-model="auction.addr_post" class="input-dis form-control" readonly>
+                  <input v-model="auction.addr_post" placeholder="우편번호" class="input-dis form-control" readonly>
                   <div>
                     <input v-model="auction.addr1" class="input-dis form-control" readonly>
                     <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>

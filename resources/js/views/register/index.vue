@@ -129,9 +129,9 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="dealeradress">소속상사 주소</label>
-                                                        <input type="text" @click="editPostCode('daumPostcodeInput')" class="tc-light-gray" v-model="registerForm.dealerCompanyPost" placeholder="post" readonly>
+                                                        <input @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="registerForm.dealerCompanyPost" placeholder="우편번호" readonly>
                                                         <div>
-                                                            <input type="text" v-model="registerForm.dealercompany_addr1" placeholder="주소" class="searchadress tc-light-gray" readonly>
+                                                            <input v-model="registerForm.dealercompany_addr1" placeholder="주소" class="input-dis form-control" readonly>
                                                             <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                                                         </div>
                                                         
@@ -170,9 +170,9 @@
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="deliveryAdress">인수차량 도착지 주소</label>
-                                                        <input type="text" class="tc-light-gray" v-model="registerForm.dealerReceivePost" placeholder="post" readonly>
+                                                        <input class="input-dis form-control" v-model="registerForm.dealerReceivePost" placeholder="우편번호" readonly>
                                                         <div>
-                                                            <input type="text" class="tc-light-gray" v-model="registerForm.dealerReceiveAddr1" placeholder="주소" readonly>
+                                                            <input class="input-dis form-control" v-model="registerForm.dealerReceiveAddr1" placeholder="주소" readonly>
                                                             <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
                                                         </div>
                                                         
