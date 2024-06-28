@@ -7,7 +7,7 @@ import { cmmn } from '@/hooks/cmmn';
 let starScore = 0;
 
 export function initReviewSystem() {
-    const { callApi , wicac , wica } = cmmn();
+    const { wicac , wica } = cmmn();
     const router = useRouter();
 
 
@@ -327,19 +327,24 @@ export function initReviewSystem() {
    
     // 작성한 이용후기 불러오기 (사용자별 불러오기)
     const getUserReview = async (id , page=1) => {
-        return callApi({
-            _type: 'get',
-            _url:`/api/reviews`,
-            _param: {
-                _where:[`reviews.user_id:${id}`],
-                _with:['auction','dealer'],
-                _page:`${page}`
-            }
-        }).then(async result => {
+
+        return wicac.conn()
+        //.log() //로그 출력
+        .url(`/api/reviews`) //호출 URL
+        .where([
+            `reviews.user_id:${id}`
+        ]) 
+        .with([
+            'auction',
+            'dealer'
+        ]) 
+        .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
+        .callback(function(result) {
             reviewsData.value = result.data;
             reviewPagination.value = result.rawData.data.meta;
-            //return result.data;
-        });
+            return result.data; //결과값을 후 처리 할때 필수 선언
+        })
+        .get();
 
     }
 
