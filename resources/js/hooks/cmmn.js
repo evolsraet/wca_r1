@@ -92,210 +92,25 @@ export function cmmn() {
         element.style.display = 'none';
     }
 
-    //callApi
-    /*
-        
-        import { cmmn } from '@/hooks/cmmn';
-        const { callApi } = cmmn();
-
-        return callApi({
-            _type: 'get',
-            _url:`/api/reviews/${id}`,
-            _param: ['auctions','reviews'],
-            doesnthave: ['reviews'] -> with한 데이터 null 체크
-        }).then(async result => {
-            console.log(result);
-            return result.data;
-        });
-
-        
-    */  
-     
-    function parseApiCompleted(rstData, response) {
-        console.log('cmmn.callApiGet result : ',response);
-        rstData.rawData = response;
-        if(response && response.data) {
-            if(response.data.data) {
-                rstData.data = response.data.data;
-            } else {
-                rstData.isError = true;
-            }
-            if(response.data.status == 'ok') {
-                rstData.isSuccess = true;
-            } else {
-                rstData.isSuccess = false;
-            }
-        } else {
-            rstData.isError = true;
-            rstData.msg = 'unknown error';
-        }
-        return rstData;
-    }
-    function parseApiError(rstData, error) {
-        console.log('cmmn.callApiGet result(error) : ',error);
-        rstData.isError = true;
-        rstData.rawData = error;
-        if(error) {
-            if (error.response) {
-                rstData.status = error.response.status;
-                if(error.response.data) {
-                    //code :
-                    if (error.response.data.status === 'fail') {
-                        if(error.response.status == 422) {
-                            rstData.msg = error.response.data.errors;
-                        } else {
-                            rstData.msg = error.response.data.message;
-                            if(error.response.statusText != 'Bad Request') {
-                                rstData.isAlert = true;       
-                            } else {
-                                rstData.msg = error.response.data.errors;
-                            }
-                        }
-                    } else {
-                        rstData.msg = error.response.data.errors;
-                    }
-                } else {
-                    rstData.status = 5033;
-                    rstData.msg = error.message;
-                }
-            } else {
-                rstData.status = 5032;
-                rstData.msg = error.message;
-            }
-        } else { //
-            rstData.status = 5031;
-            rstData.msg = 'unknown error';
-        }
-        return rstData;
-    }
-    const callApi = async(input) => {
-        let rstData = {
-            isError : false,
-            isSuccess : false,
-            isAlert : false,
-            data : null,
-            msg : '',
-            status : 200,
-            rawData : null,
-        };
-        let callType = '';
-        let isPost = false;
-        let isGet = false;
-        let isPut = false;
-        let urlPath = '';
-        let urlParams = '';
-        if(input) {
-            if(input._url) {
-                urlPath = input._url;
-            } else {
-                rstData.isError = true;
-                rstData.msg = 'not exist _url';
-                return rstData;
-            }
-            if(input._type) {
-                callType = input._type;
-                if(input._type.toUpperCase() == 'GET') {
-                    isGet = true;
-                } else if(input._type.toUpperCase() == 'POST') {
-                    isPost = true;
-                } else if(input._type.toUpperCase() == 'PUT') {
-                    isPut = true;
-                }
-            } else {
-                rstData.isError = true;
-                rstData.msg = 'not exist _type';
-                return rstData;
-            }
-            if(input._param) {
-                if(isGet) {
-                    if(input._param._where) {
-                        let urlParamsWhere = '';
-                        input._param._where.forEach(function(item){
-                            if(urlParamsWhere) urlParamsWhere += '|';
-                            urlParamsWhere += item;
-                        });
-                        if(urlParams) urlParams += '&';
-                        urlParams += 'where='+urlParamsWhere;
-                    }
-                    if(input._param._with) {
-                        let urlParamsWith = '';
-                        input._param._with.forEach(function(item){
-                            if(urlParamsWith) urlParamsWith += ',';
-                            urlParamsWith += item;
-                        });
-                        if(urlParams) urlParams += '&';
-                        urlParams += 'with='+urlParamsWith;
-                    }
-                    if(input._param._page) {
-                        if(urlParams) urlParams += '&';
-                        urlParams += 'page='+input._param._page;    
-                    }
-                    if(input._param._doesnthave){
-                        let urlParamsWith = '';
-                        input._param._with.forEach(function(item){
-                            if(urlParamsWith) urlParamsWith += ',';
-                            urlParamsWith += item;
-                        });
-                        if(urlParams) urlParams += '&';
-                        urlParams += 'doesnthave='+urlParamsWith;
-                    }
-                } else if(isPost) {
-                    urlParams = input._param;
-                } else if(isPut) {
-                    urlParams = input._param;
-                }
-            } else {
-                if(isPost || isPut) {
-                    rstData.isError = true;
-                    rstData.msg = 'not exist _param';
-                    return rstData;
-                }
-            }       
-        }
-        console.log('cmmn.callApi 호출');       
-        console.log('cmmn.callApi url : ' + urlPath);
-        console.log('cmmn.callApi params : ' + urlParams);
-        console.log('cmmn.callApi type : ' + callType);
-        let returnData;
-
-        if(isGet) {
-            const response = await axios.get(`${urlPath}?${urlParams}`).then(response => {        
-                returnData = parseApiCompleted(rstData,response);                
-            })
-            .catch(error => {            
-                returnData = parseApiError(rstData,error);
-            });
-        } else if(isPost) {
-            const response = await axios.post(`${urlPath}`,urlParams).then(response => {            
-                returnData = parseApiCompleted(rstData,response);
-            })
-            .catch(error => {            
-                returnData = parseApiError(rstData,error);
-            });
-        } else if(isPut) {
-            const response = await axios.put(`${urlPath}`,urlParams).then(response => {            
-                returnData = parseApiCompleted(rstData,response);
-            })
-            .catch(error => {            
-                returnData = parseApiError(rstData,error);
-            });
-        }
-        return returnData;
-    }
-    
-    
     /***
+     
+        import { cmmn } from '@/hooks/cmmn';
+        const { wicac } = cmmn();
+
     
-        return wicac.conn()
-        .url(`/api/reviews/${id}`)
-        .multipart()
+        return wicac.conn() //결과값을 후 처리 할때 필수 선언
+
+        wicac.conn()
+        .log() //로그 출력
+        .url(`/api/reviews/${id}`) //호출 URL
+        .multipart() //첨부파일 있을 경우 선언
         .param({
             'id' : 1
         }) 
         .where([
             'w1=1',
             'w2=1',
-        ])
+        ]) 
         .with([
             'auction',
             'dealer',
@@ -308,10 +123,10 @@ export function cmmn() {
             ['auction','asc'],
             ['auction','desc']
         ])
-        .page(10)
+        .page(10) //페이지 0 또는 주석 처리시 기능 안함
         .callback(function(result) {
             console.log('wicac.conn callback ' , result);
-            return result.data;
+            return result.data; //결과값을 후 처리 할때 필수 선언
         })
         .get();
         .post();
@@ -345,6 +160,7 @@ export function cmmn() {
                 _isPut : false,
                 _isDelete : false,
                 _isMultipart : false,
+                _isLog : false,
                 _rstData : {
                     isError : false,
                     isSuccess : false,
@@ -356,6 +172,11 @@ export function cmmn() {
                 },
             };
             return newObj;
+        },
+        log : function() {
+            let _this = this;
+            _this._input._isLog = true;
+            return _this;
         },
         url : function(input) {
             let _this = this;
@@ -477,7 +298,7 @@ export function cmmn() {
                 if(urlParams) urlParams += '&';
                 urlParams += 'with='+urlParamsWith;
             }
-            if(_input._isPage) {
+            if(_input._isPage && _input._page > 0) {
                 if(urlParams) urlParams += '&';
                 urlParams += 'page='+_input._page;    
             }
@@ -524,13 +345,14 @@ export function cmmn() {
                     urlParams += urlParamsData;
                 }
                 urlParams = this.parseParam(_input, urlParams);
-                console.log('cmmn wicac GET [ ' + _this._input._url+urlParams + ' ]');
+                if(_input._isLog) console.log('cmmn wicac GET [ ' + _this._input._url+urlParams + ' ]');
                 await axios.get(_this._input._url+urlParams).then(response => {      
-                    _input._rstData = parseApiCompleted(_input._rstData,response);                                 
+                    _input._rstData = parseApiCompleted(_input._isLog,_input._rstData,response);                                 
                 })
                 .catch(error => {            
-                    _input._rstData = parseApiError(_input._rstData,error);                    
+                    _input._rstData = parseApiError(_input._isLog,_input._rstData,error);                    
                 });
+                if(_input._isLog) console.log('cmmn wicac GET result : ',_input._rstData);
                 return _input._rstData;
             } else if(_input._isPost) {
                 let urlParamsData = '';
@@ -548,13 +370,14 @@ export function cmmn() {
                         }
                     };
                 }
-                console.log('cmmn wicac POST'+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ]', urlParamsData);
+                if(_input._isLog) console.log('cmmn wicac POST'+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ]', urlParamsData);
                 await axios.post(_this._input._url+urlParams,urlParamsData,urlHeaders).then(response => {            
-                    _input._rstData = parseApiCompleted(_input._rstData,response);
+                    _input._rstData = parseApiCompleted(_input._isLog,_input._rstData,response);
                 })
                 .catch(error => {            
-                    _input._rstData = parseApiError(_input._rstData,error);
+                    _input._rstData = parseApiError(_input._isLog,_input._rstData,error);
                 });  
+                if(_input._isLog) console.log('cmmn wicac POST result : ',_input._rstData);
                 return _input._rstData;              
             } else if(_input._isPut) {
                 let urlParamsData = '';
@@ -571,13 +394,14 @@ export function cmmn() {
                         }
                     };
                 }
-                console.log('cmmn wicac PUT'+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ]', urlParamsData);
+                if(_input._isLog) console.log('cmmn wicac PUT'+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ]', urlParamsData);
                 await axios.put(_this._input._url+urlParams,urlParamsData).then(response => {            
-                    _input._rstData = parseApiCompleted(_input._rstData,response);
+                    _input._rstData = parseApiCompleted(_input._isLog,_input._rstData,response);
                 })
                 .catch(error => {            
-                    _input._rstData = parseApiError(_input._rstData,error);
+                    _input._rstData = parseApiError(_input._isLog,_input._rstData,error);
                 });
+                if(_input._isLog) console.log('cmmn wicac PUT result : ',_input._rstData);
                 return _input._rstData;
             } else if(_input._isDelete) {
                 let urlParamsData = '';
@@ -585,13 +409,14 @@ export function cmmn() {
                     urlParamsData = _input._param;
                 }
                 urlParams = this.parseParam(_input, urlParams);
-                console.log('cmmn wicac DELETE [ ' + _this._input._url+urlParams +' ]', urlParamsData);
+                if(_input._isLog) console.log('cmmn wicac DELETE [ ' + _this._input._url+urlParams +' ]', urlParamsData);
                 await axios.delete(_this._input._url+urlParams,urlParamsData).then(response => {            
-                    _input._rstData = parseApiCompleted(_input._rstData,response);
+                    _input._rstData = parseApiCompleted(_input._isLog,_input._rstData,response);
                 })
                 .catch(error => {            
-                    _input._rstData = parseApiError(_input._rstData,error);
+                    _input._rstData = parseApiError(_input._isLog,_input._rstData,error);
                 });
+                if(_input._isLog) console.log('cmmn wicac DELETE result : ',_input._rstData);
                 return _input._rstData;
             }            
         },
@@ -603,6 +428,63 @@ export function cmmn() {
             }
             return _this;
         }    
+    }
+    function parseApiCompleted(isLog,rstData, response) {
+        if(isLog) console.log('cmmn wicac parseApiCompleted : ',response);
+        rstData.rawData = response;
+        if(response && response.data) {
+            if(response.data.data) {
+                rstData.data = response.data.data;
+            } else {
+                rstData.isError = true;
+            }
+            if(response.data.status == 'ok') {
+                rstData.isSuccess = true;
+            } else {
+                rstData.isSuccess = false;
+            }
+        } else {
+            rstData.isError = true;
+            rstData.msg = 'unknown error';
+        }
+        return rstData;
+    }
+    function parseApiError(isLog,rstData, error) {
+        if(isLog) console.log('cmmn wicac parseApiError : ',error);
+        rstData.isError = true;
+        rstData.rawData = error;
+        if(error) {
+            if (error.response) {
+                rstData.status = error.response.status;
+                if(error.response.data) {
+                    //code :
+                    if (error.response.data.status === 'fail') {
+                        if(error.response.status == 422) {
+                            rstData.msg = error.response.data.errors;
+                        } else {
+                            rstData.msg = error.response.data.message;
+                            if(error.response.statusText != 'Bad Request') {
+                                rstData.isAlert = true;       
+                            } else {
+                                rstData.msg = error.response.data.errors;
+                            }
+                        }
+                    } else {
+                        rstData.msg = error.response.data.errors;
+                    }
+                } else {
+                    rstData.status = 5033;
+                    rstData.msg = error.message;
+                }
+            } else {
+                rstData.status = 5032;
+                rstData.msg = error.message;
+            }
+        } else { //
+            rstData.status = 5031;
+            rstData.msg = 'unknown error';
+        }
+        return rstData;
     }
     //End of callApi
 
@@ -646,196 +528,13 @@ export function cmmn() {
         return formattedDateTime;
     }
 
-  // public swal
-    /**
-        salert({
-            _swal: swal, //필수 지정
-            //_type: 'C', //C:confirm , T:toast , A:alert
-            _msg: '<b style="color:red">msg1</b>',
-            //_title: '<b style="color:red">title1</b>',
-            //_isHtml: false, //_msg가 HTML 태그 인 경우 활성화
-            //_icon: 'E|W|I|Q', //E:error , W:warning , I:info , Q:question
-            //_isClose: true,// 닫기 버튼 활성화
-            //_btnOkLabel: '', //확인 버튼 라벨 변경시
-            //_btnCancelLabel: '', //취소 버튼 라벨 변경시
-            //_btnBatch: 'L|R', //확인 버튼 위치 지정
-            //_timer: 10, //자동 닫기 타이머 설정
-            //_isBackCancel:true, //창 외부 클릭 닫기 활성화
-            //_isReturnFunction:false, //결과 함수 리턴 비활성화 , 기본 선언 필요
-            //_addClassNm:'', // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
-            //_addOption: { //swal 기타 옵션 추가
-            //    width: 700,
-            //    padding: 150,
-            //    background: '#fff url(https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg)',
-            //    imageUrl: 'https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg',
-            //    imageWidth: 200,
-            //    imageHeight: 200,
-            //    imageAlt: 'Custom image',
-            //},
-        },function(result){
-            console.log('salert', result);
-        }); 
-
-        // Toast
-        salert({
-            _swal: swal, //필수 지정
-            _type: 'T', //C:confirm , T:toast , A:alert
-            _msg: '<b style="color:red">msg1</b>',
-            //_isHtml: false, //_msg가 HTML 태그 인 경우 활성화
-            _isBackCancel:true, //창 외부 클릭 닫기 활성화
-            _isReturnFunction:false, //결과 함수 리턴 비활성화 , 기본 선언 필요
-        }); 
-     */
-    const salert = (input,fnCallback) => {
-        let rstData = {
-            isError : false,
-            isOk : false,
-            msg : '',
-            rawData : input,
-            css: null,
-        };
-        let isReturn = true;
-        if(input) {
-            let _classNm = 'wica-salert';
-            let _isBackCancel;
-            let isRight;
-            let _title;
-            let _icon = null;//success , error , warning , info , question
-            let _btnOkLabel = '확인';
-            let _btnCancelLabel = '취소';
-            let isConfirm;
-            let isAlert;
-            let isToast;
-            let isClose;
-            if(input._icon) {
-                if(input._icon.toUpperCase() == 'E') {
-                    _icon = 'error'
-                } else if(input._icon.toUpperCase() == 'W') {
-                    _icon = 'warning'
-                } else if(input._icon.toUpperCase() == 'I') {
-                    _icon = 'info'
-                } else if(input._icon.toUpperCase() == 'Q') {
-                    _icon = 'question'
-                }
-            }
-            if(input._type) {
-                if(input._type.toUpperCase() == 'C') {
-                    isConfirm = true;
-                } else if(input._type.toUpperCase() == 'A') {
-                    isAlert = true;
-                } else if(input._type.toUpperCase() == 'T') {
-                    isToast = true;
-                } else {
-                    isToast = true;
-                }
-            } else {
-                isToast = true;
-            }
-            if(input._title) {
-                _title = input._title;
-            }
-            if(input._btnBatch) {
-                if(input._btnBatch.toUpperCase() == 'R') { 
-                    isRight = true;
-                } else {
-                    isRight = false;
-                }
-            }
-            if(input._btnOkLabel) {
-                _btnOkLabel = input._btnOkLabel;
-            }
-            if(input._btnCancelLabel) {
-                _btnCancelLabel = input._btnCancelLabel; 
-            }
-            if(input._isBackCancel) {
-                _isBackCancel = input._isBackCancel;
-            }   
-            if(input._addClassNm) {
-                _classNm = input._addClassNm;
-            }   
-            if(input._isClose)      {
-                isClose = input._isClose;
-            }
-            if(input._isReturnFunction != undefined) {
-                isReturn = input._isReturnFunction;
-            }
-            let _customClass = {
-                container: _classNm+'-container',
-                confirmButton: _classNm+'-confirmButton',
-                cancelButton: _classNm+'-cancelButton',
-                popup: _classNm+'-popup',
-                header: _classNm+'-header',
-                title: _classNm+'-title',
-                content: _classNm+'-content',
-                icon: _classNm+'-icon',
-                closeButton: _classNm+'-closeButton',
-                image: _classNm+'-image',
-                input: _classNm+'-input',
-                actions: _classNm+'-actions',
-                footer: _classNm+'-footer',
-            };
-            rstData.css = _customClass;
-            let opt = {
-                title: _title,
-                icon: _icon,
-                showConfirmButton: !isToast,
-                showCancelButton: isConfirm,
-                showCloseButton: isClose,
-                confirmButtonText: _btnOkLabel,
-                //confirmButtonColor: '#ef4444',
-                cancelButtonText: _btnCancelLabel,
-                //cancelButtonColor: '#ef4444', 
-                reverseButtons: isRight,
-                allowOutsideClick: _isBackCancel,
-                customClass: _customClass,
-            }; 
-            if(input._addOption) {
-                Object.assign(opt, input._addOption);
-            }
-            if(input._msg) {
-                if(input._isHtml) {
-                    opt.html = input._msg;
-                } else {
-                    opt.text = input._msg;
-                }
-            }
-            if(input._timer) {
-                opt.timer = 1000 * input._timer;
-                opt.timerProgressBar = true;
-            } else {
-                if(isToast) {
-                    opt.timer = 1000 * 2;
-                    opt.timerProgressBar = false;
-                }
-            }
-            input._swal(opt)
-                .then(result => {
-                    console.log(result);
-                    if (result.isConfirmed) {
-                        rstData.isOk = true;
-                    }
-                    if(isToast) {
-                        rstData.isOk = true;
-                    }
-                    if(isReturn) fnCallback(rstData);
-                })
-        } else {
-            rstData.isError = true;
-            rstData.msg = 'not exist _param';
-            if(isReturn) fnCallback(rstData);
-        }        
-    }
-    //End of public swal
-
     //public wica swal
     /**
-      width: 700,
-            //    padding: 150,
-            //    background: '#fff url(https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg)',
-            //    imageUrl: 'https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg',
-            //    imageWidth: 200,
-            //    imageHeight: 200,
-            //    imageAlt: 'Custom image',
+      
+        import { cmmn } from '@/hooks/cmmn';
+        const { wica } = cmmn();
+
+
         wica.ntcn(swal)
         .param({}) // 리턴값에 전달 할 데이터
         .title('') // 알림 제목
@@ -850,39 +549,57 @@ export function cmmn() {
         .addClassNm('') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
         .addOption({}) //swal 기타 옵션 추가
         .callback(function(result) {
-
+            console.log(result);
         })
         .toast('<b style="color:red">msg wica toast</b>');
         .alert('<b style="color:red">msg wica alert</b>');
         .confirm('<b style="color:red">msg wica confirm</b>');
 
-        //
-        wica.ntcn(swal).toast('이용후기가 정상적으로 삭제되었습니다.');
-        //
-        wica.ntcn(swal)
-        .icon('I') //E:error , W:warning , I:info , Q:question
-        .callback(function(result) {
-            if(result.isOk){                                
-                getAllReview(1);                                
-            }
-        })
-        .alert('이용후기가 정상적으로 삭제되었습니다.');
-        //
-        wica.ntcn(swal)
-        .title('오류가 발생하였습니다.')
-        .icon('E') //E:error , W:warning , I:info , Q:question
-        .alert('관리자에게 문의해주세요.');
+        # 유형 1
 
-        //참고
-        wica.ntcn(swal).useHtmlText().alert('<b style="color:red">message !!</b>');
+            wica.ntcn(swal).toast('이용후기가 정상적으로 삭제되었습니다.');
 
-        wica.ntcn(swal).title('message !!!').alert();
+        # 유형 2
 
-        wica.ntcn(swal).icon('E').title('error message !!!').alert();
+            wica.ntcn(swal)
+            .icon('I') //E:error , W:warning , I:info , Q:question
+            .callback(function(result) {
+                if(result.isOk){                                
+                    getAllReview(1);                                
+                }
+            })
+            .alert('이용후기가 정상적으로 삭제되었습니다.');
+        
+        # 유형 3
 
-        wica.ntcn(swal).icon('E').title('error message !!!').callback(function(result){
-            console.log(result);
-        }).alert();
+            wica.ntcn(swal)
+            .title('오류가 발생하였습니다.')
+            .icon('E') //E:error , W:warning , I:info , Q:question
+            .alert('관리자에게 문의해주세요.');
+
+        # 참고 유형
+            
+            wica.ntcn(swal).useHtmlText().alert('<b style="color:red">message !!</b>');
+
+            wica.ntcn(swal).title('message !!!').alert();
+
+            wica.ntcn(swal).icon('E').title('error message !!!').alert();
+
+            wica.ntcn(swal).icon('E').title('error message !!!').callback(function(result){
+                console.log(result);
+            }).alert();
+
+        # addOption 값에 넣을 수 있는 항목 정리
+
+            width: 700,
+            height: 700,
+            padding: 150,
+            background: '#fff url(https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg)',
+            imageUrl: 'https://image.shutterstock.com/z/stock-vector--exclamation-mark-exclamation-mark-hazard-warning-symbol-flat-design-style-vector-eps-444778462.jpg',
+            imageWidth: 200,
+            imageHeight: 200,
+            imageAlt: 'Custom image',
+
 
      */
     const wica = {
@@ -1134,11 +851,9 @@ export function cmmn() {
       amtComma,
       openPostcode,
       closePostcode,
-      callApi,
       splitDate,
       getDayOfWeek,
       formatDateAndTime,
-      salert,
       wica,
       wicac,
       wicaLabel,
