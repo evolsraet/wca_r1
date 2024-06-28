@@ -101,12 +101,14 @@ export function cmmn() {
         return wicac.conn() //결과값을 후 처리 할때 필수 선언
 
         wicac.conn()
-        .log() //로그 출력
+        .log() //로그 출력 (파라미터 및 결과 등)
+        .logDetail() //상세 로그 출력(기본 로그 포함하여 상세하게)
         .url(`/api/reviews/${id}`) //호출 URL
         .multipart() //첨부파일 있을 경우 선언
         .param({
             'id' : 1
         }) 
+        .search('')
         .where([
             'w1=1',
             'w2=1',
@@ -123,7 +125,8 @@ export function cmmn() {
             ['auction','asc'],
             ['auction','desc']
         ])
-        .page(10) //페이지 0 또는 주석 처리시 기능 안함
+        .pageLimit(10) //한 페이지당 나올 게시물 갯수( 0 또는 주석 처리시 기능 안함 )
+        .page(10) //불러올 페이지 번호( 0 또는 주석 처리시 기능 안함 )
         .callback(function(result) {
             console.log('wicac.conn callback ' , result);
             return result.data; //결과값을 후 처리 할때 필수 선언
@@ -155,12 +158,14 @@ export function cmmn() {
                 _isDoesnthave : false,
                 _isOrder : false,
                 _isPage : false,
+                _isPageLimit : false,
                 _isPost : false,
                 _isGet : false,
                 _isPut : false,
                 _isDelete : false,
                 _isMultipart : false,
                 _isLog : false,
+                _isLogDetail : false,
                 _rstData : {
                     isError : false,
                     isSuccess : false,
@@ -169,6 +174,7 @@ export function cmmn() {
                     msg : '',
                     status : 200,
                     rawData : null,
+                    page : null,
                 },
             };
             return newObj;
@@ -178,16 +184,23 @@ export function cmmn() {
             _this._input._isLog = true;
             return _this;
         },
+        logDetail : function() {
+            let _this = this;
+            _this._input._isLogDetail = true;
+            return _this;
+        },
         url : function(input) {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ url(string) ] 함수 선언 ',input);
             _this._input._url = input;
-            if(input) {
+            if(input) {                
                 _this._input._isUrl = true;
             }
             return _this;
         },
         param : function(input) {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ param(object) ] 함수 선언 ',input);
             _this._input._param = input;
             if(input) {
                 _this._input._isParam = true;
@@ -196,11 +209,13 @@ export function cmmn() {
         },
         multipart : function() {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ multipart() ] 함수 선언 ');
             _this._input._isMultipart = true;
             return _this;
         },
         where : function(input) {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ where(array) ] 함수 선언 ',input);
             _this._input._where = input;
             if(input && input != null && input.length) {
                 _this._input._isWhere = true;
@@ -209,6 +224,7 @@ export function cmmn() {
         },
         with : function(input) {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ with(array) ] 함수 선언 ',input);
             _this._input._with = input;
             if(input) {
                 _this._input._isWith = true;
@@ -217,6 +233,7 @@ export function cmmn() {
         },
         doesnthave : function(input) {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ doesnthave(array) ] 함수 선언 ',input);
             _this._input._doesnthave = input;
             if(input) {
                 _this._input._isDoesnthave = true;
@@ -225,6 +242,7 @@ export function cmmn() {
         },
         order : function(input) {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ order(array) ] 함수 선언 ',input);
             _this._input._order = input;
             if(input) {
                 _this._input._isOrder = true;
@@ -233,14 +251,25 @@ export function cmmn() {
         },
         page : function(input) {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ page(int) ] 함수 선언 ',input);
             _this._input._page = input;
             if(input) {
                 _this._input._isPage = true;
             }
             return _this;
-        },        
+        },     
+        pageLimit : function(input) {
+            let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ pageLimit(int) ] 함수 선언 ',input);
+            _this._input._pageLimit = input;
+            if(input) {
+                _this._input._isPageLimit = true;
+            }
+            return _this;
+        },    
         get : function() {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ get() ] 함수 선언 ');
             _this._input._isGet = true;
             return this.call().then(result => {
                 if(_this._isReturn) {
@@ -251,6 +280,7 @@ export function cmmn() {
         },
         post : function() {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ post() ] 함수 선언 ');
             _this._input._isPost = true;
             return this.call().then(result => {
                 if(_this._isReturn) {
@@ -261,6 +291,7 @@ export function cmmn() {
         },
         put : function() {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ put() ] 함수 선언 ');
             _this._input._isPut = true;
             return this.call().then(result => {
                 if(_this._isReturn) {
@@ -271,6 +302,7 @@ export function cmmn() {
         },
         delete : function() {
             let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ delete() ] 함수 선언 ');
             _this._input._isDelete = true;
             return this.call().then(result => {
                 if(_this._isReturn) {
@@ -280,6 +312,7 @@ export function cmmn() {
             });
         },
         parseParam : function(_input,urlParams) {
+            if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] 로직 시작 ');
             if(_input._isWhere) {
                 let urlParamsWhere = '';
                 _input._where.forEach(function(item){
@@ -288,6 +321,7 @@ export function cmmn() {
                 });
                 if(urlParams) urlParams += '&';
                 urlParams += 'where='+urlParamsWhere;
+                if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] where 처리 ',_input._where,' , where='+urlParamsWhere);
             }
             if(_input._isWith) {
                 let urlParamsWith = '';
@@ -297,10 +331,17 @@ export function cmmn() {
                 });
                 if(urlParams) urlParams += '&';
                 urlParams += 'with='+urlParamsWith;
+                if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] with 처리 ',_input._with,' , with='+urlParamsWith);
             }
             if(_input._isPage && _input._page > 0) {
                 if(urlParams) urlParams += '&';
                 urlParams += 'page='+_input._page;    
+                if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] page 처리 ',_input._page);
+            }
+            if(_input._isPageLimit && _input.pageLimit > 0) {
+                if(urlParams) urlParams += '&';
+                urlParams += 'paginate='+_input._pageLimit;    
+                if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] pageLimit 처리 ',_input._pageLimit);
             }
             if(_input._isDoesnthave){
                 let urlParamsDoesnthave = '';
@@ -310,6 +351,7 @@ export function cmmn() {
                 });
                 if(urlParams) urlParams += '&';
                 urlParams += 'doesnthave='+urlParamsDoesnthave;
+                if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] doesnthave 처리 ',_input._doesnthave,' , doesnthave='+urlParamsDoesnthave);
             }
             if(_input._isOrder){
                 let urlParamsOrder1 = '';
@@ -322,8 +364,10 @@ export function cmmn() {
                 });
                 if(urlParams) urlParams += '&';
                 urlParams += 'order_column='+urlParamsOrder1+'&order_direction='+urlParamsOrder2;
+                if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] order 처리 ',_input._order,' , order_column='+urlParamsOrder1,' , order_direction='+urlParamsOrder2);
             }
             if(urlParams) urlParams = '?' + urlParams;
+            if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] 로직 종료 ',urlParams);
             return urlParams;
         },
         call : async function() {
@@ -345,14 +389,14 @@ export function cmmn() {
                     urlParams += urlParamsData;
                 }
                 urlParams = this.parseParam(_input, urlParams);
-                if(_input._isLog) console.log('cmmn wicac GET [ ' + _this._input._url+urlParams + ' ]');
+                if(_input._isLog || _input._isLogDetail) console.log('cmmn wicac GET [ ' + _this._input._url+urlParams + ' ]');
                 await axios.get(_this._input._url+urlParams).then(response => {      
-                    _input._rstData = parseApiCompleted(_input._isLog,_input._rstData,response);                                 
+                    _input._rstData = parseApiCompleted(_input,_input._rstData,response);                                 
                 })
                 .catch(error => {            
-                    _input._rstData = parseApiError(_input._isLog,_input._rstData,error);                    
+                    _input._rstData = parseApiError(_input,_input._rstData,error);                    
                 });
-                if(_input._isLog) console.log('cmmn wicac GET result : ',_input._rstData);
+                if(_input._isLog || _input._isLogDetail) console.log('cmmn wicac GET [ ' + _this._input._url+urlParams + ' ] result : ',_input._rstData);
                 return _input._rstData;
             } else if(_input._isPost) {
                 let urlParamsData = '';
@@ -370,14 +414,14 @@ export function cmmn() {
                         }
                     };
                 }
-                if(_input._isLog) console.log('cmmn wicac POST'+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ]', urlParamsData);
+                if(_input._isLog || _input._isLogDetail) console.log('cmmn wicac POST'+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ]', urlParamsData);
                 await axios.post(_this._input._url+urlParams,urlParamsData,urlHeaders).then(response => {            
-                    _input._rstData = parseApiCompleted(_input._isLog,_input._rstData,response);
+                    _input._rstData = parseApiCompleted(_input,_input._rstData,response);
                 })
                 .catch(error => {            
-                    _input._rstData = parseApiError(_input._isLog,_input._rstData,error);
+                    _input._rstData = parseApiError(_input,_input._rstData,error);
                 });  
-                if(_input._isLog) console.log('cmmn wicac POST result : ',_input._rstData);
+                if(_input._isLog || _input._isLogDetail) console.log('cmmn wicac POST '+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ] result : ',_input._rstData);
                 return _input._rstData;              
             } else if(_input._isPut) {
                 let urlParamsData = '';
@@ -394,14 +438,14 @@ export function cmmn() {
                         }
                     };
                 }
-                if(_input._isLog) console.log('cmmn wicac PUT'+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ]', urlParamsData);
+                if(_input._isLog || _input._isLogDetail) console.log('cmmn wicac PUT'+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ]', urlParamsData);
                 await axios.put(_this._input._url+urlParams,urlParamsData).then(response => {            
-                    _input._rstData = parseApiCompleted(_input._isLog,_input._rstData,response);
+                    _input._rstData = parseApiCompleted(_input,_input._rstData,response);
                 })
                 .catch(error => {            
-                    _input._rstData = parseApiError(_input._isLog,_input._rstData,error);
+                    _input._rstData = parseApiError(_input,_input._rstData,error);
                 });
-                if(_input._isLog) console.log('cmmn wicac PUT result : ',_input._rstData);
+                if(_input._isLog || _input._isLogDetail) console.log('cmmn wicac PUT '+(_input._isMultipart?'(Multipart)':'')+' [ ' + _this._input._url+urlParams +' ] result : ',_input._rstData);
                 return _input._rstData;
             } else if(_input._isDelete) {
                 let urlParamsData = '';
@@ -409,14 +453,14 @@ export function cmmn() {
                     urlParamsData = _input._param;
                 }
                 urlParams = this.parseParam(_input, urlParams);
-                if(_input._isLog) console.log('cmmn wicac DELETE [ ' + _this._input._url+urlParams +' ]', urlParamsData);
+                if(_input._isLog || _input._isLogDetail) console.log('cmmn wicac DELETE [ ' + _this._input._url+urlParams +' ]', urlParamsData);
                 await axios.delete(_this._input._url+urlParams,urlParamsData).then(response => {            
-                    _input._rstData = parseApiCompleted(_input._isLog,_input._rstData,response);
+                    _input._rstData = parseApiCompleted(_input,_input._rstData,response);
                 })
                 .catch(error => {            
-                    _input._rstData = parseApiError(_input._isLog,_input._rstData,error);
+                    _input._rstData = parseApiError(_input,_input._rstData,error);
                 });
-                if(_input._isLog) console.log('cmmn wicac DELETE result : ',_input._rstData);
+                if(_input._isLog || _input._isLogDetail) console.log('cmmn wicac DELETE [ ' + _this._input._url+urlParams +' ] result : ',_input._rstData);
                 return _input._rstData;
             }            
         },
@@ -429,10 +473,13 @@ export function cmmn() {
             return _this;
         }    
     }
-    function parseApiCompleted(isLog,rstData, response) {
-        if(isLog) console.log('cmmn wicac parseApiCompleted : ',response);
+    function parseApiCompleted(input,rstData, response) {
+        if(input._isLogDetail) console.log('cmmn wicac parseApiCompleted : ',response);
         rstData.rawData = response;
         if(response && response.data) {
+            if(response.data.meta) {
+                rstData.page = response.data.meta;
+            }
             if(response.data.data) {
                 rstData.data = response.data.data;
             } else {
@@ -449,8 +496,8 @@ export function cmmn() {
         }
         return rstData;
     }
-    function parseApiError(isLog,rstData, error) {
-        if(isLog) console.log('cmmn wicac parseApiError : ',error);
+    function parseApiError(input,rstData, error) {
+        if(input._isLogDetail) console.log('cmmn wicac parseApiError : ',error);
         rstData.isError = true;
         rstData.rawData = error;
         if(error) {
