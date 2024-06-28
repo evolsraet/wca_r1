@@ -125,7 +125,7 @@
                                                 <h4>등록된 차가 없어요</h4>
                                                 <h5>차량 등록후, 경매를 시작해보세요.</h5>
                                             </div>
-                                            <p class="btn primary-btn btn-apply-ty02 justify-content-around">차량 등록하기</p>
+                                            <router-link :to="{ name: 'home' }" class="btn primary-btn btn-apply-ty02 justify-content-around">차량 등록하기</router-link>
                                         </div>
                                     </div>
                                 </div>
