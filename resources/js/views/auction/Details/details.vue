@@ -117,14 +117,14 @@
                       </button>
                   </div>
 
-                  <div v-if="isDealer && auctionDetail.data.status === 'ing'" class="p-3">
+                <!-- <div v-if="isDealer && auctionDetail.data.status === 'ing'" class="p-3">
                     <div v-if="auctionDetail.data.hope_price !== null">
                       <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
                         <p>현재 희망가</p>
                         <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
                       </div>
                     </div>
-                  </div>
+                  </div>-->
                 </div>
               </div>
             </div>
@@ -689,7 +689,7 @@
                             
                             <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
                             
-                            <div v-if="isDealer && auctionDetail.data.status === 'ing' && (succesbid || succesbidhope || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price !== null" @click.stop="">
+                        <!--    <div v-if="isDealer && auctionDetail.data.status === 'ing' && (succesbid || succesbidhope || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price !== null" @click.stop="">
                               <h5 class="mx-3 text-center">{{ minutesLeft }}</h5>
                               <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ amtComma(myBidPrice) }}</span></p>
                               <h5 class="my-4">입찰 {{ auctionDetail.data.bids.length }}명/ 관심 0 명</h5>
@@ -700,7 +700,7 @@
                                 입찰 취소하기
                               </button>
                             </div>
-                            <AlarmGuidModal ref="alarmGuidModal" />
+                            <AlarmGuidModal ref="alarmGuidModal" />-->
                             
                         </div>
 
@@ -745,7 +745,7 @@
                         <BottomSheet02 class="container" v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
                           <button type="button" class="btn btn-dark d-flex align-items-center justify-content-center gap-1" @click="toggleView">재경매 하기<p class="icon-up-wh"></p></button>
                         </BottomSheet02>
-                        <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView &&isUser" class="p-0 filter-content">
+                       <!-- <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView &&isUser" class="p-0 filter-content">
                         <div>
                           <button type="button" class="mb-1 btn-close" @click="backView"></button>
                           <h5 class="my-4 mb-5">재경매할 금액을<br>입력해 주세요.</h5>
@@ -777,7 +777,7 @@
                             <button type="button" class="btn btn-primary" @click="reauction">재경매</button>
                           </div>
                         </div>
-                      </BottomSheet03>
+                      </BottomSheet03>-->
                       <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                       </div>
                     </div>
@@ -1248,7 +1248,7 @@ const completeAuction = async () => {
     status: 'chosen',
    // choice_at: formattedDate,
     final_price: selectedDealer.value.price,
-    bid_id: selectedDealer.value.user_id,
+    bid_id: selectedDealer.value.id,
   };
 
   try {
