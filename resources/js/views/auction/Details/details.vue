@@ -61,7 +61,7 @@
                       <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                       <h5 v-if="auctionDetail.data.hope_price !== null"><span class="gray-box">재경매</span></h5>
                     </div>
-                    <div v-if="auctionDetail.data.status ==='chosen'">
+                    <div v-if="auctionDetail.data.status ==='chosen' && isUser">
                       <hr>
                       <h4>탁송 신청 정보</h4>
                       <div class="fw-medium ">
@@ -369,7 +369,7 @@
             </BottomSheet02>
           </div>
 
-          <div v-if="auctionDetail.data.status !== 'done' &&  isDealer" class="sheet-content">
+          <div v-if="auctionDetail.data.status !== 'done' && auctionDetail.data.status !== 'chosen' &&  isDealer" class="sheet-content">
             <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
                 <div  @click.stop="">
                   <p class="text-center tc-red my-2">현재  {{ auctionDetail.data.bids_count }}명이 입찰했어요.</p>
@@ -1138,7 +1138,6 @@ const toggleView = () => {
     })
     .confirm(textOk);
 };
-
 const showbidView = () =>{
   bidSession.value=true;
 }
