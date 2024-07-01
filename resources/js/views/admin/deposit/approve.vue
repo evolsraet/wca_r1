@@ -1,14 +1,14 @@
 <template>
   <div class="container-fluid" v-if="auctionDetails">
-    <form @submit.prevent="updateAuction(auctionId, auction)">
+    <form @submit.prevent="registerAuction">
       <div>
         <div class="container mov-wide my-4">
           <div>
             <div class="mb-4">
               <div class="card my-auction">
                 <div class="d-flex align-items-baseline justify-content-between">
-                  <h4>No.3801<span class="tc-light-gray ms-3 fw-lighter">차량번호 385가1231</span></h4>
-                  <a class="btn-apply">자세히 보기</a>
+                  <h4>No.3801<span class="tc-light-gray ms-3 fw-lighter">차량번호 {{auction.car_no}}</span></h4>
+                  <a class="btn-apply" @click="detailAuction()">자세히 보기</a>
                   </div>
                   <div class="sell-info mb-5">
                           <div class="car-image-style">
@@ -17,15 +17,15 @@
                     <div class="car-info">
                         <div class="item">
                             <span class="label">성공수수료</span>
-                            <span class="value">300,000 원</span>
+                            <span class="value">{{ auction.success_fee_label }}</span>
                         </div>
                         <div class="item">
                             <span class="label">진단 비</span>
-                            <span class="value">120,000 원</span>
+                            <span class="value">{{auction.diag_fee_label}}</span>
                         </div>
                         <div class="total">
                             <span>합 계</span>
-                            <span>420,000 원</span>
+                            <span>{{ add_pee }}</span>
                         </div>
                     </div>
                 </div>
@@ -33,7 +33,7 @@
                       <p class="tc-light-gray">입금 상태</p>
                       <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
                       <option value="done">입금 완료</option>
-                      <option value="chosen">입금 대기</option>
+                      <option value="chosen">입금 대기</option> <!-- dlvr자리 -->
                       </select>
                   </div>
                   <div class="card-body">
@@ -57,311 +57,33 @@
                     </div>
                   </div>
           -->
-                  <!--<div class="card-body">
-                      <p class="tc-light-gray">차량번호</p>
-                      <input v-model="auction.car_no" id="car_no" class="form-control"/>
-                  </div>
-                  <div class="card-body">
-                      <p class="tc-light-gray">소유자명</p>
-                      <input v-model="auction.owner_name" id="owner_name" class="form-control"/>
-                  </div>
-                  <div class="card-body">
-                    <p class="tc-light-gray">은행</p>
-                    <input v-model="auction.bank" id="bank" class="form-control"/>
-                  </div>
-                  <div class="card-body">
-                    <p class="tc-light-gray">계좌번호</p>
-                    <input v-model="auction.account" id="account" class="form-control"/>
-                  </div>
-                <div class="card-body">
-                  <p class="tc-light-gray">메모</p>
-                  <input v-model="auction.memo" id="memo" class="form-control"/>
+            
+                <div class="btn-group mt-4">
+                  <button class="btn btn-primary tc-wh"> 저장 </button>
                 </div>
-                <div class="card-body">
-                  <p class="tc-light-gray">우편주소</p>
-                  <input v-model="auction.addr_post" class="form-control" type="hidden" id="addr_post">
-                  <input v-model="auction.addr1" class="form-control" id="addr1" @click="openPostcodePopup">
-                </div>
-                <div class="card-body">
-                  <p class="tc-light-gray">상세주소</p>
-                  <input v-model="auction.addr2" class="form-control" id="addr2">
-                </div>
-                <div class="card-body">
-                  <p class="tc-light-gray">경매마감일</p>
-                  <input v-model="auction.final_at" id="finalAt" class="form-control">
-                </div>
-                <div class="card-body">
-                  <p class="tc-light-gray">선택일</p>
-                  <input v-model="auction.choice_at" id="choiceAt" class="form-control">
-                </div>
-                <div class="card-body">
-                  <p class="tc-light-gray">완료일</p>
-                  <input v-model="auction.done_at" id="doneAt" class="form-control">
-                </div>
-                <div class="card-body">
-                  <p class="tc-light-gray">성공수수료</p>
-                  <input v-model="auction.success_fee" id="successFee" class="form-control">
-                </div>
-                <div class="card-body">
-                  <p class="tc-light-gray">진단수수료</p>
-                  <input v-model="auction.diag_fee" id="diagFee" class="form-control">
-                </div>
-                <div class="card-body">
-                  <p class="tc-light-gray">총 비용</p>
-                  <input v-model="auction.total_fee" id="totalFee" class="form-control">
-                </div>
-                <div class="card-body">
-                  <p class="tc-light-gray">희망가</p>
-                  <input v-model="auction.hope_price" id="hopePrice" class="form-control">
-                </div>
-                <div class="card-body">
-                  <p class="tc-light-gray">낙찰가</p>
-                  <input v-model="auction.final_price" id="finalPrice" class="form-control">
-                </div>
-                <div></div>
-                <p class="tc-light-gray ms-2">진단평가 자료 정보</p>
-                <file v-if="auctionDetails.data.status === 'ask'" @file-attached="handleFileAttachment" />
-              </div>
-            </div>
-          </div>-->
-          <div v-if="auctionDetails.data.status === 'chosen'" class="btn-group mt-4">
-                  <button class="btn btn-primary tc-wh" @click="registerAuction"> 등록 </button>
-                </div>
-                <div class="btn-group" v-else>
-                  <button class="btn primary-disable tc-wh" @click="auctionDone"> 등록</button>
-                </div>
+               
                 </div>
               </div>
             </div>
-                
-           <!-- <div @click="toggleVisibility" class="d-flex justify-content-between align-items-center p-3 border-bottom">
-            <h5>차량정보</h5>
-            <img :src="isVisible ? hideIcon : showIcon" :alt="isVisible ? '숨기기' : '더보기'" class="toggle-icon" width="20px" height="10px" />
-          <transition name="slide">
-            <div v-show="isVisible" class="container card-style">
-              <div class="card card-custom">
-                <div class="row">
-                  <div class="col-6">
-                    <div class="item-label">년식</div>
-                    <div class="item-value"></div>
-                  </div>
-                  <div class="col-6">
-                    <div class="item-label">주행거리</div>
-                    <div class="item-value">103,000km</div>
-                  </div>
-                </div>
-                <div class="row">
-                  <div class="col-6">
-                    <div class="item-label">내사 피해</div>
-                    <div class="item-value">1건</div>
-                  </div>
-                  <div class="col-6">
-                    <div class="item-label">타사 피해</div>
-                    <div class="item-value">3건</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </transition>
-          <transition name="slide">
-            <div v-show="isVisible" class="container p-4">
-          
-              <ul class="machine-inform-title">
-                <li class="tc-light-gray">차량번호</li>
-                <li class="info-num"></li>
-                <li class="car-icon"></li>
-              </ul>
-              <ul class="machine-inform">
-                <li class="tc-light-gray">제조사</li>
-                <li class="sub-title"></li>
-              </ul>
-              <ul class="machine-inform">
-                <li class="tc-light-gray">모델</li>
-                <li class="sub-title"></li>
-              </ul>
-              <ul class="machine-inform">
-                <li class="tc-light-gray">세부모델</li>
-                <li class="sub-title"></li>
-              </ul>
-              <ul class="machine-inform">
-                <li class="tc-light-gray">등급</li>
-                <li class="sub-title"></li>
-              </ul>
-              <ul class="machine-inform">
-                <li class="tc-light-gray">세부등급</li>
-                <li class="sub-title"></li>
-              </ul>
-              <ul class="machine-inform-title">
-                <li class="tc-light-gray">최초등록일</li>
-                <li class="info-num"></li>
-                <li class="car-aside-icon"></li>
-              </ul>
-              <ul class="machine-inform">
-                <li class="tc-light-gray">년식</li>
-                <li class="sub-title"></li>
-              </ul>
-              <ul class="machine-inform">
-                <li class="tc-light-gray">차량유형</li>
-                <li class="sub-title">종합 승용차</li>
-              </ul>
-              <ul class="machine-inform-title">
-                <li class="tc-light-gray">배기량</li>
-                <li class="info-num">2000cc</li>
-                <li class="gasoline-icon"></li>
-              </ul>
-              <ul class="machine-inform">
-                <li class="tc-light-gray">연료</li>
-                <li class="sub-title"></li>
-              </ul>
-              <ul class="machine-inform">
-                <li class="tc-light-gray">미션</li>
-                <li class="sub-title"></li>
-              </ul>
-              <ul class="machine-inform-title">
-                <li class="tc-light-gray">용도변경이력</li>
-                <li class="info-num">-</li>
-                <li class="clean-icon"></li>
-              </ul>
-              <ul class="machine-inform">
-                <li class="tc-light-gray">튜닝이력</li>
-                <li class="sub-title">1회</li>
-              </ul>
-              <ul class="machine-inform">
-                <li class="tc-light-gray">리콜이력</li>
-                <li class="sub-title">-</li>
-              </ul>
-              <ul class="machine-inform-title">
-                <li class="tc-light-gray">옵션정보</li>
-              </ul>
-              <div></div>
-              <ul class="machine-inform-title">
-                <li class="tc-light-gray">추가옵션</li>
-                <li class="info-num">-</li>
-              </ul>
-              <div class="contour-style"></div>
-              <div class="container px-4 py-5">
-                <h5>이력</h5>
-                <div class="p-4 rounded text-body-emphasis bg-body-secondary">
-                  <ul class="mt-0 machine-inform-title">
-                    <li class="tc-light-gray">용도 변경이력</li>
-                    <li class="info-num">-</li>
-                  </ul>
-                  <ul class="mt-0 machine-inform-title">
-                    <li class="tc-light-gray">소유자 변경</li>
-                    <li class="info-num">1</li>
-                  </ul>
-                  <ul class="mt-0 machine-inform-title">
-                    <li class="tc-light-gray">압류/저당</li>
-                    <li class="info-num">-</li>
-                  </ul>
-                  <ul class="mt-0 mb-0 machine-inform-title">
-                    <li class="tc-light-gray">특수사고 이력</li>
-                    <li class="info-num">전손 0 침수0 도난0</li>
-                  </ul>
-                </div>
-                <h5 class="mt-5">내차피해 (<span class="tc-red">1</span>건)</h5>
-                <div class="o_table_mobile">
-                  <div class="tbl_basic">
-                    <table>
-                      <tbody>
-                        <tr>
-                          <th>일시</th>
-                          <th>부품</th>
-                          <th>공임</th>
-                          <th>조회</th>
-                          <th>날짜</th>
-                        </tr>
-                        <tr>
-                          <td>2024-03-22</td>
-                          <td>12,000</td>
-                          <td>10,000</td>
-                          <td>7</td>
-                          <td>2022-05-01</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <h5 class="mt-5">타차피해 (<span class="tc-red">1</span>건)</h5>
-                <div class="o_table_mobile">
-                  <div class="tbl_basic">
-                    <table>
-                      <tbody>
-                        <tr>
-                          <th>일시</th>
-                          <th>부품</th>
-                          <th>공임</th>
-                          <th>조회</th>
-                          <th>날짜</th>
-                        </tr>
-                        <tr>
-                          <td>2024-03-22</td>
-                          <td>12,000</td>
-                          <td>10,000</td>
-                          <td>7</td>
-                          <td>2022-05-01</td>
-                        </tr>
-                        <tr>
-                          <td>2024-03-22</td>
-                          <td>12,000</td>
-                          <td>10,000</td>
-                          <td>7</td>
-                          <td>2022-05-01</td>
-                        </tr>
-                        <tr>
-                          <td>2024-03-22</td>
-                          <td>12,000</td>
-                          <td>10,000</td>
-                          <td>7</td>
-                          <td>2022-05-01</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-                <h5 class="mt-5">기타</h5>
-                <div class="form-group">
-                  <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetails.data.memo }}</textarea>
-                </div>
-                <ul class="machine-inform-title">
-                  <li class="tc-light-gray">거래지역</li>
-                  <li class="info-num">경기>성남시 중원구</li>
-                </ul>
-                <ul class="machine-inform-title">
-                  <li class="tc-light-gray">기타이력</li>
-                  <li class="info-num">-</li>
-                </ul>
-                <ul class="machine-inform-title">
-                  <li class="tc-light-gray">차량명의</li>
-                  <li class="info-num">개인</li>
-                </ul>
-              </div>
-            </div>
-          </transition>-->
         </div>
       </div>
     </form>
-    
   </div>
 </template>
 <script setup>
-import { ref, onMounted, reactive, onUnmounted } from 'vue';
-import { useRoute } from 'vue-router';
-import file from "@/components/file.vue";
+import { createApp,h,ref, onMounted, reactive, onUnmounted, inject  } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import useAuctions from '@/composables/auctions';
-import BottomSheet from '@/views/bottomsheet/Bottomsheet-type02.vue';
-import hideIcon from '../../../../../resources/img/Icon-black-down.png';
-import showIcon from '../../../../../resources/img/Icon-black-up.png';
+import { cmmn } from '@/hooks/cmmn';
+import LawGid from '@/views/modal/deposit/detailAuction.vue';
 
+const router = useRouter();
 const route = useRoute();
-const { getAuctionById, updateAuctionStatus, isLoading, updateAuction } = useAuctions();
-const auctionId = parseInt(route.params.id); 
+const { getAuctionById, updateAuctionStatus, AuctionCarInfo } = useAuctions();
+const { amtComma, formatCurrency, wica } = cmmn();
 const auctionDetails = ref(null);
-const isVisible = ref(false);
-const showBottomSheet = ref(true);
-const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
-const isFileAttached = ref(false);
 
+const swal = inject('$swal');
 const auction = reactive({ 
     car_no: '',
     owner_name: '',
@@ -375,30 +97,18 @@ const auction = reactive({
     final_at: '',
     choice_at: '',
     done_at: '',
-    success_fee: '',
-    diag_fee: '',
-    total_fee: '',
-    hope_price: '',
-    final_price: '',
+    success_fee: '0',
+    diag_fee: '0',
+    total_fee: '0 원',
+    hope_price: '0',
+    final_price: '0 원',
+    success_fee_label: '0 원',
+    diag_fee_label: '0 원',
 }); 
+const add_pee = ref(0);
 
 function changeStatus(event) {
   auction.status = event.target.value;
-}
-
-const toggleVisibility = () => {
-  isVisible.value = !isVisible.value;
-};
-
-function toggleSheet() {
-  const bottomSheet = document.querySelector('.bottom-sheet');
-  
-  if (showBottomSheet.value) {
-    bottomSheetStyle.value = { position: 'static', bottom: '-100%' };
-  } else {
-    bottomSheetStyle.value = { position: 'fixed', bottom: '0px' };
-  }
-  showBottomSheet.value = !showBottomSheet.value;
 }
 
 const fetchAuctionDetails = async () => {
@@ -406,46 +116,90 @@ const fetchAuctionDetails = async () => {
     const id = route.params.id;
     const data = await getAuctionById(id);
     auctionDetails.value = data;
-    console.log('Fetched auction details:', data);
   } catch (error) {
     console.error('Error fetching auction details:', error);
   }
 };
 
-const handleFileAttachment = () => {
-  isFileAttached.value = true;
-  console.log('File attached successfully');
-};
-
-const registerAuction = async () => {
+async function registerAuction(){
   try {
     const id = route.params.id;
-    await updateAuctionStatus(id, 'done');
-    router.push({ name: 'approve.index' }); 
-    alert('등록되었습니다.');
+    
+    wica.ntcn(swal)
+    .title('수정하시겠습니까?') // 알림 제목
+    .icon('Q') //E:error , W:warning , I:info , Q:question
+    .callback(async function(result) {
+        if(result.isOk){
+          const updateResult = await updateAuctionStatus(id, 'done');
+          if(updateResult.isSuccess){
+            wica.ntcn(swal)
+            .icon('I') //E:error , W:warning , I:info , Q:question
+            .callback(function(result) {
+                if (result.isOk) {
+                  router.push({ name: 'deposit.index' }); 
+                }
+            })
+            .alert('입금상태가 정상적으로 수정되었습니다.');
+          }else{
+            validationErrors.value = result.msg;
+            wica.ntcn(swal)
+            .title('변경 실패')
+            .icon('E') //E:error , W:warning , I:info , Q:question
+            .alert('입금상태 변경에 실패하였습니다.');
+          }
+        }
+    }).confirm();
+
+   
   } catch (error) {
     console.error('Error updating auction status:', error);
-    alert('등록에 실패했습니다.');
   }
 };
 
-const auctionDone  = async (event) => {
-  event.preventDefault(); 
-  event.stopPropagation();
-  alert(' 경매 완료된 매물 입니다. ');
+const detailAuction = async () => {
+  const container = document.createElement('div');
+  
+  const carInfoForm = {
+    owner: auction.owner_name,
+    no: auction.car_no,
+    forceRefresh: ""
+  };
+  const carDetail = ref({});
+  const carInfoResponse = await AuctionCarInfo(carInfoForm);
+  const carData = carInfoResponse.data;
+
+  carDetail.no = carData.no;
+  carDetail.model = carData.model;
+  carDetail.modelSub = carData.modelSub;
+  carDetail.grade = carData.grade;
+  carDetail.gradeSub = carData.gradeSub;
+  carDetail.year = carData.year;
+  carDetail.fuel = carData.fuel;
+  carDetail.mission = carData.mission;
+
+  const app = createApp({
+    render() {
+      return h(LawGid, { content: carDetail });
+    }
+  });
+  
+  app.mount(container);
+  
+  const text = container.innerHTML;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .addClassNm('intro-modal')
+    .useClose()
+    .callback(function (result) {
+      // 추가적인 콜백 함수 내용이 필요하다면 여기에 작성
+    })
+    .confirm(text);
+
+  app.unmount(); // Unmount the app after getting the HTML content
 };
 
-// Daum Postcode API를 활용한 주소 검색 팝업 열기
-const openPostcodePopup = () => {
-  new daum.Postcode({
-    oncomplete: data => {
-      addr_post.value = data.zonecode; // 우편번호
-      addr1.value = data.address; // 주소
-      auction.addr_post = addr_post.value;
-      auction.addr1 = addr1.value;
-    }
-  }).open();
-};
 
 onMounted(async () => {
   await fetchAuctionDetails();
@@ -459,28 +213,22 @@ onMounted(async () => {
   auction.addr_post = auctionDetails.value.data.addr_post;
   auction.addr1 = auctionDetails.value.data.addr1;
   auction.addr2 = auctionDetails.value.data.addr2;
+  auction.success_fee = auctionDetails.value.data.success_fee;
+  auction.diag_fee =auctionDetails.value.data.diag_fee;
 
-  // Change body background color
-  const style = document.createElement('style');
-  style.innerHTML = `
-    body {
-      background-color: #f7f8fb !important;
-    }
-  `;
-  document.head.appendChild(style);
-
-  // Store the style element to remove it later
-  document.body.dataset.styleElement = style;
-});
-
-// Reset body background color on component unmount
-onUnmounted(() => {
-  const style = document.body.dataset.styleElement;
-  if (style) {
-    document.head.removeChild(style);
-    delete document.body.dataset.styleElement;
+  add_pee.value = formatCurrency(auction.success_fee + auction.diag_fee);
+  if(auctionDetails.value.data.success_fee){
+    auction.success_fee_label = formatCurrency(auctionDetails.value.data.success_fee);
   }
+  if(auctionDetails.value.data.diag_fee){
+    auction.diag_fee_label = formatCurrency(auctionDetails.value.data.diag_fee);
+  }
+  if(auctionDetails.value.data.final_price){
+    auction.final_price = amtComma(auctionDetails.value.data.final_price);
+  }
+  
 });
+
 </script>
 
 

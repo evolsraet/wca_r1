@@ -10,7 +10,7 @@ export default function useAuctions() {
     const auctionsData = ref([]);
     const auction = ref({});
     const pagination = ref({});
-    const router = useRouter();;
+    const router = useRouter();
     const processing = ref(false);
     const validationErrors = ref({});
 
@@ -104,6 +104,35 @@ const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
     }
 };
 
+//관리자페이지 - 입금관리 dlvr상태 리스트 가져오기 
+const adminGetDepositAuctions = async(
+    page = 1,
+    column = '',
+    direction = '',
+    status = 'dlvr',
+    search_title=''
+) => {
+    const apiList = [];
+    apiList.push(`auctions.status:${status}`)
+    if(search_title){
+        apiList.push(`auctions.car_no:${search_title}`)
+    }
+
+    return wicac.conn()
+    .url(`/api/auctions`)
+    .where(apiList)
+    .order([
+        [`${column}`,`${direction}`]
+    ])
+    .page(`${page}`)
+    .callback(function(result) {
+        auctionsData.value = result.data;
+        pagination.value = result.rawData.data.meta;
+        return result.data;
+    })
+    .get();
+}
+
     
 // 경매 ID를 이용해 경매 상세 정보를 가져오는 함수
 const getAuctionById = async (id) => {
@@ -137,6 +166,7 @@ const statusMap = {
     wait: "선택대기",
     ing: "경매진행",
     diag: "진단대기",
+    dlvr: "탁송진행",
     ask: "신청완료"
 };
 const getStatusLabel = (status) => {
@@ -466,6 +496,7 @@ const deleteAuction = async (id) => {
 
     return {
         adminGetAuctions,
+        adminGetDepositAuctions,
         AuctionCarInfo,
         chosenDealer,
         AuctionReauction,

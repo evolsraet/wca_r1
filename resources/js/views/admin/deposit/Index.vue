@@ -6,8 +6,9 @@
                 <div class="image-icon-excel"></div>
             </div>
             <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
-            <button type="button" class="search-btn">검색</button>
+            <button type="button" class="search-btn" @click="searchBtn">검색</button>
         </div>
+        <!--
         <div class="container mb-3">
             <div class="d-flex justify-content-end">
                 <div class="text-start status-selector">
@@ -20,6 +21,7 @@
                 </div>
             </div>
         </div>
+        -->
         <div class="o_table_mobile my-5">
             <div class="tbl_basic tbl_dealer">
                 <div class="overflow-auto">
@@ -32,8 +34,9 @@
                                         등록일
                                     </div>
                                     <div class="select-none">
-                                        <span :class="{ 'text-blue-600': orderDirection === 'asc' && orderColumn === 'created_at', hidden: orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'created_at' }">&uarr;</span>
-                                        <span :class="{ 'text-blue-600': orderDirection === 'desc' && orderColumn === 'created_at', hidden: orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'created_at' }">&darr;</span>
+                                        <span v-if="orderingState.created_at.direction === 'asc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&uarr;</span>
+                                        <span v-else-if="orderingState.created_at.direction === 'desc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&darr;</span>
+                                        <span v-else-if="orderingState.created_at.direction === '' && orderingState.created_at.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                     </div>
                                 </div>
                             </th>
@@ -49,7 +52,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-if="filteredAuctionsData.length > 0" v-for="auction in filteredAuctionsData" :key="auction.id">
+                        <tr v-if="auctionsData.length > 0" v-for="auction in auctionsData" :key="auction.id">
                             <td class="px-6 py-4 text-sm">
                                 {{ auction.created_at }}
                             </td>
@@ -90,7 +93,19 @@
             </div>
         </div>
         <div class="card-footer">
-            <Pagination :data="pagination" :limit="3" @pagination-change-page="(page) => fetchAuctions(page)" class="mt-4 justify-content-center" />
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" :class="{ disabled: !pagination.prev }">
+                    <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1,fetchAuctions)"></a>
+                    </li>
+                    <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                    <a class="page-link" @click="loadPage(n,fetchAuctions)">{{ n }}</a>
+                    </li>
+                    <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+                    <a class="page-link next-style" @click="loadPage(pagination.current_page + 1,fetchAuctions)"></a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
 </template>
@@ -101,23 +116,52 @@ import useAuctions from '@/composables/auctions';
 import useCategories from '@/composables/categories';
 import { useAbility } from '@casl/vue';
 
-const search_category = ref('');
-const search_id = ref('');
+const currentStatus = ref('dlvr'); 
+const currentPage = ref(1); // 현재 페이지 번호
+const orderingState = {
+        created_at: { direction: '', column: '', hit: 0 },
+        car_no: { direction: '', column: '', hit: 0 },
+};
+
+
 const search_title = ref('');
-const search_content = ref('');
-const search_global = ref('');
 const orderColumn = ref('created_at');
 const orderDirection = ref('desc');
-const { auctionsData, pagination, getAuctions, deleteAuction, getStatusLabel } = useAuctions();
-const { categoryList, getCategoryList } = useCategories();
+const { auctionsData, pagination, deleteAuction, getStatusLabel, adminGetDepositAuctions } = useAuctions();
+const { getCategoryList } = useCategories();
 const { can } = useAbility();
 
-const fetchAuctions = async (page = 1) => {
-    try {
-        await getAuctions(page);
-    } catch (error) {
-        console.error('Error fetching auctions:', error);
-    }
+
+const updateOrdering = (column) => {
+        let columnState = orderingState[column];
+        
+        if (columnState.hit == 3) {
+            columnState.column = '';
+            columnState.direction = '';
+            columnState.hit = 0;
+        } else {
+            columnState.column = column;
+            columnState.direction = columnState.direction === 'asc' ? 'desc' : 'asc';
+        }
+        orderColumn.value = columnState.column;
+        orderDirection.value = columnState.direction;
+
+        fetchAuctions(); 
+};
+
+
+const searchBtn = async() =>{
+    fetchAuctions();
+}
+
+function fetchAuctions(){
+    adminGetDepositAuctions(
+        currentPage.value,
+        orderColumn.value,
+        orderDirection.value,
+        currentStatus.value,
+        search_title.value
+    );
 };
 
 onMounted(() => {
@@ -125,78 +169,13 @@ onMounted(() => {
     getCategoryList();
 });
 
-const updateOrdering = (column) => {
-    orderColumn.value = column;
-    orderDirection.value = orderDirection.value === 'asc' ? 'desc' : 'asc';
-    fetchAuctions(
-        1,
-        search_category.value,
-        search_id.value,
-        search_title.value,
-        search_content.value,
-        search_global.value,
-        orderColumn.value,
-        orderDirection.value
-    );
-};
+function loadPage(page) { // 페이지 로드
+    if (page < 1 || page > pagination.value.last_page) return;
+    currentPage.value = page;
+    fetchAuctions();
+    window.scrollTo(0,0);
+}
 
-const filteredAuctionsData = computed(() => {
-    return auctionsData.value.filter(auction => auction.status === 'chosen' || auction.status === 'done');
-});
-
-watch(search_category, (current) => {
-    fetchAuctions(
-        1,
-        current,
-        search_id.value,
-        search_title.value,
-        search_content.value,
-        search_global.value
-    );
-});
-watch(search_id, (current) => {
-    fetchAuctions(
-        1,
-        search_category.value,
-        current,
-        search_title.value,
-        search_content.value,
-        search_global.value
-    );
-});
-watch(search_title, (current) => {
-    fetchAuctions(
-        1,
-        search_category.value,
-        search_id.value,
-        current,
-        search_content.value,
-        search_global.value
-    );
-});
-watch(search_content, (current) => {
-    fetchAuctions(
-        1,
-        search_category.value,
-        search_id.value,
-        search_title.value,
-        current,
-        search_global.value
-    );
-});
-watch(
-    search_global,
-    _.debounce((current) => {
-        fetchAuctions(
-            1,
-            search_category.value,
-            search_id.value,
-            search_title.value,
-            search_content.value,
-            current
-        );
-    }, 200)
-);
 </script>
     <style scoped>
     .tc-red {
@@ -229,10 +208,6 @@ watch(
 }
 .search-type2 .search-btn{
     top: 63px !important;
-}
-.gray-box {
-    width: 65px !important;
-    border-radius: 16px !important;
 }
     </style>
     
