@@ -10,12 +10,13 @@
                 <div class="styled-div mt-0">
                     <div class="profile">
                         <div class="dealer-info">
-                            <img src="../../../../img/profile_dom.png" width="100%" alt="Profile Image" class="main-profile">
+                            <img :src="photoUrl" alt="Profile Photo" class="profile-photo" />
                             <div class="deal-info">
                                 <p class="tc-light-gray">{{ user.dealer.company }} </p>
                                 <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
                                 <p class="restar">4.5점</p>
-                                <p class="no-bidding"><span>입찰 불가</span></p>
+                                <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1 shadow-sm"><span>입찰 불가</span></p>
+                                <p v-else-if="user.status === 'ok'" class="bidding mt-1 mb-1 shadow-sm"><span>입찰 가능</span></p>
                             </div>
                         </div>
                     </div>
@@ -115,7 +116,9 @@ import { useStore } from 'vuex';
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import Footer from "@/views/layout/footer.vue"
+import profileDom from '/resources/img/profile_dom.png'; 
 
+const photoUrl = ref(profileDom);
 const currentTab = ref('dealerInfo');
 const { amtComma } = cmmn();
 const store = useStore();
@@ -155,6 +158,7 @@ const user = computed(() => store.state.auth.user);
 const filteredViewBids = ref([]);
 
 const fetchFilteredViewBids = async () => {
+    
     console.log('Original Bids:', bidsData.value);
     const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
     console.log('Bids with Details:', bidsWithDetails);  // Bids with Details 데이터 출력
@@ -166,6 +170,9 @@ const fetchFilteredViewBids = async () => {
 };
 
 onMounted(async () => {
+    if (user.value.files) {
+      photoUrl.value = user.value.files.file_user_photo[0].original_url;
+    }
     await getBids();
     console.log('Loaded Bids:', bidsData.value);  // Bids 데이터 출력
     await getAuctions();
