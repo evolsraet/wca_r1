@@ -238,22 +238,20 @@ const AuctionCarInfo = async (carInfoForm) => {
     processing.value = true;
     validationErrors.value = {};
 
-    try {
-        const response = await axios.post('/api/auctions', auctionData);
-        return response.data; 
-    } catch (error) {
-        console.error(error);
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;
+    return wicac.conn()
+    .url(`/api/auctions`)
+    .param(auctionData) 
+    .callback(function(result) {
+        if(result.isError){
+            validationErrors.value = result.rawData.response.data.errors;
+            throw new Error;          
+        } else {
+            processing.value = false;
+            return result.data;
         }
-        swal({
-            icon: 'error',
-            title: 'Failed to create auction'
-        });
-        throw error;
-    } finally {
-        processing.value = false;
-    }
+    })
+    .post();
+
 };
 //재경매- (희망가) 변경
 const AuctionReauction = async (id, data) => {

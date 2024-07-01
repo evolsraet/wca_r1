@@ -24,23 +24,43 @@
         </div>
         <!-- 지역 선택 -->
         <div class="form-group">
-          <label for="sido1">지역</label>
+          <label for="sido1">(*필수입력) 지역</label>
           <div class="region">
             <select class="w-100" v-model="selectedRegion" @change="onRegionChange">
               <option value="">시/도 선택</option>
               <option v-for="region in regions" :key="region" :value="region">{{ region }}</option>
             </select>
           </div>
+          <div class="text-danger mt-1">
+            <div v-for="message in validationErrors?.region">
+              {{ message }}
+            </div>
+          </div>
         </div>
         <!-- 주소 입력 -->
         <div class="form-group mb-5">
             <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly>
+            <div class="text-danger mt-1">
+              <div v-for="message in validationErrors?.addr_post">
+                {{ message }}
+              </div>
+            </div>
             <div>
                 <input type="text" v-model="addr" placeholder="주소" class="input-dis form-control" readonly>
+                <div class="text-danger mt-1">
+                  <div v-for="message in validationErrors?.addr1">
+                    {{ message }}
+                  </div>
+                </div>
                 <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
             </div>
             
             <input type="text" v-model="addrdt" placeholder="상세주소">
+            <div class="text-danger mt-1">
+              <div v-for="message in validationErrors?.addr2">
+                {{ message }}
+              </div>
+            </div>
             <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                 <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
             </div>
@@ -74,7 +94,7 @@
   </div>
 </template>
 <script setup>
-import { ref, onMounted, computed, nextTick, watch,inject } from 'vue';
+import { ref, onMounted, computed, nextTick, watch,inject, registerRuntimeCompiler } from 'vue';
 import { useStore } from 'vuex';
 import Modal from '@/views/modal/modal.vue';
 import BankModal from '@/views/modal/bank/BankModal.vue';
@@ -87,7 +107,7 @@ import carObjects from '../../../../../resources/img/modal/car-objects-blur.png'
 const { openPostcode , closePostcode} = cmmn();
 const { wica} = cmmn();
 // Auction 관련 데이터와 함수 가져오기
-const { createAuction } = useAuctions();
+const { createAuction , validationErrors } = useAuctions();
 const store = useStore();
 const user = computed(() => store.getters['auth/user']);
 const swal = inject('$swal');
@@ -121,6 +141,7 @@ const fileUserOwner = ref(null); // 추가: 파일 저장 변수
 const fileUserOwnerName = ref(''); // 추가: 파일 이름 저장 변수
 const auctionEntry = async () => {
   // 필수 정보를 확인
+  /**
   if (
     !isVerified.value ||
     !ownerName.value.trim() ||
@@ -153,7 +174,7 @@ const auctionEntry = async () => {
     .alert('소유자 본인 인증 및 필수 정보를 모두 입력해야 합니다.');
 
     return;
-  }
+  } */
 
   const auctionData = {
     owner_name: ownerName.value,
@@ -186,11 +207,6 @@ const auctionEntry = async () => {
       })
       .confirm(textOk);
   } catch (error) {
-
-    wica.ntcn(swal)
-    .title('경매 신청 불가')
-    .icon('E')
-    .alert(error);
 
   }
 };
