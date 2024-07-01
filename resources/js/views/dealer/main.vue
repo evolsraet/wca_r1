@@ -38,7 +38,7 @@
                         </div>
                         <div class="slide-up-ani activity-info bold-18-font process mb-0">
                             <router-link :to="{  name: 'auction.index' }" class="item">
-                            <p><span class="tc-red slide-up mb-0" ref="item1">0</span> 건</p>
+                            <p><span class="tc-red slide-up mb-0" ref="item1">{{ userLikesCount }}</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
                             </router-link>
                             <router-link :to="{ name: 'auction.index' }" class="item">
@@ -170,6 +170,9 @@ import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
 import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
+import useLikes from '@/composables/useLikes';
+
+const { getLikes, likesData, isAuctionFavorited } = useLikes();
 const item1 = ref(null);
 const item2 = ref(null);
 const item3 = ref(null);
@@ -185,20 +188,24 @@ const alarmModal = ref(null);
 const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
 const { bidsData, getBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
+
 const calculateMyBidsCount = () => {
     if (bidsData.value && user.value) {
         myBidsCount.value = bidsData.value.filter(bid => bid.user_id === user.value.id).length;
     }
 };
+
 const openAlarmModal = () => {
-console.log("openAlarmModal called");
-if (alarmModal.value) {
-  alarmModal.value.openModal();
-}
+    console.log("openAlarmModal called");
+    if (alarmModal.value) {
+        alarmModal.value.openModal();
+    }
 };
+
 const ingCount = computed(() => {
     return auctionsData.value.filter(auction => auction.status === 'ing').length;
 });
+
 const alertNoVehicle = (event) => {
     event.preventDefault();
     if (viewBids.value.length === 0) {
@@ -207,6 +214,7 @@ const alertNoVehicle = (event) => {
         router.push({ name: 'dealer.bids' });
     }
 };
+
 const fetchAuctionDetails = async (bid) => {
     try {
         const auctionDetails = await getAuctionById(bid.auction_id);
@@ -223,6 +231,7 @@ const fetchAuctionDetails = async (bid) => {
         };
     }
 };
+
 const filteredViewBids = ref([]);
 const fetchFilteredViewBids = async () => {
     // 필터링을 제거하고 모든 입찰을 가져옵니다.
@@ -232,30 +241,38 @@ const fetchFilteredViewBids = async () => {
     console.log('Bids with Auction Details:', filteredViewBids.value);
 };
 
+// Computed property to count likes by the user
+const userLikesCount = computed(() => {
+    return likesData.value.filter(like => like.user_id === user.value.id).length;
+});
 
 function navigateToDetail(bid) {
     console.log("Navigate to Detail:", bid.auction_id);
     router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
 }
+
 onMounted(async () => {
+    await getLikes();
+    console.log('Fetched likes data:', likesData.value);
     await getBids();
     calculateMyBidsCount();
     await getAuctions();
     await fetchFilteredViewBids();
     setTimeout(() => {
-    item1.value.classList.add('visible');
-  }, 0);
-  setTimeout(() => {
-    item2.value.classList.add('visible');
-  }, 200);
-  setTimeout(() => {
-    item3.value.classList.add('visible');
-  }, 400);
-  setTimeout(() => {
-    item4.value.classList.add('visible');
-  }, 800);
+        item1.value.classList.add('visible');
+    }, 0);
+    setTimeout(() => {
+        item2.value.classList.add('visible');
+    }, 200);
+    setTimeout(() => {
+        item3.value.classList.add('visible');
+    }, 400);
+    setTimeout(() => {
+        item4.value.classList.add('visible');
+    }, 800);
 });
 </script>
+
 <style scoped>
 p {
     margin-top: 0;
