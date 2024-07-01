@@ -34,9 +34,9 @@
         </div>
         <!-- 주소 입력 -->
         <div class="form-group mb-5">
-            <input @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly>
+            <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly>
             <div>
-                <input v-model="addr" placeholder="주소" class="input-dis form-control" readonly>
+                <input type="text" v-model="addr" placeholder="주소" class="input-dis form-control" readonly>
                 <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
             </div>
             
@@ -395,7 +395,8 @@ onMounted(() => {
   }
 }
 .search-btn {
-  right: auto !important;
-  transform: translateY(-119%) translateX(-117%) !important
+left: auto !important;
+right: 280px !important;
+transform: translateY(-287%) !important;
 }
 </style>
