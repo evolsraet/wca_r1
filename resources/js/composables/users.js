@@ -327,7 +327,7 @@ export default function useUsers() {
                                 location.reload();                          
                             }
                         })
-                        .alert('이용후기가 정상적으로 삭제되었습니다.');
+                        .alert('회원정보가 정상적으로 삭제되었습니다.');
                     })
                     .catch(error => {
                         wica.ntcn(swal)

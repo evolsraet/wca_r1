@@ -27,6 +27,17 @@
                             />
                         </div>
                         <div class="mb-3">
+                            <label for="user-title" class="form-label"
+                                >최종 수정일</label
+                            >
+                            <input
+                                v-model = "updated_at"
+                                type="text"
+                                class="input-dis form-control"
+                                readonly
+                            />
+                        </div>
+                        <div class="mb-3">
                             <label for="email" class="form-label">Email</label>
                             <input
                                 v-model = "email"
@@ -81,6 +92,16 @@
                                 <option value="ask">심사중</option>
                                 <option value="reject">거절</option>
                             </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="user-title" class="form-label"
+                                >사진(본인 확인용)</label
+                            >
+                            <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
+                                파일 첨부
+                            </button>
+                            <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
+                            <div class="text-start tc-light-gray" v-if="editForm.file_user_photo_name">사진 파일 : {{ editForm.file_user_photo_name }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">회원유형</label>
@@ -171,17 +192,6 @@
                                     class="custom-textarea mt-2"
                                 ></textarea>
                             </div>
-                            
-                            <div class="mb-3">
-                                <label for="user-title" class="form-label"
-                                    >사진(본인 확인용)</label
-                                >
-                                <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
-                                    파일 첨부
-                                </button>
-                                <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
-                                <div class="text-start tc-light-gray" v-if="editForm.file_user_photo_name">사진 파일 : {{ editForm.file_user_photo_name }}</div>
-                            </div>
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
                                     >사업자 등록증</label
@@ -263,6 +273,7 @@ const fileInputRef = ref(null);
 
 let created_at;
 let email;
+let updated_at;
 
 // Define a validation schema
 const schema = {
@@ -293,7 +304,7 @@ const dealer = reactive({
 onMounted(async () => {
     const response = await getUser(route.params.id);
     await getRoleList();
-
+    console.log(response);
     /** 
     for (const roleName of response.roles) {
         const findRoleId = roleList.value.find(role => role.name === roleName);
@@ -302,6 +313,7 @@ onMounted(async () => {
     watchEffect(() => {
         editForm.name = response.name;
         created_at = response.created_at;
+        updated_at = response.updated_at;
         email = response.email;
         document.getElementById("status").value = response.status;
         document.getElementById("role").value = response.roles[0];
