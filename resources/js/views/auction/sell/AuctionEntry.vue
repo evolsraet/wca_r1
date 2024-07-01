@@ -396,7 +396,7 @@ onMounted(() => {
 }
 .search-btn {
 left: auto !important;
-right: 280px !important;
-transform: translateY(-287%) !important;
+right: 211px !important;
+transform: translateY(-283%) !important;
 }
 </style>
