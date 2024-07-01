@@ -119,6 +119,7 @@
                                     <label for="user-title" class="form-label">소속상사 주소</label>
                                     
                                     <input
+                                        type="text"
                                         v-model="dealer.company_post"
                                         class="input-dis form-control"
                                         placeholder="우편번호"
@@ -126,6 +127,7 @@
                                         />
                                         <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                                         <input
+                                            type="text"
                                             v-model="dealer.company_addr1"
                                             class="input-dis form-control"
                                             placeholder="주소"
@@ -144,16 +146,18 @@
                                 <div class="form-group">
                                     <label for="user-title" class="form-label">인수차량 도착지 주소</label>
                                     <input
+                                        type="text" 
                                         v-model="dealer.receive_post"
-                                        class="input-dis form-control"
+                                        class="input-dis"
                                         placeholder="우편번호"
                                         readonly
                                     />
-                                    <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
+                                    <button type="button" class="search-btn2" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
                                     <div>
                                         <input
+                                            type="text"
                                             v-model="dealer.receive_addr1"
-                                            class="input-dis form-control"
+                                            class="input-dis"
                                             placeholder="주소"
                                             readonly
                                         />
@@ -448,4 +452,19 @@ function handleFileUploadCert(event) {
         bottom: 0;
         left: 0;
     }
+    .search-btn2 {
+    cursor: pointer;
+    position: absolute;
+    right: 5px;
+    transform: translateY(55%);
+    height: 40px;
+    width: 40px;
+    border: none;
+    background-color: transparent;
+    background-image: url('../../../../img/search.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 20px 20px;
+    font-size: 0;
+}
     </style>
