@@ -500,6 +500,8 @@ TODO:
                                             <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>   
                                             <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
                                             <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span> 
+                                            <span v-if="auction.status === 'diag'" class="mx-2 auction-done">진단대기</span>
+                                            <span v-if="auction.status === 'ask'" class="mx-2 auction-done">신청완료</span>
                                             <div class="d-flex">    
                                                 <span v-if="auction.status === 'ing' && auction.timeLeft" class="mx-2 timer">
                                                     <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
