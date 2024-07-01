@@ -111,7 +111,7 @@ const getAuctionById = async (id) => {
     return wicac.conn()
     //.log() //로그 출력
     .url(`/api/auctions/${id}`) //호출 URL
-    .with(['bids'])
+    .with(['bids','reviews'])
     //.page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
     .callback(async function(result) {
         auction.value = result.data;

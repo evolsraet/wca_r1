@@ -365,9 +365,16 @@
         <div v-if="isUser && auctionDetail.data.status === 'done'" class="sheet-content">
             <BottomSheet02>
               <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
-              <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">
-                후기 남기기
+              <div v-if="reviewIsOk">
+                <router-link :to="{ name: 'user.create-review' }" type="button" class="tc-wh btn btn-primary w-100">
+                  후기 남기기
               </router-link>
+              </div>
+              <div v-else>
+                <button type="button" class="tc-wh btn btn-primary w-100 disabled">
+                  이 거래는 이미 후기를 작성하셨습니다.
+              </button>
+              </div>
             </BottomSheet02>
           </div>
 
@@ -838,7 +845,7 @@ const amount = ref('');
 const koreanAmount = ref('원');
 const { wicaLabel } = cmmn();
 const swal = inject('$swal');
-
+const reviewIsOk = ref(true);
 
 const { numberToKoreanUnit , amtComma , wica} = cmmn();
 const myBidPrice = computed(() => {
@@ -1381,6 +1388,9 @@ const fetchAuctionDetail = async () => {
   console.log("????????????????????????:", auctionId);
   try {
     auctionDetail.value = await getAuctionById(auctionId);
+    if(auctionDetail.value.data.reviews.length > 0){
+      reviewIsOk.value = false;
+    }
     console.log("222222222222:", auctionDetail.value);
     const { car_no, owner_name } = auctionDetail.value.data;
     const carInfoForm = {
