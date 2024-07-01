@@ -38,8 +38,9 @@
           </div>
         </div>
         <!-- 주소 입력 -->
-        <div class="form-group mb-5">
+        <div class="form-group mb-5 input-wrapper">
             <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly>
+             <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
             <div class="text-danger mt-1">
               <div v-for="message in validationErrors?.addr_post">
                 {{ message }}
@@ -52,7 +53,6 @@
                     {{ message }}
                   </div>
                 </div>
-                <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
             </div>
             
             <input type="text" v-model="addrdt" placeholder="상세주소">
@@ -410,9 +410,31 @@ onMounted(() => {
       width: 45rem !important;
   }
 }
-.search-btn {
-left: auto !important;
-right: 211px !important;
-transform: translateY(-283%) !important;
+.input-wrapper {
+    position: relative;
+    display: inline-block;
+    width: 100%;
 }
+
+.input-dis {
+    padding-right: 50px; 
+}
+
+.search-btn {
+    cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 18%;
+    transform: translateY(-50%);
+    height: 40px;
+    width: 40px;
+    border: none;
+    background-color: transparent;
+    background-image: url('../../../../img/search.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 20px 20px;
+    font-size: 0;
+}
+
 </style>

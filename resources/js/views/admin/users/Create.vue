@@ -452,7 +452,7 @@ function handleFileUploadCert(event) {
         bottom: 0;
         left: 0;
     }
-    .search-btn2 {
+.search-btn2 {
     cursor: pointer;
     position: absolute;
     right: 5px;
