@@ -101,7 +101,7 @@ const fetchFilteredBids = async () => {
     await getBids();
     console.log('All Bids:', bidsData.value);
     const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
-    filteredBids.value = bidsWithDetails.filter(bid => bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id);
+    filteredBids.value = bidsWithDetails.filter(bid => bid.auctionDetails.win_bid && bid.auctionDetails.win_bid.user_id === user.value.id);
     console.log('Bids with Auction Details:', filteredBids.value);
 };
 

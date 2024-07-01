@@ -32,7 +32,6 @@ export default function useAuctions() {
         direction = '',
         status = 'all'
     ) => {
-        console.log(page);
         const apiList = [];
 
         if(status != 'all'){
@@ -57,7 +56,6 @@ export default function useAuctions() {
 
 // 경매 내용 통신 (페이지까지)
 const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
-    console.log(status);
     const apiList = [];
 
     if(status != 'all'){
@@ -100,7 +98,7 @@ const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
             auctionsData.value = result.data;
             pagination.value = result.rawData.data.meta;
         })
-        .log()
+        //.log()
         .get();
 
     }
@@ -111,25 +109,22 @@ const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
 const getAuctionById = async (id) => {
     
     return wicac.conn()
-    .log() //로그 출력
+    //.log() //로그 출력
     .url(`/api/auctions/${id}`) //호출 URL
     .with(['bids'])
     //.page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
     .callback(async function(result) {
-
         auction.value = result.data;
-        console.log(auction.value);
         auction.value.dealer_name = null;
-        
         if (auction.value.win_bid) {
             const data = await getUser(auction.value.win_bid.user_id);
             const name = data.dealer.name;
             auction.value.dealer_name = name;
         } else {
             auction.value.dealer_name = null; 
-        }
+        } 
         return result;
-    
+        console.log(result);
     })
     .get();
 
