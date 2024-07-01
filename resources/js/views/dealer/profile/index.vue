@@ -83,6 +83,9 @@
                     <h5>지난 낙찰건</h5>
                 </div>
                 <span class="tc-light-gray">딜러가 낙찰받은 매물들이에요.</span>
+                <div v-if="filteredViewBids.length == 0">
+                    <p class="tc-red bold-18-font my-2">낙찰 받은 매물이 없습니다.</p>
+                </div>
                 <div v-if="filteredViewBids.length > 0">
                     <div class="complete-car mt-3"  v-for="bid in filteredViewBids" :key="bid.id">
                         <div class="card my-auction mt-3">
