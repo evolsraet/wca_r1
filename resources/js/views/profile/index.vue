@@ -8,19 +8,34 @@
           <input type="file" ref="fileInput" @change="onFileChange" id="photo" class="d-none" />
         </div>
       </div>
-      <!--
+      <div class="form-group">
+        <label for="name">가입일자</label>
+        <input type="text" v-model="user.created_at" id="name" class="input-dis form-control" readonly/>
+      </div>
       <div class="form-group">
         <label for="name">이름</label>
         <input type="text" v-model="profile.name" id="name" class="form-control" />
-      </div>-->
+      </div>
+      <div class="form-group">
+        <label for="name">전화번호</label>
+        <input type="text" class="form-control" />
+      </div>
       <div class="form-group">
         <label for="email">이메일</label>
         <input type="text" v-model="profile.email" id="email" class="input-dis form-control" readonly/>
       </div>
+      <div class="form-group">
+        <label for="email">변경 비밀번호</label>
+        <input autocomplete="one-time-code" type="password" v-model="profile.password" id="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합"/>
+      </div>
+      <div class="form-group">
+        <label for="email">비밀번호 확인</label>
+        <input autocomplete="one-time-code" type="password_confirmation" v-model="profile.password_confirmation" id="password_confirmation" class="form-control"/>
+      </div>
       <div v-if="isDealer">
         <div class="form-group">
           <label for="dealerName">딜러 이름</label>
-          <input type="text" v-model="profile.name" id="dealerName" class="form-control"/>
+          <input type="text" v-model="profile.dealer_name" id="dealerName" class="form-control"/>
         </div>
         <div class="form-group">
           <label for="dealer">소속</label>
@@ -68,6 +83,7 @@ import profileDom from '/resources/img/profile_dom.png';
 import useAuth from '@/composables/auth';
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
+import { previousFriday } from 'date-fns';
 
 const router = useRouter();
 const photoUrl = ref(profileDom);
@@ -75,6 +91,9 @@ const store = useStore();
 const swal = inject('$swal')
 const profile = ref({
   name: '',
+  dealer_name: '',
+  password: '',
+  password_confirmation : '',
   email: '',
   company: '',
   company_post : '',
@@ -111,12 +130,13 @@ const onFileChange = (e) => {
 };
 
 const updateProfile = async () => {
+  console.log(profile.value);
   let payload = {
       user : {
-
+        name : profile.value.name,       
       },
       dealer: {
-          name: profile.value.name,
+          name: profile.value.dealer_name,
           company: profile.value.company,
           company_post: profile.value.company_post,
           company_addr1:profile.value.company_addr1,
@@ -127,6 +147,13 @@ const updateProfile = async () => {
           receive_addr2: profile.value.receive_addr2,
       }
   };
+  if (profile.value.password && profile.value.password !== '') {
+    payload.user.password = profile.value.password;
+  }
+
+  if (profile.value.password_confirmation && profile.value.password_confirmation !== '') {
+    payload.user.password_confirmation = profile.value.password_confirmation;
+  }
   console.log(JSON.stringify(payload));
   const formData = new FormData();
   formData.append('user', JSON.stringify(payload.user));
@@ -145,15 +172,17 @@ const updateProfile = async () => {
             .param(formData)
             .multipart()
             .callback(async function(result) {
+              console.log(result);
                 if(result.isSuccess){
                   swal({
                       icon: "success",
                       showConfirmButton: false,
                       timer: 3000,
                   });
-                  setUserProfileData();
+                  
                   location.reload();
-                }
+                } 
+
             })
             .post();
         }
@@ -162,15 +191,18 @@ const updateProfile = async () => {
 };
 
 const setUserProfileData = async () => {
+
+  await store.dispatch('auth/getUser');
   const user = store.getters['auth/user'];
+
   console.log(user);
   userId = user.id;
 
   if (user) {
-    //profile.value.name = user.name;
+    profile.value.name = user.name;
     profile.value.email = user.email;
-    if (isDealer) {
-      profile.value.name = user.dealer.name;
+    if (isDealer.value) {
+      profile.value.dealer_name = user.dealer.name;
       profile.value.company = user.dealer.company;
       profile.value.company_post = user.dealer.company_post;
       profile.value.company_addr1 = user.dealer.company_addr1;
@@ -181,6 +213,7 @@ const setUserProfileData = async () => {
       profile.value.introduce = user.dealer.introduce;
     }
     if (user.files) {
+      console.log("확인");
       photoUrl.value = user.files.file_user_photo[0].original_url;
     }
   }
@@ -203,7 +236,7 @@ function editPostCodeReceive(elementName) {
 }
 
 onMounted(async () => {
-  await store.dispatch("auth/getUser");
+  //await store.dispatch("auth/getUser");
   setUserProfileData();
 });
 </script>
