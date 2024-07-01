@@ -312,5 +312,11 @@
     flex-direction: column;
   }
 }
+.blue-box02{
+    width: 66px !important;
+}
+.box{
+    width: 66px !important;  
+}
     </style>
     
