@@ -269,7 +269,7 @@
   import { cmmn } from '@/hooks/cmmn';
   import { routerKey } from "vue-router";
   import { useRoute, useRouter } from 'vue-router';
-
+  import carInfo from '../../../../resources/img/electric-car.png';
   
   const swal = inject('$swal');
   const { wica , wicaLabel } = cmmn();
@@ -342,6 +342,7 @@ const submitCarInfoIsOk = () => {
 
   if(!user.value.name){
     const text= `<div class="enroll_box" style="position: relative;">
+                   <img src="${carInfo}" alt="자동차 이미지" width="160" height="160">
                   <p class="overlay_text04">로그인을 하면 경매 신청이 가능해요.</p>
                </div>`;
     wica.ntcn(swal)

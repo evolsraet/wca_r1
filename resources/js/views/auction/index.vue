@@ -481,13 +481,13 @@ TODO:
                                         <div class="card my-auction">
                                             <div v-if="isDealer">
                                                 <input
-                                                class="toggle-heart"
-                                                type="checkbox"
-                                                :id="'favorite-' + auction.id"
-                                                :checked="auction.isFavorited"
-                                                @click.stop="toggleFavorite(auction)"
-                                            />
-                                            <label class="heart-toggle" :for="'favorite-' + auction.id" @click.stop></label>
+                                                    class="toggle-heart"
+                                                    type="checkbox"
+                                                    :id="'favorite-' + auction.id"
+                                                    :checked="auction.isFavorited"
+                                                    @click.stop="toggleFavorite(auction)"
+                                                />
+                                                <label class="heart-toggle" :for="'favorite-' + auction.id" @click.stop></label>
                                             </div>
                                             <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
                                             <div v-if="auction.status === 'ask' || auction.status === 'diag'">
@@ -783,9 +783,18 @@ const isUser = computed(() => user.value?.roles?.includes('user'));
 const isSpinning = ref(false);
 
 const initializeFavorites = () => {
+    const userId = user.value.id; // 현재 사용자 ID
+    const userLikes = likesData.value.filter(like => like.user_id === userId); // 현재 사용자의 좋아요 데이터 필터링
+
+    console.log('Filtered Likes Data:', userLikes); // 필터링된 좋아요 데이터 콘솔 출력
+
     auctionsData.value.forEach(auction => {
-        auction.isFavorited = likesData.value.some(like => like.likeable_id === auction.id);
+        auction.isFavorited = userLikes.some(like => like.likeable_id === auction.id);
     });
+
+    // 좋아요 매물 ID 출력
+    const likedAuctionIds = userLikes.map(like => like.likeable_id);
+    console.log('Liked Auction IDs:', likedAuctionIds);
 };
 
 const toggleFavorite = (auction) => {
@@ -804,6 +813,8 @@ const addLike = (auctionId) => {
 const removeLike = (auctionId) => {
     console.log('Like removed for auction:', auctionId);
 };
+
+
 
 const pullContainer = ref(null);
 const state = reactive({
