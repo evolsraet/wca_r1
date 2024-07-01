@@ -2,7 +2,7 @@
     <div class="container">
         <div class="regiest-content">
             <!-- 딜러 프로필 요약 정보 -->
-            <div class="banner-top ">
+            <div class="banner-top mt-3">
                 <div class="top-info gap-1 align-items-center">현재 진행중인 경매<p class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }} </p> 건</div>
                 <div class="d-flex justify-content-end">
                     <a href="/edit-profile" class="btn btn-outline-primary mb-3">내 정보수정</a>

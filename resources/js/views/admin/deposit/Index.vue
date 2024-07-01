@@ -230,5 +230,9 @@ watch(
 .search-type2 .search-btn{
     top: 63px !important;
 }
+.gray-box {
+    width: 65px !important;
+    border-radius: 16px !important;
+}
     </style>
     
