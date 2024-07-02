@@ -64,6 +64,7 @@
                             <td class="px-6 py-4 text-sm">
                                 <div>
                                     <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ getStatusLabel(auction.status) }}</span></p>
+                                    <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ getStatusLabel(auction.status) }}</span></p>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
@@ -116,7 +117,7 @@ import useAuctions from '@/composables/auctions';
 import useCategories from '@/composables/categories';
 import { useAbility } from '@casl/vue';
 
-const currentStatus = ref('dlvr'); 
+const currentStatus = ref('dlvr,done'); 
 const currentPage = ref(1); // 현재 페이지 번호
 const orderingState = {
         created_at: { direction: '', column: '', hit: 0 },
