@@ -62,8 +62,8 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                <div :class="{'gray-box me-0': auction.status == 'chosen'}">
-                                {{ getStatusLabel(auction.status) }}
+                                <div>
+                                    <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ getStatusLabel(auction.status) }}</span></p>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
@@ -78,7 +78,7 @@
                                 <span>|</span>
                                 <a
                                     href="#"
-                                    @click.prevent="deleteAuction(auction.id)"
+                                    @click.prevent="deleteAuction(auction.id,'deposit')"
                                     class="ms-2 fs-6 badge delete"
                                     >삭제</a
                                 >

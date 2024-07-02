@@ -121,7 +121,7 @@
                                 <span>|</span>
                                 <a
                                     href="#"
-                                    @click.prevent="deleteAuction(auction.id)"
+                                    @click.prevent="deleteAuction(auction.id,'auction')"
                                     class="ms-2 fs-6 badge delete "
                                     >삭제</a
                                 >

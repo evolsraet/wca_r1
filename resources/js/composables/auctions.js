@@ -461,32 +461,42 @@ const updateAuctionStatus = async (id, status) => {
     }
 };
 
-const deleteAuction = async (id) => {
+const deleteAuction = async (id,urlPath) => {
 
     wica.ntcn(swal)
     .title('삭제하시겠습니까?') // 알림 제목
     .icon('W') //E:error , W:warning , I:info , Q:question
     .callback(function(result) {
         if(result.isOk){
-            axios.delete(`/api/auctions/${id}`)
-                .then(response => {
+            wicac.conn()
+            .url(`/api/auctions/${id}`) //호출 URL
+            .callback(function(result) {
+                if(result.isSuccess){
                     wica.ntcn(swal)
                     .icon('I') //E:error , W:warning , I:info , Q:question
                     .callback(function(result) {
                         if(result.isOk){
-                            getAuctions()
-                            router.push({name: 'auctions.index'})                            
+                            if(urlPath == 'auction'){
+                                getAuctions();
+                                router.push({name: 'auctions.index'})
+                            } else if(urlPath == 'deposit'){
+                                adminGetDepositAuctions();
+                                router.push({name: 'deposit.index'})
+                            } else{
+                                router.push({name: 'admin.index'})
+                            }              
                         }
                     })
                     .alert('삭제되었습니다.');
-                })
-                .catch(error => {
+                }else{
                     wica.ntcn(swal)
                     .title('오류가 발생하였습니다.')
                     .useHtmlText()
                     .icon('I') //E:error , W:warning , I:info , Q:question
                     .alert('관리자에게 문의해주세요.');
-                })
+                }
+            })
+            .delete();
         }
     })
     .confirm('삭제된 정보는 복구할 수 없습니다.');
