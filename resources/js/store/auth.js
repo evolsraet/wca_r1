@@ -1,4 +1,6 @@
 import axios from "axios";
+import { cmmn } from '@/hooks/cmmn';
+const { wicac } = cmmn();
 
 export default {
   namespaced: true,
@@ -38,39 +40,54 @@ export default {
   actions: {
     async login({ commit }, credentials) {
       commit('CLEAR_ERROR_MESSAGE');
-      try {
-        const { data } = await axios.post('/login', credentials);
-        commit("SET_USER", data.data.user);
-        commit("SET_AUTHENTICATED", true);
-        return data.data.user;
-      } catch (error) {
-        if (error.response && error.response.data.message) {
-          commit('SET_ERROR_MESSAGE', error.response.data.message);
-        } else {
-          commit('SET_ERROR_MESSAGE', '로그인 중 오류가 발생했습니다.');
-        }
-        commit("SET_USER", {});
-        commit("SET_AUTHENTICATED", false);
-        throw error;
-      }
+
+      return wicac.conn()
+      .url(`/login`) //호출 URL
+      .param(credentials)
+      .callback(function(result) {
+          if(result.isError) {
+            commit("SET_USER", '123123123');
+            commit("SET_AUTHENTICATED", false);
+            commit('SET_ERROR_MESSAGE', result.msg);
+          } else {
+            if(result.isSuccess) {
+              commit("SET_USER", result.data.user);
+              commit("SET_AUTHENTICATED", true);
+            } else {
+              commit("SET_USER", {});
+              commit("SET_AUTHENTICATED", false);
+              commit('SET_ERROR_MESSAGE', result.msg);
+            }
+          }
+          return result; //결과값을 후 처리 할때 필수 선언
+      })
+      .post();
     },
     async getUser({ commit }) {
-      try {
-        const { data } = await axios.get('/api/users/me');
-        commit("SET_USER", data.data);
-        commit("SET_AUTHENTICATED", true);
-      } catch (error) {
-        commit("SET_USER", {});
-        commit("SET_AUTHENTICATED", false);
-      }
+      return wicac.conn()
+      .url('/api/users/me') //호출 URL
+      .callback(function(result) {
+          if(result.isError) {
+            commit("SET_USER", {});
+            commit("SET_AUTHENTICATED", false);
+          } else {
+            commit("SET_USER", result.data);
+            commit("SET_AUTHENTICATED", true);
+          }
+      })
+      .get();
     },
     async getAbilities({ commit }) {
-      try {
-        const { data } = await axios.get('/api/users/abilities');
-        commit("SET_USER_ACT", data.data);
-      } catch (error) {
-        // 오류 처리 필요 시 추가
-      }
+      return wicac.conn()
+      .url('/api/users/abilities') //호출 URL
+      .callback(function(result) {
+          if(result.isError) {
+            commit("SET_USER_ACT", null);
+          } else {
+            commit("SET_USER_ACT", result.data);
+          }
+      })
+      .get();
     },
     logout({ commit }) {
       commit("SET_USER", {});
