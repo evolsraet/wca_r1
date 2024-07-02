@@ -318,5 +318,6 @@
 .box{
     width: 66px !important;  
 }
+
     </style>
     
