@@ -105,7 +105,7 @@
                                             @click="updateOrdering('name')"
                                         >
                                             <div
-                                                class="font-medium text-uppercase"
+                                                class="leading-4 font-medium text-uppercase"
                                                 :class="{
                                                     'font-bold text-blue-600':
                                                         orderColumn === 'name',
@@ -126,7 +126,7 @@
                                             @click="updateOrdering('email')"
                                         >
                                             <div
-                                                class="font-medium text-uppercase"
+                                                class="leading-4 font-medium text-uppercase"
                                                 :class="{
                                                     'font-bold text-blue-600':
                                                         orderColumn === 'email',

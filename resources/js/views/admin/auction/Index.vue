@@ -14,6 +14,7 @@
                 <div class="text-end select-option">
                     <select class="form-select select-rank" aria-label="상태" @change="event => setFilter(event.target.value)">
                         <option value="all" selected>전체</option>
+                        <option value="dlvr">탁송진행</option>
                         <option value="done">경매완료</option>
                         <option value="chosen">선택완료</option>
                         <option value="wait">선택대기</option>
@@ -108,6 +109,7 @@
                                     <p v-if="auction.status === 'ask'" class="ml-auto"><span class="box bg-warning bg-opacity-75">{{ getStatusLabel(auction.status) }}</span></p>
                                     <p v-if="auction.status === 'ing'" class="ml-auto"><span class="box bg-danger">{{ getStatusLabel(auction.status) }}</span></p>
                                     <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ getStatusLabel(auction.status) }}</span></p>
+                                    <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ getStatusLabel(auction.status) }}</span></p>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
@@ -318,5 +320,6 @@
 .box{
     width: 66px !important;  
 }
+
     </style>
     

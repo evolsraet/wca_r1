@@ -2,40 +2,41 @@
  <div class="container mt-auto mb-auto" id="dashadmin">
         <div class="card-container mt-4">
             <div class="section">
-                <h5 class="text-start">회원 491</h5>
+                <h5 class="text-start">회원 {{ userAllCnt }}</h5>
                 <div class="card">
-                    <div class="number d-flex justify-content-around">심사중 <span class="tc-red">31</span></div>
-                    <div class="number d-flex justify-content-around">정&nbsp;&nbsp;상 <span>363</span></div>
+                    <div class="number d-flex justify-content-around">심사중 <span class="tc-red">{{ userAskCnt }}</span></div>
+                    <div class="number d-flex justify-content-around">정&nbsp;&nbsp;상 <span>{{ userOkCnt }}</span></div>
                     <div class="divider"></div>
-                    <div class="d-flex justify-content-around tc-light-gray">탈&nbsp;&nbsp;&nbsp;&nbsp;퇴 <span>12</span></div>
-                    <div class="d-flex justify-content-around tc-light-gray">가입거부 <span>3</span></div>
+                    <!--<div class="d-flex justify-content-around tc-light-gray">탈&nbsp;&nbsp;&nbsp;&nbsp;퇴 <span>12</span></div>-->
+                    <div class="d-flex justify-content-around tc-light-gray">가입거부 <span>{{ userRejectCnt }}</span></div>
                 </div>
             </div>
             <div class="section">
-                <h5 class="text-start">입금 491</h5>
+                <h5 class="text-start">입금</h5>
                 <div class="card">
-                    <div class="number d-flex justify-content-around">입금 대기 <span class="tc-red">31</span></div>
+                    <div class="number d-flex justify-content-around">입금 대기 <span class="tc-red">{{ auctionDlvrCnt }}</span></div>
                     <div class="divider"></div>
-                    <div class="d-flex justify-content-around tc-light-gray">입금 완료 <span>363</span></div>
+                    <div class="d-flex justify-content-around tc-light-gray">입금 완료 <span>{{ auctionDoneCnt }}</span></div>
                 </div>
             </div>
             <div class="section">
-                <h5 class="text-start">매물 491</h5>
+                <h5 class="text-start">매물 {{ auctionAllCnt }}</h5>
                 <div class="card">
-                    <div class="number d-flex justify-content-around">신청 완료<span class="tc-red">31</span></div>
-                    <div class="number d-flex justify-content-around">진단 중<span class="tc-red">31</span></div>
-                    <div class="number d-flex justify-content-around">경매 중<span class="tc-red">31</span></div>
+                    <div class="number d-flex justify-content-around">신청 완료<span class="tc-red">{{ auctionAskCnt }}</span></div>
+                    <div class="number d-flex justify-content-around">진단 중<span class="tc-red">{{ auctionDiagCnt }}</span></div>
+                    <div class="number d-flex justify-content-around">경매 중<span class="tc-red">{{ auctionWIAddCnt }}</span></div>
                     <div class="divider"></div>
-                    <div class="d-flex justify-content-around tc-light-gray">선택 완료<span>363</span></div>
-                    <div class="d-flex justify-content-around tc-light-gray">경매 완료<span>363</span></div>
+                    <div class="d-flex justify-content-around tc-light-gray">신청 취소<span>{{ auctionCancelCnt }}</span></div>
+                    <div class="d-flex justify-content-around tc-light-gray">선택 완료<span>{{ auctionChosenCnt }}</span></div>
+                    <div class="d-flex justify-content-around tc-light-gray">경매 완료<span>{{ auctionDoneCnt }}</span></div>
                 </div>
             </div>
             <div class="section">
-                <h5 class="text-start">후기 491</h5>
+                <h5 class="text-start">후기 {{ reviewAllCnt }}</h5>
                 <div class="card">
-                    <div class="number d-flex justify-content-around">작성<span class="tc-red">316</span></div>
+                    <div class="number d-flex justify-content-around">작성<span class="tc-red">{{ reviewWriteCnt }}</span></div>
                     <div class="divider"></div>
-                    <div class="d-flex justify-content-around tc-light-gray">미작성 <span>33</span></div>
+                    <div class="d-flex justify-content-around tc-light-gray">미작성 <span>{{ reviewNotWriteCnt }}</span></div>
                 </div>
             </div>
         </div>
@@ -172,11 +173,71 @@
 </div>
 </template>
 <script setup>
-import { ref } from 'vue';
+import { ref, onMounted } from "vue";
+import useUsers from "@/composables/users";
+import useAuctions from "@/composables/auctions";
+import { initReviewSystem } from '@/composables/review';
+
+
+const { getUserStatus } = useUsers();
+const { getStatusAuctionsCnt } = useAuctions();
+const { getWriteReviewCnt } = initReviewSystem();
 
 const activeTab = ref('available');
 
 function setActiveTab(tab) {
     activeTab.value = tab;
 }
+
+//회원
+const userAskCnt = ref(0);
+const userOkCnt = ref(0);
+const userRejectCnt = ref(0);
+const userAllCnt = ref(0);
+
+//입급
+//const 
+const auctionDlvrCnt = ref(0);
+
+//매물
+const auctionAskCnt = ref(0);
+const auctionDiagCnt = ref(0);
+const auctionIngCnt = ref(0);
+const auctionWaitCnt = ref(0);
+const auctionChosenCnt = ref(0);
+const auctionDoneCnt = ref(0);
+const auctionAllCnt = ref(0);
+const auctionWIAddCnt = ref(0);
+const auctionCancelCnt = ref(0);
+
+//후기
+const reviewWriteCnt = ref(0);
+const reviewNotWriteCnt = ref(0);
+const reviewAllCnt = ref(0);
+
+onMounted(async () => {
+    //회원
+    userAskCnt.value = await getUserStatus('ask');
+    userOkCnt.value = await getUserStatus('ok');
+    userRejectCnt.value = await getUserStatus('reject');
+    userAllCnt.value = await getUserStatus('all');
+
+    //매물
+    auctionAskCnt.value = await getStatusAuctionsCnt('ask');
+    auctionDiagCnt.value = await getStatusAuctionsCnt('diag');
+    auctionIngCnt.value = await getStatusAuctionsCnt('ing');
+    auctionWaitCnt.value = await getStatusAuctionsCnt('wait');
+    auctionDlvrCnt.value = await getStatusAuctionsCnt('dlvr');
+    auctionWIAddCnt.value = auctionIngCnt.value + auctionWaitCnt.value + auctionDlvrCnt.value;
+    auctionChosenCnt.value = await getStatusAuctionsCnt('chosen');
+    auctionDoneCnt.value = await getStatusAuctionsCnt('done');
+    auctionCancelCnt.value = await getStatusAuctionsCnt('cancel');
+    auctionAllCnt.value = await getStatusAuctionsCnt('all');
+
+    //후기
+    reviewWriteCnt.value = await getWriteReviewCnt();
+    reviewNotWriteCnt.value = auctionDoneCnt.value - reviewWriteCnt.value
+    reviewAllCnt.value = auctionDoneCnt.value;
+});
+
 </script>

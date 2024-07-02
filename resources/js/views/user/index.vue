@@ -97,6 +97,7 @@
                                                                 <p v-if="auction.status === 'ask'" class="ml-auto"><span class="box bg-warning bg-opacity-75">신청 완료</span></p>
                                                                 <p v-if="auction.status === 'ing'" class="ml-auto"><span class="box bg-danger">경매진행</span></p>
                                                                 <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">경매완료</span></p>
+                                                                <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">탁송진행</span></p>
                                                             </div>
                                                         </div>
                                                     </li>
