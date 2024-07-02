@@ -145,10 +145,8 @@ const getStatusAuctionsCnt = async(
     return wicac.conn()
     .url(`/api/auctions`)
     .where(apiList)
-    .pageLimit(99999)
     .callback(function(result) {
-        const dataLength = result.data.length;
-        return dataLength;
+        return result.page.total;
     })
     .get();
 }

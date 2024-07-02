@@ -12,11 +12,11 @@
                 </div>
             </div>
             <div class="section">
-                <h5 class="text-start">입금 ??</h5>
+                <h5 class="text-start">입금</h5>
                 <div class="card">
-                    <div class="number d-flex justify-content-around">입금 대기 <span class="tc-red">??</span></div>
+                    <div class="number d-flex justify-content-around">입금 대기 <span class="tc-red">{{ auctionDlvrCnt }}</span></div>
                     <div class="divider"></div>
-                    <div class="d-flex justify-content-around tc-light-gray">입금 완료 <span>??</span></div>
+                    <div class="d-flex justify-content-around tc-light-gray">입금 완료 <span>{{ auctionDoneCnt }}</span></div>
                 </div>
             </div>
             <div class="section">
@@ -26,6 +26,7 @@
                     <div class="number d-flex justify-content-around">진단 중<span class="tc-red">{{ auctionDiagCnt }}</span></div>
                     <div class="number d-flex justify-content-around">경매 중<span class="tc-red">{{ auctionWIAddCnt }}</span></div>
                     <div class="divider"></div>
+                    <div class="d-flex justify-content-around tc-light-gray">신청 취소<span>{{ auctionCancelCnt }}</span></div>
                     <div class="d-flex justify-content-around tc-light-gray">선택 완료<span>{{ auctionChosenCnt }}</span></div>
                     <div class="d-flex justify-content-around tc-light-gray">경매 완료<span>{{ auctionDoneCnt }}</span></div>
                 </div>
@@ -194,6 +195,9 @@ const userOkCnt = ref(0);
 const userRejectCnt = ref(0);
 const userAllCnt = ref(0);
 
+//입급
+//const 
+const auctionDlvrCnt = ref(0);
 
 //매물
 const auctionAskCnt = ref(0);
@@ -204,6 +208,7 @@ const auctionChosenCnt = ref(0);
 const auctionDoneCnt = ref(0);
 const auctionAllCnt = ref(0);
 const auctionWIAddCnt = ref(0);
+const auctionCancelCnt = ref(0);
 
 //후기
 const reviewWriteCnt = ref(0);
@@ -222,9 +227,11 @@ onMounted(async () => {
     auctionDiagCnt.value = await getStatusAuctionsCnt('diag');
     auctionIngCnt.value = await getStatusAuctionsCnt('ing');
     auctionWaitCnt.value = await getStatusAuctionsCnt('wait');
-    auctionWIAddCnt.value = auctionIngCnt.value + auctionWaitCnt.value;
+    auctionDlvrCnt.value = await getStatusAuctionsCnt('dlvr');
+    auctionWIAddCnt.value = auctionIngCnt.value + auctionWaitCnt.value + auctionDlvrCnt.value;
     auctionChosenCnt.value = await getStatusAuctionsCnt('chosen');
     auctionDoneCnt.value = await getStatusAuctionsCnt('done');
+    auctionCancelCnt.value = await getStatusAuctionsCnt('cancel');
     auctionAllCnt.value = await getStatusAuctionsCnt('all');
 
     //후기

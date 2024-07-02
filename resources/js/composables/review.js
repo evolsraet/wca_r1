@@ -405,11 +405,8 @@ export function initReviewSystem() {
     const getWriteReviewCnt = async() => {
         return wicac.conn()
         .url(`/api/reviews`)
-        .pageLimit(99999)
         .callback(function(result) {
-            console.log('wicac.conn callback ' , result);
-            const dataLength = result.data.length;
-            return dataLength;
+            return result.page.total;
         })
         .get();
     }
