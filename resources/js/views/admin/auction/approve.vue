@@ -28,6 +28,14 @@
                   <input v-model="auction.car_no" id="car_no" class="form-control"/>
                 </div>
                 <div class="card-body">
+                  <p class="tc-light-gray">등록일자</p>
+                  <input v-model="created_at" id="bank" class="input-dis form-control" readonly/>
+                </div>
+                <div class="card-body">
+                  <p class="tc-light-gray">최종 수정일자</p>
+                  <input v-model="updated_at" id="bank" class="input-dis form-control" readonly/>
+                </div>
+                <div class="card-body">
                   <p class="tc-light-gray">소유자명</p>
                   <input v-model="auction.owner_name" id="owner_name" class="form-control"/>
                 </div>
@@ -44,8 +52,9 @@
                 </div>
                 <div class="card-body">
                   <p class="tc-light-gray">은행</p>
-                  <input v-model="auction.bank" id="bank" class="form-control"/>
+                  <input v-model="auction.bank" type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" class="input-dis form-control" readonly>
                 </div>
+                <BankModal :showDetails="showDetails" @update:showDetails="showDetails = $event" @select-bank="selectBank" />
                 <div class="card-body">
                   <p class="tc-light-gray">계좌번호</p>
                   <input v-model="auction.account" id="account" class="form-control"/>
@@ -342,14 +351,17 @@
 </template>
 
 <script setup>
-import { ref, onMounted, reactive, watchEffect ,onBeforeUnmount} from 'vue';
+import { ref, onMounted, reactive, watchEffect ,onBeforeUnmount , nextTick } from 'vue';
 import { useRoute } from 'vue-router';
+import BankModal from '@/views/modal/bank/BankModal.vue';
 import file from "@/components/file.vue";
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import hideIcon from '../../../../../resources/img/Icon-black-down.png';
 import showIcon from '../../../../../resources/img/Icon-black-up.png';
 import { regions, updateDistricts } from '@/hooks/selectBOX.js';
+const showDetails = ref(false); 
+const isActive = ref(false);
 const isMobileView = ref(window.innerWidth <= 640);
 const checkScreenWidth = () => {
     if (typeof window !== 'undefined') {
@@ -357,6 +369,8 @@ const checkScreenWidth = () => {
     }
   };
 const auction = reactive({ 
+    bank : '',
+    account : '',
     car_no: '',
     owner_name: '',
     bank: '',
@@ -390,7 +404,30 @@ const diagFeeKorean = ref('0 원');
 const totalFeeKorean = ref('0 원');
 const hopePriceFeeKorean = ref('0 원');
 const finalPriceFeeKorean = ref('0 원');
+let created_at;
+let updated_at;
 
+
+// 은행 선택 라벨 클릭 시 처리 함수
+const handleBankLabelClick = () => {
+  showDetails.value = true;
+  nextTick(() => {
+    isActive.value = true;
+  });
+};
+
+// 은행 선택 처리 함수
+const selectBank = bankName => {
+  auction.bank = bankName;
+  showDetails.value = false;
+  isActive.value = false;
+};
+
+// 은행 선택 모달 닫기 함수
+const closeDetailContent = () => {
+  showDetails.value = false;
+  isActive.value = false;
+};
 
 const updateKoreanAmount = (price) => {
   if(price == 'successFee'){
@@ -483,7 +520,8 @@ onMounted(async () => {
   document.getElementById("status").value = data.status;
 
   watchEffect(() => {
-      auction.updated_at = data.updated_at;
+      updated_at = data.updated_at;
+      created_at = data.created_at;
       auction.car_no = data.car_no;
       auction.owner_name = data.owner_name;
       auction.status = data.status;
@@ -504,6 +542,8 @@ onMounted(async () => {
       auction.total_fee = data.total_fee;
       auction.hope_price = data.hope_price;
       auction.final_price = data.final_price;
+      auction.bank = data.bank;
+      auction.account = data.account;
 
       if(data.success_fee){
         successFeeKorean.value = formatCurrency(data.success_fee);
