@@ -139,12 +139,37 @@ trait CrudTrait
             $wheres = [];
             $exploded = explode('|', request('where'));
 
-            foreach ((array) $exploded as $row) :
-                $row = explode(':', $row);
+            foreach ((array) $exploded as $onewhere) :
+                $row = explode(':', $onewhere);
 
-                //$row[1] 이 like 일때, $row[2] 에 '%' 가 포되어있지 않으면 앞뒤로 '%' 문자 더해주기
+                // like = $row[1] 이 like 일때, $row[2] 에 '%' 가 포되어있지 않으면 앞뒤로 '%' 문자 더해주기
                 if ($row[1] == 'like' && strpos($row[2], '%') === false) {
                     $row[2] = '%' . $row[2] . '%';
+                }
+
+                // whereIn 동일테이블만 적용 가능
+                if ($row[1] == 'wherein') {
+                    $values = explode(',', $row[2]);
+                    $result = $result->whereIn($row[0], $values);
+                    continue;
+                }
+
+                // where 와 기타 구분
+                $whereFunction = 'where';
+
+                // where 펑션이 바뀌어야할 경우
+                if (isset($row[2])) {
+                    switch ($row[1]) {
+                        case 'whereIn':
+                            $whereFunction = $row[1];
+                            $row = [
+                                $row[0],
+                                explode(',', $row[2])
+                            ];
+                            // print_r($row);
+                            // die();
+                            break;
+                    }
                 }
 
                 switch ($row[0]) {
@@ -156,9 +181,9 @@ trait CrudTrait
                         if (strpos($row[0], (new $this->modelClass)->getTable() . ".") !== false) {
                             // 동일테이블
                             if (isset($row[2])) {
-                                $result = $result->where($row[0], $row[1], $row[2]);
+                                $result = $result->$whereFunction($row[0], $row[1], $row[2]);
                             } else {
-                                $result = $result->where($row[0], $row[1]);
+                                $result = $result->$whereFunction($row[0], $row[1]);
                             }
                         } else {
                             // 다른테이블
@@ -166,14 +191,14 @@ trait CrudTrait
                             $result->with($findKey[0]);
 
                             if (isset($row[2])) {
-                                $result->whereHas($findKey[0], function ($qry) use ($findKey, $row) {
+                                $result->whereHas($findKey[0], function ($qry) use ($findKey, $row, $whereFunction) {
                                     // findKey[1]는 필드명, row[1]은 연산자, row[2]는 값
-                                    $qry->where($findKey[1], $row[1], $row[2]); // 특정 조건에 맞는 관계를 필터링
+                                    $qry->$whereFunction($findKey[1], $row[1], $row[2]); // 특정 조건에 맞는 관계를 필터링
                                 });
                             } else {
-                                $result->whereHas($findKey[0], function ($qry) use ($findKey, $row) {
+                                $result->whereHas($findKey[0], function ($qry) use ($findKey, $row, $whereFunction) {
                                     // findKey[1]는 필드명, row[1]은 값 (기본 산자 '=')
-                                    $qry->where($findKey[1], '=', $row[1]); // 기본 연산자 '='를 명시적으로 사용
+                                    $qry->$whereFunction($findKey[1], '=', $row[1]); // 기본 연산자 '='를 명시적으로 사용
                                 });
                             }
                         }

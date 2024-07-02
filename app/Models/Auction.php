@@ -37,6 +37,7 @@ class Auction extends Model implements HasMedia
             'wait'   => '선택대기',
             'ing'    => '경매진행',
             'diag'   => '진단대기',
+            'dlvr'   => '탁송중',
             'ask'    => '신청완료',
         ],
     ];
