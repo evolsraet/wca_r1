@@ -66,6 +66,26 @@ export default function useUsers() {
         
             
     }
+
+    const getUserStatus = async(
+        stat = 'all'
+    )=>{
+        const apiList = [];
+        if(stat != 'all'){
+            apiList.push(`users.status:${stat}`)
+        }
+
+        return wicac.conn()
+        .url(`/api/users`)
+        .where(apiList)
+        .pageLimit(99999)
+        .callback(function(result) {
+            console.log('wicac.conn callback ' , result);
+            const dataLength = result.data.length;
+            return dataLength;
+        })
+        .get();
+    }
     
     const adminGetUsers = async (
         page = 1,
@@ -344,6 +364,7 @@ export default function useUsers() {
     return {
         adminEditForm,
         editForm,
+        getUserStatus,
         users,
         user,
         getUsers,

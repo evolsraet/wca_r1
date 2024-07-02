@@ -400,6 +400,19 @@ export function initReviewSystem() {
             .log()
             .get();
     }
+
+    // 관리자페이지 - 대시보드 리뷰 개수 가져오기
+    const getWriteReviewCnt = async() => {
+        return wicac.conn()
+        .url(`/api/reviews`)
+        .pageLimit(99999)
+        .callback(function(result) {
+            console.log('wicac.conn callback ' , result);
+            const dataLength = result.data.length;
+            return dataLength;
+        })
+        .get();
+    }
         
     // 홈 화면 리뷰 불러오기 (auction 정보 포함하지 않음.)
     const getHomeReview = async (page = 1) => {
@@ -461,6 +474,7 @@ export function initReviewSystem() {
         reviewsData,
         getHomeReview,
         getCarInfo,
+        getWriteReviewCnt,
         setInitialStarRating,
     }
 

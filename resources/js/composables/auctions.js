@@ -109,7 +109,7 @@ const adminGetDepositAuctions = async(
     page = 1,
     column = '',
     direction = '',
-    status = 'dlvr',
+    status = 'all',
     search_title=''
 ) => {
     const apiList = [];
@@ -133,6 +133,25 @@ const adminGetDepositAuctions = async(
     .get();
 }
 
+//관리자페이지 - auction 상태 별 개수 가져오기
+const getStatusAuctionsCnt = async(
+    status = 'all',
+) => {
+    const apiList = [];
+    if(status != 'all'){
+        apiList.push(`auctions.status:${status}`)
+    }
+    
+    return wicac.conn()
+    .url(`/api/auctions`)
+    .where(apiList)
+    .pageLimit(99999)
+    .callback(function(result) {
+        const dataLength = result.data.length;
+        return dataLength;
+    })
+    .get();
+}
     
 // 경매 ID를 이용해 경매 상세 정보를 가져오는 함수
 const getAuctionById = async (id) => {
@@ -507,6 +526,7 @@ const deleteAuction = async (id,urlPath) => {
     return {
         adminGetAuctions,
         adminGetDepositAuctions,
+        getStatusAuctionsCnt,
         AuctionCarInfo,
         chosenDealer,
         AuctionReauction,
