@@ -947,7 +947,7 @@ export function cmmn() {
         console.log(wicas.enum(store).dealers());
         console.log(wicas.enum(store).excl('dlvr','wait').auctions());
         console.log(wicas.enum(store).perm('dlvr','wait').auctions());
-        console.log(wicas.enum(store).auctions());
+        console.log(wicas.enum(store).add('k1','aa').add('k2',2).auctions());
 
         # 필요한 테이블 enums 는 별도 추가해야함.
         # ( js/store/enums.js ) 에 loopLabel 값에도 추가
@@ -963,8 +963,10 @@ export function cmmn() {
             newObj._input = {
                 isExcl : false,
                 isPerm : false,
+                isAdd : false,
                 _excl : null,
                 _perm : null,
+                _add : {},
             }
             return newObj;
         },
@@ -980,9 +982,20 @@ export function cmmn() {
             _this._input._perm = input;
             return _this;
         },
+        add : function(key,val) {
+            let _this = this;
+            _this._input.isAdd = true;
+            if(key) {
+                _this._input._add[key] = val
+            }
+            return _this;
+        },
         auctions : function() {
             let _this = this;
             let data =  this.deepClone(this._store.getters['enums/data']['auctions']);
+            if(_this._input.isAdd) {
+                Object.assign(data.status, _this._input._add);
+            }
             if(_this._input.isExcl) {
                 return this.remove(data.status,_this._input._excl);
             } else if(_this._input.isPerm) {
@@ -994,6 +1007,9 @@ export function cmmn() {
         users : function() {
             let _this = this;
             let data =  this.deepClone(this._store.getters['enums/data']['users']);
+            if(_this._input.isAdd) {
+                Object.assign(data.status, _this._input._add);
+            }
             if(_this._input.isExcl) {
                 return this.remove(data.status,_this._input._excl);
             } else if(_this._input.isPerm) {
@@ -1005,6 +1021,9 @@ export function cmmn() {
         dealers : function() {
             let _this = this;
             let data = this.deepClone(this._store.getters['enums/data']['dealers']);
+            if(_this._input.isAdd) {
+                Object.assign(data.status, _this._input._add);
+            }
             if(_this._input.isExcl) {
                 return this.remove(data.status,_this._input._excl);
             } else if(_this._input.isPerm) {
