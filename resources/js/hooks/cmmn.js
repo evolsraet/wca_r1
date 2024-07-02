@@ -469,6 +469,7 @@ export function cmmn() {
                 if(_input._isParam) {
                     urlParamsData = _input._param;
                 }
+                let urlParams = '';
                 urlParams = this.parseParam(_input, urlParams);
                 if(_input._isLog || _input._isLogDetail) console.log('cmmn wicac DELETE [ ' + _this._input._url+urlParams +' ]', urlParamsData);
                 await axios.delete(_this._input._url+urlParams,urlParamsData).then(response => {            
