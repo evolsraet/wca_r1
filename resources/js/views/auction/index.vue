@@ -497,6 +497,7 @@ TODO:
                                             </div>
                                             <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
                                             </div>
+                                            <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done">탁송중</span>
                                             <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>   
                                             <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
                                             <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span> 
