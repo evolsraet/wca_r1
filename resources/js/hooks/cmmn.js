@@ -355,9 +355,9 @@ export function cmmn() {
                 urlParams += 'page='+_input._page;    
                 if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] page 처리 ',_input._page);
             }
-            if(_input._isPageLimit && _input.pageLimit > 0) {
+            if(_input._isPageLimit && _input._pageLimit > 0) {
                 if(urlParams) urlParams += '&';
-                urlParams += 'paginate='+_input._pageLimit;    
+                urlParams += 'paginate='+_input._pageLimit;
                 if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] pageLimit 처리 ',_input._pageLimit);
             }
             if(_input._isDoesnthave){
