@@ -918,7 +918,7 @@ export function cmmn() {
         }        
     }
 
-// 위카 명  
+    //공통 전역 라벨링
     const wicaLabel = {        
         title : function() {
             return window.Laravel.appName;
@@ -927,6 +927,113 @@ export function cmmn() {
             return window.Laravel.appName;
         }
     } 
+    //End of 공통 전역 라벨링
+
+
+    //public wicas enum data
+    /**
+    
+        import { useStore } from 'vuex';
+        const store = useStore();
+    
+        import { cmmn } from '@/hooks/cmmn';
+        const { wicas } = cmmn();
+
+
+        # 호출 방법
+
+        console.log(wicas.enum(store).auctions());
+        console.log(wicas.enum(store).users());
+        console.log(wicas.enum(store).dealers());
+        console.log(wicas.enum(store).excl('dlvr','wait').auctions());
+        console.log(wicas.enum(store).perm('dlvr','wait').auctions());
+        console.log(wicas.enum(store).auctions());
+
+        # 필요한 테이블 enums 는 별도 추가해야함.
+        # ( js/store/enums.js ) 에 loopLabel 값에도 추가
+        # (views/login/Login.vue) 에서 await store.dispatch("enums/getData"); 가 로그인시 호출됨
+      
+     */
+    const wicas = {
+        _store : null,
+        _input : null,
+        enum : function(_store) {
+            let newObj = Object.create(this);
+            newObj._store = _store;            
+            newObj._input = {
+                isExcl : false,
+                isPerm : false,
+                _excl : null,
+                _perm : null,
+            }
+            return newObj;
+        },
+        excl : function(...input) {
+            let _this = this;
+            _this._input.isExcl = true;
+            _this._input._excl = input;
+            return _this;
+        },
+        perm : function(...input) {
+            let _this = this;
+            _this._input.isPerm = true;
+            _this._input._perm = input;
+            return _this;
+        },
+        auctions : function() {
+            let _this = this;
+            let data =  this.deepClone(this._store.getters['enums/data']['auctions']);
+            if(_this._input.isExcl) {
+                return this.remove(data.status,_this._input._excl);
+            } else if(_this._input.isPerm) {
+                return this.filtering(data.status,_this._input._perm);
+            } else {
+                return data.status;
+            }
+        },
+        users : function() {
+            let _this = this;
+            let data =  this.deepClone(this._store.getters['enums/data']['users']);
+            if(_this._input.isExcl) {
+                return this.remove(data.status,_this._input._excl);
+            } else if(_this._input.isPerm) {
+                return this.filtering(data.status,_this._input._perm);
+            } else {
+                return data.status;
+            }
+        },
+        dealers : function() {
+            let _this = this;
+            let data = this.deepClone(this._store.getters['enums/data']['dealers']);
+            if(_this._input.isExcl) {
+                return this.remove(data.status,_this._input._excl);
+            } else if(_this._input.isPerm) {
+                return this.filtering(data.status,_this._input._perm);
+            } else {
+                return data.status;
+            }
+        },
+        //utils
+        deepClone : function(input) {
+            return JSON.parse(JSON.stringify(input));
+        },
+        filtering : function(input,keys) {
+            return Object.keys(input)
+            .filter(key => keys.includes(key))
+            .reduce((obj, key) => {
+                obj[key] = input[key];
+                return obj;
+            }, {});
+        },
+        remove : function(input,keys) {
+            keys.forEach(val => {
+                delete input[val];
+            });
+            return input;
+        }
+
+    } 
+    //End of public wicas enum data
 
     return {
       numberToKoreanUnit,
@@ -940,5 +1047,6 @@ export function cmmn() {
       wica,
       wicac,
       wicaLabel,
+      wicas,
     }
   }
