@@ -13,8 +13,7 @@
             <div class="d-flex justify-content-end">
                 <div class="text-end select-option">
                     <select class="form-select select-rank" aria-label="상태" @change="event => setFilter(event.target.value)">
-                        <option value="all" selected>전체</option>
-                        <option v-for="(label, value) in statusLabel" :key="value" :value="value">{{ label }}</option>
+                        <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == 'all'">{{ label }}</option>
                     </select>
                 </div>
             </div>
@@ -183,7 +182,7 @@
     }; */
     
     onMounted(() => {
-        statusLabel = wicas.enum(store).auctions();
+        statusLabel = wicas.enum(store).addFirst('all','전체').auctions();
         fetchAuctions();
         getCategoryList();
     });
