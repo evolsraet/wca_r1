@@ -63,8 +63,8 @@
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <div>
-                                    <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ getStatusLabel(auction.status) }}</span></p>
-                                    <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ getStatusLabel(auction.status) }}</span></p>
+                                    <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                    <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
@@ -116,7 +116,10 @@ import { ref, onMounted, watch, computed } from 'vue';
 import useAuctions from '@/composables/auctions';
 import useCategories from '@/composables/categories';
 import { useAbility } from '@casl/vue';
+import { useStore } from 'vuex';
+import { cmmn } from '@/hooks/cmmn';
 
+const { wicas } = cmmn();
 const currentStatus = ref('dlvr,done'); 
 const currentPage = ref(1); // 현재 페이지 번호
 const orderingState = {
@@ -131,7 +134,7 @@ const orderDirection = ref('desc');
 const { auctionsData, pagination, deleteAuction, getStatusLabel, adminGetDepositAuctions } = useAuctions();
 const { getCategoryList } = useCategories();
 const { can } = useAbility();
-
+const store = useStore();
 
 const updateOrdering = (column) => {
         let columnState = orderingState[column];

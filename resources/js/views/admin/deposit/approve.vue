@@ -33,12 +33,12 @@
                       <p class="tc-light-gray">입금 상태</p>
                       <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
                       <option value="done">입금 완료</option>
-                      <option value="chosen">입금 대기</option> <!-- dlvr자리 -->
+                      <option value="dlvr">입금 대기</option> <!-- dlvr자리 -->
                       </select>
                   </div>
                   <div class="card-body">
                     <p class="tc-light-gray">낙찰 금액</p>
-                    <input value="40,000,000 원" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
+                    <input v-model="auction.final_price" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
                   </div>
                   <div class="card-body">
                     <p class="tc-light-gray">입금 총액</p>
