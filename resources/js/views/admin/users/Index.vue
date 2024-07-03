@@ -37,10 +37,7 @@
                     
                     <div class="text-end select-option">
                         <select class="form-select select-rank" @change="event => setStatusFilter(event.target.value)">
-                            <option value="all" selected>전체</option>
-                            <option value="ok">정상</option>
-                            <option value="ask">심사중</option>
-                            <option value="reject">가입거부</option>
+                            <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == 'all'">{{ label }}</option>
                         </select>
                     </div>
                     </div>
@@ -156,10 +153,13 @@
                                             {{ post.created_at }}
                                         </td>
                                         <td class="px-6 py-4 text-sm">
-                                            {{ post.name }}    
+                                            {{ post.name }}
+                                        
                                         <div :class="{'blue-box ms-2': post.status === 'ok', 'blue-box02 ms-2': post.status === 'ask', 'red-box ms-2': post.status === 'reject'}">
-                                        {{ post.status === 'ok' ? '정상' : post.status === 'ask' ? '심사중' : post.status === 'reject' ? '가입거부' : '' }}
+                                            {{ wicas.enum(store).toLabel(post.status).users() }}
                                         </div>
+                                        
+                                        
                                         </td>
                                         <td class="px-6 py-4 text-sm">
                                             {{ post.email }}
@@ -216,8 +216,12 @@
 import { ref, onMounted, watch, computed} from "vue";
 import useUsers from "../../../composables/users";
 import { useAbility } from "@casl/vue";
+import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import { cmmn } from '@/hooks/cmmn';
 
+const { wicas } = cmmn();
+const store = useStore();
 const router = useRouter();
 const orderColumn = ref("created_at");
 const orderDirection = ref("desc");
@@ -231,8 +235,10 @@ const orderingState = {
     name: { direction: '', column: '', hit: 0 },
     email: { direction: '', column: '', hit: 0 },
 };
+let statusLabel;
 
 onMounted(async () => {
+    statusLabel = wicas.enum(store).addFirst('all','전체').users();
     adminGetUsers(1,currentStatus.value,currentRoleStatus.value);                  
 });
 

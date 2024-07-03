@@ -88,9 +88,7 @@
                         <div class="mb-3">
                             <label for="email" class="form-label">승인여부</label>
                             <select class="form-select" :v-model="editForm.status" @change="changeStatus($event)" id="status">
-                                <option value="ok">정상</option>
-                                <option value="ask">심사중</option>
-                                <option value="reject">거절</option>
+                                <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == editForm.status">{{ label }}</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -249,6 +247,7 @@ import useRoles from "@/composables/roles";
 import useUsers from "@/composables/users";
 import { useForm, useField, defineRule } from "vee-validate";
 import { required, min } from "@/validation/rules";
+import { useStore } from 'vuex';
 import { cmmn } from '@/hooks/cmmn';
 
 defineRule("required", required);
@@ -256,7 +255,7 @@ defineRule("min", min);
 
 const route = useRoute();
 const { roleList, getRoleList } = useRoles();
-const { openPostcode , closePostcode} = cmmn();
+const { openPostcode , closePostcode, wicas} = cmmn();
 
 const {
     editForm,
@@ -274,6 +273,9 @@ const fileInputRef = ref(null);
 let created_at;
 let email;
 let updated_at;
+
+const store = useStore();
+let statusLabel;
 
 // Define a validation schema
 const schema = {
@@ -302,6 +304,7 @@ const dealer = reactive({
 })
 
 onMounted(async () => {
+    statusLabel = wicas.enum(store).users();
     const response = await getUser(route.params.id);
     await getRoleList();
     console.log(response);
@@ -310,6 +313,7 @@ onMounted(async () => {
         const findRoleId = roleList.value.find(role => role.name === roleName);
         user.role = findRoleId.id;
     }*/
+   
     watchEffect(() => {
         editForm.name = response.name;
         created_at = response.created_at;
