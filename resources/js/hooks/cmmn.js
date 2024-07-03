@@ -949,12 +949,19 @@ export function cmmn() {
         .excl('dlvr','wait') // 기입된 필드는 제거
         .perm('dlvr','wait') // 기입된 필드만 남김
         .add('k1','aa').add('k2',2) // 필드 추가
+        .addFirst('k1','aa').addFirst('k1','aa') // 정렬 순서 없이 입력 순서대로 필드 맨 위에 위치
+        .change('dlvr','입금대기').change('done','입금완료') // 기존 필드 값 변경
+        .changeKey('dlvr','dlvr2').changeKey('done','done2') // 기존 필드 키 명칭 변경
         .toProxy(reactive) // 리턴 데이터를 proxy object 로 변환
         .callback(function(item){ //필드 갯수만큼 개별 출력
             console.log(item);
         })
         .toLabel('wait') // 입력값 하나에 대해서 'wait' 를 기입하면 '선택대기' 를 리턴
         .toCode('선택대기') // 입력값 하나에 대해서 '선택대기' 를 기입하면 'wait' 를 리턴
+        .DescKey() // 키 기준 c,b,a 순
+        .DescVal() // 값 기준 다,나,가 순
+        .ascKey() // 키 기준 a,b,c 순
+        .ascVal() // 값 기준 가,나,다 순
         .auctions();
         .users();
         .dealers();
@@ -992,13 +999,23 @@ export function cmmn() {
                 isExcl : false,
                 isPerm : false,
                 isAdd : false,
+                isAddFirst : false,
+                isChange : false,
+                isChangeKey : false,
                 isToProxy : false,
                 isReturn : false,
                 isToLabel : false,
                 isToCode : false,
+                isDescKey : false,
+                isAscKey : false,
+                isDescVal : false,
+                isAscVal : false,
                 _excl : null,
                 _perm : null,
                 _add : {},
+                _addFirst : {},
+                _change : {},
+                _changeKey : {},
                 _toProxy : null,
                 _callback : null,
                 _toLabel : null,
@@ -1023,6 +1040,30 @@ export function cmmn() {
             _this._input.isAdd = true;
             if(key) {
                 _this._input._add[key] = val;
+            }
+            return _this;
+        },
+        addFirst : function(key,val) {
+            let _this = this;
+            _this._input.isAddFirst = true;
+            if(key) {
+                _this._input._addFirst[key] = val;
+            }
+            return _this;
+        },
+        change : function(key,val) {
+            let _this = this;
+            _this._input.isChange = true;
+            if(key) {
+                _this._input._change[key] = val;
+            }
+            return _this;
+        },
+        changeKey : function(key,val) {
+            let _this = this;
+            _this._input.isChangeKey = true;
+            if(key) {
+                _this._input._changeKey[key] = val;
             }
             return _this;
         },
@@ -1058,6 +1099,35 @@ export function cmmn() {
             }
             return _this;
         },
+        toCode : function(input) {
+            let _this = this;
+            _this._input.isToCode = true;
+            if(input) {
+                _this._input._toCode = input;
+            }
+            return _this;
+        },
+        descKey : function() {
+            let _this = this;
+            _this._input.isDescKey = true;
+            return _this;
+        },
+        ascKey : function() {
+            let _this = this;
+            _this._input.isAscKey = true;
+            return _this;
+        },
+        descVal : function() {
+            let _this = this;
+            _this._input.isDescVal = true;
+            return _this;
+        },
+        ascVal : function() {
+            let _this = this;
+            _this._input.isAscVal = true;
+            return _this;
+        },
+        //enums 목록
         auctions : function() {
             let _this = this;
             let data =  this.deepClone(this._store.getters['enums/data']['auctions']);
@@ -1102,6 +1172,36 @@ export function cmmn() {
                 d = this.filtering(data.status,_input._perm);
             } else {
                 d = data.status;
+            }
+            if(_input.isChangeKey) {
+                Object.keys(_input._changeKey).forEach(key => {
+                    const k = _input._changeKey[key];
+                    d[k] = d[key];
+                    delete d[key];
+                });
+            }
+            if(_input.isChange) {
+                Object.keys(_input._change).forEach(key => {
+                    if (d.hasOwnProperty(key)) {
+                        d[key] = _input._change[key];
+                    }
+                });
+            }
+            if(_input.isDescKey) {
+                const sortedEntries = Object.entries(d).sort(([keyA], [keyB]) => keyB.localeCompare(keyA));
+                d = Object.fromEntries(sortedEntries);
+            } else if(_input.isDescVal) {
+                const sortedEntries = Object.entries(d).sort(([, valueA], [, valueB]) => valueB.localeCompare(valueA));
+                d = Object.fromEntries(sortedEntries);
+            } else if(_input.isAscKey) {
+                const sortedEntries = Object.entries(d).sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
+                d = Object.fromEntries(sortedEntries);    
+            } else if(_input.isAscVal) {
+                const sortedEntries = Object.entries(d).sort(([, valueA], [, valueB]) => valueA.localeCompare(valueB));
+                d = Object.fromEntries(sortedEntries);
+            }
+            if(_input.isAddFirst) {
+                d = Object.assign({}, _input._addFirst, d);
             }
             if(_input.isReturn) {
                 for (let key in d) {
