@@ -948,8 +948,8 @@ export function cmmn() {
         wicas.enum(store)
         .excl('dlvr','wait') // 기입된 필드는 제거
         .perm('dlvr','wait') // 기입된 필드만 남김
-        .add('k1','aa').add('k2',2) // 필드 추가
-        .addFirst('k1','aa').addFirst('k1','aa') // 정렬 순서 없이 입력 순서대로 필드 맨 위에 위치
+        .add('dlvrNew','입금대기').add('doneNew','입금완료') // 필드 추가
+        .addFirst('all','전체').addFirst('','전체2') // 정렬 순서 없이 입력 순서대로 필드 맨 위에 위치
         .change('dlvr','입금대기').change('done','입금완료') // 기존 필드 값 변경
         .changeKey('dlvr','dlvr2').changeKey('done','done2') // 기존 필드 키 명칭 변경
         .toProxy(reactive) // 리턴 데이터를 proxy object 로 변환
@@ -977,6 +977,7 @@ export function cmmn() {
         console.log(wicas.enum(store).add('k1','aa').add('k2',2).auctions());
         console.log(wicas.enum(store).toLabel('wait').auctions());
         console.log(wicas.enum(store).toCode('선택대기').auctions());
+        console.log(wicas.enum(store).addFirst('all','전체').auctions());
 
         let rdata = wicas.enum(store).excl('dlvr','wait').callback(function(item){
           console.log(item);
