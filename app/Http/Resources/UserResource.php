@@ -24,9 +24,13 @@ class UserResource extends JsonResource
             'roles' => $this->roles->pluck('name'),
         ];
 
-        if ((auth()->user()) && auth()->user()->hasPermissionTo('act.admin')) {
-            // $parentArray[]
+        // 관리자 또는 본인일 경우 숨겨진 속성을 노출
+        if (auth()->check() && (auth()->user()->hasPermissionTo('act.admin') || auth()->id() === $this->resource->id)) {
+            // $hiddenAttributes = $this->resource->getHidden();
+            // $this->resource->makeVisible($hiddenAttributes);
+            $this->resource->makeVisible(['phone']);
         }
+        $parentArray = $this->resource->toArray();
 
         // // if (Str::contains($request->get('with', ''), 'dealer')) {
         // $additionalArray['dealer'] = new DealerResource($this->dealer);

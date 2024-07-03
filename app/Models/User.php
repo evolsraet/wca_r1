@@ -135,6 +135,14 @@ class User extends Authenticatable implements HasMedia
         static::addGlobalScope('withRoles', function ($builder) {
             $builder->with('roles');
         });
+
+        // static::retrieved(function ($user) {
+        //     print_r(auth()->check());
+        //     die();
+        //     if (auth()->check() && (auth()->user()->hasPermissionTo('act.admin') || auth()->id() === $user->id)) {
+        //         $user->makeVisible(['phone', 'password', 'remember_token']);
+        //     }
+        // });
     }
 
     public function setPhoneAttribute($value)
