@@ -22,25 +22,25 @@
         <div class="pt-3 sidebar-sticky">
             <ul id="menu" class="nav flex-column mb-2">
                 <li class="nav-item mb-4">
-                    <router-link :to="{ name: 'users.index' }" class="side-navbar-link nav-link">
+                    <router-link :to="{ name: 'users.index' }" class="side-navbar-link nav-link" id="adminSidebar-user"> 
                         <div class="d-flex align-items-center">
                             <div class="admin-icon admin-icon-users admin-icon-small-02 mx-2 "></div>
-                            <span class="d-none d-sm-inline ps-2">회원 관리</span>
+                            <span class="d-none d-sm-inline ps-2" id="adminSidebar-user">회원 관리</span>
                             <div class="admin-icon admin-icon-coin admin-icon-pass m-auto"></div>
                         </div>
                     </router-link>
                 </li>
                 <li class="nav-item mb-4">
-                    <router-link :to="{ name: 'deposit.index' }" class="nav-link side-navbar-link">
+                    <router-link :to="{ name: 'deposit.index' }" class="nav-link side-navbar-link" id="adminSidebar-deposit">
                         <div class="d-flex align-items-center">
                             <div class="admin-icon admin-icon-coin mx-2"></div>
-                            <span class="d-none d-sm-inline ps-2">입금 관리</span>
+                            <span class="d-none d-sm-inline ps-2" id="adminSidebar-deposit">입금 관리</span>
                             <div class="admin-icon admin-icon-coin admin-icon-pass m-auto"></div>
                         </div>
                     </router-link>
                 </li>
                 <li class="nav-item side-navbar-link mb-4">
-                    <router-link :to="{ name: 'auctions.index' }" class="nav-link side-navbar-link">
+                    <router-link :to="{ name: 'auctions.index' }" class="nav-link side-navbar-link" id="adminSidebar-auction">
                         <div class="d-flex align-items-center">
                             <div class="admin-icon admin-icon-car admin-icon-small mx-2"></div>
                             <span class="d-none d-sm-inline ps-2">매물 관리</span>
@@ -49,10 +49,10 @@
                     </router-link>
                 </li>
                 <li class="nav-item mb-4">
-                    <router-link :to="{ name: 'review.index' }" class="nav-link side-navbar-link">
+                    <router-link :to="{ name: 'review.index' }" class="nav-link side-navbar-link" id="adminSidebar-review">
                         <div class="d-flex align-items-center">
                             <div class="admin-icon admin-icon-review admin-icon-small mx-2"></div>
-                            <span class="d-none d-sm-inline ps-2">후기 관리</span>
+                            <span class="d-none d-sm-inline ps-2" >후기 관리</span>
                             <div class="admin-icon admin-icon-coin admin-icon-pass m-auto"></div>
                         </div>
                     </router-link>
@@ -63,16 +63,49 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted , watch , nextTick , ref } from 'vue';
 import { useAbility } from "@casl/vue";
 import useAuth from "@/composables/auth";
-import { useRouter } from 'vue-router';
+import { useRouter , useRoute } from 'vue-router';
 const { can } = useAbility();
 const { logout } = useAuth();
 const router = useRouter();
+const route = useRoute();
+const pageName = ref('');
+
+function addSideBar(element, routeName, to){
+    
+    //console.log(element);
+    
+    if(to === routeName){
+        nextTick(() => {
+            element.classList.remove('nav-link', 'side-navbar-link'); 
+            element.classList.add('router-link-active', 'router-link-exact-active', 'nav-link', 'side-navbar-link');
+        });
+    } else if(pageName.value != routeName.split('.')[0]){
+        element.classList.remove('router-link-active', 'router-link-exact-active', 'nav-link', 'side-navbar-link');
+        element.classList.add('nav-link', 'side-navbar-link'); 
+
+    } 
+}
 
 onMounted(() => {
-    //router.push({ name: 'users.index' });
+
+    let user = document.getElementById('adminSidebar-user');
+    let review = document.getElementById('adminSidebar-review');
+    let deposit = document.getElementById('adminSidebar-deposit');
+    let auction = document.getElementById('adminSidebar-auction');
+
+    watch(() => route.name, (to, from) => {
+        //console.log('라우터 이름:', to);
+        pageName.value = to.split('.')[0];
+        addSideBar(user,'users.edit',to);
+        addSideBar(deposit,'deposit.approve',to);
+        addSideBar(auction,'auction.approve',to);
+        addSideBar(review,'review.approve',to);
+
+    }, { immediate: true });
+
 })
 
 </script>

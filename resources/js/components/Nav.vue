@@ -80,7 +80,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text process">과거 낙찰 이력</span>
-                      <span class="tc-light-gray font-1">경매 완료 매물</span>
+                      <span class="tc-light-gray font-1">경매 완료 매물</span>                       
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'index.claim' }" class="menu-item process mt-0" @click="toggleNavbar">
@@ -237,10 +237,10 @@
                   <router-link to="/" class="nav-link mx-3" aria-current="page" exact-active-class="active-link">내차조회</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3" aria-current="page" exact-active-class="active-link">내 매물관리</router-link>
+                  <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3" aria-current="page" exact-active-class="active-link" id="nav-auction">내 매물관리</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'user.review'}" class="nav-link mx-3" exact-active-class="active-link">이용후기</router-link>
+                  <router-link :to="{ name: 'user.review'}" class="nav-link mx-3" exact-active-class="active-link" id="nav-review">이용후기</router-link>
                 </li>
               </div>
               <li class="nav-item my-member ms-auto dropdown">
@@ -258,7 +258,7 @@
                 <router-link :to="{ name: 'home'}" class="nav-link mx-3" exact-active-class="active-link">내차조회</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3" exact-active-class="active-link">이용후기</router-link>
+                <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3-review" exact-active-class="active-link">이용후기</router-link>
               </li>
               <li class="nav-item">
                 <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
@@ -305,7 +305,7 @@
   </template>
   
   <script setup>
-  import { ref, computed, onMounted, watch } from 'vue';
+  import { ref, computed, onMounted, watch , nextTick } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
   import { useStore } from 'vuex';
   import useAuth from '@/composables/auth';
@@ -324,7 +324,7 @@
   const showScrollGradient = ref(false);
   let scrollTimeout = null;
   const auctionDetailsLoaded = ref(false);
-  
+
   function toggleSettingsMenuMov() {
     showSettingsmov.value = !showSettingsmov.value;
   }
@@ -426,8 +426,12 @@
       content.classList.remove('visible');
     }
   }
-  
+
   onMounted(() => {
+
+    let navAuction = document.getElementById('nav-auction');
+    let navReview = document.getElementById('nav-review');
+
     const content = document.querySelector('.toggle-nav-content');
     content.addEventListener('scroll', checkScrollGradient);
     checkScrollGradient();
@@ -473,8 +477,35 @@
   };
   updateIsMobile();
   window.addEventListener('resize', updateIsMobile);
-  });
 
+  watch(() => route.name, (to, from) => {
+      //console.log('라우터 이름:', to);
+
+      //매물
+      if (to === 'AuctionDetail' || to === 'completionsuccess') {
+        nextTick(() => {
+          navAuction.classList.add('active-link');
+        });
+      } else {
+        if(navAuction){
+          navAuction.classList.remove('active-link');
+        }
+      }
+
+      //이용후기
+      if (to === 'user.edit-review' || to === 'index.allreview' || to == "user.create-review") {
+        nextTick(() => {
+          navReview.classList.add('active-link');
+        });
+      } else {
+        if(navReview){
+          navReview.classList.remove('active-link');
+        }
+      }
+    }, { immediate: true });
+
+  });
+    
   function toggleOverlay(show) {
     const overlay = document.querySelector('.overlay');
     if (show) {
@@ -489,6 +520,8 @@
       }, 300);
     }
   }
+
+
   </script>
   
   <style scoped>
