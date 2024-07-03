@@ -933,6 +933,9 @@ export function cmmn() {
     //public wicas enum data
     /**
     
+        # 필수 선언
+
+        import { reactive  } from 'vue';
         import { useStore } from 'vuex';
         const store = useStore();
     
@@ -941,6 +944,23 @@ export function cmmn() {
 
 
         # 호출 방법
+        
+        wicas.enum(store)
+        .excl('dlvr','wait') // 기입된 필드는 제거
+        .perm('dlvr','wait') // 기입된 필드만 남김
+        .add('k1','aa').add('k2',2) // 필드 추가
+        .toProxy(reactive) // 리턴 데이터를 proxy object 로 변환
+        .callback(function(item){ //필드 갯수만큼 개별 출력
+            console.log(item);
+        })
+        .toLabel('wait') // 입력값 하나에 대해서 'wait' 를 기입하면 '선택대기' 를 리턴
+        .toCode('선택대기') // 입력값 하나에 대해서 '선택대기' 를 기입하면 'wait' 를 리턴
+        .auctions();
+        .users();
+        .dealers();
+
+
+        # 호출 예시
 
         console.log(wicas.enum(store).auctions());
         console.log(wicas.enum(store).users());
@@ -948,10 +968,14 @@ export function cmmn() {
         console.log(wicas.enum(store).excl('dlvr','wait').auctions());
         console.log(wicas.enum(store).perm('dlvr','wait').auctions());
         console.log(wicas.enum(store).add('k1','aa').add('k2',2).auctions());
-        let rdata = wicas.enum(store).excl('dlvr','wait').auctions(function(item){
+        console.log(wicas.enum(store).toLabel('wait').auctions());
+        console.log(wicas.enum(store).toCode('선택대기').auctions());
+
+        let rdata = wicas.enum(store).excl('dlvr','wait').callback(function(item){
           console.log(item);
-        });
+        }).auctions();
         console.log(rdata);
+        
 
         # 필요한 테이블 enums 는 별도 추가해야함.
         # ( js/store/enums.js ) 에 loopLabel 값에도 추가
@@ -968,9 +992,17 @@ export function cmmn() {
                 isExcl : false,
                 isPerm : false,
                 isAdd : false,
+                isToProxy : false,
+                isReturn : false,
+                isToLabel : false,
+                isToCode : false,
                 _excl : null,
                 _perm : null,
                 _add : {},
+                _toProxy : null,
+                _callback : null,
+                _toLabel : null,
+                _toCode : null,
             }
             return newObj;
         },
@@ -990,66 +1022,56 @@ export function cmmn() {
             let _this = this;
             _this._input.isAdd = true;
             if(key) {
-                _this._input._add[key] = val
+                _this._input._add[key] = val;
             }
             return _this;
         },
-        auctions : function(input) {
+        toProxy : function(input) {
+            let _this = this;
+            _this._input.isToProxy = true;
+            if(input) {
+                _this._input._toProxy = input
+            }
+            return _this;
+        },
+        callback : function(input) {
+            let _this = this;
+            _this._input._callback = input;
+            if(input) {
+                _this._input.isReturn = true;
+            }
+            return _this;
+        },
+        toLabel : function(input) {
+            let _this = this;
+            _this._input.isToLabel = true;
+            if(input) {
+                _this._input._toLabel = input;
+            }
+            return _this;
+        },
+        toCode : function(input) {
+            let _this = this;
+            _this._input.isToCode = true;
+            if(input) {
+                _this._input._toCode = input;
+            }
+            return _this;
+        },
+        auctions : function() {
             let _this = this;
             let data =  this.deepClone(this._store.getters['enums/data']['auctions']);
-            if(_this._input.isAdd) {
-                Object.assign(data.status, _this._input._add);
-            }
-            if(_this._input.isExcl) {
-                const d = this.remove(data.status,_this._input._excl);
-                this.callback(input,d);
-                return d;
-            } else if(_this._input.isPerm) {
-                const d = this.filtering(data.status,_this._input._perm);
-                this.callback(input,d);
-                return d;
-            } else {
-                this.callback(input,data.status);
-                return data.status;
-            }
+            return this.processPublic(_this._input,data);
         },
-        users : function(input) {
+        users : function() {
             let _this = this;
             let data =  this.deepClone(this._store.getters['enums/data']['users']);
-            if(_this._input.isAdd) {
-                Object.assign(data.status, _this._input._add);
-            }
-            if(_this._input.isExcl) {
-                const d = this.remove(data.status,_this._input._excl);
-                this.callback(input,d);
-                return d;
-            } else if(_this._input.isPerm) {
-                const d = this.filtering(data.status,_this._input._perm);
-                this.callback(input,d);
-                return d;
-            } else {
-                this.callback(input,data.status);
-                return data.status;
-            }
+            return this.processPublic(_this._input,data);
         },
         dealers : function(input) {
             let _this = this;
             let data = this.deepClone(this._store.getters['enums/data']['dealers']);
-            if(_this._input.isAdd) {
-                Object.assign(data.status, _this._input._add);
-            }
-            if(_this._input.isExcl) {
-                const d = this.remove(data.status,_this._input._excl);
-                this.callback(input,d);
-                return d;
-            } else if(_this._input.isPerm) {
-                const d = this.filtering(data.status,_this._input._perm);
-                this.callback(input,d);
-                return d;
-            } else {
-                this.callback(input,data.status);
-                return data.status;
-            }
+            return this.processPublic(_this._input,data);
         },
         //utils
         deepClone : function(input) {
@@ -1069,15 +1091,35 @@ export function cmmn() {
             });
             return input;
         },
-        callback : function(input,data) {
-            if(input) {
-                for (let key in data) {
-                    input({key:key,val:data[key]});
+        processPublic : function(_input,data) {
+            if(_input.isAdd) {
+                Object.assign(data.status, _input._add);
+            }
+            let d;
+            if(_input.isExcl) {
+                d = this.remove(data.status,_input._excl);                              
+            } else if(_input.isPerm) {
+                d = this.filtering(data.status,_input._perm);
+            } else {
+                d = data.status;
+            }
+            if(_input.isReturn) {
+                for (let key in d) {
+                    _input._callback({key:key,val:d[key]});
                 };
             }
+            if(_input.isToLabel) {
+                return d[_input._toLabel];
+            } else if(_input.isToCode) {
+                return Object.keys(d).find(key => d[key] === _input._toCode);
+            } else {
+                if(_input.isToProxy) {
+                    return _input._toProxy(d);
+                } else {
+                    return d;
+                }
+            }  
         }
-
-
     } 
     //End of public wicas enum data
 
