@@ -507,7 +507,7 @@ TODO:
                                             <span v-if="auction.status === 'diag'" class="mx-2 auction-done">진단대기</span>
                                             <span v-if="auction.status === 'ask'" class="mx-2 auction-done">신청완료</span>
                                             <div class="d-flex">    
-                                                <span v-if="auction.status === 'ing' && auction.timeLeft" class="mx-2 timer">
+                                                <span v-if="(auction.status === 'ing' || auction.status === 'wait') && auction.timeLeft" class="mx-2 timer">
                                                     <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
                                                     <span v-if="auction.timeLeft.days != '0' ">{{ auction.timeLeft.days }}일 &nbsp; </span>{{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
                                                 </span>
@@ -518,7 +518,7 @@ TODO:
                                                         </span>
                                                     </div>
                                                 </div>
-                                                <span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>
+                                                <!--<span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>-->
                                             </div>
                                         <!--  <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>-->
                                         <!--  <div v-if="isDealer">-->

@@ -180,6 +180,9 @@
                 <div class="mb-3">
                   <label for="email" class="form-label">email</label>
                   <input v-model="loginForm.email" id="email" type="email" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="이메일을 입력해주세요.">
+                  <div v-for="message in validationErrors?.email">
+                      {{ message }}
+                  </div>
                 </div>
                 <!-- 비밀번호 입력 -->
                 <div class="mb-4">
@@ -187,6 +190,9 @@
                     {{ $t("password") }}
                   </label>
                   <input v-model="loginForm.password" id="password" type="password" class="form-control border-0 border-bottom" required autocomplete="current-password" placeholder="비밀번호를 입력해주세요.">
+                  <div v-for="message in validationErrors?.password">
+                      {{ message }}
+                  </div>
                 </div>
                 <!-- 백엔드 오류 메시지 -->
 
@@ -317,57 +323,54 @@ const submitLogin = async () => {
   processing.value = true;
   validationErrors.value = {};
 
-  try {
-    const userData = await store.dispatch('auth/login', loginForm.value);
-    await store.dispatch("auth/getUser");
-    await store.dispatch("auth/getAbilities");
-
-    wica.ntcn(swal).icon('S').title('로그인 성공').fire();
-
-    // 로컬 스토리지에서 carDetails와 게스트 클릭 플래그 확인
-    const localCarDetails = localStorage.getItem('carDetails');
-    const guestClickedAuction = localStorage.getItem('guestClickedAuction');
-
-    // 페이지 리디렉션 조건
-    if (userData.roles.includes('admin')) {
-      router.push({ name: "admin.index" });
-    } else if (userData.roles.includes('dealer')) {
-      router.push({ name: "dealer.index" });
-    }else if (guestClickedAuction !== 'true' &&userData.roles.includes('user')) {
-      router.push({ name: "user.index" });
-    } else if (guestClickedAuction === 'true' && userData.roles.includes('user')) {
-      router.push({ name: "sell" });
-      localStorage.removeItem('guestClickedAuction');  // 플래그 삭제
+  const returnUserData = await store.dispatch('auth/login', loginForm.value);
+  if(returnUserData.isError) {
+    if(returnUserData.isAlert) {
+      wica.ntcn(swal)
+      .title(returnUserData.msg)
+      .icon('E')
+      .alert('계속 될 경우 관리자에게 문의해주세요.');   
     } else {
-      router.push({ name: "home" });
+      //validationErrors.value = returnUserData.rawData.response.data.errors;
+      wica.ntcn(swal)
+      .title(returnUserData.rawData.response.data.message)
+      .icon('E')
+      .alert();   
     }
-  } catch (error) {
-    handleLoginError(error);
-  } finally {
-    processing.value = false;
-  }
-};
-
-
-function handleLoginError(error) {
-  if (!error.response) {
-    wica.ntcn(swal)
-    .title('네트워크 연결이 실패하였습니다.')
-    .icon('E')
-    .alert('계속 될 경우 관리자에게 문의해주세요.');   
   } else {
-    wica.ntcn(swal)
-    .title(error.response.data.message)
-    .icon('E')
-    .alert('계속 될 경우 관리자에게 문의해주세요.');   
-    if (error.response?.data) {
-      validationErrors.value = error.response.data.errors;
+    if(returnUserData.isSuccess) {
+      wica.ntcn(swal).icon('S').title('로그인 성공').fire();
+
+      let userData = returnUserData.data.user;
+      await store.dispatch("auth/getUser");
+      await store.dispatch("auth/getAbilities");
+      await store.dispatch("enums/getData");
+      
+      // 로컬 스토리지에서 carDetails와 게스트 클릭 플래그 확인
+      const localCarDetails = localStorage.getItem('carDetails');
+      const guestClickedAuction = localStorage.getItem('guestClickedAuction');
+
+      // 페이지 리디렉션 조건
+      if (userData.roles.includes('admin')) {
+        router.push({ name: "admin.index" });
+      } else if (userData.roles.includes('dealer')) {
+        router.push({ name: "dealer.index" });
+      }else if (guestClickedAuction !== 'true' &&userData.roles.includes('user')) {
+        router.push({ name: "user.index" });
+      } else if (guestClickedAuction === 'true' && userData.roles.includes('user')) {
+        router.push({ name: "sell" });
+        localStorage.removeItem('guestClickedAuction');  // 플래그 삭제
+      } else {
+        router.push({ name: "home" });
+      }
+    } else {
+      wica.ntcn(swal).icon('E').title('로그인 실패').fire();
     }
   }
-  console.log(error);
-  console.log(error.response?.data.message);
-  console.log(error.response?.data.errors);
-}
+
+  processing.value = false;
+
+};
 
 
 const animationClass = computed(() => {

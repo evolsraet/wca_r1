@@ -113,7 +113,7 @@ const adminGetDepositAuctions = async(
     search_title=''
 ) => {
     const apiList = [];
-    apiList.push(`auctions.status:${status}`)
+    apiList.push(`auctions.status:whereIn:${status}`)
     if(search_title){
         apiList.push(`auctions.car_no:${search_title}`)
     }
