@@ -29,7 +29,7 @@
                             </div>-->
                         <div class="text-end select-option">
                                 <select class="form-select select-rank" aria-label="별점" @change="event => setStarFilter(event.target.value)">
-                                    <option selected>전체</option>
+                                    <option value="all"selected>전체</option>
                                     <option value="1">1점</option>
                                     <option value="2">2점</option>
                                     <option value="3">3점</option>
