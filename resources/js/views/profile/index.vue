@@ -1,3 +1,4 @@
+
 <template>
   <div class="container p-5 mov-wide">
     <form @submit.prevent="updateProfile">
@@ -10,7 +11,7 @@
       </div>
       <div class="form-group">
         <label for="name">가입일자</label>
-        <input type="text" v-model="user.created_at" id="name" class="input-dis form-control" readonly/>
+        <input type="text" v-model="user.created_at" id="createdAt" class="input-dis form-control" readonly/>
       </div>
       <div class="form-group">
         <label for="name">이름</label>
@@ -18,7 +19,7 @@
       </div>
       <div class="form-group">
         <label for="name">전화번호</label>
-        <input type="text" class="form-control" />
+        <input type="text" id="phone" v-model="profile.phone" class="form-control" />
       </div>
       <div class="form-group">
         <label for="email">이메일</label>
@@ -40,7 +41,7 @@
         <div class="form-group">
           <label for="dealer">소속</label>
           <input type="text" v-model="profile.company" class="form-control" />
-        </div>
+    </div>
         <div class="form-group">
           <label for="dealer">소속상사 주소 </label>
           <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_post" class="input-dis form-control" readonly/>
@@ -84,7 +85,9 @@ import useAuth from '@/composables/auth';
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import { previousFriday } from 'date-fns';
+import useUsers from "@/composables/users";
 
+const { getUser , user } = useUsers();
 const router = useRouter();
 const photoUrl = ref(profileDom);
 const store = useStore();
@@ -95,6 +98,7 @@ const profile = ref({
   password: '',
   password_confirmation : '',
   email: '',
+  phone: '',
   company: '',
   company_post : '',
   company_addr1 : '',
@@ -105,16 +109,16 @@ const profile = ref({
   introduce : '',
   file_user_photo: null
 });
-const user = computed(() => store.getters['auth/user']);
+const userId = ref(null);
+const isDealer = ref(false);
 const { openPostcode , closePostcode , wica , wicac } = cmmn();
-const isDealer = computed(() => user.value?.roles?.includes('dealer'));
+
 
 const triggerFileInput = () => {
   fileInput.value.click();
 };
 
 const fileInput = ref(null);
-let userId ;
 
 const onFileChange = (e) => {
   const file = e.target.files[0];
@@ -130,7 +134,7 @@ const onFileChange = (e) => {
 };
 
 const updateProfile = async () => {
-  console.log(profile.value);
+
   let payload = {
       user : {
         name : profile.value.name,       
@@ -157,7 +161,9 @@ const updateProfile = async () => {
   console.log(JSON.stringify(payload));
   const formData = new FormData();
   formData.append('user', JSON.stringify(payload.user));
-  formData.append('dealer', JSON.stringify(payload.dealer));
+  if(isDealer){
+    formData.append('dealer', JSON.stringify(payload.dealer));
+  }
 
   if (profile.value.file_user_photo) {
     formData.append('file_user_photo', profile.value.file_user_photo);
@@ -168,7 +174,7 @@ const updateProfile = async () => {
     .callback(async function(result) {
         if (result.isOk) {
             wicac.conn()
-            .url(`/api/users/${userId}`)
+            .url(`/api/users/${userId.value}`)
             .param(formData)
             .multipart()
             .callback(async function(result) {
@@ -179,7 +185,7 @@ const updateProfile = async () => {
                       showConfirmButton: false,
                       timer: 3000,
                   });
-                  
+                  //setUserProfileData();
                   location.reload();
                 } 
 
@@ -192,31 +198,36 @@ const updateProfile = async () => {
 
 const setUserProfileData = async () => {
 
-  await store.dispatch('auth/getUser');
-  const user = store.getters['auth/user'];
+  userId.value = store.getters['auth/user'].id;
+  
+  await getUser(userId.value);
+  //console.log(user);
 
-  console.log(user);
-  userId = user.id;
+  if (user.value?.roles?.includes('dealer')) {
+    isDealer.value = true;
+  } else {
+    isDealer.value = false;
+  }
 
   if (user) {
-    profile.value.name = user.name;
-    profile.value.email = user.email;
+    profile.value.name = user.value.name;
+    profile.value.phone = user.value.phone;
+    profile.value.email = user.value.email;
     if (isDealer.value) {
-      profile.value.dealer_name = user.dealer.name;
-      profile.value.company = user.dealer.company;
-      profile.value.company_post = user.dealer.company_post;
-      profile.value.company_addr1 = user.dealer.company_addr1;
-      profile.value.company_addr2 = user.dealer.company_addr2;
-      profile.value.receive_post = user.dealer.receive_post;
-      profile.value.receive_addr1 = user.dealer.receive_addr1;
-      profile.value.receive_addr2 = user.dealer.receive_addr2;
-      profile.value.introduce = user.dealer.introduce;
+      profile.value.dealer_name = user.value.dealer.name;
+      profile.value.company = user.value.dealer.company;
+      profile.value.company_post = user.value.dealer.company_post;
+      profile.value.company_addr1 = user.value.dealer.company_addr1;
+      profile.value.company_addr2 = user.value.dealer.company_addr2;
+      profile.value.receive_post = user.value.dealer.receive_post;
+      profile.value.receive_addr1 = user.value.dealer.receive_addr1;
+      profile.value.receive_addr2 = user.value.dealer.receive_addr2;
+      profile.value.introduce = user.value.dealer.introduce;
     }
-    if (user.files) {
-      console.log("확인");
-      photoUrl.value = user.files.file_user_photo[0].original_url;
+    if (user.value.files) {
+      photoUrl.value = user.value.files.file_user_photo[0].original_url;
     }
-  }
+  } 
 };
 
 function editPostCode(elementName) {

@@ -122,12 +122,10 @@ export default function useUsers() {
             const result = await wicac.conn()
             .url(`/api/users/${id}`)
             .callback(function(result) {
-                return result
+                user.value = result.data;
+                return result.data;
             })
             .get();
-
-            //const response = await axios.get('/api/users/' + id);
-            return result.data;
         } catch (error) {
             throw error;
         }
