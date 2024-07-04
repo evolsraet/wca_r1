@@ -258,7 +258,7 @@
                 <router-link :to="{ name: 'home'}" class="nav-link mx-3" exact-active-class="active-link">내차조회</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3-review" exact-active-class="active-link">이용후기</router-link>
+                <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3-review" exact-active-class="active-link" id="nav-all-review">이용후기</router-link>
               </li>
               <li class="nav-item">
                 <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
@@ -431,6 +431,7 @@
 
     let navAuction = document.getElementById('nav-auction');
     let navReview = document.getElementById('nav-review');
+    let navAllReview = document.getElementById('nav-all-review');
 
     const content = document.querySelector('.toggle-nav-content');
     content.addEventListener('scroll', checkScrollGradient);
@@ -479,7 +480,7 @@
   window.addEventListener('resize', updateIsMobile);
 
   watch(() => route.name, (to, from) => {
-      //console.log('라우터 이름:', to);
+      console.log('라우터 이름:', to);
 
       //매물
       if (to === 'AuctionDetail' || to === 'completionsuccess') {
@@ -493,13 +494,24 @@
       }
 
       //이용후기
-      if (to === 'user.edit-review' || to === 'index.allreview' || to == "user.create-review") {
+      if (to === 'user.edit-review' || to === 'index.allreview' || to == "user.create-review" || to == "user.review-detail") {
         nextTick(() => {
           navReview.classList.add('active-link');
         });
       } else {
         if(navReview){
           navReview.classList.remove('active-link');
+        }
+      }
+
+      //이용후기
+      if (to == "user.review-detail") {
+        nextTick(() => {
+          navAllReview.classList.add('active-link');
+        });
+      } else {
+        if(navAllReview){
+          navAllReview.classList.remove('active-link');
         }
       }
     }, { immediate: true });
