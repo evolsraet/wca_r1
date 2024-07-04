@@ -750,7 +750,7 @@ export function cmmn() {
                 showCancelButton: isConfirm,
                 showCloseButton: input._isUseClose,
                 confirmButtonText: input._btnOkLabel,
-                //confirmButtonColor: '#ef4444',
+                confirmButtonColor: '#ef4444',
                 cancelButtonText: input._btnCancelLabel,
                 //cancelButtonColor: '#ef4444', 
                 reverseButtons: input._isRight,

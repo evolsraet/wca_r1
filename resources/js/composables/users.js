@@ -184,7 +184,9 @@ export default function useUsers() {
         console.log(JSON.stringify(payload));
         const formData = new FormData();
         formData.append('user', JSON.stringify(payload.user));
-        formData.append('dealer', JSON.stringify(payload.dealer));
+        if(editForm.role == "dealer"){
+            formData.append('dealer', JSON.stringify(payload.dealer));
+        }
         //formData.append('_method', 'PUT');
         
         if (editForm.file_user_photo) {
