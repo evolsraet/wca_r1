@@ -119,8 +119,9 @@ export default function useUsers() {
 
     const getUser = async (id) => {
         try {
-            const result = await wicac.conn()
+            return wicac.conn()
             .url(`/api/users/${id}`)
+            .log()
             .callback(function(result) {
                 user.value = result.data;
                 return result.data;
