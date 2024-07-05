@@ -30,7 +30,6 @@ class BidResource extends JsonResource
                 $parentArray[$key] = $this->$key->toDatetimeString();
             }
         }
-
         // 관계 리소스로 리턴
         $this->relationResource($request, $parentArray);
 

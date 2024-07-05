@@ -111,7 +111,7 @@ class UserService
             return response()->api(
                 (new UserResource($item))
                     ->additional([
-                        'file_data' => $file_result
+                        'file_result' => $file_result
                     ])
             );
         } catch (\Exception $e) {
@@ -241,7 +241,7 @@ class UserService
         return response()->api(
             (new UserResource($item))
                 ->additional([
-                    // 'file_result' => $file_result, // media 로 추가된 부분 응답이 온다
+                    'file_result' => $file_result, // media 로 추가된 부분 응답이 온다
                     // '_logs' => $logs,
                     // '_post_files' => $request->files,
                 ])

@@ -67,8 +67,8 @@ class BidService
             }
         } elseif ($method == 'update') {
             $this->modifyOnlyMe($result);
-            unset($result->user_id);
-            unset($result->auction_id);
+            unset($request->user_id);
+            unset($request->auction_id);
         } elseif ($method == 'destroy') {
             $this->modifyOnlyMe($result);
         }

@@ -164,8 +164,8 @@ class AuthTest extends TestCase
         ]);
 
         // 파일이 올바르게 저장되었는지 확인
-        $fileId = $response->json()['file_data'][0]['id'];
-        $fileName = $response->json()['file_data'][0]['file_name'];
+        $fileId = $response->json()['file_result'][0]['id'];
+        $fileName = $response->json()['file_result'][0]['file_name'];
 
         $this->assertEquals('file_user_sign.pdf', $fileName);
 
@@ -244,9 +244,9 @@ class AuthTest extends TestCase
         ]);
 
         // 파일이 올바르게 저장되었는지 확인
-        dd($response->json());
-        $fileId = $response->json()['file_data'][0]['id'];
-        $fileName = $response->json()['file_data'][0]['file_name'];
+        // dd($response->json());
+        $fileId = $response->json()['file_result'][0]['id'];
+        $fileName = $response->json()['file_result'][0]['file_name'];
 
         $this->assertEquals('file_user_sign.pdf', $fileName);
         // Storage::disk('media_folder')->assertExists("{$fileId}/{$fileName}");
