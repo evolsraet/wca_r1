@@ -496,22 +496,26 @@
       //이용후기
       if (to === 'user.edit-review' || to === 'index.allreview' || to == "user.create-review" || to == "user.review-detail") {
         nextTick(() => {
-          navReview.classList.add('active-link');
+          if(navReview!=null && navReview.classList!=null)
+            navReview.classList.add('active-link');
         });
       } else {
         if(navReview){
-          navReview.classList.remove('active-link');
+          if(navReview!=null && navReview.classList!=null)
+            navReview.classList.remove('active-link');
         }
       }
 
       //이용후기
       if (to == "user.review-detail") {
         nextTick(() => {
-          navAllReview.classList.add('active-link');
+          if(navAllReview!=null && navAllReview.classList!=null)
+            navAllReview.classList.add('active-link');
         });
       } else {
         if(navAllReview){
-          navAllReview.classList.remove('active-link');
+          if(navAllReview!=null && navAllReview.classList!=null)
+            navAllReview.classList.remove('active-link');
         }
       }
     }, { immediate: true });

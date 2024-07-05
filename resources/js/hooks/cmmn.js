@@ -526,6 +526,9 @@ export function cmmn() {
                     if (error.response.data.status === 'fail') {
                         if(error.response.status == 422) {
                             rstData.msg = error.response.data.errors;
+                        } else if(error.response.status == 429) {
+                            //TODO: 이부분은 어떻게 하는게 나을까.
+                            alert('단시간 많은 호출로 인해 요청이 거부되었습니다.\n차단이 해제되려면 약 1분 뒤 다시 시도해주세요.');
                         } else {
                             rstData.msg = error.response.data.message;
                             if(error.response.statusText != 'Bad Request') {

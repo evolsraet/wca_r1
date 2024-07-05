@@ -339,7 +339,7 @@ const openAlarmModal = () => {
 };
 
 const submitCarInfoIsOk = () => {
-
+/*
   if(!user.value.name){
     const text= `<div class="enroll_box" style="position: relative;">
                    <img src="${carInfo}" alt="자동차 이미지" width="160" height="160">
@@ -359,6 +359,12 @@ const submitCarInfoIsOk = () => {
   else{
     submitCarInfo();
   }
+    */
+  //TODO: 여기는 위에보단 아래 유형이 맞지 않나?
+  if(submitCarInfo()) {
+    wica.ntcn(swal).icon('E').title('필수 입력정보가 필요합니다.').fire();
+  }
+
 }
   const closeModal = () => {
     isModalOpen.value = false;

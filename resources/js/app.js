@@ -16,7 +16,8 @@ import 'vue-select/dist/vue-select.css';
 
 const app = createApp({
     created() {
-        useAuth().getUser()
+        //TODO: 이건 호출하지 않아도 무방한거 같은데?
+        //useAuth().getUser() 
     }
 });
 

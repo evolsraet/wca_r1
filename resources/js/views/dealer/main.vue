@@ -257,18 +257,22 @@ onMounted(async () => {
     await getBids();
     calculateMyBidsCount();
     await getAuctions();
-    await fetchFilteredViewBids();
+    await fetchFilteredViewBids();    
     setTimeout(() => {
-        item1.value.classList.add('visible');
+        if(item1!=null && item1.value!=null && item1.value.classList!=null) 
+            item1.value.classList.add('visible');
     }, 0);
     setTimeout(() => {
-        item2.value.classList.add('visible');
+        if(item2!=null && item2.value!=null && item2.value.classList!=null)
+            item2.value.classList.add('visible');
     }, 200);
     setTimeout(() => {
-        item3.value.classList.add('visible');
+        if(item3!=null && item3.value!=null && item3.value.classList!=null)
+            item3.value.classList.add('visible');
     }, 400);
     setTimeout(() => {
-        item4.value.classList.add('visible');
+        if(item4!=null && item4.value!=null && item4.value.classList!=null)
+            item4.value.classList.add('visible');
     }, 800);
 });
 </script>
