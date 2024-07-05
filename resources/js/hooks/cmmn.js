@@ -280,6 +280,10 @@ export function cmmn() {
             return _this;
         },   
         get : function() {
+            if(wicaData.is('wicac_err_429')) {
+                console.log('cmmn wicac [ get() ] 함수 선언 실패 : 에러 429 발생으로 거부됨 ');
+                return; 
+            }
             let _this = this;
             if(_this._input._isLogDetail) console.log('cmmn wicac [ get() ] 함수 선언 ');
             _this._input._isGet = true;
@@ -291,6 +295,10 @@ export function cmmn() {
             });
         },
         post : function() {
+            if(wicaData.is('wicac_err_429')) {
+                console.log('cmmn wicac [ post() ] 함수 선언 실패 : 에러 429 발생으로 거부됨 ');
+                return; 
+            }
             let _this = this;
             if(_this._input._isLogDetail) console.log('cmmn wicac [ post() ] 함수 선언 ');
             _this._input._isPost = true;
@@ -302,6 +310,10 @@ export function cmmn() {
             });
         },
         put : function() {
+            if(wicaData.is('wicac_err_429')) {
+                console.log('cmmn wicac [ put() ] 함수 선언 실패 : 에러 429 발생으로 거부됨 ');
+                return; 
+            }
             let _this = this;
             if(_this._input._isLogDetail) console.log('cmmn wicac [ put() ] 함수 선언 ');
             _this._input._isPut = true;
@@ -313,6 +325,10 @@ export function cmmn() {
             });
         },
         delete : function() {
+            if(wicaData.is('wicac_err_429')) {
+                console.log('cmmn wicac [ delete() ] 함수 선언 실패 : 에러 429 발생으로 거부됨 ');
+                return; 
+            }
             let _this = this;
             if(_this._input._isLogDetail) console.log('cmmn wicac [ delete() ] 함수 선언 ');
             _this._input._isDelete = true;
@@ -527,8 +543,13 @@ export function cmmn() {
                         if(error.response.status == 422) {
                             rstData.msg = error.response.data.errors;
                         } else if(error.response.status == 429) {
-                            //TODO: 이부분은 어떻게 하는게 나을까.
-                            alert('단시간 많은 호출로 인해 요청이 거부되었습니다.\n차단이 해제되려면 약 1분 뒤 다시 시도해주세요.');
+                            if(!wicaData.is('wicac_err_429')) {
+                                wicaData.save('wicac_err_429',true);
+                                alert('단시간 많은 호출로 인해 요청이 거부되었습니다.\n차단이 해제되려면 약 1분 뒤 다시 시도해주세요.');
+                                setTimeout(function() {
+                                    wicaData.del('wicac_err_429');
+                                },800);
+                            }
                         } else {
                             rstData.msg = error.response.data.message;
                             if(error.response.statusText != 'Bad Request') {
@@ -1227,6 +1248,98 @@ export function cmmn() {
     } 
     //End of public wicas enum data
 
+    //public wicaData
+    /**
+     
+        # 필수 선언
+            
+            import { cmmn } from '@/hooks/cmmn';
+            const { wicaData } = cmmn();
+
+        # 사용 방법
+
+            // wicaData 내 모든 저장 값 초기화(삭제)
+            wicaData.clear();
+
+            // key 존재 여부 확인(true,false 리턴)
+            wicaData.is('key1');
+
+            // key 값 저장하기 (각 유형별 저장)
+            wicaData.save('key1',{d1:11,d2:'bb'});
+            wicaData.save('key2',['d1','d2','d3']);
+            wicaData.save('key3',100);
+            wicaData.save('key4','data1');
+            wicaData.save('key5',true);
+
+            // key 값 불러오기(저장 유형에 따라 리턴)
+            wicaData.load('key1'); // {d1:11,d2:'bb'}
+            wicaData.load('key2'); // ['d1','d2','d3']
+            wicaData.load('key3'); // 숫자 100
+            wicaData.load('key4'); // 문자 'data1'
+            wicaData.load('key5'); // true,false
+      
+     */
+    const wicaData = {
+        _publicKey : 'wicald_data_',
+        _saveInfo : {},
+        /*
+        data : function() {
+            let newObj = Object.create(this);
+            return newObj;
+        },
+        */
+        save : function(key,val) {
+            if(Array.isArray(val)) {
+                this._saveInfo[key] = {type:'array'};
+                window.localStorage.setItem(this._publicKey+key, JSON.stringify(val));
+            } else if(typeof val === 'object' && val !== null) {
+                this._saveInfo[key] = {type:'object'};
+                window.localStorage.setItem(this._publicKey+key, JSON.stringify(val));
+            } else if(typeof val === 'number') {
+                this._saveInfo[key] = {type:'number'};
+                window.localStorage.setItem(this._publicKey+key,val);
+            } else if(typeof val === 'boolean') {
+                this._saveInfo[key] = {type:'boolean'};
+                window.localStorage.setItem(this._publicKey+key,val);
+            } else {
+                this._saveInfo[key] = {type:'default'};
+                window.localStorage.setItem(this._publicKey+key,val);
+            }            
+        },
+        load : function(key) {
+            if(this.is(key)) {
+                let ty = this._saveInfo[key].type;
+                if(ty == 'object' || ty == 'array') {
+                    return JSON.parse(window.localStorage.getItem(this._publicKey+key));
+                } else if(ty == 'number') {
+                    return parseInt(window.localStorage.getItem(this._publicKey+key));
+                } else if(ty == 'boolean') {
+                    return window.localStorage.getItem(this._publicKey+key).toLowerCase()==='true';
+                } else {
+                    return window.localStorage.getItem(this._publicKey+key);
+                }
+            } else {
+                return null;
+            }
+        },
+        del : function(key) {
+            if(this.is(key))
+                window.localStorage.removeItem(this._publicKey+key);
+        },
+        clear : function() {
+            for(const key in window.localStorage) {
+                if(window.localStorage.hasOwnProperty(key) && key.search(this._publicKey) !== -1) {
+                    console.log(key);
+                    window.localStorage.removeItem(key);
+                }
+            }
+        },
+        is : function(key) {
+            return window.localStorage.hasOwnProperty(this._publicKey+key);
+        }
+    }
+    //End of //public wicaData
+    
     return {
       numberToKoreanUnit,
       formatCurrency,
@@ -1240,5 +1353,6 @@ export function cmmn() {
       wicac,
       wicaLabel,
       wicas,
+      wicaData,
     }
   }
