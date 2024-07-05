@@ -119,15 +119,14 @@ export default function useUsers() {
 
     const getUser = async (id) => {
         try {
-            const result = await wicac.conn()
+            return wicac.conn()
             .url(`/api/users/${id}`)
+            .log()
             .callback(function(result) {
-                return result
+                user.value = result.data;
+                return result.data;
             })
             .get();
-
-            //const response = await axios.get('/api/users/' + id);
-            return result.data;
         } catch (error) {
             throw error;
         }
@@ -186,7 +185,9 @@ export default function useUsers() {
         console.log(JSON.stringify(payload));
         const formData = new FormData();
         formData.append('user', JSON.stringify(payload.user));
-        formData.append('dealer', JSON.stringify(payload.dealer));
+        if(editForm.role == "dealer"){
+            formData.append('dealer', JSON.stringify(payload.dealer));
+        }
         //formData.append('_method', 'PUT');
         
         if (editForm.file_user_photo) {

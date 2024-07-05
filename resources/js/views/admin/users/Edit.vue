@@ -88,9 +88,7 @@
                         <div class="mb-3">
                             <label for="email" class="form-label">승인여부</label>
                             <select class="form-select" :v-model="editForm.status" @change="changeStatus($event)" id="status">
-                                <option value="ok">정상</option>
-                                <option value="ask">심사중</option>
-                                <option value="reject">거절</option>
+                                <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == editForm.status">{{ label }}</option>
                             </select>
                         </div>
                         <div class="mb-3">
@@ -249,6 +247,7 @@ import useRoles from "@/composables/roles";
 import useUsers from "@/composables/users";
 import { useForm, useField, defineRule } from "vee-validate";
 import { required, min } from "@/validation/rules";
+import { useStore } from 'vuex';
 import { cmmn } from '@/hooks/cmmn';
 
 defineRule("required", required);
@@ -256,12 +255,13 @@ defineRule("min", min);
 
 const route = useRoute();
 const { roleList, getRoleList } = useRoles();
-const { openPostcode , closePostcode} = cmmn();
+const { openPostcode , closePostcode, wicas} = cmmn();
 
 const {
     editForm,
     updateUser,
     getUser,
+    user,
     validationErrors,
     isLoading,
 } = useUsers();
@@ -275,73 +275,58 @@ let created_at;
 let email;
 let updated_at;
 
+const store = useStore();
+let statusLabel;
+
 // Define a validation schema
 const schema = {
     name: { required: "이름은 필수 항목입니다."},
 
 };
 
-/**
-// Create a form context with the validation schema
-const { validate, errors, resetForm } = useForm({ validationSchema: schema });
-// Define actual fields for validation
-const { value: name } = useField("name", null, { initialValue: "" });
-
-const { value: status } = useField("status", null, { initialValue: "" });
-const { value: role } = useField("role", null, { initialValue: "" });
-const { value: company } = useField("company", null, { initialValue: "" });
-const { value: company_post } = useField("company_post", null, { initialValue: "" });
-const { value: company_addr1 } = useField("company_addr1", null, { initialValue: "" });
-const { value: company_addr2 } = useField("company_addr2", null, { initialValue: "" });
-const { value: receive_post } = useField("receive_post", null, { initialValue: "" });
-const { value: receive_addr1 } = useField("receive_addr1", null, { initialValue: "" });
-const { value: receive_addr2 } = useField("receive_addr2", null, { initialValue: "" }); */
-const introduce = ref("");
-const dealer = reactive({
-
-})
-
 onMounted(async () => {
-    const response = await getUser(route.params.id);
+    statusLabel = wicas.enum(store).users();
+    await getUser(route.params.id);
+    console.log(user.value);
     await getRoleList();
-    console.log(response);
     /** 
     for (const roleName of response.roles) {
         const findRoleId = roleList.value.find(role => role.name === roleName);
         user.role = findRoleId.id;
     }*/
+   
     watchEffect(() => {
-        editForm.name = response.name;
-        created_at = response.created_at;
-        updated_at = response.updated_at;
-        email = response.email;
-        document.getElementById("status").value = response.status;
-        document.getElementById("role").value = response.roles[0];
-        editForm.status = response.status;
-        editForm.role = response.roles[0];
-        editForm.phone = response.phone;
-        if(response.files.file_user_photo){
-            editForm.file_user_photo_name = response.files.file_user_photo[0].name;
+        editForm.name = user.value.name;
+        created_at = user.value.created_at;
+        updated_at = user.value.updated_at;
+        email = user.value.email;
+        document.getElementById("status").value = user.value.status;
+        document.getElementById("role").value = user.value.roles[0];
+        editForm.status = user.value.status;
+        editForm.role = user.value.roles[0];
+        editForm.phone = user.value.phone;
+        if(user.value.files.file_user_photo){
+            editForm.file_user_photo_name = user.value.files.file_user_photo[0].name;
         }
-        if(response.files.file_user_biz){
-            editForm.file_user_biz_name = response.files.file_user_biz[0].name;
+        if(user.value.files.file_user_biz){
+            editForm.file_user_biz_name = user.value.files.file_user_biz[0].name;
         }
-        if(response.files.file_user_sign){
-            editForm.file_user_sign_name = response.files.file_user_sign[0].name;
+        if(user.value.files.file_user_sign){
+            editForm.file_user_sign_name = user.value.files.file_user_sign[0].name;
         }
-        if(response.files.file_user_cert){
-            editForm.file_user_cert_name = response.files.file_user_cert[0].name;
+        if(user.value.files.file_user_cert){
+            editForm.file_user_cert_name = user.value.files.file_user_cert[0].name;
         }
         
-        if(response.dealer){
-            editForm.company = response.dealer.company;
-            editForm.company_post = response.dealer.company_post;
-            editForm.company_addr1 = response.dealer.company_addr1;
-            editForm.company_addr2 = response.dealer.company_addr2;
-            editForm.introduce = response.dealer.introduce;
-            editForm.receive_post = response.dealer.receive_post;
-            editForm.receive_addr1 = response.dealer.receive_addr1;
-            editForm.receive_addr2 = response.dealer.receive_addr2;
+        if(user.value.dealer){
+            editForm.company = user.value.dealer.company;
+            editForm.company_post = user.value.dealer.company_post;
+            editForm.company_addr1 = user.value.dealer.company_addr1;
+            editForm.company_addr2 = user.value.dealer.company_addr2;
+            editForm.introduce = user.value.dealer.introduce;
+            editForm.receive_post = user.value.dealer.receive_post;
+            editForm.receive_addr1 = user.value.dealer.receive_addr1;
+            editForm.receive_addr2 = user.value.dealer.receive_addr2;
         } 
 
     })
@@ -387,6 +372,7 @@ function editPostCodeReceive(elementName) {
 
 function changeStatus(event) {
     editForm.status = event.target.value;
+    isDealer = true;
 }
 
 function changeRoles(event) {

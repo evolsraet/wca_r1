@@ -37,6 +37,7 @@
                     class="menu-item mt-2" 
                     :class="{ active: isActive('users.index') }"
                     @click="toggleNavbar"
+                    id="adminNav-user"
                 >
                     <span class="tc-gray menu-text">회원</span>
                 </router-link>
@@ -45,6 +46,7 @@
                     class="menu-item mt-2" 
                     :class="{ active: isActive('deposit.index') }"
                     @click="toggleNavbar"
+                    id="adminNav-deposit"
                 >
                     <span class="tc-gray menu-text">입금</span>
                 </router-link>
@@ -53,6 +55,7 @@
                     class="menu-item mt-2" 
                     :class="{ active: isActive('auctions.index') }"
                     @click="toggleNavbar"
+                    id="adminNav-auction"
                 >
                     <span class="tc-gray menu-text">매물</span>
                 </router-link>
@@ -61,6 +64,7 @@
                     class="menu-item mt-2" 
                     :class="{ active: isActive('review.index') }"
                     @click="toggleNavbar"
+                    id="adminNav-review"
                 >
                     <span class="tc-gray menu-text">후기</span>
                 </router-link>
@@ -69,7 +73,7 @@
     </div>
 </template>
 <script setup>
-import { computed, ref } from 'vue';
+import { computed, ref , onMounted , watch , nextTick} from 'vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import useAuth from "@/composables/auth";
@@ -79,6 +83,7 @@ const user = computed(() => store.state.auth.user);
 const { processing, logout } = useAuth();
 const route = useRoute();
 const router = useRouter();
+const pageName = ref('');
 
 const isMenuOpen = ref(false);
 
@@ -98,6 +103,40 @@ const isAdminPage = computed(() => route.path === '/admin');
 function toggledash() {
     router.push('/admin');  // 이 부분에서 '/admin' 페이지로 리디렉션
 }
+
+function addSideBar(element, routeName, to){
+    
+    //console.log(element);
+    
+    if(to === routeName){
+        nextTick(() => {
+            element.classList.remove('nav-link', 'side-navbar-link');
+            element.classList.add('router-link-active', 'router-link-exact-active', 'active');
+        });
+    } else if(pageName.value != routeName.split('.')[0]){
+        element.classList.remove('router-link-active', 'router-link-exact-active', 'active');
+        element.classList.add('nav-link', 'side-navbar-link');
+    } 
+}
+
+onMounted(() => {
+
+let user = document.getElementById('adminNav-user');
+let review = document.getElementById('adminNav-review');
+let deposit = document.getElementById('adminNav-deposit');
+let auction = document.getElementById('adminNav-auction');
+
+watch(() => route.name, (to, from) => {
+    console.log('라우터 이름:', to);
+    pageName.value = to.split('.')[0];
+    addSideBar(user,'users.edit',to);
+    addSideBar(deposit,'deposit.approve',to);
+    addSideBar(auction,'auction.approve',to);
+    addSideBar(review,'review.approve',to);
+
+}, { immediate: true });
+
+})
 
 </script>
 

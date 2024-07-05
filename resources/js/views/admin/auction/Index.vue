@@ -13,15 +13,7 @@
             <div class="d-flex justify-content-end">
                 <div class="text-end select-option">
                     <select class="form-select select-rank" aria-label="상태" @change="event => setFilter(event.target.value)">
-                        <option value="all" selected>전체</option>
-                        <option value="dlvr">탁송진행</option>
-                        <option value="done">경매완료</option>
-                        <option value="chosen">선택완료</option>
-                        <option value="wait">선택대기</option>
-                        <option value="ing">경매진행</option>
-                        <option value="status">진단대기</option>
-                        <option value="ask">신청완료</option>
-                        <option value="cancel">취소</option>
+                        <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == 'all'">{{ label }}</option>
                     </select>
                 </div>
             </div>
@@ -102,14 +94,14 @@
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <div>
-                                    <p v-if="auction.status === 'chosen'" class="ml-auto"><span class="blue-box02 bg-opacity-50">{{ getStatusLabel(auction.status) }}</span></p>
-                                    <p v-if="auction.status === 'cancel'" class="ml-auto"><span class="box bg-secondary">{{ getStatusLabel(auction.status) }}</span></p>
-                                    <p v-if="auction.status === 'wait'" class="ml-auto"><span class="blue-box02">{{ getStatusLabel(auction.status) }}</span></p>
-                                    <p v-if="auction.status === 'diag'" class="ml-auto"><span class="box bg-success bg-opacity-75">{{ getStatusLabel(auction.status) }}</span></p>
-                                    <p v-if="auction.status === 'ask'" class="ml-auto"><span class="box bg-warning bg-opacity-75">{{ getStatusLabel(auction.status) }}</span></p>
-                                    <p v-if="auction.status === 'ing'" class="ml-auto"><span class="box bg-danger">{{ getStatusLabel(auction.status) }}</span></p>
-                                    <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ getStatusLabel(auction.status) }}</span></p>
-                                    <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ getStatusLabel(auction.status) }}</span></p>
+                                    <p v-if="auction.status === 'chosen'" class="ml-auto"><span class="blue-box02 bg-opacity-50">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                    <p v-if="auction.status === 'cancel'" class="ml-auto"><span class="box bg-secondary">{{  wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                    <p v-if="auction.status === 'wait'" class="ml-auto"><span class="blue-box02">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                    <p v-if="auction.status === 'diag'" class="ml-auto"><span class="box bg-success bg-opacity-75">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                    <p v-if="auction.status === 'ask'" class="ml-auto"><span class="box bg-warning bg-opacity-75">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                    <p v-if="auction.status === 'ing'" class="ml-auto"><span class="box bg-danger">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                    <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                    <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
@@ -161,10 +153,15 @@
     import useAuctions from '@/composables/auctions';
     import useCategories from '@/composables/categories';
     import { useAbility } from '@casl/vue';
+    import { useStore } from 'vuex';
+    import { cmmn } from '@/hooks/cmmn';
+
+    const { wicas } = cmmn();
+    const store = useStore();
     let hit = 0;
     const orderColumn = ref('');
     const orderDirection = ref('');
-    const { auctionsData, pagination, adminGetAuctions, deleteAuction,getStatusLabel } = useAuctions();
+    const { auctionsData, pagination, adminGetAuctions, deleteAuction } = useAuctions();
     const { categoryList, getCategoryList } = useCategories();
     const { can } = useAbility();
     const currentStatus = ref('all'); 
@@ -173,6 +170,8 @@
         created_at: { direction: '', column: '', hit: 0 },
         car_no: { direction: '', column: '', hit: 0 },
     };
+    let statusLabel;
+
     /**
     const fetchAuctions = async (page = 1) => {
         try {
@@ -183,6 +182,7 @@
     }; */
     
     onMounted(() => {
+        statusLabel = wicas.enum(store).addFirst('all','전체').auctions();
         fetchAuctions();
         getCategoryList();
     });
@@ -192,7 +192,6 @@
         currentStatus.value = status;
         fetchAuctions();
     }
-
 
     function loadPage(page) { // 페이지 로드
         if (page < 1 || page > pagination.value.last_page) return;

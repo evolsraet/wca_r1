@@ -29,7 +29,7 @@
                             </div>-->
                         <div class="text-end select-option">
                                 <select class="form-select select-rank" aria-label="별점" @change="event => setStarFilter(event.target.value)">
-                                    <option selected>전체</option>
+                                    <option value="all"selected>전체</option>
                                     <option value="1">1점</option>
                                     <option value="2">2점</option>
                                     <option value="3">3점</option>
@@ -255,7 +255,7 @@ const { can } = useAbility();
 const { getAllReview , adminDeleteReview , reviewsData , reviewPagination } = initReviewSystem(); 
 const currentStatus = ref('all');
 const currentPage = ref(1);
-const currentStar = ref('');
+const currentStar = ref('all');
 const orderingState = {
     'created_at': { direction: '', column: 'created_at', hit: 0 },
     'id': { direction: '', column: 'id', hit: 0 },

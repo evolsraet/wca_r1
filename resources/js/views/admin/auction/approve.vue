@@ -42,12 +42,7 @@
                 <div class="card-body">
                   <p class="tc-light-gray">상태</p>
                   <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
-                    <option value="done">경매완료</option>
-                    <option value="chosen">선택완료</option>
-                    <option value="wait">선택대기</option>
-                    <option value="ing">경매진행</option>
-                    <option value="diag">진단대기</option>
-                    <option value="ask">신청완료</option>
+                    <option v-for="(label, value) in statusLabel" :key="value" :value="value">{{ label }}</option>
                   </select>
                 </div>
                 <div class="card-body">
@@ -123,9 +118,14 @@
                   <p class="d-flex justify-content-end tc-light-gray p-2">{{ finalPriceFeeKorean }}</p>
                 </div>
                 <div></div>
-                <!--
-                <p class="tc-light-gray ms-2">진단평가 자료 정보</p>
-                <file v-if="auctionDetails.data.status === 'ask'" @file-attached="handleFileAttachment" />-->
+                <div class="mb-3">
+                  <label for="user-title" class="form-label">위임장 or 소유자 인감 증명서</label>
+                  <input type="file" @change="handleFileUploadOwner" ref="fileInputOwner" style="display:none">
+                  <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
+                      파일 첨부
+                  </button>
+                  <div class="text-start mb-5 tc-light-gray" v-if="userData.file_user_owner_name">매매업체 대표증 / 종사원증 : {{ userData.file_user_owner_name }}</div>
+                </div>
               </div>
             </div>
           </div>
@@ -351,7 +351,9 @@
 </template>
 
 <script setup>
+
 import { ref, onMounted, reactive, watchEffect ,onBeforeUnmount , nextTick } from 'vue';
+import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 import BankModal from '@/views/modal/bank/BankModal.vue';
 import file from "@/components/file.vue";
@@ -360,6 +362,7 @@ import { cmmn } from '@/hooks/cmmn';
 import hideIcon from '../../../../../resources/img/Icon-black-down.png';
 import showIcon from '../../../../../resources/img/Icon-black-up.png';
 import { regions, updateDistricts } from '@/hooks/selectBOX.js';
+
 const showDetails = ref(false); 
 const isActive = ref(false);
 const isMobileView = ref(window.innerWidth <= 640);
@@ -390,6 +393,12 @@ const auction = reactive({
     hope_price: '',
     final_price: '',
 }); 
+
+const userData = reactive({
+  file_user_owner : '',
+  file_user_owner_name : '',
+});
+
 const route = useRoute();
 const { getAuctionById, updateAuctionStatus, isLoading, updateAuction } = useAuctions();
 const auctionId = parseInt(route.params.id); 
@@ -398,15 +407,20 @@ const isVisible = ref(false);
 const showBottomSheet = ref(true);
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
 const isFileAttached = ref(false);
-const { openPostcode , closePostcode, amtComma, formatCurrency } = cmmn();
+const { openPostcode , closePostcode, amtComma, formatCurrency, wicas } = cmmn();
 const successFeeKorean = ref('0 원');
 const diagFeeKorean = ref('0 원');
 const totalFeeKorean = ref('0 원');
 const hopePriceFeeKorean = ref('0 원');
 const finalPriceFeeKorean = ref('0 원');
+const fileInputOwner = ref(null);
+
 let created_at;
 let updated_at;
 
+const store = useStore();
+
+let statusLabel;
 
 // 은행 선택 라벨 클릭 시 처리 함수
 const handleBankLabelClick = () => {
@@ -512,7 +526,25 @@ function editPostCode(elementName) {
     })
 }
 
+function handleFileUploadOwner(event) {
+    const file = event.target.files[0];
+    if (file) {
+        userData.file_user_owner = file;
+        userData.file_user_owner_name = file.name;
+        console.log("Owner file:", file.name);
+    }
+}
+
+function triggerFileUploadOwner() {
+    if (fileInputOwner.value) {
+      fileInputOwner.value.click();
+    } else {
+        console.error("위임장 또는 소유자 인감 증명서 파일을 찾을 수 없습니다.");
+    }
+}
+
 onMounted(async () => {
+  statusLabel = wicas.enum(store).auctions();
   window.addEventListener('resize', checkScreenWidth);
   checkScreenWidth();
   await fetchAuctionDetails();
@@ -562,6 +594,7 @@ onMounted(async () => {
       }
       
   });
+
 });
 
 

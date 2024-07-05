@@ -280,6 +280,10 @@ export function cmmn() {
             return _this;
         },   
         get : function() {
+            if(wicaData.is('wicac_err_429')) {
+                console.log('cmmn wicac [ get() ] 함수 선언 실패 : 에러 429 발생으로 거부됨 ');
+                return; 
+            }
             let _this = this;
             if(_this._input._isLogDetail) console.log('cmmn wicac [ get() ] 함수 선언 ');
             _this._input._isGet = true;
@@ -291,6 +295,10 @@ export function cmmn() {
             });
         },
         post : function() {
+            if(wicaData.is('wicac_err_429')) {
+                console.log('cmmn wicac [ post() ] 함수 선언 실패 : 에러 429 발생으로 거부됨 ');
+                return; 
+            }
             let _this = this;
             if(_this._input._isLogDetail) console.log('cmmn wicac [ post() ] 함수 선언 ');
             _this._input._isPost = true;
@@ -302,6 +310,10 @@ export function cmmn() {
             });
         },
         put : function() {
+            if(wicaData.is('wicac_err_429')) {
+                console.log('cmmn wicac [ put() ] 함수 선언 실패 : 에러 429 발생으로 거부됨 ');
+                return; 
+            }
             let _this = this;
             if(_this._input._isLogDetail) console.log('cmmn wicac [ put() ] 함수 선언 ');
             _this._input._isPut = true;
@@ -313,6 +325,10 @@ export function cmmn() {
             });
         },
         delete : function() {
+            if(wicaData.is('wicac_err_429')) {
+                console.log('cmmn wicac [ delete() ] 함수 선언 실패 : 에러 429 발생으로 거부됨 ');
+                return; 
+            }
             let _this = this;
             if(_this._input._isLogDetail) console.log('cmmn wicac [ delete() ] 함수 선언 ');
             _this._input._isDelete = true;
@@ -526,6 +542,14 @@ export function cmmn() {
                     if (error.response.data.status === 'fail') {
                         if(error.response.status == 422) {
                             rstData.msg = error.response.data.errors;
+                        } else if(error.response.status == 429) {
+                            if(!wicaData.is('wicac_err_429')) {
+                                wicaData.save('wicac_err_429',true);
+                                alert('단시간 많은 호출로 인해 요청이 거부되었습니다.\n차단이 해제되려면 약 1분 뒤 다시 시도해주세요.');
+                                setTimeout(function() {
+                                    wicaData.del('wicac_err_429');
+                                },800);
+                            }
                         } else {
                             rstData.msg = error.response.data.message;
                             if(error.response.statusText != 'Bad Request') {
@@ -750,7 +774,7 @@ export function cmmn() {
                 showCancelButton: isConfirm,
                 showCloseButton: input._isUseClose,
                 confirmButtonText: input._btnOkLabel,
-                //confirmButtonColor: '#ef4444',
+                confirmButtonColor: '#ef4444',
                 cancelButtonText: input._btnCancelLabel,
                 //cancelButtonColor: '#ef4444', 
                 reverseButtons: input._isRight,
@@ -933,6 +957,9 @@ export function cmmn() {
     //public wicas enum data
     /**
     
+        # 필수 선언
+
+        import { reactive  } from 'vue';
         import { useStore } from 'vuex';
         const store = useStore();
     
@@ -941,6 +968,30 @@ export function cmmn() {
 
 
         # 호출 방법
+        
+        wicas.enum(store)
+        .excl('dlvr','wait') // 기입된 필드는 제거
+        .perm('dlvr','wait') // 기입된 필드만 남김
+        .add('dlvrNew','입금대기').add('doneNew','입금완료') // 필드 추가
+        .addFirst('all','전체').addFirst('','전체2') // 정렬 순서 없이 입력 순서대로 필드 맨 위에 위치
+        .change('dlvr','입금대기').change('done','입금완료') // 기존 필드 값 변경
+        .changeKey('dlvr','dlvr2').changeKey('done','done2') // 기존 필드 키 명칭 변경
+        .toProxy(reactive) // 리턴 데이터를 proxy object 로 변환
+        .callback(function(item){ //필드 갯수만큼 개별 출력
+            console.log(item);
+        })
+        .toLabel('wait') // 입력값 하나에 대해서 'wait' 를 기입하면 '선택대기' 를 리턴
+        .toCode('선택대기') // 입력값 하나에 대해서 '선택대기' 를 기입하면 'wait' 를 리턴
+        .DescKey() // 키 기준 c,b,a 순
+        .DescVal() // 값 기준 다,나,가 순
+        .ascKey() // 키 기준 a,b,c 순
+        .ascVal() // 값 기준 가,나,다 순
+        .auctions();
+        .users();
+        .dealers();
+
+
+        # 호출 예시
 
         console.log(wicas.enum(store).auctions());
         console.log(wicas.enum(store).users());
@@ -948,10 +999,15 @@ export function cmmn() {
         console.log(wicas.enum(store).excl('dlvr','wait').auctions());
         console.log(wicas.enum(store).perm('dlvr','wait').auctions());
         console.log(wicas.enum(store).add('k1','aa').add('k2',2).auctions());
-        let rdata = wicas.enum(store).excl('dlvr','wait').auctions(function(item){
+        console.log(wicas.enum(store).toLabel('wait').auctions());
+        console.log(wicas.enum(store).toCode('선택대기').auctions());
+        console.log(wicas.enum(store).addFirst('all','전체').auctions());
+
+        let rdata = wicas.enum(store).excl('dlvr','wait').callback(function(item){
           console.log(item);
-        });
+        }).auctions();
         console.log(rdata);
+        
 
         # 필요한 테이블 enums 는 별도 추가해야함.
         # ( js/store/enums.js ) 에 loopLabel 값에도 추가
@@ -968,9 +1024,27 @@ export function cmmn() {
                 isExcl : false,
                 isPerm : false,
                 isAdd : false,
+                isAddFirst : false,
+                isChange : false,
+                isChangeKey : false,
+                isToProxy : false,
+                isReturn : false,
+                isToLabel : false,
+                isToCode : false,
+                isDescKey : false,
+                isAscKey : false,
+                isDescVal : false,
+                isAscVal : false,
                 _excl : null,
                 _perm : null,
                 _add : {},
+                _addFirst : {},
+                _change : {},
+                _changeKey : {},
+                _toProxy : null,
+                _callback : null,
+                _toLabel : null,
+                _toCode : null,
             }
             return newObj;
         },
@@ -990,66 +1064,109 @@ export function cmmn() {
             let _this = this;
             _this._input.isAdd = true;
             if(key) {
-                _this._input._add[key] = val
+                _this._input._add[key] = val;
             }
             return _this;
         },
-        auctions : function(input) {
+        addFirst : function(key,val) {
+            let _this = this;
+            _this._input.isAddFirst = true;
+            if(key) {
+                _this._input._addFirst[key] = val;
+            }
+            return _this;
+        },
+        change : function(key,val) {
+            let _this = this;
+            _this._input.isChange = true;
+            if(key) {
+                _this._input._change[key] = val;
+            }
+            return _this;
+        },
+        changeKey : function(key,val) {
+            let _this = this;
+            _this._input.isChangeKey = true;
+            if(key) {
+                _this._input._changeKey[key] = val;
+            }
+            return _this;
+        },
+        toProxy : function(input) {
+            let _this = this;
+            _this._input.isToProxy = true;
+            if(input) {
+                _this._input._toProxy = input
+            }
+            return _this;
+        },
+        callback : function(input) {
+            let _this = this;
+            _this._input._callback = input;
+            if(input) {
+                _this._input.isReturn = true;
+            }
+            return _this;
+        },
+        toLabel : function(input) {
+            let _this = this;
+            _this._input.isToLabel = true;
+            if(input) {
+                _this._input._toLabel = input;
+            }
+            return _this;
+        },
+        toCode : function(input) {
+            let _this = this;
+            _this._input.isToCode = true;
+            if(input) {
+                _this._input._toCode = input;
+            }
+            return _this;
+        },
+        toCode : function(input) {
+            let _this = this;
+            _this._input.isToCode = true;
+            if(input) {
+                _this._input._toCode = input;
+            }
+            return _this;
+        },
+        descKey : function() {
+            let _this = this;
+            _this._input.isDescKey = true;
+            return _this;
+        },
+        ascKey : function() {
+            let _this = this;
+            _this._input.isAscKey = true;
+            return _this;
+        },
+        descVal : function() {
+            let _this = this;
+            _this._input.isDescVal = true;
+            return _this;
+        },
+        ascVal : function() {
+            let _this = this;
+            _this._input.isAscVal = true;
+            return _this;
+        },
+        //enums 목록
+        auctions : function() {
             let _this = this;
             let data =  this.deepClone(this._store.getters['enums/data']['auctions']);
-            if(_this._input.isAdd) {
-                Object.assign(data.status, _this._input._add);
-            }
-            if(_this._input.isExcl) {
-                const d = this.remove(data.status,_this._input._excl);
-                this.callback(input,d);
-                return d;
-            } else if(_this._input.isPerm) {
-                const d = this.filtering(data.status,_this._input._perm);
-                this.callback(input,d);
-                return d;
-            } else {
-                this.callback(input,data.status);
-                return data.status;
-            }
+            return this.processPublic(_this._input,data);
         },
-        users : function(input) {
+        users : function() {
             let _this = this;
             let data =  this.deepClone(this._store.getters['enums/data']['users']);
-            if(_this._input.isAdd) {
-                Object.assign(data.status, _this._input._add);
-            }
-            if(_this._input.isExcl) {
-                const d = this.remove(data.status,_this._input._excl);
-                this.callback(input,d);
-                return d;
-            } else if(_this._input.isPerm) {
-                const d = this.filtering(data.status,_this._input._perm);
-                this.callback(input,d);
-                return d;
-            } else {
-                this.callback(input,data.status);
-                return data.status;
-            }
+            return this.processPublic(_this._input,data);
         },
         dealers : function(input) {
             let _this = this;
             let data = this.deepClone(this._store.getters['enums/data']['dealers']);
-            if(_this._input.isAdd) {
-                Object.assign(data.status, _this._input._add);
-            }
-            if(_this._input.isExcl) {
-                const d = this.remove(data.status,_this._input._excl);
-                this.callback(input,d);
-                return d;
-            } else if(_this._input.isPerm) {
-                const d = this.filtering(data.status,_this._input._perm);
-                this.callback(input,d);
-                return d;
-            } else {
-                this.callback(input,data.status);
-                return data.status;
-            }
+            return this.processPublic(_this._input,data);
         },
         //utils
         deepClone : function(input) {
@@ -1069,18 +1186,160 @@ export function cmmn() {
             });
             return input;
         },
-        callback : function(input,data) {
-            if(input) {
-                for (let key in data) {
-                    input({key:key,val:data[key]});
+        processPublic : function(_input,data) {
+            if(_input.isAdd) {
+                Object.assign(data.status, _input._add);
+            }
+            let d;
+            if(_input.isExcl) {
+                d = this.remove(data.status,_input._excl);                              
+            } else if(_input.isPerm) {
+                d = this.filtering(data.status,_input._perm);
+            } else {
+                d = data.status;
+            }
+            if(_input.isChangeKey) {
+                Object.keys(_input._changeKey).forEach(key => {
+                    const k = _input._changeKey[key];
+                    d[k] = d[key];
+                    delete d[key];
+                });
+            }
+            if(_input.isChange) {
+                Object.keys(_input._change).forEach(key => {
+                    if (d.hasOwnProperty(key)) {
+                        d[key] = _input._change[key];
+                    }
+                });
+            }
+            if(_input.isDescKey) {
+                const sortedEntries = Object.entries(d).sort(([keyA], [keyB]) => keyB.localeCompare(keyA));
+                d = Object.fromEntries(sortedEntries);
+            } else if(_input.isDescVal) {
+                const sortedEntries = Object.entries(d).sort(([, valueA], [, valueB]) => valueB.localeCompare(valueA));
+                d = Object.fromEntries(sortedEntries);
+            } else if(_input.isAscKey) {
+                const sortedEntries = Object.entries(d).sort(([keyA], [keyB]) => keyA.localeCompare(keyB));
+                d = Object.fromEntries(sortedEntries);    
+            } else if(_input.isAscVal) {
+                const sortedEntries = Object.entries(d).sort(([, valueA], [, valueB]) => valueA.localeCompare(valueB));
+                d = Object.fromEntries(sortedEntries);
+            }
+            if(_input.isAddFirst) {
+                d = Object.assign({}, _input._addFirst, d);
+            }
+            if(_input.isReturn) {
+                for (let key in d) {
+                    _input._callback({key:key,val:d[key]});
                 };
             }
+            if(_input.isToLabel) {
+                return d[_input._toLabel];
+            } else if(_input.isToCode) {
+                return Object.keys(d).find(key => d[key] === _input._toCode);
+            } else {
+                if(_input.isToProxy) {
+                    return _input._toProxy(d);
+                } else {
+                    return d;
+                }
+            }  
         }
-
-
     } 
     //End of public wicas enum data
 
+    //public wicaData
+    /**
+     
+        # 필수 선언
+            
+            import { cmmn } from '@/hooks/cmmn';
+            const { wicaData } = cmmn();
+
+        # 사용 방법
+
+            // wicaData 내 모든 저장 값 초기화(삭제)
+            wicaData.clear();
+
+            // key 존재 여부 확인(true,false 리턴)
+            wicaData.is('key1');
+
+            // key 값 저장하기 (각 유형별 저장)
+            wicaData.save('key1',{d1:11,d2:'bb'});
+            wicaData.save('key2',['d1','d2','d3']);
+            wicaData.save('key3',100);
+            wicaData.save('key4','data1');
+            wicaData.save('key5',true);
+
+            // key 값 불러오기(저장 유형에 따라 리턴)
+            wicaData.load('key1'); // {d1:11,d2:'bb'}
+            wicaData.load('key2'); // ['d1','d2','d3']
+            wicaData.load('key3'); // 숫자 100
+            wicaData.load('key4'); // 문자 'data1'
+            wicaData.load('key5'); // true,false
+      
+     */
+    const wicaData = {
+        _publicKey : 'wicald_data_',
+        _saveInfo : {},
+        /*
+        data : function() {
+            let newObj = Object.create(this);
+            return newObj;
+        },
+        */
+        save : function(key,val) {
+            if(Array.isArray(val)) {
+                this._saveInfo[key] = {type:'array'};
+                window.localStorage.setItem(this._publicKey+key, JSON.stringify(val));
+            } else if(typeof val === 'object' && val !== null) {
+                this._saveInfo[key] = {type:'object'};
+                window.localStorage.setItem(this._publicKey+key, JSON.stringify(val));
+            } else if(typeof val === 'number') {
+                this._saveInfo[key] = {type:'number'};
+                window.localStorage.setItem(this._publicKey+key,val);
+            } else if(typeof val === 'boolean') {
+                this._saveInfo[key] = {type:'boolean'};
+                window.localStorage.setItem(this._publicKey+key,val);
+            } else {
+                this._saveInfo[key] = {type:'default'};
+                window.localStorage.setItem(this._publicKey+key,val);
+            }            
+        },
+        load : function(key) {
+            if(this.is(key)) {
+                let ty = this._saveInfo[key].type;
+                if(ty == 'object' || ty == 'array') {
+                    return JSON.parse(window.localStorage.getItem(this._publicKey+key));
+                } else if(ty == 'number') {
+                    return parseInt(window.localStorage.getItem(this._publicKey+key));
+                } else if(ty == 'boolean') {
+                    return window.localStorage.getItem(this._publicKey+key).toLowerCase()==='true';
+                } else {
+                    return window.localStorage.getItem(this._publicKey+key);
+                }
+            } else {
+                return null;
+            }
+        },
+        del : function(key) {
+            if(this.is(key))
+                window.localStorage.removeItem(this._publicKey+key);
+        },
+        clear : function() {
+            for(const key in window.localStorage) {
+                if(window.localStorage.hasOwnProperty(key) && key.search(this._publicKey) !== -1) {
+                    console.log(key);
+                    window.localStorage.removeItem(key);
+                }
+            }
+        },
+        is : function(key) {
+            return window.localStorage.hasOwnProperty(this._publicKey+key);
+        }
+    }
+    //End of //public wicaData
+    
     return {
       numberToKoreanUnit,
       formatCurrency,
@@ -1094,5 +1353,6 @@ export function cmmn() {
       wicac,
       wicaLabel,
       wicas,
+      wicaData,
     }
   }

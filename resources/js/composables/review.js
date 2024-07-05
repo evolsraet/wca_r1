@@ -381,7 +381,7 @@ export function initReviewSystem() {
             apiList.push('auction');
             apiList.push('user');
         }
-        if(star != ''){
+        if(star != 'all'){
             whereList.push(`reviews.star:${star}`)
         }
         return wicac.conn()
