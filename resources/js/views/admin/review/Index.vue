@@ -255,7 +255,7 @@ const { can } = useAbility();
 const { getAllReview , adminDeleteReview , reviewsData , reviewPagination } = initReviewSystem(); 
 const currentStatus = ref('all');
 const currentPage = ref(1);
-const currentStar = ref('');
+const currentStar = ref('all');
 const orderingState = {
     'created_at': { direction: '', column: 'created_at', hit: 0 },
     'id': { direction: '', column: 'id', hit: 0 },
