@@ -187,6 +187,8 @@ trait CrudTrait
                             }
                         } else {
                             // 다른테이블
+                            // $row = explode(':', $onewhere);
+
                             $findKey = explode('.', $row[0]); // 0 테이블 1 필드
                             $result->with($findKey[0]);
 
@@ -196,9 +198,14 @@ trait CrudTrait
                                     $qry->$whereFunction($findKey[1], $row[1], $row[2]); // 특정 조건에 맞는 관계를 필터링
                                 });
                             } else {
+                                // $row[0] = 'auctions.status';
+                                // $row[1] = 'wait';
+                                // print_r($row);
+                                // die();
                                 $result->whereHas($findKey[0], function ($qry) use ($findKey, $row, $whereFunction) {
                                     // findKey[1]는 필드명, row[1]은 값 (기본 산자 '=')
                                     $qry->$whereFunction($findKey[1], '=', $row[1]); // 기본 연산자 '='를 명시적으로 사용
+                                    // $qry->$whereFunction($row[0], '=', $row[1]); // 기본 연산자 '='를 명시적으로 사용
                                 });
                             }
                         }

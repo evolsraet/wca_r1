@@ -45,6 +45,17 @@ class UserService
             //     'password' => ['required', 'string', 'min:8', 'confirmed'],
             // ]);
 
+            $requestData = (array) $data;
+            $requestData['model'] = new User;  // $result는 모델 인스턴스를 가리킵니다.
+
+            // beforeData() 이전에 발리데이트 해야함
+            $validatedData = validator($requestData, [
+                'name' => 'required|max:255',
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'phone' => 'required',
+                'password' => ['required', 'string', 'min:8', 'confirmed'],
+            ])->validate();
+
             $data = $this->beforeData($data);
 
             // 유효성 검사 실패 시
@@ -52,15 +63,7 @@ class UserService
             //     return response()->api(null, null, 'fail', 422, ['errors' => $validator->errors()]);
             // }
 
-            $requestData = (array) $data;
-            $requestData['model'] = new User;  // $result는 모델 인스턴스를 가리킵니다.
 
-            $validatedData = validator($requestData, [
-                'name' => 'required|max:255',
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'phone' => 'required',
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
-            ])->validate();
 
 
             // 본인회원가입 - 사용자일경우

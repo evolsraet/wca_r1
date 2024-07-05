@@ -139,8 +139,15 @@ class User extends Authenticatable implements HasMedia
         // static::retrieved(function ($user) {
         //     print_r(auth()->check());
         //     die();
-        //     if (auth()->check() && (auth()->user()->hasPermissionTo('act.admin') || auth()->id() === $user->id)) {
-        //         $user->makeVisible(['phone', 'password', 'remember_token']);
+        // static::retrieved(function ($user) {
+        //     try {
+        //         // 여기에 로직 추가
+        //         if (Auth::check() && Auth::user()->is_admin) {
+        //             $user->makeVisible(['phone']);
+        //         }
+        //     } catch (\Exception $e) {
+        //         Log::error('Error in User retrieved event: ' . $e->getMessage());
+        //         // 필요하다면 여기에서 추가적인 예외 처리를 할 수 있습니다.
         //     }
         // });
     }

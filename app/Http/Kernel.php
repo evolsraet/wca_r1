@@ -44,6 +44,7 @@ class Kernel extends HttpKernel
             'throttle:api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \Rakutentech\LaravelRequestDocs\LaravelRequestDocsMiddleware::class,
+            // 얘를 끼면 응답코드가 모두 200으로 (업댓시 수정필요), LRD 요청의 리스폰스는 텔레스코프에 HTML 으로만 기록된다.
         ],
     ];
 
