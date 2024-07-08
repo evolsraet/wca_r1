@@ -205,10 +205,10 @@ const submitCarInfo = async () => {
     .callback(function(result) {
         if(result.isError){
             validationErrors.value = result.rawData.response.data.errors;         
-            return true;
+            return result;
         }else{
             localStorage.setItem('carDetails', JSON.stringify(result.data));  // 데이터를 로컬 스토리지에 저장
-            router.push({ name: 'sell' });  // 저장 후 sell 라우트로 이동
+            return result;
         }
     })
     .post();
