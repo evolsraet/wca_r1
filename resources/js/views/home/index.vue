@@ -361,9 +361,13 @@ const submitCarInfoIsOk = () => {
   }
     */
   //TODO: 여기는 위에보단 아래 유형이 맞지 않나?
-  if(submitCarInfo()) {
-    wica.ntcn(swal).icon('E').title('필수 입력정보가 필요합니다.').fire();
-  }
+  submitCarInfo().then((response) => {
+    if(response.isError) {
+      wica.ntcn(swal).icon('E').title('필수 입력정보가 필요합니다.').fire();
+    } else {
+      router.push({ name: 'sell' });
+    }
+  })
 
 }
   const closeModal = () => {

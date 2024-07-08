@@ -264,26 +264,21 @@ export default function useAuth() {
 
         processing.value = true;
 
-        axios
-            .post("/logout")
-            .then((response) => {
-                user.name = "";
-                user.email = "";
-                store.dispatch("auth/logout");
-                router.push({ name: "auth.login" });
-                // console.log();
-            })
-            .catch((error) => {
-                // swal({
-                //     icon: 'error',
-                //     title: error.response.status,
-                //     text: error.response.statusText
-                // })
-            })
-            .finally(() => {
-                processing.value = false;
-                // Cookies.remove('loggedIn')
-            });
+        wicac.conn()
+        .url(`/logout`) //호출 URL
+        .callback(function(result) {
+            console.log('wicac.conn callback ' , result);            
+
+            processing.value = false;
+
+            user.name = "";
+            user.email = "";
+            localStorage.clear;
+            store.dispatch("auth/logout");            
+
+        })
+        .post();
+
     };
 
     const getAbilities = async () => {

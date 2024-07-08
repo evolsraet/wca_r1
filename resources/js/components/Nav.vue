@@ -234,13 +234,13 @@
             <template v-if="isUser">
               <div class="d-flex">
                 <li class="nav-item">
-                  <router-link to="/" class="nav-link mx-3" aria-current="page" exact-active-class="active-link">내차조회</router-link>
+                  <router-link to="/" class="nav-link mx-3 nav-inq" aria-current="page" exact-active-class="active-link">내차조회</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3" aria-current="page" exact-active-class="active-link" id="nav-auction">내 매물관리</router-link>
+                  <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3 nav-auction" aria-current="page" exact-active-class="active-link">내 매물관리</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'user.review'}" class="nav-link mx-3" exact-active-class="active-link" id="nav-review">이용후기</router-link>
+                  <router-link :to="{ name: 'user.review'}" class="nav-link mx-3 nav-review" exact-active-class="active-link">이용후기</router-link>
                 </li>
               </div>
               <li class="nav-item my-member ms-auto dropdown">
@@ -255,10 +255,10 @@
             </template>
             <template v-else-if="!user?.name">
               <li class="nav-item">
-                <router-link :to="{ name: 'home'}" class="nav-link mx-3" exact-active-class="active-link">내차조회</router-link>
+                <router-link :to="{ name: 'home'}" class="nav-link mx-3 nav-inq" exact-active-class="active-link">내차조회</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3-review" exact-active-class="active-link" id="nav-all-review">이용후기</router-link>
+                <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3-review nav-review" exact-active-class="active-link">이용후기</router-link>
               </li>
               <li class="nav-item">
                 <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
@@ -269,7 +269,7 @@
             </template>
             <template v-else-if="isDealer">
               <li class="nav-item">
-                <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh mx-3" to="/register" exact-active-class="active-link">입찰하기</router-link>
+                <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh mx-3 nav-auction" to="/register" exact-active-class="active-link">입찰하기</router-link>
               </li>
               <li class="nav-item">
                 <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">선택 완료 차량</router-link>
@@ -429,9 +429,9 @@
 
   onMounted(() => {
 
-    let navAuction = document.getElementById('nav-auction');
-    let navReview = document.getElementById('nav-review');
-    let navAllReview = document.getElementById('nav-all-review');
+    let navAuction = document.querySelectorAll('.nav-auction');
+    let navReview = document.querySelectorAll('.nav-review');
+    let navCarInq = document.querySelectorAll('.nav-inq');
 
     const content = document.querySelector('.toggle-nav-content');
     content.addEventListener('scroll', checkScrollGradient);
@@ -482,43 +482,63 @@
   watch(() => route.name, (to, from) => {
       console.log('라우터 이름:', to);
 
+      const removeActiveLink = (elements) => {
+        elements.forEach(element => {
+          element.classList.remove('active-link');
+        });
+      };
+
+      removeActiveLink(navAuction);
+      removeActiveLink(navReview);
+      removeActiveLink(navCarInq);
+
+      //내차조회
+      if (to === 'sell' || to === 'selldt2') {
+        nextTick(() => {
+          navCarInq.forEach(element => {
+            element.classList.add('active-link');
+          })
+        });
+      } else {
+        if(navCarInq){
+          navCarInq.forEach(element => {  
+            element.classList.remove('active-link');
+          })
+        }
+      }
+
       //매물
       if (to === 'AuctionDetail' || to === 'completionsuccess') {
         nextTick(() => {
-          navAuction.classList.add('active-link');
+          navAuction.forEach(element => {
+            element.classList.add('active-link');
+          })
         });
       } else {
         if(navAuction){
-          navAuction.classList.remove('active-link');
+          navAuction.forEach(element => {
+            
+            element.classList.remove('active-link');
+          })
         }
       }
 
       //이용후기
       if (to === 'user.edit-review' || to === 'index.allreview' || to == "user.create-review" || to == "user.review-detail") {
         nextTick(() => {
-          if(navReview!=null && navReview.classList!=null)
-            navReview.classList.add('active-link');
+          navReview.forEach(element => {
+            element.classList.add('active-link');
+          }) 
         });
       } else {
         if(navReview){
           if(navReview!=null && navReview.classList!=null)
-            navReview.classList.remove('active-link');
+            navReview.forEach(element => {
+              element.classList.remove('active-link');
+          }) 
         }
       }
-
-      //이용후기
-      if (to == "user.review-detail") {
-        nextTick(() => {
-          if(navAllReview!=null && navAllReview.classList!=null)
-            navAllReview.classList.add('active-link');
-        });
-      } else {
-        if(navAllReview){
-          if(navAllReview!=null && navAllReview.classList!=null)
-            navAllReview.classList.remove('active-link');
-        }
-      }
-    }, { immediate: true });
+    } , { immediate: true });
 
   });
     
