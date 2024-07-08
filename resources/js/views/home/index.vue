@@ -155,7 +155,7 @@
             <bottom-sheet initial="half" :dismissable="true">
               <template #default>
                
-                <form @submit.prevent="submitCarInfo" class="d-flex flex-column justify-content-center">
+                <form @submit.prevent="submitCarInfoIsOk" class="d-flex flex-column justify-content-center">
                   <div class="row mb-1 mt-1">
                     <div class="col-12">
                       <div>
@@ -389,7 +389,7 @@ const submitCarInfoIsOk = () => {
       const animatedSectionElement = animatedSection.value;
       const loginCard = loginCardRef.value;
       setTimeout(() => {
-        loginCard.classList.add('enter-active');
+        if(loginCard!=null) loginCard.classList.add('enter-active');
       }, 200);
       setTimeout(() => {
         if (animatedSectionElement) {

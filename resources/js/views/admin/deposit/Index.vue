@@ -2,9 +2,12 @@
     <div class="p-3 row justify-content-center my-2">
         <div class="col-md-12"></div>
         <div class="search-type2 mb-5">
+            <!--
             <div class="border-xsl">
                 <div class="image-icon-excel"></div>
             </div>
+            -->
+            <div></div>
             <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
             <button type="button" class="search-btn" @click="searchBtn">검색</button>
         </div>
@@ -86,7 +89,7 @@
                             </td>
                         </tr>
                         <tr v-else>
-                            <td colspan="4" class="px-6 py-4 text-sm text-center">No data available</td>
+                            <td colspan="4" class="px-6 py-4 text-sm text-center">등록 된 입금 데이터가 없습니다.</td>
                         </tr>
                     </tbody>
                 </table>
@@ -138,6 +141,8 @@ const store = useStore();
 
 const updateOrdering = (column) => {
         let columnState = orderingState[column];
+
+        columnState.hit += 1;
         
         if (columnState.hit == 3) {
             columnState.column = '';
