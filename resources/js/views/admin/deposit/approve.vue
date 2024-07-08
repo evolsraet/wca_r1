@@ -5,15 +5,15 @@
         <div class="container mov-wide my-4">
           <div>
             <div class="mb-4">
-              <div class="card my-auction">
+              <div>
                 <div class="d-flex align-items-baseline justify-content-between">
                   <h4>No.3801<span class="tc-light-gray ms-3 fw-lighter">차량번호 {{auction.car_no}}</span></h4>
                   <a class="btn-apply" @click="detailAuction()">자세히 보기</a>
-                  </div>
-                  <div class="sell-info mb-5">
-                          <div class="car-image-style">
-                            <div class="card-img-top-ty01"></div>
-                          </div>
+                </div>
+                <div class="sell-info mb-5">
+                    <div class="car-image-style">
+                      <div class="card-img-top-ty01"></div>
+                    </div>
                     <div class="car-info">
                         <div class="item">
                             <span class="label">성공수수료</span>
@@ -29,42 +29,41 @@
                         </div>
                     </div>
                 </div>
-                  <div class="card-body">
-                      <p class="tc-light-gray">입금 상태</p>
-                      <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
-                      <option value="done">입금 완료</option>
-                      <option value="dlvr">입금 대기</option> <!-- dlvr자리 -->
-                      </select>
-                  </div>
-                  <div class="card-body">
-                    <p class="tc-light-gray">낙찰 금액</p>
-                    <input v-model="auction.final_price" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
-                  </div>
-                  <div class="card-body">
-                    <p class="tc-light-gray">입금 총액</p>
-                    <input value="35,000,000 원" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
-                  </div>
-                  <div class="card-body">
-                    <p class="tc-light-gray">미수금</p>
-                    <input value="5,000,000 원"  class="input-dis tc-red form-control bg-secondary bg-opacity-10" readonly/>
-                  </div>
-                  
-              <!--       <div class="container-receipt mt-5">
-                    <img src="../../../../img/admin/admin-back-sell.png" alt="Image" style="width:100%; height: auto;">
-                    <div class="text-block">
-                      <h4>Your Text Here</h4>
-                      <p>Additional Text Here</p>
+                <div class="card-body">
+                    <p class="tc-light-gray">입금 상태</p>
+                    <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
+                    <option value="done">입금 완료</option>
+                    <option value="dlvr">입금 대기</option> <!-- dlvr자리 -->
+                    </select>
+                </div>
+                <div class="card-body">
+                  <p class="tc-light-gray">낙찰 금액</p>
+                  <input v-model="auction.final_price" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
+                </div>
+                <div class="card-body">
+                  <p class="tc-light-gray">입금 총액</p>
+                  <input value="35,000,000 원" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
+                </div>
+                <div class="card-body">
+                  <p class="tc-light-gray">미수금</p>
+                  <input value="5,000,000 원"  class="input-dis tc-red form-control bg-secondary bg-opacity-10" readonly/>
+                </div>
+                
+                <!--       <div class="container-receipt mt-5">
+                      <img src="../../../../img/admin/admin-back-sell.png" alt="Image" style="width:100%; height: auto;">
+                      <div class="text-block">
+                        <h4>Your Text Here</h4>
+                        <p>Additional Text Here</p>
+                      </div>
                     </div>
-                  </div>
-          -->
+                -->
             
                 <div class="btn-group mt-4">
                   <button class="btn btn-primary tc-wh"> 저장 </button>
                 </div>
-               
-                </div>
               </div>
             </div>
+          </div>
         </div>
       </div>
     </form>
