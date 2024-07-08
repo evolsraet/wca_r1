@@ -106,6 +106,7 @@ export function cmmn() {
         .logDetail() //상세 로그 출력(기본 로그 포함하여 상세하게)
         .url(`/api/reviews/${id}`) //호출 URL
         .multipart() //첨부파일 있을 경우 선언
+        .multipartUpdate() //첨부파일을 포함한 업데이트 요청인 경우
         .param({
             'id' : 1
         }) 
