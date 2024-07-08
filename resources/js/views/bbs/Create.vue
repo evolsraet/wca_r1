@@ -59,27 +59,27 @@
                                 <div class="wrap">
                                     <div class="rating my-3">
                                         <label class="rating__label rating__label--full" for="star1">
-                                            <input type="radio" id="star1" class="rating__input" name="rating" value="">
+                                            <input type="radio" id="star1" class="rating__input" name="rating" value="1" v-model="rv.star">
                                             <span class="star-icon ms-2"></span>
                                             <span class="rating-description">별로에요</span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star2">
-                                            <input type="radio" id="star2" class="rating__input" name="rating" value="">
+                                            <input type="radio" id="star2" class="rating__input" name="rating" value="2" v-model="rv.star">
                                             <span class="star-icon"></span>
                                             <span class="rating-description">괜찮아요</span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star3">
-                                            <input type="radio" id="star3" class="rating__input" name="rating" value="">
+                                            <input type="radio" id="star3" class="rating__input" name="rating" value="3" v-model="rv.star">
                                             <span class="star-icon"></span>
                                             <span class="rating-description">좋아요</span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star4">
-                                            <input type="radio" id="star4" class="rating__input" name="rating" value="">
+                                            <input type="radio" id="star4" class="rating__input" name="rating" value="4" v-model="rv.star">
                                             <span class="star-icon"></span>
                                             <span class="rating-description">만족해요</span>
                                         </label>
                                         <label class="rating__label rating__label--full" for="star5">
-                                            <input type="radio" id="star5" class="rating__input" name="rating" value="">
+                                            <input type="radio" id="star5" class="rating__input" name="rating" value="5" v-model="rv.star">
                                             <span class="star-icon"></span>
                                             <span class="rating-description">최고에요!</span>
                                         </label>
