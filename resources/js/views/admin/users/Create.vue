@@ -14,10 +14,8 @@
                                     type="text"
                                     class="form-control"
                                     autocomplete="one-time-code"
+                                    required
                                 />
-                                <div class="text-danger mt-1">
-                                    {{ errors.name }}
-                                </div>
                                 <div class="text-danger mt-1">
                                     <div v-for="message in validationErrors?.name">
                                         {{ message }}
@@ -34,10 +32,8 @@
                                     type="text"
                                     class="form-control"
                                     autocomplete="one-time-code"
+                                    required
                                 />
-                                <div class="text-danger mt-1">
-                                    {{ errors.email }}
-                                </div>
                                 <div class="text-danger mt-1">
                                     <div v-for="message in validationErrors?.email">
                                         {{ message }}
@@ -54,10 +50,8 @@
                                     type="password"
                                     class="form-control"
                                     autocomplete="one-time-code"
+                                    required
                                 />
-                                <div class="text-danger mt-1">
-                                    {{ errors.password }}
-                                </div>
                                 <div class="text-danger mt-1">
                                     <div v-for="message in validationErrors?.password">
                                         {{ message }}
@@ -74,10 +68,8 @@
                                     type="password"
                                     class="form-control"
                                     autocomplete="one-time-code"
+                                    required
                                 />
-                                <div class="text-danger mt-1">
-                                    {{ errors.password }}
-                                </div>
                                 <div class="text-danger mt-1">
                                     <div v-for="message in validationErrors?.password">
                                         {{ message }}
@@ -93,6 +85,7 @@
                                     v-model = "user.phone"
                                     type="text"
                                     class="form-control"
+                                    required
                                 />
     
                             </div>
@@ -107,12 +100,57 @@
                             <div v-if="userRoles=='dealer'">
                                 <div class="mb-3">
                                     <label for="user-title" class="form-label"
+                                        >이름</label
+                                    >
+                                    <input
+                                        v-model = "dealer.name"
+                                        type="text"
+                                        class="form-control"
+                                        required
+                                    />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="user-title" class="form-label"
+                                        >전화번호</label
+                                    >
+                                    <input
+                                        v-model = "dealer.phone"
+                                        type="text"
+                                        class="form-control"
+                                        required
+                                    />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="user-title" class="form-label"
+                                        >생년월일</label
+                                    >
+                                    <input
+                                        v-model = "dealer.birthday"
+                                        type="text"
+                                        class="form-control"
+                                        required
+                                    />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="user-title" class="form-label"
                                         >소속상사</label
                                     >
                                     <input
                                         v-model = "dealer.company"
                                         type="text"
                                         class="form-control"
+                                        required
+                                    />
+                                </div>
+                                <div class="mb-3">
+                                    <label for="user-title" class="form-label"
+                                        >직급</label
+                                    >
+                                    <input
+                                        v-model = "dealer.company_duty"
+                                        type="text"
+                                        class="form-control"
+                                        required
                                     />
                                 </div>
                                 <div class="form-group">
@@ -138,6 +176,7 @@
                                         type="text"
                                         class="form-control"
                                         placeholder="상세주소"
+                                        required
                                     />
                                     <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                                         <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
@@ -168,6 +207,7 @@
                                         type="text"
                                         class="form-control"
                                         placeholder="상세주소"
+                                        required
                                     />
                                     <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                                         <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
@@ -248,17 +288,11 @@
     <script setup>
     import { onMounted, reactive, ref } from "vue";
     import { useRoute } from "vue-router";
-    import useRoles from "@/composables/roles";
     import useUsers from "@/composables/users";
-    import { useForm, useField, defineRule } from "vee-validate";
     import { required, min } from "@/validation/rules";
     import { cmmn } from '@/hooks/cmmn';
     
-    defineRule("required", required);
-    defineRule("min", min);
-    
     const route = useRoute();
-    const { roleList, getRoleList } = useRoles();
     const { openPostcode , closePostcode} = cmmn();
     const userRoles = ref("");
 
@@ -273,9 +307,6 @@
     const fileInputRefCert = ref(null);
     const fileInputRef = ref(null);
 
-    let created_at;
-    let email;
-
     
     // Define a validation schema
     const schema = {
@@ -286,39 +317,27 @@
         role: { required },
     };
     
-    // Create a form context with the validation schema
-    const { validate, errors, resetForm } = useForm({ validationSchema: schema });
-    // Define actual fields for validation
-    const { value: name } = useField("name", null, { initialValue: "" });
-    const { value: password } = useField("password", null, { initialValue: "" });
-    const { value: password_confirmation } = useField("password_confirmation", null, { initialValue: "" });
-    const { value: phone } = useField("phone", null, { initialValue: "" });
-    const { value: role } = useField("role", null, { initialValue: "" });
-    const { value: company } = useField("company", null, { initialValue: "" });
-    const { value: company_post } = useField("company_post", null, { initialValue: "" });
-    const { value: company_addr1 } = useField("company_addr1", null, { initialValue: "" });
-    const { value: company_addr2 } = useField("company_addr2", null, { initialValue: "" });
-    const { value: receive_post } = useField("receive_post", null, { initialValue: "" });
-    const { value: receive_addr1 } = useField("receive_addr1", null, { initialValue: "" });
-    const { value: receive_addr2 } = useField("receive_addr2", null, { initialValue: "" });
-    const introduce = ref("");
-    
     const user = reactive({
-        name,
-        password,
-        password_confirmation,
-        phone,
+        name:'',
+        password:'',
+        password_confirmation:'',
+        phone:'',
+        email:'',
         role:"user"
     });
     const dealer = reactive({
-        company,
-        company_post,
-        company_addr1,
-        company_addr2,
-        introduce,
-        receive_post,
-        receive_addr1,
-        receive_addr2,
+        name:'',
+        phone:'',
+        birthday: '',
+        company_duty: '',
+        company:'',
+        company_post:'',
+        company_addr1:'',
+        company_addr2:'',
+        introduce:'',
+        receive_post:'',
+        receive_addr1:'',
+        receive_addr2:'',
         file_user_photo:"",
         file_user_photo_name:"",
         file_user_biz:"",
@@ -330,20 +349,7 @@
     })
     
     function submitForm() {
-        validate().then((form) => {
-            if(userRoles=="dealer"){
-                schema.company = { required };
-                schema.company_post = { required };
-                schema.company_addr1 = { required };
-                schema.company_addr2 = { required };
-                schema.receive_post = { required };
-                schema.receive_addr1 = { required };
-                schema.receive_addr2 = { required };
-    
-            }
-            console.log(JSON.stringify(user));
-            adminStoreUser(user,dealer);
-        });
+        adminStoreUser(user,dealer);
     }
     
     function editPostCode(elementName) {

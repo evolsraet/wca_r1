@@ -54,55 +54,53 @@ export default function useAuctions() {
 
     }
 
-// 경매 내용 통신 (페이지까지)
-const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
-    const apiList = [];
+    const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
+        const apiList = [];
+    
+        if(status != 'all'){
+            apiList.push(`auctions.status:${status}`)
+        }
 
-    if(status != 'all'){
-        apiList.push(`auctions.status:${status}`)
-
-    }
-
-    if(isReviews){
-
-        wicac.conn()
-        //.log() //로그 출력
-        .url(`/api/auctions`) //호출 URL
-        .where([
-            'auctions.status:done',
-            'auctions.bid_id:>:0'
-        ]) 
-        .with([
-            'reviews'
-        ]) 
-        .doesnthave([
-            'reviews',
-        ])
-        .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
-        .callback(function(result) {
-            auctionsData.value = result.data;
-            pagination.value = result.rawData.data.meta;
-        })
-
-        .get();
-        
-    } else {
-
-        wicac.conn()
-        //.log() //로그 출력
-        .url(`/api/auctions`) //호출 URL
-        .with(['bids'])
-        .where(apiList) 
-        .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
-        .callback(function(result) {
-            auctionsData.value = result.data;
-            pagination.value = result.rawData.data.meta;
-        })
-        //.log()
-        .get();
-
-    }
-};
+        if(isReviews){
+    
+            wicac.conn()
+            //.log() //로그 출력
+            .url(`/api/auctions`) //호출 URL
+            .where([
+                'auctions.status:done',
+                'auctions.bid_id:>:0'
+            ]) 
+            .with([
+                'reviews'
+            ]) 
+            .doesnthave([
+                'reviews',
+            ])
+            .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
+            .callback(function(result) {
+                auctionsData.value = result.data;
+                pagination.value = result.rawData.data.meta;
+            })
+    
+            .get();
+            
+        } else {
+    
+            return wicac.conn()
+            .log() //로그 출력
+            .url(`/api/auctions`) //호출 URL
+            .with(['bids','likes'])
+            .where(apiList) 
+            .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
+            .callback(function(result) {
+                auctionsData.value = result.data;
+                pagination.value = result.rawData.data.meta;
+            })
+            //.log()
+            .get();
+    
+        }
+    };
 
 //관리자페이지 - 입금관리 dlvr상태 리스트 가져오기 
 const adminGetDepositAuctions = async(
@@ -155,15 +153,18 @@ const getStatusAuctionsCnt = async(
 const getAuctionById = async (id) => {
     
     return wicac.conn()
-    //.log() //로그 출력
+    .log() //로그 출력
     .url(`/api/auctions/${id}`) //호출 URL
-    .with(['bids','reviews'])
+    .with(['bids','reviews','likes'])
     //.page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
     .callback(async function(result) {
+        console.log(result);
         auction.value = result.data;
         auction.value.dealer_name = null;
         if (auction.value.win_bid) {
+            console.log(auction.value.win_bid.user_id);
             const data = await getUser(auction.value.win_bid.user_id);
+
             const name = data.dealer.name;
             auction.value.dealer_name = name;
         } else {

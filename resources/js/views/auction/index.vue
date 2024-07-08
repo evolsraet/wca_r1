@@ -773,7 +773,7 @@ import usebid from '@/composables/bids.js';
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
 const {getBids, bidsData } = usebid();
-const { getLikes, likesData, isAuctionFavorited } = useLikes();
+const { getLikes, likesData, isAuctionFavorited , like , setLikes , deleteLike } = useLikes();
 const router = useRouter();
 const currentStatus = ref('all'); 
 const { role, getRole } = useRoles();
@@ -792,6 +792,8 @@ const isUser = computed(() => user.value?.roles?.includes('user'));
 const isSpinning = ref(false);
 
 const initializeFavorites = () => {
+
+    /**
     const userId = user.value.id; // 현재 사용자 ID
     const userLikes = likesData.value.filter(like => like.user_id === userId); // 현재 사용자의 좋아요 데이터 필터링
 
@@ -803,24 +805,30 @@ const initializeFavorites = () => {
 
     // 좋아요 매물 ID 출력
     const likedAuctionIds = userLikes.map(like => like.likeable_id);
-    console.log('Liked Auction IDs:', likedAuctionIds);
+    console.log('Liked Auction IDs:', likedAuctionIds); */
 };
 
 const toggleFavorite = (auction) => {
     auction.isFavorited = !auction.isFavorited;
+    //console.log(auction.isFavorited);
     if (auction.isFavorited) {
         addLike(auction.id);
     } else {
-        removeLike(auction.id);
+        removeLike(auction);
     }
 };
 
-const addLike = (auctionId) => {
+const addLike = (auctionId) => { 
+    like.user_id = user.value.id;
+    like.likeable_id = auctionId;
     console.log('Like added for auction:', auctionId);
+    setLikes(like);
 };
 
-const removeLike = (auctionId) => {
-    console.log('Like removed for auction:', auctionId);
+const removeLike = (auction) => {
+    //console.log(auction.likes[0].id);
+    deleteLike(auction.likes[0].id);
+    //console.log('Like removed for auction:', auction.id);
 };
 
 
@@ -940,17 +948,29 @@ function isDealerParticipating(auctionId) {
 let timer;
 onMounted(async () => { 
     await getAuctions(currentPage.value);
+ 
     await getBids(); 
     console.log('Fetched bids data:', bidsData.value);
     
-    await getLikes();
-    console.log('Fetched likes data:', likesData.value);
+
+    /**
+    await getLikes('Auction',user.value.id);
+
+    console.log('Fetched likes data:', likesData.value); */
     if (role.value.name === 'user') {
         isUser.value = true;
     }
     initializeFavorites();
     updateAuctionTimes();
     auctionsData.value.forEach(auction => {
+        auction.likes = auction.likes.filter(like => {
+            if(like.user_id == user.value.id){
+                auction.isFavorited = true;
+                return true;
+            }else{
+                return false;
+            }
+        })
         auction.isDealerParticipating = isDealerParticipating(auction.id);
     });
 

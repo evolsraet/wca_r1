@@ -25,8 +25,9 @@
                       <span v-if="auctionDetail.data.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
                       <span v-if="auctionDetail.data.status === 'chosen'" class="mx-2 auction-done">선택완료</span>
                       <div v-if="auctionDetail.data.status !== 'cancel'">
-                        <input class="toggle-heart" type="checkbox" checked />
-                        <label class="heart-toggle"></label>
+                        <input class="toggle-heart" type="checkbox" :id="'favorite-' + auctionDetail.data.id"
+                        :checked="auctionDetail.data.isFavorited" @click.stop="toggleFavorite(auctionDetail.data)"/>
+                        <label class="heart-toggle" :for="'favorite-' + auctionDetail.data.id" @click.stop></label>
                       </div>
                       <div class="gap-1" :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
                         <div v-if="!isMobileView" class="d-flex flex-row gap-1">
@@ -47,7 +48,7 @@
                         <div></div>
                         <div class="d-flex gap-3 justify-content-end align-items-center mb-1">
                           <div class="tc-light-gray icon-hit">조회수 {{ auctionDetail.data.hit }}</div>
-                          <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
+                          <div class="tc-light-gray ml-2 icon-heart">관심 {{ auctionDetail.data.likes ? auctionDetail.data.likes.length : 0 }}</div>
                           <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids_count }}</p>
                         </div>
                       </div>
@@ -391,7 +392,7 @@
                 <h5>나의 입찰 금액</h5>
                 <div class="mt-3 d-flex align-items-center justify-content-end gap-3">
                   <p class="tc-light-gray icon-bid">입찰  {{ auctionDetail.data.bids_count }}</p>
-                  <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
+                  <div class="tc-light-gray ml-2 icon-heart">관심 {{ auctionDetail.data.likes ? auctionDetail.data.likes.length : 0 }}</div>
                 </div>
               </div>
               <div v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price == null" @click.stop="">
@@ -682,7 +683,7 @@
                                   <button type="button" class="mb-1 btn-close" @click="DealerbackView"></button>
                                   <div class="mt-3 d-flex align-items-center justify-content-end gap-3">
                                     <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids.length }}</p>
-                                    <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
+                                    <div class="tc-light-gray ml-2 icon-heart">관심 {{ auctionDetail.data.likes ? auctionDetail.data.likes.length : 0 }}</div>
                                   </div>
                                 </div>
                               <div>
@@ -819,6 +820,7 @@ import { initReviewSystem } from '@/composables/review';
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
+import useLikes from '@/composables/useLikes';
 
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
 const auctionChosn = ref(false);
@@ -832,6 +834,7 @@ const bidSession =ref(false);
 const alarmGuidModal = ref(null);
 const isSellChecked = ref(false);
 const { getUser } = useUsers();
+const { like , setLikes , deleteLike } = useLikes();
 const store = useStore();
 const user = computed(() => store.getters['auth/user']);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
@@ -869,6 +872,30 @@ const checkScreenWidth = () => {
       isMobileView.value = window.innerWidth <= 640;
     }
   };
+
+const toggleFavorite = (auction) => {
+  console.log(auction)
+  auction.isFavorited = !auction.isFavorited;
+  //console.log(auction.isFavorited);
+  if (auction.isFavorited) {
+      addLike(auction.id);
+  } else {
+      removeLike(auction);
+  }
+};
+
+const addLike = (auctionId) => { 
+    like.user_id = user.value.id;
+    like.likeable_id = auctionId;
+    console.log('Like added for auction:', auctionId);
+    setLikes(like);
+};
+
+const removeLike = (auction) => {
+    //console.log(auction.likes[0].id);
+    deleteLike(auction.likes[0].id);
+    //console.log('Like removed for auction:', auction.id);
+};
 
 const dynamicClass = computed(() => {
   if (auctionDetail.value?.data?.status === 'ask' || auctionDetail.value?.data?.status === 'diag') {
@@ -1389,6 +1416,16 @@ const fetchAuctionDetail = async () => {
   console.log("????????????????????????:", auctionId);
   try {
     auctionDetail.value = await getAuctionById(auctionId);
+    console.log(auctionDetail.value.data.likes);
+
+    auctionDetail.value.data.likes = auctionDetail.value.data.likes.filter(like => {
+        if(like.user_id == user.value.id){
+          auctionDetail.value.data.isFavorited = true;
+          console.log(auctionDetail.value.data);
+          return true;
+        }
+    })
+
     if(auctionDetail.value.data.reviews.length > 0){
       reviewIsOk.value = false;
     }
