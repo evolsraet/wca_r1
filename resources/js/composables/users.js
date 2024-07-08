@@ -203,6 +203,7 @@ export default function useUsers() {
             formData.append('file_user_sign', editForm.file_user_sign);
         }
         for (const x of formData) {
+            console.log('FORMdATA==========');
             console.log(x);
         };
 
@@ -214,7 +215,7 @@ export default function useUsers() {
                     wicac.conn()
                     .url(`/api/users/${id}`)
                     .param(formData)
-                    .multipart()
+                    .multipartUpdate()
                     .callback(async function(result) {
                         console.log('wicac.conn callback ' , result);
                         if(result.isError) {
@@ -228,6 +229,80 @@ export default function useUsers() {
                     .post();
                 }
             }).confirm();
+    };
+
+    const adminStoreUser = async (user,dealer) => {
+        if (isLoading.value) return;
+        let payload = {
+            user: {
+                name: user.name,
+                email: user.email,
+                status: user.status,
+                password:user.password,
+                password_confirmation: user.password_confirmation,
+                phone: user.phone,
+                role: user.role
+            },
+            dealer: {
+                name:dealer.name,
+                phone:dealer.phone,
+                birthday:dealer.birthday,
+                company_duty:dealer.company_duty,
+                company:dealer.company,
+                company_post:dealer.company_post,
+                company_addr1:dealer.company_addr1,
+                company_addr2:dealer.company_addr2,
+                introduce:dealer.introduce,
+                receive_post:dealer.receive_post,
+                receive_addr1:dealer.receive_addr1,
+                receive_addr2:dealer.receive_addr2
+            }
+        };
+        
+        const formData = new FormData();
+        formData.append('user', JSON.stringify(payload.user));
+        if(user.role == "dealer"){
+            formData.append('dealer', JSON.stringify(payload.dealer));
+        }
+        if (dealer.file_user_photo) {
+            formData.append('file_user_photo', dealer.file_user_photo);
+        }
+        if (dealer.file_user_biz) {
+            formData.append('file_user_biz', dealer.file_user_biz);
+        }
+        if (dealer.file_user_cert) {
+            formData.append('file_user_cert', dealer.file_user_cert);
+        }
+        if (dealer.file_user_sign) {
+            formData.append('file_user_sign', dealer.file_user_sign);
+        }
+        for (const x of formData) {
+            console.log(x);
+        };
+
+        wica.ntcn(swal)
+            .title('등록하시겠습니까?') // 알림 제목
+            .icon('Q') //E:error , W:warning , I:info , Q:question
+            .callback(async function(result) {
+                if (result.isOk) {
+                    wicac.conn()
+                    .url(`/api/users`)
+                    .param(formData)
+                    .multipart()
+                    .callback(async function(result) {
+                        //console.log('wicac.conn callback ' , result);
+                        if(result.isError) {
+                            validationErrors.value = result.msg;
+                        } else {
+                            wica.ntcn(swal).icon('S').title('정상 처리 되었습니다.').fire();
+                            //console.log(response);
+                            await router.push({ name: "users.index" });
+                        }
+                    })
+                    .post();
+                }
+            }).confirm();
+            
     };
 
     const updateMyInfo = async(adminEditForm,id) =>{
@@ -374,6 +449,7 @@ export default function useUsers() {
         deleteUser,
         validationErrors,
         isLoading,
+        adminStoreUser,
         pagination
     }
 }
