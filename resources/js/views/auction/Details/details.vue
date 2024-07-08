@@ -26,8 +26,8 @@
                       <span v-if="auctionDetail.data.status === 'chosen'" class="mx-2 auction-done">선택완료</span>
                       <div v-if="auctionDetail.data.status !== 'cancel'">
                         <input class="toggle-heart" type="checkbox" :id="'favorite-' + auctionDetail.data.id"
-                        :checked="auctionDetail.data.isFavorited" />
-                        <label class="heart-toggle"></label>
+                        :checked="auctionDetail.data.isFavorited" @click.stop="toggleFavorite(auctionDetail.data)"/>
+                        <label class="heart-toggle" :for="'favorite-' + auctionDetail.data.id" @click.stop></label>
                       </div>
                       <div class="gap-1" :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
                         <div v-if="!isMobileView" class="d-flex flex-row gap-1">
@@ -820,6 +820,7 @@ import { initReviewSystem } from '@/composables/review';
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
+import useLikes from '@/composables/useLikes';
 
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
 const auctionChosn = ref(false);
@@ -833,6 +834,7 @@ const bidSession =ref(false);
 const alarmGuidModal = ref(null);
 const isSellChecked = ref(false);
 const { getUser } = useUsers();
+const { like , setLikes , deleteLike } = useLikes();
 const store = useStore();
 const user = computed(() => store.getters['auth/user']);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
@@ -870,6 +872,30 @@ const checkScreenWidth = () => {
       isMobileView.value = window.innerWidth <= 640;
     }
   };
+
+const toggleFavorite = (auction) => {
+  console.log(auction)
+  auction.isFavorited = !auction.isFavorited;
+  //console.log(auction.isFavorited);
+  if (auction.isFavorited) {
+      addLike(auction.id);
+  } else {
+      removeLike(auction);
+  }
+};
+
+const addLike = (auctionId) => { 
+    like.user_id = user.value.id;
+    like.likeable_id = auctionId;
+    console.log('Like added for auction:', auctionId);
+    setLikes(like);
+};
+
+const removeLike = (auction) => {
+    //console.log(auction.likes[0].id);
+    deleteLike(auction.likes[0].id);
+    //console.log('Like removed for auction:', auction.id);
+};
 
 const dynamicClass = computed(() => {
   if (auctionDetail.value?.data?.status === 'ask' || auctionDetail.value?.data?.status === 'diag') {
