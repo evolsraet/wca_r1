@@ -106,6 +106,7 @@ export function cmmn() {
         .logDetail() //상세 로그 출력(기본 로그 포함하여 상세하게)
         .url(`/api/reviews/${id}`) //호출 URL
         .multipart() //첨부파일 있을 경우 선언
+        .multipartUpdate() //첨부파일을 포함한 업데이트 요청인 경우
         .param({
             'id' : 1
         }) 
@@ -166,6 +167,7 @@ export function cmmn() {
                 _isPut : false,
                 _isDelete : false,
                 _isMultipart : false,
+                _isMultipartWithUpdate : false,
                 _isLog : false,
                 _isLogDetail : false,
                 _isSearchText : false,
@@ -214,6 +216,13 @@ export function cmmn() {
             let _this = this;
             if(_this._input._isLogDetail) console.log('cmmn wicac [ multipart() ] 함수 선언 ');
             _this._input._isMultipart = true;
+            return _this;
+        },
+        multipartUpdate : function() {
+            let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ multipart() with Put (Update) ] 함수 선언 ');
+            _this._input._isMultipart = true;
+            _this._input._isMultipartWithUpdate = true;
             return _this;
         },
         where : function(input) {
@@ -440,7 +449,7 @@ export function cmmn() {
                 urlParams = this.parseParam(_input, urlParams);
                 let urlHeaders = null;
                 if(_input._isMultipart){
-                    urlParamsData.append('_method', 'PUT');
+                    if(_input._isMultipartWithUpdate) urlParamsData.append('_method', 'PUT');
                     urlHeaders = {
                         headers : {
                             'Content-Type': 'multipart/form-data'
