@@ -67,6 +67,7 @@ class BidService
             }
         } elseif ($method == 'update') {
             $this->modifyOnlyMe($result);
+            // 수정 시 사용자 아이디와 경매 아이디는 수정 불가
             unset($request->user_id);
             unset($request->auction_id);
         } elseif ($method == 'destroy') {
