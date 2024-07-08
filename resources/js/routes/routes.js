@@ -76,7 +76,6 @@ function requireAct(act) {
 function takingVerificationHomeRole(next) {
     let isLogin = !!store.state.auth.authenticated;    
     if(isLogin) {
-        console.log(store.state.auth.user.roles);
         let isAdmin = store.state.auth.user && store.state.auth.user.roles.includes('admin');
         let isDealer = store.state.auth.user && store.state.auth.user.roles.includes('dealer');
         let isUser = store.state.auth.user && store.state.auth.user.roles.includes('user');
