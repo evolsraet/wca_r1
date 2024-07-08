@@ -25,7 +25,8 @@
                       <span v-if="auctionDetail.data.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
                       <span v-if="auctionDetail.data.status === 'chosen'" class="mx-2 auction-done">선택완료</span>
                       <div v-if="auctionDetail.data.status !== 'cancel'">
-                        <input class="toggle-heart" type="checkbox" checked />
+                        <input class="toggle-heart" type="checkbox" :id="'favorite-' + auctionDetail.data.id"
+                        :checked="auctionDetail.data.isFavorited" />
                         <label class="heart-toggle"></label>
                       </div>
                       <div class="gap-1" :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
@@ -47,7 +48,7 @@
                         <div></div>
                         <div class="d-flex gap-3 justify-content-end align-items-center mb-1">
                           <div class="tc-light-gray icon-hit">조회수 {{ auctionDetail.data.hit }}</div>
-                          <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
+                          <div class="tc-light-gray ml-2 icon-heart">관심 {{ auctionDetail.data.likes ? auctionDetail.data.likes.length : 0 }}</div>
                           <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids_count }}</p>
                         </div>
                       </div>
@@ -391,7 +392,7 @@
                 <h5>나의 입찰 금액</h5>
                 <div class="mt-3 d-flex align-items-center justify-content-end gap-3">
                   <p class="tc-light-gray icon-bid">입찰  {{ auctionDetail.data.bids_count }}</p>
-                  <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
+                  <div class="tc-light-gray ml-2 icon-heart">관심 {{ auctionDetail.data.likes ? auctionDetail.data.likes.length : 0 }}</div>
                 </div>
               </div>
               <div v-if="auctionDetail.data.status === 'ing' && (succesbid || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price == null" @click.stop="">
@@ -682,7 +683,7 @@
                                   <button type="button" class="mb-1 btn-close" @click="DealerbackView"></button>
                                   <div class="mt-3 d-flex align-items-center justify-content-end gap-3">
                                     <p class="tc-light-gray icon-bid">입찰 {{ auctionDetail.data.bids.length }}</p>
-                                    <div class="tc-light-gray ml-2 icon-heart">관심 0</div>
+                                    <div class="tc-light-gray ml-2 icon-heart">관심 {{ auctionDetail.data.likes ? auctionDetail.data.likes.length : 0 }}</div>
                                   </div>
                                 </div>
                               <div>
@@ -1389,6 +1390,16 @@ const fetchAuctionDetail = async () => {
   console.log("????????????????????????:", auctionId);
   try {
     auctionDetail.value = await getAuctionById(auctionId);
+    console.log(auctionDetail.value.data.likes);
+
+    auctionDetail.value.data.likes = auctionDetail.value.data.likes.filter(like => {
+        if(like.user_id == user.value.id){
+          auctionDetail.value.data.isFavorited = true;
+          console.log(auctionDetail.value.data);
+          return true;
+        }
+    })
+
     if(auctionDetail.value.data.reviews.length > 0){
       reviewIsOk.value = false;
     }

@@ -1,13 +1,35 @@
 import { ref } from 'vue';
 import { cmmn } from '@/hooks/cmmn';
+import { reactive } from 'vue';
 
 export default function useLikes() {
     const likesData = ref([]);
     const pagination = ref({});
     const validationErrors = ref({});
     const { wicac } = cmmn();
+    
+    const like = reactive({
+        likeable_type: `App\\Models\\Auction`,
+        user_id:'',
+        likeable_id:'',
+    })
+    
+    const setLikes = async (like) => {
+        const form = {
+            like
+        }
+        return wicac.conn()
+        .log() // 로그 출력
+        .url(`/api/likes`)
+        .param(form)
+        .callback(function(result) {       
+            return result;
+        })
+        .post(); 
+    }
 
     const getLikes = async (likeableType = 'Auction', userId = null) => {
+        console.log(userId);
         const apiList = [`likes.likeable_type:like:${likeableType}`];
 
         if (userId) {
@@ -21,7 +43,7 @@ export default function useLikes() {
         while (hasMorePages) {
             try {
                 const result = await wicac.conn()
-                    //.log() // 로그 출력
+                    .log() // 로그 출력
                     .url(`/api/likes`)
                     .where(apiList)
                     .page(`${page}`) // 페이지 0 또는 주석 처리시 기능 안함
@@ -51,8 +73,21 @@ export default function useLikes() {
         return likesData.value.some(like => like.likeable_id === auctionId);
     };
 
+    const deleteLike = (id => {
+        wicac.conn()
+        .url(`/api/likes/${id}`)
+        //.log()
+        .callback(function(result){
+            console.log(result);
+        })
+        .delete();
+
+    }) 
     return {
+        like,
+        setLikes,
         getLikes,
+        deleteLike,
         likesData,
         pagination,
         validationErrors,

@@ -203,11 +203,7 @@ const setUserProfileData = async () => {
   await getUser(userId.value);
   //console.log(user);
 
-  if (user.value?.roles?.includes('dealer')) {
-    isDealer.value = true;
-  } else {
-    isDealer.value = false;
-  }
+  isDealer.value = user.value?.roles?.includes('dealer') || false;
 
   if (user) {
     profile.value.name = user.value.name;
