@@ -23,7 +23,7 @@ trait CrudTrait
         $resourceClass = "\\App\\Http\\Resources\\" . ucfirst($modelName) . "Resource";
 
         if (!class_exists($modelClass) || !class_exists($resourceClass)) {
-            throw new \Exception("Model or Resource class does not exist.");
+            throw new \Exception("모델 또는 리소스 클래스가 없습니다. Crud Trait");
         }
 
         $this->modelClass = $modelClass;
@@ -99,6 +99,17 @@ trait CrudTrait
         });
 
         $this->middleProcess(__FUNCTION__, request(), $result);
+
+        // 검색어
+        if ($search_text = request('search_text') && $searchable = $modelInstance->searchable) {
+            $result = $result->where(function ($query) use ($search_text, $searchable) {
+                foreach (explode(',', $search_text) as $search) {
+                    foreach ($searchable as $column) {
+                        $query->orWhere($column, 'like', '%' . $search . '%');
+                    }
+                }
+            });
+        }
 
         $result = $result->when(request('search_id'), function ($query) {
             $query->where('id', request('search_id'));

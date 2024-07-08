@@ -24,6 +24,7 @@ class CreateAuctionsTable extends Migration
             $table->string('bank')->nullable()->comment('은행');;
             $table->string('account')->nullable()->comment('은행번호');
             $table->text('memo')->nullable()->comment('메모');
+            $table->boolean('is_reauction')->default(0)->comment('재경매여부');
             $table->timestamp('final_at')->nullable()->comment('경매마감일');
             $table->timestamp('choice_at')->nullable()->comment('선택일');
             $table->timestamp('done_at')->nullable()->comment('완료일');

@@ -29,6 +29,15 @@ class Auction extends Model implements HasMedia
         'diag_check_at',
     ];
 
+    // 검색어로 검색가능한 경우
+    public $searchable = [
+        'owner_name',
+        'car_no',
+        'region',
+        'addr1',
+        'addr2',
+    ];
+
     public $enums = [
         'status' => [
             'cancel' => '취소',

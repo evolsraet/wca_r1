@@ -58,6 +58,7 @@ class CrudTest extends TestCase
 
         // 응답 검증
         $response->assertSuccessful();
+        // data[]->auction.status 가 wait, done 인지 확인
         $response->assertJson(
             fn (AssertableJson $json) =>
             $json

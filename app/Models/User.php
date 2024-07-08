@@ -65,6 +65,13 @@ class User extends Authenticatable implements HasMedia
         'deleted_at' => 'datetime',
     ];
 
+    // 검색어로 검색가능한 경우
+    public $searchable = [
+        'name',
+        'phone',
+        'email',
+    ];
+
     // 업로드 가능한 파일들
     public $files = [
         'file_user_photo' => '사진',
