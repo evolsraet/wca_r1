@@ -176,7 +176,7 @@ const updateProfile = async () => {
             wicac.conn()
             .url(`/api/users/${userId.value}`)
             .param(formData)
-            .multipart()
+            .multipartUpdate()
             .callback(async function(result) {
               console.log(result);
                 if(result.isSuccess){

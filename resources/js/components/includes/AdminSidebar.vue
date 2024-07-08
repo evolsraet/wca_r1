@@ -3,8 +3,8 @@
         <div class="d-flex flex-column align-items-center ms-3 pt-0 mb-4">
             <router-link to="/admin" class="navbar-brand col-md-3 col-lg-2 ms-1 px-3 fs-6 nuxt-link-active mini mb-2"></router-link>
             <span class="admin-icon admin-icon-profile admin-icon-large"></span>
-            <p class="profile-name">관리자</p>
-            <p class="profile-name tc-light-gray">admin@demo.com</p>
+            <p class="profile-name">{{ userName }}</p>
+            <p class="profile-name tc-light-gray">{{ userEmail }}</p>
             <div class="d-flex mt-2 gap-3 mb-2">
                 <a href="/login" @click="logout" class="tc-light-gray nav-link d-flex align-items-center ft-13 mx-1">
                     <span class="d-none d-sm-inline tc-light-gray ms-1">로그아웃</span>
@@ -66,12 +66,21 @@
 import { onMounted , watch , nextTick , ref } from 'vue';
 import { useAbility } from "@casl/vue";
 import useAuth from "@/composables/auth";
+import useUsers from "@/composables/users";
 import { useRouter , useRoute } from 'vue-router';
+import { useStore } from 'vuex';
 const { can } = useAbility();
 const { logout } = useAuth();
 const router = useRouter();
 const route = useRoute();
 const pageName = ref('');
+const store = useStore();
+
+const userName = ref('');
+const userEmail = ref('');
+const {
+        getUser,
+} = useUsers();
 
 function addSideBar(element, routeName, to){
     
@@ -89,7 +98,13 @@ function addSideBar(element, routeName, to){
     } 
 }
 
-onMounted(() => {
+onMounted(async () => {
+    const userInfo =store.getters['auth/user'];
+    let userId = userInfo.id;
+    const response = await getUser(userId);
+
+    userName.value = response.name;
+    userEmail.value = response.email;
 
     let user = document.getElementById('adminSidebar-user');
     let review = document.getElementById('adminSidebar-review');
