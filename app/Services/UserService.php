@@ -305,12 +305,15 @@ class UserService
     {
         if ($method === 'index') {
             // $item->with('role');
-            if (!auth()->user()->hasPermissionTo('act.admin')) {
+            // print_r(auth()->user()->hasPermissionTo);
+            // die();
+            if (auth()->check() && !auth()->user()->hasPermissionTo('act.admin')) {
                 $item->where('id', auth()->user()->id);
                 $item->role(['user', 'dealer']);
             }
         } elseif ($method === 'show') {
             if (
+                auth()->check() &&
                 !auth()->user()->hasPermissionTo('act.admin')
             ) {
                 $item->role(['user', 'dealer']);

@@ -48,7 +48,7 @@ trait CrudTrait
     // 선처리 훅
     protected function beforeProcess($method, $request, $data = null, $id = null)
     {
-        // 컨트롤러에서 이 메소드를 오버라이드하여 사용할 수 있습니다.
+        // 컨트롤러에서 이 메소드�� 오버라이드하여 사용할 수 있습니다.
     }
 
     // 중간처리 훅
@@ -115,7 +115,7 @@ trait CrudTrait
 
 
         // 연관데이터 없는것들
-        // with 와 사용법 동��
+        // with 와 사용법 동
         // ?doesnthave=reviews
         $result = $result->when(request('doesnthave'), function ($query) {
             $relations = request('doesnthave') ? explode(',', request('doesnthave')) : [];
@@ -148,11 +148,11 @@ trait CrudTrait
                 }
 
                 // whereIn 동일테이블만 적용 가능
-                if ($row[1] == 'wherein') {
-                    $values = explode(',', $row[2]);
-                    $result = $result->whereIn($row[0], $values);
-                    continue;
-                }
+                // if ($row[1] == 'wherein') {
+                //     $values = explode(',', $row[2]);
+                //     $result = $result->whereIn($row[0], $values);
+                //     continue;
+                // }
 
                 // where 와 기타 구분
                 $whereFunction = 'where';
@@ -204,8 +204,7 @@ trait CrudTrait
                                 // die();
                                 $result->whereHas($findKey[0], function ($qry) use ($findKey, $row, $whereFunction) {
                                     // findKey[1]는 필드명, row[1]은 값 (기본 산자 '=')
-                                    $qry->$whereFunction($findKey[1], '=', $row[1]); // 기본 연산자 '='를 명시적으로 사용
-                                    // $qry->$whereFunction($row[0], '=', $row[1]); // 기본 연산자 '='를 명시적으로 사용
+                                    $qry->$whereFunction($findKey[1], $row[1]); // 기본 연산자 '='를 명시적으로 사용
                                 });
                             }
                         }
