@@ -141,6 +141,8 @@ const store = useStore();
 
 const updateOrdering = (column) => {
         let columnState = orderingState[column];
+
+        columnState.hit += 1;
         
         if (columnState.hit == 3) {
             columnState.column = '';
