@@ -73,6 +73,26 @@ function requireAct(act) {
 
     };
 }
+function takingVerificationHomeRole(next) {
+    let isLogin = !!store.state.auth.authenticated;    
+    if(isLogin) {
+        console.log(store.state.auth.user.roles);
+        let isAdmin = store.state.auth.user && store.state.auth.user.roles.includes('admin');
+        let isDealer = store.state.auth.user && store.state.auth.user.roles.includes('dealer');
+        let isUser = store.state.auth.user && store.state.auth.user.roles.includes('user');
+        if(isAdmin) {
+            next('/admin');
+        } else if(isDealer) {
+            next('/dealer');
+        } else if(isUser) {
+            next();
+        } else {
+            next();
+        }
+    } else {
+        next();
+    }
+}
 
 //url 추후에 리네임 
 export default [
@@ -85,7 +105,9 @@ export default [
                 path: '/',
                 name: 'home',
                 component: () => import('../views/home/index.vue'),
-
+                beforeEnter: (to, from, next) => {
+                    takingVerificationHomeRole(next);
+                },
             },
             {
                 path: '/user',
