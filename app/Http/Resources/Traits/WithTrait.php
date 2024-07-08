@@ -11,7 +11,21 @@ trait WithTrait
         $withRelations = $request->query('with');
         if ($withRelations) {
             $relations = explode(',', $withRelations);
+
             foreach ($relations as $relation) {
+
+                // print_r($relation);
+                // print_r($parentArray);
+                // die();
+
+                if ($relation == 'likeable') {
+                    $relation = Str::studly(Str::singular(class_basename($parentArray['likeable_type'])));
+                }
+
+                // print_r($relation);
+                // print_r($parentArray);
+                // die();
+
                 $this->handleRelation($relation, $parentArray);
             }
         }

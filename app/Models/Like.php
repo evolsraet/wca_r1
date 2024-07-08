@@ -14,6 +14,13 @@ class Like extends Model
         return $this->morphTo();
     }
 
+    public function auction()
+    {
+        return $this->with(['likeable' => function ($query) {
+            $query->where('likeable_type', Auction::class);
+        }])->get();
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

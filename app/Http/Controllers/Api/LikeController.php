@@ -20,8 +20,7 @@ class LikeController extends Controller
 
     public function toggle($likeable_type_model, $likeable_id)
     {
-        $likeable_type = "App\\Models\\" . Str::camel($likeable_type_model);
-        $likeable_id = (int) $likeable_id;
+        $likeable_type = "App\\Models\\" . Str::studly($likeable_type_model);
 
         // TODO: CrudTrait 수정 - $request 가 아닌 request() 를 사용한다. $request 사용 유도
         // $request = request();
@@ -32,7 +31,7 @@ class LikeController extends Controller
             ],
         ]);
 
-        // print_r(request()->all());
+        // print_r($request->toArray());
         // die();
 
         $like = Like::where('likeable_id', $likeable_id)

@@ -23,6 +23,8 @@ class LikeService
 
         switch ($method) {
             case 'index':
+                // print_r(Like::where('likeable_id', 3)->where('likeable_type', 'auction')->with('likeable')->get()->toArray());
+                // die();
             case 'show':
                 // echo json_encode($request->all(), JSON_PRETTY_PRINT);  // JSON 형식으로 깔끔하게 출력
                 // die();
@@ -38,6 +40,7 @@ class LikeService
                 break;
             case 'store':
                 // 저장일때 자동 내 아이디 삽입
+                // $result->likeable_type = auth()->user()->id;
                 $result->user_id = auth()->user()->id;
                 break;
         }

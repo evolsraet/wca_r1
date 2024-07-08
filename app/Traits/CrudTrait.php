@@ -183,6 +183,20 @@ trait CrudTrait
                     }
                 }
 
+                // 값 변경
+                switch ($row[0]) {
+                    case 'likes.likeable_type':
+                        if ($row[3]) {
+                            $row[3] = Str::camel($row[3]);
+                        } else {
+                            $row[2] = Str::camel($row[2]);
+                        }
+                        break;
+                    default:
+                        break;
+                }
+
+                // 조건처리
                 switch ($row[0]) {
                     case 'users.roles':
                         $result = $result->role($row[1]);
@@ -306,6 +320,9 @@ trait CrudTrait
 
             $this->middleProcess(__FUNCTION__, $data, $item);
             $item->save(); // 상위 객체 저장
+
+            // print_r($item->toArray());
+            // die();
 
             // 하위 객체를 동적으로 처리합니다.
             foreach ((array) $data as $relationName => $relationData) {
