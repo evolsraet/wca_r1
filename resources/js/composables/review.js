@@ -372,7 +372,7 @@ export function initReviewSystem() {
             isHomeReview = false,
             column = 'created_at',
             direction = 'desc',
-            star = ''
+            star = 'all'
         ) => {
 
         const apiList = ['dealer'];
