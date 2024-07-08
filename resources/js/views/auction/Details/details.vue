@@ -24,7 +24,7 @@
                       <span v-if="auctionDetail.data.status === 'ask'" class="mx-2 auction-done">신청완료</span>
                       <span v-if="auctionDetail.data.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
                       <span v-if="auctionDetail.data.status === 'chosen'" class="mx-2 auction-done">선택완료</span>
-                      <div v-if="auctionDetail.data.status !== 'cancel'">
+                      <div v-if="auctionDetail.data.status !== 'cancel' & !isUser">
                         <input class="toggle-heart" type="checkbox" :id="'favorite-' + auctionDetail.data.id"
                         :checked="auctionDetail.data.isFavorited" @click.stop="toggleFavorite(auctionDetail.data)"/>
                         <label class="heart-toggle" :for="'favorite-' + auctionDetail.data.id" @click.stop></label>
