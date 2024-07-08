@@ -203,7 +203,6 @@ export default function useUsers() {
             formData.append('file_user_sign', editForm.file_user_sign);
         }
         for (const x of formData) {
-            console.log('FORMdATA==========');
             console.log(x);
         };
 
