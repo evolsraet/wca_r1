@@ -1232,6 +1232,7 @@ export function cmmn() {
         },
         users : function() {
             let _this = this;
+            let data;
             if(_this._input._isEnum) {
                 data =  this.deepClone(this._store.getters['enums/data']['users']);
             } else if(_this._input._isField) {
@@ -1243,6 +1244,7 @@ export function cmmn() {
         },
         dealers : function(input) {
             let _this = this;
+            let data;
             if(_this._input._isEnum) {
                 data =  this.deepClone(this._store.getters['enums/data']['dealers']);
             } else if(_this._input._isField) {
