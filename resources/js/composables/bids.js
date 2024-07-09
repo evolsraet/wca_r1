@@ -1,8 +1,10 @@
 import { ref, computed, inject } from 'vue';
 import axios from 'axios';
+import { cmmn } from '@/hooks/cmmn';
 
 // 입찰 데이터
 export default function useBid() {
+    const { wicac , wica } = cmmn();
     const bidsData = ref([]);
     const bids = ref([]);
     const bid = ref({
@@ -14,7 +16,8 @@ export default function useBid() {
     const swal = inject('$swal');
     const auctionsData = ref([]);
     const pagination = ref({});
-
+    
+    /**
     const getBids = async () => {
         let allBids = [];
         let currentPage = 1;
@@ -49,8 +52,52 @@ export default function useBid() {
         } catch (error) {
             console.error('Error fetching bids:', error);
         }
-    };
+    }; */
 
+    const getBids = async (page = 1 , isSelect = false, userId = 0) => {
+        const whereList = [];
+        if(isSelect){
+            if(userId != 0){
+                whereList.push(`auction.status:whereIn:dlvr,chosen&like=auction.win_bid.user_id:${userId}`)
+            }
+            
+        }
+        return wicac.conn()
+            .log()
+            .url(`/api/bids`)
+            .with(['auction'])
+            .where(whereList)
+            .page(`${page}`)
+            .callback(function(result) {
+                console.log(result);
+                bidsData.value = result.data;
+                pagination.value = result.rawData.data.meta;
+                return result.data;
+            })
+            .get();
+
+    }
+
+    //페이징 안 한 전체 bid
+    const getHomeBids = async () => {
+        const apiList = [];
+
+        return wicac.conn()
+            .log()
+            .url(`/api/bids`)
+            .with(['auction'])
+            .pageLimit(10000)
+            //.where(apiList)
+            //.page(`${page}`)
+            .callback(function(result) {
+                //console.log(result);
+                bidsData.value = result.data;
+                //pagination.value = result.rawData.data.meta;
+                return result.data;
+            })
+            .get();
+
+    } 
     const getBidById = async (id) => {
         try {
             const response = await axios.get(`/api/bids/${id}`);
@@ -180,6 +227,7 @@ export default function useBid() {
     };
 
     return {
+        getHomeBids,
         cancelBid,
         bidsData,
         bidsCountByUser,

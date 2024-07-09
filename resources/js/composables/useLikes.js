@@ -28,6 +28,22 @@ export default function useLikes() {
         .post(); 
     }
 
+    //pagination 안한 전체 데이터 
+    const getAllLikes = async(likeableType = 'Auction', userId = null) => {
+        console.log(userId);
+        return wicac.conn()
+        .log()
+        .url(`/api/likes`)
+        .where([`likes.user_id:${userId}`])
+        .pageLimit(10000)
+        .callback(function(result) {
+            
+            likesData.value = result.data;
+            return result;
+        })
+        .get();
+        
+    }
     const getLikes = async (likeableType = 'Auction', userId = null) => {
         console.log(userId);
         const apiList = [`likes.likeable_type:like:${likeableType}`];
@@ -84,6 +100,7 @@ export default function useLikes() {
 
     }) 
     return {
+        getAllLikes,
         like,
         setLikes,
         getLikes,
