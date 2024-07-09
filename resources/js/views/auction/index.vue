@@ -500,12 +500,12 @@ TODO:
                                             </div>
                                             <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
                                             </div>
-                                            <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">탁송진행</span>
-                                            <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>   
-                                            <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
-                                            <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span> 
-                                            <span v-if="auction.status === 'diag'" class="mx-2 auction-done">진단대기</span>
-                                            <span v-if="auction.status === 'ask'" class="mx-2 auction-done">신청완료</span>
+                                            <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                                            <span v-if="auction.status === 'done'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>   
+                                            <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                                            <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span> 
+                                            <span v-if="auction.status === 'diag'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                                            <span v-if="auction.status === 'ask'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
                                             <div class="d-flex">    
                                                 <span v-if="(auction.status === 'ing' || auction.status === 'wait') && auction.timeLeft" class="mx-2 timer">
                                                     <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
@@ -587,12 +587,12 @@ TODO:
                     </div>
                     <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
                     </div>
-                    <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">탁송진행</span>
-                    <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>   
-                    <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
-                    <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span> 
-                    <span v-if="auction.status === 'diag'" class="mx-2 auction-done">진단대기</span>
-                    <span v-if="auction.status === 'ask'" class="mx-2 auction-done">신청완료</span>
+                    <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                    <span v-if="auction.status === 'done'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>   
+                    <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                    <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span> 
+                    <span v-if="auction.status === 'diag'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                    <span v-if="auction.status === 'ask'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
                     <div class="d-flex">    
                         <span v-if="(auction.status === 'ing' || auction.status === 'wait') && auction.timeLeft" class="mx-2 timer">
                             <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
@@ -823,7 +823,7 @@ export default {
 
 </script>
 <script setup>
-import { ref, computed, onMounted, reactive, onUnmounted } from 'vue';
+import { ref, computed, onMounted, reactive, onUnmounted} from 'vue';
 import { useStore } from "vuex";
 import useAuctions from "@/composables/auctions"; 
 import useRoles from '@/composables/roles'; 
@@ -832,7 +832,8 @@ import { useRouter } from 'vue-router';
 import Footer from "@/views/layout/footer.vue";
 import useLikes from '@/composables/useLikes';
 import usebid from '@/composables/bids.js'; 
-
+import { cmmn } from '@/hooks/cmmn';
+const { wicas } = cmmn();
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
 const {getBids, bidsData } = usebid();
@@ -853,7 +854,7 @@ const user = computed(() => store.getters["auth/user"]);
 const isDealer = computed(() => user.value?.roles?.includes('dealer')); 
 const isUser = computed(() => user.value?.roles?.includes('user')); 
 const isSpinning = ref(false);
-
+let statusLabel;
 const initializeFavorites = () => {
 
     /**
@@ -1011,7 +1012,6 @@ function isDealerParticipating(auctionId) {
 let timer;
 onMounted(async () => { 
     await getAuctions(currentPage.value);
- 
     await getBids(); 
     console.log('Fetched bids data:', bidsData.value);
     
