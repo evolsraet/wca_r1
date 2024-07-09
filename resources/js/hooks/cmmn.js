@@ -1222,7 +1222,8 @@ export function cmmn() {
             let _this = this;
             let data;
             if(_this._input._isEnum) {
-                data =  this.deepClone(this._store.getters['enums/data']['auctions']);
+                let rdata =  this.deepClone(this._store.getters['enums/data']['auctions']);
+                data = rdata.status;
             } else if(_this._input._isField) {
                 data =  this.deepClone(this._store.getters['fields/data']['auctions']);
             } else {
@@ -1234,7 +1235,8 @@ export function cmmn() {
             let _this = this;
             let data;
             if(_this._input._isEnum) {
-                data =  this.deepClone(this._store.getters['enums/data']['users']);
+                let rdata =  this.deepClone(this._store.getters['enums/data']['users']);
+                data = rdata.status;
             } else if(_this._input._isField) {
                 data =  this.deepClone(this._store.getters['fields/data']['users']);
             } else {
@@ -1246,7 +1248,8 @@ export function cmmn() {
             let _this = this;
             let data;
             if(_this._input._isEnum) {
-                data =  this.deepClone(this._store.getters['enums/data']['dealers']);
+                let rdata =  this.deepClone(this._store.getters['enums/data']['dealers']);
+                data = rdata.status;
             } else if(_this._input._isField) {
                 data =  this.deepClone(this._store.getters['fields/data']['dealers']);
             } else {
@@ -1274,31 +1277,15 @@ export function cmmn() {
         },
         processPublic : function(_input,data) {
             if(_input.isAdd) {
-                if(_input._isEnum) {
-                    Object.assign(data.status, _input._add);
-                } else {
-                    Object.assign(data, _input._add);
-                }
+                Object.assign(data, _input._add);
             }
             let d;
             if(_input.isExcl) {
-                if(_input._isEnum) {
-                    d = this.remove(data.status,_input._excl);
-                } else {
-                    d = this.remove(data,_input._excl);
-                }                
+                d = this.remove(data,_input._excl);                
             } else if(_input.isPerm) {
-                if(_input._isEnum) {
-                    d = this.filtering(data.status,_input._perm);
-                } else {
-                    d = this.filtering(data,_input._perm);
-                }
+                d = this.filtering(data,_input._perm);
             } else {
-                if(_input._isEnum) {
-                    d = data.status;
-                } else {
-                    d = data;
-                }
+                d = data;
             }
             if(_input.isChangeKey) {
                 Object.keys(_input._changeKey).forEach(key => {
