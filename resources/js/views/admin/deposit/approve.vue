@@ -1,5 +1,5 @@
 <template>
-<h4><span class="admin-icon admin-icon-menu"></span>입금 관리</h4>
+<h4><span class="admin-icon admin-icon-menu02"></span>입금 관리</h4>
   <div class="row justify-content-center my-5">
   <div class="container-fluid" v-if="auctionDetails">
     <form @submit.prevent="registerAuction">
