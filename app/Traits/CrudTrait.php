@@ -153,98 +153,51 @@ trait CrudTrait
         // 키 테이블명(복수).필드
         // 키:값 or 키:비교:값
         // ?where=users.id:<:10|users.id:>:1
+
+
         if (!empty(request('where'))) {
-            $wheres = [];
-            $exploded = explode('|', request('where'));
+            // 그룹을 지정한다.
+            // 예시: ?where=users.id:<:10|users.id:>:1_and_users.name:like:%홍길동%_or_users.id:>:20
 
-            foreach ((array) $exploded as $onewhere) :
-                $row = explode(':', $onewhere);
+            // 웨어그룹 아이템은 [웨어문들복합] 또는 그룹을 묶는 [or,and] 로 나위어 있다.
+            $whereGroup = preg_split('/(_and_|_or_)/', request('where'), -1, PREG_SPLIT_DELIM_CAPTURE);
+            $whereGroupFunction = 'where';
 
-                // like = $row[1] 이 like 일때, $row[2] 에 '%' 가 포되어있지 않으면 앞뒤로 '%' 문자 더해주기
-                if ($row[1] == 'like' && strpos($row[2], '%') === false) {
-                    $row[2] = '%' . $row[2] . '%';
-                }
+            // Log::info(['웨어그룹 시작', $whereGroup]);
 
-                // whereIn 동일테이블만 적용 가능
-                // if ($row[1] == 'wherein') {
-                //     $values = explode(',', $row[2]);
-                //     $result = $result->whereIn($row[0], $values);
-                //     continue;
-                // }
+            foreach ($whereGroup as $whereGroupItem) {
+                // whereGroupItem 값에 따라 쿼리 그룹화 방식을 결정합니다.
+                // '_or_'이면 orWhere 그룹, '_and_'이면 where 그룹을 사용합니다.
 
-                // where 와 기타 구분
-                $whereFunction = 'where';
+                // Log::info(['whereGroupItem 포이치입장', $whereGroupItem, $whereGroupFunction]);
 
-                // where 펑션이 바뀌어야할 경우
-                if (isset($row[2])) {
-                    switch ($row[1]) {
-                        case 'whereIn':
-                        case 'orWhere':
-                            $whereFunction = $row[1];
-                            $row = [
-                                $row[0],
-                                explode(',', $row[2])
-                            ];
-                            // print_r($row);
-                            // die();
-                            break;
-                    }
-                }
-
-                // 값 변경
-                switch ($row[0]) {
-                    case 'likes.likeable_type':
-                        if ($row[3]) {
-                            $row[3] = Str::camel($row[3]);
-                        } else {
-                            $row[2] = Str::camel($row[2]);
-                        }
+                switch ($whereGroupItem) {
+                    case '_or_':
+                        $whereGroupFunction = 'orWhere';
+                        continue 2;
                         break;
-                    default:
+                    case '_and_':
+                        $whereGroupFunction = 'where';
+                        continue 2;
                         break;
                 }
 
-                // 조건처리
-                switch ($row[0]) {
-                    case 'users.roles':
-                        $result = $result->role($row[1]);
-                        break;
+                $wheres = explode('|', $whereGroupItem);
 
-                    default:
-                        if (strpos($row[0], (new $this->modelClass)->getTable() . ".") !== false) {
-                            // 동일테이블
-                            if (isset($row[2])) {
-                                $result = $result->$whereFunction($row[0], $row[1], $row[2]);
-                            } else {
-                                $result = $result->$whereFunction($row[0], $row[1]);
-                            }
-                        } else {
-                            // 다른테이블
-                            // $row = explode(':', $onewhere);
+                // Log::info(
+                //     [
+                //         '실행부',
+                //         $whereGroupFunction,
+                //         $wheres
+                //     ]
+                // );
 
-                            $findKey = explode('.', $row[0]); // 0 테이블 1 필드
-                            $result->with($findKey[0]);
-
-                            if (isset($row[2])) {
-                                $result->whereHas($findKey[0], function ($qry) use ($findKey, $row, $whereFunction) {
-                                    // findKey[1]는 필드명, row[1]은 연산자, row[2]는 값
-                                    $qry->$whereFunction($findKey[1], $row[1], $row[2]); // 특정 조건에 맞는 관계를 필터링
-                                });
-                            } else {
-                                // $row[0] = 'auctions.status';
-                                // $row[1] = 'wait';
-                                // print_r($row);
-                                // die();
-                                $result->whereHas($findKey[0], function ($qry) use ($findKey, $row, $whereFunction) {
-                                    // findKey[1]는 필드명, row[1]은 값 (기본 산자 '=')
-                                    $qry->$whereFunction($findKey[1], $row[1]); // 기본 연산자 '='를 명시적으로 사용
-                                });
-                            }
-                        }
-                        break;
-                }
-            endforeach;
+                $result->{$whereGroupFunction}(function ($query) use ($wheres) {
+                    $this->parseWhereClause($query, $wheres);
+                });
+            }
         }
+
         // 후처리
 
         $this->afterProcess(__FUNCTION__, request(), $result);
@@ -252,6 +205,81 @@ trait CrudTrait
         $result = $result->paginate($paginate);
 
         return response()->api($this->resourceClass::collection($result));
+    }
+
+    private function parseWhereClause($query, $wheres)
+    {
+        foreach ((array) $wheres as $onewhere) :
+            $row = explode(':', $onewhere);
+            if (!isset($row[1])) {
+                // Log::info($row, ['비정상 where 구문 parseWhereClause']);
+                continue;
+            }
+
+            $fieldWithTable = $row[0];
+            $operator = isset($row[2]) ? $row[1] : null;
+            $value = $row[2] ?? $row[1];
+
+            // where 와 기타 구분
+            $whereFunction = 'where';
+
+            // where 펑션이 바뀌어야할 경우
+            if ($operator) {
+                switch ($operator) {
+                    case 'whereIn':
+                    case 'orWhere':
+                        $whereFunction = $operator;
+                        $operator = null;
+                        $value = explode(',', $value);
+                        break;
+                    case 'like':
+                        if (strpos($value, '%') === false) {
+                            $value = '%' . $value . '%';
+                        }
+                        break;
+                }
+            }
+
+            // 값 변경
+            switch ($fieldWithTable) {
+                case 'likes.likeable_type':
+                    $value = Str::camel($value);
+                    break;
+                default:
+                    break;
+            }
+
+            // 조건처리
+            switch ($fieldWithTable) {
+                case 'users.roles':
+                    $result = $query->role($value);
+                    break;
+
+                default:
+                    if (strpos($fieldWithTable, (new $this->modelClass)->getTable() . ".") !== false) {
+                        // 동일테이블
+                        $this->addWhere($fieldWithTable, $operator, $value, $whereFunction, $query);
+                    } else {
+                        // 다른테이블
+                        $tableAndField = explode('.', $fieldWithTable); // 0 테이블 1 필드
+                        $query->with($tableAndField[0]);
+
+                        $query->whereHas($tableAndField[0], function ($subQuery) use ($tableAndField, $operator, $value, $whereFunction) {
+                            // $qry->$whereFunction($tableAndField[1], $operator, $value); // 특정 조건에 맞는 관계를 필터링
+                            $this->addWhere($tableAndField[1], $operator, $value, $whereFunction, $subQuery);  // 특정 조건에 맞는 관계를 필터링
+                        });
+                    }
+                    break;
+            }
+        endforeach;
+    }
+
+    private function addWhere($fieldWithTable, $operator, $value, $whereFunction, $qry)
+    {
+        if ($operator)
+            $qry = $qry->$whereFunction($fieldWithTable, $operator, $value);
+        else
+            $qry = $qry->$whereFunction($fieldWithTable, $value);
     }
 
     private function applyRelationOrder($modelInstance, $query, $orderColumn, $orderDirection)

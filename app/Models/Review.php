@@ -11,6 +11,11 @@ class Review extends Model
 {
     use HasFactory, SoftDeletes;
 
+    // 검색어로 검색가능한 경우
+    public $searchable = [
+        'content',
+    ];
+
     public function auction()
     {
         return $this->belongsTo(Auction::class);
