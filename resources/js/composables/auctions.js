@@ -30,7 +30,8 @@ export default function useAuctions() {
         page = 1,
         column = '',
         direction = '',
-        status = 'all'
+        status = 'all',
+        search_title = ''
     ) => {
         const apiList = [];
 
@@ -40,11 +41,13 @@ export default function useAuctions() {
 
         return wicac.conn()
         .url(`/api/auctions`)
+        .log()
         .where(apiList)
         .order([
             [`${column}`,`${direction}`]
         ])
         .page(`${page}`)
+        .search(search_title)
         .callback(function(result) {
             auctionsData.value = result.data;
             pagination.value = result.rawData.data.meta;
@@ -107,14 +110,11 @@ const adminGetDepositAuctions = async(
     page = 1,
     column = '',
     direction = '',
-    status = 'all',
+    status = 'dlvr,done',
     search_title=''
 ) => {
     const apiList = [];
     apiList.push(`auctions.status:whereIn:${status}`)
-    if(search_title){
-        apiList.push(`auctions.car_no:${search_title}`)
-    }
 
     return wicac.conn()
     .url(`/api/auctions`)
@@ -123,9 +123,11 @@ const adminGetDepositAuctions = async(
         [`${column}`,`${direction}`]
     ])
     .page(`${page}`)
+    .search(search_title)
     .callback(function(result) {
         auctionsData.value = result.data;
         pagination.value = result.rawData.data.meta;
+        
         return result.data;
     })
     .get();
@@ -280,17 +282,49 @@ const AuctionCarInfo = async (carInfoForm) => {
     if (processing.value) return;
     processing.value = true;
     validationErrors.value = {};
+    console.log('auctionsData=====');
+    console.log(auctionData.auction.owner_name);
+    console.log(auction.ownerName);
+    let payload = {
+        auction : {
+            owner_name: auctionData.auction.owner_name,
+            car_no: auctionData.auction.car_no,
+            final_at: auctionData.auction.final_at,
+            region: auctionData.auction.region,
+            addr1: auctionData.auction.addr1,
+            addr2: auctionData.auction.addr2,
+            bank: auctionData.auction.bank,
+            account: auctionData.auction.account,
+            memo: auctionData.auction.memo,
+            addr_post: auctionData.auction.addr_post,
+            status: auctionData.auction.status
+        }
+    }
+    console.log('====');
+    console.log(payload);
 
+    const formData = new FormData();
+    formData.append('auction', JSON.stringify(payload.auction));
+    if(auction.file_user_owner){
+        formData.append('file_user_owner', auction.file_user_owner);
+    }
+    //const fileResult = await fileUserOwnerUpdate(userData.file_user_owner,userData.id);
+
+    console.log('formData=====');
+    console.log(formData);
+    
     return wicac.conn()
     .url(`/api/auctions`)
-    .param(auctionData) 
-    .callback(function(result) {
+    .param(formData) 
+    .multipart()
+    .callback(function (result) {
         if(result.isError){
             validationErrors.value = result.rawData.response.data.errors;
+            //fileUserOwnerDeleteById(userData.id);
             throw new Error;          
         } else {
             processing.value = false;
-            return result.data;
+            return result.isSuccess;
         }
     })
     .post();
@@ -329,9 +363,36 @@ const AuctionReauction = async (id, data) => {
 const updateAuction = async (id,auction) => {
     console.log('111111');
     const auctionForm = {
-        auction
+        auction : {
+            bank : auction.bank,
+            account : auction.account,
+            car_no: auction.car_no,
+            owner_name: auction.owner_name,
+            bank: auction.bank,
+            account: auction.account,
+            memo: auction.memo,
+            region:auction.region,
+            addr_post: auction.addr_post,
+            status : auction.status,
+            addr1: auction.addr1,
+            addr2: auction.addr2,
+            final_at: auction.final_at,
+            choice_at: auction.choice_at,
+            done_at: auction.done_at,
+            success_fee: auction.success_fee,
+            diag_fee: auction.diag_fee,
+            total_fee: auction.total_fee,
+            hope_price: auction.hope_price,
+            final_price: auction.final_price,
+        }
     }
     console.log(JSON.stringify(auctionForm));
+
+    const formData = new FormData();
+    formData.append('auction', JSON.stringify(auctionForm.auction));
+    if(auction.file_user_owner){
+        formData.append('file_user_owner', auction.file_user_owner);
+    }
 
     wica.ntcn(swal)
     .title('변경하시겠습니까?') // 알림 제목
@@ -339,8 +400,13 @@ const updateAuction = async (id,auction) => {
     .useHtmlText()
     .callback(async function(result) {
         if(result.isOk){
-            axios.put(`/api/auctions/${id}`,auctionForm)
-                .then(response => {
+            wicac.conn()
+            .url(`/api/auctions/${id}`) //호출 URL
+            //.multipart() //첨부파일 있을 경우 선언
+            .param(auctionForm)
+            .callback(function(result) {
+                console.log('wicac.conn callback ' , result);
+                if(result.isSuccess){
                     wica.ntcn(swal)
                     .useHtmlText()
                     .icon('I')
@@ -351,8 +417,7 @@ const updateAuction = async (id,auction) => {
                             router.push({name: 'auctions.index'})
                         }
                     }).alert('변경되었습니다');
-                })
-                .catch(error => {
+                }else{
                     wica.ntcn(swal)
                     .title('오류가 발생하였습니다.')
                     .useHtmlText()
@@ -360,7 +425,9 @@ const updateAuction = async (id,auction) => {
                     .callback(function(result) {
                         console.log(result);
                     }).alert('관리자에게 문의해주세요.');
-                })
+                }
+            })
+            .put();
         }
     }).confirm();
 }
@@ -547,7 +614,7 @@ const deleteAuction = async (id,urlPath) => {
         updateAuctionStatus,
         createAuction,
         refreshCarInfo,
-        updateAuction,
+        updateAuction
     };
     
 }
