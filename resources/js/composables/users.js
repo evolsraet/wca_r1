@@ -89,7 +89,8 @@ export default function useUsers() {
         stat = 'all',
         role = 'all',
         column = '',
-        direction = ''
+        direction = '',
+        search_title = ''
     ) => {
         const apiList = [];
         if(stat != 'all'){
@@ -107,6 +108,7 @@ export default function useUsers() {
             [`${column}`,`${direction}`]
         ])
         .page(`${page}`)
+        .search(search_title)
         .callback(function(result) {
             console.log('wicac.conn callback ' , result);
             users.value = result.data;
