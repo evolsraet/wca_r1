@@ -21,11 +21,13 @@
                         </div>
                     </div>
                     <div class="container my-5" v-if="loading">
-                        <div v-if="filteredBids.length > 0" class="row">
-                            <div class="col-md-3 p-2 mb-2 shadow-hover" v-for="bid in filteredBids" :key="bid.id"  @click="navigateToDetail(bid)">
+                        <div v-if="bidsData.length > 0" class="row">
+                            <div class="col-md-3 p-2 mb-2 shadow-hover" v-for="bid in bidsData" :key="bid.id"  @click="navigateToDetail(bid)">
                                 <div class="card my-auction">
                                     <div class="card-img-top-placeholder"></div> 
-                                    <div class="card-body">
+                                    <span v-if="bid.auction.status === 'dlvr'" class="mx-2 auction-done">탁송진행</span>
+                                    <span v-if="bid.auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span> 
+                                    <div class="card-body">  
                                         <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                                         <p>2020년 / 2.4km / 무사고</p>
                                         <div class="d-flex justify-content-between">
@@ -44,6 +46,20 @@
                     </div>
                 </div>
             </div>
+            <!-- Pagination -->
+            <nav>
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" :class="{ disabled: !pagination.prev }">
+                    <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
+                    </li>
+                    <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                    <a class="page-link" @click="loadPage(n)">{{ n }}</a>
+                    </li>
+                    <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+                    <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
+                    </li>
+                </ul>
+            </nav>
         </div>
     </div>
     <Footer />
@@ -58,15 +74,16 @@ import useBid from "@/composables/bids";
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 
+const currentPage = ref(1); 
 const router = useRouter();
 const store = useStore();
 const { getAuctions, getAuctionById } = useAuctions();
-const { bidsData, getBids } = useBid();
+const { bidsData, getBids , pagination } = useBid();
 const user = computed(() => store.getters['auth/user']);
 const { amtComma } = cmmn();
-const filteredBids = ref([]);
 const loading = ref(false);
 
+/**
 const fetchAuctionDetails = async (bid) => {
     if (!user.value || !user.value.id) {
         console.error('사용자 정보가 올바르지 않습니다.');
@@ -88,11 +105,6 @@ const fetchAuctionDetails = async (bid) => {
     }
 };
 
-function navigateToDetail(bid) {
-    console.log("Navigate to Detail:", bid.auction_id);
-    router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
-}
-
 const fetchFilteredBids = async () => {
     if (!user.value || !user.value.id) {
         console.error('사용자 정보가 올바르지 않습니다.');
@@ -103,15 +115,27 @@ const fetchFilteredBids = async () => {
     const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
     filteredBids.value = bidsWithDetails.filter(bid => bid.auctionDetails.win_bid && bid.auctionDetails.win_bid.user_id === user.value.id);
     console.log('Bids with Auction Details:', filteredBids.value);
-};
+}; */
+
+function loadPage(page) { 
+    if (page < 1 || page > pagination.value.last_page) return;
+    currentPage.value = page;
+    getBids(page, true);
+    window.scrollTo(0,0);
+}
+
+function navigateToDetail(bid) {
+    console.log("Navigate to Detail:", bid.auction_id);
+    router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
+}
+
 
 onMounted(async () => {
     if (!user.value || !user.value.id) {
         console.error('사용자 정보가 없습니다.');
         return;
     }
-    await getAuctions();
-    await fetchFilteredBids();
+    await getBids(1,true,user.value.id);
     loading.value = true;
 });
 </script>
