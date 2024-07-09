@@ -427,31 +427,35 @@ TODO:
                 </div> 
             </div>
                 <div class="container mb-3" v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
-                    <div class="registration-content">
-                        <div class="text-start status-selector">
-                            <input type="radio" name="status" value="all" id="all" checked @change="setFilter('all')">
+                    <div class="registration-content overflow-hidden">
+                        <div class="text-start status-selector registration-content overflow-x-scroll">
+                            <div v-for="(label, value) in statusLabel" :key="value" class="mx-2">
+                                <input type="radio" name="status" :value="value":id="value":checked="value === 'all' "@change="event => setFilter(event.target.value)"/>
+                                <label :for="value">{{ label }}</label>
+                                </div>
+                   <!--     <input type="radio" name="status" value="all" id="all" checked @change="event => setFilter(event.target.value)">
                             <label for="all" class="mx-2">전체</label>
 
-                            <input type="radio" name="status" value="dlvr" id="dlvr"  @change="setFilter('dlvr')">
+                            <input type="radio" name="status" value="dlvr" id="dlvr" @change="event => setFilter(event.target.value)">
                             <label for="dlvr" class="mx-2">탁송진행</label>
 
-                            <input type="radio" name="status" value="done" id="done"  @change="setFilter('done')">
+                            <input type="radio" name="status" value="done" id="done"  @change="event => setFilter(event.target.value)">
                             <label for="done" class="mx-2">경매완료</label>
 
-                            <input type="radio" name="status" value="chosen" id="chosen"  @change="setFilter('chosen')">
+                            <input type="radio" name="status" value="chosen" id="chosen"  @change="event => setFilter(event.target.value)">
                             <label for="chosen" class="mx-2">선택완료</label>
 
-                            <input type="radio" name="status" value="wait" id="wait"  @change="setFilter('wait')">
+                            <input type="radio" name="status" value="wait" id="wait" @change="event => setFilter(event.target.value)">
                             <label for="wait" class="mx-2">선택대기</label>
 
-                            <input type="radio" name="status" value="ing" id="ing"  @change="setFilter('ing')">
+                            <input type="radio" name="status" value="ing" id="ing" @change="event => setFilter(event.target.value)">
                             <label for="ing" class="mx-2">경매진행</label>
 
-                            <input type="radio" name="status" value="diag" id="diag"  @change="setFilter('diag')">
+                            <input type="radio" name="status" value="diag" id="diag" @change="event => setFilter(event.target.value)">
                             <label for="diag" class="mx-2">진단대기</label>
 
-                            <input type="radio" name="status" value="ask" id="ask"  @change="setFilter('ask')">
-                            <label for="ask" class="mx-2">신청완료</label>
+                            <input type="radio" name="status" value="ask" id="ask" @change="event => setFilter(event.target.value)">
+                            <label for="ask" class="mx-2">신청완료</label>-->   
                         </div>
 
                       <!--  <div class="text-end select-option">
@@ -501,11 +505,14 @@ TODO:
                                             <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
                                             </div>
                                             <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                                            <span v-if="auction.status === 'done'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>   
-                                            <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                                            <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span> 
-                                            <span v-if="auction.status === 'diag'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                                            <span v-if="auction.status === 'ask'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                                            <div>
+                                                <span
+                                                    v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(auction.status)"
+                                                    class="mx-2 auction-done"
+                                                    >
+                                                    {{ wicas.enum(store).toLabel(auction.status).auctions() }}
+                                                    </span>
+                                                </div>
                                             <div class="d-flex">    
                                                 <span v-if="(auction.status === 'ing' || auction.status === 'wait') && auction.timeLeft" class="mx-2 timer">
                                                     <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
@@ -588,11 +595,9 @@ TODO:
                     <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
                     </div>
                     <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                    <span v-if="auction.status === 'done'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>   
-                    <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                    <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span> 
-                    <span v-if="auction.status === 'diag'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                    <span v-if="auction.status === 'ask'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                    <div>
+                        <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(auction.status)" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                    </div>
                     <div class="d-flex">    
                         <span v-if="(auction.status === 'ing' || auction.status === 'wait') && auction.timeLeft" class="mx-2 timer">
                             <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
@@ -1014,7 +1019,7 @@ onMounted(async () => {
     await getAuctions(currentPage.value);
     await getBids(); 
     console.log('Fetched bids data:', bidsData.value);
-    
+    statusLabel = wicas.enum(store).addFirst('all','전체').excl('cancel','취소').ascVal().auctions();
 
     /**
     await getLikes('Auction',user.value.id);
