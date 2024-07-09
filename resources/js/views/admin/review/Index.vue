@@ -1,20 +1,10 @@
 <template>
-    <div class="p-3 row justify-content-center my-2">
-        <div class="col-md-12"></div>
-
-<!--
-                    <div class="search-type2 mb-5">
-                        
-                        <div class="border-xsl">
-                            <div class="image-icon-excel"></div>
-                        </div>
-                        <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
-                        <button type="button" class="search-btn">검색</button>
-                    </div>
--->
-                    <div class="container mb-3">
-                        <div class="d-flex justify-content-end">
-                            <div class="text-end select-option">
+    <div class="row justify-content-center my-2 p-3">
+        <div class="col-md-12">
+            </div>
+                <div class="container mb-3">
+                    <div class="d-flex justify-content-end responsive-flex-end gap-2">
+                        <div class="text-end select-option">
                                 <select class="form-select select-rank" aria-label="별점" @change="event => setStarFilter(event.target.value)">
                                     <option value="all"selected>전체</option>
                                     <option value="1">1점</option>
@@ -23,6 +13,10 @@
                                     <option value="4">4점</option>
                                     <option value="5">5점</option>
                                 </select>
+                            </div>
+                            <div class="search-type2 p-0">
+                                <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
+                                <button type="button" class="search-btn" @click="searchBtn">검색</button>
                             </div>
                         </div>
                     </div>
@@ -251,6 +245,8 @@ const orderingState = {
     'user.name': { direction: '', column: 'user.name', hit: 0 },
     'dealer.name': { direction: '', column: 'dealer.name', hit: 0 },
 };
+const search_title = ref('');
+
 onMounted(async () => {
     fetchReviews();
     getCategoryList();
@@ -289,14 +285,19 @@ const updateOrdering = (column) => {
     fetchReviews(); 
 };
 
+const searchBtn = async() =>{
+    fetchReviews();
+}
+
 function fetchReviews() {
     getAllReview(    currentPage.value,
                         false,
                         orderColumn.value,
                         orderDirection.value,
-                        currentStar.value
+                        currentStar.value,
+                        search_title.value
                 );
-            }   
+}   
 
 /** 
 const filterReviews = computed(() => {
@@ -370,5 +371,13 @@ watch(
   overflow: hidden; 
   text-overflow: ellipsis;
   white-space: nowrap; 
+}
+
+.search-type2 .search-btn{
+    top: 54px !important;  
+}
+
+.select-option {
+    width: 112px !important;
 }
 </style>

@@ -427,31 +427,35 @@ TODO:
                 </div> 
             </div>
                 <div class="container mb-3" v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
-                    <div class="registration-content">
-                        <div class="text-start status-selector">
-                            <input type="radio" name="status" value="all" id="all" checked @change="setFilter('all')">
+                    <div class="registration-content overflow-hidden">
+                        <div class="text-start status-selector registration-content overflow-x-scroll">
+                            <div v-for="(label, value) in statusLabel" :key="value" class="mx-2">
+                                <input type="radio" name="status" :value="value":id="value":checked="value === 'all' "@change="event => setFilter(event.target.value)"/>
+                                <label :for="value">{{ label }}</label>
+                                </div>
+                   <!--     <input type="radio" name="status" value="all" id="all" checked @change="event => setFilter(event.target.value)">
                             <label for="all" class="mx-2">전체</label>
 
-                            <input type="radio" name="status" value="dlvr" id="dlvr"  @change="setFilter('dlvr')">
+                            <input type="radio" name="status" value="dlvr" id="dlvr" @change="event => setFilter(event.target.value)">
                             <label for="dlvr" class="mx-2">탁송진행</label>
 
-                            <input type="radio" name="status" value="done" id="done"  @change="setFilter('done')">
+                            <input type="radio" name="status" value="done" id="done"  @change="event => setFilter(event.target.value)">
                             <label for="done" class="mx-2">경매완료</label>
 
-                            <input type="radio" name="status" value="chosen" id="chosen"  @change="setFilter('chosen')">
+                            <input type="radio" name="status" value="chosen" id="chosen"  @change="event => setFilter(event.target.value)">
                             <label for="chosen" class="mx-2">선택완료</label>
 
-                            <input type="radio" name="status" value="wait" id="wait"  @change="setFilter('wait')">
+                            <input type="radio" name="status" value="wait" id="wait" @change="event => setFilter(event.target.value)">
                             <label for="wait" class="mx-2">선택대기</label>
 
-                            <input type="radio" name="status" value="ing" id="ing"  @change="setFilter('ing')">
+                            <input type="radio" name="status" value="ing" id="ing" @change="event => setFilter(event.target.value)">
                             <label for="ing" class="mx-2">경매진행</label>
 
-                            <input type="radio" name="status" value="diag" id="diag"  @change="setFilter('diag')">
+                            <input type="radio" name="status" value="diag" id="diag" @change="event => setFilter(event.target.value)">
                             <label for="diag" class="mx-2">진단대기</label>
 
-                            <input type="radio" name="status" value="ask" id="ask"  @change="setFilter('ask')">
-                            <label for="ask" class="mx-2">신청완료</label>
+                            <input type="radio" name="status" value="ask" id="ask" @change="event => setFilter(event.target.value)">
+                            <label for="ask" class="mx-2">신청완료</label>-->   
                         </div>
 
                       <!--  <div class="text-end select-option">
@@ -500,12 +504,15 @@ TODO:
                                             </div>
                                             <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
                                             </div>
-                                            <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">탁송진행</span>
-                                            <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>   
-                                            <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
-                                            <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span> 
-                                            <span v-if="auction.status === 'diag'" class="mx-2 auction-done">진단대기</span>
-                                            <span v-if="auction.status === 'ask'" class="mx-2 auction-done">신청완료</span>
+                                            <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                                            <div>
+                                                <span
+                                                    v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(auction.status)"
+                                                    class="mx-2 auction-done"
+                                                    >
+                                                    {{ wicas.enum(store).toLabel(auction.status).auctions() }}
+                                                    </span>
+                                                </div>
                                             <div class="d-flex">    
                                                 <span v-if="(auction.status === 'ing' || auction.status === 'wait') && auction.timeLeft" class="mx-2 timer">
                                                     <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
@@ -587,12 +594,10 @@ TODO:
                     </div>
                     <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
                     </div>
-                    <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">탁송진행</span>
-                    <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>   
-                    <span v-if="auction.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
-                    <span v-if="auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span> 
-                    <span v-if="auction.status === 'diag'" class="mx-2 auction-done">진단대기</span>
-                    <span v-if="auction.status === 'ask'" class="mx-2 auction-done">신청완료</span>
+                    <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                    <div>
+                        <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(auction.status)" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                    </div>
                     <div class="d-flex">    
                         <span v-if="(auction.status === 'ing' || auction.status === 'wait') && auction.timeLeft" class="mx-2 timer">
                             <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
@@ -828,16 +833,19 @@ import { useStore } from "vuex";
 import useAuctions from "@/composables/auctions"; 
 import useRoles from '@/composables/roles'; 
 import FilterModal from '@/views/modal/filter.vue'; 
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Footer from "@/views/layout/footer.vue";
 import useLikes from '@/composables/useLikes';
 import usebid from '@/composables/bids.js'; 
+import { cmmn } from '@/hooks/cmmn';
 
+const { wicas } = cmmn();
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
 const {getBids, bidsData } = usebid();
 const { getLikes, likesData, isAuctionFavorited , like , setLikes , deleteLike } = useLikes();
 const router = useRouter();
+const route = useRoute();
 const currentStatus = ref('all'); 
 const { role, getRole } = useRoles();
 const currentTab = ref('allInfo'); 
@@ -853,10 +861,12 @@ const user = computed(() => store.getters["auth/user"]);
 const isDealer = computed(() => user.value?.roles?.includes('dealer')); 
 const isUser = computed(() => user.value?.roles?.includes('user')); 
 const isSpinning = ref(false);
+let statusLabel;
 
+/**
 const initializeFavorites = () => {
 
-    /**
+
     const userId = user.value.id; // 현재 사용자 ID
     const userLikes = likesData.value.filter(like => like.user_id === userId); // 현재 사용자의 좋아요 데이터 필터링
 
@@ -868,8 +878,8 @@ const initializeFavorites = () => {
 
     // 좋아요 매물 ID 출력
     const likedAuctionIds = userLikes.map(like => like.likeable_id);
-    console.log('Liked Auction IDs:', likedAuctionIds); */
-};
+    console.log('Liked Auction IDs:', likedAuctionIds); 
+};*/
 
 const toggleFavorite = (auction) => {
     auction.isFavorited = !auction.isFavorited;
@@ -1009,31 +1019,30 @@ function isDealerParticipating(auctionId) {
 }
 
 let timer;
-onMounted(async () => { 
-    await getAuctions(currentPage.value);
- 
-    await getBids(); 
-    console.log('Fetched bids data:', bidsData.value);
+onMounted(async () => {
+
+    if(history.state.currentTab){
+        currentTab.value = history.state.currentTab;
+    }
     
+    await getAuctions(currentPage.value);
+    await getBids();
+	statusLabel = wicas.enum(store).addFirst('all','전체').excl('cancel','취소').ascVal().auctions();
 
-    /**
-    await getLikes('Auction',user.value.id);
-
-    console.log('Fetched likes data:', likesData.value); */
     if (role.value.name === 'user') {
         isUser.value = true;
     }
-    initializeFavorites();
+
     updateAuctionTimes();
     auctionsData.value.forEach(auction => {
         auction.likes = auction.likes.filter(like => {
-            if(like.user_id == user.value.id){
+            if (like.user_id == user.value.id) {
                 auction.isFavorited = true;
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        })
+        });
         auction.isDealerParticipating = isDealerParticipating(auction.id);
     });
 
@@ -1041,6 +1050,7 @@ onMounted(async () => {
         currentTime.value = new Date();
         updateAuctionTimes();
     }, 1000);
+
 });
 
 onUnmounted(() => {

@@ -385,8 +385,12 @@
   const isDealerSelectionCompleted = computed(() => latestAuction.value?.status === 'chosen');
   
   const isDetailPage = computed(() => {
-    return /^\/auction\/\d+$/.test(route.path) || route.path === '/selldt' || route.path === '/selldt2';
-  });
+  return /^\/auction\/\d+$/.test(route.path) ||
+         route.path === '/selldt' ||
+         route.path === '/selldt2' ||
+         /^\/completionsuccess\/\d+$/.test(route.path);
+});
+
   
   const isAuctionDetailPage = computed(() => {
     return route.name === 'AuctionDetail';

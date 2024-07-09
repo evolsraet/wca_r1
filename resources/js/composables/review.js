@@ -372,7 +372,8 @@ export function initReviewSystem() {
             isHomeReview = false,
             column = 'created_at',
             direction = 'desc',
-            star = 'all'
+            star = 'all',
+            search_title = ''
         ) => {
 
         const apiList = ['dealer'];
@@ -388,6 +389,7 @@ export function initReviewSystem() {
             .url(`/api/reviews`)
             .with(apiList)
             .where(whereList)
+            .search(search_title)
             .page(`${page}`)
             .order([
                 [`${column}`,`${direction}`]

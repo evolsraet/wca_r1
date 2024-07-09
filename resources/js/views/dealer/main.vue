@@ -37,7 +37,7 @@
                             </div>
                         </div>
                         <div class="slide-up-ani activity-info bold-18-font process mb-0">
-                            <router-link :to="{  name: 'auction.index' }" class="item">
+                             <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
                             <p><span class="tc-red slide-up mb-0" ref="item1">{{ userLikesCount }}</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
                             </router-link>
@@ -130,7 +130,7 @@
                         <!-- 차량이 존재 할 경우-->
                         <div v-if="filteredViewBids.length > 0" class="container">
                             <div class="row">
-                            <div class="col-md-6 p-2" v-for="bid in filteredViewBids" :key="bid.id">
+                            <div class="col-md-6 p-2" v-for="bid in filteredViewBids.slice(0,2)" :key="bid.id">
                                 <div class="card my-auction mt-3">
                                     <div class="card-img-top-placeholder border-rad"></div>
                                     <div class="card-body">
@@ -172,7 +172,7 @@ import AlarmModal from '@/views/modal/AlarmModal.vue';
 import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
 import useLikes from '@/composables/useLikes';
 
-const { getLikes, likesData, isAuctionFavorited } = useLikes();
+const { getAllLikes, likesData, isAuctionFavorited } = useLikes();
 const item1 = ref(null);
 const item2 = ref(null);
 const item3 = ref(null);
@@ -186,9 +186,16 @@ const toggleCard = () => {
 };
 const alarmModal = ref(null);
 const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
-const { bidsData, getBids, viewBids, bidsCountByUser } = useBid();
+const { bidsData, getHomeBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
+let a = '';
 
+/**
+function test(){
+    localStorage.setItem('currentTab','interInfo')
+    router.push({name:'auction.index'})
+    
+}*/
 const calculateMyBidsCount = () => {
     if (bidsData.value && user.value) {
         myBidsCount.value = bidsData.value.filter(bid => bid.user_id === user.value.id).length;
@@ -232,14 +239,16 @@ const fetchAuctionDetails = async (bid) => {
     }
 };
 
+
 const filteredViewBids = ref([]);
+/**
 const fetchFilteredViewBids = async () => {
     // 필터링을 제거하고 모든 입찰을 가져옵니다.
     console.log('Original Bids:', bidsData.value);
     const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
     filteredViewBids.value = bidsWithDetails.filter(bid => bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id);
     console.log('Bids with Auction Details:', filteredViewBids.value);
-};
+};**/
 
 // Computed property to count likes by the user
 const userLikesCount = computed(() => {
@@ -252,12 +261,24 @@ function navigateToDetail(bid) {
 }
 
 onMounted(async () => {
-    await getLikes();
-    console.log('Fetched likes data:', likesData.value);
-    await getBids();
-    calculateMyBidsCount();
-    await getAuctions();
-    await fetchFilteredViewBids();    
+    //await getAuctions();
+    //console.log(auctionsData.value);
+    await getHomeBids();
+    bidsData.value.forEach(bid => {
+        if (
+            bid.auction.win_bid &&
+            bid.auction.win_bid.user_id === user.value.id &&
+            (bid.auction.status === 'dlvr' || bid.auction.status === 'chosen')
+        ){
+            filteredViewBids.value.push(bid);
+        }
+        else{
+            return;
+        }
+
+    });
+    await getAllLikes('Auction',user.value.id);
+
     setTimeout(() => {
         if(item1!=null && item1.value!=null && item1.value.classList!=null) 
             item1.value.classList.add('visible');

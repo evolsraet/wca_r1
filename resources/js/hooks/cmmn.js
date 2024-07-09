@@ -117,6 +117,13 @@ export function cmmn() {
         ]) 
         .whereOr('auctions.status','dlvr,done').whereOr('auctions.car_no','3,2') // where 조건에서 or 처리 (서버 whereIn) , 여러개인 경우 계속 추가
         .whereLike('auctions.addr1','청주시').whereLike('auctions.addr1','대전') // where 조건에서 like 처리 , 여러개인 경우 계속 추가
+        //조건문 별도 구성 방법 참조
+        .addWhere('auctions.status','dlvr')
+        .addOrWhere('auctions.status','done')
+        .addLike('auctions.add1','청주시')
+        .sprtrOr()
+        .sprtrAnd()
+        //End 조건문 별도 구성 방법 참조
         .with([
             'auction',
             'dealer',
@@ -140,6 +147,28 @@ export function cmmn() {
         .put();
         .delete();
 
+
+        ### 참조 : 조건문 별도 구성 방법 (작성시 순서대로 매칭됨)
+
+        # 쿼리문 예시 1 : auctions.status = dlvr and auctions.status = done            
+            .addWhere('auctions.status','dlvr').addWhere('auctions.status','done')
+
+        # 쿼리문 예시 2 : auctions.status = dlvr or auctions.status = done        
+            .addWhere('auctions.status','dlvr').addOrWhere('auctions.status','done')
+
+        # 쿼리문 예시 3 : ( auctions.status = dlvr or auctions.status = done ) and ( auctions.addr1 like %청주시% and auctions.status like %대전% )
+            .addWhere('auctions.status','dlvr').addOrWhere('auctions.status','done').sprtrAnd().addLike('auctions.add1','청주시').addLike('auctions.add1','대전')
+
+        # 쿼리문 예시 4 : ( auctions.status = dlvr or auctions.status = done ) or ( auctions.addr1 like %청주시% and auctions.status like %대전% )
+            .addWhere('auctions.status','dlvr').addOrWhere('auctions.status','done').sprtrOr().addLike('auctions.add1','청주시').addLike('auctions.add1','대전')
+
+        # 쿼리문 예시 4 : auctions.addr1 like %청주시% and ( auctions.status = dlvr or auctions.status = done )
+            .addLike('auctions.add1','청주시').sprtrAnd().addWhere('auctions.status','dlvr').addOrWhere('auctions.status','done')
+
+        # 쿼리문 예시 5 : auctions.addr1 like %청주시% or ( auctions.status = dlvr or auctions.status = done )
+            .addLike('auctions.add1','청주시').sprtrOr().addWhere('auctions.status','dlvr').addOrWhere('auctions.status','done')
+
+
      */
     const wicac = {
         _input : null,
@@ -153,6 +182,7 @@ export function cmmn() {
                 _where : null,
                 _whereOr : [],
                 _whereLike : [],
+                _sprtrMake : [],
                 _with : null,
                 _doesnthave : null,
                 _order : null,
@@ -163,6 +193,7 @@ export function cmmn() {
                 _isWhere : false,
                 _isWhereOr : false,
                 _isWhereLike : false,
+                _isSprtrMake : false,                
                 _isWith : false,
                 _isDoesnthave : false,
                 _isOrder : false,
@@ -258,6 +289,48 @@ export function cmmn() {
                 _this._input._isWhereLike = true;
                 _this._input._isWhere = true;
             }
+            return _this;
+        },
+        addWhere : function(key,val) {
+            let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ addWhere(key,val) ] 함수 선언 ',key,val);
+            if(key) {
+                _this._input._sprtrMake.push(['addWhere',key,val]);
+                _this._input._isSprtrMake = true;
+            }
+            return _this;
+        },
+        addOrWhere : function(key,val) {
+            let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ addOrWhere(key,val) ] 함수 선언 ',key,val);
+            if(key) {
+                _this._input._sprtrMake.push(['addOrWhere',key,val]);
+                _this._input._isSprtrMake = true;
+            }
+            return _this;
+        },
+        addLike : function(key,val) {
+            let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ addLike(key,val) ] 함수 선언 ',key,val);
+            if(key) {
+                _this._input._sprtrMake.push(['addLike',key,val]);
+                _this._input._isAddLike = true;
+                _this._input._isSprtrMake = true;
+            }
+            return _this;
+        },
+        sprtrOr : function() {
+            let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ sprtrOr() ] 함수 선언 ');
+            _this._input._sprtrMake.push(['sprtrOr']);
+            _this._input._isSprtrMake = true;
+            return _this;
+        },
+        sprtrAnd : function() {
+            let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ sprtrAnd() ] 함수 선언 ');
+            _this._input._sprtrMake.push(['sprtrAnd']);
+            _this._input._isSprtrMake = true;
             return _this;
         },
         with : function(input) {
@@ -399,6 +472,43 @@ export function cmmn() {
                 if(urlParams) urlParams += '&';
                 urlParams += 'where='+urlParamsWhere;
                 if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] where 처리 ',_input._where,' , where='+urlParamsWhere);
+            }
+            if(_input._isSprtrMake) {
+                let urlParamsSprtrMake = '';
+                let isSprtr = false;
+                _input._sprtrMake.forEach(function(item){
+                    let ty = item[0];
+                    if(ty == 'addWhere') {
+                        let k = item[1];
+                        let v = item[2];
+                        if(urlParamsSprtrMake && !isSprtr) urlParamsSprtrMake += '|';
+                        urlParamsSprtrMake += k+':'+v;
+                        isSprtr = false;
+                    } else if(ty == 'addOrWhere') {
+                        let k = item[1];
+                        let v = item[2];
+                        if(urlParamsSprtrMake && !isSprtr) urlParamsSprtrMake += '|';
+                        urlParamsSprtrMake += k+':orWhere:'+v;
+                        isSprtr = false;
+                    } else if(ty == 'addLike') {
+                        let k = item[1];
+                        let v = item[2];
+                        if(urlParamsSprtrMake && !isSprtr) urlParamsSprtrMake += '|';
+                        urlParamsSprtrMake += k+':like:'+v;
+                        isSprtr = false;
+                    } else if(ty == 'sprtrOr') {
+                        urlParamsSprtrMake += "_or_";
+                        isSprtr = true;
+                    } else if(ty == 'sprtrAnd') {
+                        urlParamsSprtrMake += "_and_";
+                        isSprtr = true;
+                    } else {
+                        // not working
+                    }
+                });
+                if(urlParams) urlParams += '&';
+                urlParams += 'where='+urlParamsSprtrMake;
+                if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] where sprtrMake 처리 ',_input._sprtrMake,' , where='+urlParamsSprtrMake);
             }
             if(_input._isWith) {
                 let urlParamsWith = '';
@@ -1023,7 +1133,7 @@ export function cmmn() {
         .excl('dlvr','wait') // 기입된 필드는 제거
         .perm('dlvr','wait') // 기입된 필드만 남김
         .add('dlvrNew','입금대기').add('doneNew','입금완료') // 필드 추가
-        .addFirst('all','전체').addFirst('','전체2') // 정렬 순서 없이 입력 순서대로 필드 맨 위에 위치
+        .addFirst('all','전체').addFirst('','전체2') // 정렬 순서(desc,asc 선언) 영향 없이 입력 순서대로 필드 맨 위에 위치
         .change('dlvr','입금대기').change('done','입금완료') // 기존 필드 값 변경
         .changeKey('dlvr','dlvr2').changeKey('done','done2') // 기존 필드 키 명칭 변경
         .toProxy(reactive) // 리턴 데이터를 proxy object 로 변환
@@ -1037,28 +1147,28 @@ export function cmmn() {
         .ascKey() // 키 기준 a,b,c 순
         .ascVal() // 값 기준 가,나,다 순
         
-        .auctions(); // enums , fields 
-        .users(); // enums , fields 
-        .dealers(); // enums , fields 
-        
+        .auctions(); // enums data, fields data
+        .users(); // enums data, fields data
+        .dealers(); // enums data, fields data
+
 
 
         # 호출 예시 ( enums : wicas.enum() , fields : wicas.field() )
 
-        console.log(wicas.enum(store).auctions());
+        console.log(wicas.enum(store).auctions()); // 예시 : { "done": "경매완료", "wait": "선택대기", "ing": "경매진행", "dlvr": "탁송중" }
         console.log(wicas.enum(store).users());
         console.log(wicas.enum(store).dealers());
-        console.log(wicas.enum(store).excl('dlvr','wait').auctions());
-        console.log(wicas.enum(store).perm('dlvr','wait').auctions());
-        console.log(wicas.enum(store).add('k1','aa').add('k2',2).auctions());
-        console.log(wicas.enum(store).toLabel('wait').auctions());
-        console.log(wicas.enum(store).toCode('선택대기').auctions());
-        console.log(wicas.enum(store).addFirst('all','전체').auctions());
+        console.log(wicas.enum(store).excl('dlvr','wait').auctions()); // { "done": "경매완료", "ing": "경매진행" }
+        console.log(wicas.enum(store).perm('dlvr','wait').auctions()); // { "wait": "선택대기", "dlvr": "탁송중" }
+        console.log(wicas.enum(store).add('k1','aa').add('k2',2).change('dlvr','입금대기').changeKey('done','done2').auctions()); // { "done2": "경매완료", "wait": "선택대기", "ing": "경매진행", "dlvr": "입금대기", "k1": "aa" , "k2" : 2 }
+        console.log(wicas.enum(store).toLabel('wait').auctions()); // "선택대기"
+        console.log(wicas.enum(store).toCode('선택대기').auctions()); // "wait"
+        console.log(wicas.enum(store).addFirst('all','전체').auctions()); // { "all": "전체", "done": "경매완료", "wait": "선택대기", "ing": "경매진행", "dlvr": "탁송중" }
 
         let rdata = wicas.enum(store).excl('dlvr','wait').callback(function(item){
-          console.log(item);
+          console.log(item); // {"key":"done","val":"경매완료"} ...
         }).auctions();
-        console.log(rdata);
+        console.log(rdata); 
         
 
         # 필요한 테이블 enums , fields 는 별도 추가해야함.
