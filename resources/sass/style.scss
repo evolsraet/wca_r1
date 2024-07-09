@@ -1311,7 +1311,14 @@ video {
     background-size: 20px 20px;
     font-size: 0;
 }
-
+.input-with-button {
+    position: relative;
+  }
+  
+  .input-with-button input {
+    width: 100%;
+    padding-right: 50px;
+  }
 
 
 .search-type2 {

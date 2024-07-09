@@ -240,7 +240,7 @@
                   <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3 nav-auction" aria-current="page" exact-active-class="active-link">내 매물관리</router-link>
                 </li>
                 <li class="nav-item">
-                  <router-link :to="{ name: 'user.review'}" class="nav-link mx-3 nav-review" exact-active-class="active-link">이용후기</router-link>
+                  <router-link :to="{ name: 'user.review'}" class="nav-link me-0 mx-3 nav-review" exact-active-class="active-link">이용후기</router-link>
                 </li>
               </div>
               <li class="nav-item my-member ms-auto dropdown">
@@ -258,7 +258,7 @@
                 <router-link :to="{ name: 'home'}" class="nav-link mx-3 nav-inq" exact-active-class="active-link">내차조회</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'index.allreview'}" class="nav-link mx-3-review nav-review" exact-active-class="active-link">이용후기</router-link>
+                <router-link :to="{ name: 'index.allreview'}" class="nav-link me-0 mx-3-review nav-review" exact-active-class="active-link">이용후기</router-link>
               </li>
               <li class="nav-item">
                 <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
