@@ -99,7 +99,9 @@
                                 파일 첨부
                             </button>
                             <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
-                            <div class="text-start tc-light-gray" v-if="editForm.file_user_photo_name">사진 파일 : {{ editForm.file_user_photo_name }}</div>
+                            <div class="text-start tc-light-gray" v-if="editForm.file_user_photo_name">
+                                사진 파일 : <a :href=fileImgUrl download>{{ editForm.file_user_photo_name }}</a>
+                            </div>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="form-label">회원유형</label>
@@ -198,7 +200,9 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
                                     파일 첨부
                                 </button>
-                                <div class="text-start mb-3 tc-light-gray" v-if="editForm.file_user_biz_name">사업자 등록증 : {{ editForm.file_user_biz_name }}</div>
+                                <div class="text-start tc-light-gray" v-if="editForm.file_user_biz_name">
+                                    사업자 등록증 파일 : <a :href=fileBizUrl download>{{ editForm.file_user_biz_name }}</a>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
@@ -208,7 +212,9 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
                                     파일 첨부
                                 </button>
-                                <div class="text-start mb-3 tc-light-gray" v-if="editForm.file_user_sign_name">매도용인감정보 : {{ editForm.file_user_sign_name }}</div>
+                                <div class="text-start tc-light-gray" v-if="editForm.file_user_sign_name">
+                                    매도용인감정보 파일 : <a :href=fileSignUrl download>{{ editForm.file_user_sign_name }}</a>
+                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
@@ -218,7 +224,9 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
                                     파일 첨부
                                 </button>
-                                <div class="text-start mb-5 tc-light-gray" v-if="editForm.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ editForm.file_user_cert_name }}</div>
+                                <div class="text-start tc-light-gray" v-if="editForm.file_user_cert_name">
+                                    매매업체 대표증 / 종사원증 파일 : <a :href=fileCertUrl download>{{ editForm.file_user_cert_name }}</a>
+                                </div>
                             </div>
                         </div>
                         <!-- Buttons -->
@@ -266,10 +274,17 @@ const {
     isLoading,
 } = useUsers();
 
+let userInfo = {};
+
 const fileInputRefBiz = ref(null);
 const fileInputRefSign = ref(null);
 const fileInputRefCert = ref(null);
 const fileInputRef = ref(null);
+const fileImgUrl = ref('');
+const fileSignUrl = ref('');
+const fileCertUrl = ref('');
+const fileBizUrl = ref('');
+
 
 let created_at;
 let email;
@@ -286,7 +301,12 @@ const schema = {
 
 onMounted(async () => {
     statusLabel = wicas.enum(store).users();
-    await getUser(route.params.id);
+    userInfo = await getUser(route.params.id);
+    fileImgUrl.value = userInfo.files.file_user_photo[0].original_url;
+    fileSignUrl.value = userInfo.files.file_user_sign[0].original_url;
+    fileCertUrl.value = userInfo.files.file_user_cert[0].original_url;
+    fileBizUrl.value = userInfo.files.file_user_biz[0].original_url;
+
     console.log(user.value);
     await getRoleList();
     /** 
@@ -414,9 +434,12 @@ function triggerFileUploadCert() {
 
 function handleFileUpload(event) {
     const file = event.target.files[0];
+    console.log('fileInfo======');
+    console.log(file);
     if (file) {
         editForm.file_user_photo = file;
         editForm.file_user_photo_name = file.name;
+        fileImgUrl.value = URL.createObjectURL(file);
         //console.log("File:", file.name);
     }
 }
@@ -426,7 +449,8 @@ function handleFileUploadBiz(event) {
     if (file) {
         editForm.file_user_biz = file;
         editForm.file_user_biz_name = file.name;
-        console.log("Business registration file:", file.name);
+        fileBizUrl.value = URL.createObjectURL(file);
+        //console.log("Business registration file:", file.name);
     }
 }
 
@@ -435,7 +459,8 @@ function handleFileUploadSign(event) {
     if (file) {
         editForm.file_user_sign = file;
         editForm.file_user_sign_name = file.name;
-        console.log("Signature file:", file.name);
+        fileSignUrl.value = URL.createObjectURL(file);
+        //console.log("Signature file:", file.name);
     }
 }
 
@@ -444,7 +469,8 @@ function handleFileUploadCert(event) {
     if (file) {
         editForm.file_user_cert = file;
         editForm.file_user_cert_name = file.name;
-        console.log("Certification file:", file.name);
+        fileCertUrl.value = URL.createObjectURL(file);
+        //console.log("Certification file:", file.name);
     }
 }
 
