@@ -218,5 +218,10 @@ function loadPage(page) { // 페이지 로드
 .search-type2 .search-btn{
     top: 63px !important;
 }
+.blue-box {
+    width: auto !important;
+    min-width: 55px !important;
+    padding: 0 12px !important;
+}
     </style>
     

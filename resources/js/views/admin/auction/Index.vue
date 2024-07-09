@@ -319,6 +319,10 @@
 .box{
     width: 66px !important;  
 }
-
+.blue-box {
+    width: auto !important;
+    min-width: 55px !important;
+    padding: 0 12px !important;
+}
     </style>
     
