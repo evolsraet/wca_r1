@@ -5,6 +5,7 @@ import lang from '../store/lang'
 import cancelAttempted from './cancelAttempted';
 //import lib_storage from '../store/lib_storage' 
 import enums from '../store/enums'
+import fields from '../store/fields'
 
 const store = createStore({
     state: {
@@ -19,6 +20,7 @@ const store = createStore({
         cancelAttempted,
         //lib_storage, //저장소 라이브러리 명
         enums,
+        fields,
     }
 })
 
