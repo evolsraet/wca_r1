@@ -4,7 +4,7 @@
             <img src="../../../img/main_banner.png" class="styled-img" alt="배너 이미지">
             <div class="content d-flex">
                 <div>
-                    <h1 class="fw-bolder mb-4 lh-base animated-text">내 차 판매는 <br>위카에서 !</h1>
+                    <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">내 차 판매는 <br>위카에서 !</h1>
                     <!--<router-link :to="{ name: 'auction.index' }" href="" class="btn-apply animated-button">더 알아보기</router-link>-->
                 </div>
                 <div>
