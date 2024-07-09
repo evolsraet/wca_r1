@@ -828,22 +828,24 @@ export default {
 
 </script>
 <script setup>
-import { ref, computed, onMounted, reactive, onUnmounted} from 'vue';
+import { ref, computed, onMounted, reactive, onUnmounted } from 'vue';
 import { useStore } from "vuex";
 import useAuctions from "@/composables/auctions"; 
 import useRoles from '@/composables/roles'; 
 import FilterModal from '@/views/modal/filter.vue'; 
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import Footer from "@/views/layout/footer.vue";
 import useLikes from '@/composables/useLikes';
 import usebid from '@/composables/bids.js'; 
 import { cmmn } from '@/hooks/cmmn';
+
 const { wicas } = cmmn();
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
 const {getBids, bidsData } = usebid();
 const { getLikes, likesData, isAuctionFavorited , like , setLikes , deleteLike } = useLikes();
 const router = useRouter();
+const route = useRoute();
 const currentStatus = ref('all'); 
 const { role, getRole } = useRoles();
 const currentTab = ref('allInfo'); 
@@ -860,9 +862,11 @@ const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user')); 
 const isSpinning = ref(false);
 let statusLabel;
+
+/**
 const initializeFavorites = () => {
 
-    /**
+
     const userId = user.value.id; // 현재 사용자 ID
     const userLikes = likesData.value.filter(like => like.user_id === userId); // 현재 사용자의 좋아요 데이터 필터링
 
@@ -874,8 +878,8 @@ const initializeFavorites = () => {
 
     // 좋아요 매물 ID 출력
     const likedAuctionIds = userLikes.map(like => like.likeable_id);
-    console.log('Liked Auction IDs:', likedAuctionIds); */
-};
+    console.log('Liked Auction IDs:', likedAuctionIds); 
+};*/
 
 const toggleFavorite = (auction) => {
     auction.isFavorited = !auction.isFavorited;
@@ -1015,30 +1019,30 @@ function isDealerParticipating(auctionId) {
 }
 
 let timer;
-onMounted(async () => { 
+onMounted(async () => {
+
+    if(history.state.currentTab){
+        currentTab.value = history.state.currentTab;
+    }
+    
     await getAuctions(currentPage.value);
-    await getBids(); 
-    console.log('Fetched bids data:', bidsData.value);
-    statusLabel = wicas.enum(store).addFirst('all','전체').excl('cancel','취소').ascVal().auctions();
+    await getBids();
+	statusLabel = wicas.enum(store).addFirst('all','전체').excl('cancel','취소').ascVal().auctions();
 
-    /**
-    await getLikes('Auction',user.value.id);
-
-    console.log('Fetched likes data:', likesData.value); */
     if (role.value.name === 'user') {
         isUser.value = true;
     }
-    initializeFavorites();
+
     updateAuctionTimes();
     auctionsData.value.forEach(auction => {
         auction.likes = auction.likes.filter(like => {
-            if(like.user_id == user.value.id){
+            if (like.user_id == user.value.id) {
                 auction.isFavorited = true;
                 return true;
-            }else{
+            } else {
                 return false;
             }
-        })
+        });
         auction.isDealerParticipating = isDealerParticipating(auction.id);
     });
 
@@ -1046,6 +1050,7 @@ onMounted(async () => {
         currentTime.value = new Date();
         updateAuctionTimes();
     }, 1000);
+
 });
 
 onUnmounted(() => {
