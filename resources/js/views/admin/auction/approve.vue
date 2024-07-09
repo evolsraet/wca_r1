@@ -1,4 +1,6 @@
 <template>
+  <h4><span class="admin-icon admin-icon-menu"></span>매물 관리</h4>
+  <div class="row justify-content-center my-5">
   <div class="container-fluid" v-if="auctionDetails">
     <form @submit.prevent="updateAuction(auctionId, auction)">
       <div>
@@ -124,7 +126,7 @@
                   <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
                       파일 첨부
                   </button>
-                  <div class="text-start mb-5 tc-light-gray" v-if="userData.file_user_owner_name">매매업체 대표증 / 종사원증 : {{ userData.file_user_owner_name }}</div>
+                  <div class="text-start mb-5 tc-light-gray" v-if="auction.file_user_owner_name">매매업체 대표증 / 종사원증 : {{ auction.file_user_owner_name }}</div>
                 </div>
               </div>
             </div>
@@ -346,7 +348,7 @@
         </div>
       </div>
     </form>
-    
+  </div>
   </div>
 </template>
 
@@ -392,12 +394,16 @@ const auction = reactive({
     total_fee: '',
     hope_price: '',
     final_price: '',
+    file_user_owner : '',
+    file_user_owner_name : '',
 }); 
 
+/*
 const userData = reactive({
   file_user_owner : '',
   file_user_owner_name : '',
 });
+*/
 
 const route = useRoute();
 const { getAuctionById, updateAuctionStatus, isLoading, updateAuction } = useAuctions();
@@ -529,8 +535,8 @@ function editPostCode(elementName) {
 function handleFileUploadOwner(event) {
     const file = event.target.files[0];
     if (file) {
-        userData.file_user_owner = file;
-        userData.file_user_owner_name = file.name;
+        auction.file_user_owner = file;
+        auction.file_user_owner_name = file.name;
         console.log("Owner file:", file.name);
     }
 }
