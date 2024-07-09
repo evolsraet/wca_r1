@@ -103,6 +103,7 @@ export default function useUsers() {
 
         return wicac.conn()
         .url(`/api/users`)
+        .log()
         .where(apiList)
         .order([
             [`${column}`,`${direction}`]

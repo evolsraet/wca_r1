@@ -1,33 +1,20 @@
 <template>
     <div class="p-3 row justify-content-center my-2">
-        <div class="col-md-12">
-        </div>
+        <div class="col-md-12"></div>
 
-
+<!--
                     <div class="search-type2 mb-5">
-                        <!--
+                        
                         <div class="border-xsl">
                             <div class="image-icon-excel"></div>
                         </div>
                         <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
-                        <button type="button" class="search-btn">검색</button>-->
+                        <button type="button" class="search-btn">검색</button>
                     </div>
-
+-->
                     <div class="container mb-3">
-                        
                         <div class="d-flex justify-content-end">
-                            <!--
-                            <div class="text-start status-selector">
-                                <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
-                                <label for="all" class="mx-2">전체</label>
-
-                                <input type="radio" name="status" value="user" id="user" hidden @change="setFilter('user')">
-                                <label for="ongoing">일반</label>
-
-                                <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setFilter('dealer')">
-                                <label for="completed" class="mx-2">딜러</label>
-                            </div>-->
-                        <div class="text-end select-option">
+                            <div class="text-end select-option">
                                 <select class="form-select select-rank" aria-label="별점" @change="event => setStarFilter(event.target.value)">
                                     <option value="all"selected>전체</option>
                                     <option value="1">1점</option>
