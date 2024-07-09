@@ -102,19 +102,17 @@
             </div>
         </div>
         <div class="card-footer">
-            <nav v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item" :class="{ disabled: !pagination.prev }">
-                    <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1,fetchAuctions)"></a>
-                    </li>
-                    <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
-                    <a class="page-link" @click="loadPage(n,fetchAuctions)">{{ n }}</a>
-                    </li>
-                    <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                    <a class="page-link next-style" @click="loadPage(pagination.current_page + 1,fetchAuctions)"></a>
-                    </li>
-                </ul>
-            </nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" :class="{ disabled: !pagination.prev }">
+                <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1,fetchAuctions)"></a>
+                </li>
+                <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                <a class="page-link" @click="loadPage(n,fetchAuctions)">{{ n }}</a>
+                </li>
+                <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+                <a class="page-link next-style" @click="loadPage(pagination.current_page + 1,fetchAuctions)"></a>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
