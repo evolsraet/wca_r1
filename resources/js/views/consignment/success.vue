@@ -1,5 +1,5 @@
 <template>
-    <div class="container mov-wide d-flex flex-column gap-5">
+    <div class="container mov-wide d-flex flex-column gap-5 my-4">
       <div class="p-2">
         <div class="my-5">
           <h4>탁송 확인</h4>
@@ -48,6 +48,7 @@
         </div>
       </div>
     </div>
+    <Footer />
   </template>
   
   <script setup>
@@ -57,7 +58,8 @@
   import useAuctions from '@/composables/auctions';
   import carObjects from '../../../../resources/img/modal/car-objects-blur.png';
   import { cmmn } from '@/hooks/cmmn';
-  
+  import Footer from "@/views/layout/footer.vue";
+
   const isCompletedButtonClicked = ref(false);
   const route = useRoute();
   const router = useRouter();
