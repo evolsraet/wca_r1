@@ -22,7 +22,7 @@
                     </div>-->
                     
                     <div class="container mb-3">
-                    <div class="d-flex justify-content-end responsive-flex-end gap-2">
+                    <div class="d-flex justify-content-end responsive-flex-end gap-3">
                         
                         
                         <div class="text-end select-option">
@@ -341,4 +341,24 @@ watch(
 .search-type2 .search-btn{
     top: 54px !important;   
 }
+
+@media screen and (max-width: 937px) {
+  .o_table_mobile {
+    width: 100% !important;
+    overflow-x: auto !important;
+  }
+  .o_table_mobile .tbl_basic {
+    overflow-x: auto !important;
+  }
+  .o_table_mobile .tbl_basic table {
+    width: 100% !important;
+    min-width: 600px !important;
+  }
+  .o_table_mobile .tbl_dealer table {
+    width: 100% !important;
+    min-width: 600px !important;
+  }
+}
+
+
 </style>
