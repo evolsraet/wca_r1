@@ -1036,9 +1036,11 @@ export function cmmn() {
         .DescVal() // 값 기준 다,나,가 순
         .ascKey() // 키 기준 a,b,c 순
         .ascVal() // 값 기준 가,나,다 순
-        .auctions();
-        .users();
-        .dealers();
+        
+        .auctions(); // enums , fields 
+        .users(); // enums , fields 
+        .dealers(); // enums , fields 
+        
 
 
         # 호출 예시 ( enums : wicas.enum() , fields : wicas.field() )
@@ -1059,9 +1061,10 @@ export function cmmn() {
         console.log(rdata);
         
 
-        # 필요한 테이블 enums 는 별도 추가해야함.
-        # ( js/store/enums.js ) 에 loopLabel 값에도 추가
+        # 필요한 테이블 enums , fields 는 별도 추가해야함.
+        # ( js/store/enums.js 또는 js/store/fields.js ) 에 loopLabel 값에도 추가
         # (views/login/Login.vue) 에서 await store.dispatch("enums/getData"); 가 로그인시 호출됨
+        # (views/login/Login.vue) 에서 await store.dispatch("fields/getData"); 가 로그인시 호출됨
       
      */
     const wicas = {        
