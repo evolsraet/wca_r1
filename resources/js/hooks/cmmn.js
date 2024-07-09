@@ -1326,6 +1326,9 @@ export function cmmn() {
             wicaData.load('key3'); // 숫자 100
             wicaData.load('key4'); // 문자 'data1'
             wicaData.load('key5'); // true,false
+
+            // key 로 값 삭제
+            wicaData.del('key1');
       
      */
     const wicaData = {
