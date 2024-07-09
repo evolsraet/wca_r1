@@ -1016,9 +1016,10 @@ export function cmmn() {
         const { wicas } = cmmn();
 
 
-        # 호출 방법
+        # 호출 방법 ( enums : wicas.enum() , fields : wicas.field() )
         
-        wicas.enum(store)
+        wicas.enum(store) // api/lib/enums 관련
+        wicas.field(store) // api/lib/fields 관련
         .excl('dlvr','wait') // 기입된 필드는 제거
         .perm('dlvr','wait') // 기입된 필드만 남김
         .add('dlvrNew','입금대기').add('doneNew','입금완료') // 필드 추가
@@ -1040,7 +1041,7 @@ export function cmmn() {
         .dealers();
 
 
-        # 호출 예시
+        # 호출 예시 ( enums : wicas.enum() , fields : wicas.field() )
 
         console.log(wicas.enum(store).auctions());
         console.log(wicas.enum(store).users());
@@ -1063,13 +1064,25 @@ export function cmmn() {
         # (views/login/Login.vue) 에서 await store.dispatch("enums/getData"); 가 로그인시 호출됨
       
      */
-    const wicas = {
+    const wicas = {        
         _store : null,
         _input : null,
         enum : function(_store) {
+            let newObj = this.init(_store);
+            newObj._input._isEnum = true;
+            return newObj;
+        },
+        field : function(_store) {
+            let newObj = this.init(_store);
+            newObj._input._isField = true;
+            return newObj;
+        },
+        init : function(_store) {
             let newObj = Object.create(this);
             newObj._store = _store;            
             newObj._input = {
+                _isEnum : false,
+                _isField : false,
                 isExcl : false,
                 isPerm : false,
                 isAdd : false,
@@ -1096,7 +1109,7 @@ export function cmmn() {
                 _toCode : null,
             }
             return newObj;
-        },
+        },        
         excl : function(...input) {
             let _this = this;
             _this._input.isExcl = true;
@@ -1204,17 +1217,36 @@ export function cmmn() {
         //enums 목록
         auctions : function() {
             let _this = this;
-            let data =  this.deepClone(this._store.getters['enums/data']['auctions']);
+            let data;
+            if(_this._input._isEnum) {
+                data =  this.deepClone(this._store.getters['enums/data']['auctions']);
+            } else if(_this._input._isField) {
+                data =  this.deepClone(this._store.getters['fields/data']['auctions']);
+            } else {
+                data = null;
+            }
             return this.processPublic(_this._input,data);
         },
         users : function() {
             let _this = this;
-            let data =  this.deepClone(this._store.getters['enums/data']['users']);
+            if(_this._input._isEnum) {
+                data =  this.deepClone(this._store.getters['enums/data']['users']);
+            } else if(_this._input._isField) {
+                data =  this.deepClone(this._store.getters['fields/data']['users']);
+            } else {
+                data = null;
+            }
             return this.processPublic(_this._input,data);
         },
         dealers : function(input) {
             let _this = this;
-            let data = this.deepClone(this._store.getters['enums/data']['dealers']);
+            if(_this._input._isEnum) {
+                data =  this.deepClone(this._store.getters['enums/data']['dealers']);
+            } else if(_this._input._isField) {
+                data =  this.deepClone(this._store.getters['fields/data']['dealers']);
+            } else {
+                data = null;
+            }
             return this.processPublic(_this._input,data);
         },
         //utils
@@ -1237,15 +1269,31 @@ export function cmmn() {
         },
         processPublic : function(_input,data) {
             if(_input.isAdd) {
-                Object.assign(data.status, _input._add);
+                if(_input._isEnum) {
+                    Object.assign(data.status, _input._add);
+                } else {
+                    Object.assign(data, _input._add);
+                }
             }
             let d;
             if(_input.isExcl) {
-                d = this.remove(data.status,_input._excl);                              
+                if(_input._isEnum) {
+                    d = this.remove(data.status,_input._excl);
+                } else {
+                    d = this.remove(data,_input._excl);
+                }                
             } else if(_input.isPerm) {
-                d = this.filtering(data.status,_input._perm);
+                if(_input._isEnum) {
+                    d = this.filtering(data.status,_input._perm);
+                } else {
+                    d = this.filtering(data,_input._perm);
+                }
             } else {
-                d = data.status;
+                if(_input._isEnum) {
+                    d = data.status;
+                } else {
+                    d = data;
+                }
             }
             if(_input.isChangeKey) {
                 Object.keys(_input._changeKey).forEach(key => {
@@ -1381,7 +1429,6 @@ export function cmmn() {
         clear : function() {
             for(const key in window.localStorage) {
                 if(window.localStorage.hasOwnProperty(key) && key.search(this._publicKey) !== -1) {
-                    console.log(key);
                     window.localStorage.removeItem(key);
                 }
             }
