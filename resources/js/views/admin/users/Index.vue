@@ -22,29 +22,31 @@
                     </div>-->
                     
                     <div class="container mb-3">
-                    <div class="d-flex justify-content-end responsive-flex-end">
+                    <div class="d-flex justify-content-end responsive-flex-end gap-2">
                         
-                        <div class="text-start status-selector">
-                            <input type="radio" name="status" value="all" id="all" hidden checked @change="setUserFilter('all')">
-                            <label for="all" class="mx-2">전체</label>
-
-                            <input type="radio" name="status" value="user" id="user" hidden @change="setUserFilter('user')">
-                            <label for="user">일반</label>
-
-                            <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setUserFilter('dealer')">
-                            <label for="dealer" class="mx-2">딜러</label>
-                        </div>
                         
                         <div class="text-end select-option">
                             <select class="form-select select-rank" @change="event => setStatusFilter(event.target.value)">
                                 <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == 'all'">{{ label }}</option>
                             </select>
                         </div>
-                        <input type="text" placeholder="회원 검색" v-model="search_title" id="searchUserName" style="width: auto !important; margin-right: 10px;"/>
-                        <button type="button" class="search-btn" @click="searchBtn">검색</button>
+                        <div class="search-type2 p-0">
+                            <input type="text" placeholder="회원 검색" v-model="search_title" id="searchUserName" style="width: auto !important; margin-right: 10px;"/>
+                            <button type="button" class="search-btn" @click="searchBtn">검색</button>
+                        </div>
                     </div>
-                    </div>
-                    <div class="d-flex align-items-center justify-content-end">
+                </div>
+                <div class="text-end status-selector">
+                    <input type="radio" name="status" value="all" id="all" hidden checked @change="setUserFilter('all')">
+                    <label for="all" class="mx-2">전체</label>
+
+                    <input type="radio" name="status" value="user" id="user" hidden @change="setUserFilter('user')">
+                    <label for="user">일반</label>
+
+                    <input type="radio" name="status" value="dealer" id="dealer" hidden @change="setUserFilter('dealer')">
+                    <label for="dealer" class="mx-2">딜러</label>
+                </div>
+                    <div class="d-flex align-items-center justify-content-end mt-3">
                         <button class="btn btn-primary" @click="navigateToCreate">
                             회원 등록
                         </button>
@@ -335,5 +337,8 @@ watch(
     align-items: flex-end;
     flex-direction: column;
   }
+}
+.search-type2 .search-btn{
+    top: 54px !important;   
 }
 </style>
