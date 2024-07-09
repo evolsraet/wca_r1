@@ -791,6 +791,9 @@
                       </BottomSheet03>-->
                       <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                       </div>
+                      <div class="bottom-message" :class="{ 'show': likeMessageVisible }">
+                        {{ likeMessage }}
+                    </div>
                     </div>
                   <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
 </template>
@@ -850,6 +853,8 @@ const koreanAmount = ref('원');
 const { wicaLabel } = cmmn();
 const swal = inject('$swal');
 const reviewIsOk = ref(true);
+let likeMessage;
+const likeMessageVisible = ref(false);
 
 const { numberToKoreanUnit , amtComma , wica} = cmmn();
 const myBidPrice = computed(() => {
@@ -889,12 +894,14 @@ const addLike = (auctionId) => {
     like.likeable_id = auctionId;
     console.log('Like added for auction:', auctionId);
     setLikes(like);
+    showLikeMessage('add');
 };
 
 const removeLike = (auction) => {
     //console.log(auction.likes[0].id);
     deleteLike(auction.likes[0].id);
     //console.log('Like removed for auction:', auction.id);
+    showLikeMessage('remove');
 };
 
 const dynamicClass = computed(() => {
@@ -905,6 +912,18 @@ const dynamicClass = computed(() => {
   }
 });
 
+function showLikeMessage(cl) {
+    likeMessageVisible.value = true;
+    if(cl == "add"){
+        likeMessage = '관심 차량이 추가되었습니다.'
+    } else if(cl == "remove"){
+        likeMessage = '관심 차량이 삭제되었습니다.'
+    }
+    setTimeout(() => {
+        likeMessageVisible.value = false;
+        location.reload();
+    }, 1000);
+}
 // 사용자 입찰이 취소된 적이 있는지 확인
 const userBid = computed(() => auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id));
 const userBidExists = computed(() => userBid.value && !userBid.value.deleted_at);

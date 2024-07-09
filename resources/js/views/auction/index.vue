@@ -776,6 +776,10 @@ TODO:
                         </li>
                     </ul>
                 </nav>
+
+            </div>
+            <div class="bottom-message" :class="{ 'show': likeMessageVisible }">
+                {{ likeMessage }}
             </div>
         </div>
     </div>
@@ -862,6 +866,8 @@ const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user')); 
 const isSpinning = ref(false);
 let statusLabel;
+let likeMessage;
+const likeMessageVisible = ref(false);
 
 /**
 const initializeFavorites = () => {
@@ -882,6 +888,7 @@ const initializeFavorites = () => {
 };*/
 
 const toggleFavorite = (auction) => {
+    console.log(auction);
     auction.isFavorited = !auction.isFavorited;
     //console.log(auction.isFavorited);
     if (auction.isFavorited) {
@@ -891,20 +898,40 @@ const toggleFavorite = (auction) => {
     }
 };
 
-const addLike = (auctionId) => { 
+const addLike = async (auctionId) => { 
     like.user_id = user.value.id;
     like.likeable_id = auctionId;
     console.log('Like added for auction:', auctionId);
-    setLikes(like);
+    const response = await setLikes(like);
+    if(response.isSuccess){
+        showLikeMessage("add");
+    }
 };
 
-const removeLike = (auction) => {
-    //console.log(auction.likes[0].id);
-    deleteLike(auction.likes[0].id);
-    //console.log('Like removed for auction:', auction.id);
+const removeLike = async (auction) => {
+    console.log(",,,,",auction.likes[0]);
+
+    const response = await deleteLike(auction.likes[0].id);
+    showLikeMessage("remove");
+    console.log(response);
+    //console.log('Like removed for auction:', auction.id); 
 };
 
 
+function showLikeMessage(cl) {
+    likeMessageVisible.value = true;
+    if(cl == "add"){
+        likeMessage = '관심 차량이 추가되었습니다.'
+    } else if(cl == "remove"){
+        likeMessage = '관심 차량이 삭제되었습니다.'
+    }
+    
+    setTimeout(() => {
+        likeMessageVisible.value = false;
+        location.reload();
+    }, 1000);
+    
+}
 
 const pullContainer = ref(null);
 const state = reactive({
