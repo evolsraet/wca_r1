@@ -18,7 +18,7 @@
                         <img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
                         <span v-if="timeLeft.days != '0'">{{ timeLeft.days }}일 &nbsp;</span>{{ timeLeft.hours }} : {{ timeLeft.minutes }} : {{ timeLeft.seconds }}
                       </span>
-                      <span v-if="auctionDetail.data.status === 'dlvr'" class="mx-2 auction-done">탁송진행</span>
+                      <span v-if="auctionDetail.data.status === 'dlvr'" class="mx-2 auction-done bg-info">탁송진행</span>
                       <span v-if="auctionDetail.data.status === 'done'" class="mx-2 auction-done">경매완료</span>
                       <span v-if="auctionDetail.data.status === 'diag'" class="mx-2 auction-done">진단대기</span>
                       <span v-if="auctionDetail.data.status === 'ask'" class="mx-2 auction-done">신청완료</span>
