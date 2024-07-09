@@ -179,6 +179,7 @@ trait CrudTrait
                 if (isset($row[2])) {
                     switch ($row[1]) {
                         case 'whereIn':
+                        case 'orWhere':
                             $whereFunction = $row[1];
                             $row = [
                                 $row[0],
