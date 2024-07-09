@@ -69,7 +69,7 @@
                       <hr>
                       <h4>탁송 신청 정보</h4>
                       <div class="fw-medium ">
-                      <p class="mt-4 tc-light-gray ">낙찰 딜러 : <span class="tc-red">&nbsp; 홍길동 딜러</span></p>
+                      <p class="mt-4 tc-light-gray ">낙찰 딜러2 : <span class="tc-red">&nbsp; 홍길동 딜러</span></p>
                       <p class="tc-light-gray">낙1&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red">&nbsp;3500만원</span></p>
                       <p class="tc-light-gray">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red">&nbsp;2024년 6월 26일 오후 6:12</span></p>
                       </div>
