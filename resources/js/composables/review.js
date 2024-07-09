@@ -257,6 +257,7 @@ export function initReviewSystem() {
                         .title('이용후기가 삭제되었습니다.')
                         .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
                         .icon('I') //E:error , W:warning , I:info , Q:question
+                        .addOption({ padding: 20})
                         .callback(function(result) {
                             if(result.isOk){                                
                                 getUserReview(userId, 1);                                 

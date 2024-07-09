@@ -4072,8 +4072,9 @@ width: 100%;
     color: #ff0000 !important;
     width: 2em !important;
     height: 2em !important;
-    box-shadow: 0 1rem 1rem rgba(0, 0, 0, .15) !important; 
+    box-shadow: 0 2px 9px rgba(0, 0, 0, 0.15) !important;
 }
+
 .review-custom-icon .swal2-icon-content{
     font-size: 1.75em !important;
 }
@@ -4127,7 +4128,9 @@ width: 100%;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
 }
-
+.review-custom-popup{
+    padding: 20px;
+}
 .cmm-review-custom-confirmButton {
     background-color: $sub-color01 !important;
     width: 100% !important;
