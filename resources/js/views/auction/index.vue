@@ -428,7 +428,7 @@ TODO:
             </div>
                 <div class="container mb-3" v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
                     <div class="registration-content overflow-hidden">
-                        <div class="text-start status-selector registration-content overflow-x-scroll">
+                        <div class="text-start status-selector registration-content">
                             <div v-for="(label, value) in statusLabel" :key="value" class="mx-2">
                                 <input type="radio" name="status" :value="value":id="value":checked="value === 'all' "@change="event => setFilter(event.target.value)"/>
                                 <label :for="value">{{ label }}</label>
@@ -1111,6 +1111,11 @@ const favoriteAuctions = computed(() => {
     .usernav{
     padding-right: 35% !important;
     padding-left: 5%;
+}
+}
+@media (max-width: 991px){
+.status-selector {
+    overflow-x: scroll !important;
 }
 }
 </style>
