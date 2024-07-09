@@ -3,6 +3,8 @@
         * mov-text : 모바일 일때 보이는 뷰
         * web-text: : 웹 화면에서 보이는뷰
     -->
+    <h4><span class="admin-icon admin-icon-menu"></span>후기 관리</h4>
+    <div class="row justify-content-center my-5">
     <div class="container mov-wide">
         <form @submit.prevent="submitForm" v-for="review in reviewData" :key="review">
             <div class="create-review">
@@ -74,6 +76,7 @@
                 </div>
             </div>
         </form>
+    </div>
     </div>
 </template>
 <script>

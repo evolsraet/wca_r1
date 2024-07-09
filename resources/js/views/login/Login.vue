@@ -345,6 +345,7 @@ const submitLogin = async () => {
       await store.dispatch("auth/getUser");
       await store.dispatch("auth/getAbilities");
       await store.dispatch("enums/getData");
+      await store.dispatch("fields/getData");
       
       // 로컬 스토리지에서 carDetails와 게스트 클릭 플래그 확인
       const localCarDetails = localStorage.getItem('carDetails');

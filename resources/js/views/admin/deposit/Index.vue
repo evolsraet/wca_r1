@@ -1,99 +1,89 @@
 <template>
-    <div class="p-3 row justify-content-center my-2">
-        <div class="col-md-12"></div>
-        <div class="search-type2 mb-5">
-            <!--
-            <div class="border-xsl">
-                <div class="image-icon-excel"></div>
+    <div class="row justify-content-center my-2 p-3">
+        <div class="col-md-12">
             </div>
-            -->
-            <div></div>
-            <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
-            <button type="button" class="search-btn" @click="searchBtn">검색</button>
-        </div>
-        <!--
-        <div class="container mb-3">
-            <div class="d-flex justify-content-end">
-                <div class="text-start status-selector">
-                    <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
-                    <label for="all" class="mx-2">전체</label>
-                    <input type="radio" name="status" value="ing" id="ongoing" hidden @change="setFilter('ing')">
-                    <label for="ongoing">진단중</label>
-                    <input type="radio" name="status" value="done" id="completed" hidden @change="setFilter('done')">
-                    <label for="completed" class="mx-2">진단완료</label>
+                <div class="container mb-3">
+                    <div class="d-flex justify-content-end responsive-flex-end gap-2">
+                        <div class="text-end select-option">
+                            <select class="form-select select-rank" aria-label="상태" @change="event => setFilter(event.target.value)">
+                                <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == 'all'">{{ label }}</option>
+                            </select>
+                        </div>
+                        <div class="search-type2 p-0">
+                            <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
+                            <button type="button" class="search-btn" @click="searchBtn">검색</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
-        -->
-        <div class="o_table_mobile my-5">
-            <div class="tbl_basic tbl_dealer">
-                <div class="overflow-auto">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th class="px-6 py-3 bg-gray-50 justify-content-center">
-                                <div class="flex flex-row items-center justify-content-center justify-between cursor-pointer" @click="updateOrdering('created_at')">
-                                    <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider" :class="{ 'font-bold text-blue-600': orderColumn === 'created_at' }">
-                                        등록일
+            <div class="o_table_mobile my-5">
+                <div class="tbl_basic tbl_dealer">
+                    <div class="overflow-auto">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th class="px-6 py-3 bg-gray-50 justify-content-center">
+                                    <div class="flex flex-row items-center justify-content-center justify-between cursor-pointer" @click="updateOrdering('created_at')">
+                                        <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider" :class="{ 'font-bold text-blue-600': orderColumn === 'created_at' }">
+                                            등록일
+                                        </div>
+                                        <div class="select-none">
+                                            <span v-if="orderingState.created_at.direction === 'asc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&uarr;</span>
+                                            <span v-else-if="orderingState.created_at.direction === 'desc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&darr;</span>
+                                            <span v-else-if="orderingState.created_at.direction === '' && orderingState.created_at.column === ''" class="text-blue-600">&uarr;&darr;</span>
+                                        </div>
                                     </div>
-                                    <div class="select-none">
-                                        <span v-if="orderingState.created_at.direction === 'asc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&uarr;</span>
-                                        <span v-else-if="orderingState.created_at.direction === 'desc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&darr;</span>
-                                        <span v-else-if="orderingState.created_at.direction === '' && orderingState.created_at.column === ''" class="text-blue-600">&uarr;&darr;</span>
+                                </th>
+                                <th class="px-6 py-3 bg-gray-50 text-left">
+                                   매물번호
+                                </th>
+                                <th class="px-6 py-3 text-left">
+                                    상태
+                                </th>
+                                <th class="px-6 py-3 bg-gray-50 text-center">
+                                    비고
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-if="auctionsData.length > 0" v-for="auction in auctionsData" :key="auction.id">
+                                <td class="px-6 py-4 text-sm">
+                                    {{ auction.created_at }}
+                                </td>
+                                <td class="px-6 py-4 text-sm">
+                                    <div class="blue-box">
+                                        {{ auction.car_no }}
                                     </div>
-                                </div>
-                            </th>
-                            <th class="px-6 py-3 bg-gray-50 text-left">
-                                <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">매물번호</span>
-                            </th>
-                            <th class="px-6 py-3 text-left">
-                                상태
-                            </th>
-                            <th class="px-6 py-3 bg-gray-50 text-center">
-                                비고
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-if="auctionsData.length > 0" v-for="auction in auctionsData" :key="auction.id">
-                            <td class="px-6 py-4 text-sm">
-                                {{ auction.created_at }}
-                            </td>
-                            <td class="px-6 py-4 text-sm">
-                                <div class="blue-box">
-                                    {{ auction.car_no }}
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-sm">
-                                <div>
-                                    <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
-                                    <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
-                                </div>
-                            </td>
-                            <td class="px-6 py-4 text-sm">
-                                <router-link
-                                    href="#"
-                                    :to="{ 
-                                        name: 'deposit.approve', params: { id: auction.id } 
-                                    }"
-                                    class="ms-2 fs-6 badge edit"
-                                    >수정
-                                </router-link>
-                                <span>|</span>
-                                <a
-                                    href="#"
-                                    @click.prevent="deleteAuction(auction.id,'deposit')"
-                                    class="ms-2 fs-6 badge delete"
-                                    >삭제</a
-                                >
-                            </td>
-                        </tr>
-                        <tr v-else>
-                            <td colspan="4" class="px-6 py-4 text-sm text-center">등록 된 입금 데이터가 없습니다.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm">
+                                    <div>
+                                        <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                        <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                    </div>
+                                </td>
+                                <td class="px-6 py-4 text-sm">
+                                    <router-link
+                                        href="#"
+                                        :to="{ 
+                                            name: 'deposit.approve', params: { id: auction.id } 
+                                        }"
+                                        class="ms-2 fs-6 badge edit"
+                                        >수정
+                                    </router-link>
+                                    <span>|</span>
+                                    <a
+                                        href="#"
+                                        @click.prevent="deleteAuction(auction.id,'deposit')"
+                                        class="ms-2 fs-6 badge delete"
+                                        >삭제</a
+                                    >
+                                </td>
+                            </tr>
+                            <tr v-else>
+                                <td colspan="4" class="px-6 py-4 text-sm text-center">등록 된 입금 데이터가 없습니다.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
         <div class="card-footer">
@@ -138,6 +128,7 @@ const { auctionsData, pagination, deleteAuction, getStatusLabel, adminGetDeposit
 const { getCategoryList } = useCategories();
 const { can } = useAbility();
 const store = useStore();
+let statusLabel;
 
 const updateOrdering = (column) => {
         let columnState = orderingState[column];
@@ -174,6 +165,7 @@ function fetchAuctions(){
 };
 
 onMounted(() => {
+    statusLabel = wicas.enum(store).perm('dlvr','done').addFirst('dlvr,done','전체').auctions();
     fetchAuctions();
     getCategoryList();
 });
@@ -183,6 +175,12 @@ function loadPage(page) { // 페이지 로드
     currentPage.value = page;
     fetchAuctions();
     window.scrollTo(0,0);
+}
+
+function setFilter(status) { // 필터 설정
+    currentPage.value = 1;
+    currentStatus.value = status;
+    fetchAuctions();
 }
 
 </script>
@@ -216,7 +214,17 @@ function loadPage(page) { // 페이지 로드
   }
 }
 .search-type2 .search-btn{
-    top: 63px !important;
+    top: 54px !important;  
+}
+.blue-box {
+    width: auto !important;
+    min-width: 55px !important;
+    padding: 0 12px !important;
+}
+.box{
+    width: auto !important;
+    min-width: 73px !important;
+    padding: 0 10px !important; 
 }
     </style>
     

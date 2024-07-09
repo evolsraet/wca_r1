@@ -18,7 +18,7 @@
                         <img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
                         <span v-if="timeLeft.days != '0'">{{ timeLeft.days }}일 &nbsp;</span>{{ timeLeft.hours }} : {{ timeLeft.minutes }} : {{ timeLeft.seconds }}
                       </span>
-                      <span v-if="auctionDetail.data.status === 'dlvr'" class="mx-2 auction-done">탁송진행</span>
+                      <span v-if="auctionDetail.data.status === 'dlvr'" class="mx-2 auction-done bg-info">탁송진행</span>
                       <span v-if="auctionDetail.data.status === 'done'" class="mx-2 auction-done">경매완료</span>
                       <span v-if="auctionDetail.data.status === 'diag'" class="mx-2 auction-done">진단대기</span>
                       <span v-if="auctionDetail.data.status === 'ask'" class="mx-2 auction-done">신청완료</span>
@@ -65,15 +65,15 @@
                       <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                       <h5 v-if="auctionDetail.data.hope_price !== null"><span class="gray-box">재경매</span></h5>
                     </div>
-                    <div v-if="auctionDetail.data.status ==='chosen' && isUser">
+                    <div v-if="auctionDetail.data.status ==='chosen'">
                       <hr>
                       <h4>탁송 신청 정보</h4>
                       <div class="fw-medium ">
-                      <p class="mt-4 tc-light-gray ">낙찰딜러: <span class="tc-red">홍길동딜러</span></p>
-                      <p class="tc-light-gray">낙찰액 : <span class="tc-red">3500만원</span></p>
-                      <p class="tc-light-gray">탁송일 : <span class="tc-red">2024년 6월 26일 오후 6:12</span></p>
+                      <p class="mt-4 tc-light-gray ">낙찰 딜러 : <span class="tc-red">&nbsp; 홍길동 딜러</span></p>
+                      <p class="tc-light-gray">낙1&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red">&nbsp;3500만원</span></p>
+                      <p class="tc-light-gray">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red">&nbsp;2024년 6월 26일 오후 6:12</span></p>
                       </div>
-                      <button
+                      <button v-if ="auctionDetail.data.status ==='chosen' && isUser"
                         class="my-4 btn-primary bold-18-font modal-bid d-flex p-3 justify-content-between blinking"
                         @click="competionsuccess"
                       >

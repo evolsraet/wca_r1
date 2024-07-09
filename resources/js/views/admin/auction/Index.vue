@@ -1,48 +1,20 @@
 <template>
-    <div class="p-3 row justify-content-center my-2">
-        <div class="col-md-12"></div>
-        <!--
-        <div class="search-type2 mb-5">
-            <div class="border-xsl">
-                <div class="image-icon-excel"></div>
+    <div class="row justify-content-center my-2 p-3">
+        <div class="col-md-12">
             </div>
-            <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
-            <button type="button" class="search-btn">검색</button>
-        </div>-->
-        <div class="container mb-3">
-            <div class="d-flex justify-content-end">
-                <div class="text-end select-option">
-                    <select class="form-select select-rank" aria-label="상태" @change="event => setFilter(event.target.value)">
-                        <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == 'all'">{{ label }}</option>
-                    </select>
+                <div class="container mb-3">
+                    <div class="d-flex justify-content-end responsive-flex-end gap-2">
+                        <div class="text-end select-option">
+                            <select class="form-select select-rank" aria-label="상태" @change="event => setFilter(event.target.value)">
+                                <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == 'all'">{{ label }}</option>
+                            </select>
+                        </div>
+                        <div class="search-type2 p-0">
+                            <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
+                            <button type="button" class="search-btn" @click="searchBtn">검색</button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-                <!--
-                <div class="text-start status-selector">
-                    <input type="radio" name="status" value="all" id="all" checked @change="setFilter('all')">
-                    <label for="all" class="mx-2">전체</label>
-
-                    <input type="radio" name="status" value="done" id="done"  @change="setFilter('done')">
-                    <label for="done" class="mx-2">경매완료</label>
-
-                    <input type="radio" name="status" value="chosen" id="chosen"  @change="setFilter('chosen')">
-                    <label for="chosen" class="mx-2">선택완료</label>
-
-                    <input type="radio" name="status" value="wait" id="wait"  @change="setFilter('wait')">
-                    <label for="wait" class="mx-2">선택대기</label>
-
-                    <input type="radio" name="status" value="ing" id="ing"  @change="setFilter('ing')">
-                    <label for="ing" class="mx-2">경매진행</label>
-
-                    <input type="radio" name="status" value="diag" id="diag"  @change="setFilter('diag')">
-                    <label for="diag" class="mx-2">진단대기</label>
-
-                    <input type="radio" name="status" value="ask" id="ask"  @change="setFilter('ask')">
-                    <label for="ask" class="mx-2">신청완료</label>
-
-                </div>-->
-
-        </div>
         <div class="o_table_mobile my-5">
             <div class="tbl_basic tbl_dealer">
                 <div class="overflow-auto">
@@ -130,19 +102,17 @@
             </div>
         </div>
         <div class="card-footer">
-            <nav v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item" :class="{ disabled: !pagination.prev }">
-                    <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1,fetchAuctions)"></a>
-                    </li>
-                    <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
-                    <a class="page-link" @click="loadPage(n,fetchAuctions)">{{ n }}</a>
-                    </li>
-                    <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                    <a class="page-link next-style" @click="loadPage(pagination.current_page + 1,fetchAuctions)"></a>
-                    </li>
-                </ul>
-            </nav>
+            <ul class="pagination justify-content-center">
+                <li class="page-item" :class="{ disabled: !pagination.prev }">
+                <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1,fetchAuctions)"></a>
+                </li>
+                <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                <a class="page-link" @click="loadPage(n,fetchAuctions)">{{ n }}</a>
+                </li>
+                <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+                <a class="page-link next-style" @click="loadPage(pagination.current_page + 1,fetchAuctions)"></a>
+                </li>
+            </ul>
         </div>
     </div>
 </template>
@@ -171,6 +141,7 @@
         car_no: { direction: '', column: '', hit: 0 },
     };
     let statusLabel;
+    const search_title = ref('');
 
     /**
     const fetchAuctions = async (page = 1) => {
@@ -219,14 +190,19 @@
         fetchAuctions(); 
     };
 
+    const searchBtn = async() =>{
+        fetchAuctions();
+    }
 
     function fetchAuctions() {
         adminGetAuctions(   currentPage.value,
                             orderColumn.value,
                             orderDirection.value,
-                            currentStatus.value
+                            currentStatus.value,
+                            search_title.value
                         );
-                    }   
+    }   
+
     /**
     watch(search_category, (current) => {s
         fetchAuctions(
@@ -319,6 +295,23 @@
 .box{
     width: 66px !important;  
 }
-
+.blue-box {
+    width: auto !important;
+    min-width: 55px !important;
+    padding: 0 12px !important;
+}
+.box{
+    width: auto !important;
+    min-width: 73px !important;
+    padding: 0 10px !important; 
+}
+.blue-box02{
+    width: auto !important;
+    min-width: 73px !important;
+    padding: 0 10px !important;  
+}
+.search-type2 .search-btn{
+    top: 54px !important;  
+}
     </style>
     
