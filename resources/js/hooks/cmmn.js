@@ -115,6 +115,8 @@ export function cmmn() {
             'w1=1',
             'w2=1',
         ]) 
+        .whereOr('auctions.status','dlvr,done').whereOr('auctions.car_no','3,2') // where 조건에서 or 처리 (서버 whereIn) , 여러개인 경우 계속 추가
+        .whereLike('auctions.addr1','청주시').whereLike('auctions.addr1','대전') // where 조건에서 like 처리 , 여러개인 경우 계속 추가
         .with([
             'auction',
             'dealer',
@@ -149,6 +151,8 @@ export function cmmn() {
                 _url : null,
                 _param : null,
                 _where : null,
+                _whereOr : [],
+                _whereLike : [],
                 _with : null,
                 _doesnthave : null,
                 _order : null,
@@ -157,6 +161,8 @@ export function cmmn() {
                 _isUrl : false,
                 _isParam : false,
                 _isWhere : false,
+                _isWhereOr : false,
+                _isWhereLike : false,
                 _isWith : false,
                 _isDoesnthave : false,
                 _isOrder : false,
@@ -230,6 +236,26 @@ export function cmmn() {
             if(_this._input._isLogDetail) console.log('cmmn wicac [ where(array) ] 함수 선언 ',input);
             _this._input._where = input;
             if(input && input != null && input.length) {
+                _this._input._isWhere = true;
+            }
+            return _this;
+        },
+        whereOr : function(key,val) {
+            let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ whereOr(key,val) ] 함수 선언 ',key,val);
+            if(key) {
+                _this._input._whereOr.push([key,val]);
+                _this._input._isWhereOr = true;
+                _this._input._isWhere = true;
+            }
+            return _this;
+        },
+        whereLike : function(key,val) {
+            let _this = this;
+            if(_this._input._isLogDetail) console.log('cmmn wicac [ whereLike(key,val) ] 함수 선언 ',key,val);
+            if(key) {
+                _this._input._whereLike.push([key,val]);
+                _this._input._isWhereLike = true;
                 _this._input._isWhere = true;
             }
             return _this;
@@ -352,10 +378,24 @@ export function cmmn() {
             if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] 로직 시작 ');
             if(_input._isWhere) {
                 let urlParamsWhere = '';
-                _input._where.forEach(function(item){
-                    if(urlParamsWhere) urlParamsWhere += '|';
-                    urlParamsWhere += item;
-                });
+                if(_input._where!=null) {
+                    _input._where.forEach(function(item){
+                        if(urlParamsWhere) urlParamsWhere += '|';
+                        urlParamsWhere += item;
+                    });
+                }
+                if(_input._isWhereOr) {
+                    _input._whereOr.forEach((item) => {
+                        if(urlParamsWhere) urlParamsWhere += '|';
+                        urlParamsWhere += item[0]+':whereIn:'+item[1];
+                    });
+                }
+                if(_input._isWhereLike) {
+                    _input._whereLike.forEach((item) => {
+                        if(urlParamsWhere) urlParamsWhere += '|';
+                        urlParamsWhere += item[0]+':like:'+item[1];
+                    });
+                }
                 if(urlParams) urlParams += '&';
                 urlParams += 'where='+urlParamsWhere;
                 if(_input._isLogDetail) console.log('cmmn wicac [ parseParam ] where 처리 ',_input._where,' , where='+urlParamsWhere);
