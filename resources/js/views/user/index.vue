@@ -4,7 +4,7 @@
             <img src="../../../img/main_banner.png" class="styled-img" alt="배너 이미지">
             <div class="content d-flex">
                 <div>
-                    <h1 class="fw-bolder mb-4 lh-base animated-text">내 차 판매는 <br>위카에서!</h1>
+                    <h1 class="fw-bolder mb-4 lh-base animated-text">내 차 판매는 <br>위카에서 !</h1>
                     <!--<router-link :to="{ name: 'auction.index' }" href="" class="btn-apply animated-button">더 알아보기</router-link>-->
                 </div>
                 <div>
@@ -14,12 +14,12 @@
         </div>
     </div>
     <div>
-        <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 mt-2">
-            <h2 class="fw-bolder lh-base animated-text">내 차 판매는 <br>위카에서!</h2>
-            <router-link :to="{ name: 'auction.index' }" href="" class="btn-apply p-0 m-0 animated-button">더 알아보기</router-link>
-        </div>
         <div class="regiest-content">
             <div class="container my-4">
+                <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 mt-2">
+                    <h2 class="fw-bolder lh-base animated-text">내 차 판매는 <br>위카에서 !</h2>
+                    <router-link :to="{ name: 'auction.index' }" href="" class="btn-apply p-0 m-0 animated-button">더 알아보기</router-link>
+                </div>
                 <div class="layout-container02 mt-5">
                     <!-- 딜러 프로필 요약 정보 -->
                     <div class="p-2">
@@ -225,7 +225,7 @@ p {
         margin-top: 0px !important;
     }
     .mt-5{
-        margin-top: 0px !important;
+        margin-top: 10px !important;
     }
     .my-4{
         margin-top: 0px !important;
