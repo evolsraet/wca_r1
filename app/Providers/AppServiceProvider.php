@@ -64,9 +64,10 @@ class AppServiceProvider extends ServiceProvider
         Response::macro('api', function ($data = null, $message = null, $status = 'ok', $code = 200, $additional = []) {
             // return $data;
             $response = [
+                'code' => $code,
                 'status' => $status,
                 'message' => $message,
-                'code' => $code,
+                'data_count' => 0,
                 'data' => null,
             ];
 
@@ -94,6 +95,7 @@ class AppServiceProvider extends ServiceProvider
                 $response = array_merge($response, $additional);
             }
 
+            $response['data_count'] = count((array) $response['data']);
 
             // print_r([$response, $code]);
             // die();

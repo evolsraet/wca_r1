@@ -101,11 +101,18 @@ trait CrudTrait
         $this->middleProcess(__FUNCTION__, request(), $result);
 
         // 검색어
-        if ($search_text = request('search_text') && $searchable = $modelInstance->searchable) {
+        $search_text = request()->input('search_text');
+        if ($search_text && $searchable = $modelInstance->searchable) {
             $result = $result->where(function ($query) use ($search_text, $searchable) {
                 foreach (explode(',', $search_text) as $search) {
+                    // print_r([
+                    //     request()->input('search_text'),
+                    //     $search_text,
+                    //     $searchable,
+                    // ]);
+                    // die();
                     foreach ($searchable as $column) {
-                        $query->orWhere($column, 'like', '%' . $search . '%');
+                        $query->orWhere($this->tableName . '.' . $column, 'like', '%' . $search . '%');
                     }
                 }
             });
