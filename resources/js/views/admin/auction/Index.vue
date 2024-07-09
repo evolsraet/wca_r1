@@ -324,5 +324,15 @@
     min-width: 55px !important;
     padding: 0 12px !important;
 }
+.box{
+    width: auto !important;
+    min-width: 73px !important;
+    padding: 0 10px !important; 
+}
+.blue-box02{
+    width: auto !important;
+    min-width: 73px !important;
+    padding: 0 10px !important;  
+}
     </style>
     

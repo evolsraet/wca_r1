@@ -223,5 +223,10 @@ function loadPage(page) { // 페이지 로드
     min-width: 55px !important;
     padding: 0 12px !important;
 }
+.box{
+    width: auto !important;
+    min-width: 73px !important;
+    padding: 0 10px !important; 
+}
     </style>
     
