@@ -120,7 +120,7 @@ const fetchFilteredBids = async () => {
 function loadPage(page) { 
     if (page < 1 || page > pagination.value.last_page) return;
     currentPage.value = page;
-    await getBids(1,true,false,user.value.id);
+    getBids(1,true,false,user.value.id);
     window.scrollTo(0,0);
 }
 
