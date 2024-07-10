@@ -428,7 +428,7 @@ TODO:
                     </div>
                 </div>
                 <div>
-                    <div class="container mb-3" v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
+                    <div class="container mb-3" v-if="currentTab == 'allInfo' && currentTab !== 'auctionDone'">
                         <div class="registration-content overflow-hidden">
                             <div class="text-start status-selector registration-content">
                                 <div v-for="(label, value) in statusLabel" :key="value" class="mx-2">
@@ -668,11 +668,10 @@ TODO:
                             <div class="row">
                                 <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="bid in bidsData" :key="bid.id" @click="navigateToDetail(bid.auction)">
                                     <div class="card my-auction">
-                                        <!--
                                         <div v-if="isDealer">
                                             <input class="toggle-heart" type="checkbox" :id="'favorite-' + bid.auction.id" :checked="bid.auction.isFavorited" @click.stop="toggleFavorite(bid.auction)" />
                                             <label class="heart-toggle" :for="'favorite-' + bid.auction.id" @click.stop></label>
-                                        </div>-->
+                                        </div>
                                         <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
                                         <div v-if="bid.auction.status === 'ask' || bid.auction.status === 'diag'">
                                             <div class="card-img-demo">
