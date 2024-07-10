@@ -746,7 +746,7 @@
                             <li @click="handleClick(bid, $event, index)">
                               <div class="d-flex gap-4 align-items-center justify-content-between">
                                 <div class="img_box">
-                                  <img :src="photoUrl" alt="Profile Photo" class="profile-photo" />
+                                  <img :src="getPhotoUrl(bid)" alt="Profile Photo" class="profile-photo" />
                                 </div>
                                 <div class="txt_box me-auto">
                                   <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
@@ -822,7 +822,7 @@ import auctionModal from '@/views/modal/auction/auctionModal.vue';
 import consignment from '@/views/consignment/consignment.vue';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
 import AlarmGuidModal from '@/views/modal/AlarmGuidModal.vue';
-
+import profileDom from '/resources/img/profile_dom.png';
 
 import drift from '../../../../../resources/img/drift.png';
 import carObjects from '../../../../../resources/img/modal/car-objects-blur.png';
@@ -1237,7 +1237,9 @@ watchEffect(async () => {
       for (const bid of bids) {
         if (bid.user_id) {
           const userData = await getDealer(bid.user_id);
+          bid.dealerfile = userData;
           bid.dealerInfo = userData.dealer;
+          console.log("???????,",bid.dealerInfo);
         }
       }
       sortedTopBids.value = bids;
@@ -1277,7 +1279,11 @@ const handleClick = async (bid, event, index) => {
     await selectDealer(bid, index);
   }
 };
-
+const getPhotoUrl = (bid) => {
+  return bid.dealerfile && bid.dealerfile.files && bid.dealerfile.files.file_user_photo
+    ? bid.dealerfile.files.file_user_photo[0].original_url
+    : profileDom;
+};
 const handleModalClose = () => {
   connectDealerModal.value = false;
   if (selectedBid.value) {
@@ -1842,5 +1848,9 @@ opacity: 0;
   border-top-right-radius: 6px;
   border-bottom-right-radius: 6px;
 }
-
+.img_box img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 </style>
