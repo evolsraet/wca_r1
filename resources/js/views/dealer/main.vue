@@ -61,7 +61,7 @@
                         <h3 class="review-title">공지사항</h3>
                         <router-link :to="{ name: 'index.notices' }" class="btn-apply mt-0">전체보기</router-link>
                     </div>
-                    <table class="table custom-border">
+                    <table class="table custom-border mt-5">
                         <thead style="display: none;">
                             <tr>
                                 <th class="tc-light-gray">날짜</th>
@@ -305,6 +305,7 @@ p {
 }
 .layout-container02{
     grid-template-columns: 1fr 1fr !important;
+    align-items: baseline;
 }
 @media (max-width: 640px){
     .layout-container02 {
