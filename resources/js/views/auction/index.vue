@@ -888,9 +888,8 @@ const initializeFavorites = () => {
 };*/
 
 const toggleFavorite = (auction) => {
-    console.log(auction);
+    //console.log(auction);
     auction.isFavorited = !auction.isFavorited;
-    //console.log(auction.isFavorited);
     if (auction.isFavorited) {
         addLike(auction.id);
     } else {
@@ -901,7 +900,7 @@ const toggleFavorite = (auction) => {
 const addLike = async (auctionId) => { 
     like.user_id = user.value.id;
     like.likeable_id = auctionId;
-    console.log('Like added for auction:', auctionId);
+    //console.log('Like added for auction:', auctionId);
     const response = await setLikes(like);
     if(response.isSuccess){
         showLikeMessage("add");
@@ -909,14 +908,13 @@ const addLike = async (auctionId) => {
 };
 
 const removeLike = async (auction) => {
-    console.log(",,,,",auction.likes[0]);
-
     const response = await deleteLike(auction.likes[0].id);
-    showLikeMessage("remove");
     console.log(response);
-    //console.log('Like removed for auction:', auction.id); 
+    if(response.isSuccess){
+        showLikeMessage("remove");
+    }
+    
 };
-
 
 function showLikeMessage(cl) {
     likeMessageVisible.value = true;
@@ -928,7 +926,9 @@ function showLikeMessage(cl) {
     
     setTimeout(() => {
         likeMessageVisible.value = false;
-        location.reload();
+        fetchFilteredViewBids();
+        //location.reload();
+        //currentTab.value = 'allInfo';
     }, 1000);
     
 }
@@ -988,7 +988,7 @@ const handleTouchEnd = async () => {
     if (distance.value === 100) { 
         isSpinning.value = true; 
         setTimeout(async () => {
-            await getAuctions(); 
+            fetchFilteredViewBids();
             isSpinning.value = false; 
             isPulling.value = false;
             distance.value = 0;
@@ -1009,7 +1009,7 @@ function toggleModal() {
 
 function setFilter(status) { 
     currentStatus.value = status;
-    getAuctions(1, false, currentStatus.value);
+    fetchFilteredViewBids();
 }
 
 function handleClose() { 
@@ -1027,7 +1027,7 @@ const filteredDone = computed(() => {
 function loadPage(page) { 
     if (page < 1 || page > pagination.value.last_page) return;
     currentPage.value = page;
-    getAuctions(page, false, currentStatus.value);
+    fetchFilteredViewBids();
     window.scrollTo(0,0);
 }
 
@@ -1044,23 +1044,8 @@ function getAuctionStyle(auction) {
 function isDealerParticipating(auctionId) { 
     return bidsData.value.some(bid => bid.auction_id === auctionId);
 }
-
-let timer;
-onMounted(async () => {
-
-    if(history.state.currentTab){
-        currentTab.value = history.state.currentTab;
-    }
-    
-    await getAuctions(currentPage.value);
-    await getBids();
-	statusLabel = wicas.enum(store).addFirst('all','전체').excl('cancel','취소').ascVal().auctions();
-
-    if (role.value.name === 'user') {
-        isUser.value = true;
-    }
-
-    updateAuctionTimes();
+const fetchFilteredViewBids = async () => {
+    await getAuctions(currentPage.value, false, currentStatus.value);
     auctionsData.value.forEach(auction => {
         auction.likes = auction.likes.filter(like => {
             if (like.user_id == user.value.id) {
@@ -1072,6 +1057,28 @@ onMounted(async () => {
         });
         auction.isDealerParticipating = isDealerParticipating(auction.id);
     });
+}
+
+    
+
+let timer;
+onMounted(async () => {
+
+    if(history.state.currentTab){
+        currentTab.value = history.state.currentTab;
+    }
+    
+    fetchFilteredViewBids();
+
+    await getBids();
+	statusLabel = wicas.enum(store).addFirst('all','전체').excl('cancel','취소').ascVal().auctions();
+
+    if (role.value.name === 'user') {
+        isUser.value = true;
+    }
+
+    updateAuctionTimes();
+    
 
     timer = setInterval(() => {
         currentTime.value = new Date();

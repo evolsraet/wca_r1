@@ -894,14 +894,18 @@ const addLike = (auctionId) => {
     like.likeable_id = auctionId;
     console.log('Like added for auction:', auctionId);
     setLikes(like);
-    showLikeMessage('add');
+    if(response.isSuccess){
+        showLikeMessage("add");
+    }
 };
 
 const removeLike = (auction) => {
     //console.log(auction.likes[0].id);
     deleteLike(auction.likes[0].id);
     //console.log('Like removed for auction:', auction.id);
-    showLikeMessage('remove');
+    if(response.isSuccess){
+        showLikeMessage("remove");
+    }
 };
 
 const dynamicClass = computed(() => {
@@ -921,7 +925,7 @@ function showLikeMessage(cl) {
     }
     setTimeout(() => {
         likeMessageVisible.value = false;
-        location.reload();
+        fetchAuctionDetail();
     }, 1000);
 }
 // 사용자 입찰이 취소된 적이 있는지 확인
@@ -1432,7 +1436,6 @@ const errorMessage = ref('');
 
 const fetchAuctionDetail = async () => {
   const auctionId = parseInt(route.params.id);
-  console.log("????????????????????????:", auctionId);
   try {
     auctionDetail.value = await getAuctionById(auctionId);
     console.log(auctionDetail.value.data.likes);
@@ -1448,7 +1451,6 @@ const fetchAuctionDetail = async () => {
     if(auctionDetail.value.data.reviews.length > 0){
       reviewIsOk.value = false;
     }
-    console.log("222222222222:", auctionDetail.value);
     const { car_no, owner_name } = auctionDetail.value.data;
     const carInfoForm = {
       owner: owner_name,
@@ -1486,9 +1488,10 @@ const fetchBidsInfo = async (topBids) => {
       const newHeightPrice = Math.max(...bidsInfo.map(bid => bid.price));
       if (newHeightPrice !== heightPrice.value) {
          heightPrice.value = newHeightPrice;
+         /*
          console.log("?",auctionDetail.value.data.status);
          console.log(auctionDetail.value.data.hope_price);
-       /*  if (auctionDetail.value.data.status === 'ing' && auctionDetail.value.data.hope_price === null) {
+         if (auctionDetail.value.data.status === 'ing' && auctionDetail.value.data.hope_price === null) {
           animateHeightPrice(newHeightPrice);
         }else if(auctionDetail.value.data.hope_price !== 'null'){
           animateHeightPrice(auctionDetail.value.data.hope_price);

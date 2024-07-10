@@ -90,7 +90,7 @@ export default function useLikes() {
     };
 
     const deleteLike = (id => {
-        wicac.conn()
+        return wicac.conn()
         .url(`/api/likes/${id}`)
         //.log()
         .callback(function(result){
