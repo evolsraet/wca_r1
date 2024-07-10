@@ -279,9 +279,7 @@ const AuctionCarInfo = async (carInfoForm) => {
     if (processing.value) return;
     processing.value = true;
     validationErrors.value = {};
-    console.log('auctionsData=====');
-    console.log(auctionData.auction.owner_name);
-    console.log(auction.ownerName);
+
     let payload = {
         auction : {
             owner_name: auctionData.auction.owner_name,
@@ -297,9 +295,8 @@ const AuctionCarInfo = async (carInfoForm) => {
             status: auctionData.auction.status
         }
     }
-    console.log('====');
-    console.log(payload);
 
+    /*
     const formData = new FormData();
     formData.append('auction', JSON.stringify(payload.auction));
     if(auction.file_user_owner){
@@ -307,8 +304,7 @@ const AuctionCarInfo = async (carInfoForm) => {
     }
     //const fileResult = await fileUserOwnerUpdate(userData.file_user_owner,userData.id);
 
-    console.log('formData=====');
-    console.log(formData);
+    
     
     return wicac.conn()
     .url(`/api/auctions`)
@@ -320,6 +316,28 @@ const AuctionCarInfo = async (carInfoForm) => {
             //fileUserOwnerDeleteById(userData.id);
             throw new Error;          
         } else {
+            processing.value = false;
+            return result.isSuccess;
+        }
+    })
+    .post();
+    */
+    return wicac.conn()
+    .url(`/api/auctions`)
+    .param(payload)
+    .callback(function (result) {
+        if(result.isError){
+            validationErrors.value = result.rawData.response.data.errors;
+            //fileUserOwnerDeleteById(userData.id);
+            throw new Error;          
+        } else {
+            wica.ntcn(swal)
+            .title('')
+            .useHtmlText()
+            .icon('I')
+            .callback(function(result) {
+                //console.log(result);
+            }).alert('경매 신청이 완료되었습니다.');
             processing.value = false;
             return result.isSuccess;
         }
