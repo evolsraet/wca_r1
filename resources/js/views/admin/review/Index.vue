@@ -380,4 +380,8 @@ watch(
 .select-option {
     width: 112px !important;
 }
+.search-type2 .search-btn{
+    top: 53px !important;  
+    right: 4px !important;
+}
 </style>

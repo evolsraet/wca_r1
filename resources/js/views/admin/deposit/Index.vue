@@ -214,7 +214,8 @@ function setFilter(status) { // 필터 설정
   }
 }
 .search-type2 .search-btn{
-    top: 54px !important;  
+    top: 53px !important;  
+    right: 4px !important;
 }
 .blue-box {
     width: auto !important;
@@ -226,5 +227,6 @@ function setFilter(status) { // 필터 설정
     min-width: 73px !important;
     padding: 0 10px !important; 
 }
+
     </style>
     
