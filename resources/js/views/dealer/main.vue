@@ -24,11 +24,12 @@
 
                         <div>
                             <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span>건 있습니다</p>
+                            <!--
                             <div class="w-50">
                                 <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1 shadow-sm"><span>입찰 불가</span></p>
                                 <p v-else-if="user.status === 'ok'" class="bidding mt-1 mb-1 shadow-sm"><span>입찰 가능</span></p>
                             </div>
-                            <p class="tc-light-gray mb-3 mt-2">입찰가능 유효시간 2024.03.20</p>
+                            <p class="tc-light-gray mb-3 mt-2">입찰가능 유효시간 2024.03.20</p>-->
                         </div>
                             <div>
                                 <div style="display: flex; align-items: flex-end;">
