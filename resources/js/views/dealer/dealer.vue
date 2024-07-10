@@ -24,7 +24,7 @@
                         <div v-if="bidsData.length > 0" class="row">
                             <div class="col-md-3 p-2 mb-2 shadow-hover" v-for="bid in bidsData" :key="bid.id"  @click="navigateToDetail(bid)">
                                 <div class="card my-auction">
-                                    <div class="card-img-top-placeholder"></div> 
+                                    <div class="card-img-top-placeholder"><img src="../../../img/car_example.png"></div> 
                                     <span v-if="bid.auction.status === 'dlvr'" class="mx-2 bg-info auction-done">탁송진행</span>
                                     <span v-if="bid.auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span> 
                                     <div class="card-body">  
