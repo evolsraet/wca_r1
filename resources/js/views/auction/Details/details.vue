@@ -30,19 +30,20 @@
                         <label class="heart-toggle" :for="'favorite-' + auctionDetail.data.id" @click.stop></label>
                       </div>
                       <div class="gap-1" :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
-                        <div v-if="!isMobileView" class="d-flex flex-row gap-1">
-                          <div class="w-50">
-                            <div class="card-img-top-ty02"></div>
-                          </div>
-                          <div class="w-50 d-flex flex-column gap-1">
-                            <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
-                            <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
-                          </div>
+                      <div v-if="!isMobileView" class="d-flex flex-row gap-1">
+                        <div class="w-50">
+                          <div class="card-img-top-ty02" :style="borderStyle"></div>
                         </div>
-                        <div v-if="isMobileView">
-                          <div class="card-img-top-ty02"></div>
+                        <div class="w-50 d-flex flex-column gap-1">
+                          <div class="card-img-top-ty02 h-50 left-image background-auto" :style="borderStyle"></div>
+                          <div class="card-img-top-ty02 h-50 right-image background-auto" :style="borderStyle"></div>
                         </div>
                       </div>
+                      <div v-if="isMobileView">
+                        <div class="card-img-top-ty02" :style="borderStyle"></div>
+                      </div>
+                    </div>
+
                       <h4 v-if="auctionDetail.data.status === 'done' || auctionDetail.data.status === 'chosen'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
                       <div class="mt-2 pb-1 d-flex gap-3 justify-content-between">
                         <div></div>
@@ -380,12 +381,19 @@
             </BottomSheet02>
           </div>
 
-          <div v-if="auctionDetail.data.status !== 'cancel' && auctionDetail.data.status !== 'done' && auctionDetail.data.status !== 'chosen' &&  isDealer" class="sheet-content">
+          <div v-if="auctionDetail.data.status !== 'done' && auctionDetail.data.status !== 'dlvr' && auctionDetail.data.status !== 'chosen'  &&  isDealer" class="sheet-content">
             <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
                 <div  @click.stop="">
                   <p class="text-center tc-red my-2">현재  {{ auctionDetail.data.bids_count }}명이 입찰했어요.</p>
                   <button type="button" class="btn btn-primary w-100 align-items-center d-flex justify-content-center gap-3" @click="showbidView">입찰하기<p class="icon-up-wh"></p></button>
                 </div>
+              </BottomSheet02>
+              <BottomSheet02 v-if="auctionDetail.data.status == 'cancel'" >
+                <h5 class="text-start">입찰이 취소되었습니다</h5>
+                <p class="auction-deadline align-items-center my-4 p-4 justify-content-between">
+                  <span class="tc-light-gray">나의 입찰 금액</span>
+                  <span class="bold-20-font">{{ amtComma(myBidPrice) }}</span>
+                </p>
               </BottomSheet02>
             <BottomSheet02 initial="half" class="p-2 pt-0" v-if="userBidExists && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null">
               <div class="d-flex justify-content-between align-items-baseline">
@@ -411,21 +419,21 @@
                 <p class="text-center tc-red">※ 최초 1회 수정이 가능합니다</p>
               </div>
             </BottomSheet02>
-            <BottomSheet02 v-if="auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen'">
-               <div class="d-flex justify-content-between align-items-baseline">
-                <h4>탁송 신청 정보</h4>
-              </div>
-              <div class="text-start mt-2">
-                <p class="tc-light-gray">낙찰 딜러 :<span class="tc-red">&nbsp; 홍길동 딜러</span></p>
-                <p class="tc-light-gray">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red">&nbsp;3500 만원</span></p>
-                <p class="tc-light-gray">입금&nbsp;&nbsp;은행 :<span class="tc-red ">&nbsp; (농협은행) 0000-0088-0024</span></p>
-                <p class="tc-light-gray">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red">&nbsp;2024년 6월 26일 오후 6:12</span></p>
-              </div>
-              <div>
-                <button class="border-6 btn-fileupload my-4 shadow02">매도용 인감증명서 다운로드</button>
-              </div>
-            </BottomSheet02>
           </div>
+          <BottomSheet02 v-if="auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen'">
+             <div class="d-flex justify-content-between align-items-baseline">
+              <h4>탁송 신청 정보</h4>
+            </div>
+            <div class="text-start mt-2">
+              <p class="tc-light-gray">낙찰 딜러 :<span class="tc-red">&nbsp; 홍길동 딜러</span></p>
+              <p class="tc-light-gray">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red">&nbsp;3500 만원</span></p>
+              <p class="tc-light-gray">입금&nbsp;&nbsp;은행 :<span class="tc-red ">&nbsp; (농협은행) 0000-0088-0024</span></p>
+              <p class="tc-light-gray">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red">&nbsp;2024년 6월 26일 오후 6:12</span></p>
+            </div>
+            <div>
+              <button class="border-6 btn-fileupload my-4 shadow02">매도용 인감증명서 다운로드</button>
+            </div>
+          </BottomSheet02>
       </div>
     </div>
 
@@ -649,7 +657,7 @@
                      <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
                         <div v-if="isDealer">
                             <div v-if="auctionDetail.data.status === 'wait'" @click.stop="">
-                              <BottomSheet02 >
+                            <!--    <BottomSheet02 >
                               <div class="steps-container mb-3">
                                 <div class="step completed">
                                   <div class="label completed">STEP01</div>
@@ -667,7 +675,7 @@
                                 </div>
                               </div>
                               <p class="auction-deadline text-center mt-2">경매 선택 중 입니다.</p>
-                            </BottomSheet02>
+                            </BottomSheet02>-->
                             </div>
 
                   <!--       <div v-if="!succesbidhope && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price !== null" @click.stop="">
@@ -1840,13 +1848,13 @@ opacity: 0;
 }
 .card-img-top-ty02{
   border-top-left-radius: 6px;
-  border-bottom-left-radius: 6px;
+  border-top-right-radius: 6px;
 }
 .flex-column .card-img-top-ty02{
   border-top-left-radius: 0px !important;
   border-bottom-left-radius: 0px !important;
   border-top-right-radius: 6px;
-  border-bottom-right-radius: 6px;
+  border-top-left-radius: 6px !important;
 }
 .img_box img{
   width: 100%;
