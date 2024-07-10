@@ -302,12 +302,21 @@ const schema = {
 onMounted(async () => {
     statusLabel = wicas.enum(store).users();
     userInfo = await getUser(route.params.id);
-    fileImgUrl.value = userInfo.files.file_user_photo[0].original_url;
-    fileSignUrl.value = userInfo.files.file_user_sign[0].original_url;
-    fileCertUrl.value = userInfo.files.file_user_cert[0].original_url;
-    fileBizUrl.value = userInfo.files.file_user_biz[0].original_url;
-
-    console.log(user.value);
+    if(userInfo.files.length>0){
+        if(userInfo.files.file_user_photo[0].original_url){
+            fileImgUrl.value = userInfo.files.file_user_photo[0].original_url;
+        }
+        if(userInfo.files.file_user_sign[0].original_url){
+            fileSignUrl.value = userInfo.files.file_user_sign[0].original_url;
+        }
+        if(userInfo.files.file_user_cert[0].original_url){
+            fileCertUrl.value = userInfo.files.file_user_cert[0].original_url;
+        }
+        if(userInfo.files.file_user_biz[0].original_url){
+            fileBizUrl.value = userInfo.files.file_user_biz[0].original_url;
+        }
+    }
+    
     await getRoleList();
     /** 
     for (const roleName of response.roles) {
