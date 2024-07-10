@@ -1,5 +1,4 @@
 import { reactive, ref,inject } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import store from "../store";
 import useUsers from "./users";
@@ -173,7 +172,6 @@ const getAuctionById = async (id) => {
             auction.value.dealer_name = null; 
         } 
         return result;
-        console.log(result);
     })
     .get();
 
@@ -223,37 +221,34 @@ const refreshCarInfo = async () => {
     processing.value = true;
     validationErrors.value = {};
 
-    try {
-        const carDetails = JSON.parse(localStorage.getItem('carDetails'));
-        if (!carDetails || !carDetails.owner || !carDetails.no) {
-            throw new Error("Owner and No fields are required in carDetails");
-        }
-
-        console.log("Refreshing with:", carDetails);
-
-        const response = await axios.post('/api/auctions/carInfo', {
-            owner: carDetails.owner,
-            no: carDetails.no,
-            forceRefresh: 'true'
-        });
-
-        localStorage.setItem('carDetails', JSON.stringify(response.data.data));
-        console.log("Updated carDetails:", response.data.data);  
-
-
-        const lastRefreshTimes = JSON.parse(localStorage.getItem('lastRefreshTimes')) || {};
-        lastRefreshTimes[`${carDetails.owner}-${carDetails.no}`] = new Date().toISOString();
-        localStorage.setItem('lastRefreshTimes', JSON.stringify(lastRefreshTimes));
-
-    } catch (error) {
-        console.error(error);
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;  
-        }
-        throw error;  
-    } finally {
-        processing.value = false;
+    const carDetails = JSON.parse(localStorage.getItem('carDetails'));
+    if (!carDetails || !carDetails.owner || !carDetails.no) {
+        throw new Error("Owner and No fields are required in carDetails");
     }
+
+    wicac.conn()
+    .url(`/api/auctions/carInfo`)
+    .param({
+        owner: carDetails.owner,
+        no: carDetails.no,
+        forceRefresh: 'true'
+    })
+    .callback(function (result) {
+        if(result.isError){
+            validationErrors.value = result.rawData.response.data.errors;
+            throw new Error;          
+        } else {
+            console.log(result);
+            localStorage.setItem('carDetails', JSON.stringify(result.data));
+            console.log("Updated carDetails:", result.data);  
+            const lastRefreshTimes = JSON.parse(localStorage.getItem('lastRefreshTimes')) || {};
+            lastRefreshTimes[`${carDetails.owner}-${carDetails.no}`] = new Date().toISOString();
+            localStorage.setItem('lastRefreshTimes', JSON.stringify(lastRefreshTimes));
+        }
+        processing.value = false;
+    })
+    .post();
+
 };
 
 
@@ -262,19 +257,21 @@ const AuctionCarInfo = async (carInfoForm) => {
     processing.value = true;
     validationErrors.value = {};
   
-    try {
-      const response = await axios.post('/api/auctions/carInfo', carInfoForm);
-      return response.data; // response 데이터를 반환
-    } catch (error) {
-      console.error(error);
-      if (error.response?.data) {
-        validationErrors.value = error.response.data.errors;
-      } else {
-        throw new Error('Unknown error');
-      }
-    } finally {
-      processing.value = false;
-    }
+    return await wicac.conn()
+    .url(`/api/auctions/carInfo`)
+    .param(carInfoForm)
+    .callback(function (result) {
+        if(result.isError){
+            processing.value = false;
+            validationErrors.value = result.rawData.response.data.errors;
+            throw new Error;          
+        } else {
+            processing.value = false;
+            return result;
+        }
+    })
+    .post();
+
   };
   
 
@@ -341,23 +338,27 @@ const AuctionReauction = async (id, data) => {
         auction: data
     };
 
-    try {
-        console.log(`Updating auction id: ${id} with data:`, data);
-        const response = await axios.put(`/api/auctions/${id}`, requestData);
-
-        console.log('response:', response.data);
-        auction.value = response.data;
-    } catch (error) {
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;
+    wicac.conn()
+    .url(`/api/auctions/${id}`) 
+    .param(requestData)
+    .callback(function(result) {
+        console.log('wicac.conn callback ' , result);
+        if(result.isError){
+            validationErrors.value = result.rawData.response.data.errors;
+            wica.ntcn(swal)
+            .title('매물 상태 업데이트 중 오류가 발생하였습니다.')
+            .useHtmlText()
+            .icon('E')
+            .callback(function(result) {
+                //console.log(result);
+            }).alert('관리자에게 문의해주세요.');
+        } else {
+            auction.value = result.data;
         }
-        swal({
-            icon: 'error',
-            title: 'Failed to update auction status'
-        });
-    } finally {
         isLoading.value = false;
-    }
+    })
+    .put();
+    
 };
 //수정
 const updateAuction = async (id,auction) => {
@@ -434,6 +435,7 @@ const updateAuction = async (id,auction) => {
 
 //딜러 선택
 const chosenDealer = async (id, data) => {
+    console.log('=====딜러선택------==================');
     if (isLoading.value) return;
 
     isLoading.value = true;
@@ -443,22 +445,27 @@ const chosenDealer = async (id, data) => {
         auction: data
     };
 
-    try {
-        console.log(`Updating auction id: ${id} with data:`, data);
-        const response = await axios.put(`/api/auctions/${id}`, requestData);
-        console.log('response:', response.data);
-        auction.value = response.data;
-    } catch (error) {
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;
-        }
-        swal({
-            icon: 'error',
-            title: 'Failed to update auction status'
-        });
-    } finally {
-        isLoading.value = false;
-    }
+    wicac.conn()
+        .url(`/api/auctions/${id}`) 
+        .param(requestData)
+        .callback(function(result) {
+            console.log('wicac.conn callback ' , result);
+            if(result.isError){
+                validationErrors.value = result.rawData.response.data.errors;
+                wica.ntcn(swal)
+                .title('매물 상태 업데이트 중 오류가 발생하였습니다.')
+                .useHtmlText()
+                .icon('E')
+                .callback(function(result) {
+                    //console.log(result);
+                }).alert('관리자에게 문의해주세요.');
+            } else {
+                auction.value = result.data;
+            }
+            isLoading.value = false;
+        })
+        .put();
+
 };
     
 // 상태 업데이트 
@@ -489,26 +496,6 @@ const updateAuctionStatus = async (id, status) => {
     })
     .put();
     
-    /*try {
-        console.log(`status : ${status} auction id : ${id}`);
-        const response = await axios.put(`/api/auctions/${id}`, data);
-        console.log('response:', response.data);
-        auction.value = response.data;
-        swal({
-            icon: 'success',
-            title: 'Auction status updated successfully'
-        });
-    } catch (error) {
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;
-        }
-        swal({
-            icon: 'error',
-            title: 'Failed to update auction status'
-        });
-    } finally {``
-        isLoading.value = false;
-    }*/
 };
 
  const updateAuctionPrice = async (auctionId, amount) => {
@@ -523,27 +510,28 @@ const updateAuctionStatus = async (id, status) => {
         }
     };
 
-    try {
-        console.log(`Updating auction price: ${amount}`);
-        const response = await axios.put(`/api/auctions/${auctionId}`, data);
-        console.log('response:', response.data);
-        swal({
-            icon: 'success',
-            title: 'Auction price updated successfully'
-        });
-        return response.data;
-    } catch (error) {
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;
+    return await wicac.conn()
+    .url(`/api/auctions/${auctionId}`)
+    .param(data)
+    .callback(function (result) {
+        if(result.isError){
+            processing.value = false;
+            validationErrors.value = result.rawData.response.data.errors;
+            wica.ntcn(swal)
+                .title('매물 가격 업데이트 중 오류가 발생하였습니다.')
+                .useHtmlText()
+                .icon('E')
+                .callback(function(result) {
+                    //console.log(result);
+            }).alert('관리자에게 문의해주세요.');
+            throw new Error;          
+        } else {
+            processing.value = false;
+            return result;
         }
-        swal({
-            icon: 'error',
-            title: 'Failed to update auction price'
-        });
-        throw error;
-    } finally {
-        isLoading.value = false;
-    }
+    })
+    .put();
+
 };
 
 const deleteAuction = async (id,urlPath) => {
