@@ -424,8 +424,8 @@ onMounted(() => {
     cursor: pointer;
     position: absolute;
     right: 0;
-    top: 18%;
-    transform: translateY(-50%);
+    top: 38px;
+    transform: translateY(-49%);
     height: 40px;
     width: 40px;
     border: none;
