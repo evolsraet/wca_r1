@@ -41,8 +41,8 @@
                             <p><span class="tc-red slide-up mb-0" ref="item1">{{ userLikesCount }}</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
                             </router-link>
-                            <router-link :to="{ name: 'auction.index' }" class="item">
-                            <p><span class="tc-red mb-0" ref="item2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
+                            <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo' }}" class="item">
+                            <p><span class="tc-red mb-0" ref="item2">{{ bidsData.length }}</span> 건</p>
                             <p class="bid-icon tc-light-gray normal-16-font mb-0">입찰</p>
                             </router-link>
                             <router-link :to="{  name: 'dealer.bids' }" class="item">
