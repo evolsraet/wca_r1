@@ -329,6 +329,7 @@ const AuctionCarInfo = async (carInfoForm) => {
         if(result.isError){
             validationErrors.value = result.rawData.response.data.errors;
             //fileUserOwnerDeleteById(userData.id);
+            processing.value = false;
             throw new Error;          
         } else {
             wica.ntcn(swal)
@@ -343,6 +344,7 @@ const AuctionCarInfo = async (carInfoForm) => {
         }
     })
     .post();
+    
 
 };
 //재경매- (희망가) 변경
