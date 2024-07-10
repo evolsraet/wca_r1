@@ -120,7 +120,7 @@ const fetchFilteredBids = async () => {
 function loadPage(page) { 
     if (page < 1 || page > pagination.value.last_page) return;
     currentPage.value = page;
-    getBids(page, true);
+    await getBids(1,true,false,user.value.id);
     window.scrollTo(0,0);
 }
 
@@ -135,7 +135,7 @@ onMounted(async () => {
         console.error('사용자 정보가 없습니다.');
         return;
     }
-    await getBids(1,true,user.value.id);
+    await getBids(1,true,false,user.value.id);
     loading.value = true;
 });
 </script>

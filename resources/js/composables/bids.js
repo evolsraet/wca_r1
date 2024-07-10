@@ -54,13 +54,18 @@ export default function useBid() {
         }
     }; */
 
-    const getBids = async (page = 1 , isSelect = false, userId = 0) => {
+    //isSelect => 선택 차량 (선택,탁송 filter)
+    //isMyBid => 진행 중 입찰 건 filter
+    const getBids = async (page = 1 , isSelect = false, isMyBid = false , userId = 0) => {
         const whereList = [];
         if(isSelect){
             if(userId != 0){
                 whereList.push(`auction.status:whereIn:dlvr,chosen&like=auction.win_bid.user_id:${userId}`)
             }
             
+        }
+        if(isMyBid){
+            whereList.push(`auction.status:whereIn:dlvr,chosen,ing,wait`)
         }
         return wicac.conn()
             .log()
@@ -80,14 +85,12 @@ export default function useBid() {
 
     //페이징 안 한 전체 bid
     const getHomeBids = async () => {
-        const apiList = [];
-
         return wicac.conn()
             .log()
             .url(`/api/bids`)
             .with(['auction'])
             .pageLimit(10000)
-            //.where(apiList)
+            .where([`auction.status:whereIn:dlvr,chosen,ing,wait`])
             //.page(`${page}`)
             .callback(function(result) {
                 //console.log(result);
@@ -191,41 +194,6 @@ export default function useBid() {
         }
     };
 
-    // 경매 내용 통신 (페이지까지)
-    const getAuctions = async (page = 1, isReviews = false, status = 'all') => {
-        const apiList = [];
-
-        if (status !== 'all') {
-            apiList.push(`auctions.status:${status}`);
-        }
-
-        try {
-            if (isReviews) {
-                const result = await axios.get('/api/auctions', {
-                    params: {
-                        _where: ['auctions.status:done', 'auctions.bid_id:>:0'],
-                        _with: ['reviews'],
-                        _doesnthave: ['reviews'],
-                        _page: `${page}`
-                    }
-                });
-                auctionsData.value = result.data.data;
-                pagination.value = result.data.meta;  // Assuming pagination data is in 'meta'
-            } else {
-                const result = await axios.get('/api/auctions', {
-                    params: {
-                        _page: `${page}`,
-                        _where: apiList,
-                    }
-                });
-                auctionsData.value = result.data.data;
-                pagination.value = result.data.meta;  // Assuming pagination data is in 'meta'
-            }
-        } catch (error) {
-            console.error('Error fetching auctions:', error);
-        }
-    };
-
     return {
         getHomeBids,
         cancelBid,
@@ -241,6 +209,5 @@ export default function useBid() {
         isLoading,
         auctionsData,
         pagination,
-        getAuctions
     };
 }
