@@ -90,7 +90,6 @@ export default function useBid() {
             .url(`/api/bids`)
             .with(['auction'])
             .pageLimit(10000)
-            .where([`auction.status:whereIn:dlvr,chosen,ing,wait`])
             //.page(`${page}`)
             .callback(function(result) {
                 //console.log(result);

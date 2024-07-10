@@ -42,11 +42,11 @@
                             <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
                             </router-link>
                             <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo' }}" class="item">
-                            <p><span class="tc-red mb-0" ref="item2">{{ bidsData.length }}</span> 건</p>
+                            <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
                             <p class="bid-icon tc-light-gray normal-16-font mb-0">입찰</p>
                             </router-link>
                             <router-link :to="{  name: 'dealer.bids' }" class="item">
-                            <p><span class="tc-red mb-0" ref="item3">{{ filteredViewBids.length }}</span> 건</p>
+                            <p><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
                             <p class="suc-bid-icon tc-light-gray normal-16-font mb-0">낙찰</p>
                             </router-link>
                          <!--   <div class="item">
@@ -128,9 +128,9 @@
                         </div>
                         <span class="tc-light-gray">24시간 내 응대해 주세요!</span>
                         <!-- 차량이 존재 할 경우-->
-                        <div v-if="filteredViewBids.length > 0" class="container">
+                        <div v-if="filteredDoneBids.length > 0" class="container">
                             <div class="row">
-                            <div class="col-md-6 p-2" v-for="bid in filteredViewBids.slice(0,2)" :key="bid.id">
+                            <div class="col-md-6 p-2" v-for="bid in filteredDoneBids.slice(0,2)" :key="bid.id">
                                 <div class="card my-auction mt-3">
                                     <div class="card-img-top-placeholder border-rad"></div>
                                     <div class="card-body">
@@ -189,6 +189,7 @@ const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 �
 const { bidsData, getHomeBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
 let a = '';
+const myBidCount = ref(0);
 
 /**
 function test(){
@@ -240,7 +241,7 @@ const fetchAuctionDetails = async (bid) => {
 };
 
 
-const filteredViewBids = ref([]);
+const filteredDoneBids = ref([]);
 /**
 const fetchFilteredViewBids = async () => {
     // 필터링을 제거하고 모든 입찰을 가져옵니다.
@@ -267,13 +268,18 @@ onMounted(async () => {
     bidsData.value.forEach(bid => {
         if (
             bid.auction.win_bid &&
-            bid.auction.win_bid.user_id === user.value.id &&
-            (bid.auction.status === 'dlvr' || bid.auction.status === 'chosen')
+            bid.auction.win_bid.user_id === user.value.id && (bid.auction.status === 'done')
+           
         ){
-            filteredViewBids.value.push(bid);
+            console.log(bid);
+            filteredDoneBids.value.push(bid);
         }
-        else{
-            return;
+        else if( bid.auction.status === 'ing' || 
+                 bid.auction.status === 'chosen' || 
+                 bid.auction.status === 'dlvr' || 
+                 bid.auction.status === 'wait' 
+        ){
+            myBidCount.value += 1;
         }
 
     });

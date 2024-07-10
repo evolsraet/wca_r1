@@ -939,6 +939,7 @@ const addLike = async (auctionId) => {
     const response = await setLikes(like);
     if(response.isSuccess){
         wica.ntcn(swal).icon('S').title('관심 차량이 추가되었습니다.').fire();
+        fetchFilteredViewLikes();
     }
 };
 
@@ -948,6 +949,7 @@ const removeLike = async (auction) => {
     console.log(response);
     if(response.isSuccess){
         wica.ntcn(swal).icon('S').title('관심 차량이 취소되었습니다.').fire();
+        fetchFilteredViewLikes();
     }
     
 };
@@ -1095,6 +1097,7 @@ const fetchFilteredViewLikes = async () => {
        
         auction.isDealerParticipating = isDealerParticipating(auction.id);
     });
+
     fetchFilteredBids();
 }
 
