@@ -805,14 +805,11 @@
                       </BottomSheet03>-->
                       <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                       </div>
-                      <div class="bottom-message" :class="{ 'show': likeMessageVisible }">
-                        {{ likeMessage }}
-                    </div>
                     </div>
                   <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
 </template>
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount ,inject} from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount , inject} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { gsap } from 'gsap';
@@ -864,13 +861,12 @@ const succesbid = ref(false);
 const succesbidhope = ref(false);
 const amount = ref('');
 const koreanAmount = ref('원');
-const { wicaLabel } = cmmn();
-const swal = inject('$swal');
+const { numberToKoreanUnit , amtComma , wica , wicaLabel } = cmmn();
+
 const reviewIsOk = ref(true);
 let likeMessage;
-const likeMessageVisible = ref(false);
 
-const { numberToKoreanUnit , amtComma , wica} = cmmn();
+const swal = inject('$swal');
 const myBidPrice = computed(() => {
   const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id);
   return myBid ? myBid.price : '0';
@@ -903,22 +899,23 @@ const toggleFavorite = (auction) => {
   }
 };
 
-const addLike = (auctionId) => { 
+const addLike = async (auctionId) => { 
     like.user_id = user.value.id;
     like.likeable_id = auctionId;
-    console.log('Like added for auction:', auctionId);
-    setLikes(like);
+    //console.log('Like added for auction:', auctionId);
+    const response = await setLikes(like);
+    console.log(response);
     if(response.isSuccess){
-        showLikeMessage("add");
+      wica.ntcn(swal).icon('S').title('관심 차량이 추가되었습니다.').fire();
     }
 };
 
-const removeLike = (auction) => {
+const removeLike = async (auction) => {
     //console.log(auction.likes[0].id);
-    deleteLike(auction.likes[0].id);
+    const response = await deleteLike(auction.like.id);
     //console.log('Like removed for auction:', auction.id);
     if(response.isSuccess){
-        showLikeMessage("remove");
+      wica.ntcn(swal).icon('S').title('관심 차량이 취소되었습니다.').fire();
     }
 };
 
@@ -930,18 +927,6 @@ const dynamicClass = computed(() => {
   }
 });
 
-function showLikeMessage(cl) {
-    likeMessageVisible.value = true;
-    if(cl == "add"){
-        likeMessage = '관심 차량이 추가되었습니다.'
-    } else if(cl == "remove"){
-        likeMessage = '관심 차량이 삭제되었습니다.'
-    }
-    setTimeout(() => {
-        likeMessageVisible.value = false;
-        fetchAuctionDetail();
-    }, 1000);
-}
 // 사용자 입찰이 취소된 적이 있는지 확인
 const userBid = computed(() => auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id));
 const userBidExists = computed(() => userBid.value && !userBid.value.deleted_at);
@@ -1453,14 +1438,13 @@ const fetchAuctionDetail = async () => {
   try {
     auctionDetail.value = await getAuctionById(auctionId);
     console.log(auctionDetail.value.data.likes);
+    
+    const userLike = auctionDetail.value.data.likes.find(like => like.user_id === user.value.id);
 
-    auctionDetail.value.data.likes = auctionDetail.value.data.likes.filter(like => {
-        if(like.user_id == user.value.id){
-          auctionDetail.value.data.isFavorited = true;
-          console.log(auctionDetail.value.data);
-          return true;
-        }
-    })
+    if (userLike) {
+        auctionDetail.value.data.like = userLike;
+        auctionDetail.value.data.isFavorited = true;
+    }
 
     if(auctionDetail.value.data.reviews.length > 0){
       reviewIsOk.value = false;
