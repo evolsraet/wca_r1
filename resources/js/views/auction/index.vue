@@ -493,6 +493,7 @@ TODO:
                                                     </div>
                                                 </div>
                                                 <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
+                                                    <img src="../../../img/car_example.png">
                                                 </div>
                                                 <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
                                                 <div>
@@ -569,6 +570,7 @@ TODO:
                                             </div>
                                         </div>
                                         <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
+                                            <img src="../../../img/car_example.png">
                                         </div>
                                         <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
                                         <div>
@@ -641,7 +643,7 @@ TODO:
                         <div class="row">
                             <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in filteredDone" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
                                 <div class="card my-auction">
-                                    <div class="card-img-top-placeholder grayscale_img"></div>
+                                    <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
                                     <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                     <div class="card-body">
                                         <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
@@ -678,6 +680,7 @@ TODO:
                                             </div>
                                         </div>
                                         <div v-else="bid.auction.status !== 'ask' || bid.auction.status !== 'diag'" :class="{ 'grayscale_img': bid.auction.status === 'done' || bid.auction.status === 'cancel' ||(isDealer && bid.auction.status === 'chosen') }" class="card-img-top-placeholder">
+                                            <img src="../../../img/car_example.png">
                                         </div>
                                         <span v-if="bid.auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(bid.auction.status).auctions() }}</span>
                                         <div>
