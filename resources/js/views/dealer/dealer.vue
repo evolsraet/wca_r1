@@ -25,7 +25,7 @@
                             <div class="col-md-3 p-2 mb-2 shadow-hover" v-for="bid in bidsData" :key="bid.id"  @click="navigateToDetail(bid)">
                                 <div class="card my-auction">
                                     <div class="card-img-top-placeholder"></div> 
-                                    <span v-if="bid.auction.status === 'dlvr'" class="mx-2 auction-done">탁송진행</span>
+                                    <span v-if="bid.auction.status === 'dlvr'" class="mx-2 bg-info auction-done">탁송진행</span>
                                     <span v-if="bid.auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span> 
                                     <div class="card-body">  
                                         <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
