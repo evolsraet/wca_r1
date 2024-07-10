@@ -24,7 +24,7 @@
         </div>
         <!-- 지역 선택 -->
         <div class="form-group">
-          <label for="sido1">(*필수입력) 지역</label>
+          <label for="sido1"><span class="text-danger">*</span> 지역</label>
           <div class="region">
             <select class="w-100" v-model="selectedRegion" @change="onRegionChange">
               <option value="">시/도 선택</option>
