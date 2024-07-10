@@ -45,6 +45,7 @@ export default function useUsers() {
         password_confirmation:"",
     });
 
+    /*
     const getUsers = async (
         page = 1,
         search_id = '',
@@ -65,7 +66,7 @@ export default function useUsers() {
             })
         
             
-    }
+    }*/
 
     const getUserStatus = async(
         stat = 'all'
@@ -135,7 +136,7 @@ export default function useUsers() {
         }
     }
     
-
+    /*
     const storeUser = async (user) => {
         if (isLoading.value) return;
 
@@ -161,6 +162,7 @@ export default function useUsers() {
             })
             .finally(() => isLoading.value = false)
     }
+    */
 
     const updateUser = async (editForm, id) => {
         console.log(JSON.stringify(editForm));
@@ -412,9 +414,10 @@ export default function useUsers() {
         .icon('W') //E:error , W:warning , I:info , Q:question
         .callback(function(result) {
             if(result.isOk){
-                console.log(result);
-                axios.delete('/api/users/' + id)
-                    .then(response => {
+                wicac.conn()
+                .url(`/api/users/${id}`) 
+                .callback(function(result2) {
+                    if(result2.isSuccess){
                         wica.ntcn(swal)
                         .icon('I') //E:error , W:warning , I:info , Q:question
                         .callback(function(result) {
@@ -423,13 +426,14 @@ export default function useUsers() {
                             }
                         })
                         .alert('회원정보가 정상적으로 삭제되었습니다.');
-                    })
-                    .catch(error => {
+                    }else{
                         wica.ntcn(swal)
                         .title('오류가 발생하였습니다.')
                         .icon('E') //E:error , W:warning , I:info , Q:question
                         .alert('관리자에게 문의해주세요.');
-                    })
+                    }
+                })
+                .delete();
             }
         })
         .confirm('삭제된 정보는 복구할 수 없습니다.');   
@@ -442,10 +446,8 @@ export default function useUsers() {
         getUserStatus,
         users,
         user,
-        getUsers,
         getUser,
         adminGetUsers,
-        storeUser,
         updateMyInfo,
         updateUser,
         deleteUser,
