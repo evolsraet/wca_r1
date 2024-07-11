@@ -1,4 +1,3 @@
-import axios from "axios";
 import { cmmn } from '@/hooks/cmmn';
 const { wicac } = cmmn();
 

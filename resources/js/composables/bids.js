@@ -1,5 +1,4 @@
 import { ref, computed, inject } from 'vue';
-import axios from 'axios';
 import { cmmn } from '@/hooks/cmmn';
 
 // 입찰 데이터
