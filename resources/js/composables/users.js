@@ -45,29 +45,6 @@ export default function useUsers() {
         password_confirmation:"",
     });
 
-    /*
-    const getUsers = async (
-        page = 1,
-        search_id = '',
-        search_title = '',
-        search_global = '',
-        order_column = 'created_at',
-        order_direction = 'desc'
-    ) => {
-        axios.get('/api/users?page=' + page +
-            '&search_id=' + search_id +
-            '&search_title=' + search_title +
-            '&search_global=' + search_global +
-            '&order_column=' + order_column +
-            '&order_direction=' + order_direction)
-            .then(response => {
-                users.value = response.data;
-                console.log(users.value);
-            })
-        
-            
-    }*/
-
     const getUserStatus = async(
         stat = 'all'
     )=>{
@@ -135,34 +112,6 @@ export default function useUsers() {
             throw error;
         }
     }
-    
-    /*
-    const storeUser = async (user) => {
-        if (isLoading.value) return;
-
-        isLoading.value = true
-        validationErrors.value = {}
-
-        let serializedPost = new FormData()
-        for (let item in user) {
-            if (user.hasOwnProperty(item)) {
-                serializedPost.append(item, user[item])
-            }
-        }
-        
-        axios.post('/api/users', serializedPost)
-            .then(response => {
-                router.push({name: 'users.index'})
-                wica.ntcn(swal).icon('S').title('정상 처리 되었습니다.').fire();
-            })
-            .catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
-            })
-            .finally(() => isLoading.value = false)
-    }
-    */
 
     const updateUser = async (editForm, id) => {
         console.log(JSON.stringify(editForm));
@@ -383,29 +332,6 @@ export default function useUsers() {
         })
         .put();
     }
-    
-    /**console.log(result);
-    await axios.put(`/api/users/${id}`, formData,{
-        headers:{ 
-            'Content-Type': 'multipart/form-data'
-        }
-    })
-    .then(response => {
-        wica.ntcn(swal)
-            .icon('I') //E:error , W:warning , I:info , Q:question
-            .callback(function(result) {
-                if (result.isOk) {
-                    router.push({ name: 'users.index' });
-                }
-            })
-            .alert('회원정보가 정상적으로 수정되었습니다.');
-    })
-    .catch(error => {
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;
-        }
-    })
-    .finally(() => isLoading.value = false); */
 
     const deleteUser = async (id) => {
         wica.ntcn(swal)

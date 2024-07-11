@@ -224,7 +224,6 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import usePosts from "@/composables/posts";
 import useCategories from "@/composables/categories";
 import { useAbility } from "@casl/vue";
 import { initReviewSystem } from '@/composables/review';
