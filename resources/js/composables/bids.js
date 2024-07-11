@@ -65,7 +65,7 @@ export default function useBid() {
             
         }
         if(isMyBid){
-            whereList.push(`auction.status:whereIn:dlvr,chosen,ing,wait`)
+            whereList.push(`auction.status:whereIn:ing,wait`)
         }
         return wicac.conn()
             .log()

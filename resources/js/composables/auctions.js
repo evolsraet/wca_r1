@@ -56,6 +56,27 @@ export default function useAuctions() {
 
     }
 
+    const getAuctionsByDealer = async (page = null) => {
+
+        let request = wicac.conn()
+            .log()
+            .url(`/api/auctions`)
+            .where(['auctions.status:whereIn:ing,wait'])
+            .with(['bids', 'likes']);
+    
+        if (page != null) {
+            request = request.page(page);
+        } else {
+            request = request.pageLimit(10000);
+        }
+    
+        return request.callback(function(result) {
+            auctionsData.value = result.data;
+            pagination.value = result.rawData.data.meta;
+            return result.data;
+        }).get();
+    }
+
     const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
         const apiList = [];
     
@@ -622,7 +643,8 @@ const deleteAuction = async (id,urlPath) => {
         updateAuctionStatus,
         createAuction,
         refreshCarInfo,
-        updateAuction
+        updateAuction,
+        getAuctionsByDealer
     };
     
 }

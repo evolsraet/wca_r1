@@ -803,7 +803,7 @@ TODO:
                 </div>
                 -->
                 <!-- Pagination -->
-                <nav v-if="currentTab !== 'interInfo' && currentTab !== 'auctionDone'">
+                <nav>
                     <ul class="pagination justify-content-center">
                         <li class="page-item" :class="{ disabled: !pagination.prev }">
                             <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
@@ -891,7 +891,7 @@ const route = useRoute();
 const currentStatus = ref('all'); 
 const { role, getRole } = useRoles();
 const currentTab = ref('allInfo'); 
-const { auctionsData, pagination, getAuctions } = useAuctions();
+const { auctionsData, pagination, getAuctions, getAuctionsByDealer } = useAuctions();
 const currentPage = ref(1); 
 const showModal = ref(false); 
 const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); 
@@ -1086,7 +1086,9 @@ function isDealerParticipating(auctionId) {
     return bidsData.value.some(bid => bid.auction_id === auctionId);
 }
 const fetchFilteredViewLikes = async () => {
-    await getAuctions(currentPage.value, false, currentStatus.value);
+    await getAuctionsByDealer(currentPage.value);
+    console.log(auctionsData.value);
+    //await getAuctions(currentPage.value, false, currentStatus.value);
 
     auctionsData.value.forEach(auction => {
         const userLike = auction.likes.find(like => like.user_id === user.value.id);
@@ -1151,8 +1153,6 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
-    console.log("onUnmounted")
-    currentTab.value = "allInfo"
     clearInterval(timer);
 });
 

@@ -23,7 +23,7 @@
                             </div>-->
 
                         <div>
-                            <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span>건 있습니다</p>
+                            <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ auctionsData.length }}</span>건 있습니다</p>
                             <!--
                             <div class="w-50">
                                 <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1 shadow-sm"><span>입찰 불가</span></p>
@@ -186,7 +186,7 @@ const toggleCard = () => {
     isExpanded.value = !isExpanded.value;
 };
 const alarmModal = ref(null);
-const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
+const { getAuctionsByDealer, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
 const { bidsData, getHomeBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
 let a = '';
@@ -263,8 +263,8 @@ function navigateToDetail(bid) {
 }
 
 onMounted(async () => {
-    //await getAuctions();
-    //console.log(auctionsData.value);
+    await getAuctionsByDealer();
+
     await getHomeBids();
     bidsData.value.forEach(bid => {
         if (
