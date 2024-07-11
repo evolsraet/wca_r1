@@ -18,12 +18,12 @@
                         <img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
                         <span v-if="timeLeft.days != '0'">{{ timeLeft.days }}일 &nbsp;</span>{{ timeLeft.hours }} : {{ timeLeft.minutes }} : {{ timeLeft.seconds }}
                       </span>
-                      <span v-if="auctionDetail.data.status === 'dlvr'" class="mx-2 auction-done bg-info">탁송진행</span>
-                      <span v-if="auctionDetail.data.status === 'done'" class="mx-2 auction-done">경매완료</span>
-                      <span v-if="auctionDetail.data.status === 'diag'" class="mx-2 auction-done">진단대기</span>
-                      <span v-if="auctionDetail.data.status === 'ask'" class="mx-2 auction-done">신청완료</span>
-                      <span v-if="auctionDetail.data.status === 'cancel'" class="mx-2 auction-done">경매취소</span>
-                      <span v-if="auctionDetail.data.status === 'chosen'" class="mx-2 auction-done">선택완료</span>
+                      <span v-if="auctionDetail.data.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
+                      <span v-if="auctionDetail.data.status === 'done'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
+                      <span v-if="auctionDetail.data.status === 'diag'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
+                      <span v-if="auctionDetail.data.status === 'ask'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
+                      <span v-if="auctionDetail.data.status === 'cancel'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
+                      <span v-if="auctionDetail.data.status === 'chosen'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
                       <div v-if="auctionDetail.data.status !== 'cancel' & !isUser">
                         <input class="toggle-heart" type="checkbox" :id="'favorite-' + auctionDetail.data.id"
                         :checked="auctionDetail.data.isFavorited" @click.stop="toggleFavorite(auctionDetail.data)"/>
@@ -828,7 +828,7 @@
                   <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
 </template>
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount , inject} from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount , inject,reactive} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { gsap } from 'gsap';
@@ -840,17 +840,14 @@ import modal from '@/views/modal/modal.vue';
 import auctionModal from '@/views/modal/auction/auctionModal.vue';
 import consignment from '@/views/consignment/consignment.vue';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
-import AlarmGuidModal from '@/views/modal/AlarmGuidModal.vue';
 import profileDom from '/resources/img/profile_dom.png';
 
 import drift from '../../../../../resources/img/drift.png';
 import carObjects from '../../../../../resources/img/modal/car-objects-blur.png';
 import carInfo from '../../../../../resources/img/electric-car.png';
-import ClaimModal from '@/views/modal/ClaimModal.vue';
-import bidModal from '@/views/modal/bid/bidModal.vue';
 import { cmmn } from '@/hooks/cmmn';
+import bidModal from '@/views/modal/bid/bidModal.vue';
 import { initReviewSystem } from '@/composables/review';
-import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
 import useLikes from '@/composables/useLikes';
@@ -881,7 +878,7 @@ const succesbid = ref(false);
 const succesbidhope = ref(false);
 const amount = ref('');
 const koreanAmount = ref('원');
-const { numberToKoreanUnit , amtComma , wica , wicaLabel } = cmmn();
+const { numberToKoreanUnit , amtComma , wica , wicaLabel, wicas } = cmmn();
 
 const reviewIsOk = ref(true);
 let likeMessage;
@@ -1536,7 +1533,6 @@ const startPolling = () => {
 let timer;
 const currentTime = ref(new Date());
 onMounted(async () => {
-
   timer = setInterval(() => {
     currentTime.value = new Date();
   }, 1000);
