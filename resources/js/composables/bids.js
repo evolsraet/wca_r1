@@ -85,11 +85,16 @@ export default function useBid() {
 
     //페이징 안 한 전체 bid
     const getHomeBids = async (mainIsOk = false) => {
+        const whereList = [];
+        if(mainIsOk){
+            whereList.push(`auction.status:whereIn:ing,wait`)
+        }
         return wicac.conn()
             .log()
             .url(`/api/bids`)
             .with(['auction'])
             .pageLimit(10000)
+            .where(whereList)
             //.page(`${page}`)
             .callback(function(result) {
                 //console.log(result);

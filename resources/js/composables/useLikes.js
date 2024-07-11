@@ -28,9 +28,8 @@ export default function useLikes() {
         .post(); 
     }
 
-    //pagination 안한 전체 데이터 
+    //pagination 안한 전체 데이터 - 사용자별
     const getAllLikes = async(likeableType = 'Auction', userId = null) => {
-        console.log(userId);
         return wicac.conn()
         //.log()
         .url(`/api/likes`)

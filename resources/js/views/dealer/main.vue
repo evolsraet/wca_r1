@@ -39,11 +39,11 @@
                         </div>
                         <div class="slide-up-ani activity-info bold-18-font process mb-0">
                              <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                            <p><span class="tc-red slide-up mb-0" ref="item1">{{ userLikesCount }}</span> 건</p>
+                            <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
                             </router-link>
                             <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo' }}" class="item">
-                            <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
+                            <p><span class="tc-red mb-0" ref="item2">{{ bidsData.length }}</span> 건</p>
                             <p class="bid-icon tc-light-gray normal-16-font mb-0">입찰</p>
                             </router-link>
                             <router-link :to="{  name: 'dealer.bids' }" class="item">
@@ -265,14 +265,14 @@ function navigateToDetail(bid) {
 onMounted(async () => {
     await getAuctionsByDealer();
 
-    await getHomeBids();
+    await getHomeBids(true);
+    /** 
     bidsData.value.forEach(bid => {
         if (
             bid.auction.win_bid &&
             bid.auction.win_bid.user_id === user.value.id && (bid.auction.status === 'done')
            
         ){
-            console.log(bid);
             filteredDoneBids.value.push(bid);
         }
         else if( bid.auction.status === 'ing' || 
@@ -283,7 +283,7 @@ onMounted(async () => {
             myBidCount.value += 1;
         }
 
-    });
+    }); */
     await getAllLikes('Auction',user.value.id);
 
     setTimeout(() => {
