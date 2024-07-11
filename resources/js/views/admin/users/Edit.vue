@@ -99,7 +99,7 @@
                                 파일 첨부
                             </button>
                             <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
-                            <img :src="fileImgUrl" alt="Profile Photo" class="profile-photo" />
+                            <img :src="fileImgUrl" alt="Profile Photo" class="profile-photo" v-if="editForm.file_user_photo_name"/>
                             <div class="text-start tc-light-gray" v-if="editForm.file_user_photo_name">
                                 사진 파일 : <a :href=fileImgUrl download>{{ editForm.file_user_photo_name }}</a>
                             </div>
