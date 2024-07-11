@@ -99,6 +99,7 @@
                                 파일 첨부
                             </button>
                             <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
+                            <img :src="fileImgUrl" alt="Profile Photo" class="profile-photo" />
                             <div class="text-start tc-light-gray" v-if="editForm.file_user_photo_name">
                                 사진 파일 : <a :href=fileImgUrl download>{{ editForm.file_user_photo_name }}</a>
                             </div>
@@ -299,23 +300,38 @@ const schema = {
 
 };
 
+function fileExstCheck(info){
+    if(info.hasOwnProperty('files')){
+        if(info.files.hasOwnProperty('file_user_photo')){
+            if(info.files.file_user_photo[0].hasOwnProperty('original_url')){
+                fileImgUrl.value = userInfo.files.file_user_photo[0].original_url;
+            }
+        }
+
+        if(info.files.hasOwnProperty('file_user_sign')){
+            if(info.files.file_user_sign[0].hasOwnProperty('original_url')){
+                fileSignUrl.value = userInfo.files.file_user_sign[0].original_url;
+            }
+        }
+
+        if(info.files.hasOwnProperty('file_user_cert')){
+            if(info.files.file_user_cert[0].hasOwnProperty('original_url')){
+                fileCertUrl.value = userInfo.files.file_user_cert[0].original_url;
+            }
+        }
+
+        if(info.files.hasOwnProperty('file_user_cert')){
+            if(info.files.file_user_biz[0].hasOwnProperty('original_url')){
+                fileBizUrl.value = userInfo.files.file_user_biz[0].original_url;
+            }
+        }
+    }
+}
+
 onMounted(async () => {
     statusLabel = wicas.enum(store).users();
     userInfo = await getUser(route.params.id);
-    if(userInfo.files.length>0){
-        if(userInfo.files.file_user_photo[0].original_url){
-            fileImgUrl.value = userInfo.files.file_user_photo[0].original_url;
-        }
-        if(userInfo.files.file_user_sign[0].original_url){
-            fileSignUrl.value = userInfo.files.file_user_sign[0].original_url;
-        }
-        if(userInfo.files.file_user_cert[0].original_url){
-            fileCertUrl.value = userInfo.files.file_user_cert[0].original_url;
-        }
-        if(userInfo.files.file_user_biz[0].original_url){
-            fileBizUrl.value = userInfo.files.file_user_biz[0].original_url;
-        }
-    }
+    fileExstCheck(userInfo);
     
     await getRoleList();
     /** 
@@ -335,16 +351,16 @@ onMounted(async () => {
         editForm.role = user.value.roles[0];
         editForm.phone = user.value.phone;
         if(user.value.files.file_user_photo){
-            editForm.file_user_photo_name = user.value.files.file_user_photo[0].name;
+            editForm.file_user_photo_name = user.value.files.file_user_photo[0].file_name;
         }
         if(user.value.files.file_user_biz){
-            editForm.file_user_biz_name = user.value.files.file_user_biz[0].name;
+            editForm.file_user_biz_name = user.value.files.file_user_biz[0].file_name;
         }
         if(user.value.files.file_user_sign){
-            editForm.file_user_sign_name = user.value.files.file_user_sign[0].name;
+            editForm.file_user_sign_name = user.value.files.file_user_sign[0].file_name;
         }
         if(user.value.files.file_user_cert){
-            editForm.file_user_cert_name = user.value.files.file_user_cert[0].name;
+            editForm.file_user_cert_name = user.value.files.file_user_cert[0].file_name;
         }
         
         if(user.value.dealer){
