@@ -555,13 +555,14 @@ TODO:
                         <nav>
                             <ul class="pagination justify-content-center">
                                 <li class="page-item" :class="{ disabled: !pagination.prev }">
-                                    <a class="page-link prev-style" @click="loadPage1(pagination.current_page - 1)"></a>
+                                    
+                                    <a class="page-link prev-style" @click="loadPage( pagination.current_page - 1, 'all', pagination)"></a>
                                 </li>
                                 <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
-                                    <a class="page-link" @click="loadPage1(n)">{{ n }}</a>
+                                    <a class="page-link" @click="loadPage( n , 'all', pagination)">{{ n }}</a>
                                 </li>
                                 <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                                    <a class="page-link next-style" @click="loadPage1(pagination.current_page + 1)"></a>
+                                    <a class="page-link next-style" @click="loadPage( pagination.current_page + 1, 'all', pagination)"></a>
                                 </li>
                             </ul>
                         </nav>
@@ -654,13 +655,15 @@ TODO:
                         <nav>
                             <ul class="pagination justify-content-center">
                                 <li class="page-item" :class="{ disabled: !favoriteAuctionsPagination.prev }">
-                                    <a class="page-link prev-style" @click="loadPage2(favoriteAuctionsPagination.current_page - 1)"></a>
+                                    
+                                    <a class="page-link prev-style" 
+                                    @click="loadPage( favoriteAuctionsPagination.current_page - 1, 'favorite', favoriteAuctionsPagination)"></a>
                                 </li>
                                 <li v-for="n in favoriteAuctionsPagination.last_page" :key="n" class="page-item" :class="{ active: n === favoriteAuctionsPagination.current_page }">
-                                    <a class="page-link" @click="loadPage2(n)">{{ n }}</a>
+                                    <a class="page-link" @click="loadPage( n, 'favorite', favoriteAuctionsPagination)">{{ n }}</a>
                                 </li>
                                 <li class="page-item next-prev" :class="{ disabled: !favoriteAuctionsPagination.next }">
-                                    <a class="page-link next-style" @click="loadPage2(favoriteAuctionsPagination.current_page + 1)"></a>
+                                    <a class="page-link next-style" @click="loadPage( favoriteAuctionsPagination.current_page + 1, 'favorite', favoriteAuctionsPagination)"></a>
                                 </li>
                             </ul>
                         </nav>
@@ -751,13 +754,14 @@ TODO:
                         <nav>
                             <ul class="pagination justify-content-center">
                                 <li class="page-item" :class="{ disabled: !bidPagination.prev }">
-                                    <a class="page-link prev-style" @click="loadPage3(bidPagination.current_page - 1)"></a>
+                                    
+                                    <a class="page-link prev-style" @click="loadPage( bidPagination.current_page - 1, 'bid', bidPagination)"></a>
                                 </li>
                                 <li v-for="n in bidPagination.last_page" :key="n" class="page-item" :class="{ active: n === bidPagination.current_page }">
-                                    <a class="page-link" @click="loadPage3( n )">{{ n }}</a>
+                                    <a class="page-link" @click="loadPage( n, 'bid', bidPagination)">{{ n }}</a>
                                 </li>
                                 <li class="page-item next-prev" :class="{ disabled: !bidPagination.next }">
-                                    <a class="page-link next-style" @click="loadPage3( bidPagination.current_page + 1 )"></a>
+                                    <a class="page-link next-style" @click="loadPage( bidPagination.current_page + 1, 'bid', bidPagination)"></a>
                                 </li>
                             </ul>
                         </nav>
@@ -1107,32 +1111,31 @@ const filteredDone = computed(() => {
     return auctionsData.value.filter(auction => ['done'].includes(auction.status));
 });
 
-//전체 
-function loadPage1(page) { 
+function loadPage( page, type, pagination) {
     if (page < 1 || page > pagination.last_page) return;
-    currentPage.value = page;
-    fetchFilteredViewLikes();
-    window.scrollTo(0,0);
-}
-
-//관심 매물
-function loadPage2(page) { 
-    if (page < 1 || page > pagination.last_page) return;
-    currentFavoritePage.value = page;
-    favoriteAuctionsGetData();
-    window.scrollTo(0,0);
-}
-
-//내 입찰 차량
-function loadPage3(page) { 
-    if (page < 1 || page > pagination.last_page) return;
-    currentMyBidPage.value = page;
-    fetchFilteredBids();
-    window.scrollTo(0,0);
+    
+    window.scrollTo(0, 0);
+    
+    switch (type) {
+        case 'all':
+            currentPage.value = page;
+            fetchFilteredViewLikes();
+            break;
+        case 'favorite':
+            currentFavoritePage.value = page;
+            favoriteAuctionsGetData();
+            break;
+        case 'bid':
+            currentMyBidPage.value = page;
+            fetchFilteredBids();
+            break;
+        default:
+            console.error('Unknown page type');
+    }
 }
 
 function navigateToDetail(auction) { 
-    console.log("디테일 :", auction.id);
+    //console.log("디테일 :", auction.id);
     router.push({ name: 'AuctionDetail', params: { id: auction.id } });
 }
 
@@ -1160,15 +1163,13 @@ const favoriteAuctionsGetData = async () => {
 
     favoriteAuctionsData.value = response.data;
     favoriteAuctionsPagination.value = response.rawData.data.meta;
-
-    console.log("favoriteAuctionsData : ",favoriteAuctionsData.value);
+    //console.log("favoriteAuctionsData : ",favoriteAuctionsData.value);
     
     filterLikeData(favoriteAuctionsData.value);
 }
 
 const fetchFilteredBids = async () => {
     await getBids(currentMyBidPage.value, false, true, user.value.id);
-    console.log(bidsData.value);
     await getAllLikes('Auction', user.value.id);
 
     bidsData.value.forEach(bid => {
@@ -1182,12 +1183,13 @@ const fetchFilteredBids = async () => {
         } else {
             bid.auction.isFavorited = false;
         }
+        bid.auction.isDealerParticipating = isDealerParticipating(bid.auction.id);
     });
 
 };
 
 const filterLikeData = (auctions) => {
-    console.log(auctions);
+    //console.log(auctions);
     auctions.forEach(auction => {
         const userLike = auction.likes.find(like => like.user_id === user.value.id);
         if(userLike){
@@ -1198,6 +1200,7 @@ const filterLikeData = (auctions) => {
         }
         auction.isDealerParticipating = isDealerParticipating(auction.id);
     });
+    console.log(favoriteAuctionsData.value);
 }
 
 
