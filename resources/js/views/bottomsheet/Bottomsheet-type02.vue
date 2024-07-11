@@ -10,20 +10,23 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
-  initial: String,
+  initial: {
+    type: String,
+    default: 'half'
+  },
   dismissable: Boolean
 });
 
-const showHead = ref(true); 
-const showBottomSheet = ref(false);
+const showHead = ref(props.initial !== 'half');
+const showBottomSheet = ref(props.initial === 'half');
 const isDragging = ref(false);
 const startY = ref(0);
 const currentY = ref(0);
 const deltaY = ref(0);
-const sheetHeight = ref(200); 
+const sheetHeight = ref(props.initial === 'half' ? 'auto' : 30);
 let animationFrame = null;
 
 const sheet = ref(null);
@@ -108,7 +111,11 @@ const handleResize = () => {
 };
 
 onMounted(() => {
-  handleResize();
+  if (props.initial === 'half') {
+    expandSheet();
+  } else {
+    collapseSheet();
+  }
   window.addEventListener('resize', handleResize);
 });
 
@@ -116,6 +123,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize);
 });
 </script>
+
 <style scoped>
 .sheet-wrap {
   position: fixed;
@@ -199,9 +207,9 @@ onBeforeUnmount(() => {
     height: auto !important;
     transition: none;
   }
-.handle{
-  display: none;
-}
+  .handle {
+    display: none;
+  }
   .handle-head {
     cursor: default;
   }
