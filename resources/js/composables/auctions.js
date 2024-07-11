@@ -66,6 +66,8 @@ export default function useAuctions() {
     
         if(page == "all"){
             request = request.pageLimit(10000);
+        } else{
+            request = request.page(`${page}`)
         }
     
         return request.callback(function(result) {

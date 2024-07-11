@@ -555,13 +555,13 @@ TODO:
                         <nav>
                             <ul class="pagination justify-content-center">
                                 <li class="page-item" :class="{ disabled: !pagination.prev }">
-                                    <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1 , pagination)"></a>
+                                    <a class="page-link prev-style" @click="loadPage1(pagination.current_page - 1)"></a>
                                 </li>
                                 <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
-                                    <a class="page-link" @click="loadPage(n , pagination)">{{ n }}</a>
+                                    <a class="page-link" @click="loadPage1(n)">{{ n }}</a>
                                 </li>
                                 <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                                    <a class="page-link next-style" @click="loadPage(pagination.current_page + 1 , pagination)"></a>
+                                    <a class="page-link next-style" @click="loadPage1(pagination.current_page + 1)"></a>
                                 </li>
                             </ul>
                         </nav>
@@ -654,13 +654,13 @@ TODO:
                         <nav>
                             <ul class="pagination justify-content-center">
                                 <li class="page-item" :class="{ disabled: !favoriteAuctionsPagination.prev }">
-                                    <a class="page-link prev-style" @click="loadPage(favoriteAuctionsPagination.current_page - 1,favoriteAuctionsPagination)"></a>
+                                    <a class="page-link prev-style" @click="loadPage2(favoriteAuctionsPagination.current_page - 1)"></a>
                                 </li>
                                 <li v-for="n in favoriteAuctionsPagination.last_page" :key="n" class="page-item" :class="{ active: n === favoriteAuctionsPagination.current_page }">
-                                    <a class="page-link" @click="loadPage(n,favoriteAuctionsPagination)">{{ n }}</a>
+                                    <a class="page-link" @click="loadPage2(n)">{{ n }}</a>
                                 </li>
                                 <li class="page-item next-prev" :class="{ disabled: !favoriteAuctionsPagination.next }">
-                                    <a class="page-link next-style" @click="loadPage(favoriteAuctionsPagination.current_page + 1 , favoriteAuctionsPagination)"></a>
+                                    <a class="page-link next-style" @click="loadPage2(favoriteAuctionsPagination.current_page + 1)"></a>
                                 </li>
                             </ul>
                         </nav>
@@ -751,13 +751,13 @@ TODO:
                         <nav>
                             <ul class="pagination justify-content-center">
                                 <li class="page-item" :class="{ disabled: !bidPagination.prev }">
-                                    <a class="page-link prev-style" @click="loadPage(bidPagination.current_page - 1 , bidPagination )"></a>
+                                    <a class="page-link prev-style" @click="loadPage3(bidPagination.current_page - 1)"></a>
                                 </li>
                                 <li v-for="n in bidPagination.last_page" :key="n" class="page-item" :class="{ active: n === bidPagination.current_page }">
-                                    <a class="page-link" @click="loadPage( n , bidPagination )">{{ n }}</a>
+                                    <a class="page-link" @click="loadPage3( n )">{{ n }}</a>
                                 </li>
                                 <li class="page-item next-prev" :class="{ disabled: !bidPagination.next }">
-                                    <a class="page-link next-style" @click="loadPage( bidPagination.current_page + 1 , bidPagination )"></a>
+                                    <a class="page-link next-style" @click="loadPage3( bidPagination.current_page + 1 )"></a>
                                 </li>
                             </ul>
                         </nav>
@@ -918,10 +918,14 @@ const currentStatus = ref('all');
 const { role, getRole } = useRoles();
 const currentTab = ref('allInfo'); 
 const { auctionsData, pagination, getAuctions, getAuctionsByDealer, getAuctionsByDealerLike } = useAuctions();
+
 const currentPage = ref(1); 
+const currentFavoritePage = ref(1); 
+const currentMyBidPage = ref(1); 
+
 const showModal = ref(false); 
-const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); 
-const auctionModal = ref(false);
+//const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); 
+//const auctionModal = ref(false);
 const isPulling = ref(false);
 const distance = ref(0);
 const store = useStore();
@@ -1103,10 +1107,27 @@ const filteredDone = computed(() => {
     return auctionsData.value.filter(auction => ['done'].includes(auction.status));
 });
 
-function loadPage(page , pagination) { 
+//전체 
+function loadPage1(page) { 
     if (page < 1 || page > pagination.last_page) return;
     currentPage.value = page;
     fetchFilteredViewLikes();
+    window.scrollTo(0,0);
+}
+
+//관심 매물
+function loadPage2(page) { 
+    if (page < 1 || page > pagination.last_page) return;
+    currentFavoritePage.value = page;
+    favoriteAuctionsGetData();
+    window.scrollTo(0,0);
+}
+
+//내 입찰 차량
+function loadPage3(page) { 
+    if (page < 1 || page > pagination.last_page) return;
+    currentMyBidPage.value = page;
+    fetchFilteredBids();
     window.scrollTo(0,0);
 }
 
@@ -1132,13 +1153,10 @@ const fetchFilteredViewLikes = async () => {
     }
     
     filterLikeData(auctionsData.value);
-
-    favoriteAuctionsGetData();
-    fetchFilteredBids();
 }
 
 const favoriteAuctionsGetData = async () => {
-    const response = await getAuctionsByDealerLike(currentPage.value , user.value.id);
+    const response = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id);
 
     favoriteAuctionsData.value = response.data;
     favoriteAuctionsPagination.value = response.rawData.data.meta;
@@ -1149,7 +1167,8 @@ const favoriteAuctionsGetData = async () => {
 }
 
 const fetchFilteredBids = async () => {
-    await getBids(1, false, true, user.value.id);
+    await getBids(currentMyBidPage.value, false, true, user.value.id);
+    console.log(bidsData.value);
     await getAllLikes('Auction', user.value.id);
 
     bidsData.value.forEach(bid => {
@@ -1191,7 +1210,9 @@ onMounted(async () => {
     } 
     
     fetchFilteredViewLikes();
-   
+    favoriteAuctionsGetData();
+    fetchFilteredBids();
+
     //console.log("bids",bidsData.value);
 	statusLabel = wicas.enum(store).addFirst('all','전체').excl('cancel','취소').ascVal().auctions();
 

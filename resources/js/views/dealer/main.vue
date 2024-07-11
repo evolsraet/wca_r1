@@ -258,7 +258,7 @@ const userLikesCount = computed(() => {
 });
 
 function navigateToDetail(bid) {
-    console.log("Navigate to Detail:", bid.auction_id);
+    //console.log("Navigate to Detail:", bid.auction_id);
     router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
 }
 
