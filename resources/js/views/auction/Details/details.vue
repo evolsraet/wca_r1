@@ -389,6 +389,14 @@
               </div>
             </BottomSheet02>
           </div>
+          <div v-if="isUser && auctionDetail.data.status === 'cancel'" class="sheet-content">
+            <BottomSheet02>
+              <p class="auction-deadline align-items-center my-4 p-4 ">
+                <span class="text-center tc-light-gray fw-semibold">경매 취소</span>
+              </p>
+              <p class="tc-light-gray fw-semibold">해당 매물의 경매가 취소 되었습니다.</p>
+            </BottomSheet02>
+          </div>
           <div v-if="isUser && auctionDetail.data.status === 'ing'" class="sheet-content">
             <BottomSheet02 v-if="auctionDetail.data.bids_count === 0">
               <h4 class="text-start my-2">경매 진행중</h4>
