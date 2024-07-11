@@ -1041,8 +1041,8 @@ const calculateTimeLeft = (auction) => {
     };
 };
 
-const updateAuctionTimes = () => {
-    auctionsData.value.forEach((auction) => {
+const updateAuctionTimes = (auction) => {
+    auction.forEach((auction) => {
         auction.timeLeft = calculateTimeLeft(auction);
     });
 };
@@ -1145,20 +1145,23 @@ function getAuctionStyle(auction) {
 }
 
 function isDealerParticipating(auctionId) { 
+    console.log(bidsData.value);
     return bidsData.value.some(bid => bid.auction_id === auctionId);
 }
 
 const fetchFilteredViewLikes = async () => {
     if(isUser.value){
-        await getAuctions(currentPage.value);
+        await getAuctions(currentPage.value , false , currentStatus.value );
     } else if(isDealer.value){
-        await getAuctionsByDealer(currentPage.value);
+        await getAuctionsByDealer(currentPage.value , currentStatus.value);
     }
     
     filterLikeData(auctionsData.value);
+
 }
 
 const favoriteAuctionsGetData = async () => {
+    await getBids(currentMyBidPage.value, false, true, user.value.id);
     const response = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id);
 
     favoriteAuctionsData.value = response.data;
@@ -1169,11 +1172,9 @@ const favoriteAuctionsGetData = async () => {
 }
 
 const fetchFilteredBids = async () => {
-    await getBids(currentMyBidPage.value, false, true, user.value.id);
+    
     await getAllLikes('Auction', user.value.id);
-
     bidsData.value.forEach(bid => {
-        
         bid.auction = auctionsData.value.find(auction => parseInt(auction.id) === bid.auction_id);
         const matchedLike = likesData.value.find(like => parseInt(like.likeable_id) === bid.auction_id);
 
@@ -1185,22 +1186,20 @@ const fetchFilteredBids = async () => {
         }
         bid.auction.isDealerParticipating = isDealerParticipating(bid.auction.id);
     });
-
+    
 };
 
 const filterLikeData = (auctions) => {
-    //console.log(auctions);
     auctions.forEach(auction => {
         const userLike = auction.likes.find(like => like.user_id === user.value.id);
-        if(userLike){
-            auction.like = userLike
+        if (userLike) {
+            auction.like = userLike;
             auction.isFavorited = true;
-        } else{
+        } else {
             auction.isFavorited = false;
         }
         auction.isDealerParticipating = isDealerParticipating(auction.id);
     });
-    console.log(favoriteAuctionsData.value);
 }
 
 
@@ -1223,12 +1222,11 @@ onMounted(async () => {
         isUser.value = true;
     }
     
-    updateAuctionTimes();
-    
-
     timer = setInterval(() => {
         currentTime.value = new Date();
-        updateAuctionTimes();
+        updateAuctionTimes(auctionsData.value);
+        updateAuctionTimes(favoriteAuctionsData.value);
+        updateAuctionTimes(bidsData.value);
     }, 1000);
     
     

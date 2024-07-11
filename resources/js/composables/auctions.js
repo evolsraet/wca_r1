@@ -40,7 +40,7 @@ export default function useAuctions() {
 
         return wicac.conn()
         .url(`/api/auctions`)
-        .log()
+        //.log()
         .where(apiList)
         .order([
             [`${column}`,`${direction}`]
@@ -56,10 +56,14 @@ export default function useAuctions() {
 
     }
 
-    const getAuctionsByDealer = async (page = 1) => {
+    const getAuctionsByDealer = async (page = 1 , status="all") => {
         const apiList = ['auctions.status:whereIn:ing,wait'];
+
+        if(status != 'all'){
+            apiList.push(`auctions.status:${status}`)
+        }
         let request = wicac.conn()
-            //.log()
+            .log()
             .url(`/api/auctions`)
             .where(apiList)
             .with(['bids', 'likes']);
@@ -123,7 +127,7 @@ export default function useAuctions() {
         } else {
     
             return wicac.conn()
-            .log() //로그 출력
+            //.log() //로그 출력
             .url(`/api/auctions`) //호출 URL
             .with(['bids','likes'])
             .where(apiList) 
@@ -188,7 +192,7 @@ const getStatusAuctionsCnt = async(
 const getAuctionById = async (id) => {
     
     return wicac.conn()
-    .log() //로그 출력
+    //.log() //로그 출력
     .url(`/api/auctions/${id}`) //호출 URL
     .with(['bids','reviews','likes'])
     //.page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
