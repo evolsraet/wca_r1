@@ -15,10 +15,6 @@ export default function useProfile() {
 
     const getProfile = async () => {
         profile.value = store.getters["auth/user"];
-        // axios.get('/api/user')
-        //     .then(({data}) => {
-        //         profile.value = data.data;
-        //     })
     };
 
     const updateProfile = async (profile) => {
@@ -27,21 +23,18 @@ export default function useProfile() {
         isLoading.value = true;
         validationErrors.value = {};
 
-        axios
-            .put("/api/users/" + user.id, profile)
-            .then(({ data }) => {
-                if (data.success) {
-                    store.commit("auth/SET_USER", data.data);
-                    // router.push({name: 'profile.index'})
-                    wica.ntcn(swal).icon('S').title('정상 처리 되었습니다.').fire();
-                }
-            })
-            .catch((error) => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors;
-                }
-            })
-            .finally(() => (isLoading.value = false));
+        wicac.conn()
+        .url(`/api/users/${user.id}`) //호출 URL
+        .param(profile)
+        .callback(function(result) {
+            if(result.isSuccess){
+                store.commit("auth/SET_USER", result.data);
+                wica.ntcn(swal).icon('S').title('정상 처리 되었습니다.').fire();
+            }else{
+                validationErrors.value = result.rawData.response.data.errors;
+            }
+        })
+        .put();
     };
 
     return {
