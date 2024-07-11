@@ -547,7 +547,7 @@ TODO:
                             <div class="complete-car">
                                 <div class="card my-auction mt-3">
                                     <div class="none-complete">
-                                        <span class="tc-light-gray"></span>
+                                        <span class="tc-light-gray">차량 정보가 없습니다.</span>
                                     </div>
                                 </div>
                             </div>
@@ -978,7 +978,7 @@ const addLike = async (auctionId) => {
     const response = await setLikes(like);
     if(response.isSuccess){
         wica.ntcn(swal).icon('S').title('관심 차량이 추가되었습니다.').fire();
-        fetchFilteredViewLikes();
+        favoriteAuctionsGetData();
     }
 };
 
@@ -988,7 +988,7 @@ const removeLike = async (auction) => {
     console.log(response);
     if(response.isSuccess){
         wica.ntcn(swal).icon('S').title('관심 차량이 취소되었습니다.').fire();
-        fetchFilteredViewLikes();
+        favoriteAuctionsGetData();
     }
     
 };
