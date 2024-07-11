@@ -3,7 +3,7 @@
     <div v-if="!fileuploadvue" class="card p-3 my-4">
       <div class="profile ms-0 p-0">
         <div class="dealer-info">
-          <img src="../../../img/profile_dom.png" alt="Profile Image" class="main-profile" />
+          <img :src="photoUrl(userData)" alt="Profile Photo" class="profile-photo" />
           <div class="deal-info">
             <p class="tc-light-gray">낙찰액</p>
             <h4>{{ amtComma(bid?.price) }}</h4>
@@ -101,6 +101,7 @@ import { ref, onMounted, defineProps, defineEmits, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { cmmn } from '@/hooks/cmmn';
 import BankModal from '@/views/modal/bank/BankModal.vue';
+import profileDom from '/resources/img/profile_dom.png';
 
 const days = ref(getNextTwoDays());
 const selectedDay = ref(null);
@@ -269,6 +270,13 @@ function handleFileUpload(event) {
     console.log("File:", file.name);
   }
 }
+
+const photoUrl = (userData) => {
+  return userInfo.value && userInfo.value.files && userInfo.value.files.file_user_photo
+    ? userInfo.value.files.file_user_photo[0].original_url
+    : profileDom;
+};
+
 </script>
 
 
