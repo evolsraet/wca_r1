@@ -45,7 +45,7 @@
                     </div>
 
                       <h4 v-if="auctionDetail.data.status === 'done' || auctionDetail.data.status === 'chosen'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
-                      <div class="mt-2 pb-1 d-flex gap-3 justify-content-between">
+                      <div class="mt-2 pb-1 d-flex gap-3 justify-content-between me-1">
                         <div></div>
                         <div class="d-flex gap-3 justify-content-end align-items-center mb-1">
                           <div class="tc-light-gray icon-hit">조회수 {{ auctionDetail.data.hit }}</div>
@@ -96,11 +96,10 @@
                       <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
                     </div>
                   </div>
-                  <div v-if="isUser && auctionDetail.data.status === 'ing'" class="p-3">
-             
-                 <!--   <template v-if="auctionDetail.data.hope_price !== null">
-                      <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
-                        <p>현재 희망가</p>
+                  
+                  <!--   <template v-if="auctionDetail.data.hope_price !== null">
+                    <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
+                      <p>현재 희망가</p>
                         <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
                       </div>
                     </template>
@@ -110,17 +109,8 @@
                         <p class="icon-coins">{{ amtComma(heightPrice)}}</p>
                       </div>
                     </template>-->
-
+                    
                     <!--TODO: bid가 1명이라도 있을때 알림뜨기-->
-
-                      <button v-if="auctionDetail.data.bids_count === 0" class="bg-sub-color01 bold-18-font modal-bid d-flex p-3 justify-content-center blinking">
-                          <p class="text-center">경매 진행중 입니다.</p>
-                      </button>
-                      <button v-else class="bg-sub-color bold-18-font modal-bid d-flex p-3 justify-content-between blinking" @click="auctionIngChosen">
-                          <p>딜러 선택이 가능해요!</p>
-                          <p class="d-flex align-items-center gap-2">바로가기<p class="icon-right-wh"></p></p>
-                      </button>
-                  </div>
 
                 <!-- <div v-if="isDealer && auctionDetail.data.status === 'ing'" class="p-3">
                     <div v-if="auctionDetail.data.hope_price !== null">
@@ -380,7 +370,23 @@
               </div>
             </BottomSheet02>
           </div>
-
+          <div v-if="isUser && auctionDetail.data.status === 'ing'" class="sheet-content">
+            <BottomSheet02 v-if="auctionDetail.data.bids_count === 0">
+              <h4 class="text-start my-2">경매 진행중</h4>
+              <P class="text-start tc-light-gray">※ 입찰한 딜러가 있으면 즉시 선택이 가능합니다.</P>
+              <button  class="bg-sub-color01 bold-18-font modal-bid d-flex mt-3 p-3 justify-content-center blinking">
+                  <p class="text-center">경매 진행중 입니다.</p>
+              </button>
+            </BottomSheet02>
+            <BottomSheet02 v-else>
+              <h4 class="text-start my-2">경매 진행중</h4>
+              <P class="text-start tc-light-gray">※ 입찰한 딜러가 있으면 즉시 선택이 가능합니다.</P>
+              <button class="bg-sub-color bold-18-font modal-bid d-flex p-3 mt-3 justify-content-between blinking" @click="auctionIngChosen">
+                  <p>딜러 선택이 가능해요!</p>
+                  <p class="d-flex align-items-center gap-2">바로가기<p class="icon-right-wh"></p></p>
+              </button>
+          </BottomSheet02>
+        </div>
           <!--
             딜러 : 바텀 시트 
           -->
