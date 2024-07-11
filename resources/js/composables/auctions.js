@@ -64,9 +64,7 @@ export default function useAuctions() {
             .where(apiList)
             .with(['bids', 'likes']);
     
-        if (page != null) {
-            request = request.page(page);
-        } else {
+        if(page == "all"){
             request = request.pageLimit(10000);
         }
     

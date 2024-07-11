@@ -263,7 +263,7 @@ function navigateToDetail(bid) {
 }
 
 onMounted(async () => {
-    await getAuctionsByDealer();
+    await getAuctionsByDealer("all");
 
     await getHomeBids(true);
     /** 
