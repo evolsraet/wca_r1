@@ -4180,3 +4180,8 @@ width: 100%;
 .intro-modal-container .swal2-html-container{
     padding: 2.5em 0.5em 0em !important;
 }
+@media (min-width: 991px){
+    .intro-modal-popup{
+        width: 60%;
+    }
+}
