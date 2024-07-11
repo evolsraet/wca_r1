@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid" v-if="auctionDetail">
-    <div v-if="!auctionChosn&& !showReauctionView && auctionDetail.data.status !== 'wait'" class="container">
+    <div v-if="!auctionChosn && !showReauctionView && (auctionDetail.data.status !== 'wait' && isUser) || isDealer " class="container">
       <div class="web-content-style02">
         <div class="container p-1">
           <div>
@@ -381,12 +381,35 @@
             </BottomSheet02>
           </div>
 
+          <!--
+            딜러 : 바텀 시트 
+          -->
           <div v-if="auctionDetail.data.status !== 'done' && auctionDetail.data.status !== 'dlvr' && auctionDetail.data.status !== 'chosen'  &&  isDealer" class="sheet-content">
             <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
                 <div  @click.stop="">
                   <p class="text-center tc-red my-2">현재  {{ auctionDetail.data.bids_count }}명이 입찰했어요.</p>
                   <button type="button" class="btn btn-primary w-100 align-items-center d-flex justify-content-center gap-3" @click="showbidView">입찰하기<p class="icon-up-wh"></p></button>
                 </div>
+              </BottomSheet02>
+
+              <BottomSheet02  v-if="auctionDetail.data.status == 'wait' && isDealer">
+                <div class="steps-container mb-3">
+                  <div class="step completed">
+                    <div class="label completed">STEP01</div>
+                    <div class="label label-style tc-light-gray">입찰 중</div>
+                  </div>
+                  <div class="line completed"></div>
+                  <div class="step completing">
+                    <div class="label completing">STEP02</div>
+                    <div class="label label-style tc-light-gray completing-text">딜러 선택</div>
+                  </div>
+                  <div class="line"></div>
+                  <div class="step">
+                    <div class="label">STEP03</div>
+                    <div class="label label-style02 tc-light-gray">완료</div>
+                  </div>
+                </div>
+                <p class="auction-deadline text-center mt-2">경매 완료 후 딜러선택 중 입니다.</p>
               </BottomSheet02>
               <BottomSheet02 v-if="auctionDetail.data.status == 'cancel'" >
                 <h5 class="text-start">입찰이 취소되었습니다</h5>
@@ -657,25 +680,7 @@
                      <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
                         <div v-if="isDealer">
                             <div v-if="auctionDetail.data.status === 'wait'" @click.stop="">
-                            <!--    <BottomSheet02 >
-                              <div class="steps-container mb-3">
-                                <div class="step completed">
-                                  <div class="label completed">STEP01</div>
-                                  <div class="label label-style tc-light-gray">매물 준비</div>
-                                </div>
-                                <div class="line completed"></div>
-                                <div class="step completed">
-                                  <div class="label completed">STEP02</div>
-                                  <div class="label label-style tc-light-gray completing-text">경매</div>
-                                </div>
-                                <div class="line"></div>
-                                <div class="step">
-                                  <div class="label">STEP03</div>
-                                  <div class="label label-style02 tc-light-gray">완료</div>
-                                </div>
-                              </div>
-                              <p class="auction-deadline text-center mt-2">경매 선택 중 입니다.</p>
-                            </BottomSheet02>-->
+                            
                             </div>
 
                   <!--       <div v-if="!succesbidhope && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price !== null" @click.stop="">
@@ -737,7 +742,7 @@
                             
                         </div>
 
-                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' &&!connectDealerModal || auctionChosn &&!connectDealerModal ">
+                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' && !connectDealerModal || auctionChosn && !connectDealerModal ">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
                               <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
@@ -843,6 +848,7 @@ import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
 import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
 import useLikes from '@/composables/useLikes';
+import { isEqual } from 'date-fns';
 
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
 const auctionChosn = ref(false);
