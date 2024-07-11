@@ -1153,7 +1153,7 @@ const fetchFilteredViewLikes = async () => {
     if(isUser.value){
         await getAuctions(currentPage.value , false , currentStatus.value );
     } else if(isDealer.value){
-        await getAuctionsByDealer(currentPage.value , currentStatus.value);
+        await getAuctionsByDealer(currentPage.value , currentStatus.value );
     }
     
     filterLikeData(auctionsData.value);
@@ -1171,8 +1171,7 @@ const favoriteAuctionsGetData = async () => {
     filterLikeData(favoriteAuctionsData.value);
 }
 
-const fetchFilteredBids = async () => {
-    
+const fetchFilteredBids = async () => { 
     await getAllLikes('Auction', user.value.id);
     bidsData.value.forEach(bid => {
         bid.auction = auctionsData.value.find(auction => parseInt(auction.id) === bid.auction_id);
@@ -1186,7 +1185,6 @@ const fetchFilteredBids = async () => {
         }
         bid.auction.isDealerParticipating = isDealerParticipating(bid.auction.id);
     });
-    
 };
 
 const filterLikeData = (auctions) => {
