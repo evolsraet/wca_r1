@@ -74,7 +74,6 @@ export default function useBid() {
             .where(whereList)
             .page(`${page}`)
             .callback(function(result) {
-                console.log(result);
                 bidsData.value = result.data;
                 bidPagination.value = result.rawData.data.meta;
                 return result.data;
@@ -106,12 +105,19 @@ export default function useBid() {
 
     } 
     const getBidById = async (id) => {
-        try {
-            const response = await axios.get(`/api/bids/${id}`);
-            return response.data.data;
-        } catch (error) {
-            console.error('Error fetching bid:', error);
-        }
+        return wicac.conn()
+        .url(`/api/bids/${id}`) 
+        .callback(function(result) {
+            if(result.isSuccess){
+                return result.data;
+            }else{
+                wica.ntcn(swal)
+                .title('오류가 발생하였습니다.')
+                .icon('E') //E:error , W:warning , I:info , Q:question
+                .alert('관리자에게 문의해주세요.');
+            }
+        })
+        .get();
     };
 
     // 입찰 건수 
@@ -140,62 +146,51 @@ export default function useBid() {
         isLoading.value = true;
         validationErrors.value = {};
 
-        try {
-            const response = await axios.post("/api/bids", {
-                user_id: userId,
-                bid: {
-                    auction_id: auctionId,
-                    price: bidAmount
-                }
-            });
-
-            console.log("응답 데이터:", response);
-
-            if (response.status === 200 && response.data.status === "ok") {
+        return wicac.conn()
+        .url(`/api/bids`) //호출 URL
+        .param({
+            user_id: userId,
+            bid: {
+                auction_id: auctionId,
+                price: bidAmount
+            }
+        })
+        .callback(function(result) {
+            if(result.isSuccess){
+                isLoading.value = false;
                 return {
                     success: true,
-                    bidId: response.data.data.id,  // 입찰 ID 추출
-                    message: response.data.message
+                    bidId: result.data.id,  // 입찰 ID 추출
+                    message: result.data.message
                 };
-            } else {
-                return {
-                    success: false,
-                    message: response.data.message
-                };
-            }
-        } catch (error) {
-            console.error("입찰 제출 중 오류 발생:", error);
-            let errorMessage = "입찰 제출 중 오류가 발생했습니다. 다시 시도해 주세요.";
-            if (error.response?.data) {
-                validationErrors.value = error.response.data.errors;  // 서버로부터 받은 에러를 저장
-
-                // 특정 오류 메시지를 감지하여 구체적인 알림 표시
-                if (error.response.data.message.includes('Numeric value out of range')) {
+            }else{
+                isLoading.value = false;
+                let errorMessage = "입찰 제출 중 오류가 발생했습니다. 다시 시도해 주세요.";
+                if (result.rawData.response.data.message.includes('Numeric value out of range')) {
                     errorMessage = "입찰 금액이 너무 큽니다. 다시 시도해 주세요.";
                 } else {
-                    errorMessage = error.response.data.message;
+                    errorMessage = result.rawData.response.data.message;
                 }
+                return {
+                    success: false,
+                    message: errorMessage
+                };
             }
-            return {
-                success: false,
-                message: errorMessage
-            };
-        } finally {
-            isLoading.value = false;  // 로딩 상태를 false로 설정
-        }
+         })
+        .post();
     };
 
     const cancelBid = async (bidId) => {
-        try {
-            const response = await axios.delete(`/api/bids/${bidId}`);
-            if (response.status === 204 || response.status === 200) {
+        return wicac.conn()
+        .url(`/api/bids/${bidId}`)
+        .callback(function(result) {
+            if(result.isSuccess){
                 return { success: true };
-            } else {
+            }else{
                 return { success: false };
             }
-        } catch (error) {
-            return { success: false, message: error.response?.data?.message };
-        }
+        })
+        .delete();
     };
 
     return {

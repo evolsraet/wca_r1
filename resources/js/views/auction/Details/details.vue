@@ -1471,11 +1471,19 @@ const confirmBid = async () => {
       await fetchAuctionDetail();
       closeBidModal();
       succesbid.value = true;
+
+      wica.ntcn(swal)
+      .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
+      .icon('I') //E:error , W:warning , I:info , Q:question
+      .alert('입찰이 완료되었습니다.');
      /* if (auctionDetail.value.data.hope_price !== null && amount.value == auctionDetail.value.data.hope_price) {
         await handleImmediateAuctionEnd(user.value.id, amount.value);
       }*/
     } else {
-      alert(bidResult.message);
+      wica.ntcn(swal)
+      .title('')
+      .icon('E') //E:error , W:warning , I:info , Q:question
+      .alert(bidResult.message);
     }
   } catch (error) {
     console.error('Error confirming bid:', error);
@@ -1665,7 +1673,10 @@ const handleCancelBid = async () => {
         succesbid.value = false;
         koreanAmount.value = '원';
       } else {
-        alert(result.message);
+        wica.ntcn(swal)
+        .title('')
+        .icon('E') //E:error , W:warning , I:info , Q:question
+        .alert('입찰 취소에 실패하였습니다.');
       }
     } else {
       alert('입찰 내역이 없습니다.');

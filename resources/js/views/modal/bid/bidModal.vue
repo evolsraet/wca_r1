@@ -22,6 +22,7 @@
           </div>
         </div>
       </section>
+      <!--
       <section v-else class="modal modal-section type-confirm alert-modal-type02">
         <div class="modal-dialog-ty04">
           <div class="modal-content-ty03 shadow">
@@ -38,6 +39,7 @@
           </div>
         </div>
       </section>
+      -->
     </transition>
   </template>
   
@@ -59,7 +61,8 @@
   });
   
   const confirmBid = () => {
-    bidSuccess.value = true;
+    bidSuccess.value = false;
+    emit('confirm');
   };
   
   const cancelBid = () => {
