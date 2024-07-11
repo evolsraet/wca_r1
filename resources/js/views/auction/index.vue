@@ -21,7 +21,7 @@ TODO:
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav gap-2">
                         <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-2">{{ favoriteAuctions.length }}</span></a><!-- 관심 차량 숫자표기 -->
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-2">{{ favoriteAuctionsData.length }}</span></a><!-- 관심 차량 숫자표기 -->
                         <a class="nav-item nav-link pe-0" @click="setCurrentTab('myBidInfo')" :class="{ active: currentTab === 'myBidInfo' }">내 입찰 차량<span class="interest mx-2">{{ bidsData.length }}</span></a>
                     </div>
                 </nav>
@@ -552,12 +552,25 @@ TODO:
                                 </div>
                             </div>
                         </div>
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" :class="{ disabled: !pagination.prev }">
+                                    <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1 , pagination)"></a>
+                                </li>
+                                <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                                    <a class="page-link" @click="loadPage(n , pagination)">{{ n }}</a>
+                                </li>
+                                <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+                                    <a class="page-link next-style" @click="loadPage(pagination.current_page + 1 , pagination)"></a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                     <div class="container my-4" v-if="currentTab === 'interInfo'">
-                        <div v-if="favoriteAuctions.length > 0">
+                        <div v-if="favoriteAuctionsData.length > 0">
                             <!-- 경매 목록 -->
                             <div class="row">
-                                <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in favoriteAuctions" :key="auction.id" @click="navigateToDetail(auction)">
+                                <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in favoriteAuctionsData" :key="auction.id" @click="navigateToDetail(auction)">
                                     <div class="card my-auction">
                                         <div v-if="isDealer">
                                             <input class="toggle-heart" type="checkbox" :id="'favorite-' + auction.id" :checked="auction.isFavorited" @click.stop="toggleFavorite(auction)" />
@@ -638,6 +651,19 @@ TODO:
                                 </div>
                             </div>
                         </div>
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" :class="{ disabled: !favoriteAuctionsPagination.prev }">
+                                    <a class="page-link prev-style" @click="loadPage(favoriteAuctionsPagination.current_page - 1,favoriteAuctionsPagination)"></a>
+                                </li>
+                                <li v-for="n in favoriteAuctionsPagination.last_page" :key="n" class="page-item" :class="{ active: n === favoriteAuctionsPagination.current_page }">
+                                    <a class="page-link" @click="loadPage(n,favoriteAuctionsPagination)">{{ n }}</a>
+                                </li>
+                                <li class="page-item next-prev" :class="{ disabled: !favoriteAuctionsPagination.next }">
+                                    <a class="page-link next-style" @click="loadPage(favoriteAuctionsPagination.current_page + 1 , favoriteAuctionsPagination)"></a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                     <div class="container my-4" v-if="currentTab === 'auctionDone'">
                         <div class="row">
@@ -686,7 +712,7 @@ TODO:
                                             <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(bid.auction.status)" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(bid.auction.status).auctions() }}</span>
                                         </div>
                                         <div class="d-flex">
-                                            <span v-if="(bid.auction.status === 'ing' || bid.auction.status === 'wait') && bid.auction.timeLeft" class="mx-2 timer">
+                                            <span class="mx-2 timer">
                                                 <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
                                                 <span v-if="bid.auction.timeLeft.days != '0' ">{{ bid.auction.timeLeft.days }}일 &nbsp; </span>{{ bid.auction.timeLeft.hours }}:{{ bid.auction.timeLeft.minutes }}:{{ bid.auction.timeLeft.seconds }}
                                             </span>
@@ -722,6 +748,19 @@ TODO:
                                 </div>
                             </div>
                         </div>
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" :class="{ disabled: !bidPagination.prev }">
+                                    <a class="page-link prev-style" @click="loadPage(bidPagination.current_page - 1 , bidPagination )"></a>
+                                </li>
+                                <li v-for="n in bidPagination.last_page" :key="n" class="page-item" :class="{ active: n === bidPagination.current_page }">
+                                    <a class="page-link" @click="loadPage( n , bidPagination )">{{ n }}</a>
+                                </li>
+                                <li class="page-item next-prev" :class="{ disabled: !bidPagination.next }">
+                                    <a class="page-link next-style" @click="loadPage( bidPagination.current_page + 1 , bidPagination )"></a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
 
@@ -803,20 +842,6 @@ TODO:
                 </div>
                 -->
                 <!-- Pagination -->
-                <nav>
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item" :class="{ disabled: !pagination.prev }">
-                            <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
-                        </li>
-                        <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
-                            <a class="page-link" @click="loadPage(n)">{{ n }}</a>
-                        </li>
-                        <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                            <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
-                        </li>
-                    </ul>
-                </nav>
-
             </div>
         </div>
     </div>
@@ -879,19 +904,20 @@ import Footer from "@/views/layout/footer.vue";
 import useLikes from '@/composables/useLikes';
 import usebid from '@/composables/bids.js'; 
 import { cmmn } from '@/hooks/cmmn';
+import { isError } from 'lodash';
 
 const swal = inject('$swal');
 const { wicas , wica } = cmmn();
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
-const {getBids, bidsData } = usebid();
+const {getBids, bidsData , bidPagination } = usebid();
 const { getLikes, likesData, isAuctionFavorited , like , setLikes , deleteLike , getAllLikes} = useLikes();
 const router = useRouter();
 const route = useRoute();
 const currentStatus = ref('all'); 
 const { role, getRole } = useRoles();
 const currentTab = ref('allInfo'); 
-const { auctionsData, pagination, getAuctions, getAuctionsByDealer } = useAuctions();
+const { auctionsData, pagination, getAuctions, getAuctionsByDealer, getAuctionsByDealerLike } = useAuctions();
 const currentPage = ref(1); 
 const showModal = ref(false); 
 const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); 
@@ -904,7 +930,10 @@ const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user')); 
 const isSpinning = ref(false);
 let statusLabel;
-let likeMessage;
+//let likeMessage;
+
+const favoriteAuctionsData = ref({}); //관심 차량 데이터
+const favoriteAuctionsPagination = ref({}); //관심 차량 페이징
 
 /**
 const initializeFavorites = () => {
@@ -1040,6 +1069,17 @@ const handleTouchEnd = async () => {
     }
 };
 
+/**
+const favoriteAuctions = computed(() => {
+    return auctionsData.value.filter(auction => auction.isFavorited);
+}); 
+
+const hasCompletedAuctions = computed(() => { 
+    return auctionsData.value.some(auction => auction.status === 'done');
+});
+
+*/
+
 function setCurrentTab(tab) {
     currentTab.value = tab;
 }
@@ -1057,16 +1097,14 @@ function handleClose() {
     showModal.value = false;
 }
 
-const hasCompletedAuctions = computed(() => { 
-    return auctionsData.value.some(auction => auction.status === 'done');
-});
+
 
 const filteredDone = computed(() => { 
     return auctionsData.value.filter(auction => ['done'].includes(auction.status));
 });
 
-function loadPage(page) { 
-    if (page < 1 || page > pagination.value.last_page) return;
+function loadPage(page , pagination) { 
+    if (page < 1 || page > pagination.last_page) return;
     currentPage.value = page;
     fetchFilteredViewLikes();
     window.scrollTo(0,0);
@@ -1085,34 +1123,40 @@ function getAuctionStyle(auction) {
 function isDealerParticipating(auctionId) { 
     return bidsData.value.some(bid => bid.auction_id === auctionId);
 }
+
 const fetchFilteredViewLikes = async () => {
-    await getAuctionsByDealer(currentPage.value);
-    console.log(auctionsData.value);
-    //await getAuctions(currentPage.value, false, currentStatus.value);
+    if(isUser.value){
+        await getAuctions(currentPage.value);
+    } else if(isDealer.value){
+        await getAuctionsByDealer(currentPage.value);
+    }
+    
+    filterLikeData(auctionsData.value);
 
-    auctionsData.value.forEach(auction => {
-        const userLike = auction.likes.find(like => like.user_id === user.value.id);
-        if(userLike){
-            auction.like = userLike
-            auction.isFavorited = true;
-        } else{
-            auction.isFavorited = false;
-        }
-       
-        auction.isDealerParticipating = isDealerParticipating(auction.id);
-    });
-
+    favoriteAuctionsGetData();
     fetchFilteredBids();
 }
 
-const fetchFilteredBids = async () => {
-    await getBids(1,false,true,user.value.id);
-    await getAllLikes('Auction',user.value.id);
-    //console.log(likesData.value);
-    //console.log(bidsData.value)
+const favoriteAuctionsGetData = async () => {
+    const response = await getAuctionsByDealerLike(currentPage.value , user.value.id);
+
+    favoriteAuctionsData.value = response.data;
+    favoriteAuctionsPagination.value = response.rawData.data.meta;
+
+    console.log("favoriteAuctionsData : ",favoriteAuctionsData.value);
     
+    filterLikeData(favoriteAuctionsData.value);
+}
+
+const fetchFilteredBids = async () => {
+    await getBids(1, false, true, user.value.id);
+    await getAllLikes('Auction', user.value.id);
+
     bidsData.value.forEach(bid => {
+        
+        bid.auction = auctionsData.value.find(auction => parseInt(auction.id) === bid.auction_id);
         const matchedLike = likesData.value.find(like => parseInt(like.likeable_id) === bid.auction_id);
+
         if (matchedLike) {
             bid.auction.like = matchedLike;
             bid.auction.isFavorited = true;
@@ -1121,14 +1165,28 @@ const fetchFilteredBids = async () => {
         }
     });
 
-} 
+};
+
+const filterLikeData = (auctions) => {
+    console.log(auctions);
+    auctions.forEach(auction => {
+        const userLike = auction.likes.find(like => like.user_id === user.value.id);
+        if(userLike){
+            auction.like = userLike
+            auction.isFavorited = true;
+        } else{
+            auction.isFavorited = false;
+        }
+        auction.isDealerParticipating = isDealerParticipating(auction.id);
+    });
+}
+
 
 let timer;
 
 onMounted(async () => {
 
     if(history.state.currentTab){
-        console.log("history.state.currentTab");
         currentTab.value = history.state.currentTab;
     } 
     
@@ -1156,9 +1214,7 @@ onUnmounted(() => {
     clearInterval(timer);
 });
 
-const favoriteAuctions = computed(() => {
-    return auctionsData.value.filter(auction => auction.isFavorited);
-});
+
 </script>
 
 

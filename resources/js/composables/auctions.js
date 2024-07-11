@@ -56,12 +56,12 @@ export default function useAuctions() {
 
     }
 
-    const getAuctionsByDealer = async (page = null) => {
-
+    const getAuctionsByDealer = async (page = 1) => {
+        const apiList = ['auctions.status:whereIn:ing,wait'];
         let request = wicac.conn()
-            .log()
+            //.log()
             .url(`/api/auctions`)
-            .where(['auctions.status:whereIn:ing,wait'])
+            .where(apiList)
             .with(['bids', 'likes']);
     
         if (page != null) {
@@ -73,8 +73,21 @@ export default function useAuctions() {
         return request.callback(function(result) {
             auctionsData.value = result.data;
             pagination.value = result.rawData.data.meta;
-            return result.data;
+            return result;
         }).get();
+    }
+
+    const getAuctionsByDealerLike = async (page = 1 , userId = null) => {
+        return wicac.conn()
+        .log()
+        .url(`/api/auctions`)
+        .with(['likes'])
+        .where([`likes.user_id:whereIn:${userId}`])
+        .page(`${page}`)
+        .callback(function(result) {
+            return result;
+        })
+        .get();
     }
 
     const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
@@ -619,6 +632,7 @@ const deleteAuction = async (id,urlPath) => {
 
 
     return {
+        getAuctionsByDealerLike,
         adminGetAuctions,
         adminGetDepositAuctions,
         getStatusAuctionsCnt,

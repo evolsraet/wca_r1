@@ -15,7 +15,7 @@ export default function useBid() {
     const isLoading = ref(false);
     const swal = inject('$swal');
     const auctionsData = ref([]);
-    const pagination = ref({});
+    const bidPagination = ref({});
     
     /**
     const getBids = async () => {
@@ -76,7 +76,7 @@ export default function useBid() {
             .callback(function(result) {
                 console.log(result);
                 bidsData.value = result.data;
-                pagination.value = result.rawData.data.meta;
+                bidPagination.value = result.rawData.data.meta;
                 return result.data;
             })
             .get();
@@ -84,7 +84,7 @@ export default function useBid() {
     }
 
     //페이징 안 한 전체 bid
-    const getHomeBids = async () => {
+    const getHomeBids = async (mainIsOk = false) => {
         return wicac.conn()
             .log()
             .url(`/api/bids`)
@@ -94,7 +94,7 @@ export default function useBid() {
             .callback(function(result) {
                 //console.log(result);
                 bidsData.value = result.data;
-                //pagination.value = result.rawData.data.meta;
+                //bidPagination.value = result.rawData.data.meta;
                 return result.data;
             })
             .get();
@@ -207,6 +207,6 @@ export default function useBid() {
         validationErrors,
         isLoading,
         auctionsData,
-        pagination,
+        bidPagination,
     };
 }

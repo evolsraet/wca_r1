@@ -54,14 +54,14 @@
             <!-- Pagination -->
             <nav>
                 <ul class="pagination justify-content-center">
-                    <li class="page-item" :class="{ disabled: !pagination.prev }">
-                    <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
+                    <li class="page-item" :class="{ disabled: !bidPagination.prev }">
+                    <a class="page-link prev-style" @click="loadPage(bidPagination.current_page - 1)"></a>
                     </li>
-                    <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                    <li v-for="n in bidPagination.last_page" :key="n" class="page-item" :class="{ active: n === bidPagination.current_page }">
                     <a class="page-link" @click="loadPage(n)">{{ n }}</a>
                     </li>
-                    <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                    <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
+                    <li class="page-item next-prev" :class="{ disabled: !bidPagination.next }">
+                    <a class="page-link next-style" @click="loadPage(bidPagination.current_page + 1)"></a>
                     </li>
                 </ul>
             </nav>
@@ -83,7 +83,7 @@ const currentPage = ref(1);
 const router = useRouter();
 const store = useStore();
 const { getAuctions, getAuctionById } = useAuctions();
-const { bidsData, getBids , pagination } = useBid();
+const { bidsData, getBids , bidPagination } = useBid();
 const user = computed(() => store.getters['auth/user']);
 const { amtComma , wicas } = cmmn();
 const loading = ref(false);
@@ -123,7 +123,7 @@ const fetchFilteredBids = async () => {
 }; */
 
 function loadPage(page) { 
-    if (page < 1 || page > pagination.value.last_page) return;
+    if (page < 1 || page > bidPagination.value.last_page) return;
     currentPage.value = page;
     getBids(1,true,false,user.value.id);
     window.scrollTo(0,0);
