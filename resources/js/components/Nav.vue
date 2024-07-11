@@ -285,7 +285,7 @@
               </li>
               <li class="nav-item my-member-dealer ms-auto dropdown dropdown-arrow">
                 <a class="tc-wh p-1 pb-0 me-3 dropdown-toggle" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <img src="../../img/profile_dom.png" class="nav-profile" alt="Profile Image">{{ user.name }}
+                <img :src="photoUrl" alt="Profile Photo" class="nav-profile" />{{ user.name }}
                 </a>
                 <ul class="dropdown-menu p-2" aria-labelledby="dealerDropdown">
                   <li class="my-2"><router-link to="/profile" class="dropdown-item">내 정보</router-link></li>
@@ -311,6 +311,9 @@
   import useAuth from '@/composables/auth';
   import useAuctions from '@/composables/auctions';
   import { cmmn } from '@/hooks/cmmn';
+  import profileDom from '/resources/img/profile_dom.png';
+
+  const photoUrl = ref(profileDom);
   const { wica , wicaLabel } = cmmn();
   const isMobile = ref(false);
   const { getAuctions, auctionsData } = useAuctions();
@@ -432,7 +435,9 @@
   }
 
   onMounted(() => {
-
+    if (user.value.files) {
+      photoUrl.value = user.value.files.file_user_photo[0].original_url;
+    }
     let navAuction = document.querySelectorAll('.nav-auction');
     let navReview = document.querySelectorAll('.nav-review');
     let navCarInq = document.querySelectorAll('.nav-inq');
