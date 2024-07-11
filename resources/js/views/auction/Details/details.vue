@@ -1449,17 +1449,25 @@ const handleImmediateAuctionEnd = async (userId, price) => {
     //chosen_at: new Date().toISOString(),
   };
 
-  try {
-    const response = await axios.post(`api/auctions/${id}`, data); // 사용자 API로 요청
-    auctionDetail.value.data.status = 'chosen';
-    auctionDetail.value.data.final_price = price;
-    auctionDetail.value.data.bid_id = userId;
-   /* auctionDetail.value.data.chosen_at = data.chosen_at;*/
-    completeAuctionModal.value = true; // 경매 완료 모달 표시
-  } catch (error) {
-    console.error('Error completing auction:', error);
-    alert('경매에 실패했습니다.');
-  }
+  const response = wicac.conn()
+  .url(`/api/auctions/${id}`) //호출 URL
+  .param(data)
+  .callback(function(result) {
+    if(result.isSuccess){
+      auctionDetail.value.data.status = 'chosen';
+      auctionDetail.value.data.final_price = price;
+      auctionDetail.value.data.bid_id = userId;
+    /* auctionDetail.value.data.chosen_at = data.chosen_at;*/
+      completeAuctionModal.value = true; // 경매 완료 모달 표시
+    }else{
+      wica.ntcn(swal)
+      .title('')
+      .icon('E') //E:error , W:warning , I:info , Q:question
+      .alert('경매에 실패했습니다.');
+    }
+    
+  })
+  .post();
 };
 
 
