@@ -355,6 +355,25 @@
             </ul>
           </div>
         </div>
+        <!--
+          사용자 바텀시트
+        -->
+        <div v-if="(isUser && auctionDetail.data.status === 'ask') || (isUser && auctionDetail.data.status === 'diag')" class="sheet-content">
+            <BottomSheet02 class="text-center">
+              <div v-if="auctionDetail.data.status === 'ask'">
+              <p class="auction-deadline align-items-center my-4 p-4 ">
+                <span class="text-center fw-semibold">매물 신청 완료</span>
+              </p>
+              <p class="tc-light-gray fw-semibold">해당 매물 신청이 완료 되었습니다. <br><span class="fw-light fs-6">※ 경매진행까지 약간의 검토 시간이 소요됩니다. </span></p>
+              </div>
+              <div v-if="auctionDetail.data.status === 'diag'">
+              <p class="auction-deadline align-items-center my-4 p-4 ">
+                <span class="text-center fw-semibold">진단 대기 중</span>
+              </p>
+              <p class="tc-light-gray fw-semibold">※ 진단이 완료되는 즉시 경매진행이 시작됩니다 ※ <br><span>잠시만 기다려주세요.</span></p>
+              </div>
+            </BottomSheet02>
+          </div>
         <div v-if="isUser && auctionDetail.data.status === 'done'" class="sheet-content">
             <BottomSheet02>
               <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
@@ -387,6 +406,7 @@
               </button>
           </BottomSheet02>
         </div>
+
           <!--
             딜러 : 바텀 시트 
           -->
