@@ -965,7 +965,6 @@ const initializeFavorites = () => {
 };*/
 
 const toggleFavorite = (auction) => {
-    console.log(auction);
     auction.isFavorited = !auction.isFavorited;
     if (auction.isFavorited) {
         addLike(auction.id);
@@ -981,17 +980,15 @@ const addLike = async (auctionId) => {
     const response = await setLikes(like);
     if(response.isSuccess){
         wica.ntcn(swal).icon('S').title('관심 차량이 추가되었습니다.').fire();
-        favoriteAuctionsGetData();
+        getAuctionsData();
     }
 };
 
 const removeLike = async (auction) => {
-    console.log(auction);
     const response = await deleteLike(auction.like.id);
-    console.log(response);
     if(response.isSuccess){
         wica.ntcn(swal).icon('S').title('관심 차량이 취소되었습니다.').fire();
-        favoriteAuctionsGetData();
+        getAuctionsData();
     }
     
 };
@@ -1131,6 +1128,8 @@ const getAuctionsData = async () => {
         await getAuctionsByDealer(currentPage.value , currentStatus.value);
     }
     filterLikeData(auctionsData.value);
+    favoriteAuctionsGetData();
+    fetchFilteredBids();
 }
 
 const favoriteAuctionsGetData = async () => {
@@ -1159,6 +1158,7 @@ const fetchFilteredBids = async () => {
 const filterLikeData = (auctions) => {
     auctions.forEach(auction => {
         const userLike = auction.likes.find(like => like.user_id === user.value.id);
+        console.log("@@@@@@@@@@@@@@@@@@@",userLike);
         if (userLike) {
             auction.like = userLike;
             auction.isFavorited = true;
@@ -1166,7 +1166,9 @@ const filterLikeData = (auctions) => {
             auction.isFavorited = false;
         }
         auction.isDealerParticipating = isDealerParticipating(auction.id);
+        console.log("@@@@@@@@@@@"+auction.value);
     });
+
 }
 
 let timer;
@@ -1177,8 +1179,8 @@ onMounted(async () => {
     }
 
     await getAuctionsData();
-    await favoriteAuctionsGetData();
-    await fetchFilteredBids();
+    //await favoriteAuctionsGetData();
+    //await fetchFilteredBids();
 
     statusLabel = wicas.enum(store).addFirst('all', '전체').excl('cancel', '취소').ascVal().auctions();
 
