@@ -74,16 +74,6 @@
                       <p class="tc-light-gray">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red">&nbsp;3500만원</span></p>
                       <p class="tc-light-gray">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red">&nbsp;2024년 6월 26일 오후 6:12</span></p>
                       </div>-->
-                      <button v-if ="auctionDetail.data.status ==='chosen' && isUser"
-                        class="my-4 btn-primary bold-18-font modal-bid d-flex p-3 justify-content-between blinking"
-                        @click="competionsuccess"
-                      >
-                        <p>탁송 확인</p>
-                        <p class="d-flex align-items-center gap-2">
-                          바로가기
-                          <p class="icon-right-wh"></p>
-                        </p>
-                      </button>
                     </div>
                     <div v-if="showNotification" class="container">
                       <div class="notification-container show container px-3">
@@ -483,13 +473,26 @@
             </div>
             <div class="text-start mt-2">
               <p class="tc-light-gray">낙찰 딜러 :<span class="tc-red">&nbsp; 홍길동 딜러</span></p>
-              <p class="tc-light-gray">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red">&nbsp;3500 만원</span></p>
-              <p class="tc-light-gray">입금&nbsp;&nbsp;은행 :<span class="tc-red ">&nbsp; (농협은행) 0000-0088-0024</span></p>
-              <p class="tc-light-gray">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red">&nbsp;2024년 6월 26일 오후 6:12</span></p>
+              <p class="tc-light-gray">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1">3500 만원</span></p>
+              <p class="tc-light-gray">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1">(농협은행) 0000-0088-0024</span></p>
+              <p class="tc-light-gray">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red ms-1">2024년 6월 26일 오후 6:12</span></p>
             </div>
             <div>
               <button class="border-6 btn-fileupload my-4 shadow02">매도용 인감증명서 다운로드</button>
             </div>
+            <hr v-if ="auctionDetail.data.status ==='chosen' && isUser">
+            <h4>탁송 확인</h4>
+            <p class="text-start tc-light-gray">※ 탁송 서비스 안내는 ' 탁송 확인 '에서 확인 가능합니다. </p>
+            <button
+              class="my-4 btn-primary bold-18-font modal-bid d-flex p-3 justify-content-between blinking"
+              @click="competionsuccess"
+            >
+              <p>탁송 확인</p>
+              <p class="d-flex align-items-center gap-2">
+                바로가기
+                <p class="icon-right-wh"></p>
+              </p>
+            </button>
           </BottomSheet02>
       </div>
     </div>
@@ -1915,5 +1918,9 @@ opacity: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.sheet.half{
+  max-height: none !important;
+  height: fit-content !important;
 }
 </style>

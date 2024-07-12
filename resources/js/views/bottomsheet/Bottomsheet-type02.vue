@@ -26,7 +26,7 @@ const isDragging = ref(false);
 const startY = ref(0);
 const currentY = ref(0);
 const deltaY = ref(0);
-const sheetHeight = ref(props.initial === 'half' ? 'auto' : 30);
+const sheetHeight = ref(props.initial === 'half' ? 'fit-content' : 30);
 let animationFrame = null;
 
 const sheet = ref(null);
