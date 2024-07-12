@@ -67,7 +67,7 @@ export default function useBid() {
             whereList.push(`auction.status:whereIn:ing,wait`)
         }
         return wicac.conn()
-            .log()
+            //.log()
             .url(`/api/bids`)
             .with(['auction'])
             .where(whereList)
@@ -88,7 +88,7 @@ export default function useBid() {
             whereList.push(`auction.status:whereIn:ing,wait`)
         }
         return wicac.conn()
-            .log()
+            //.log()
             .url(`/api/bids`)
             .with(['auction'])
             .pageLimit(10000)
