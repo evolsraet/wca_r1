@@ -471,53 +471,143 @@ TODO:
                         </div>-->
                         </div>
                     </div>
-                    <div :class="['container my-4', { 'pulling': isPulling && distance > 0, 'is-spinning': isSpinning }]" ref="pullContainer" @touchstart.passive="handleTouchStart" @touchmove.passive="handleTouchMove" @touchend="handleTouchEnd" v-if="currentTab === 'allInfo'">
-                        <div v-if="isPulling" class="refresh-indicator" :style="imageStyle">
-                            <img src="../../../img/Icon-refresh.png" alt="Refresh" class="fas fa-sync-alt" width="20px" :style="imagestyle" />
-                        </div>
-                        <div v-if="auctionsData.length > 0">
-                            <div class="content-wrapper" :style="{ 'transform': `translateY(${Math.min(distance, 20)}px)` }">
-                                <div class="row-wrapper">
-                                    <div class="row" :class="{'pulled': isPulling && distance > 0}">
-                                        <!-- if. 경매 ing 있을때 -->
-                                        <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in auctionsData" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
-                                            <div class="card my-auction">
-                                                <div v-if="isDealer">
-                                                    <input class="toggle-heart" type="checkbox" :id="'favorite-' + auction.id" :checked="auction.isFavorited" @click.stop="toggleFavorite(auction)" />
-                                                    <label class="heart-toggle" :for="'favorite-' + auction.id" @click.stop></label>
-                                                </div>
-                                                <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
-                                                <div v-if="auction.status === 'ask' || auction.status === 'diag'">
-                                                    <div class="card-img-demo">
-                                                        <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
-                                                    </div>
-                                                </div>
-                                                <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
-                                                    <img src="../../../img/car_example.png">
-                                                </div>
-                                                <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                                                <div>
-                                                    <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(auction.status)" class="mx-2 auction-done">
-                                                        {{ wicas.enum(store).toLabel(auction.status).auctions() }}
-                                                    </span>
-                                                </div>
-                                                <div class="d-flex">
-                                                    <span v-if="(auction.status === 'ing' || auction.status === 'wait') && auction.timeLeft" class="mx-2 timer">
-                                                        <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
-                                                        <span v-if="auction.timeLeft.days != '0' ">{{ auction.timeLeft.days }}일 &nbsp; </span>{{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
-                                                    </span>
+                    <div v-if="isLoading">
+                        <div :class="['container my-4', { 'pulling': isPulling && distance > 0, 'is-spinning': isSpinning }]" ref="pullContainer" @touchstart.passive="handleTouchStart" @touchmove.passive="handleTouchMove" @touchend="handleTouchEnd" v-if="currentTab === 'allInfo'">
+                            <div v-if="isPulling" class="refresh-indicator" :style="imageStyle">
+                                <img src="../../../img/Icon-refresh.png" alt="Refresh" class="fas fa-sync-alt" width="20px" :style="imagestyle" />
+                            </div>
+                            <div v-if="auctionsData.length > 0">
+                                <div class="content-wrapper" :style="{ 'transform': `translateY(${Math.min(distance, 20)}px)` }">
+                                    <div class="row-wrapper">
+                                        <div class="row" :class="{'pulled': isPulling && distance > 0}">
+                                            <!-- if. 경매 ing 있을때 -->
+                                            <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in auctionsData" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
+                                                <div class="card my-auction">
                                                     <div v-if="isDealer">
-                                                        <div class="participate-badge" v-if="auction.isDealerParticipating">
-                                                            <span class="hand-icon">
-                                                                <img src="../../../img/Icon-hand.png" alt="Hand Icon">
-                                                            </span>
+                                                        <input class="toggle-heart" type="checkbox" :id="'favorite-' + auction.id" :checked="auction.isFavorited" @click.stop="toggleFavorite(auction)" />
+                                                        <label class="heart-toggle" :for="'favorite-' + auction.id" @click.stop></label>
+                                                    </div>
+                                                    <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
+                                                    <div v-if="auction.status === 'ask' || auction.status === 'diag'">
+                                                        <div class="card-img-demo">
+                                                            <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
                                                         </div>
                                                     </div>
-                                                    <!--<span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>-->
+                                                    <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
+                                                        <img src="../../../img/car_example.png">
+                                                    </div>
+                                                    <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                                                    <div>
+                                                        <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(auction.status)" class="mx-2 auction-done">
+                                                            {{ wicas.enum(store).toLabel(auction.status).auctions() }}
+                                                        </span>
+                                                    </div>
+                                                    <div class="d-flex">
+                                                        <span v-if="(auction.status === 'ing' || auction.status === 'wait') && auction.timeLeft" class="mx-2 timer">
+                                                            <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
+                                                            <span v-if="auction.timeLeft.days != '0' ">{{ auction.timeLeft.days }}일 &nbsp; </span>{{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
+                                                        </span>
+                                                        <div v-if="isDealer">
+                                                            <div class="participate-badge" v-if="auction.isDealerParticipating">
+                                                                <span class="hand-icon">
+                                                                    <img src="../../../img/Icon-hand.png" alt="Hand Icon">
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                        <!--<span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>-->
+                                                    </div>
+                                                    <!--  <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>-->
+                                                    <!--  <div v-if="isDealer">-->
+                                                    <!-- <div v-if="auction.status === 'chosen'" class="time-remaining">경매 종료</div>
                                                 </div>
-                                                <!--  <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>-->
-                                                <!--  <div v-if="isDealer">-->
-                                                <!-- <div v-if="auction.status === 'chosen'" class="time-remaining">경매 종료</div>
+                                                <div v-else>
+                                                    <div v-if="auction.status === 'chosen'" class="wait-selection">선택완료</div>
+                                                    <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
+                                                    <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
+                                                    <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
+                                                    <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
+                                                </div>-->
+                                                    <div class="card-body">
+                                                        <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                        <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                                        <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
+                                                        <div class="d-flex">
+                                                            <h5 class="card-title"><span class="blue-box">무사고</span></h5>
+                                                            <h5 v-if="auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                                                            <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
+                                                            <p class="tc-light-gray">{{ auction.car_no }}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <div class="complete-car">
+                                    <div class="card my-auction mt-3">
+                                        <div class="none-complete">
+                                            <span class="tc-light-gray">차량 정보가 없습니다.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <nav>
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" :class="{ disabled: !pagination.prev }">
+                                        
+                                        <a class="page-link prev-style" @click="loadPage( pagination.current_page - 1, 'all', pagination)"></a>
+                                    </li>
+                                    <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                                        <a class="page-link" @click="loadPage( n , 'all', pagination)">{{ n }}</a>
+                                    </li>
+                                    <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+                                        <a class="page-link next-style" @click="loadPage( pagination.current_page + 1, 'all', pagination)"></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                        <div class="container my-4" v-if="currentTab === 'interInfo'">
+                            <div v-if="favoriteAuctionsData.length > 0">
+                                <!-- 경매 목록 -->
+                                <div class="row">
+                                    <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in favoriteAuctionsData" :key="auction.id" @click="navigateToDetail(auction)">
+                                        <div class="card my-auction">
+                                            <div v-if="isDealer">
+                                                <input class="toggle-heart" type="checkbox" :id="'favorite-' + auction.id" :checked="auction.isFavorited" @click.stop="toggleFavorite(auction)" />
+                                                <label class="heart-toggle" :for="'favorite-' + auction.id" @click.stop></label>
+                                            </div>
+                                            <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
+                                            <div v-if="auction.status === 'ask' || auction.status === 'diag'">
+                                                <div class="card-img-demo">
+                                                    <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
+                                                </div>
+                                            </div>
+                                            <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
+                                                <img src="../../../img/car_example.png">
+                                            </div>
+                                            <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                                            <div>
+                                                <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(auction.status)" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                                            </div>
+                                            <div class="d-flex">
+                                                <span v-if="(auction.status === 'ing' || auction.status === 'wait') && auction.timeLeft" class="mx-2 timer">
+                                                    <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
+                                                    <span v-if="auction.timeLeft.days != '0' ">{{ auction.timeLeft.days }}일 &nbsp; </span>{{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
+                                                </span>
+                                                <div v-if="isDealer">
+                                                    <div class="participate-badge" v-if="auction.isDealerParticipating">
+                                                        <span class="hand-icon">
+                                                            <img src="../../../img/Icon-hand.png" alt="Hand Icon">
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <!--<span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>-->
+                                            </div>
+                                            <!--  <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>-->
+                                            <!--  <div v-if="isDealer">-->
+                                            <!-- <div v-if="auction.status === 'chosen'" class="time-remaining">경매 종료</div>
                                             </div>
                                             <div v-else>
                                                 <div v-if="auction.status === 'chosen'" class="wait-selection">선택완료</div>
@@ -526,246 +616,159 @@ TODO:
                                                 <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
                                                 <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
                                             </div>-->
-                                                <div class="card-body">
-                                                    <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                    <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
-                                                    <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
-                                                    <div class="d-flex">
-                                                        <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                                        <h5 v-if="auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
-                                                        <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                        <p class="tc-light-gray">{{ auction.car_no }}</p>
-                                                    </div>
+                                            <div class="card-body">
+                                                <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                                <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
+                                                <div class="d-flex">
+                                                    <h5 class="card-title"><span class="blue-box">무사고</span></h5>
+                                                    <h5 v-if="auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                                                    <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
+                                                    <p class="tc-light-gray">{{ auction.car_no }}</p>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div v-else>
-                            <div class="complete-car">
-                                <div class="card my-auction mt-3">
-                                    <div class="none-complete">
-                                        <span class="tc-light-gray">차량 정보가 없습니다.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <nav>
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item" :class="{ disabled: !pagination.prev }">
-                                    
-                                    <a class="page-link prev-style" @click="loadPage( pagination.current_page - 1, 'all', pagination)"></a>
-                                </li>
-                                <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
-                                    <a class="page-link" @click="loadPage( n , 'all', pagination)">{{ n }}</a>
-                                </li>
-                                <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                                    <a class="page-link next-style" @click="loadPage( pagination.current_page + 1, 'all', pagination)"></a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="container my-4" v-if="currentTab === 'interInfo'">
-                        <div v-if="favoriteAuctionsData.length > 0">
-                            <!-- 경매 목록 -->
-                            <div class="row">
-                                <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in favoriteAuctionsData" :key="auction.id" @click="navigateToDetail(auction)">
-                                    <div class="card my-auction">
-                                        <div v-if="isDealer">
-                                            <input class="toggle-heart" type="checkbox" :id="'favorite-' + auction.id" :checked="auction.isFavorited" @click.stop="toggleFavorite(auction)" />
-                                            <label class="heart-toggle" :for="'favorite-' + auction.id" @click.stop></label>
-                                        </div>
-                                        <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
-                                        <div v-if="auction.status === 'ask' || auction.status === 'diag'">
-                                            <div class="card-img-demo">
-                                                <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
-                                            </div>
-                                        </div>
-                                        <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
-                                            <img src="../../../img/car_example.png">
-                                        </div>
-                                        <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                                        <div>
-                                            <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(auction.status)" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                                        </div>
-                                        <div class="d-flex">
-                                            <span v-if="(auction.status === 'ing' || auction.status === 'wait') && auction.timeLeft" class="mx-2 timer">
+                                        <!--
+                                        <div class="card my-auction">
+                                            <div class="card-img-top-placeholder"></div>
+                                            <span v-if="auction.status === 'ing' && auction.timeLeft" class="mx-2 timer">
                                                 <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
                                                 <span v-if="auction.timeLeft.days != '0' ">{{ auction.timeLeft.days }}일 &nbsp; </span>{{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
                                             </span>
-                                            <div v-if="isDealer">
-                                                <div class="participate-badge" v-if="auction.isDealerParticipating">
-                                                    <span class="hand-icon">
-                                                        <img src="../../../img/Icon-hand.png" alt="Hand Icon">
-                                                    </span>
-                                                </div>
+                                            <div class="card-body">
+                                            <h5 class="card-title"><span class="blue-box">무사고</span>{{ auction.car_no }}</h5>
+                                            <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
                                             </div>
-                                            <!--<span v-if="auction.status === 'wait'" class="mx-2 timer"><img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">D-3</span>-->
-                                        </div>
-                                        <!--  <div v-if="auction.status === 'done'" class="time-remaining">경매 완료</div>-->
-                                        <!--  <div v-if="isDealer">-->
-                                        <!-- <div v-if="auction.status === 'chosen'" class="time-remaining">경매 종료</div>
-                                        </div>
-                                        <div v-else>
-                                            <div v-if="auction.status === 'chosen'" class="wait-selection">선택완료</div>
-                                            <div v-if="auction.status === 'cancel'" class="time-remaining">경매 취소</div>
-                                            <div v-if="auction.status === 'wait'" class="wait-selection">딜러 선택</div>
-                                            <div v-if="auction.status === 'diag'" class="time-remaining">진단 대기</div>
-                                            <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
                                         </div>-->
-                                        <div class="card-body">
-                                            <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                            <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
-                                            <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
-                                            <div class="d-flex">
-                                                <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                                <h5 v-if="auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
-                                                <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                <p class="tc-light-gray">{{ auction.car_no }}</p>
-                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <!-- 하트 토글된 경매가 없을 경우의 메시지 -->
+                                <div class="complete-car">
+                                    <div class="card my-auction mt-3">
+                                        <div class="none-complete">
+                                            <span class="tc-light-gray">관심 차량이 없습니다.</span>
                                         </div>
                                     </div>
-                                    <!--
-                                    <div class="card my-auction">
-                                        <div class="card-img-top-placeholder"></div>
-                                        <span v-if="auction.status === 'ing' && auction.timeLeft" class="mx-2 timer">
-                                            <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
-                                            <span v-if="auction.timeLeft.days != '0' ">{{ auction.timeLeft.days }}일 &nbsp; </span>{{ auction.timeLeft.hours }}:{{ auction.timeLeft.minutes }}:{{ auction.timeLeft.seconds }}
-                                        </span>
-                                        <div class="card-body">
-                                        <h5 class="card-title"><span class="blue-box">무사고</span>{{ auction.car_no }}</h5>
-                                        <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
-                                        </div>
-                                    </div>-->
                                 </div>
                             </div>
+                            <nav>
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" :class="{ disabled: !favoriteAuctionsPagination.prev }">
+                                        
+                                        <a class="page-link prev-style" 
+                                        @click="loadPage( favoriteAuctionsPagination.current_page - 1, 'favorite', favoriteAuctionsPagination)"></a>
+                                    </li>
+                                    <li v-for="n in favoriteAuctionsPagination.last_page" :key="n" class="page-item" :class="{ active: n === favoriteAuctionsPagination.current_page }">
+                                        <a class="page-link" @click="loadPage( n, 'favorite', favoriteAuctionsPagination)">{{ n }}</a>
+                                    </li>
+                                    <li class="page-item next-prev" :class="{ disabled: !favoriteAuctionsPagination.next }">
+                                        <a class="page-link next-style" @click="loadPage( favoriteAuctionsPagination.current_page + 1, 'favorite', favoriteAuctionsPagination)"></a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
-                        <div v-else>
-                            <!-- 하트 토글된 경매가 없을 경우의 메시지 -->
-                            <div class="complete-car">
-                                <div class="card my-auction mt-3">
-                                    <div class="none-complete">
-                                        <span class="tc-light-gray">관심 차량이 없습니다.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <nav>
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item" :class="{ disabled: !favoriteAuctionsPagination.prev }">
-                                    
-                                    <a class="page-link prev-style" 
-                                    @click="loadPage( favoriteAuctionsPagination.current_page - 1, 'favorite', favoriteAuctionsPagination)"></a>
-                                </li>
-                                <li v-for="n in favoriteAuctionsPagination.last_page" :key="n" class="page-item" :class="{ active: n === favoriteAuctionsPagination.current_page }">
-                                    <a class="page-link" @click="loadPage( n, 'favorite', favoriteAuctionsPagination)">{{ n }}</a>
-                                </li>
-                                <li class="page-item next-prev" :class="{ disabled: !favoriteAuctionsPagination.next }">
-                                    <a class="page-link next-style" @click="loadPage( favoriteAuctionsPagination.current_page + 1, 'favorite', favoriteAuctionsPagination)"></a>
-                                </li>
-                            </ul>
-                        </nav>
-                    </div>
-                    <div class="container my-4" v-if="currentTab === 'auctionDone'">
-                        <div class="row">
-                            <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in filteredDone" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
-                                <div class="card my-auction">
-                                    <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
-                                    <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
-                                    <div class="card-body">
-                                        <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
-                                        <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
-                                    </div>
-                                </div>
-                            </div>
-                            <div v-if="!filteredDone" class="complete-car">
-                                <div class="card my-auction mt-3">
-                                    <div class="none-complete">
-                                        <span class="tc-light-gray">판매 차량이 없습니다.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                        </div>
-                    </div>
-                    <div class="container my-4" v-if="currentTab === 'myBidInfo'">
-                        <div v-if="bidsData.length > 0">
-                            <!-- 경매 목록 -->
+                        <div class="container my-4" v-if="currentTab === 'auctionDone'">
                             <div class="row">
-                                <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="bid in bidsData" :key="bid.id" @click="navigateToDetail(bid.auction)">
+                                <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in filteredDone" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
                                     <div class="card my-auction">
-                                        <div v-if="isDealer">
-                                            <input class="toggle-heart" type="checkbox" :id="'favorite-' + bid.auction.id" :checked="bid.auction.isFavorited" @click.stop="toggleFavorite(bid.auction)" />
-                                            <label class="heart-toggle" :for="'favorite-' + bid.auction.id" @click.stop></label>
+                                        <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
+                                        <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
+                                        <div class="card-body">
+                                            <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
+                                            <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
                                         </div>
-                                        <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
-                                        <div v-if="bid.auction.status === 'ask' || bid.auction.status === 'diag'">
-                                            <div class="card-img-demo">
-                                                <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
-                                            </div>
+                                    </div>
+                                </div>
+                                <div v-if="!filteredDone" class="complete-car">
+                                    <div class="card my-auction mt-3">
+                                        <div class="none-complete">
+                                            <span class="tc-light-gray">판매 차량이 없습니다.</span>
                                         </div>
-                                        <div v-else="bid.auction.status !== 'ask' || bid.auction.status !== 'diag'" :class="{ 'grayscale_img': bid.auction.status === 'done' || bid.auction.status === 'cancel' ||(isDealer && bid.auction.status === 'chosen') }" class="card-img-top-placeholder">
-                                            <img src="../../../img/car_example.png">
-                                        </div>
-                                        <span v-if="bid.auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(bid.auction.status).auctions() }}</span>
-                                        <div>
-                                            <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(bid.auction.status)" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(bid.auction.status).auctions() }}</span>
-                                        </div>
-                                        <div class="d-flex">
-                                            <span class="mx-2 timer">
-                                                <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
-                                                <span v-if="bid.auction.timeLeft.days != '0' ">{{ bid.auction.timeLeft.days }}일 &nbsp; </span>{{ bid.auction.timeLeft.hours }}:{{ bid.auction.timeLeft.minutes }}:{{ bid.auction.timeLeft.seconds }}
-                                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                            </div>
+                        </div>
+                        <div class="container my-4" v-if="currentTab === 'myBidInfo'">
+                            <div v-if="bidsData.length > 0">
+                                <!-- 경매 목록 -->
+                                <div class="row">
+                                    <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="bid in bidsData" :key="bid.id" @click="navigateToDetail(bid.auction)">
+                                        <div class="card my-auction">
                                             <div v-if="isDealer">
-                                                <div class="participate-badge" v-if="bid.auction.isDealerParticipating">
-                                                    <span class="hand-icon">
-                                                        <img src="../../../img/Icon-hand.png" alt="Hand Icon">
-                                                    </span>
+                                                <input class="toggle-heart" type="checkbox" :id="'favorite-' + bid.auction.id" :checked="bid.auction.isFavorited" @click.stop="toggleFavorite(bid.auction)" />
+                                                <label class="heart-toggle" :for="'favorite-' + bid.auction.id" @click.stop></label>
+                                            </div>
+                                            <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
+                                            <div v-if="bid.auction.status === 'ask' || bid.auction.status === 'diag'">
+                                                <div class="card-img-demo">
+                                                    <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
+                                                </div>
+                                            </div>
+                                            <div v-else="bid.auction.status !== 'ask' || bid.auction.status !== 'diag'" :class="{ 'grayscale_img': bid.auction.status === 'done' || bid.auction.status === 'cancel' ||(isDealer && bid.auction.status === 'chosen') }" class="card-img-top-placeholder">
+                                                <img src="../../../img/car_example.png">
+                                            </div>
+                                            <span v-if="bid.auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(bid.auction.status).auctions() }}</span>
+                                            <div>
+                                                <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(bid.auction.status)" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(bid.auction.status).auctions() }}</span>
+                                            </div>
+                                            <div class="d-flex">
+                                                <span class="mx-2 timer">
+                                                    <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
+                                                    <span v-if="bid.auction.timeLeft.days != '0' ">{{ bid.auction.timeLeft.days }}일 &nbsp; </span>{{ bid.auction.timeLeft.hours }}:{{ bid.auction.timeLeft.minutes }}:{{ bid.auction.timeLeft.seconds }}
+                                                </span>
+                                                <div v-if="isDealer">
+                                                    <div class="participate-badge" v-if="bid.auction.isDealerParticipating">
+                                                        <span class="hand-icon">
+                                                            <img src="../../../img/Icon-hand.png" alt="Hand Icon">
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                                <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
+                                                <div class="d-flex">
+                                                    <h5 class="card-title"><span class="blue-box">무사고</span></h5>
+                                                    <h5 v-if="bid.auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                                                    <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
+                                                    <p class="tc-light-gray">{{ bid.auction.car_no }}</p>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card-body">
-                                            <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                            <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
-                                            <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
-                                            <div class="d-flex">
-                                                <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                                <h5 v-if="bid.auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
-                                                <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                <p class="tc-light-gray">{{ bid.auction.car_no }}</p>
-                                            </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div v-else>
+                                <div class="complete-car">
+                                    <div class="card my-auction mt-3">
+                                        <div class="none-complete">
+                                            <span class="tc-light-gray">입찰한 차량이 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            <nav>
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" :class="{ disabled: !bidPagination.prev }">
+                                        
+                                        <a class="page-link prev-style" @click="loadPage( bidPagination.current_page - 1, 'bid', bidPagination)"></a>
+                                    </li>
+                                    <li v-for="n in bidPagination.last_page" :key="n" class="page-item" :class="{ active: n === bidPagination.current_page }">
+                                        <a class="page-link" @click="loadPage( n, 'bid', bidPagination)">{{ n }}</a>
+                                    </li>
+                                    <li class="page-item next-prev" :class="{ disabled: !bidPagination.next }">
+                                        <a class="page-link next-style" @click="loadPage( bidPagination.current_page + 1, 'bid', bidPagination)"></a>
+                                    </li>
+                                </ul>
+                            </nav>
                         </div>
-                        <div v-else>
-                            <div class="complete-car">
-                                <div class="card my-auction mt-3">
-                                    <div class="none-complete">
-                                        <span class="tc-light-gray">입찰한 차량이 없습니다.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <nav>
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item" :class="{ disabled: !bidPagination.prev }">
-                                    
-                                    <a class="page-link prev-style" @click="loadPage( bidPagination.current_page - 1, 'bid', bidPagination)"></a>
-                                </li>
-                                <li v-for="n in bidPagination.last_page" :key="n" class="page-item" :class="{ active: n === bidPagination.current_page }">
-                                    <a class="page-link" @click="loadPage( n, 'bid', bidPagination)">{{ n }}</a>
-                                </li>
-                                <li class="page-item next-prev" :class="{ disabled: !bidPagination.next }">
-                                    <a class="page-link next-style" @click="loadPage( bidPagination.current_page + 1, 'bid', bidPagination)"></a>
-                                </li>
-                            </ul>
-                        </nav>
                     </div>
+                    
                 </div>
 
                 <div class="container my-4" v-if="currentTab === 'auctionDone'">
@@ -926,7 +929,7 @@ const { auctionsData, pagination, getAuctions, getAuctionsByDealer, getAuctionsB
 const currentPage = ref(1); 
 const currentFavoritePage = ref(1); 
 const currentMyBidPage = ref(1); 
-
+const isLoading = ref(false);
 const showModal = ref(false); 
 //const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); 
 //const auctionModal = ref(false);
@@ -1004,7 +1007,7 @@ function showLikeMessage(cl) {
     
     setTimeout(() => {
         likeMessageVisible.value = false;
-        fetchFilteredViewLikes();
+        getAuctionsData();
         //location.reload();
         //currentTab.value = 'allInfo';
     }, 1000);
@@ -1038,7 +1041,7 @@ const handleTouchEnd = async () => {
     if (distance.value === 100) { 
         isSpinning.value = true; 
         setTimeout(async () => {
-            fetchFilteredViewLikes();
+            getAuctionsData();
             isSpinning.value = false; 
             isPulling.value = false;
             distance.value = 0;
@@ -1070,7 +1073,7 @@ function toggleModal() {
 
 function setFilter(status) { 
     currentStatus.value = status;
-    fetchFilteredViewLikes();
+    getAuctionsData();
 }
 
 function handleClose() { 
@@ -1091,7 +1094,7 @@ function loadPage( page, type, pagination) {
     switch (type) {
         case 'all':
             currentPage.value = page;
-            fetchFilteredViewLikes();
+            getAuctionsData();
             break;
         case 'favorite':
             currentFavoritePage.value = page;
@@ -1121,25 +1124,20 @@ function isDealerParticipating(auctionId) {
     return bidsData.value.some(bid => bid.auction_id === auctionId);
 }
 
-const fetchFilteredViewLikes = async () => {
+const getAuctionsData = async () => {
     if(isUser.value){
-        await getAuctions(currentPage.value , false , currentStatus.value );
+        await getAuctions(currentPage.value , false , currentStatus.value);
     } else if(isDealer.value){
-        await getAuctionsByDealer(currentPage.value , currentStatus.value );
+        await getAuctionsByDealer(currentPage.value , currentStatus.value);
     }
-    
     filterLikeData(auctionsData.value);
-
 }
 
 const favoriteAuctionsGetData = async () => {
     await getBids(currentMyBidPage.value, false, true, user.value.id);
     const response = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id);
-    console.log(response);
     favoriteAuctionsData.value = response.data;
     favoriteAuctionsPagination.value = response.rawData.data.meta;
-    //console.log("favoriteAuctionsData : ",favoriteAuctionsData.value);
-    
     filterLikeData(favoriteAuctionsData.value);
 }
 
@@ -1148,7 +1146,6 @@ const fetchFilteredBids = async () => {
     bidsData.value.forEach(bid => {
         bid.auction = auctionsData.value.find(auction => parseInt(auction.id) === bid.auction_id);
         const matchedLike = likesData.value.find(like => parseInt(like.likeable_id) === bid.auction_id);
-
         if (matchedLike) {
             bid.auction.like = matchedLike;
             bid.auction.isFavorited = true;
@@ -1172,35 +1169,32 @@ const filterLikeData = (auctions) => {
     });
 }
 
-
 let timer;
 
 onMounted(async () => {
-
-    if(history.state.currentTab){
+    if (history.state.currentTab) {
         currentTab.value = history.state.currentTab;
-    } 
-    
-    fetchFilteredViewLikes();
-    favoriteAuctionsGetData();
-    fetchFilteredBids();
+    }
 
-    //console.log("bids",bidsData.value);
-	statusLabel = wicas.enum(store).addFirst('all','전체').excl('cancel','취소').ascVal().auctions();
+    await getAuctionsData();
+    await favoriteAuctionsGetData();
+    await fetchFilteredBids();
+
+    statusLabel = wicas.enum(store).addFirst('all', '전체').excl('cancel', '취소').ascVal().auctions();
 
     if (role.value.name === 'user') {
         isUser.value = true;
     }
-    
+
     timer = setInterval(() => {
-        
         updateAuctionTimes(auctionsData.value);
         updateAuctionTimes(favoriteAuctionsData.value);
         updateAuctionTimes(bidsData.value);
+        isLoading.value = true;
     }, 1000);
-    
-    
+
 });
+
 
 onUnmounted(() => {
     clearInterval(timer);

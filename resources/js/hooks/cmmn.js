@@ -1553,7 +1553,6 @@ export function cmmn() {
     }, 1000);} 
     */
     const updateAuctionTimes = (auction) => {
-        console.log(auction);
         auction.forEach((auction) => {
             auction.timeLeft = calculateTimeLeft(auction);
         });
@@ -1584,7 +1583,7 @@ export function cmmn() {
         };
     };
     //End of updateAuctionTimes
-    
+
     return {
       numberToKoreanUnit,
       formatCurrency,
