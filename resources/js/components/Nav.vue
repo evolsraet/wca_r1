@@ -445,9 +445,6 @@
   }
 
   onMounted(() => {
-    console.log('user================================');
-    console.log(user.value);
-    console.log('user================================');
     fileExstCheck(user.value);
     let navAuction = document.querySelectorAll('.nav-auction');
     let navReview = document.querySelectorAll('.nav-review');
@@ -500,7 +497,7 @@
   window.addEventListener('resize', updateIsMobile);
 
   watch(() => route.name, (to, from) => {
-      console.log('라우터 이름:', to);
+      //console.log('라우터 이름:', to);
 
       const removeActiveLink = (elements) => {
         elements.forEach(element => {
