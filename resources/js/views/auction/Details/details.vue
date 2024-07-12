@@ -495,6 +495,24 @@
               </p>
             </button>
             </div>
+              <div v-if ="auctionDetail.data.status ==='chosen' && isDealer">
+                <hr>
+              <h4 class="mt-2">탁송 주소지</h4>
+              <p class="text-start tc-light-gray">※ 현 주소지로 탁송이 진행 됩니다. </p>
+              <div class="d-flex justify-content-end">
+                <button class=" btn-outline-primary btn sm-height" @click="dealerAddrConnect">주소지 변경</button>
+              </div>
+              <div class="fw-semibold">
+              <p>우편번호 :<span class="tc-red ms-1">{{ user.dealer.company_post }}</span></p>
+              <p>주<span class="ms-4">소</span> :<span class="tc-red ms-2"> {{ user.dealer.company_addr1 }} , {{ user.dealer.company_addr2 }}</span></p>
+              </div>
+              <button
+                class="my-4 btn-primary btn w-100"
+                @click="dealerAddrCompetion"
+              >
+                <p>현 주소지 탁송하기</p>
+              </button>
+            </div>
           </BottomSheet02>
       </div>
     </div>
@@ -1084,7 +1102,22 @@ watch(
   },
   { immediate: true } // 이 옵션을 통해 컴포넌트가 마운트될 때 즉시 실행됩니다.
 );
+const dealerAddrConnect = () =>{
+  const text = `
+  `;
 
+  wica.ntcn(swal)
+    .useClose()
+    .useHtmlText()
+    .addClassNm('primary-check')
+    .addOption({ })
+    .callback(function (result) {
+      if (result.isOk) {
+        router.push({ path: '/selldt2' }); 
+      }
+    })
+    .confirm(text);
+};
 
 /* 위카 진단평가 확인하기 모달 */ 
 const openAlarmModal = () => {
@@ -1927,5 +1960,8 @@ opacity: 0;
 .sheet.half{
   max-height: none !important;
   height: fit-content !important;
+}
+.sm-height{
+  height: 34px !important;
 }
 </style>
