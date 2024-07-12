@@ -29,6 +29,12 @@ class Auction extends Model implements HasMedia
         'diag_check_at',
     ];
 
+    // 업로드 가능한 파일들
+    public $files = [
+        'file_auction_proxy'  => '위임장/소유자 인감증명서',
+        'file_auction_owner'  => '매도자관련서류',
+    ];
+
     // 검색어로 검색가능한 경우
     public $searchable = [
         'owner_name',

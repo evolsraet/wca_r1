@@ -7,7 +7,7 @@ use App\Services\AuctionService;
 use App\Traits\CrudControllerTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
-use Illuminate\Http\Client\Request as ClientRequest;
+use App\Models\Auction;
 
 class AuctionController extends Controller
 {
@@ -16,6 +16,17 @@ class AuctionController extends Controller
     public function __construct(AuctionService $service)
     {
         $this->service = $service;
+    }
+    /**
+     * @lrd:start
+     * # 가능 파일
+     * #    'file_auction_proxy'  => '위임장/소유자 인감증명서',
+     * #    'file_auction_owner'  => '매도자관련서류', (관리자가 저장 후 낙찰 딜러에게 표시된다)
+     * @lrd:end
+     */
+    public function store(Request $request)
+    {
+        return $this->service->store($request);
     }
 
     public function swapNumber($a, $b)

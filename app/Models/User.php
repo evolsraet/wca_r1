@@ -78,7 +78,7 @@ class User extends Authenticatable implements HasMedia
         'file_user_biz'   => '사업자등록증',
         'file_user_sign'  => '매도용인감증명',
         'file_user_cert'  => '매매업체 대표증 / 종사원증',
-        'file_user_owner'  => '위임장/소유자 인감증명서',
+        // 'file_user_owner'  => '위임장/소유자 인감증명서',
     ];
 
     // 한개만 저장되고 새로 업로드시 삭제될 파일들
