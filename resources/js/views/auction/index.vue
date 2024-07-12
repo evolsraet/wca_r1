@@ -1073,7 +1073,7 @@ function toggleModal() {
 
 function setFilter(status) { 
     currentStatus.value = status;
-    getAuctionsData();
+    favoriteAuctionsGetData();
 }
 
 function handleClose() { 
@@ -1135,7 +1135,7 @@ const getAuctionsData = async () => {
 
 const favoriteAuctionsGetData = async () => {
     await getBids(currentMyBidPage.value, false, true, user.value.id);
-    const response = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id);
+    const response = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , currentStatus.value);
     favoriteAuctionsData.value = response.data;
     favoriteAuctionsPagination.value = response.rawData.data.meta;
     filterLikeData(favoriteAuctionsData.value);

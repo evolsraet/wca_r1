@@ -81,12 +81,19 @@ export default function useAuctions() {
         }).get();
     }
 
-    const getAuctionsByDealerLike = async (page = 1 , userId = null) => {
+    const getAuctionsByDealerLike = async (page = 1 , userId = null , status = "all") => {
+        const apiList = []
+        if(userId != null){
+            apiList.push(`likes.user_id:whereIn:${userId}`)
+        }
+        if(status != 'all'){
+            apiList.push(`auctions.status:whereIn:${status}`)
+        }
         return wicac.conn()
         .log()
         .url(`/api/auctions`)
         .with(['likes'])
-        .where([`likes.user_id:whereIn:${userId}`])
+        .where(apiList)
         .page(`${page}`)
         .callback(function(result) {
             return result;
