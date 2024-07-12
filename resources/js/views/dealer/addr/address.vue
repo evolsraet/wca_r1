@@ -46,9 +46,9 @@
                                 <td class="px-6 pb-3 pt-1 text-sm text-overflow">{{ user.dealer.company_addr1 }} , {{ user.dealer.company_addr2 }}</td>
                                 <td class="px-6 pb-3 pt-1 text-sm text-overflow">메모</td>
                                 <td class="px-6 pb-3 pt-1 text-sm">
-                                    <a href="#" class="ms-2 badge web_style">
+                                 <router-link :to="{ name: 'addr.update' }" class="ms-2 badge web_style">
                                         <div class="icon-edit-img"></div>
-                                    </a>
+                                    </router-link>
                                     <a href="#" class="ms-2 badge web_style">
                                         <div class="icon-trash-img"></div>
                                     </a>
