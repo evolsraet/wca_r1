@@ -196,6 +196,16 @@ const updateProfile = async () => {
 
 };
 
+function fileExstCheck(info){
+    if(info.hasOwnProperty('files')){
+        if(info.files.hasOwnProperty('file_user_photo')){
+            if(info.files.file_user_photo[0].hasOwnProperty('original_url')){
+                photoUrl.value = info.files.file_user_photo[0].original_url;
+            }
+        }
+    }
+}
+
 const setUserProfileData = async () => {
 
   userId.value = store.getters['auth/user'].id;
@@ -221,7 +231,7 @@ const setUserProfileData = async () => {
       profile.value.introduce = user.value.dealer.introduce;
     }
     if (user.value.files) {
-      photoUrl.value = user.value.files.file_user_photo[0].original_url;
+      fileExstCheck(user.value);
     }
   } 
 };
