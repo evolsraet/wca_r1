@@ -192,6 +192,28 @@ export default function useBid() {
         .delete();
     };
 
+    const getBidsByUserId = async(userId) =>{
+        const apiList = [];
+        apiList.push(`bids.user_id:${userId}`);
+        
+        return wicac.conn()
+        .url(`/api/bids`)
+        .where(apiList)
+        .pageLimit(10000)
+        .callback(function(result) {
+            if(result.isSuccess){
+                return result.data; 
+            }else{
+                wica.ntcn(swal)
+                .title('오류가 발생하였습니다.')
+                .useHtmlText()
+                .icon('I') //E:error , W:warning , I:info , Q:question
+                .alert('관리자에게 문의해주세요.');
+            }
+        })
+        .get();
+    };
+
     return {
         getHomeBids,
         cancelBid,
@@ -207,5 +229,6 @@ export default function useBid() {
         isLoading,
         auctionsData,
         bidPagination,
+        getBidsByUserId,
     };
 }
