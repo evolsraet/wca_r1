@@ -21,6 +21,19 @@
                         </div>
                     </div>
                     <div class="activity-info bold-18-font mt-5">
+                        <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
+                        <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
+                        <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
+                        </router-link>
+                        <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo' }}" class="item">
+                        <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
+                        <p class="bid-icon tc-light-gray normal-16-font mb-0">입찰</p>
+                        </router-link>
+                        <router-link :to="{  name: 'dealer.bids' }" class="item">
+                        <p><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
+                        <p class="suc-bid-icon tc-light-gray normal-16-font mb-0">낙찰</p>
+                        </router-link>
+                        <!--
                         <div class="item">
                             <p><span class="tc-red">0</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font">관심</p>
@@ -33,6 +46,7 @@
                             <p><span class="tc-red">{{ filteredViewBids.length }}</span> 건</p>
                             <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
                         </div>
+                        -->
                      <!--   <div class="item">
                             <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
                             <p class="purchase-icon tc-light-gray normal-16-font">매입</p>
@@ -117,16 +131,21 @@ import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import Footer from "@/views/layout/footer.vue"
 import profileDom from '/resources/img/profile_dom.png'; 
+import useLikes from '@/composables/useLikes';
 
 const photoUrl = ref(profileDom);
 const currentTab = ref('dealerInfo');
 const { amtComma } = cmmn();
 const store = useStore();
 const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
+const { likesData, getAllLikes } = useLikes();
+const { bidsData, getBids, viewBids, bidsCountByUser, getHomeBids } = useBid();
 const isExpanded = ref(false);
 const ingCount = computed(() => {
     return auctionsData.value.filter(auction => auction.status === 'ing').length;
 });
+const myBidCount = ref(0);
+const filteredDoneBids = ref([]);
 
 const fetchAuctionDetails = async (bid) => {
     try {
@@ -151,32 +170,45 @@ const toggleCard = () => {
 const setCurrentTab = (tab) => {
     currentTab.value = tab;
 };
-const { bidsData, getBids, viewBids, bidsCountByUser } = useBid();
+
 const user = computed(() => store.state.auth.user);
 
 // 낙찰된 건수 필터링
 const filteredViewBids = ref([]);
 
-const fetchFilteredViewBids = async () => {
-    
-    console.log('Original Bids:', bidsData.value);
-    const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
-    console.log('Bids with Details:', bidsWithDetails);  // Bids with Details 데이터 출력
-    filteredViewBids.value = bidsWithDetails.filter(bid => {
-        console.log('Checking Bid:', bid);  // 각 Bid 데이터 출력
-        return bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id;
-    });
-    console.log('Bids with Auction Details:', filteredViewBids.value);
-};
+
+function fileExstCheck(info){
+    if(info.hasOwnProperty('files')){
+        if(info.files.hasOwnProperty('file_user_photo')){
+            if(info.files.file_user_photo[0].hasOwnProperty('original_url')){
+                photoUrl.value = userInfo.files.file_user_photo[0].original_url;
+            }
+        }
+    }
+}
 
 onMounted(async () => {
-    if (user.value.files) {
-      photoUrl.value = user.value.files.file_user_photo[0].original_url;
-    }
-    await getBids();
-    console.log('Loaded Bids:', bidsData.value);  // Bids 데이터 출력
+    fileExstCheck(user.value);
+    await getHomeBids();
+    bidsData.value.forEach(bid => {
+        if (
+            bid.auction.win_bid &&
+            bid.auction.win_bid.user_id === user.value.id &&
+            (bid.auction.status == "chosen" || bid.auction.status == "dlvr")
+           
+        ){
+            filteredDoneBids.value.push(bid);
+        }
+        
+        if(bid.auction.status == "ing" || bid.auction.status == "wait"){
+            myBidCount.value += 1;
+        }
+
+    });
+
+    await getAllLikes('Auction',user.value.id);
     await getAuctions();
-    await fetchFilteredViewBids();
+    
 });
 </script>
 <style scoped>
