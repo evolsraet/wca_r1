@@ -480,7 +480,8 @@
             <div>
               <button class="border-6 btn-fileupload my-4 shadow02">매도용 인감증명서 다운로드</button>
             </div>
-            <hr v-if ="auctionDetail.data.status ==='chosen' && isUser">
+            <div v-if ="auctionDetail.data.status ==='chosen' && isUser">
+            <hr>
             <h4>탁송 확인</h4>
             <p class="text-start tc-light-gray">※ 탁송 서비스 안내는 ' 탁송 확인 '에서 확인 가능합니다. </p>
             <button
@@ -493,6 +494,7 @@
                 <p class="icon-right-wh"></p>
               </p>
             </button>
+            </div>
           </BottomSheet02>
       </div>
     </div>

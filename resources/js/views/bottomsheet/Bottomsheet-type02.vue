@@ -48,7 +48,7 @@ const closeSheet = () => {
 };
 
 const startDrag = (event) => {
-  if (window.innerWidth >= 992 || showBottomSheet.value) return; // half 상태일 때 드래그 비활성화
+  if (window.innerWidth >= 992) return;
   isDragging.value = true;
   startY.value = event.touches ? event.touches[0].clientY : event.clientY;
   document.body.style.overflow = 'hidden';
@@ -61,7 +61,13 @@ const startDrag = (event) => {
 const onDrag = (event) => {
   if (!isDragging.value) return;
   currentY.value = event.touches ? event.touches[0].clientY : event.clientY;
-  deltaY.value = startY.value - currentY.value; 
+  deltaY.value = startY.value - currentY.value;
+
+  if (showBottomSheet.value && deltaY > 0) {
+    // half 상태일 때 위로 드래그하는 것을 막음
+    return;
+  }
+
   cancelAnimationFrame(animationFrame);
   animationFrame = requestAnimationFrame(() => {
     const newHeight = Math.max(20, sheetHeight.value + deltaY.value);
@@ -69,7 +75,7 @@ const onDrag = (event) => {
   });
 };
 
-const endDrag = () => {
+const endDrag = (event) => {
   if (!isDragging.value) return;
   isDragging.value = false;
   document.body.style.overflow = '';
@@ -79,10 +85,19 @@ const endDrag = () => {
   document.removeEventListener('touchend', endDrag);
 
   const finalHeight = Math.max(20, sheetHeight.value + deltaY.value);
-  
-  const targetHeight = window.innerHeight * 0.1; 
-  if (finalHeight > targetHeight) {
+
+  const oneThirdHeight = window.innerHeight / 3;
+  const oneTenthHeight = window.innerHeight / 10;
+
+  if (showHead.value && finalHeight > sheetHeight.value - oneTenthHeight) {
     expandSheet();
+  } else if (finalHeight > oneThirdHeight) {
+    showBottomSheet.value = true;
+    showHead.value = false;
+    sheetHeight.value = window.innerHeight / 3;
+    requestAnimationFrame(() => {
+      sheet.value.style.height = `${sheetHeight.value}px`;
+    });
   } else {
     collapseSheet();
   }
@@ -93,7 +108,7 @@ const endDrag = () => {
 const expandSheet = () => {
   showBottomSheet.value = true;
   showHead.value = false;
-  sheetHeight.value = window.innerHeight * 0.5;
+  sheetHeight.value = window.innerHeight * 0.1;
   requestAnimationFrame(() => {
     sheet.value.style.height = `${sheetHeight.value}px`;
   });
