@@ -911,7 +911,7 @@ import { cmmn } from '@/hooks/cmmn';
 import { isError } from 'lodash';
 
 const swal = inject('$swal');
-const { wicas , wica } = cmmn();
+const { wicas , wica , updateAuctionTimes } = cmmn();
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
 const {getBids, bidsData , bidPagination } = usebid();
@@ -1017,35 +1017,7 @@ const state = reactive({
   isPulling: false,
   distance: 0
 });
-const currentTime = ref(new Date());
-const padZero = (num) => {
-  return num < 10 ? '0' + num : num;
-};
 
-const calculateTimeLeft = (auction) => {
-    const finalAtDate = new Date(auction.final_at);
-    const diff = finalAtDate.getTime() - currentTime.value.getTime();
-    if (auction.status !== 'ing' || !auction.final_at || diff < 0) {
-        return {
-            days: 0,
-            hours: '00',
-            minutes: '00',
-            seconds: '00'
-        };
-    }
-    return {
-        days: Math.floor(diff / (24 * 3600000)),
-        hours: padZero(Math.floor((diff % (24 * 3600000)) / 3600000)),
-        minutes: padZero(Math.floor((diff % 3600000) / 60000)),
-        seconds: padZero(Math.floor((diff % 60000) / 1000)),
-    };
-};
-
-const updateAuctionTimes = (auction) => {
-    auction.forEach((auction) => {
-        auction.timeLeft = calculateTimeLeft(auction);
-    });
-};
 
 const handleTouchStart = (e) => {
     state.startY = e.touches[0].pageY;
@@ -1221,7 +1193,7 @@ onMounted(async () => {
     }
     
     timer = setInterval(() => {
-        currentTime.value = new Date();
+        
         updateAuctionTimes(auctionsData.value);
         updateAuctionTimes(favoriteAuctionsData.value);
         updateAuctionTimes(bidsData.value);
