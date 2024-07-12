@@ -125,6 +125,20 @@
                                 </div>
                             </div>
                         </div>
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" :class="{ disabled: !pagination.prev }">
+                                    
+                                    <a class="page-link prev-style" @click="loadPage( pagination.current_page - 1, pagination)"></a>
+                                </li>
+                                <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                                    <a class="page-link" @click="loadPage( n , pagination)">{{ n }}</a>
+                                </li>
+                                <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+                                    <a class="page-link next-style" @click="loadPage( pagination.current_page + 1, pagination)"></a>
+                                </li>
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
@@ -147,13 +161,15 @@ const router = useRouter();
 const photoUrl = ref(profileDom);
 const currentTab = ref('dealerInfo');
 const store = useStore();
-const { getDoneAuctions } = useAuctions(); // 경매 관련 함수를 사용
+const { getDoneAuctions, pagination } = useAuctions(); // 경매 관련 함수를 사용
 const { likesData, getAllLikes } = useLikes();
 const { bidsData, bidsCountByUser, getHomeBids, getBidsByUserId } = useBid();
 const myBidCount = ref(0);
 const filteredDoneBids = ref([]);
 const auctionsDoneData = ref([]);
+const currentPage = ref(1); 
 let isData = false;
+let bidsNumList ='';
 
 const setCurrentTab = (tab) => {
     currentTab.value = tab;
@@ -192,7 +208,7 @@ onMounted(async () => {
 
     await getAllLikes('Auction',user.value.id);
     let bidsList = await getBidsByUserId(user.value.id);
-    let bidsNumList = '';
+    bidsNumList = '';
     if(bidsList){
         for(let i=0; i<bidsList.length; i++){
             bidsNumList += bidsList[i].id;
@@ -201,13 +217,19 @@ onMounted(async () => {
             }
         }
     }
-    auctionsDoneData.value = await getDoneAuctions(bidsNumList);
+
+    getDoneAuctionsByBidsNum(bidsNumList);
+
+});
+
+const getDoneAuctionsByBidsNum = async(numList) =>{
+    auctionsDoneData.value = await getDoneAuctions(numList,currentPage.value);
     if(auctionsDoneData._rawValue.length>0){
         isData = true;
     }else{
         isData = false;
     }
-});
+}
 
 function navigateToDetail(auction) {
     router.push({ name: 'AuctionDetail', params: { id: auction.id } });
@@ -217,6 +239,16 @@ function getAuctionStyle(auction) {
     const validStatuses = ['done'];
     return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
 }
+
+function loadPage( page, pagination) {
+    if (page < 1 || page > pagination.last_page) return;
+    window.scrollTo(0, 0);
+    
+    currentPage.value = page;
+    getDoneAuctionsByBidsNum(bidsNumList);
+
+}
+
 </script>
 <style scoped>
 @media (max-width: 340px) {

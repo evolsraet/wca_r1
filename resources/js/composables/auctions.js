@@ -320,7 +320,7 @@ const AuctionCarInfo = async (carInfoForm) => {
   };
   
 
- const createAuction = async (auctionData) => {
+  const createAuction = async (auctionData) => {
     if (processing.value) return;
     processing.value = true;
     validationErrors.value = {};
@@ -342,23 +342,27 @@ const AuctionCarInfo = async (carInfoForm) => {
     }
 
     /*
+    console.log('dtata================================');
+    console.log(auctionData);
+    console.log('dtata================================');
     const formData = new FormData();
     formData.append('auction', JSON.stringify(payload.auction));
-    if(auction.file_user_owner){
-        formData.append('file_user_owner', auction.file_user_owner);
+    if(auctionData.auction.file_auction_proxy){
+        console.log('들어옴');
+        formData.append('file_auction_proxy', auctionData.auction.file_auction_proxy);
     }
-    //const fileResult = await fileUserOwnerUpdate(userData.file_user_owner,userData.id);
-
-    
     
     return wicac.conn()
     .url(`/api/auctions`)
     .param(formData) 
     .multipart()
     .callback(function (result) {
+        console.log('result======================');
+        console.log(result);
         if(result.isError){
             validationErrors.value = result.rawData.response.data.errors;
             //fileUserOwnerDeleteById(userData.id);
+            processing.value = false;
             throw new Error;          
         } else {
             processing.value = false;
@@ -367,6 +371,8 @@ const AuctionCarInfo = async (carInfoForm) => {
     })
     .post();
     */
+
+    
     return wicac.conn()
     .url(`/api/auctions`)
     .param(payload)
@@ -641,22 +647,22 @@ const deleteAuction = async (id,urlPath) => {
 
 };
 
-const getDoneAuctions = async (bidsNumList) => {
+const getDoneAuctions = async (bidsNumList,page) => {
     const apiList = [];
     apiList.push(`auctions.status:done`);
     //apiList.push(`auctions.bid_id:>:0`);
     apiList.push(`auctions.bid_id:whereIn:${bidsNumList}`);
     return wicac.conn()
         .url(`/api/auctions`)
-        .log()
         .where(apiList)
         .with([
             'bids',
         ])
-       
-        .pageLimit(99999) 
+        .pageLimit(10)
+        .page(`${page}`)
         .callback(function(result) {
             if(result.isSuccess){
+                pagination.value = result.rawData.data.meta;
                 return result.data;
             }else{
                 wica.ntcn(swal)
