@@ -435,12 +435,14 @@
   }
 
   function fileExstCheck(info){
-    if(info.hasOwnProperty('files')){
+    if(info){
+      if(info.hasOwnProperty('files')){
         if(info.files.hasOwnProperty('file_user_photo')){
             if(info.files.file_user_photo[0].hasOwnProperty('original_url')){
               photoUrl.value = userInfo.files.file_user_photo[0].original_url;
             }
         }
+      }
     }
 }
 
