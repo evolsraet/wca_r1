@@ -1117,7 +1117,6 @@ function getAuctionStyle(auction) {
 }
 
 function isDealerParticipating(auctionId) { 
-    console.log(bidsData.value);
     return bidsData.value.some(bid => bid.auction_id === auctionId);
 }
 
@@ -1128,8 +1127,11 @@ const getAuctionsData = async () => {
         await getAuctionsByDealer(currentPage.value , currentStatus.value);
     }
     filterLikeData(auctionsData.value);
-    favoriteAuctionsGetData();
-    fetchFilteredBids();
+    if(isDealer.value){
+        favoriteAuctionsGetData();
+        fetchFilteredBids();
+    }
+
 }
 
 const favoriteAuctionsGetData = async () => {
@@ -1187,9 +1189,14 @@ onMounted(async () => {
     }
 
     timer = setInterval(() => {
-        updateAuctionTimes(auctionsData.value);
-        updateAuctionTimes(favoriteAuctionsData.value);
-        updateAuctionTimes(bidsData.value);
+        if(isUser.value){
+            updateAuctionTimes(auctionsData.value);
+        } else if(isDealer.value){
+            updateAuctionTimes(auctionsData.value);
+            updateAuctionTimes(favoriteAuctionsData.value);
+            updateAuctionTimes(bidsData.value);
+        }
+
         isLoading.value = true;
     }, 1000);
 
