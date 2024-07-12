@@ -1100,53 +1100,89 @@ watch(
       console.log("Height price updated:", heightPrice.value);
     }
   },
-  { immediate: true } // 이 옵션을 통해 컴포넌트가 마운트될 때 즉시 실행됩니다.
+  { immediate: true } 
 );
-const dealerAddrConnect = () =>{
-const text = `  <div class="border-0" @click="toggleCard">
-                        <div class="card-body">
-                          <div class="text-start">
-                           <h4>탁송지 변경</h4>
-                           <p>원하시는 탁송지를 선택해주세요.</p>
-                           <a href="/addr" class="fs-6 tc-light-gray link-hov">다른 주소지로 변경,추가를 원하시나요?</a>
-                           </div>
-                            <div v-if="auctionsData.length > 0" class="scrollable-content mt-4">
-                                <div v-for="(auction, index) in auctionsData"
-                                    :key="auction.id"
-                                    @click="navigateToDetail(auction)"
-                                    :style="getAuctionStyle(auction)"
-                                    ">
-                                    <div class="complete-car">
-                                        <div class="my-auction">
-                                            <div class="bid-bc p-2" style="max-height: 480px;">
-                                                <ul class="px-0 inspector_list max_width_900">
-                                                    <li>
-                                                        <div class="text-start fw-semibold">
-                                                          <p>명칭 :  주소명칭</p>
-                                                          <p>주소 : 주소입니다</p>
-                                                          <p>우편번호 : 우편번호입니다</p>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+
+
+
+
+const DOMauctionsData = ref([
+  { id: 1, name: '주소명칭1', address: '주소1', zipCode: '우편번호1' },
+  { id: 2, name: '주소명칭2', address: '주소2', zipCode: '우편번호2' },
+]);
+
+const selectedAuction = ref(null);
+
+const selectAuction = (id) => {
+  selectedAuction.value = DOMauctionsData.value.find(auction => auction.id === id);
+  console.log('선택된 항목:', selectedAuction.value); // 콘솔에 선택된 항목 출력
+};
+
+const dealerAddrConnect = () => {
+  const container = document.createElement('div');
+  container.classList.add('border-0');
+  container.innerHTML = `
+    <div class="card-body">
+      <div class="text-start">
+        <h4>탁송지 변경</h4>
+        <p>원하시는 탁송지를 선택해주세요.</p>
+        <a href="/addr" class="fs-6 tc-light-gray link-hov">다른 주소지로 변경, 추가를 원하시나요?</a>
+      </div>
+      <div class="scrollable-content mt-4"></div>
+    </div>
   `;
+
+  const scrollableContent = container.querySelector('.scrollable-content');
+  DOMauctionsData.value.forEach(auction => {
+    const auctionItem = document.createElement('div');
+    auctionItem.classList.add('auction-item');
+    auctionItem.setAttribute('data-id', auction.id);
+    auctionItem.innerHTML = `
+      <div class="complete-car">
+        <div class="my-auction">
+          <div class="bid-bc p-2" style="max-height: 480px;">
+            <ul class="px-0 inspector_list max_width_900">
+              <li>
+                <div class="text-start fw-semibold">
+                  <p>명칭: ${auction.name}</p>
+                  <p>주소: ${auction.address}</p>
+                  <p>우편번호: ${auction.zipCode}</p>
+                </div>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    `;
+
+    auctionItem.addEventListener('click', () => {
+      selectAuction(auction.id);
+      document.querySelectorAll('.auction-item').forEach(item => {
+        item.classList.remove('selected');
+      });
+      auctionItem.classList.add('selected');
+    });
+
+    scrollableContent.appendChild(auctionItem);
+  });
 
   wica.ntcn(swal)
     .useClose()
     .useHtmlText()
     .addClassNm('primary-check')
-    .addOption({ padding :20 })
-    .callback(function (result) {
+    .addOption({ padding: 20 })
+    .callback((result) => {
       if (result.isOk) {
-        router.push({ path: '/selldt2' }); 
+        if (selectedAuction.value) {
+          alert(`선택된 주소:\n명칭: ${selectedAuction.value.name}\n주소: ${selectedAuction.value.address}\n우편번호: ${selectedAuction.value.zipCode}`);
+        } else {
+          alert("선택을 해줘야합니다.");
+        }
       }
     })
-    .confirm(text);
+    .confirm(container.outerHTML);
 };
+
 
 /* 위카 진단평가 확인하기 모달 */ 
 const openAlarmModal = () => {
@@ -1993,5 +2029,8 @@ opacity: 0;
 .sm-height{
   height: 34px !important;
 }
-
+.selected {
+  background-color: lightgray;
+  border: 2px solid blue;
+}
 </style>
