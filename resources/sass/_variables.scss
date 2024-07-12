@@ -161,6 +161,11 @@ background-color: $sub-color01 !important;
 /* Text color */
 .tc-red{color:red !important;}
 
+.card-body .link-hov:hover{
+    color: $primary !important;
+    text-decoration: underline !important;
+  }
+
 .tc-light-gray{color:#aaaebe !important;}
 
 .tc-blue{color:blue}

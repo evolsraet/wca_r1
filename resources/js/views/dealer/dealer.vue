@@ -21,7 +21,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="text-start status-selector registration-content justify-content-end">
+                    <div class="text-start status-selector registration-content justify-content-start">
                         <div v-for="(label, value) in statusLabel" :key="value" class="mx-2">
                             <input type="radio" name="status" :value="value" :id="value" :checked="value === 'all' " @change="event => setFilter(event.target.value)" />
                             <label :for="value">{{ label }}</label>

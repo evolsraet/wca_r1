@@ -1103,14 +1103,43 @@ watch(
   { immediate: true } // 이 옵션을 통해 컴포넌트가 마운트될 때 즉시 실행됩니다.
 );
 const dealerAddrConnect = () =>{
-  const text = `
+const text = `  <div class="border-0" @click="toggleCard">
+                        <div class="card-body">
+                          <div class="text-start">
+                           <h4>탁송지 변경</h4>
+                           <p>원하시는 탁송지를 선택해주세요.</p>
+                           <a href="/addr" class="fs-6 tc-light-gray link-hov">다른 주소지로 변경,추가를 원하시나요?</a>
+                           </div>
+                            <div v-if="auctionsData.length > 0" class="scrollable-content mt-4">
+                                <div v-for="(auction, index) in auctionsData"
+                                    :key="auction.id"
+                                    @click="navigateToDetail(auction)"
+                                    :style="getAuctionStyle(auction)"
+                                    ">
+                                    <div class="complete-car">
+                                        <div class="my-auction">
+                                            <div class="bid-bc p-2" style="max-height: 480px;">
+                                                <ul class="px-0 inspector_list max_width_900">
+                                                    <li>
+                                                        <div class="text-start fw-semibold">
+                                                          <p>명칭 :  주소명칭</p>
+                                                          <p>주소 : 주소입니다</p>
+                                                          <p>우편번호 : 우편번호입니다</p>
+                                                        </div>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
   `;
 
   wica.ntcn(swal)
     .useClose()
     .useHtmlText()
     .addClassNm('primary-check')
-    .addOption({ })
+    .addOption({ padding :20 })
     .callback(function (result) {
       if (result.isOk) {
         router.push({ path: '/selldt2' }); 
@@ -1964,4 +1993,5 @@ opacity: 0;
 .sm-height{
   height: 34px !important;
 }
+
 </style>
