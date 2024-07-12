@@ -8,6 +8,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
@@ -25,12 +26,13 @@ const isDragging = ref(false);
 const startY = ref(0);
 const currentY = ref(0);
 const deltaY = ref(0);
-const sheetHeight = ref(props.initial === 'half' ? 'fit-content' : 30);
+const sheetHeight = ref(props.initial === 'half' ? window.innerHeight / 2 : 30);
 let animationFrame = null;
 
 const sheet = ref(null);
 
-const toggleSheet = () => {
+const toggleSheet = (event) => {
+  if (window.innerWidth >= 992) return;
   if (showHead.value) {
     expandSheet();
   } else {
@@ -46,7 +48,7 @@ const closeSheet = () => {
 };
 
 const startDrag = (event) => {
-  if (window.innerWidth >= 992) return; // Disable dragging on larger screens
+  if (window.innerWidth >= 992) return;
   isDragging.value = true;
   startY.value = event.touches ? event.touches[0].clientY : event.clientY;
   document.body.style.overflow = 'hidden';
@@ -59,7 +61,7 @@ const startDrag = (event) => {
 const onDrag = (event) => {
   if (!isDragging.value) return;
   currentY.value = event.touches ? event.touches[0].clientY : event.clientY;
-  deltaY.value = startY.value - currentY.value; // 헤더가 위로 드래그될 때 시트가 확장되도록
+  deltaY.value = startY.value - currentY.value; 
   cancelAnimationFrame(animationFrame);
   animationFrame = requestAnimationFrame(() => {
     const newHeight = Math.max(20, sheetHeight.value + deltaY.value);
@@ -76,20 +78,23 @@ const endDrag = () => {
   document.removeEventListener('touchend', endDrag);
 
   const finalHeight = Math.max(20, sheetHeight.value + deltaY.value);
-  if (finalHeight > window.innerHeight * 0.2) {
+  
+  const targetHeight = window.innerHeight * 0.1; 
+  if (finalHeight > targetHeight) {
     expandSheet();
   } else {
     collapseSheet();
   }
+
   deltaY.value = 0;
 };
 
 const expandSheet = () => {
   showBottomSheet.value = true;
   showHead.value = false;
-  sheetHeight.value = 'auto';
+  sheetHeight.value = window.innerHeight * 0.5;
   requestAnimationFrame(() => {
-    sheet.value.style.height = 'auto';
+    sheet.value.style.height = `${sheetHeight.value}px`;
   });
 };
 
@@ -147,8 +152,7 @@ onBeforeUnmount(() => {
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
   box-shadow: 0 -2px 11px rgba(0, 0, 0, 0.1), 0 -2px 7px rgba(0, 0, 0, 0.08);
-  max-height: 280px;
-  transition: height 0.5s ease, transform 0.5s ease;
+  transition: height 0.3s ease-in-out, transform 0.3s ease-in-out;
   overflow: hidden;
 }
 
@@ -157,17 +161,17 @@ onBeforeUnmount(() => {
 }
 
 .sheet.half {
-  height: auto;
-  max-height: auto;
+  height: 50vh;
+  max-height: 50vh;
 }
 
 .sheet.dragging {
-  transition: height 0.1s ease;
+  transition: none;
 }
 
 .handle {
   display: block;
-  height: 4px;
+  height: 7px;
   width: 42px;
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.1);
