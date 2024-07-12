@@ -48,7 +48,7 @@ const closeSheet = () => {
 };
 
 const startDrag = (event) => {
-  if (window.innerWidth >= 992) return;
+  if (window.innerWidth >= 992 || showBottomSheet.value) return; // half 상태일 때 드래그 비활성화
   isDragging.value = true;
   startY.value = event.touches ? event.touches[0].clientY : event.clientY;
   document.body.style.overflow = 'hidden';
@@ -70,6 +70,7 @@ const onDrag = (event) => {
 };
 
 const endDrag = () => {
+  if (!isDragging.value) return;
   isDragging.value = false;
   document.body.style.overflow = '';
   document.removeEventListener('mousemove', onDrag);
