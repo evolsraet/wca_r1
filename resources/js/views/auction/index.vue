@@ -1158,7 +1158,6 @@ const fetchFilteredBids = async () => {
 const filterLikeData = (auctions) => {
     auctions.forEach(auction => {
         const userLike = auction.likes.find(like => like.user_id === user.value.id);
-        console.log("@@@@@@@@@@@@@@@@@@@",userLike);
         if (userLike) {
             auction.like = userLike;
             auction.isFavorited = true;
@@ -1166,7 +1165,6 @@ const filterLikeData = (auctions) => {
             auction.isFavorited = false;
         }
         auction.isDealerParticipating = isDealerParticipating(auction.id);
-        console.log("@@@@@@@@@@@"+auction.value);
     });
 
 }
