@@ -434,10 +434,18 @@
     }
   }
 
-  onMounted(() => {
-    if (user.value.files) {
-      photoUrl.value = user.value.files.file_user_photo[0].original_url;
+  function fileExstCheck(info){
+    if(info.hasOwnProperty('files')){
+        if(info.files.hasOwnProperty('file_user_photo')){
+            if(info.files.file_user_photo[0].hasOwnProperty('original_url')){
+              photoUrl.value = userInfo.files.file_user_photo[0].original_url;
+            }
+        }
     }
+}
+
+  onMounted(() => {
+    fileExstCheck(user.value);
     let navAuction = document.querySelectorAll('.nav-auction');
     let navReview = document.querySelectorAll('.nav-review');
     let navCarInq = document.querySelectorAll('.nav-inq');
