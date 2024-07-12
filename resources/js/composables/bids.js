@@ -55,31 +55,30 @@ export default function useBid() {
 
     //isSelect => 선택 차량 (선택,탁송 filter)
     //isMyBid => 진행 중 입찰 건 filter
-    const getBids = async (page = 1 , isSelect = false, isMyBid = false , userId = 0) => {
+    const getBids = async (page = 1, isSelect = false, isMyBid = false, userId = 0, status = "all") => {
         const whereList = [];
-        if(isSelect){
-            if(userId != 0){
-                whereList.push(`auction.status:whereIn:dlvr,chosen&like=auction.win_bid.user_id:${userId}`)
-            }
-            
+    
+        if (isSelect && userId !== 0) {
+            const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
+            whereList.push(`auction.status:whereIn:${statusFilter}&like=auction.win_bid.user_id:${userId}`);
         }
-        if(isMyBid){
-            whereList.push(`auction.status:whereIn:ing,wait`)
+    
+        if (isMyBid) {
+            whereList.push('auction.status:whereIn:ing,wait');
         }
+    
         return wicac.conn()
-            //.log()
-            .url(`/api/bids`)
+            .url('/api/bids')
             .with(['auction'])
             .where(whereList)
             .page(`${page}`)
-            .callback(function(result) {
+            .callback((result) => {
                 bidsData.value = result.data;
                 bidPagination.value = result.rawData.data.meta;
                 return result.data;
             })
             .get();
-
-    }
+    };
 
     //페이징 안 한 전체 bid
     const getHomeBids = async (mainIsOk = false) => {

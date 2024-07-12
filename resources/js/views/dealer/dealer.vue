@@ -11,6 +11,7 @@
                             </div>
                         </div>
                         <div class="text-end pd-10">
+                            
                             <select class="form-select select-rank" aria-label="최근 등록 순">
                                 <option selected>최근 등록 순</option>
                                 <option value="1">가격 낮은 순</option>
@@ -19,6 +20,13 @@
                                 <option value="4">연식 최신 순</option>
                             </select>
                         </div>
+                    </div>
+                    <div class="text-start status-selector registration-content">
+                        <div v-for="(label, value) in statusLabel" :key="value" class="mx-2">
+                            <input type="radio" name="status" :value="value" :id="value" :checked="value === 'all' " @change="event => setFilter(event.target.value)" />
+                            <label :for="value">{{ label }}</label>
+                        </div>
+                        
                     </div>
                     <div class="container my-5" v-if="loading">
                         <div v-if="bidsData.length > 0" class="row">
@@ -87,6 +95,8 @@ const { bidsData, getBids , bidPagination } = useBid();
 const user = computed(() => store.getters['auth/user']);
 const { amtComma , wicas } = cmmn();
 const loading = ref(false);
+const currentStatus = ref('all');
+let statusLabel;
 
 /**
 const fetchAuctionDetails = async (bid) => {
@@ -134,6 +144,14 @@ function navigateToDetail(bid) {
     router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
 }
 
+function setFilter(status) { 
+    currentStatus.value = status;
+    getBids(currentPage.value,
+            true,
+            false,
+            user.value.id,
+            currentStatus.value);
+}
 
 onMounted(async () => {
     if (!user.value || !user.value.id) {
@@ -141,6 +159,7 @@ onMounted(async () => {
         return;
     }
     await getBids(1,true,false,user.value.id);
+    statusLabel = wicas.enum(store).addFirst('all','전체').perm('dlvr','chosen').auctions();
     loading.value = true;
 });
 </script>

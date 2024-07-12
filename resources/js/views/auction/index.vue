@@ -428,7 +428,7 @@ TODO:
                     </div>
                 </div>
                 <div>
-                    <div class="container mb-3" v-if="currentTab == 'allInfo' && currentTab !== 'auctionDone'">
+                    <div class="container mb-3" v-if="currentTab == 'interInfo'">
                         <div class="registration-content overflow-hidden">
                             <div class="text-start status-selector registration-content">
                                 <div v-for="(label, value) in statusLabel" :key="value" class="mx-2">
