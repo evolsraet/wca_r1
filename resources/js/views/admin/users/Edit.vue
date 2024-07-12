@@ -95,7 +95,9 @@
                             <label for="user-title" class="form-label"
                                 >사진(본인 확인용)</label
                             >
-                            <img :src="fileImgUrl" alt="Profile Photo" class="profile-photo" v-if="editForm.file_user_photo_name"/>
+                            <div class="file-upload-container">
+                                <img :src="fileImgUrl" alt="Profile Photo" class="profile-photo" v-if="editForm.file_user_photo_name"/>
+                            </div>
                             <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
                                 파일 첨부
                             </button>

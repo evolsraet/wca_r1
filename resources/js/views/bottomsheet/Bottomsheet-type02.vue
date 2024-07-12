@@ -8,7 +8,6 @@
     </div>
   </div>
 </template>
-
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from 'vue';
 
@@ -60,10 +59,10 @@ const startDrag = (event) => {
 const onDrag = (event) => {
   if (!isDragging.value) return;
   currentY.value = event.touches ? event.touches[0].clientY : event.clientY;
-  deltaY.value = startY.value - currentY.value;
+  deltaY.value = startY.value - currentY.value; // 헤더가 위로 드래그될 때 시트가 확장되도록
   cancelAnimationFrame(animationFrame);
   animationFrame = requestAnimationFrame(() => {
-    const newHeight = Math.max(20, sheetHeight.value - deltaY.value);
+    const newHeight = Math.max(20, sheetHeight.value + deltaY.value);
     sheet.value.style.height = `${newHeight}px`;
   });
 };
@@ -76,7 +75,8 @@ const endDrag = () => {
   document.removeEventListener('touchmove', onDrag);
   document.removeEventListener('touchend', endDrag);
 
-  if (sheetHeight.value - deltaY.value > window.innerHeight * 0.2) {
+  const finalHeight = Math.max(20, sheetHeight.value + deltaY.value);
+  if (finalHeight > window.innerHeight * 0.2) {
     expandSheet();
   } else {
     collapseSheet();
@@ -88,14 +88,18 @@ const expandSheet = () => {
   showBottomSheet.value = true;
   showHead.value = false;
   sheetHeight.value = 'auto';
-  sheet.value.style.height = 'auto';
+  requestAnimationFrame(() => {
+    sheet.value.style.height = 'auto';
+  });
 };
 
 const collapseSheet = () => {
   showBottomSheet.value = false;
   showHead.value = true;
   sheetHeight.value = 30;
-  sheet.value.style.height = `${sheetHeight.value}px`;
+  requestAnimationFrame(() => {
+    sheet.value.style.height = `${sheetHeight.value}px`;
+  });
 };
 
 const handleResize = () => {
@@ -144,7 +148,7 @@ onBeforeUnmount(() => {
   border-top-right-radius: 25px;
   box-shadow: 0 -2px 11px rgba(0, 0, 0, 0.1), 0 -2px 7px rgba(0, 0, 0, 0.08);
   max-height: 280px;
-  transition: height 0.3s ease;
+  transition: height 0.5s ease, transform 0.5s ease;
   overflow: hidden;
 }
 
@@ -158,7 +162,7 @@ onBeforeUnmount(() => {
 }
 
 .sheet.dragging {
-  transition: none;
+  transition: height 0.1s ease;
 }
 
 .handle {
