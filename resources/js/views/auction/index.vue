@@ -21,8 +21,8 @@ TODO:
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav gap-2">
                         <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-2">{{ favoriteAuctionsData.length }}</span></a><!-- 관심 차량 숫자표기 -->
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('myBidInfo')" :class="{ active: currentTab === 'myBidInfo' }">내 입찰 차량<span class="interest mx-2">{{ bidsData.length }}</span></a>
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-2">{{ favoriteAuctionsPagination.total }}</span></a><!-- 관심 차량 숫자표기 -->
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('myBidInfo')" :class="{ active: currentTab === 'myBidInfo' }">내 입찰 차량<span class="interest mx-2">{{ bidPagination.total }}</span></a>
                     </div>
                 </nav>
             </div>
@@ -1135,7 +1135,7 @@ const fetchFilteredViewLikes = async () => {
 const favoriteAuctionsGetData = async () => {
     await getBids(currentMyBidPage.value, false, true, user.value.id);
     const response = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id);
-
+    console.log(response);
     favoriteAuctionsData.value = response.data;
     favoriteAuctionsPagination.value = response.rawData.data.meta;
     //console.log("favoriteAuctionsData : ",favoriteAuctionsData.value);
