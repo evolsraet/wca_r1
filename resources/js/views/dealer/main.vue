@@ -23,12 +23,13 @@
                             </div>-->
 
                         <div>
-                            <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span>건 있습니다</p>
+                            <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ auctionsData.length }}</span>건 있습니다</p>
+                            <!--
                             <div class="w-50">
                                 <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1 shadow-sm"><span>입찰 불가</span></p>
                                 <p v-else-if="user.status === 'ok'" class="bidding mt-1 mb-1 shadow-sm"><span>입찰 가능</span></p>
                             </div>
-                            <p class="tc-light-gray mb-3 mt-2">입찰가능 유효시간 2024.03.20</p>
+                            <p class="tc-light-gray mb-3 mt-2">입찰가능 유효시간 2024.03.20</p>-->
                         </div>
                             <div>
                                 <div style="display: flex; align-items: flex-end;">
@@ -38,15 +39,15 @@
                         </div>
                         <div class="slide-up-ani activity-info bold-18-font process mb-0">
                              <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                            <p><span class="tc-red slide-up mb-0" ref="item1">{{ userLikesCount }}</span> 건</p>
+                            <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
                             <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
                             </router-link>
-                            <router-link :to="{ name: 'auction.index' }" class="item">
-                            <p><span class="tc-red mb-0" ref="item2">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
+                            <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo' }}" class="item">
+                            <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
                             <p class="bid-icon tc-light-gray normal-16-font mb-0">입찰</p>
                             </router-link>
                             <router-link :to="{  name: 'dealer.bids' }" class="item">
-                            <p><span class="tc-red mb-0" ref="item3">{{ filteredViewBids.length }}</span> 건</p>
+                            <p><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
                             <p class="suc-bid-icon tc-light-gray normal-16-font mb-0">낙찰</p>
                             </router-link>
                          <!--   <div class="item">
@@ -61,7 +62,7 @@
                         <h3 class="review-title">공지사항</h3>
                         <router-link :to="{ name: 'index.notices' }" class="btn-apply mt-0">전체보기</router-link>
                     </div>
-                    <table class="table custom-border">
+                    <table class="table custom-border mt-5">
                         <thead style="display: none;">
                             <tr>
                                 <th class="tc-light-gray">날짜</th>
@@ -128,9 +129,9 @@
                         </div>
                         <span class="tc-light-gray">24시간 내 응대해 주세요!</span>
                         <!-- 차량이 존재 할 경우-->
-                        <div v-if="filteredViewBids.length > 0" class="container">
+                        <div v-if="filteredDoneBids.length > 0" class="container">
                             <div class="row">
-                            <div class="col-md-6 p-2" v-for="bid in filteredViewBids.slice(0,2)" :key="bid.id">
+                            <div class="col-md-6 p-2" v-for="bid in filteredDoneBids.slice(0,2)" :key="bid.id">
                                 <div class="card my-auction mt-3">
                                     <div class="card-img-top-placeholder border-rad"></div>
                                     <div class="card-body">
@@ -185,10 +186,11 @@ const toggleCard = () => {
     isExpanded.value = !isExpanded.value;
 };
 const alarmModal = ref(null);
-const { getAuctions, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
+const { getAuctionsByDealer, auctionsData, getAuctionById } = useAuctions(); // 경매 관련 함수를 사용
 const { bidsData, getHomeBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
 let a = '';
+const myBidCount = ref(0);
 
 /**
 function test(){
@@ -240,7 +242,7 @@ const fetchAuctionDetails = async (bid) => {
 };
 
 
-const filteredViewBids = ref([]);
+const filteredDoneBids = ref([]);
 /**
 const fetchFilteredViewBids = async () => {
     // 필터링을 제거하고 모든 입찰을 가져옵니다.
@@ -256,27 +258,31 @@ const userLikesCount = computed(() => {
 });
 
 function navigateToDetail(bid) {
-    console.log("Navigate to Detail:", bid.auction_id);
+    //console.log("Navigate to Detail:", bid.auction_id);
     router.push({ name: 'AuctionDetail', params: { id: bid.auction_id } });
 }
 
 onMounted(async () => {
-    //await getAuctions();
-    //console.log(auctionsData.value);
+    await getAuctionsByDealer("all");
+
     await getHomeBids();
+    console.log(bidsData.value);
     bidsData.value.forEach(bid => {
         if (
             bid.auction.win_bid &&
             bid.auction.win_bid.user_id === user.value.id &&
-            (bid.auction.status === 'dlvr' || bid.auction.status === 'chosen')
+            (bid.auction.status == "chosen" || bid.auction.status == "dlvr")
+           
         ){
-            filteredViewBids.value.push(bid);
+            filteredDoneBids.value.push(bid);
         }
-        else{
-            return;
+        
+        if(bid.auction.status == "ing" || bid.auction.status == "wait"){
+            myBidCount.value += 1;
         }
 
-    });
+    }); 
+
     await getAllLikes('Auction',user.value.id);
 
     setTimeout(() => {
@@ -305,6 +311,7 @@ p {
 }
 .layout-container02{
     grid-template-columns: 1fr 1fr !important;
+    align-items: baseline;
 }
 @media (max-width: 640px){
     .layout-container02 {

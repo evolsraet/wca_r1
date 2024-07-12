@@ -16,7 +16,7 @@
     <div>
         <div class="regiest-content">
             <div class="container my-4">
-                <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 mt-2">
+                <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 mt-2 mb-0">
                     <h2 class="fw-bolder lh-base animated-text">내 차 판매는 <br>위카에서 !</h2>
                     <router-link :to="{ name: 'auction.index' }" href="" class="btn-apply p-0 m-0 animated-button">더 알아보기</router-link>
                 </div>
@@ -90,14 +90,14 @@
                                                                     <img src="../../../img/car_example.png" alt="딜러 사진" class="mb-2 align-text-top">
                                                                 </div>
                                                                 <h5 class="mb-0">{{ auction.car_no }}</h5>
-                                                                <p v-if="auction.status === 'chosen'" class="ml-auto"><span class="blue-box02 bg-opacity-50">선택완료</span></p>
-                                                                <p v-if="auction.status === 'cancel'" class="ml-auto"><span class="box bg-secondary">경매 취소</span></p>
-                                                                <p v-if="auction.status === 'wait'" class="ml-auto"><span class="blue-box02">딜러 선택</span></p>
-                                                                <p v-if="auction.status === 'diag'" class="ml-auto"><span class="box bg-success bg-opacity-75">진단 대기</span></p>
-                                                                <p v-if="auction.status === 'ask'" class="ml-auto"><span class="box bg-warning bg-opacity-75">신청 완료</span></p>
-                                                                <p v-if="auction.status === 'ing'" class="ml-auto"><span class="box bg-danger">경매진행</span></p>
-                                                                <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">경매완료</span></p>
-                                                                <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">탁송진행</span></p>
+                                                                <p v-if="auction.status === 'chosen'" class="ml-auto"><span class="blue-box02 bg-opacity-50">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                                                <p v-if="auction.status === 'cancel'" class="ml-auto"><span class="box bg-secondary">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                                                <p v-if="auction.status === 'wait'" class="ml-auto"><span class="blue-box02">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                                                <p v-if="auction.status === 'diag'" class="ml-auto"><span class="box bg-success bg-opacity-75">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                                                <p v-if="auction.status === 'ask'" class="ml-auto"><span class="box bg-warning bg-opacity-75">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                                                <p v-if="auction.status === 'ing'" class="ml-auto"><span class="box bg-danger">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                                                <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
+                                                                <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
                                                             </div>
                                                         </div>
                                                     </li>
@@ -150,6 +150,7 @@ import { initReviewSystem } from '@/composables/review';
 import { cmmn } from '@/hooks/cmmn';
 import { useStore } from 'vuex';
 
+const { wicas } = cmmn();
 const { auctionsData, getAuctions } = useAuctions();
 const { getUserReview , deleteReviewApi , reviewsData } = initReviewSystem(); 
 const { amtComma } = cmmn();

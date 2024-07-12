@@ -1,3 +1,5 @@
+import { ref, computed, onMounted, reactive, onUnmounted , inject } from 'vue';
+
 export function cmmn() {
     const numberToKoreanUnit = (input) =>  {
         const units = ["", "만", "억", "조", "경"];
@@ -1540,6 +1542,48 @@ export function cmmn() {
         }
     }
     //End of //public wicaData
+
+    /**
+     * 
+     *  timer = setInterval(() => {
+        currentTime.value = new Date();
+        updateAuctionTimes(auctionsData.value);
+        updateAuctionTimes(favoriteAuctionsData.value);
+        updateAuctionTimes(bidsData.value);
+    }, 1000);} 
+    */
+    const updateAuctionTimes = (auction) => {
+        console.log(auction);
+        auction.forEach((auction) => {
+            auction.timeLeft = calculateTimeLeft(auction);
+        });
+    };
+
+    const padZero = (num) => {
+        return num < 10 ? '0' + num : num;
+      };
+
+    //시간 카운트
+    const calculateTimeLeft = (auction) => {
+        const currentTime = ref(new Date());
+        const finalAtDate = new Date(auction.final_at);
+        const diff = finalAtDate.getTime() - currentTime.value.getTime();
+        if (auction.status !== 'ing' || !auction.final_at || diff < 0) {
+            return {
+                days: 0,
+                hours: '00',
+                minutes: '00',
+                seconds: '00'
+            };
+        }
+        return {
+            days: Math.floor(diff / (24 * 3600000)),
+            hours: padZero(Math.floor((diff % (24 * 3600000)) / 3600000)),
+            minutes: padZero(Math.floor((diff % 3600000) / 60000)),
+            seconds: padZero(Math.floor((diff % 60000) / 1000)),
+        };
+    };
+    //End of updateAuctionTimes
     
     return {
       numberToKoreanUnit,
@@ -1550,6 +1594,7 @@ export function cmmn() {
       splitDate,
       getDayOfWeek,
       formatDateAndTime,
+      updateAuctionTimes,
       wica,
       wicac,
       wicaLabel,

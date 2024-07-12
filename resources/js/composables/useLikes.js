@@ -19,7 +19,7 @@ export default function useLikes() {
             like
         }
         return wicac.conn()
-        .log() // 로그 출력
+        //.log() // 로그 출력
         .url(`/api/likes`)
         .param(form)
         .callback(function(result) {       
@@ -28,11 +28,10 @@ export default function useLikes() {
         .post(); 
     }
 
-    //pagination 안한 전체 데이터 
+    //pagination 안한 전체 데이터 - 사용자별
     const getAllLikes = async(likeableType = 'Auction', userId = null) => {
-        console.log(userId);
         return wicac.conn()
-        .log()
+        //.log()
         .url(`/api/likes`)
         .where([`likes.user_id:${userId}`])
         .pageLimit(10000)
@@ -59,7 +58,7 @@ export default function useLikes() {
         while (hasMorePages) {
             try {
                 const result = await wicac.conn()
-                    .log() // 로그 출력
+                    //.log() // 로그 출력
                     .url(`/api/likes`)
                     .where(apiList)
                     .page(`${page}`) // 페이지 0 또는 주석 처리시 기능 안함
@@ -90,11 +89,12 @@ export default function useLikes() {
     };
 
     const deleteLike = (id => {
-        wicac.conn()
+        return wicac.conn()
         .url(`/api/likes/${id}`)
         //.log()
         .callback(function(result){
             console.log(result);
+            return result;
         })
         .delete();
 

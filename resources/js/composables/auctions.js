@@ -1,5 +1,4 @@
 import { reactive, ref,inject } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import store from "../store";
 import useUsers from "./users";
@@ -41,7 +40,7 @@ export default function useAuctions() {
 
         return wicac.conn()
         .url(`/api/auctions`)
-        .log()
+        //.log()
         .where(apiList)
         .order([
             [`${column}`,`${direction}`]
@@ -55,6 +54,44 @@ export default function useAuctions() {
         })
         .get();
 
+    }
+
+    const getAuctionsByDealer = async (page = 1 , status="all") => {
+        const apiList = ['auctions.status:whereIn:ing,wait'];
+
+        if(status != 'all'){
+            apiList.push(`auctions.status:${status}`)
+        }
+        let request = wicac.conn()
+            .log()
+            .url(`/api/auctions`)
+            .where(apiList)
+            .with(['bids', 'likes']);
+    
+        if(page == "all"){
+            request = request.pageLimit(10000);
+        } else{
+            request = request.page(`${page}`)
+        }
+    
+        return request.callback(function(result) {
+            auctionsData.value = result.data;
+            pagination.value = result.rawData.data.meta;
+            return result;
+        }).get();
+    }
+
+    const getAuctionsByDealerLike = async (page = 1 , userId = null) => {
+        return wicac.conn()
+        .log()
+        .url(`/api/auctions`)
+        .with(['likes'])
+        .where([`likes.user_id:whereIn:${userId}`])
+        .page(`${page}`)
+        .callback(function(result) {
+            return result;
+        })
+        .get();
     }
 
     const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
@@ -90,7 +127,7 @@ export default function useAuctions() {
         } else {
     
             return wicac.conn()
-            .log() //로그 출력
+            //.log() //로그 출력
             .url(`/api/auctions`) //호출 URL
             .with(['bids','likes'])
             .where(apiList) 
@@ -155,7 +192,7 @@ const getStatusAuctionsCnt = async(
 const getAuctionById = async (id) => {
     
     return wicac.conn()
-    .log() //로그 출력
+    //.log() //로그 출력
     .url(`/api/auctions/${id}`) //호출 URL
     .with(['bids','reviews','likes'])
     //.page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
@@ -173,7 +210,6 @@ const getAuctionById = async (id) => {
             auction.value.dealer_name = null; 
         } 
         return result;
-        console.log(result);
     })
     .get();
 
@@ -223,37 +259,34 @@ const refreshCarInfo = async () => {
     processing.value = true;
     validationErrors.value = {};
 
-    try {
-        const carDetails = JSON.parse(localStorage.getItem('carDetails'));
-        if (!carDetails || !carDetails.owner || !carDetails.no) {
-            throw new Error("Owner and No fields are required in carDetails");
-        }
-
-        console.log("Refreshing with:", carDetails);
-
-        const response = await axios.post('/api/auctions/carInfo', {
-            owner: carDetails.owner,
-            no: carDetails.no,
-            forceRefresh: 'true'
-        });
-
-        localStorage.setItem('carDetails', JSON.stringify(response.data.data));
-        console.log("Updated carDetails:", response.data.data);  
-
-
-        const lastRefreshTimes = JSON.parse(localStorage.getItem('lastRefreshTimes')) || {};
-        lastRefreshTimes[`${carDetails.owner}-${carDetails.no}`] = new Date().toISOString();
-        localStorage.setItem('lastRefreshTimes', JSON.stringify(lastRefreshTimes));
-
-    } catch (error) {
-        console.error(error);
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;  
-        }
-        throw error;  
-    } finally {
-        processing.value = false;
+    const carDetails = JSON.parse(localStorage.getItem('carDetails'));
+    if (!carDetails || !carDetails.owner || !carDetails.no) {
+        throw new Error("Owner and No fields are required in carDetails");
     }
+
+    wicac.conn()
+    .url(`/api/auctions/carInfo`)
+    .param({
+        owner: carDetails.owner,
+        no: carDetails.no,
+        forceRefresh: 'true'
+    })
+    .callback(function (result) {
+        if(result.isError){
+            validationErrors.value = result.rawData.response.data.errors;
+            throw new Error;          
+        } else {
+            console.log(result);
+            localStorage.setItem('carDetails', JSON.stringify(result.data));
+            console.log("Updated carDetails:", result.data);  
+            const lastRefreshTimes = JSON.parse(localStorage.getItem('lastRefreshTimes')) || {};
+            lastRefreshTimes[`${carDetails.owner}-${carDetails.no}`] = new Date().toISOString();
+            localStorage.setItem('lastRefreshTimes', JSON.stringify(lastRefreshTimes));
+        }
+        processing.value = false;
+    })
+    .post();
+
 };
 
 
@@ -262,19 +295,21 @@ const AuctionCarInfo = async (carInfoForm) => {
     processing.value = true;
     validationErrors.value = {};
   
-    try {
-      const response = await axios.post('/api/auctions/carInfo', carInfoForm);
-      return response.data; // response 데이터를 반환
-    } catch (error) {
-      console.error(error);
-      if (error.response?.data) {
-        validationErrors.value = error.response.data.errors;
-      } else {
-        throw new Error('Unknown error');
-      }
-    } finally {
-      processing.value = false;
-    }
+    return await wicac.conn()
+    .url(`/api/auctions/carInfo`)
+    .param(carInfoForm)
+    .callback(function (result) {
+        if(result.isError){
+            processing.value = false;
+            validationErrors.value = result.rawData.response.data.errors;
+            throw new Error;          
+        } else {
+            processing.value = false;
+            return result;
+        }
+    })
+    .post();
+
   };
   
 
@@ -282,9 +317,7 @@ const AuctionCarInfo = async (carInfoForm) => {
     if (processing.value) return;
     processing.value = true;
     validationErrors.value = {};
-    console.log('auctionsData=====');
-    console.log(auctionData.auction.owner_name);
-    console.log(auction.ownerName);
+
     let payload = {
         auction : {
             owner_name: auctionData.auction.owner_name,
@@ -300,9 +333,8 @@ const AuctionCarInfo = async (carInfoForm) => {
             status: auctionData.auction.status
         }
     }
-    console.log('====');
-    console.log(payload);
 
+    /*
     const formData = new FormData();
     formData.append('auction', JSON.stringify(payload.auction));
     if(auction.file_user_owner){
@@ -310,8 +342,7 @@ const AuctionCarInfo = async (carInfoForm) => {
     }
     //const fileResult = await fileUserOwnerUpdate(userData.file_user_owner,userData.id);
 
-    console.log('formData=====');
-    console.log(formData);
+    
     
     return wicac.conn()
     .url(`/api/auctions`)
@@ -328,6 +359,30 @@ const AuctionCarInfo = async (carInfoForm) => {
         }
     })
     .post();
+    */
+    return wicac.conn()
+    .url(`/api/auctions`)
+    .param(payload)
+    .callback(function (result) {
+        if(result.isError){
+            validationErrors.value = result.rawData.response.data.errors;
+            //fileUserOwnerDeleteById(userData.id);
+            processing.value = false;
+            throw new Error;          
+        } else {
+            wica.ntcn(swal)
+            .title('')
+            .useHtmlText()
+            .icon('I')
+            .callback(function(result) {
+                //console.log(result);
+            }).alert('경매 신청이 완료되었습니다.');
+            processing.value = false;
+            return result.isSuccess;
+        }
+    })
+    .post();
+    
 
 };
 //재경매- (희망가) 변경
@@ -341,23 +396,27 @@ const AuctionReauction = async (id, data) => {
         auction: data
     };
 
-    try {
-        console.log(`Updating auction id: ${id} with data:`, data);
-        const response = await axios.put(`/api/auctions/${id}`, requestData);
-
-        console.log('response:', response.data);
-        auction.value = response.data;
-    } catch (error) {
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;
+    wicac.conn()
+    .url(`/api/auctions/${id}`) 
+    .param(requestData)
+    .callback(function(result) {
+        console.log('wicac.conn callback ' , result);
+        if(result.isError){
+            validationErrors.value = result.rawData.response.data.errors;
+            wica.ntcn(swal)
+            .title('매물 상태 업데이트 중 오류가 발생하였습니다.')
+            .useHtmlText()
+            .icon('E')
+            .callback(function(result) {
+                //console.log(result);
+            }).alert('관리자에게 문의해주세요.');
+        } else {
+            auction.value = result.data;
         }
-        swal({
-            icon: 'error',
-            title: 'Failed to update auction status'
-        });
-    } finally {
         isLoading.value = false;
-    }
+    })
+    .put();
+    
 };
 //수정
 const updateAuction = async (id,auction) => {
@@ -434,6 +493,7 @@ const updateAuction = async (id,auction) => {
 
 //딜러 선택
 const chosenDealer = async (id, data) => {
+    console.log('=====딜러선택------==================');
     if (isLoading.value) return;
 
     isLoading.value = true;
@@ -443,22 +503,27 @@ const chosenDealer = async (id, data) => {
         auction: data
     };
 
-    try {
-        console.log(`Updating auction id: ${id} with data:`, data);
-        const response = await axios.put(`/api/auctions/${id}`, requestData);
-        console.log('response:', response.data);
-        auction.value = response.data;
-    } catch (error) {
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;
-        }
-        swal({
-            icon: 'error',
-            title: 'Failed to update auction status'
-        });
-    } finally {
-        isLoading.value = false;
-    }
+    wicac.conn()
+        .url(`/api/auctions/${id}`) 
+        .param(requestData)
+        .callback(function(result) {
+            console.log('wicac.conn callback ' , result);
+            if(result.isError){
+                validationErrors.value = result.rawData.response.data.errors;
+                wica.ntcn(swal)
+                .title('매물 상태 업데이트 중 오류가 발생하였습니다.')
+                .useHtmlText()
+                .icon('E')
+                .callback(function(result) {
+                    //console.log(result);
+                }).alert('관리자에게 문의해주세요.');
+            } else {
+                auction.value = result.data;
+            }
+            isLoading.value = false;
+        })
+        .put();
+
 };
     
 // 상태 업데이트 
@@ -489,26 +554,6 @@ const updateAuctionStatus = async (id, status) => {
     })
     .put();
     
-    /*try {
-        console.log(`status : ${status} auction id : ${id}`);
-        const response = await axios.put(`/api/auctions/${id}`, data);
-        console.log('response:', response.data);
-        auction.value = response.data;
-        swal({
-            icon: 'success',
-            title: 'Auction status updated successfully'
-        });
-    } catch (error) {
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;
-        }
-        swal({
-            icon: 'error',
-            title: 'Failed to update auction status'
-        });
-    } finally {``
-        isLoading.value = false;
-    }*/
 };
 
  const updateAuctionPrice = async (auctionId, amount) => {
@@ -523,27 +568,28 @@ const updateAuctionStatus = async (id, status) => {
         }
     };
 
-    try {
-        console.log(`Updating auction price: ${amount}`);
-        const response = await axios.put(`/api/auctions/${auctionId}`, data);
-        console.log('response:', response.data);
-        swal({
-            icon: 'success',
-            title: 'Auction price updated successfully'
-        });
-        return response.data;
-    } catch (error) {
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;
+    return await wicac.conn()
+    .url(`/api/auctions/${auctionId}`)
+    .param(data)
+    .callback(function (result) {
+        if(result.isError){
+            processing.value = false;
+            validationErrors.value = result.rawData.response.data.errors;
+            wica.ntcn(swal)
+                .title('매물 가격 업데이트 중 오류가 발생하였습니다.')
+                .useHtmlText()
+                .icon('E')
+                .callback(function(result) {
+                    //console.log(result);
+            }).alert('관리자에게 문의해주세요.');
+            throw new Error;          
+        } else {
+            processing.value = false;
+            return result;
         }
-        swal({
-            icon: 'error',
-            title: 'Failed to update auction price'
-        });
-        throw error;
-    } finally {
-        isLoading.value = false;
-    }
+    })
+    .put();
+
 };
 
 const deleteAuction = async (id,urlPath) => {
@@ -588,8 +634,42 @@ const deleteAuction = async (id,urlPath) => {
 
 };
 
+const getDoneAuctions = async (bidsNumList) => {
+    const apiList = [];
+    apiList.push(`auctions.status:done`);
+    //apiList.push(`auctions.bid_id:>:0`);
+    apiList.push(`auctions.bid_id:whereIn:${bidsNumList}`);
+    return wicac.conn()
+        .url(`/api/auctions`)
+        .log()
+        .where(apiList)
+        .with([
+            'bids',
+        ])
+       
+        .pageLimit(99999) 
+        .callback(function(result) {
+            if(result.isSuccess){
+                return result.data;
+            }else{
+                wica.ntcn(swal)
+                .title('오류가 발생하였습니다.')
+                .useHtmlText()
+                .icon('I') //E:error , W:warning , I:info , Q:question
+                .alert('관리자에게 문의해주세요.');
+            }
+        })
+        .get();
+
+        /*
+        .addWhere('auctions.bid_id','116')
+        .addOrWhere('auctions.bid_id','117')
+        */
+};
+
 
     return {
+        getAuctionsByDealerLike,
         adminGetAuctions,
         adminGetDepositAuctions,
         getStatusAuctionsCnt,
@@ -614,7 +694,9 @@ const deleteAuction = async (id,urlPath) => {
         updateAuctionStatus,
         createAuction,
         refreshCarInfo,
-        updateAuction
+        updateAuction,
+        getAuctionsByDealer,
+        getDoneAuctions
     };
     
 }

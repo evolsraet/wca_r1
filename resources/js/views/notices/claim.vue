@@ -59,7 +59,7 @@
       </div>
       <div class="main-container py-5 text-center container"v-else-if="isDealer">
           <div class="search-type">
-                        <input type="text" placeholder="모델명,차량번호,지역">
+                        <input type="text" class="border-6" placeholder="모델명,차량번호,지역">
                         <button type="button" class="search-btn">검색</button>
                     </div>
                 </div>
@@ -154,6 +154,9 @@
   </script>
 
 <style scoped>
+.search-type input{
+  padding: 0 20px 0 20px !important;
+}
 table {
   border-collapse: collapse;
   border-spacing: 0;

@@ -12,6 +12,8 @@ import "bootstrap";
 import axios from "axios";
 window.axios = axios;
 
+import store from "./store";
+
 window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 window.axios.defaults.withCredentials = true;
 window.axios.interceptors.response.use(
@@ -23,11 +25,17 @@ window.axios.interceptors.response.use(
             error.response?.status === 403 ||
             error.response?.status === 419
         ) {
+            localStorage.clear;
+            store.dispatch("auth/logout");
+            alert('장시간 미사용으로 로그인 정보가 올바르지 않습니다.\n로그아웃을 진행합니다.');
+            location.assign("/");
+            /*
+            //TODO: 기존 로직시 무한로딩에 빠지는 문제가 있어 로그아웃 처리로 변경했음, 이대로 문제 없는지 체크 필요
             if (location.pathname !== "/login") {
                 location.assign("/login");
             }
+            */
         }
-
         return Promise.reject(error);
     }
 );

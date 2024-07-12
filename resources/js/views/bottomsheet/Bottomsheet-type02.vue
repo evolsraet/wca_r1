@@ -10,25 +10,29 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
+import { ref, onMounted, onBeforeUnmount } from 'vue';
 
 const props = defineProps({
-  initial: String,
+  initial: {
+    type: String,
+    default: 'half'
+  },
   dismissable: Boolean
 });
 
-const showHead = ref(true); 
-const showBottomSheet = ref(false);
+const showHead = ref(props.initial !== 'half');
+const showBottomSheet = ref(props.initial === 'half');
 const isDragging = ref(false);
 const startY = ref(0);
 const currentY = ref(0);
 const deltaY = ref(0);
-const sheetHeight = ref(200); 
+const sheetHeight = ref(props.initial === 'half' ? window.innerHeight / 2 : 30);
 let animationFrame = null;
 
 const sheet = ref(null);
 
-const toggleSheet = () => {
+const toggleSheet = (event) => {
+  if (window.innerWidth >= 992) return;
   if (showHead.value) {
     expandSheet();
   } else {
@@ -44,7 +48,7 @@ const closeSheet = () => {
 };
 
 const startDrag = (event) => {
-  if (window.innerWidth >= 992) return; // Disable dragging on larger screens
+  if (window.innerWidth >= 992) return;
   isDragging.value = true;
   startY.value = event.touches ? event.touches[0].clientY : event.clientY;
   document.body.style.overflow = 'hidden';
@@ -58,14 +62,21 @@ const onDrag = (event) => {
   if (!isDragging.value) return;
   currentY.value = event.touches ? event.touches[0].clientY : event.clientY;
   deltaY.value = startY.value - currentY.value;
+
+  if (showBottomSheet.value && deltaY > 0) {
+    // half 상태일 때 위로 드래그하는 것을 막음
+    return;
+  }
+
   cancelAnimationFrame(animationFrame);
   animationFrame = requestAnimationFrame(() => {
-    const newHeight = Math.max(20, sheetHeight.value - deltaY.value);
+    const newHeight = Math.max(20, sheetHeight.value + deltaY.value);
     sheet.value.style.height = `${newHeight}px`;
   });
 };
 
-const endDrag = () => {
+const endDrag = (event) => {
+  if (!isDragging.value) return;
   isDragging.value = false;
   document.body.style.overflow = '';
   document.removeEventListener('mousemove', onDrag);
@@ -73,26 +84,43 @@ const endDrag = () => {
   document.removeEventListener('touchmove', onDrag);
   document.removeEventListener('touchend', endDrag);
 
-  if (sheetHeight.value - deltaY.value > window.innerHeight * 0.2) {
+  const finalHeight = Math.max(20, sheetHeight.value + deltaY.value);
+
+  const oneThirdHeight = window.innerHeight / 3;
+  const oneTenthHeight = window.innerHeight / 10;
+
+  if (showHead.value && finalHeight > sheetHeight.value - oneTenthHeight) {
     expandSheet();
+  } else if (finalHeight > oneThirdHeight) {
+    showBottomSheet.value = true;
+    showHead.value = false;
+    sheetHeight.value = window.innerHeight / 3;
+    requestAnimationFrame(() => {
+      sheet.value.style.height = `${sheetHeight.value}px`;
+    });
   } else {
     collapseSheet();
   }
+
   deltaY.value = 0;
 };
 
 const expandSheet = () => {
   showBottomSheet.value = true;
   showHead.value = false;
-  sheetHeight.value = 'auto';
-  sheet.value.style.height = 'auto';
+  sheetHeight.value = window.innerHeight * 0.1;
+  requestAnimationFrame(() => {
+    sheet.value.style.height = `${sheetHeight.value}px`;
+  });
 };
 
 const collapseSheet = () => {
   showBottomSheet.value = false;
   showHead.value = true;
   sheetHeight.value = 30;
-  sheet.value.style.height = `${sheetHeight.value}px`;
+  requestAnimationFrame(() => {
+    sheet.value.style.height = `${sheetHeight.value}px`;
+  });
 };
 
 const handleResize = () => {
@@ -108,7 +136,11 @@ const handleResize = () => {
 };
 
 onMounted(() => {
-  handleResize();
+  if (props.initial === 'half') {
+    expandSheet();
+  } else {
+    collapseSheet();
+  }
   window.addEventListener('resize', handleResize);
 });
 
@@ -116,6 +148,7 @@ onBeforeUnmount(() => {
   window.removeEventListener('resize', handleResize);
 });
 </script>
+
 <style scoped>
 .sheet-wrap {
   position: fixed;
@@ -135,8 +168,7 @@ onBeforeUnmount(() => {
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
   box-shadow: 0 -2px 11px rgba(0, 0, 0, 0.1), 0 -2px 7px rgba(0, 0, 0, 0.08);
-  max-height: 280px;
-  transition: height 0.3s ease;
+  transition: height 0.3s ease-in-out, transform 0.3s ease-in-out;
   overflow: hidden;
 }
 
@@ -145,8 +177,8 @@ onBeforeUnmount(() => {
 }
 
 .sheet.half {
-  height: auto;
-  max-height: auto;
+  height: 50vh;
+  max-height: 50vh;
 }
 
 .sheet.dragging {
@@ -155,7 +187,7 @@ onBeforeUnmount(() => {
 
 .handle {
   display: block;
-  height: 4px;
+  height: 7px;
   width: 42px;
   border-radius: 4px;
   background: rgba(0, 0, 0, 0.1);
@@ -199,9 +231,9 @@ onBeforeUnmount(() => {
     height: auto !important;
     transition: none;
   }
-.handle{
-  display: none;
-}
+  .handle {
+    display: none;
+  }
   .handle-head {
     cursor: default;
   }

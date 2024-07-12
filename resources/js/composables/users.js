@@ -45,28 +45,6 @@ export default function useUsers() {
         password_confirmation:"",
     });
 
-    const getUsers = async (
-        page = 1,
-        search_id = '',
-        search_title = '',
-        search_global = '',
-        order_column = 'created_at',
-        order_direction = 'desc'
-    ) => {
-        axios.get('/api/users?page=' + page +
-            '&search_id=' + search_id +
-            '&search_title=' + search_title +
-            '&search_global=' + search_global +
-            '&order_column=' + order_column +
-            '&order_direction=' + order_direction)
-            .then(response => {
-                users.value = response.data;
-                console.log(users.value);
-            })
-        
-            
-    }
-
     const getUserStatus = async(
         stat = 'all'
     )=>{
@@ -133,33 +111,6 @@ export default function useUsers() {
         } catch (error) {
             throw error;
         }
-    }
-    
-
-    const storeUser = async (user) => {
-        if (isLoading.value) return;
-
-        isLoading.value = true
-        validationErrors.value = {}
-
-        let serializedPost = new FormData()
-        for (let item in user) {
-            if (user.hasOwnProperty(item)) {
-                serializedPost.append(item, user[item])
-            }
-        }
-        
-        axios.post('/api/users', serializedPost)
-            .then(response => {
-                router.push({name: 'users.index'})
-                wica.ntcn(swal).icon('S').title('정상 처리 되었습니다.').fire();
-            })
-            .catch(error => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors
-                }
-            })
-            .finally(() => isLoading.value = false)
     }
 
     const updateUser = async (editForm, id) => {
@@ -381,29 +332,6 @@ export default function useUsers() {
         })
         .put();
     }
-    
-    /**console.log(result);
-    await axios.put(`/api/users/${id}`, formData,{
-        headers:{ 
-            'Content-Type': 'multipart/form-data'
-        }
-    })
-    .then(response => {
-        wica.ntcn(swal)
-            .icon('I') //E:error , W:warning , I:info , Q:question
-            .callback(function(result) {
-                if (result.isOk) {
-                    router.push({ name: 'users.index' });
-                }
-            })
-            .alert('회원정보가 정상적으로 수정되었습니다.');
-    })
-    .catch(error => {
-        if (error.response?.data) {
-            validationErrors.value = error.response.data.errors;
-        }
-    })
-    .finally(() => isLoading.value = false); */
 
     const deleteUser = async (id) => {
         wica.ntcn(swal)
@@ -412,9 +340,10 @@ export default function useUsers() {
         .icon('W') //E:error , W:warning , I:info , Q:question
         .callback(function(result) {
             if(result.isOk){
-                console.log(result);
-                axios.delete('/api/users/' + id)
-                    .then(response => {
+                wicac.conn()
+                .url(`/api/users/${id}`) 
+                .callback(function(result2) {
+                    if(result2.isSuccess){
                         wica.ntcn(swal)
                         .icon('I') //E:error , W:warning , I:info , Q:question
                         .callback(function(result) {
@@ -423,13 +352,14 @@ export default function useUsers() {
                             }
                         })
                         .alert('회원정보가 정상적으로 삭제되었습니다.');
-                    })
-                    .catch(error => {
+                    }else{
                         wica.ntcn(swal)
                         .title('오류가 발생하였습니다.')
                         .icon('E') //E:error , W:warning , I:info , Q:question
                         .alert('관리자에게 문의해주세요.');
-                    })
+                    }
+                })
+                .delete();
             }
         })
         .confirm('삭제된 정보는 복구할 수 없습니다.');   
@@ -442,10 +372,8 @@ export default function useUsers() {
         getUserStatus,
         users,
         user,
-        getUsers,
         getUser,
         adminGetUsers,
-        storeUser,
         updateMyInfo,
         updateUser,
         deleteUser,

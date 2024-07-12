@@ -7,18 +7,18 @@
                     <h3 class="review-title">이용후기 관리</h3>
                     <div class="tab-nav my-4">
                         <ul>
-                            <li class="col-4"><a href="#" @click="setActiveTab('available')" :class="{ 'active': activeTab === 'available' }" title="작성한 이용후기">작성 가능한 이용 후기(<span>{{ totalAuction }}</span>)</a></li>
-                            <li class="col-4"><a href="#" @click="setActiveTab('written')" :class="{ 'active': activeTab === 'written' }" title="작성 가능한 이용후기">작성한 이용후기(<span>{{ totalReview }}</span>)</a></li>
+                            <li class="col-4"><a href="#" @click="setActiveTab('available')" :class="{ 'active': activeTab === 'available' }" title="작성한 이용후기">작성 가능한 이용 후기( <span>{{ totalAuction || 0 }}</span> )</a></li>
+                            <li class="col-4"><a href="#" @click="setActiveTab('written')" :class="{ 'active': activeTab === 'written' }" title="작성 가능한 이용후기">작성한 이용후기( <span>{{ totalReview || 0 }}</span> )</a></li>
                         </ul>
                         <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                     </div>
                     <div v-if="activeTab === 'available'" class="row">
-                        <div class="col-md-3 p-2 mb-2" v-if="auctionsData.length > 0" v-for="auction in auctionsData" :key="auction.id" @click="navigateToDetail(auction.id)">
+                        <div class="col-md-3 p-2 mb-2 hover-ac pointer" v-if="auctionsData.length > 0" v-for="auction in auctionsData" :key="auction.id" @click="navigateToDetail(auction.id)">
                             <div class="p-2 card my-auction"> 
-                                <div class="review-image">
+                                    <div class="card-img-top-placeholder">
+                                        <img src="../../../img/car_example.png">
+                                    </div> 
                                     <p class="review-date">{{ splitDate(auction.updated_at) }} ({{ getDayOfWeek(auction.updated_at) }})</p>
-                                    <div class="card-img-top-placeholder"></div> 
-                                </div>
                                 <div class="card-body">
                                     <div class="popup-menu" v-show="isMenuVisible">
                                         <ul>
@@ -64,7 +64,9 @@
                             <div class="card my-auction p-2">
                                 <div class="review-image02">
                                     <p class="review-date">{{ splitDate(review.updated_at) }} ({{ getDayOfWeek(review.updated_at) }})</p>
-                                    <div class="card-img-top-placeholder mt-2"></div> 
+                                    <div class="card-img-top-placeholder mt-2">
+                                        <img src="../../../img/car_example.png">
+                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <p class="more-view" @click="toggleMenu(review.id)">moreview</p>
@@ -232,15 +234,8 @@ onMounted(async () => {
     transform: translateY(-20px); 
     transition: opacity 0.3s ease, transform 0.3s ease; 
 }
-.review-image02{
-    padding: 10px;
-}
-.review-content .card:hover {
-    box-shadow: 4px 3px 13px -1px rgba(27, 50, 142, 0.2) !important;
-}
 .review-image02 img {
     width: 100%;
-    height: 11rem;
     display: block;
     border-right: 1px solid #ddd;
     object-fit: cover;

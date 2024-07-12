@@ -172,4 +172,5 @@ onBeforeUnmount(() => {
     height: 3px;
     background-color: #dbdbdb;
 }
+
 </style>

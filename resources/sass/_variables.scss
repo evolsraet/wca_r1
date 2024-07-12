@@ -169,62 +169,67 @@ background-color: $sub-color01 !important;
 /* box 스타일 */
 .blue-box {
     display: inline-block;
-    width: 55px;
+    width: auto;
     height: 25px;
     margin-right: 10px;
-    border-radius: 15px;
+    margin-bottom: 10px;
+    border-radius: 16px;
     background-color:#4264ea3d !important;
     color: blue !important;
     font-size: 14px;
     line-height: 25px;
     text-align: center;
     font-weight: 500;
-    padding: 0 !important;
+    padding-right:8px;
+    padding-left:8px;
 }
 .blue-box02{
     display: inline-block;
-    width: 55px;
+    width: auto;
     height: 25px;
     margin-right: 10px;
-    border-radius: 15px;
+    border-radius: 16px;
     background-color:blue !important;
     color: rgb(255, 255, 255) !important;
     font-size: 14px;
     line-height: 25px;
     text-align: center;
     font-weight: 500;
-    padding: 0 !important;
+    padding-right:8px;
+    padding-left:8px;
 }
 .box{
     display: inline-block;
-    width: 55px;
+    width: auto;
     height: 25px;
     margin-right: 10px;
-    border-radius: 15px;
+    border-radius: 16px;
     color: rgb(255, 255, 255) !important;
     font-size: 14px;
     line-height: 25px;
     text-align: center;
     font-weight: 500;
-    padding: 0 !important;
+    padding-right:8px;
+    padding-left:8px;
 }
 .red-box {
     display: inline-block;
-    width: 55px;
+    width: auto;
     height: 25px;
-    border-radius: 8px;
+    border-radius: 16px;
     background-color:#da31374b !important;
     color:  $primary !important;
     font-size: 14px;
     line-height: 25px;
     text-align: center;
     font-weight: 500;
-    padding: 0 !important;
+    padding-right:8px;
+    padding-left:8px;
 }
 
 .red-box-type02 {
     display: inline-block;
-    width: 120px;
+    width: auto;
     height: 25px;
     border-radius: 10px;
     background-color: #fbeaea !important;
@@ -233,7 +238,8 @@ background-color: $sub-color01 !important;
     line-height: 25px;
     text-align: center;
     font-weight: 500;
-    padding: 0 !important;
+    padding-right:8px;
+    padding-left:8px;
     margin: 0 -8px 0 8px;
     transition: box-shadow 0.3s ease-in-out;
 }
@@ -269,21 +275,22 @@ background-color: $sub-color01 !important;
 
 .gray-box {
     display: inline-block;
-    width: 55px;
+    width: auto;
     height: 25px;
     margin-right: 10px;
-    border-radius: 10px;
+    border-radius: 16px;
     background: #e5e7eb !important;
     color: #aaaebe !important;
     font-size: 14px;
     line-height: 25px;
     text-align: center;
-    padding: 0 !important;
+    padding-right:8px;
+    padding-left:8px;
 }
 
 .auc-gray {
     display: inline-block;
-    width: 85px;
+    width: auto;
     height: 30px;
     margin-right: 10px;
     border-radius: 20px;
@@ -291,13 +298,14 @@ background-color: $sub-color01 !important;
     color: #ffffff !important;
     font-size: 15px;
     text-align: center;
-    padding: 0 !important;
+    padding-right:8px;
+    padding-left:8px;
     line-height: 27px;
 }
 
 .auc-blue {
     display: inline-block;
-    width: 85px;
+    width: auto;
     height: 30px;
     margin-right: 10px;
     border-radius: 20px;
@@ -305,13 +313,14 @@ background-color: $sub-color01 !important;
     color: rgb(255, 255, 255) !important;
     font-size: 15px;
     text-align: center;
-    padding: 0 !important;
+    padding-right:8px;
+    padding-left:8px;
     line-height: 27px;
 }
 
 .auc-black {
     display: inline-block;
-    width: 85px;
+    width: auto;
     height: 30px;
     margin-right: 10px;
     border-radius: 20px;
@@ -319,7 +328,8 @@ background-color: $sub-color01 !important;
     color: #ffffff !important;
     font-size: 15px;
     text-align: center;
-    padding: 0 !important;
+    padding-right:8px;
+    padding-left:8px;
     line-height: 27px;
 }
 .nav-gray-box{
@@ -334,7 +344,7 @@ background-color: $sub-color01 !important;
 
 .gray-bl-box {
     display: inline-block;
-    width: 55px;
+    width: auto;
     height: 25px;
     border-radius: 6px;
     background:#aaaebe44 !important;
@@ -342,7 +352,8 @@ background-color: $sub-color01 !important;
     font-size: 14px;
     line-height: 25px;
     text-align: center;
-    padding: 0 !important;
+    padding-right:8px;
+    padding-left:8px;
 }
 
 /*비활성화 상태 */

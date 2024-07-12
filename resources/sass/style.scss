@@ -43,10 +43,10 @@ video {
 	margin-left: -16px;
 	margin-right: -16px;
 }
-.review-content .card:hover {
+/*.review-content .card:hover {
 	box-shadow: 0 0 14px 4px rgba(27, 50, 142, 0.2) ;
 	transition: box-shadow 0.5s ease;
-}
+}*/
 .sidebar {
 	position: fixed;
 	top: 0;
@@ -1569,10 +1569,11 @@ video {
 .sub-nav {
     background-color:rgba($primary, 0.05) ;
     padding-top: 20px;
-    width: 103%;
     font-size: 18px;
 }
-
+.sub-nav.row{
+    margin-right: 0px !important;
+}
 .sub-nav .nav-container .nav-item {
     padding-right: 18px;
     padding-left: 20px;
@@ -1727,7 +1728,7 @@ video {
     border: none;
     width: 35px;
     height: 35px;
-    line-height: 19px;
+    line-height: 25px;
     text-align: center; 
     color: $primary;
 }
@@ -1845,13 +1846,45 @@ video {
 }
 
 
-.card-img-top-placeholder {
+/*.card-img-top-placeholder {
     width: 100%; 
     height: 180px; 
     background-image: url('../img/car_example.png'); 
     background-size: cover; 
     background-position: center;
     border-radius: 6px;
+}
+.card-img-top-placeholder {
+    width: 100%; 
+    height: 180px; 
+    border-radius: 6px;
+    overflow: hidden;
+}
+    */
+/* 옥션 카드 이미지 */
+.card-img-top-placeholder {
+    overflow: hidden;
+    height: 200px;
+    background-color: #f7f8fb; 
+    border-radius: 6px;
+}
+.card-img-top-placeholder img {
+    transition: transform 0.3s ease-in-out;
+}
+
+.hover-ac:hover img {
+    transform: scale(1.05);
+    border-radius: 6px;
+}  
+.hover-ac:hover .card-img-top-placeholder{
+    border-radius: 6px;
+}
+
+.card-img-top-placeholder img {
+    width: 100%;
+    height: 100%;
+    border-radius: 6px;
+    object-fit: cover; 
 }
 
 .card-img-demo {
@@ -1879,9 +1912,6 @@ video {
     box-shadow: none !important;
 }
 
-.review-content .card:hover {
-    box-shadow: 6px 8px 9px 3px rgba(27, 50, 142, 0.2) !important;
-}
 
 /*옥션 css -옮김*/
 .review {
@@ -3157,7 +3187,7 @@ input[type="checkbox"] {
     padding: 10px;
     font-size: 16px;
     transition: transform 0.5s ease-in-out;
-    transform: translateY(150%);
+    transform: translateY(200%);
     z-index: 9999;
 }
 
@@ -3765,7 +3795,9 @@ input[type="checkbox"] {
     border-radius:6px;
     cursor: pointer;
 }
-
+.shadow02 { 
+    box-shadow: 0px 1px 6px 1px rgb(109 109 109 / 30%);
+}
 
 .slide-up-ani .item .tc-red {
     opacity: 0;
@@ -4072,8 +4104,9 @@ width: 100%;
     color: #ff0000 !important;
     width: 2em !important;
     height: 2em !important;
-    box-shadow: 0 1rem 1rem rgba(0, 0, 0, .15) !important; 
+    box-shadow: 0 2px 9px rgba(0, 0, 0, 0.15) !important;
 }
+
 .review-custom-icon .swal2-icon-content{
     font-size: 1.75em !important;
 }
@@ -4127,7 +4160,9 @@ width: 100%;
     flex-direction: row !important;
     flex-wrap: nowrap !important;
 }
-
+.review-custom-popup{
+    padding: 20px;
+}
 .cmm-review-custom-confirmButton {
     background-color: $sub-color01 !important;
     width: 100% !important;
@@ -4144,4 +4179,9 @@ width: 100%;
 }
 .intro-modal-container .swal2-html-container{
     padding: 2.5em 0.5em 0em !important;
+}
+@media (min-width: 991px){
+    .intro-modal-popup{
+        width: 60%;
+    }
 }

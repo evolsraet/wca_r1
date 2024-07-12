@@ -1,6 +1,6 @@
 <template>
   <!--
-    TODO:allreview에 가격 안나오는문제???
+    TODO:allreview에 판매가 가격 안나오는문제???
   -->
   <div class="container">
     <div class="review">
@@ -20,8 +20,8 @@
         <div class="apply-top text-start">
           <h3 class="review-title">다른 사람들의 이용후기에요</h3>
           <div class="search-type m-0">
-            <input type="text" placeholder="모델명,차량번호,지역">
-            <button type="button" class="search-btn">검색</button>
+            <input type="text" v-model="search_title" placeholder="모델명,차량번호,지역">
+            <button type="button" class="search-btn" @click="searchBtn">검색</button>
           </div>
         </div>
         <div class="row">
@@ -37,7 +37,6 @@
                       <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
                       <span :class="['star-icon', index <= card.rating ? 'filled' : '']"></span>
                   </label>
-                  <span class="d-flex mx-2 rating-score tc-red"></span>
                 </div>
               </div>
               <!-- <h5 class="card-title">차량 종류 들어갈 예정:{{ card.title }}</h5>-->
@@ -47,6 +46,7 @@
                 </div>-->
                 <div>
                 <p class="text-start card-text">{{ card.text }}</p>
+               <!-- <p class="auction-deadline tc-light-gray">판매가<span>12000만원</span></p>-->
                 </div>
                 
               </div>
@@ -103,7 +103,7 @@ const cards = ref([]);
 const currentPage = ref(1); // 현재 페이지 번호
 
 const totalPages = 3; // Adjust based on the number of cards and pagination logic
-
+const search_title = ref('');
 
 const toggleSheet = () => {
   const bottomSheet = document.querySelector('.bottom-sheet');
@@ -124,7 +124,7 @@ const inputCardsValue = () => {
     text: review.content,
   }));
 }
-console.log(cards);
+
 function navigateToDetail(reviewId) {
   console.log(reviewId);
     router.push({ name: 'user.review-detail', params: { id: reviewId } });
@@ -133,7 +133,7 @@ function navigateToDetail(reviewId) {
 async function loadPage(page) { // 페이지 로드
   if (page < 1 || page > reviewPagination.value.last_page) return;
   currentPage.value = page;
-  await getAllReview(page,true); 
+  await getAllReview(page,true,'created_at','desc','all',search_title.value); 
   inputCardsValue();
   window.scrollTo(0,0);
 }
@@ -145,6 +145,9 @@ onMounted(async () => {
   inputCardsValue();
 });
 
+const searchBtn = async() =>{
+    loadPage(1);
+}
 
 onUnmounted(() => {
 });

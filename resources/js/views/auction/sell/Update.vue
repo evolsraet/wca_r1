@@ -53,13 +53,12 @@
   </template>
 <script setup>
 import { ref, computed,onMounted } from 'vue';
-import axios from 'axios';
 import { useRouter } from 'vue-router';
 import { regions, updateDistricts } from '@/hooks/selectBOX.js';
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 
-const { openPostcode , closePostcode} = cmmn();
+const { openPostcode , closePostcode, wicac} = cmmn();
 const { carInfoForm, updateAuction, processing, validationErrors } = useAuctions();
 
 const ownerName = ref('');
@@ -92,13 +91,21 @@ async function auctionEntry() {
     addrdt: addrdt.value
   };
 
-  try {
-    const response = await axios.put(`/api/auctions/${carNumber.value}`, updateData);
-    console.log('Update successful:', response.data);
-    router.push('/sell');
-  } catch (error) {
-    console.error('Failed to update auction:', error);
-  }
+  const response = wicac.conn()
+  .url(`/api/auctions/${carNumber.value}`) 
+  .param(updateData)
+  .callback(function(result) {
+      if(result.isError){
+        wica.ntcn(swal)
+        .title('오류가 발생하였습니다.')
+        .useHtmlText()
+        .icon('I') //E:error , W:warning , I:info , Q:question
+        .alert('관리자에게 문의해주세요.');
+      }else{
+        router.push('/sell');
+      }
+  })
+  .put();
 }
 
 function triggerFileUpload() {

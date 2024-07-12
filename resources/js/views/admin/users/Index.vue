@@ -320,6 +320,9 @@ watch(
 
 </script>
 <style scoped>
+.search-type2 .search-btn{
+    top: 44px !important;
+}
 .sidebar {
     height: 116vh !important;
 }

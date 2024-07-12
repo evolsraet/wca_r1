@@ -24,7 +24,7 @@
         </div>
         <!-- 지역 선택 -->
         <div class="form-group">
-          <label for="sido1">(*필수입력) 지역</label>
+          <label for="sido1"><span class="text-danger">*</span> 지역</label>
           <div class="region">
             <select class="w-100" v-model="selectedRegion" @change="onRegionChange">
               <option value="">시/도 선택</option>
@@ -192,13 +192,14 @@ const auctionEntry = async () => {
   };
 
   try {
-    await createAuction({ auction: auctionData });
-    const textOk = `<div class="enroll_box" style="position: relative;">
-                <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
-                <p class="overlay_text02">경매 신청이 완료되었습니다.</p>
-                <p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>
-              </div>`;
-    wica.ntcn(swal)
+    const result = await createAuction({ auction: auctionData });
+    if(result){
+        const textOk = `<div class="enroll_box" style="position: relative;">
+                  <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
+                  <p class="overlay_text02">경매 신청이 완료되었습니다.</p>
+                  <p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>
+                </div>`;
+      wica.ntcn(swal)
       .useHtmlText() // HTML 태그 인 경우 활성화
       .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
       .addOption({ padding: 20 }) // swal 기타 옵션 추가
@@ -206,8 +207,8 @@ const auctionEntry = async () => {
         window.location.href = '/auction';
       })
       .confirm(textOk);
+    }
   } catch (error) {
-
   }
 };
 
@@ -424,8 +425,8 @@ onMounted(() => {
     cursor: pointer;
     position: absolute;
     right: 0;
-    top: 18%;
-    transform: translateY(-50%);
+    top: 38px;
+    transform: translateY(-49%);
     height: 40px;
     width: 40px;
     border: none;

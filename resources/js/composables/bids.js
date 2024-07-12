@@ -1,5 +1,4 @@
 import { ref, computed, inject } from 'vue';
-import axios from 'axios';
 import { cmmn } from '@/hooks/cmmn';
 
 // 입찰 데이터
@@ -15,7 +14,7 @@ export default function useBid() {
     const isLoading = ref(false);
     const swal = inject('$swal');
     const auctionsData = ref([]);
-    const pagination = ref({});
+    const bidPagination = ref({});
     
     /**
     const getBids = async () => {
@@ -54,7 +53,9 @@ export default function useBid() {
         }
     }; */
 
-    const getBids = async (page = 1 , isSelect = false, userId = 0) => {
+    //isSelect => 선택 차량 (선택,탁송 filter)
+    //isMyBid => 진행 중 입찰 건 filter
+    const getBids = async (page = 1 , isSelect = false, isMyBid = false , userId = 0) => {
         const whereList = [];
         if(isSelect){
             if(userId != 0){
@@ -62,16 +63,18 @@ export default function useBid() {
             }
             
         }
+        if(isMyBid){
+            whereList.push(`auction.status:whereIn:ing,wait`)
+        }
         return wicac.conn()
-            .log()
+            //.log()
             .url(`/api/bids`)
             .with(['auction'])
             .where(whereList)
             .page(`${page}`)
             .callback(function(result) {
-                console.log(result);
                 bidsData.value = result.data;
-                pagination.value = result.rawData.data.meta;
+                bidPagination.value = result.rawData.data.meta;
                 return result.data;
             })
             .get();
@@ -79,32 +82,41 @@ export default function useBid() {
     }
 
     //페이징 안 한 전체 bid
-    const getHomeBids = async () => {
-        const apiList = [];
-
+    const getHomeBids = async (mainIsOk = false) => {
+        const whereList = [];
+        if(mainIsOk){
+            whereList.push(`auction.status:whereIn:ing,wait`)
+        }
         return wicac.conn()
-            .log()
+            //.log()
             .url(`/api/bids`)
             .with(['auction'])
             .pageLimit(10000)
-            //.where(apiList)
+            .where(whereList)
             //.page(`${page}`)
             .callback(function(result) {
                 //console.log(result);
                 bidsData.value = result.data;
-                //pagination.value = result.rawData.data.meta;
+                //bidPagination.value = result.rawData.data.meta;
                 return result.data;
             })
             .get();
 
     } 
     const getBidById = async (id) => {
-        try {
-            const response = await axios.get(`/api/bids/${id}`);
-            return response.data.data;
-        } catch (error) {
-            console.error('Error fetching bid:', error);
-        }
+        return wicac.conn()
+        .url(`/api/bids/${id}`) 
+        .callback(function(result) {
+            if(result.isSuccess){
+                return result.data;
+            }else{
+                wica.ntcn(swal)
+                .title('오류가 발생하였습니다.')
+                .icon('E') //E:error , W:warning , I:info , Q:question
+                .alert('관리자에게 문의해주세요.');
+            }
+        })
+        .get();
     };
 
     // 입찰 건수 
@@ -133,97 +145,73 @@ export default function useBid() {
         isLoading.value = true;
         validationErrors.value = {};
 
-        try {
-            const response = await axios.post("/api/bids", {
-                user_id: userId,
-                bid: {
-                    auction_id: auctionId,
-                    price: bidAmount
-                }
-            });
-
-            console.log("응답 데이터:", response);
-
-            if (response.status === 200 && response.data.status === "ok") {
+        return wicac.conn()
+        .url(`/api/bids`) //호출 URL
+        .param({
+            user_id: userId,
+            bid: {
+                auction_id: auctionId,
+                price: bidAmount
+            }
+        })
+        .callback(function(result) {
+            if(result.isSuccess){
+                isLoading.value = false;
                 return {
                     success: true,
-                    bidId: response.data.data.id,  // 입찰 ID 추출
-                    message: response.data.message
+                    bidId: result.data.id,  // 입찰 ID 추출
+                    message: result.data.message
                 };
-            } else {
-                return {
-                    success: false,
-                    message: response.data.message
-                };
-            }
-        } catch (error) {
-            console.error("입찰 제출 중 오류 발생:", error);
-            let errorMessage = "입찰 제출 중 오류가 발생했습니다. 다시 시도해 주세요.";
-            if (error.response?.data) {
-                validationErrors.value = error.response.data.errors;  // 서버로부터 받은 에러를 저장
-
-                // 특정 오류 메시지를 감지하여 구체적인 알림 표시
-                if (error.response.data.message.includes('Numeric value out of range')) {
+            }else{
+                isLoading.value = false;
+                let errorMessage = "입찰 제출 중 오류가 발생했습니다. 다시 시도해 주세요.";
+                if (result.rawData.response.data.message.includes('Numeric value out of range')) {
                     errorMessage = "입찰 금액이 너무 큽니다. 다시 시도해 주세요.";
                 } else {
-                    errorMessage = error.response.data.message;
+                    errorMessage = result.rawData.response.data.message;
                 }
+                return {
+                    success: false,
+                    message: errorMessage
+                };
             }
-            return {
-                success: false,
-                message: errorMessage
-            };
-        } finally {
-            isLoading.value = false;  // 로딩 상태를 false로 설정
-        }
+         })
+        .post();
     };
 
     const cancelBid = async (bidId) => {
-        try {
-            const response = await axios.delete(`/api/bids/${bidId}`);
-            if (response.status === 204 || response.status === 200) {
+        return wicac.conn()
+        .url(`/api/bids/${bidId}`)
+        .callback(function(result) {
+            if(result.isSuccess){
                 return { success: true };
-            } else {
+            }else{
                 return { success: false };
             }
-        } catch (error) {
-            return { success: false, message: error.response?.data?.message };
-        }
+        })
+        .delete();
     };
 
-    // 경매 내용 통신 (페이지까지)
-    const getAuctions = async (page = 1, isReviews = false, status = 'all') => {
+    const getBidsByUserId = async(userId) =>{
         const apiList = [];
-
-        if (status !== 'all') {
-            apiList.push(`auctions.status:${status}`);
-        }
-
-        try {
-            if (isReviews) {
-                const result = await axios.get('/api/auctions', {
-                    params: {
-                        _where: ['auctions.status:done', 'auctions.bid_id:>:0'],
-                        _with: ['reviews'],
-                        _doesnthave: ['reviews'],
-                        _page: `${page}`
-                    }
-                });
-                auctionsData.value = result.data.data;
-                pagination.value = result.data.meta;  // Assuming pagination data is in 'meta'
-            } else {
-                const result = await axios.get('/api/auctions', {
-                    params: {
-                        _page: `${page}`,
-                        _where: apiList,
-                    }
-                });
-                auctionsData.value = result.data.data;
-                pagination.value = result.data.meta;  // Assuming pagination data is in 'meta'
+        apiList.push(`bids.user_id:${userId}`);
+        
+        return wicac.conn()
+        .url(`/api/bids`)
+        .where(apiList)
+        .pageLimit(10000)
+        .callback(function(result) {
+            if(result.isSuccess){
+                return result.data; 
+            }else{
+                wica.ntcn(swal)
+                .title('오류가 발생하였습니다.')
+                .useHtmlText()
+                .icon('I') //E:error , W:warning , I:info , Q:question
+                .alert('관리자에게 문의해주세요.');
             }
-        } catch (error) {
-            console.error('Error fetching auctions:', error);
-        }
+        })
+        .get();
     };
 
     return {
@@ -240,7 +228,7 @@ export default function useBid() {
         validationErrors,
         isLoading,
         auctionsData,
-        pagination,
-        getAuctions
+        bidPagination,
+        getBidsByUserId,
     };
 }

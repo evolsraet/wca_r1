@@ -24,9 +24,14 @@
                         <div v-if="bidsData.length > 0" class="row">
                             <div class="col-md-3 p-2 mb-2 shadow-hover" v-for="bid in bidsData" :key="bid.id"  @click="navigateToDetail(bid)">
                                 <div class="card my-auction">
-                                    <div class="card-img-top-placeholder"></div> 
-                                    <span v-if="bid.auction.status === 'dlvr'" class="mx-2 auction-done">탁송진행</span>
-                                    <span v-if="bid.auction.status === 'chosen'" class="mx-2 auction-done">선택완료</span> 
+                                    <div class="card-img-top-placeholder"><img src="../../../img/car_example.png">
+                                    </div> 
+                                    <span v-if="bid.auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(bid.auction.status).auctions() }}</span>
+                                    <div>
+                                        <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(bid.auction.status)" class="mx-2 auction-done">
+                                            {{ wicas.enum(store).toLabel(bid.auction.status).auctions() }}
+                                        </span>
+                                    </div>
                                     <div class="card-body">  
                                         <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                                         <p>2020년 / 2.4km / 무사고</p>
@@ -49,14 +54,14 @@
             <!-- Pagination -->
             <nav>
                 <ul class="pagination justify-content-center">
-                    <li class="page-item" :class="{ disabled: !pagination.prev }">
-                    <a class="page-link prev-style" @click="loadPage(pagination.current_page - 1)"></a>
+                    <li class="page-item" :class="{ disabled: !bidPagination.prev }">
+                    <a class="page-link prev-style" @click="loadPage(bidPagination.current_page - 1)"></a>
                     </li>
-                    <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                    <li v-for="n in bidPagination.last_page" :key="n" class="page-item" :class="{ active: n === bidPagination.current_page }">
                     <a class="page-link" @click="loadPage(n)">{{ n }}</a>
                     </li>
-                    <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
-                    <a class="page-link next-style" @click="loadPage(pagination.current_page + 1)"></a>
+                    <li class="page-item next-prev" :class="{ disabled: !bidPagination.next }">
+                    <a class="page-link next-style" @click="loadPage(bidPagination.current_page + 1)"></a>
                     </li>
                 </ul>
             </nav>
@@ -78,9 +83,9 @@ const currentPage = ref(1);
 const router = useRouter();
 const store = useStore();
 const { getAuctions, getAuctionById } = useAuctions();
-const { bidsData, getBids , pagination } = useBid();
+const { bidsData, getBids , bidPagination } = useBid();
 const user = computed(() => store.getters['auth/user']);
-const { amtComma } = cmmn();
+const { amtComma , wicas } = cmmn();
 const loading = ref(false);
 
 /**
@@ -118,9 +123,9 @@ const fetchFilteredBids = async () => {
 }; */
 
 function loadPage(page) { 
-    if (page < 1 || page > pagination.value.last_page) return;
+    if (page < 1 || page > bidPagination.value.last_page) return;
     currentPage.value = page;
-    getBids(page, true);
+    getBids(1,true,false,user.value.id);
     window.scrollTo(0,0);
 }
 
@@ -135,7 +140,7 @@ onMounted(async () => {
         console.error('사용자 정보가 없습니다.');
         return;
     }
-    await getBids(1,true,user.value.id);
+    await getBids(1,true,false,user.value.id);
     loading.value = true;
 });
 </script>

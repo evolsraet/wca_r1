@@ -1,4 +1,3 @@
-import axios from 'axios';
 import { reactive , ref , inject } from 'vue';
 import useAuctions from "./auctions";
 import { useRouter } from 'vue-router';
@@ -185,24 +184,28 @@ export function initReviewSystem() {
         .callback(function(result) {
             if(result.isOk){
                 //console.log(result);
-                axios.post(`/api/reviews`, form)
-                    .then(response => {
-                        wica.ntcn(swal)
-                        .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
-                        .icon('I') //E:error , W:warning , I:info , Q:question
-                        .callback(function(result) {
-                            if(result.isOk){                                
-                                router.push({name: 'user.review'});                            
-                            }
-                        })
-                        .alert('이용후기가 정상적으로 작성되었습니다.');
-                    })
-                    .catch(error => {
+                wicac.conn()
+                .url(`/api/reviews`) //호출 URL
+                .param(form)
+                .callback(function(result) {
+                    if(result.isError){
                         wica.ntcn(swal)
                         .title('오류가 발생하였습니다.')
                         .icon('E') //E:error , W:warning , I:info , Q:question
                         .alert('관리자에게 문의해주세요.');
-                    })
+                    }else{
+                        wica.ntcn(swal)
+                        .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
+                        .icon('I') //E:error , W:warning , I:info , Q:question
+                        .callback(function(result2) {
+                            if(result2.isOk){                                
+                                router.push({name: 'user.review'});                            
+                            }
+                        })
+                        .alert('이용후기가 정상적으로 작성되었습니다.');
+                    }
+                })
+                .post();
             }
         }).confirm();
     }
@@ -215,25 +218,27 @@ export function initReviewSystem() {
         .icon('W') //E:error , W:warning , I:info , Q:question
         .callback(function(result) {
             if(result.isOk){
-                console.log(result);
-                axios.delete(`/api/reviews/${id}`)
-                    .then(response => {
+                wicac.conn()
+                .url(`/api/reviews/${id}`)
+                .callback(function(result2) {
+                    if(result2.isSuccess){
                         wica.ntcn(swal)
                         .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
                         .icon('I') //E:error , W:warning , I:info , Q:question
-                        .callback(function(result) {
-                            if(result.isOk){                                
+                        .callback(function(result3) {
+                            if(result3.isOk){                                
                                 getAllReview(1);                                
                             }
                         })
                         .alert('이용후기가 정상적으로 삭제되었습니다.');
-                    })
-                    .catch(error => {
+                    }else{
                         wica.ntcn(swal)
                         .title('오류가 발생하였습니다.')
                         .icon('E') //E:error , W:warning , I:info , Q:question
                         .alert('관리자에게 문의해주세요.');
-                    })
+                    }
+                })
+                .delete();
             }
         })
         .confirm('삭제된 정보는 복구할 수 없습니다.');   
@@ -251,25 +256,29 @@ export function initReviewSystem() {
         .callback(function(result) {
             if(result.isOk){
                 console.log(result);
-                axios.delete(`/api/reviews/${id}`)
-                    .then(response => {
+                wicac.conn()
+                .url(`/api/reviews/${id}`)
+                .callback(function(result2) {
+                    if(result2.isSuccess){
                         wica.ntcn(swal)
                         .title('이용후기가 삭제되었습니다.')
                         .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
                         .icon('I') //E:error , W:warning , I:info , Q:question
-                        .callback(function(result) {
-                            if(result.isOk){                                
+                        .addOption({ padding: 20})
+                        .callback(function(result3) {
+                            if(result3.isOk){                                
                                 getUserReview(userId, 1);                                 
                             }
                         })
                         .alert('');
-                    })
-                    .catch(error => {
+                    }else{
                         wica.ntcn(swal)
                         .title('오류가 발생하였습니다.')
                         .icon('E') //E:error , W:warning , I:info , Q:question
                         .alert('관리자에게 문의해주세요.');
-                    })
+                    }
+                })
+                .delete();
             }
         })
         .confirm('삭제된 정보는 복구할 수 없습니다.');   
@@ -277,7 +286,6 @@ export function initReviewSystem() {
 
     //작성한 이용후기 수정하기 - 사용자, 관리자 공통
     const editReview = async (id, review, role) => {
-
         if(starScore > 0){
             review.star = starScore;
         }
@@ -298,13 +306,16 @@ export function initReviewSystem() {
         .callback(function(result) {
             if(result.isOk){
                 //console.log(result);
-                axios.put(`/api/reviews/${id}`, form)
-                    .then(response => {
+                wicac.conn()
+                .url(`/api/reviews/${id}`) //호출 URL
+                .param(form)
+                .callback(function(result2) {
+                    if(result2.isSuccess){
                         wica.ntcn(swal)
                         .icon('I') //E:error , W:warning , I:info , Q:question
                         .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
-                        .callback(function(result) {
-                            if(result.isOk){                                
+                        .callback(function(result3) {
+                            if(result3.isOk){                                
                                 if(role === 'user'){
                                     router.push({name: 'user.review'});
                                 } else if(role === 'admin'){
@@ -313,13 +324,14 @@ export function initReviewSystem() {
                             }
                         })
                         .alert('이용후기가 정상적으로 수정되었습니다.');
-                    })
-                    .catch(error => {
+                    }else{
                         wica.ntcn(swal)
                         .title('오류가 발생하였습니다.')
                         .icon('E') //E:error , W:warning , I:info , Q:question
                         .alert('관리자에게 문의해주세요.');
-                    })
+                    }
+                })
+                .put();
             }
         }).confirm();
         
@@ -415,16 +427,22 @@ export function initReviewSystem() {
         
     // 홈 화면 리뷰 불러오기 (auction 정보 포함하지 않음.)
     const getHomeReview = async (page = 1) => {
-        try {      
-            const response = await axios.get(`/api/reviews?page=${page}&with=dealer`);
-            reviewPagination.value = response.data.meta;
-            //console.log('Pagination:', pagination.value);
-            //console.log(response.data.data);
-            reviewsData.value = response.data.data;
-
-        } catch (error) {
-            console.log(error);
-        }
+        wicac.conn()
+        .url(`/api/reviews`)
+        .with([
+            'dealer',
+        ]) 
+        .page(page) //불러올 페이지 번호( 0 또는 주석 처리시 기능 안함 )
+        .callback(function(result) {
+            console.log(result);
+            if(result.isSuccess){
+                reviewPagination.value = result.page;
+                reviewsData.value = result.data;
+            }else{
+                console.log(error);
+            }
+        })
+        .get();
     }
     
     function formattedAmount(amount) {

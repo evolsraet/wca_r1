@@ -224,7 +224,6 @@
 
 <script setup>
 import { ref, onMounted, watch } from "vue";
-import usePosts from "@/composables/posts";
 import useCategories from "@/composables/categories";
 import { useAbility } from "@casl/vue";
 import { initReviewSystem } from '@/composables/review';
@@ -379,5 +378,9 @@ watch(
 
 .select-option {
     width: 112px !important;
+}
+.search-type2 .search-btn{
+    top: 53px !important;  
+    right: 4px !important;
 }
 </style>
