@@ -1125,17 +1125,14 @@ const getAuctionsData = async () => {
         await getAuctions(currentPage.value , false , currentStatus.value);
     } else if(isDealer.value){
         await getAuctionsByDealer(currentPage.value , currentStatus.value);
-    }
-    filterLikeData(auctionsData.value);
-    if(isDealer.value){
+        filterLikeData(auctionsData.value);
         favoriteAuctionsGetData();
         fetchFilteredBids();
     }
-
 }
 
 const favoriteAuctionsGetData = async () => {
-    await getBids(currentMyBidPage.value, false, true, user.value.id);
+    await getBids(currentMyBidPage.value, false, true, currentStatus.value);
     const response = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , currentStatus.value);
     favoriteAuctionsData.value = response.data;
     favoriteAuctionsPagination.value = response.rawData.data.meta;
@@ -1157,9 +1154,13 @@ const fetchFilteredBids = async () => {
     });
 };
 
-const filterLikeData = (auctions) => {
+const filterLikeData = (auctions, likes="none") => {
+
     auctions.forEach(auction => {
-        const userLike = auction.likes.find(like => like.user_id === user.value.id);
+        if(likes == 'none'){
+        likes = auction.likes;
+    }
+        const userLike = likes.find(like => like.likeable_id === auction.id && like.user_id === user.value.id);
         if (userLike) {
             auction.like = userLike;
             auction.isFavorited = true;
@@ -1168,7 +1169,6 @@ const filterLikeData = (auctions) => {
         }
         auction.isDealerParticipating = isDealerParticipating(auction.id);
     });
-
 }
 
 let timer;
@@ -1179,8 +1179,6 @@ onMounted(async () => {
     }
 
     await getAuctionsData();
-    //await favoriteAuctionsGetData();
-    //await fetchFilteredBids();
 
     statusLabel = wicas.enum(store).addFirst('all', '전체').excl('cancel', '취소').ascVal().auctions();
 

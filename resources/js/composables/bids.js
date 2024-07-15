@@ -52,25 +52,25 @@ export default function useBid() {
             console.error('Error fetching bids:', error);
         }
     }; */
-
+    
     //isSelect => 선택 차량 (선택,탁송 filter)
     //isMyBid => 진행 중 입찰 건 filter
-    const getBids = async (page = 1, isSelect = false, isMyBid = false, userId = 0, status = "all") => {
+    const getBids = async (page = 1, isSelect = false, isMyBid = false , status = "all") => {
         let request = wicac.conn()
         .log()
         .url('/api/bids')
         .with(['auction'])
         .page(`${page}`)
-        if (isSelect && userId !== 0) {
+        if (isSelect) {
             const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
-            request = request.whereOr('auction.status',`${statusFilter}`)
-            request = request.whereLike('auction.win_bid.user_id',`${userId}`)
+            request = request.whereOr('auction.status',`${statusFilter}`)           
         }
     
         if (isMyBid) {
             request = request.whereOr('auction.status','ing,wait')
         }
-        return request.callback(function(result) {
+        return request.callback(function(result) {SS
+            console.log("~~~~",result);
             bidsData.value = result.data;
             bidPagination.value = result.rawData.data.meta;
             return result.data;
