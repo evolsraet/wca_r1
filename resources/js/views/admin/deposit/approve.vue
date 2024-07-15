@@ -181,7 +181,9 @@ const detailAuction = async () => {
 
   const app = createApp({
     render() {
-      return h(LawGid, { content: carDetail });
+      return h(LawGid, { content: carDetail,
+        auctionData :  auction
+       });
     }
   });
   

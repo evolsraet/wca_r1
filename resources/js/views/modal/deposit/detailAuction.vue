@@ -214,7 +214,7 @@
             </div>
             <h5 class="mt-5">기타</h5>
             <div class="form-group">
-              <textarea class="form-control text-box process" readonly style="resize: none;"></textarea>
+              <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionData.memo }}</textarea>
             </div>
             <ul class="machine-inform-title">
               <li class="tc-light-gray">거래지역</li>
@@ -237,7 +237,8 @@ import {defineProps} from 'vue';
 
 
 const props = defineProps({
-  content: Object 
+  content: Object ,
+  auctionData :  Object
 });
  
 </script>
