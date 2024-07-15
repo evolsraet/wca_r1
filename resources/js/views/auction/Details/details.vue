@@ -513,7 +513,21 @@
                 <p>현 주소지 탁송하기</p>
               </button>
             </div>
+            <div v-if="showModal" class="modal-overlay p-3">
+            <div class="modal-container">
+              <div class="card-body">
+                <div class="text-start">
+                  <h4>탁송지 변경</h4>
+                  <p>원하시는 탁송지를 선택해주세요.</p>
+                  <a href="/addr" class="fs-6 tc-light-gray link-hov">다른 주소지로 변경, 추가를 원하시나요?</a>
+                </div>
+                <div class="scrollable-content mt-4" ref="scrollableContent"></div>
+              </div>
+              <button @click="confirmSelection" class="btn btn-primary w-100">확인</button>
+            </div>
+            </div>
           </BottomSheet02>
+          
       </div>
     </div>
 
@@ -879,7 +893,7 @@
                   <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
 </template>
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount , inject,reactive} from 'vue';
+import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount , inject,reactive,nextTick} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import { gsap } from 'gsap';
@@ -1103,36 +1117,44 @@ watch(
   { immediate: true } 
 );
 
-
-
-
 const DOMauctionsData = ref([
   { id: 1, name: '주소명칭1', address: '주소1', zipCode: '우편번호1' },
   { id: 2, name: '주소명칭2', address: '주소2', zipCode: '우편번호2' },
 ]);
 
-const selectedAuction = ref(null);
+const selectedAuctionId = ref(null); // Store the selected auction ID
+const showModal = ref(false); // Control modal visibility
+const scrollableContent = ref(null); // Reference to the scrollable content
 
 const selectAuction = (id) => {
-  selectedAuction.value = DOMauctionsData.value.find(auction => auction.id === id);
-  console.log('선택된 항목:', selectedAuction.value); // 콘솔에 선택된 항목 출력
+  selectedAuctionId.value = id;
+  const selectedAuction = DOMauctionsData.value.find(auction => auction.id === id);
+  console.log('선택된 항목:', selectedAuction); // Log the selected auction
 };
 
 const dealerAddrConnect = () => {
-  const container = document.createElement('div');
-  container.classList.add('border-0');
-  container.innerHTML = `
-    <div class="card-body">
-      <div class="text-start">
-        <h4>탁송지 변경</h4>
-        <p>원하시는 탁송지를 선택해주세요.</p>
-        <a href="/addr" class="fs-6 tc-light-gray link-hov">다른 주소지로 변경, 추가를 원하시나요?</a>
-      </div>
-      <div class="scrollable-content mt-4"></div>
-    </div>
-  `;
+  console.log('dealerAddrConnect called'); // Log to verify function call
+  showModal.value = true; // Show the modal
 
-  const scrollableContent = container.querySelector('.scrollable-content');
+  // Ensure the modal content is rendered before attaching event listeners
+  nextTick(() => {
+    if (scrollableContent.value) {
+      renderAuctionItems();
+    } else {
+      console.error('Scrollable content element is not available.');
+    }
+  });
+};
+
+const renderAuctionItems = () => {
+  const scrollableContentElement = scrollableContent.value;
+  if (!scrollableContentElement) {
+    console.error('Scrollable content element is null.');
+    return;
+  }
+
+  scrollableContentElement.innerHTML = ''; // Clear previous content
+
   DOMauctionsData.value.forEach(auction => {
     const auctionItem = document.createElement('div');
     auctionItem.classList.add('auction-item');
@@ -1155,7 +1177,9 @@ const dealerAddrConnect = () => {
       </div>
     `;
 
-    auctionItem.addEventListener('click', () => {
+    auctionItem.addEventListener('click', (event) => {
+      event.stopPropagation();
+      console.log('Auction item clicked:', auction.id); // 추가된 로그
       selectAuction(auction.id);
       document.querySelectorAll('.auction-item').forEach(item => {
         item.classList.remove('selected');
@@ -1163,24 +1187,18 @@ const dealerAddrConnect = () => {
       auctionItem.classList.add('selected');
     });
 
-    scrollableContent.appendChild(auctionItem);
+    scrollableContentElement.appendChild(auctionItem);
   });
+};
 
-  wica.ntcn(swal)
-    .useClose()
-    .useHtmlText()
-    .addClassNm('primary-check')
-    .addOption({ padding: 20 })
-    .callback((result) => {
-      if (result.isOk) {
-        if (selectedAuction.value) {
-          alert(`선택된 주소:\n명칭: ${selectedAuction.value.name}\n주소: ${selectedAuction.value.address}\n우편번호: ${selectedAuction.value.zipCode}`);
-        } else {
-          alert("선택을 해줘야합니다.");
-        }
-      }
-    })
-    .confirm(container.outerHTML);
+const confirmSelection = () => {
+  const selectedAuction = DOMauctionsData.value.find(auction => auction.id === selectedAuctionId.value);
+  if (selectedAuction) {
+    alert(`선택된 주소:\n명칭: ${selectedAuction.name}\n주소: ${selectedAuction.address}\n우편번호: ${selectedAuction.zipCode}`);
+  } else {
+    alert("선택을 해줘야합니다.");
+  }
+  showModal.value = false;
 };
 
 
@@ -1225,7 +1243,6 @@ function getThreeDaysFromNow() {
 
 
 const isModalVisible = ref(false);
-const selectedAuctionId = ref(null);
 
 
 /*[사용자] 재경매 - 버튼 눌렀을떄 처리되는 곳*/ 
@@ -2032,5 +2049,48 @@ opacity: 0;
 .selected {
   background-color: lightgray;
   border: 2px solid blue;
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-container {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  max-width: 100%;
+  max-height: 90%;
+  overflow-y: auto;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: -webkit-fill-available;
+  z-index: 999;
+}
+
+.scrollable-content {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Add responsive design */
+@media (min-width: 768px) {
+  .modal-container {
+    max-width: 600px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .modal-container {
+    max-width: 800px;
+  }
 }
 </style>
