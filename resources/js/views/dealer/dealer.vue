@@ -135,7 +135,7 @@ const fetchFilteredBids = async () => {
 function loadPage(page) { 
     if (page < 1 || page > bidPagination.value.last_page) return;
     currentPage.value = page;
-    getBids(1,true,false,user.value.id);
+    getBids(1,true,false,currentStatus.value);
     window.scrollTo(0,0);
 }
 
@@ -149,7 +149,6 @@ function setFilter(status) {
     getBids(currentPage.value,
             true,
             false,
-            user.value.id,
             currentStatus.value);
 }
 
@@ -158,7 +157,7 @@ onMounted(async () => {
         console.error('사용자 정보가 없습니다.');
         return;
     }
-    await getBids(1,true,false,user.value.id);
+    await getBids(1,true,false,currentStatus.value);
     statusLabel = wicas.enum(store).addFirst('all','전체').perm('dlvr','chosen').auctions();
     loading.value = true;
 });

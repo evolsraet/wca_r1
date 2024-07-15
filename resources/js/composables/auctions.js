@@ -57,7 +57,6 @@ export default function useAuctions() {
     }
 
     const getAuctionsByDealer = async (page = 1 , status="all") => {
-        const apiList = ['auctions.status:whereIn:ing,wait'];
 
         if(status != 'all'){
             apiList.push(`auctions.status:${status}`)
@@ -65,9 +64,8 @@ export default function useAuctions() {
         let request = wicac.conn()
             .log()
             .url(`/api/auctions`)
-            .where(apiList)
-            .with(['bids', 'likes']);
-    
+            .with(['bids', 'likes'])
+            .whereOr('auctions.status','ing,wait')
         if(page == "all"){
             request = request.pageLimit(10000);
         } else{
@@ -82,23 +80,21 @@ export default function useAuctions() {
     }
 
     const getAuctionsByDealerLike = async (page = 1 , userId = null , status = "all") => {
-        const apiList = []
+        let request = wicac.conn()
+            .log()
+            .url(`/api/auctions`)
+            .with(['likes'])
+            .page(`${page}`)
+
         if(userId != null){
-            apiList.push(`likes.user_id:whereIn:${userId}`)
-        }
+            request = request.whereOr('likes.user_id',`${userId}`);
+        } 
         if(status != 'all'){
-            apiList.push(`auctions.status:whereIn:${status}`)
+            request = request.whereOr('auctions.status',`${status}`)
         }
-        return wicac.conn()
-        .log()
-        .url(`/api/auctions`)
-        .with(['likes'])
-        .where(apiList)
-        .page(`${page}`)
-        .callback(function(result) {
+        return request.callback(function(result) {
             return result;
-        })
-        .get();
+        }).get();
     }
 
     const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
@@ -157,12 +153,10 @@ const adminGetDepositAuctions = async(
     status = 'dlvr,done',
     search_title=''
 ) => {
-    const apiList = [];
-    apiList.push(`auctions.status:whereIn:${status}`)
 
     return wicac.conn()
     .url(`/api/auctions`)
-    .where(apiList)
+    .whereOr('auction.status',`${status}`)
     .order([
         [`${column}`,`${direction}`]
     ])
@@ -651,10 +645,10 @@ const getDoneAuctions = async (bidsNumList,page) => {
     const apiList = [];
     apiList.push(`auctions.status:done`);
     //apiList.push(`auctions.bid_id:>:0`);
-    apiList.push(`auctions.bid_id:whereIn:${bidsNumList}`);
     return wicac.conn()
         .url(`/api/auctions`)
         .where(apiList)
+        .whereOr('auctions.bid_id',`${bidsNumList}`)
         .with([
             'bids',
         ])

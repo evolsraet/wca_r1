@@ -52,54 +52,47 @@ export default function useBid() {
             console.error('Error fetching bids:', error);
         }
     }; */
-
+    
     //isSelect => 선택 차량 (선택,탁송 filter)
     //isMyBid => 진행 중 입찰 건 filter
-    const getBids = async (page = 1, isSelect = false, isMyBid = false, userId = 0, status = "all") => {
-        const whereList = [];
-    
-        if (isSelect && userId !== 0) {
+    const getBids = async (page = 1, isSelect = false, isMyBid = false , status = "all") => {
+        let request = wicac.conn()
+        //.log()
+        .url('/api/bids')
+        .with(['auction'])
+        .page(`${page}`)
+        if (isSelect) {
             const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
-            whereList.push(`auction.status:whereIn:${statusFilter}&like=auction.win_bid.user_id:${userId}`);
+            request = request.whereOr('auction.status',`${statusFilter}`)           
         }
     
         if (isMyBid) {
-            whereList.push('auction.status:whereIn:ing,wait');
+            request = request.whereOr('auction.status','ing,wait')
         }
-    
-        return wicac.conn()
-            .url('/api/bids')
-            .with(['auction'])
-            .where(whereList)
-            .page(`${page}`)
-            .callback((result) => {
-                bidsData.value = result.data;
-                bidPagination.value = result.rawData.data.meta;
-                return result.data;
-            })
-            .get();
+        return request.callback(function(result) {
+            bidsData.value = result.data;
+            bidPagination.value = result.rawData.data.meta;
+            return result.data;
+        }).get();
+        
     };
 
     //페이징 안 한 전체 bid
     const getHomeBids = async (mainIsOk = false) => {
-        const whereList = [];
+        let request = wicac.conn()
+        //.log()
+        .url(`/api/bids`)
+        .with(['auction'])
+        .pageLimit(10000)
         if(mainIsOk){
-            whereList.push(`auction.status:whereIn:ing,wait`)
+            request = request.whereOr('auction.status','ing,wait')
         }
-        return wicac.conn()
-            //.log()
-            .url(`/api/bids`)
-            .with(['auction'])
-            .pageLimit(10000)
-            .where(whereList)
-            //.page(`${page}`)
-            .callback(function(result) {
-                //console.log(result);
-                bidsData.value = result.data;
-                //bidPagination.value = result.rawData.data.meta;
-                return result.data;
-            })
-            .get();
+        return request.callback(function(result) {
+            //console.log(result);
+            bidsData.value = result.data;
+            //bidPagination.value = result.rawData.data.meta;
+            return result.data;
+        }).get();
 
     } 
     const getBidById = async (id) => {
