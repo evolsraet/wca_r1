@@ -1,5 +1,5 @@
 <template>
-    <div class="container mov-wide d-flex flex-column gap-5 mb-4">
+    <div class="container d-flex flex-column gap-5 mb-4">
       <div class="p-2">
         <div class="my-5">
           <h4>탁송 확인</h4>
