@@ -1470,7 +1470,7 @@ video {
     display: inline-block;
     width: 25px;
     height: 25px;
-    background-color: #4263ea;
+    background-color: $sub-color01;
     border-radius: 50%;
     text-align: center;
     vertical-align: middle;
@@ -1500,7 +1500,7 @@ video {
     font-size: 0.9em;
 }
 .my-auction .wait-selection {
-    background-color: #4263ea;
+    background-color:$sub-color01;
     color: white;
     text-align: center;
     padding: 0.5em;
@@ -2789,13 +2789,13 @@ video {
     text-align: center;
 }
 li.page-item.active{
-    background-color: #fae8e8;
+    background-color:$primary-sub;
     border-radius: 50%;
 }
 
 .pagination .page-link {
     background-color: #ffffff00 !important;
-    border-color: #fae8e8;
+    border-color: $primary-sub;
 }
 
 .custom-checkbox-input {
@@ -3901,7 +3901,7 @@ input[type="checkbox"] {
   /* [사용자] - 경매 (딜러) 선택 */
   .bid-content{
     height: 83px;
-    background-color: #4263ea;
+    background-color:$sub-color01;
     color:white;
   }
   .cancelbox{
@@ -3940,7 +3940,7 @@ input[type="checkbox"] {
 .bid-bc ul li:hover .txt_box .txt,
 .bid-bc ul li:hover .txt_box .name,
 .bid-bc ul li:hover .restar {
-    color: #4263ea;
+    color: $sub-color01;
     font-weight: bolder;
     transition: color 0.5s ease; 
 }
@@ -3948,9 +3948,10 @@ input[type="checkbox"] {
 
 .bid-bc ul li:active,
 .bid-bc ul li:hover {
-    border: 1px solid #4263ea;
+    border: 1px solid $sub-color01;
     box-shadow: 0px 8px 10px 0px rgba(174, 170, 187, 0.247);
-    transition: border 0.5s ease, box-shadow 0.5s ease; 
+    transition: border 0.5s ease, box-shadow 0.5s ease;
+    color: $sub-color01; 
 }
 
 

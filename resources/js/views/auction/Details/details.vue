@@ -327,9 +327,14 @@
                 </table>
               </div>
             </div>
-            <h5 class="mt-5">기타</h5>
+
+            <h5 class="mt-5">판매자 메모</h5>
             <div class="form-group">
               <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo }}</textarea>
+            </div>
+            <h5 class="mt-5">평가자 의견</h5>
+            <div class="form-group">
+              <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo_digician }}</textarea>
             </div>
             <ul class="machine-inform-title">
               <li class="tc-light-gray">거래지역</li>
@@ -1206,11 +1211,13 @@ const confirmSelection = () => {
   showModal.value = false; 
 };
 
+const pdfUrl = 'https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf';
 
 
 /* 위카 진단평가 확인하기 모달 */ 
 const openAlarmModal = () => {
-  const text= `<div class="enroll_box" style="position: relative;">
+  window.open(pdfUrl, '_blank');
+ /* const text= `<div class="enroll_box" style="position: relative;">
                   <img src="${carInfo}" alt="자동차 이미지" width="160" height="160">
                   <p class="overlay_text04">해당 서비스는 개발 중 상태입니다.</p>
                 </div>`;

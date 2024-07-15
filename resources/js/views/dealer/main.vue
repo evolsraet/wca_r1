@@ -328,6 +328,7 @@ p {
     gap: 2rem !important;
     flex-direction: column;
     flex-wrap: nowrap;
-}
+    align-items:normal;
+    }
 }
 </style>
