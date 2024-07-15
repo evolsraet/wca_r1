@@ -133,7 +133,9 @@
                             <div class="row">
                             <div class="col-md-6 p-2" v-for="bid in filteredDoneBids.slice(0,2)" :key="bid.id">
                                 <div class="card my-auction mt-3">
-                                    <div class="card-img-top-placeholder border-rad"></div>
+                                    <div class="card-img-top-placeholder border-rad">
+                                        <img src="../../../img/car_example.png">
+                                    </div>
                                     <div class="card-body">
                                         <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                                         <p>2020년 / 2.4km / 무사고</p>
