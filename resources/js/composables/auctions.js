@@ -156,7 +156,7 @@ const adminGetDepositAuctions = async(
 
     return wicac.conn()
     .url(`/api/auctions`)
-    .whereOr('auction.status',`${status}`)
+    .whereOr('auctions.status',`${status}`)
     .order([
         [`${column}`,`${direction}`]
     ])
@@ -336,9 +336,6 @@ const AuctionCarInfo = async (carInfoForm) => {
     }
 
     /*
-    console.log('dtata================================');
-    console.log(auctionData);
-    console.log('dtata================================');
     const formData = new FormData();
     formData.append('auction', JSON.stringify(payload.auction));
     if(auctionData.auction.file_auction_proxy){
@@ -456,8 +453,8 @@ const updateAuction = async (id,auction) => {
 
     const formData = new FormData();
     formData.append('auction', JSON.stringify(auctionForm.auction));
-    if(auction.file_user_owner){
-        formData.append('file_user_owner', auction.file_user_owner);
+    if(auction.file_auction_proxy){
+        formData.append('file_auction_proxy', auction.file_auction_proxy);
     }
 
     wica.ntcn(swal)
