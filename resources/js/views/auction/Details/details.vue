@@ -503,8 +503,8 @@
                 <button class=" btn-outline-primary btn sm-height" @click="dealerAddrConnect">주소지 변경</button>
               </div>
               <div class="fw-semibold">
-              <p>우편번호 :<span class="tc-red ms-1">{{ user.dealer.company_post }}</span></p>
-              <p>주<span class="ms-4">소</span> :<span class="tc-red ms-2"> {{ user.dealer.company_addr1 }} , {{ user.dealer.company_addr2 }}</span></p>
+                <p>우편번호 :<span class="tc-red ms-1">{{ selectedAuction ? selectedAuction.zipCode : user.dealer.company_post }}</span></p>
+                <p>주<span class="ms-4">소</span> :<span class="tc-red ms-2">{{ selectedAuction ? selectedAuction.address : user.dealer.company_addr1 }}</span></p>
               </div>
               <button
                 class="my-4 btn-primary btn w-100"
@@ -1122,14 +1122,14 @@ const DOMauctionsData = ref([
   { id: 2, name: '주소명칭2', address: '주소2', zipCode: '우편번호2' },
 ]);
 
-const selectedAuctionId = ref(null); // Store the selected auction ID
+const selectedAuction = ref(null); // Store the selected auction object
+const temporarySelectedAuction = ref(null); // Temporary store the selected auction object
 const showModal = ref(false); // Control modal visibility
 const scrollableContent = ref(null); // Reference to the scrollable content
 
 const selectAuction = (id) => {
-  selectedAuctionId.value = id;
-  const selectedAuction = DOMauctionsData.value.find(auction => auction.id === id);
-  console.log('선택된 항목:', selectedAuction); // Log the selected auction
+  temporarySelectedAuction.value = DOMauctionsData.value.find(auction => auction.id === id);
+  console.log('선택된 항목:', temporarySelectedAuction.value); // Log the selected auction
 };
 
 const dealerAddrConnect = () => {
@@ -1192,14 +1192,16 @@ const renderAuctionItems = () => {
 };
 
 const confirmSelection = () => {
-  const selectedAuction = DOMauctionsData.value.find(auction => auction.id === selectedAuctionId.value);
-  if (selectedAuction) {
-    alert(`선택된 주소:\n명칭: ${selectedAuction.name}\n주소: ${selectedAuction.address}\n우편번호: ${selectedAuction.zipCode}`);
+  if (temporarySelectedAuction.value) {
+    selectedAuction.value = temporarySelectedAuction.value;
+    alert(`선택된 주소:\n명칭: ${selectedAuction.value.name}\n주소: ${selectedAuction.value.address}\n우편번호: ${selectedAuction.value.zipCode}`);
   } else {
     alert("선택을 해줘야합니다.");
   }
-  showModal.value = false;
+  showModal.value = false; // Hide the modal
 };
+
+
 
 
 /* 위카 진단평가 확인하기 모달 */ 
