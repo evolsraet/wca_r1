@@ -1944,6 +1944,8 @@ video {
 .tab-nav {
 	border-bottom: 1px solid #afafaf;
 	margin-bottom: 40px;
+    -ms-overflow-style: none;
+    scrollbar-width: none; 
 	ul li {
 		display: table-cell;
 		text-align: center;
@@ -4184,4 +4186,7 @@ width: 100%;
     .intro-modal-popup{
         width: 60%;
     }
+}
+.sheet{
+    z-index: 1;
 }
