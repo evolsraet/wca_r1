@@ -152,6 +152,7 @@ import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
 import { useStore } from 'vuex';
 import useAuctions from '@/composables/auctions';
+import useUsers from '@/composables/users';
 import Footer from "@/views/layout/footer.vue"
 import profileDom from '/resources/img/profile_dom.png'; 
 import useLikes from '@/composables/useLikes';
@@ -164,6 +165,7 @@ const store = useStore();
 const { getDoneAuctions, pagination } = useAuctions(); // 경매 관련 함수를 사용
 const { likesData, getAllLikes } = useLikes();
 const { bidsData, bidsCountByUser, getHomeBids, getBidsByUserId } = useBid();
+const { getUser } = useUsers();
 const myBidCount = ref(0);
 const filteredDoneBids = ref([]);
 const auctionsDoneData = ref([]);
@@ -188,7 +190,8 @@ function fileExstCheck(info){
 }
 
 onMounted(async () => {
-    fileExstCheck(user.value);
+    const userInfo = await getUser(user.value.id);
+    fileExstCheck(userInfo);
     await getHomeBids();
     bidsData.value.forEach(bid => {
         if (
