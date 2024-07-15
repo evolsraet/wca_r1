@@ -84,6 +84,13 @@
           파일 첨부
         </button>
         <div class="text-start tc-light-gray" v-if="fileUserOwnerName">위임장 / 소유자 인감 증명서: {{ fileUserOwnerName }}</div>
+        <div class="form-group dealer-check">
+          <label for="dealer">법인 / 사업자차량</label>
+          <div class="check_box">
+              <input type="checkbox" id="ch2" class="form-control">
+              <label for="ch2"></label>
+          </div>
+      </div>
         <!-- 파일 첨부 -->
         <div class="flex items-center justify-end mt-5">
           <button type="submit" class="btn primary-btn normal-16-font w-100">경매 신청하기</button>

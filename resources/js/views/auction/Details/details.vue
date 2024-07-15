@@ -1116,27 +1116,26 @@ watch(
   },
   { immediate: true } 
 );
-
 const DOMauctionsData = ref([
   { id: 1, name: '주소명칭1', address: '주소1', zipCode: '우편번호1' },
   { id: 2, name: '주소명칭2', address: '주소2', zipCode: '우편번호2' },
 ]);
 
-const selectedAuction = ref(null); // Store the selected auction object
-const temporarySelectedAuction = ref(null); // Temporary store the selected auction object
-const showModal = ref(false); // Control modal visibility
-const scrollableContent = ref(null); // Reference to the scrollable content
+const selectedAuction = ref(null); 
+const temporarySelectedAuction = ref(null); 
+const showModal = ref(false); 
+const scrollableContent = ref(null); 
 
 const selectAuction = (id) => {
   temporarySelectedAuction.value = DOMauctionsData.value.find(auction => auction.id === id);
-  console.log('선택된 항목:', temporarySelectedAuction.value); // Log the selected auction
+  console.log('선택된 항목:', temporarySelectedAuction.value); 
 };
 
 const dealerAddrConnect = () => {
-  console.log('dealerAddrConnect called'); // Log to verify function call
-  showModal.value = true; // Show the modal
+  console.log('dealerAddrConnect called'); 
+  showModal.value = true; 
 
-  // Ensure the modal content is rendered before attaching event listeners
+
   nextTick(() => {
     if (scrollableContent.value) {
       renderAuctionItems();
@@ -1153,7 +1152,7 @@ const renderAuctionItems = () => {
     return;
   }
 
-  scrollableContentElement.innerHTML = ''; // Clear previous content
+  scrollableContentElement.innerHTML = ''; 
 
   DOMauctionsData.value.forEach(auction => {
     const auctionItem = document.createElement('div');
@@ -1177,18 +1176,24 @@ const renderAuctionItems = () => {
       </div>
     `;
 
-    auctionItem.addEventListener('click', (event) => {
+  /* ul 선택 스타일 부분*/ 
+    const ulElement = auctionItem.querySelector('ul');
+    ulElement.addEventListener('click', (event) => {
       event.stopPropagation();
-      console.log('Auction item clicked:', auction.id); // 추가된 로그
-      selectAuction(auction.id);
-      document.querySelectorAll('.auction-item').forEach(item => {
-        item.classList.remove('selected');
-      });
-      auctionItem.classList.add('selected');
-    });
 
+      selectAuction(auction.id);
+
+      document.querySelectorAll('.auction-item ul').forEach(item => {
+        item.style.border = '';
+        item.style.color = '';
+      });
+
+      ulElement.style.border = '2px solid red';
+      ulElement.style.color = 'red';
+      console.log('Custom styles added:', ulElement);
+    });
     scrollableContentElement.appendChild(auctionItem);
-  });
+});
 };
 
 const confirmSelection = () => {
@@ -1198,9 +1203,8 @@ const confirmSelection = () => {
   } else {
     alert("선택을 해줘야합니다.");
   }
-  showModal.value = false; // Hide the modal
+  showModal.value = false; 
 };
-
 
 
 
@@ -2048,9 +2052,10 @@ opacity: 0;
 .sm-height{
   height: 34px !important;
 }
-.selected {
-  background-color: lightgray;
-  border: 2px solid blue;
+.ul.px-0.inspector_list.max_width_900.selected {
+  background-color: lightgray !important;
+  border: 2px solid blue !important;
+  color: red;
 }
 
 .modal-overlay {
@@ -2076,6 +2081,17 @@ opacity: 0;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   width: -webkit-fill-available;
   z-index: 999;
+  animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .scrollable-content {
@@ -2083,7 +2099,6 @@ opacity: 0;
   overflow-y: auto;
 }
 
-/* Add responsive design */
 @media (min-width: 768px) {
   .modal-container {
     max-width: 600px;
