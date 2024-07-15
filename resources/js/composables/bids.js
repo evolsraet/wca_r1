@@ -69,7 +69,7 @@ export default function useBid() {
         if (isMyBid) {
             request = request.whereOr('auction.status','ing,wait')
         }
-        return request.callback(function(result) {SS
+        return request.callback(function(result) {
             bidsData.value = result.data;
             bidPagination.value = result.rawData.data.meta;
             return result.data;
