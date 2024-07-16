@@ -1207,6 +1207,7 @@ const renderAuctionItems = () => {
 
       ulElement.style.border = '2px solid red';
       ulElement.style.color = 'red';
+      ulElement.style.borderRadius = "6px";
       console.log('Custom styles added:', ulElement);
     });
     scrollableContentElement.appendChild(auctionItem);
@@ -1216,7 +1217,18 @@ const renderAuctionItems = () => {
 const confirmSelection = () => {
   if (temporarySelectedAuction.value) {
     selectedAuction.value = temporarySelectedAuction.value;
-    alert(`선택된 주소:\n명칭: ${selectedAuction.value.name}\n주소: ${selectedAuction.value.address}\n우편번호: ${selectedAuction.value.zipCode}`);
+    const textOk = `<div class="enroll_box" style="position: relative;">
+                    <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
+                    <p class="overlay_text04">탁송 주소지가 변경되었습니다.</p>
+                  </div>`;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그인 경우 활성화
+    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .callback(async function (result) { 
+    })
+    .confirm(textOk);
   } else {
     alert("선택을 해줘야합니다.");
   }
