@@ -85,7 +85,9 @@
                     </div>
                     <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
                       <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
-                      <div v-if="showPdf" id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                      <div class="mt-5" v-if="showPdf">
+                      <h5>진단 평가</h5>
+                      <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                           <iframe
                               src="https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf"
                               width="100%"
@@ -95,6 +97,7 @@
                       </div>
                   </div>
               </div>
+            </div>
                   <!--   <template v-if="auctionDetail.data.hope_price !== null">
                     <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
                       <p>현재 희망가</p>
