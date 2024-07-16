@@ -65,7 +65,7 @@
                     </div>
                     <div class="d-flex">
                       <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                      <h5 v-if="auctionDetail.data.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                      <h5 v-if="auctionDetail.data.is_reauction !== 0"><span class="gray-box">재경매</span></h5>
                     </div>
                    <div v-if="auctionDetail.data.status ==='chosen' || auctionDetail.data.status ==='dlvr'">
                      <!-- <hr>
@@ -405,9 +405,11 @@
           </div>
           <div v-if="isUser && auctionDetail.data.status === 'ing'" class="sheet-content">
             <BottomSheet02 v-if="auctionDetail.data.bids_count === 0">
-              <h4 class="text-start my-2">경매 진행중</h4>
+              <div class="d-flex justify-content-between align-items-baseline">
+              <h4 class="text-start my-2 custom-highlight">경매 진행중</h4>
+              </div>
               <P class="text-start tc-light-gray">※ 입찰한 딜러가 있으면 즉시 선택이 가능합니다.</P>
-              <button  class="bg-sub-color01 bold-18-font modal-bid d-flex mt-3 p-3 justify-content-center blinking">
+              <button  class="btn-primary bold-18-font modal-bid d-flex mt-3 p-3 justify-content-center blinking">
                   <p class="text-center">경매 진행중 입니다.</p>
               </button>
             </BottomSheet02>
@@ -485,7 +487,7 @@
           </div>
           <BottomSheet02 v-if="auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen'">
              <div class="d-flex justify-content-between align-items-baseline">
-              <h4>탁송 신청 정보</h4>
+              <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
             <div class="text-start mt-2">
               <p class="tc-light-gray">낙찰 딜러 :<span class="tc-red">&nbsp; 홍길동 딜러</span></p>
@@ -498,7 +500,9 @@
             </div>
             <div v-if ="auctionDetail.data.status ==='chosen' && isUser">
             <hr>
-            <h4>탁송 확인</h4>
+            <div class="d-flex justify-content-between align-items-baseline">
+            <h4 class="custom-highlight">탁송 확인</h4>
+            </div>
             <p class="text-start tc-light-gray">※ 탁송 서비스 안내는 ' 탁송 확인 '에서 확인 가능합니다. </p>
             <button
               class="my-4 btn-primary bold-18-font modal-bid d-flex p-3 justify-content-between blinking"
@@ -837,14 +841,16 @@
                             </div>
                           </div>
                           <div class="container p-3 mt-3">
-                          <h5>딜러 선택하기</h5>
+                          <div class="d-flex justify-content-between align-items-baseline">
+                          <h4 class="custom-highlight">딜러 선택하기</h4>
+                          </div>
                           <p class="tc-light-gray">입찰 금액이 가장 높은 순으로 5명까지만 표시돼요.</p>
                           <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
                         </div>
                         <div class="bid-bc p-2">
                           <ul v-for="(bid, index) in sortedTopBids" :key="bid.user_id" class="px-0 inspector_list max_width_900">
-                            <li @click="handleClick(bid, $event, index)">
-                              <div class="d-flex gap-4 align-items-center justify-content-between">
+                            <li @click="handleClick(bid, $event, index)" class="min-width-no mx-width-no">
+                              <div class="d-flex gap-4 align-items-center justify-content-between ">
                                 <div class="img_box">
                                   <img :src="getPhotoUrl(bid)" alt="Profile Photo" class="profile-photo" />
                                 </div>
@@ -858,7 +864,7 @@
                             </li>
                           </ul>
                           <ul v-if="!sortedTopBids || !sortedTopBids.length" class="px-0 inspector_list max_width_900 mt-3">
-                            <li>
+                            <li class="min-width-no mx-width-no">
                               <p class="tc-light-gray text-center border-none">선택 가능한 딜러가 없습니다.</p>
                             </li>
                           </ul>
@@ -1042,7 +1048,7 @@ const cancelAttempted = computed({
     store.dispatch('cancelAttempted/setCancelAttempted', { auctionId: auctionId.value, value });
   }
 });
-
+const Chosenconfirm = ref(false);
 const showBidModal = ref(false);
 const auctionModalVisible = ref(false);
 const reauctionModal = ref(false);
@@ -1251,13 +1257,14 @@ function getThreeDaysFromNow() {
 
 
 const isModalVisible = ref(false);
-
+const selectedIndex = ref(null);
 
 /*[사용자] 재경매 - 버튼 눌렀을떄 처리되는 곳*/ 
 const reauction = async () => {
   const id = route.params.id;
   let data = {
   status: 'ing',
+  is_reauction:1,
   final_at: getThreeDaysFromNow(),
 };
 
@@ -1450,11 +1457,74 @@ const selectDealer = async (bid, index) => {
     console.error('Error dealer data:', error);
   }
 };
-const handleClick = async (bid, event, index) => {
-  if (event.currentTarget === event.target || event.currentTarget.contains(event.target)) {
-    await selectDealer(bid, index);
-  }
+const handleClick = (bid, event, index) => {
+  selectedBid.value = bid;
+  selectedIndex.value = index;
+  const textOk = `<div>
+    <div class="mb-5 text-start">
+      <h5>선택딜러 상세 정보</h5>
+      </div>
+        <div class="facturer">
+          <div class="profile ps-2 pt-0 pb-2 ms-0">
+            <div class="dealer-info">
+              <div class="img_box">
+                <img src="${getPhotoUrl(bid)}" alt="Profile Photo" class="profile-photo" />
+              </div>
+              <div class="d-flex justify-content-center flex-column flex-nowrap align-center">
+                <h4>${bid.dealerInfo.name}</h4>
+                <p>${bid.dealerInfo.company}</p>
+                <p class="mt-4 restar">(4.5점)</p>
+              </div>
+            </div>
+          </div>
+          <div>
+          </div>
+          <div class="pt-2 pb-3">
+            <div class="info-item m-0">
+              <div class="phone"></div>
+              <p>010-1234-1234</p>
+            </div>
+            <div class="info-item m-0">
+              <div class="location"></div>
+              <p><span>${bid.dealerInfo.company_addr1}, ${bid.dealerInfo.company_addr2}</span></p>
+            </div>
+            <div class="introduce-area info-item m-0">
+              <p class="text-start process">${bid.dealerInfo.introduce}</p>
+            </div>
+          </div>
+        </div>
+        <div class="top-content-style wd-100">
+            <p class="tc-light-gray">입찰 금액</p>
+            <h4>${amtComma(bid.price)}</h4>
+        </div>
+    </div>`;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그인 경우 활성화
+    .btnBatch('R') // 확인 버튼 위치 지정, 기본은 L
+    .labelOk('딜러 선택') // 확인 버튼 라벨 변경
+    .labelCancel('취소') // 취소 버튼 라벨 변경
+    .addClassNm('review-custom') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .callback(async function (result) { // callback 함수를 async로 변경
+      if (result.isOk) {
+        await ChosenConfirmSelection(); // reauction 함수 호출
+      } 
+    })
+    .confirm(textOk);
 };
+const ChosenConfirmSelection = async () => {
+  Chosenconfirm.value = false;
+  if (selectedBid.value !== null && selectedIndex.value !== null) {
+    await selectDealer(selectedBid.value, selectedIndex.value);
+  }
+  selectedBid.value = null;
+  selectedIndex.value = null;
+};
+
+
+
+
 const getPhotoUrl = (bid) => {
   return bid.dealerfile && bid.dealerfile.files && bid.dealerfile.files.file_user_photo
     ? bid.dealerfile.files.file_user_photo[0].original_url
