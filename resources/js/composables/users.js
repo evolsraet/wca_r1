@@ -333,6 +333,23 @@ export default function useUsers() {
         .put();
     }
 
+    const fileUserSignUpload = async (id,fileData) =>{
+        const formData = new FormData();
+        if (fileData.file_user_sign) {
+            formData.append('file_user_sign', fileData.file_user_sign);
+        }
+
+        return wicac.conn()
+        .url(`/api/users/${id}`)
+        .param(formData)
+        .multipartUpdate()
+        .callback(async function(result) {
+            return result.isSuccess;
+        })
+        .post();
+
+    }
+
     const deleteUser = async (id) => {
         wica.ntcn(swal)
         .param({ _id : id }) // 리턴값에 전달 할 데이터
@@ -380,6 +397,7 @@ export default function useUsers() {
         validationErrors,
         isLoading,
         adminStoreUser,
+        fileUserSignUpload,
         pagination
     }
 }
