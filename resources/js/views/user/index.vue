@@ -83,7 +83,7 @@
                                         <div class="my-auction">
                                             <div class="bid-bc p-2">
                                                 <ul class="px-0 inspector_list max_width_900">
-                                                    <li>
+                                                    <li class="m-auto">
                                                         <div>
                                                             <div class="d-flex gap-4 align-items-center">
                                                                 <div class="img_box">
@@ -108,7 +108,7 @@
                                 </div>
                                 <router-link :to="{ name: 'home' }" class="bid-bc p-3">
                                     <ul class="px-0 inspector_list max_width_900">
-                                        <li>
+                                        <li class="m-auto">
                                             <div>
                                                 <p class="tc-light-gray d-flex justify-content-center">새 차량 등록하기<span class="ms-2 icon-auction-plus"></span></p>
                                             </div>
