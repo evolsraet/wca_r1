@@ -122,11 +122,19 @@
                 <div></div>
                 <div class="mb-3">
                   <label for="user-title" class="form-label">위임장 or 소유자 인감 증명서</label>
-                  <input type="file" @change="handleFileUploadOwner" ref="fileInputOwner" style="display:none">
+                  <input type="file" @change="handleFileUploadProxy" ref="fileAuctionProxy" style="display:none">
+                  <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadProxy">
+                      파일 첨부
+                  </button>
+                  <div class="text-start mb-5 tc-light-gray" v-if="auction.file_auction_proxy_name">매매업체 대표증 / 종사원증 : {{ auction.file_auction_proxy_name }}</div>
+                </div>
+                <div class="mb-3">
+                  <label for="user-title" class="form-label">매도자관련서류</label>
+                  <input type="file" @change="handleFileUploadOwner" ref="fileAuctionOwner" style="display:none">
                   <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
                       파일 첨부
                   </button>
-                  <div class="text-start mb-5 tc-light-gray" v-if="auction.file_user_owner_name">매매업체 대표증 / 종사원증 : {{ auction.file_user_owner_name }}</div>
+                  <div class="text-start mb-5 tc-light-gray" v-if="auction.file_auction_owner_name">매매업체 대표증 / 종사원증 : {{ auction.file_auction_owner_name }}</div>
                 </div>
               </div>
             </div>
@@ -394,9 +402,11 @@ const auction = reactive({
     total_fee: '',
     hope_price: '',
     final_price: '',
-    file_user_owner : '',
-    file_user_owner_name : '',
-}); 
+    file_auction_proxy:'',
+    file_auction_proxy_name : '',
+    file_auction_owner: '',
+    file_auction_owner_name :'',
+});
 
 /*
 const userData = reactive({
@@ -419,7 +429,8 @@ const diagFeeKorean = ref('0 원');
 const totalFeeKorean = ref('0 원');
 const hopePriceFeeKorean = ref('0 원');
 const finalPriceFeeKorean = ref('0 원');
-const fileInputOwner = ref(null);
+const fileAuctionProxy = ref(null);
+const fileAuctionOwner = ref(null);
 
 let created_at;
 let updated_at;
@@ -532,18 +543,35 @@ function editPostCode(elementName) {
     })
 }
 
-function handleFileUploadOwner(event) {
+function handleFileUploadProxy(event) {
     const file = event.target.files[0];
     if (file) {
-        auction.file_user_owner = file;
-        auction.file_user_owner_name = file.name;
+        auction.file_auction_proxy = file;
+        auction.file_auction_proxy_name = file.name;
         console.log("Owner file:", file.name);
     }
 }
 
+function handleFileUploadOwner(event) {
+    const file = event.target.files[0];
+    if (file) {
+        auction.file_auction_owner = file;
+        auction.file_auction_owner_name = file.name;
+        console.log("Owner file:", file.name);
+    }
+}
+
+function triggerFileUploadProxy() {
+    if (fileAuctionProxy.value) {
+      fileAuctionProxy.value.click();
+    } else {
+        console.error("위임장 또는 소유자 인감 증명서 파일을 찾을 수 없습니다.");
+    }
+}
+
 function triggerFileUploadOwner() {
-    if (fileInputOwner.value) {
-      fileInputOwner.value.click();
+    if (fileAuctionOwner.value) {
+      fileAuctionOwner.value.click();
     } else {
         console.error("위임장 또는 소유자 인감 증명서 파일을 찾을 수 없습니다.");
     }
