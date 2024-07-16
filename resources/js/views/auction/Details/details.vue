@@ -498,6 +498,9 @@
             <div>
               <button class="border-6 btn-fileupload my-4 shadow02">매도용 인감증명서 다운로드</button>
             </div>
+            <div v-if="fileOwnerUrl">
+              <button class="border-6 btn-fileupload my-2 shadow02"><a :href=fileOwnerUrl download>매도자관련서류 다운로드</a></button>
+            </div>
             <div v-if ="auctionDetail.data.status ==='chosen' && isUser">
             <hr>
             <div class="d-flex justify-content-between align-items-baseline">
@@ -912,7 +915,7 @@
                       <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                       </div>
                     </div>
-                  <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
+                    <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo"  :fileSignData = "registerForm" @close="handleModalClose" @confirm="handleDealerConfirm" />
 </template>
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount , inject,reactive,nextTick} from 'vue';
@@ -951,7 +954,7 @@ const alarmModal = ref(null);
 const bidSession =ref(false);
 const alarmGuidModal = ref(null);
 const isSellChecked = ref(false);
-const { getUser } = useUsers();
+const { getUser,fileUserSignUpload } = useUsers();
 const { like , setLikes , deleteLike } = useLikes();
 const store = useStore();
 const user = computed(() => store.getters['auth/user']);
@@ -969,6 +972,8 @@ const { numberToKoreanUnit , amtComma , wica , wicaLabel, wicas } = cmmn();
 
 const reviewIsOk = ref(true);
 let likeMessage;
+
+const fileOwnerUrl = ref('');
 
 const swal = inject('$swal');
 const myBidPrice = computed(() => {
@@ -1069,6 +1074,7 @@ const { submitBid, cancelBid,getBidById } = useBids();
 const carDetails = ref({});
 const highestBid = ref(0);
 const lowestBid = ref(0);
+const fileUserSignData = ref({});
 
 const sortedTopBids = computed(() => {
   if (!auctionDetail.value?.data?.top_bids) {
@@ -1109,6 +1115,17 @@ const heightPrice = ref(0);
     }
   );
 };*/
+
+//파일체크
+function fileExstCheck(info){
+    if(info.hasOwnProperty('files')){
+        if(info.files.hasOwnProperty('file_auction_owner')){
+            if(info.files.file_auction_owner[0].hasOwnProperty('original_url')){
+              fileOwnerUrl.value = userInfo.files.file_auction_owner[0].original_url;
+            }
+        }
+    }
+}
 
 const auctionIngChosen = () => {
   auctionChosn.value=true;
@@ -1539,9 +1556,10 @@ const handleModalClose = () => {
   }
 };
 
-const handleDealerConfirm = ({ bid, userData }) => {
+const handleDealerConfirm = ({ bid, userData, fileSignData }) => {
   selectedDealer.value = { ...bid, userData };
   connectDealerModal.value = false;
+  fileUserSignData.value = fileSignData;
   completeAuction();
 };
 
@@ -1577,6 +1595,9 @@ const completeAuction = async () => {
 
   try {
     await chosenDealer(id, data);
+    if(fileUserSignData){
+      let fileUploadResult = await fileUserSignUpload(user.value.id,fileUserSignData.value);
+    }
     auctionDetail.value.data.status = 'chosen';
     const textOk= `<div class="enroll_box" style="position: relative;">
                    <img src="${drift}" alt="자동차 이미지" width="160" height="160">
@@ -1706,6 +1727,11 @@ const fetchAuctionDetail = async () => {
   try {
     auctionDetail.value = await getAuctionById(auctionId);
     console.log(auctionDetail.value.data.likes);
+    
+    const userInfo = await getUser(auctionDetail.value.data.user_id);
+    console.log('userInfo======================');
+    console.log(userInfo)
+    console.log('userInfo======================');
     
     const userLike = auctionDetail.value.data.likes.find(like => like.user_id === user.value.id);
 
