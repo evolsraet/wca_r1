@@ -290,10 +290,9 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
-                path: 'login',
+                path: '/login',
                 name: 'auth.login',
                 component: () => import('../views/login/Login.vue'),
-                beforeEnter: guest,
             },
             {
                 path: 'register',
