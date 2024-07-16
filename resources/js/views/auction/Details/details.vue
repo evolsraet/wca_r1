@@ -1,6 +1,7 @@
 <template>
   <div class="container-fluid" v-if="auctionDetail">
-    <div v-if="!auctionChosn && !showReauctionView && (auctionDetail.data.status !== 'wait' && isUser) || isDealer" class="container">
+    <div v-if="!auctionChosn && !showReauctionView &&(auctionDetail.data.status === 'ing' && auctionDetail.data.bids_count !== 0 && isUser)"></div>
+    <div v-else-if="isDealer || !auctionChosn && !showReauctionView && (auctionDetail.data.status !== 'wait' && isUser) " class="container">
       <div class="web-content-style02">
         <div class="container p-1">
           <div>
@@ -407,14 +408,14 @@
                   <p class="text-center">경매 진행중 입니다.</p>
               </button>
             </BottomSheet02>
-           <BottomSheet02 v-else>
+          <!-- <BottomSheet02 v-else>
               <h4 class="text-start my-2">경매 진행중</h4>
               <P class="text-start tc-light-gray">※ 입찰한 딜러가 있으면 즉시 선택이 가능합니다.</P>
               <button class="bg-sub-color bold-18-font modal-bid d-flex p-3 mt-3 justify-content-between blinking" @click="auctionIngChosen">
                   <p>딜러 선택이 가능해요!</p>
                   <p class="d-flex align-items-center gap-2">바로가기<p class="icon-right-wh"></p></p>
               </button>
-          </BottomSheet02>
+          </BottomSheet02> -->
         </div>
 
           <!--
@@ -825,7 +826,7 @@
                             
                         </div>
 
-                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' && !connectDealerModal || auctionChosn && !connectDealerModal">
+                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' && !connectDealerModal || auctionChosn && !connectDealerModal || (auctionDetail.data.status === 'ing' && auctionDetail.data.bids_count !== 0 && isUser)">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
                               <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
