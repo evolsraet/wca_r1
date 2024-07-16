@@ -71,7 +71,7 @@
           파일 첨부
         </button>
         <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display: none;" id="file_user_photo">
-        <div class="text-start tc-light-gray mt-2" v-if="registerForm.file_user_photo_name">사진 파일: {{ registerForm.file_user_photo_name }}</div>
+        <div class="text-start tc-light-gray mt-2" v-if="registerForm.file_user_sign">사진 파일: {{ registerForm.file_user_sign }}</div>
       </div>
       <h4 class="mt-4">마지막으로 꼼꼼히 확인해 주세요!</h4>
       <div class="summary-box d-flex flex-column p-3 mt-3">
@@ -117,7 +117,7 @@ const showDetails = ref(false);
 const accountDetails = ref(false);
 const isActive = ref(false);
 const fileInputRef = ref(null);
-const registerForm = ref({ file_user_photo: null, file_user_photo_name: '' });
+const registerForm = ref({ file_user_sign: null, file_user_sign_name: '' });
 const imageSrc = ref('');
 const router = useRouter();
 const route = useRoute();
@@ -155,6 +155,7 @@ const confirmSelection = () => {
     bid: selectedBid.value,
     userData: userInfo.value,
     selectedDate: selectedDay.value !== null ? days.value[selectedDay.value].date : null,
+    fileSignData: registerForm.value,
     selectedTime: selectedTime.value
   });
 };
@@ -260,8 +261,8 @@ function triggerFileUpload() {
 function handleFileUpload(event) {
   const file = event.target.files[0];
   if (file) {
-    registerForm.value.file_user_photo = file;
-    registerForm.value.file_user_photo_name = file.name;
+    registerForm.value.file_user_sign = file;
+    registerForm.value.file_user_sign_name = file.name;
     const reader = new FileReader();
     reader.onload = (e) => {
       imageSrc.value = e.target.result;
