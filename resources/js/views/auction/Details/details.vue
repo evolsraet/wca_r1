@@ -85,16 +85,16 @@
                     </div>
                     <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
                       <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
-                      <div v-if="showModal" class="modal">
-                          <div class="modal-content">
-                            <span class="close" @click="closeModal">&times;</span>
-                            <div ref="pdfImagesContainer"></div>
-                          </div>
-                        </div>
-                 
-                    </div>
+                      <div v-if="showPdf" id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                          <iframe
+                              src="https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf"
+                              width="100%"
+                              height="600px"
+                              
+                          ></iframe>
+                      </div>
                   </div>
-                  
+              </div>
                   <!--   <template v-if="auctionDetail.data.hope_price !== null">
                     <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
                       <p>현재 희망가</p>
@@ -1044,6 +1044,7 @@ const showBidModal = ref(false);
 const auctionModalVisible = ref(false);
 const reauctionModal = ref(false);
 const connectDealerModal = ref(false);
+const showPdf = ref(false);
 
 const scrollButtonVisible = ref(false);
 const selectedDealer = ref(null);
@@ -1219,85 +1220,10 @@ const confirmSelection = () => {
   showModal.value = false; 
 };
 
-const props = defineProps({
-  pdfUrl: {
-    type: String,
-    required: true,
-  },
-});
 
-const showModal02 = ref(false);
-const pdfImagesContainer = ref(null);
-
-const loadPdfJs = () => {
-  return new Promise((resolve, reject) => {
-    if (window.pdfjsLib) {
-      resolve();
-      return;
-    }
-    const script = document.createElement('script');
-    script.src = 'https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf';
-    script.onload = resolve;
-    script.onerror = () => reject(new Error('Failed to load PDF.js script'));
-    document.head.appendChild(script);
-  });
-};
 
 const openAlarmModal = async () => {
-  showModal.value = true;
-  try {
-    await loadPdfJs();
-  } catch (error) {
-    console.error(error.message);
-    alert('PDF.js 라이브러리를 로드하는 데 실패했습니다.');
-    showModal.value = false;
-    return;
-  }
-
-  if (typeof props.pdfUrl !== 'string' || !props.pdfUrl) {
-    console.error('Invalid PDF URL');
-    alert('유효하지 않은 PDF URL입니다.');
-    showModal.value = false;
-    return;
-  }
-
-  try {
-    const loadingTask = window.pdfjsLib.getDocument(props.pdfUrl);
-    const pdf = await loadingTask.promise;
-    pdfImagesContainer.value.innerHTML = ''; // 이전 내용을 모두 지웁니다.
-
-    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
-      const page = await pdf.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 1 });
-      const canvas = document.createElement('canvas');
-      const context = canvas.getContext('2d');
-      canvas.height = viewport.height;
-      canvas.width = viewport.width;
-
-      await page.render({
-        canvasContext: context,
-        viewport: viewport
-      }).promise;
-
-      const img = document.createElement('img');
-      img.src = canvas.toDataURL();
-      pdfImagesContainer.value.appendChild(img);
-    }
-  } catch (error) {
-    console.error('Error loading PDF:', error);
-    alert('PDF를 로드하는 중 오류가 발생했습니다.');
-    showModal.value = false;
-  }
-};
-onMounted(() => {
-  pdfImagesContainer.value = document.getElementById('pdfImagesContainer');
-});
-
-const openAlarmGuidModal = () => {
-  console.log("openAlarmGuidModal called");
-  if (alarmGuidModal.value) {
-    alarmGuidModal.value.openModal();
-  }
+  showPdf.value = !showPdf.value;
 };
 
 
@@ -2170,5 +2096,12 @@ opacity: 0;
   .modal-container {
     max-width: 800px;
   }
+}
+#ac-evaluation {
+  cursor: pointer;
+}
+
+#ac-evaluation:hover {
+  color: red; /* 예시 스타일, 필요에 따라 수정 가능 */
 }
 </style>
