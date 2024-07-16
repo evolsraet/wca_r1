@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid" v-if="auctionDetail">
-    <div v-if="auctionDetail.data.bids_count === 0 && !auctionChosn && !showReauctionView && (auctionDetail.data.status !== 'wait' && isUser) || isDealer " class="container">
+    <div v-if="!auctionChosn && !showReauctionView && (auctionDetail.data.status !== 'wait' && isUser) || isDealer" class="container">
       <div class="web-content-style02">
         <div class="container p-1">
           <div>
@@ -84,6 +84,13 @@
                     </div>
                     <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
                       <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
+                      <div v-if="showModal" class="modal">
+                          <div class="modal-content">
+                            <span class="close" @click="closeModal">&times;</span>
+                            <div ref="pdfImagesContainer"></div>
+                          </div>
+                        </div>
+                 
                     </div>
                   </div>
                   
@@ -400,14 +407,14 @@
                   <p class="text-center">경매 진행중 입니다.</p>
               </button>
             </BottomSheet02>
-           <!-- <BottomSheet02 v-else>
+           <BottomSheet02 v-else>
               <h4 class="text-start my-2">경매 진행중</h4>
               <P class="text-start tc-light-gray">※ 입찰한 딜러가 있으면 즉시 선택이 가능합니다.</P>
               <button class="bg-sub-color bold-18-font modal-bid d-flex p-3 mt-3 justify-content-between blinking" @click="auctionIngChosen">
                   <p>딜러 선택이 가능해요!</p>
                   <p class="d-flex align-items-center gap-2">바로가기<p class="icon-right-wh"></p></p>
               </button>
-          </BottomSheet02>-->
+          </BottomSheet02>
         </div>
 
           <!--
@@ -818,7 +825,7 @@
                             
                         </div>
 
-                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' && !connectDealerModal || auctionChosn && !connectDealerModal || auctionDetail.data.bids_count !== 0 && isUser && auctionDetail.data.status === 'ing'">
+                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' && !connectDealerModal || auctionChosn && !connectDealerModal">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
                               <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
@@ -1211,33 +1218,79 @@ const confirmSelection = () => {
   showModal.value = false; 
 };
 
-const pdfUrl = 'https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf';
+const props = defineProps({
+  pdfUrl: {
+    type: String,
+    required: true,
+  },
+});
 
+const showModal02 = ref(false);
+const pdfImagesContainer = ref(null);
 
-/* 위카 진단평가 확인하기 모달 */ 
-const openAlarmModal = () => {
-  window.open(pdfUrl);
- /* const text= `<div class="enroll_box" style="position: relative;">
-                  <img src="${carInfo}" alt="자동차 이미지" width="160" height="160">
-                  <p class="overlay_text04">해당 서비스는 개발 중 상태입니다.</p>
-                </div>`;
-  wica.ntcn(swal)
-    .useHtmlText() // HTML 태그 인 경우 활성화
-    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
-    .addOption({ padding: 20, height: 265 }) // swal 기타 옵션 추가
-    .callback(function (result) {
-      if (result.isOk) {
-      } else if (!result.isOk) {
-      } else {
-        console.error('Unexpected result:', result);
-      }
-    })
-    .confirm(text);
-
-  /*if (alarmModal.value) {
-    alarmModal.value.openModal();
-  }*/
+const loadPdfJs = () => {
+  return new Promise((resolve, reject) => {
+    if (window.pdfjsLib) {
+      resolve();
+      return;
+    }
+    const script = document.createElement('script');
+    script.src = 'https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf';
+    script.onload = resolve;
+    script.onerror = () => reject(new Error('Failed to load PDF.js script'));
+    document.head.appendChild(script);
+  });
 };
+
+const openAlarmModal = async () => {
+  showModal.value = true;
+  try {
+    await loadPdfJs();
+  } catch (error) {
+    console.error(error.message);
+    alert('PDF.js 라이브러리를 로드하는 데 실패했습니다.');
+    showModal.value = false;
+    return;
+  }
+
+  if (typeof props.pdfUrl !== 'string' || !props.pdfUrl) {
+    console.error('Invalid PDF URL');
+    alert('유효하지 않은 PDF URL입니다.');
+    showModal.value = false;
+    return;
+  }
+
+  try {
+    const loadingTask = window.pdfjsLib.getDocument(props.pdfUrl);
+    const pdf = await loadingTask.promise;
+    pdfImagesContainer.value.innerHTML = ''; // 이전 내용을 모두 지웁니다.
+
+    for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+      const page = await pdf.getPage(pageNum);
+      const viewport = page.getViewport({ scale: 1 });
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
+      canvas.height = viewport.height;
+      canvas.width = viewport.width;
+
+      await page.render({
+        canvasContext: context,
+        viewport: viewport
+      }).promise;
+
+      const img = document.createElement('img');
+      img.src = canvas.toDataURL();
+      pdfImagesContainer.value.appendChild(img);
+    }
+  } catch (error) {
+    console.error('Error loading PDF:', error);
+    alert('PDF를 로드하는 중 오류가 발생했습니다.');
+    showModal.value = false;
+  }
+};
+onMounted(() => {
+  pdfImagesContainer.value = document.getElementById('pdfImagesContainer');
+});
 
 const openAlarmGuidModal = () => {
   console.log("openAlarmGuidModal called");

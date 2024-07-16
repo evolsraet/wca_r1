@@ -5,7 +5,7 @@
     --> 
     <div class="container">
         <form @submit.prevent="submitForm" v-for="review in reviewData" :key="review">
-            <div class="container mov-wide">
+            <div class="container">
                     <div class="container-img">
                         <h5 class="my-3">후기 작성</h5>
                         <div class="left-img">

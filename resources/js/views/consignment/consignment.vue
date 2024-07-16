@@ -1,5 +1,5 @@
 <template>
-  <div class="container mov-wide d-flex flex-column gap-5">
+  <div class="container d-flex flex-column gap-5">
     <div v-if="!fileuploadvue" class="card p-3 my-4">
       <div class="profile ms-0 p-0">
         <div class="dealer-info">

@@ -1,6 +1,6 @@
 
 <template>
-  <div class="container p-5 mov-wide">
+  <div class="container p-5">
     <form @submit.prevent="updateProfile">
       <h4 class="mb-5">내 정보 수정</h4>
       <div class="form-group profile-content">
