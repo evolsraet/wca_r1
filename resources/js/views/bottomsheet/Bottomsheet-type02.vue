@@ -27,6 +27,7 @@ const startY = ref(0);
 const currentY = ref(0);
 const deltaY = ref(0);
 const sheetHeight = ref(props.initial === 'half' ? window.innerHeight / 2 : 30);
+const maxSheetHeight = window.innerHeight * 0.1;
 let animationFrame = null;
 
 const sheet = ref(null);
@@ -34,17 +35,17 @@ const sheet = ref(null);
 const toggleSheet = (event) => {
   if (window.innerWidth >= 992) return;
   if (showHead.value) {
-    expandSheet();
+    showHead.value = false;
+    showBottomSheet.value = true;
+    sheetHeight.value = window.innerHeight / 2;
   } else {
-    collapseSheet();
+    showHead.value = true;
+    showBottomSheet.value = false;
+    sheetHeight.value = 30;
   }
-};
-
-const closeSheet = () => {
-  showBottomSheet.value = false;
-  showHead.value = true;
-  sheetHeight.value = 20;
-  sheet.value.style.height = `${sheetHeight.value}px`;
+  requestAnimationFrame(() => {
+    sheet.value.style.height = `${sheetHeight.value}px`;
+  });
 };
 
 const startDrag = (event) => {
@@ -64,13 +65,15 @@ const onDrag = (event) => {
   deltaY.value = startY.value - currentY.value;
 
   if (showBottomSheet.value && deltaY > 0) {
-    // half 상태일 때 위로 드래그하는 것을 막음
     return;
   }
 
   cancelAnimationFrame(animationFrame);
   animationFrame = requestAnimationFrame(() => {
-    const newHeight = Math.max(20, sheetHeight.value + deltaY.value);
+    let newHeight = Math.max(20, sheetHeight.value + deltaY.value);
+    if (showHead.value) {
+      newHeight = Math.min(newHeight, maxSheetHeight);
+    }
     sheet.value.style.height = `${newHeight}px`;
   });
 };
@@ -84,17 +87,24 @@ const endDrag = (event) => {
   document.removeEventListener('touchmove', onDrag);
   document.removeEventListener('touchend', endDrag);
 
-  const finalHeight = Math.max(20, sheetHeight.value + deltaY.value);
+  let finalHeight = Math.max(20, sheetHeight.value + deltaY.value);
+  if (showHead.value) {
+    finalHeight = Math.min(finalHeight, maxSheetHeight);
+  }
 
-  const oneThirdHeight = window.innerHeight / 3;
-  const oneTenthHeight = window.innerHeight / 10;
-
-  if (showHead.value && finalHeight > sheetHeight.value - oneTenthHeight) {
-    expandSheet();
-  } else if (finalHeight > oneThirdHeight) {
+  if (showHead.value && deltaY.value > 10) { 
     showBottomSheet.value = true;
     showHead.value = false;
-    sheetHeight.value = window.innerHeight / 3;
+    sheetHeight.value = window.innerHeight / 2;
+    requestAnimationFrame(() => {
+      sheet.value.style.height = `${sheetHeight.value}px`;
+    });
+  } else if (showBottomSheet.value && deltaY.value < -10) { 
+    collapseSheet();
+  } else if (finalHeight > maxSheetHeight * 0.5) {
+    showBottomSheet.value = true;
+    showHead.value = false;
+    sheetHeight.value = window.innerHeight / 2;
     requestAnimationFrame(() => {
       sheet.value.style.height = `${sheetHeight.value}px`;
     });
@@ -108,7 +118,7 @@ const endDrag = (event) => {
 const expandSheet = () => {
   showBottomSheet.value = true;
   showHead.value = false;
-  sheetHeight.value = window.innerHeight * 0.1;
+  sheetHeight.value = window.innerHeight * 0.5;
   requestAnimationFrame(() => {
     sheet.value.style.height = `${sheetHeight.value}px`;
   });
@@ -173,7 +183,7 @@ onBeforeUnmount(() => {
 }
 
 .sheet.head {
-  height: 300px;
+  height: 30px;
 }
 
 .sheet.half {

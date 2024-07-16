@@ -33,15 +33,15 @@
                       <div class="gap-1" :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
                       <div v-if="!isMobileView" class="d-flex flex-row gap-1">
                         <div class="w-50">
-                          <div class="card-img-top-ty02" :style="borderStyle"></div>
+                          <div class="card-img-top-ty02"></div>
                         </div>
                         <div class="w-50 d-flex flex-column gap-1">
-                          <div class="card-img-top-ty02 h-50 left-image background-auto" :style="borderStyle"></div>
-                          <div class="card-img-top-ty02 h-50 right-image background-auto" :style="borderStyle"></div>
+                          <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
+                          <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
                         </div>
                       </div>
                       <div v-if="isMobileView">
-                        <div class="card-img-top-ty02" :style="borderStyle"></div>
+                        <div class="card-img-top-ty02"></div>
                       </div>
                     </div>
 
@@ -84,7 +84,7 @@
                       </div>
                     </div>
                     <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
-                      <p class="ac-evaluation mt-4 btn-fileupload-red" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
+                      <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
                       <div class="mt-5" v-if="showPdf">
                       <h5>진단 평가</h5>
                       <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
@@ -868,7 +868,7 @@
                          <!-- 딜러 선택시 모달 -->
                     
                         <BottomSheet02 class="container" v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
-                          <button type="button" class="btn btn-dark d-flex align-items-center justify-content-center gap-1" @click="toggleView">재경매 하기<p class="icon-up-wh"></p></button>
+                          <button type="button" class="btn btn-dark d-flex align-items-center justify-content-center gap-1" @click="toggleView">재경매 하기<div class="icon-up-wh">&nbsp;</div></button>
                         </BottomSheet02>
                        <!-- <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView &&isUser" class="p-0 filter-content">
                         <div>
