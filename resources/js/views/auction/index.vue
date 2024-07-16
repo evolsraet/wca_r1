@@ -1155,12 +1155,10 @@ const fetchFilteredBids = async () => {
 };
 
 const filterLikeData = (auctions, likes="none") => {
-
     auctions.forEach(auction => {
-        if(likes == 'none'){
-        likes = auction.likes;
-    }
-        const userLike = likes.find(like => like.likeable_id === auction.id && like.user_id === user.value.id);
+         likes = auction.likes;
+        
+        const userLike = likes.find(like => like.likeable_id == auction.id && like.user_id == user.value.id);
         if (userLike) {
             auction.like = userLike;
             auction.isFavorited = true;
