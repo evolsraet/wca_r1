@@ -345,7 +345,7 @@
             </div>
             <h5 class="mt-5">평가자 의견</h5>
             <div class="form-group">
-              <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo_digician }}</textarea>
+              <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo_digician || "평가자의 의견이 아직 없습니다." }}</textarea>
             </div>
             <ul class="machine-inform-title">
               <li class="tc-light-gray">거래지역</li>
