@@ -825,8 +825,8 @@
                             <AlarmGuidModal ref="alarmGuidModal" />-->
                             
                         </div>
-
-                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' && !connectDealerModal || auctionChosn && !connectDealerModal || (auctionDetail.data.status === 'ing' && auctionDetail.data.bids_count !== 0 && isUser)">
+                        
+                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' && !connectDealerModal || auctionChosn && !connectDealerModal || !connectDealerModal && (auctionDetail.data.status === 'ing' && auctionDetail.data.bids_count !== 0 && isUser) ">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
                               <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
