@@ -496,10 +496,10 @@
               <p class="tc-light-gray">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red ms-1">2024년 6월 26일 오후 6:12</span></p>
             </div>
             <div>
-              <button class="border-6 btn-fileupload my-4 shadow02"><a :href=fileSignUrl download>매도용 인감증명서 다운로드</a></button>
+              <button class="border-6 btn-fileupload my-4 shadow02"><a :href=fileSignUrl download class="tc-light-gray">매도용 인감증명서 다운로드</a></button>
             </div>
             <div v-if="fileOwnerUrl">
-              <button class="border-6 btn-fileupload my-2 shadow02"><a :href=fileOwnerUrl download>매도자관련서류 다운로드</a></button>
+              <button class="border-6 btn-fileupload my-2 shadow02"><a :href=fileOwnerUrl download class="tc-light-gray">매도자관련서류 다운로드</a></button>
             </div>
             <div v-if ="auctionDetail.data.status ==='chosen' && isUser">
             <hr>
