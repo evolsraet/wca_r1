@@ -818,9 +818,9 @@
                             </div>
                           </BottomSheet03>
 
-                            
+                          <transition name="fade" mode="out-in">
                             <bid-modal v-if="showBidModal" :amount="amount" :highestBid="highestBid" :lowestBid="lowestBid" @close="closeBidModal" @confirm="confirmBid"></bid-modal>
-                            
+                            </transition>
                         <!--    <div v-if="isDealer && auctionDetail.data.status === 'ing' && (succesbid || succesbidhope || auctionDetail.data.bids.some(bid => bid.user_id === user.id)) && auctionDetail.data.hope_price !== null" @click.stop="">
                               <h5 class="mx-3 text-center">{{ minutesLeft }}</h5>
                               <p class="auction-deadline my-4">나의 입찰 금액 <span class="tc-red">{{ amtComma(myBidPrice) }}</span></p>
@@ -2220,4 +2220,24 @@ opacity: 0;
 #ac-evaluation:hover {
   color: red; /* 예시 스타일, 필요에 따라 수정 가능 */
 }
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
+    opacity: 0;
+  }
+  
+  .fade-in-transition {
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .fade-in-transition-enter-active,
+  .fade-in-transition-leave-active {
+    opacity: 1;
+  }
+  
+  .fade-in-transition-enter,
+  .fade-in-transition-leave-to {
+    opacity: 0;
+  }
 </style>
