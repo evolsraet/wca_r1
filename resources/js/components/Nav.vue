@@ -244,7 +244,7 @@
                 </li>
               </div>
               <li class="nav-item my-member ms-auto dropdown">
-                <a class="tc-wh p-1 pb-0 mx-2 dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <a class="tc-wh p-1 pb-0 mx-2 dropdown-toggle mb-1" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   {{ user.name }} 님
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
