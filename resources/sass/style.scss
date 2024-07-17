@@ -4193,3 +4193,25 @@ width: 100%;
 .sheet{
     z-index: 1;
 }
+
+/* 애니메이션 커스텀 */
+.fade-enter-active, .fade-leave-active {
+    transition: opacity 0.5s;
+  }
+  .fade-enter, .fade-leave-to {
+    opacity: 0;
+  }
+  
+  .fade-in-transition {
+    transition: opacity 0.5s ease-in-out;
+  }
+  
+  .fade-in-transition-enter-active,
+  .fade-in-transition-leave-active {
+    opacity: 1;
+  }
+  
+  .fade-in-transition-enter,
+  .fade-in-transition-leave-to {
+    opacity: 0;
+  }

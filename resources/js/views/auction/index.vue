@@ -54,55 +54,57 @@ TODO:
                             <label class="form-check-label" for="kia">기아 <span class="text-secondary mx-2">(1,356)</span></label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                            <label class="form-check-label" for="kia">제네시스 <span class="text-secondary mx-2">(1,356)</span></label>
+                            <input class="form-check-input" type="radio" name="manufacturer" id="genesis" value="genesis">
+                            <label class="form-check-label" for="genesis">제네시스 <span class="text-secondary mx-2">(1,356)</span></label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                            <label class="form-check-label" for="kia">쉐보레(GM대우) <span class="text-secondary mx-2">(1,356)</span></label>
+                            <input class="form-check-input" type="radio" name="manufacturer" id="chevrolet" value="chevrolet">
+                            <label class="form-check-label" for="chevrolet">쉐보레(GM대우) <span class="text-secondary mx-2">(1,356)</span></label>
                         </div>
-                        <div class="form-check ">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                            <label class="form-check-label" for="kia">르노코리아(삼성) <span class="text-secondary mx-2">(1,356)</span></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="manufacturer" id="renault" value="renault">
+                            <label class="form-check-label" for="renault">르노코리아(삼성) <span class="text-secondary mx-2">(1,356)</span></label>
                         </div>
-                        <div class="form-check ">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                            <label class="form-check-label" for="kia">KG모빌리티(쌍용) <span class="text-secondary mx-2">(1,356)</span></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="manufacturer" id="kg_mobility" value="kg_mobility">
+                            <label class="form-check-label" for="kg_mobility">KG모빌리티(쌍용) <span class="text-secondary mx-2">(1,356)</span></label>
                         </div>
-                        <div class="form-check ">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                            <label class="form-check-label" for="kia">BMW <span class="text-secondary mx-2">(1,356)</span></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="manufacturer" id="bmw" value="bmw">
+                            <label class="form-check-label" for="bmw">BMW <span class="text-secondary mx-2">(1,356)</span></label>
                         </div>
-                        <div class="form-check ">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                            <label class="form-check-label" for="kia">화물 특징 기타 <span class="text-secondary mx-2">(1,356)</span></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="manufacturer" id="other_trucks" value="other_trucks">
+                            <label class="form-check-label" for="other_trucks">화물 특징 기타 <span class="text-secondary mx-2">(1,356)</span></label>
                         </div>
-                        <div class="form-check ">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                            <label class="form-check-label" for="kia">벤츠 <span class="text-secondary mx-2">(1,356)</span></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="manufacturer" id="mercedes" value="mercedes">
+                            <label class="form-check-label" for="mercedes">벤츠 <span class="text-secondary mx-2">(1,356)</span></label>
                         </div>
-                        <div class="form-check ">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                            <label class="form-check-label" for="kia">아우디 <span class="text-secondary mx-2">(1,356)</span></label>
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="manufacturer" id="audi" value="audi">
+                            <label class="form-check-label" for="audi">아우디 <span class="text-secondary mx-2">(1,356)</span></label>
                         </div>
                     </div>
-                </div>
-                <div class="sub-side mt-2">
-                    <h5>분류</h5>
-                    <div class="mt-4 pb-3 bd-gray">
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" checked>
-                            <label class="form-check-label" for="hyundai">국산차 <span class="text-secondary mx-2">(1,356)</span></label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer">
-                            <label class="form-check-label" for="kia">수입차 <span class="text-secondary mx-2">(1,356)</span></label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer">
-                            <label class="form-check-label" for="kia">화물 특장 기타 <span class="text-secondary mx-2">(1,356)</span></label>
-                        </div>
-                    </div>
+                </div>    
+                        <div class="sub-side mt-2">
+                            <h5>분류</h5>
+                            <div class="mt-4 pb-3 bd-gray">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="domestic" value="domestic" checked>
+                                    <label class="form-check-label" for="domestic">국산차 <span class="text-secondary mx-2">(1,356)</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="imported" value="imported">
+                                    <label class="form-check-label" for="imported">수입차 <span class="text-secondary mx-2">(1,356)</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="special_trucks" value="special_trucks">
+                                    <label class="form-check-label" for="special_trucks">화물 특장 기타 <span class="text-secondary mx-2">(1,356)</span></label>
+                                </div>
+                            </div>
+
+
                     <!-- 지역 섹션 -->
                     <div class="region mt-5">
                         <h5>지역</h5>
@@ -424,7 +426,9 @@ TODO:
                     <div v-if="isDealer" class="filter-content">
                         <!-- 페이지의 나머지 내용 -->
                         <button @click="toggleModal" class="animCircle filter-button tc-light-gray mx-2"> 필터</button>
+                        <transition name="fade" mode="out-in">
                         <FilterModal v-if="showModal" @close="handleClose" />
+                        </transition>
                     </div>
                 </div>
                 <div>

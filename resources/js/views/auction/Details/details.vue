@@ -2222,24 +2222,4 @@ opacity: 0;
 #ac-evaluation:hover {
   color: red; /* 예시 스타일, 필요에 따라 수정 가능 */
 }
-.fade-enter-active, .fade-leave-active {
-    transition: opacity 0.5s;
-  }
-  .fade-enter, .fade-leave-to /* .fade-leave-active in <2.1.8 */ {
-    opacity: 0;
-  }
-  
-  .fade-in-transition {
-    transition: opacity 0.5s ease-in-out;
-  }
-  
-  .fade-in-transition-enter-active,
-  .fade-in-transition-leave-active {
-    opacity: 1;
-  }
-  
-  .fade-in-transition-enter,
-  .fade-in-transition-leave-to {
-    opacity: 0;
-  }
 </style>
