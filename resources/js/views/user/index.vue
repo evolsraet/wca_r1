@@ -16,7 +16,7 @@
     <div>
         <div class="regiest-content">
             <div class="container my-4">
-                <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 mt-2 mb-0">
+                <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 pb-0 mt-4 mb-0">
                     <h2 class="fw-bolder lh-base animated-text">내 차 판매는 <br>위카에서 !</h2>
                     <router-link :to="{ name: 'auction.index' }" href="" class="btn-apply p-0 m-0 animated-button">더 알아보기</router-link>
                 </div>
