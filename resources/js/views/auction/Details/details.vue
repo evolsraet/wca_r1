@@ -540,7 +540,9 @@
             <div class="modal-container">
               <div class="card-body">
                 <div class="text-start">
-                  <h4>탁송지 변경</h4>
+                  <div class="d-flex">
+                  <h4 class="custom-highlight">탁송지 변경</h4>
+                  </div>
                   <p>원하시는 탁송지를 선택해주세요.</p>
                   <a href="/addr" class="fs-6 tc-light-gray link-hov">다른 주소지로 변경, 추가를 원하시나요?</a>
                 </div>
@@ -1210,7 +1212,7 @@ const renderAuctionItems = () => {
         <div class="my-auction">
           <div class="bid-bc p-2" style="max-height: 480px;">
             <ul class="px-0 inspector_list max_width_900">
-              <li>
+              <li class="min-width-no mx-width-no">
                 <div class="text-start fw-semibold">
                   <p>명칭: ${auction.name}</p>
                   <p>주소: ${auction.address}</p>
