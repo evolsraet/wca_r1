@@ -496,7 +496,7 @@
               <p class="tc-light-gray">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red ms-1">2024년 6월 26일 오후 6:12</span></p>
             </div>
             <div>
-              <button class="border-6 btn-fileupload my-4 shadow02">매도용 인감증명서 다운로드</button>
+              <button class="border-6 btn-fileupload my-4 shadow02"><a :href=fileSignUrl download>매도용 인감증명서 다운로드</a></button>
             </div>
             <div v-if="fileOwnerUrl">
               <button class="border-6 btn-fileupload my-2 shadow02"><a :href=fileOwnerUrl download>매도자관련서류 다운로드</a></button>
@@ -974,6 +974,7 @@ const reviewIsOk = ref(true);
 let likeMessage;
 
 const fileOwnerUrl = ref('');
+const fileSignUrl =ref('');
 
 const swal = inject('$swal');
 const myBidPrice = computed(() => {
@@ -1124,6 +1125,12 @@ function fileExstCheck(info){
               fileOwnerUrl.value = userInfo.files.file_auction_owner[0].original_url;
             }
         }
+      
+        if(info.files.hasOwnProperty('file_user_sign')){
+            if(info.files.file_user_sign[0].hasOwnProperty('original_url')){
+              fileSignUrl.value = info.files.file_user_sign[0].original_url;
+            }
+        } 
     }
 }
 
@@ -1726,13 +1733,13 @@ const fetchAuctionDetail = async () => {
   const auctionId = parseInt(route.params.id);
   try {
     auctionDetail.value = await getAuctionById(auctionId);
-    console.log(auctionDetail.value.data.likes);
-    
-    const userInfo = await getUser(auctionDetail.value.data.user_id);
-    console.log('userInfo======================');
-    console.log(userInfo)
-    console.log('userInfo======================');
+    const userInfoData = await getUser(auctionDetail.value.data.user_id);
 
+
+    fileExstCheck(userInfoData);
+    
+
+    
     const userLike = auctionDetail.value.data.likes.find(like => like.user_id === user.value.id);
 
     if (userLike) {
