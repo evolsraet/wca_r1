@@ -57,8 +57,8 @@
                     </div>
                   </div>
                   <div class="card-body p-3 pt-0 ">
-                    <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                    <p>{{ carDetails.year }} 년 / 2.4km / 무사고</p>
+                    <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                    <p>{{ carDetails.year }} 년 | 2.4km | 무사고</p>
                     <p class="tc-light-gray">현대 소나타 (DN8)</p>
                     <div class="enter-view">
                       <AlarmModal ref="alarmModal" />

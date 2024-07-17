@@ -4,59 +4,59 @@
 <template>
     <div>
         <div class="regiest-content">
-            <div class="layout-container02">
-                <!-- 딜러 프로필 요약 정보 -->
-                <div class="banner-top primary-background">
-                    <div>
-                        <div class="profile dealer-mp">
-                           <!-- <div class="dealer-info">
-                                <img src="../../../img/myprofile_ex.png" alt="Profile Image" class="main-profile">
-                                <div class="deal-info">
-                                    <p class="tc-light-gray">{{ user.dealer.company }}</p>
-                                    <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
-                                    <p class="restar">(4.5점)</p>
-                                    <div>
-                                        <p v-if="user.status === 'fail'" class="no-bidding mt-3"><span>입찰 불가</span></p>
-                                        <p v-else-if="user.status === 'ok'" class="bidding mt-3"><span>입찰 가능</span></p>
-                                    </div>
+            <div class="banner-top primary-background">
+                <div>
+                    <div class="profile dealer-mp">
+                       <!-- <div class="dealer-info">
+                            <img src="../../../img/myprofile_ex.png" alt="Profile Image" class="main-profile">
+                            <div class="deal-info">
+                                <p class="tc-light-gray">{{ user.dealer.company }}</p>
+                                <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
+                                <p class="restar">(4.5점)</p>
+                                <div>
+                                    <p v-if="user.status === 'fail'" class="no-bidding mt-3"><span>입찰 불가</span></p>
+                                    <p v-else-if="user.status === 'ok'" class="bidding mt-3"><span>입찰 가능</span></p>
                                 </div>
-                            </div>-->
+                            </div>
+                        </div>-->
 
+                    <div>
+                        <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ auctionsData.length }}</span>건 있습니다</p>
+                        <!--
+                        <div class="w-50">
+                            <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1 shadow-sm"><span>입찰 불가</span></p>
+                            <p v-else-if="user.status === 'ok'" class="bidding mt-1 mb-1 shadow-sm"><span>입찰 가능</span></p>
+                        </div>
+                        <p class="tc-light-gray mb-3 mt-2">입찰가능 유효시간 2024.03.20</p>-->
+                    </div>
                         <div>
-                            <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ auctionsData.length }}</span>건 있습니다</p>
-                            <!--
-                            <div class="w-50">
-                                <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1 shadow-sm"><span>입찰 불가</span></p>
-                                <p v-else-if="user.status === 'ok'" class="bidding mt-1 mb-1 shadow-sm"><span>입찰 가능</span></p>
+                            <div style="display: flex; align-items: flex-end;">
+                                <div class="car-image"></div>
                             </div>
-                            <p class="tc-light-gray mb-3 mt-2">입찰가능 유효시간 2024.03.20</p>-->
-                        </div>
-                            <div>
-                                <div style="display: flex; align-items: flex-end;">
-                                    <div class="car-image"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="slide-up-ani activity-info bold-18-font process mb-0">
-                             <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                            <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
-                            <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
-                            </router-link>
-                            <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo' }}" class="item">
-                            <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
-                            <p class="bid-icon tc-light-gray normal-16-font mb-0">입찰</p>
-                            </router-link>
-                            <router-link :to="{  name: 'dealer.bids' }" class="item">
-                            <p><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
-                            <p class="suc-bid-icon tc-light-gray normal-16-font mb-0">낙찰</p>
-                            </router-link>
-                         <!--   <div class="item">
-                            <p><span class="tc-red" ref="item4">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
-                            <p class="purchase-icon tc-light-gray normal-16-font">완료</p>
-                            </div>-->
                         </div>
                     </div>
+                    <div class="slide-up-ani activity-info bold-18-font process mb-0">
+                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
+                        <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
+                        <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
+                        </router-link>
+                        <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo' }}" class="item">
+                        <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
+                        <p class="bid-icon tc-light-gray normal-16-font mb-0">입찰</p>
+                        </router-link>
+                        <router-link :to="{  name: 'dealer.bids' }" class="item">
+                        <p><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
+                        <p class="suc-bid-icon tc-light-gray normal-16-font mb-0">낙찰</p>
+                        </router-link>
+                     <!--   <div class="item">
+                        <p><span class="tc-red" ref="item4">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
+                        <p class="purchase-icon tc-light-gray normal-16-font">완료</p>
+                        </div>-->
+                    </div>
                 </div>
+            </div>
+            <div class="container layout-container02">
+                <!-- 딜러 프로필 요약 정보 -->
                 <div class="container content p-4">
                     <div class="container enter-view text-start mb-2">
                         <h3 class="review-title">공지사항</h3>
