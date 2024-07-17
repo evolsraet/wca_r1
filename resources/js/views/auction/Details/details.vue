@@ -1667,8 +1667,6 @@ if (!amount.value || isNaN(parseFloat(amount.value))) {
 }
 
 
-
-
 const handleImmediateAuctionEnd = async (userId, price) => {
   const id = route.params.id;
   const data = {
@@ -1739,7 +1737,7 @@ const fetchAuctionDetail = async () => {
     fileExstCheck(userInfoData);
     
 
-    
+
     const userLike = auctionDetail.value.data.likes.find(like => like.user_id === user.value.id);
 
     if (userLike) {

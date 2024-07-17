@@ -1,12 +1,13 @@
 <template>
   <div class="container d-flex flex-column gap-5">
-    <div v-if="!fileuploadvue" class="card p-3 my-4">
+    <div v-if="!fileuploadvue" class="p-3 my-4">
+      <h4 class="my-1 mb-5">탁송 요청</h4>
       <div class="profile ms-0 p-0">
         <div class="dealer-info">
           <img :src="photoUrl(userData)" alt="Profile Photo" class="profile-photo" />
           <div class="deal-info">
             <p class="tc-light-gray">낙찰액</p>
-            <h4>{{ amtComma(bid?.price) }}</h4>
+            <h4>{{ amtComma(selectedBid?.price ?? 0) }}</h4>
             <p><span class="fw-medium">{{ userData?.dealer.name }}</span>&nbsp;딜러</p>
             <p class="restar">4.5점</p>
           </div>
@@ -61,7 +62,7 @@
       </div>
       <hr class="custom-hr" />
       <p class="text-center mb-2">매도용 인감증명서를 <br> 준비해 주세요.</p>
-      <button type="button" class="btn btn-primary" @click="toggleView">다음</button>
+      <button type="button" class="btn btn-primary w-100" @click="toggleView">다음</button>
     </div>
     <div v-if="fileuploadvue" class="card p-3 my-4">
       <h4>매도용 인감증명서를 첨부해 주세요</h4>
@@ -77,7 +78,7 @@
       <div class="summary-box d-flex flex-column p-3 mt-3">
         <div class="d-flex justify-content-start gap-5 mb-2">
           <p class="mb-0">낙찰액</p>
-          <p class="mb-0">{{ amtComma(bid?.price) }}</p>
+          <p class="mb-0">{{ amtComma(selectedBid?.price ?? 0) }}</p>
         </div>
         <div class="d-flex justify-content-start gap-5">
           <p class="mb-0"><span class="me-3">딜</span>러</p>
@@ -92,7 +93,7 @@
           <p class="mb-0"><span class="me-2">{{ selectedBank }}</span>|<span class="ms-2">{{ account }}</span></p>
         </div>
       </div>
-      <button class="btn btn-primary my-3" @click="confirmSelection">완료</button>
+      <button class="btn btn-primary my-3 w-100" @click="confirmSelection">완료</button>
     </div>
   </div>
 </template>
