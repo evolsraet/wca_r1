@@ -1478,8 +1478,8 @@ const handleClick = (bid, event, index) => {
   selectedBid.value = bid;
   selectedIndex.value = index;
   const textOk = `<div>
-    <div class="mb-5 text-start">
-      <h5>선택딜러 상세 정보</h5>
+    <div class="mb-5 text-start d-flex">
+      <h5 class="custom-highlight">선택딜러 상세 정보</h5>
       </div>
         <div class="facturer">
           <div class="profile ps-2 pt-0 pb-2 ms-0">
@@ -1732,7 +1732,7 @@ const fetchAuctionDetail = async () => {
     console.log('userInfo======================');
     console.log(userInfo)
     console.log('userInfo======================');
-    
+
     const userLike = auctionDetail.value.data.likes.find(like => like.user_id === user.value.id);
 
     if (userLike) {
