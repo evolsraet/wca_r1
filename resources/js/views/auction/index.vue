@@ -481,7 +481,7 @@ TODO:
                                     <div class="row-wrapper">
                                         <div class="row" :class="{'pulled': isPulling && distance > 0}">
                                             <!-- if. 경매 ing 있을때 -->
-                                            <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in auctionsData" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
+                                            <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="auction in auctionsData" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
                                                 <div class="card my-auction">
                                                     <div v-if="isDealer">
                                                         <input class="toggle-heart" type="checkbox" :id="'favorite-' + auction.id" :checked="auction.isFavorited" @click.stop="toggleFavorite(auction)" />
@@ -572,7 +572,7 @@ TODO:
                             <div v-if="favoriteAuctionsData.length > 0">
                                 <!-- 경매 목록 -->
                                 <div class="row">
-                                    <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in favoriteAuctionsData" :key="auction.id" @click="navigateToDetail(auction)">
+                                    <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="auction in favoriteAuctionsData" :key="auction.id" @click="navigateToDetail(auction)">
                                         <div class="card my-auction">
                                             <div v-if="isDealer">
                                                 <input class="toggle-heart" type="checkbox" :id="'favorite-' + auction.id" :checked="auction.isFavorited" @click.stop="toggleFavorite(auction)" />
@@ -671,7 +671,7 @@ TODO:
                         </div>
                         <div class="container my-4" v-if="currentTab === 'auctionDone'">
                             <div class="row">
-                                <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auction in filteredDone" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
+                                <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="auction in filteredDone" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
                                     <div class="card my-auction">
                                         <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
                                         <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
@@ -696,7 +696,7 @@ TODO:
                             <div v-if="bidsData.length > 0">
                                 <!-- 경매 목록 -->
                                 <div class="row">
-                                    <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="bid in bidsData" :key="bid.id" @click="navigateToDetail(bid.auction)">
+                                    <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="bid in bidsData" :key="bid.id" @click="navigateToDetail(bid.auction)">
                                         <div class="card my-auction">
                                             <div v-if="isDealer">
                                                 <input class="toggle-heart" type="checkbox" :id="'favorite-' + bid.auction.id" :checked="bid.auction.isFavorited" @click.stop="toggleFavorite(bid.auction)" />

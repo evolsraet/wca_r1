@@ -108,7 +108,7 @@
                     <div class="row">
                         
                         <!--<div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auctionsDoneData in filteredDone" :key="auctionsDoneData.id" @click="navigateToDetail(auctionsDoneData)" :style="getAuctionStyle(auctionsDoneData)">-->
-                        <div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="(bid, index) in auctionsDoneData" :key="bid.id" @click="navigateToDetail(bid)" :style="getAuctionStyle(bid)">
+                        <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="(bid, index) in auctionsDoneData" :key="bid.id" @click="navigateToDetail(bid)" :style="getAuctionStyle(bid)">
                             <div class="card my-auction">
                                 <div class="card-img-top-placeholder grayscale_img"><img src="../../../../img/car_example.png"></div>
                                 <span v-if="bid.status === 'done'" class="mx-2 auction-done">경매완료</span>

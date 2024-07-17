@@ -30,7 +30,7 @@
                     </div>
                     <div class="container my-5" v-if="loading">
                         <div v-if="bidsData.length > 0" class="row">
-                            <div class="col-md-3 p-2 mb-2 shadow-hover" v-for="bid in bidsData" :key="bid.id"  @click="navigateToDetail(bid)">
+                            <div class="col-md-3 p-2 mb-2 hover-anymate" v-for="bid in bidsData" :key="bid.id"  @click="navigateToDetail(bid)">
                                 <div class="card my-auction">
                                     <div class="card-img-top-placeholder"><img src="../../../img/car_example.png">
                                     </div> 
