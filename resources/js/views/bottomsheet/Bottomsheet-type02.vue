@@ -175,13 +175,13 @@ onBeforeUnmount(() => {
   left: 0;
   right: 0;
   background: #fff;
+  border: 1px solid #ddd;
   border-top-left-radius: 25px;
   border-top-right-radius: 25px;
-  box-shadow: 0 -2px 11px rgba(0, 0, 0, 0.1), 0 -2px 7px rgba(0, 0, 0, 0.08);
   transition: height 0.3s ease-in-out, transform 0.3s ease-in-out;
   overflow: hidden;
+  box-shadow:0 0px 6px rgba(0, 0, 0, 0.1);
 }
-
 .sheet.head {
   height: 30px;
 }
@@ -240,12 +240,18 @@ onBeforeUnmount(() => {
   .sheet {
     height: auto !important;
     transition: none;
+   
   }
   .handle {
     display: none;
   }
   .handle-head {
     cursor: default;
+  }
+}
+@media (max-width: 991px) {
+  .sheet {
+    box-shadow: 0 -2px 11px rgba(0, 0, 0, 0.1), 0 -2px 7px rgba(0, 0, 0, 0.08) !important;
   }
 }
 </style>
