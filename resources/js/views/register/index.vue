@@ -130,15 +130,15 @@
                                                     <div class="form-group">
                                                         <label for="dealeradress">소속상사 주소</label>
                                                         <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis" v-model="registerForm.dealerCompanyPost" placeholder="우편번호" readonly>
+                                                        <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                                                            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
+                                                        </div>
                                                         <div>
                                                             <input type="text" v-model="registerForm.dealercompany_addr1" placeholder="주소" class="input-dis" readonly>
                                                             <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                                                         </div>
                                                         
                                                         <input type="text" v-model="registerForm.dealercompany_addr2" placeholder="상세주소">
-                                                        <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-                                                            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
-                                                        </div>
                                                         <div class="password-error" v-if="nameError">이름을 정확히 입력해 주세요.</div>
                                                     </div>
                                                     <div class="form-group">

@@ -18,10 +18,10 @@
           <label for="carNumber">차량 번호</label>
           <input type="text" id="carNumber" v-model="carNumber" placeholder="12 삼 4567" :disabled="true">
         </div>
-        <div class="form-group">
+        <!--<div class="form-group">
           <label for="finalAt">경매 종료 시간</label>
           <input type="datetime-local" id="finalAt" v-model="finalAt">
-        </div>
+        </div>-->
         <!-- 지역 선택 -->
         <div class="form-group">
           <label for="sido1"><span class="text-danger">*</span> 지역</label>
@@ -47,6 +47,9 @@
               </div>
             </div>
             <div>
+              <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                  <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
+              </div>
                 <input type="text" v-model="addr" placeholder="주소" class="input-dis form-control" readonly>
                 <div class="text-danger mt-1">
                   <div v-for="message in validationErrors?.addr1">
@@ -60,9 +63,6 @@
               <div v-for="message in validationErrors?.addr2">
                 {{ message }}
               </div>
-            </div>
-            <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-                <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
             </div>
         </div>
         <!-- 은행 선택 -->

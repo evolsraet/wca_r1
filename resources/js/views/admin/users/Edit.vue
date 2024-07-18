@@ -135,6 +135,9 @@
                                     />
                                     <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                                     </div>
+                                    <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                                        <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
+                                    </div>
                                     <div>
                                     <div class="form-group">
                                     <input
@@ -151,9 +154,6 @@
                                     class="form-control"
                                     placeholder="상세주소"
                                 />
-                                <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-                                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
-                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="user-title" class="form-label my-3">인수차량 도착지 주소</label>
@@ -164,6 +164,9 @@
                                     readonly
                                 />
                                 <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
+                                </div>
+                                <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
                                 </div>
                             <div class="form-group">
                                 <div>
@@ -181,9 +184,6 @@
                                     class="form-control"
                                     placeholder="상세주소"
                                 />
-                                <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-                                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
-                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
