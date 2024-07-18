@@ -85,7 +85,7 @@
                     </div>
                     <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
                       <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
-                      <div class="mt-5" v-if="showPdf">
+                      <div class="mt-5" v-if="!showPdf">
                       <h5>진단 평가</h5>
                       <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                           <iframe
