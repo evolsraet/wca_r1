@@ -65,6 +65,7 @@
                       <span class="text-secondary opacity-50 font-1">탁송 주소 관리</span>
                     </div>
                   </router-link>
+                  <!--
                   <router-link :to="{ name: 'dealer.bids'}" class="menu-item mt-0" @click="toggleNavbar">
                     <div class="sd-menu">
                       <div class="icon icon-awsome"></div>
@@ -74,6 +75,7 @@
                       <span class="text-secondary opacity-50 font-1">경매 낙찰차량 확인</span>
                     </div>
                   </router-link>
+                  -->
                   <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mt-0" @click="toggleNavbar">
                     <div class="sd-menu">
                       <div class="icon icon-nav-car"></div>
@@ -271,9 +273,11 @@
               <li class="nav-item">
                 <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh mx-3 nav-auction" to="/register" exact-active-class="active-link">입찰하기</router-link>
               </li>
+              <!--
               <li class="nav-item">
                 <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">선택 완료 차량</router-link>
               </li>
+              -->
               <li class="nav-item">
                 <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">과거 낙찰 이력</router-link>
               </li>

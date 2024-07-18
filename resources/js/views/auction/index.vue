@@ -21,8 +21,9 @@ TODO:
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav gap-2">
                         <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-2">{{ favoriteAuctionsPagination.total }}</span></a><!-- 관심 차량 숫자표기 -->
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('myBidInfo')" :class="{ active: currentTab === 'myBidInfo' }">내 입찰 차량<span class="interest mx-2">{{ bidPagination.total }}</span></a>
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-2">{{ favoriteAuctionsTotal }}</span></a><!-- 관심 차량 숫자표기 -->
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('myBidInfo')" :class="{ active: currentTab === 'myBidInfo' }">내 입찰 차량<span class="interest mx-2">{{ bidsTotal }}</span></a>
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('scsbidInfo')" :class="{ active: currentTab === 'scsbidInfo' }">낙찰 차량<span class="interest mx-2">{{ sbsBidsTotal }}</span></a>
                     </div>
                 </nav>
             </div>
@@ -771,6 +772,81 @@ TODO:
                                 </ul>
                             </nav>
                         </div>
+                        <div class="container my-4" v-if="currentTab === 'scsbidInfo'">
+                            <div class="registration-content overflow-hidden">
+                                <div class="text-start status-selector registration-content">
+                                    <div v-for="(label, value) in scsBidsstatusLabel" :key="value" class="mx-2">
+                                        <input type="radio" name="status" :value="value" :id="value" :checked="value === 'all' " @change="event => setScsBidsFilter(event.target.value)" />
+                                        <label :for="value">{{ label }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                                <div v-if="scsbidsData.length > 0">
+                                    <!-- 경매 목록 -->
+                                    <div class="row">
+                                        <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="scsBid in scsbidsData" :key="scsBid.id" @click="navigateToDetail(scsBid.auction)">
+                                            <div class="card my-auction">
+                                                <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
+                                                <div v-if="scsBid.auction.status === 'ask' || scsBid.auction.status === 'diag'">
+                                                    <div class="card-img-demo">
+                                                        <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
+                                                    </div>
+                                                </div>
+                                                <div v-else="scsBid.auction.status !== 'ask' || scsBid.auction.status !== 'diag'" :class="{ 'grayscale_img': scsBid.auction.status === 'done' || scsBid.auction.status === 'cancel' ||(isDealer && scsBid.auction.status === 'chosen') }" class="card-img-top-placeholder">
+                                                    <img src="../../../img/car_example.png">
+                                                </div>
+                                                <span v-if="scsBid.auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(scsBid.auction.status).auctions() }}</span>
+                                                <div>
+                                                    <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(scsBid.auction.status)" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(scsBid.auction.status).auctions() }}</span>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div v-if="isDealer">
+                                                        <div class="participate-badge" v-if="scsBid.auction.isDealerParticipating">
+                                                            <span class="hand-icon">
+                                                                <img src="../../../img/Icon-hand.png" alt="Hand Icon">
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                    <p class="text-secondary opacity-50 mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                                    <p class="text-secondary opacity-50 mt-0">현대 소나타 (DN8)</p>
+                                                    <div class="d-flex">
+                                                        <h5 class="card-title"><span class="blue-box">무사고</span></h5>
+                                                        <h5 v-if="scsBid.auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                                                        <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
+                                                        <p class="text-secondary opacity-50">{{ scsBid.auction.car_no }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div v-else>
+                                <div class="complete-car">
+                                    <div class="card my-auction mt-3">
+                                        <div class="none-complete">
+                                            <span class="text-secondary opacity-50">입찰한 차량이 없습니다.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <nav>
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" :class="{ disabled: !scsbidPagination.prev }">
+                                        
+                                        <a class="page-link prev-style" @click="loadPage( scsbidPagination.current_page - 1, 'scsbid', scsbidPagination)"></a>
+                                    </li>
+                                    <li v-for="n in scsbidPagination.last_page" :key="n" class="page-item" :class="{ active: n === scsbidPagination.current_page }">
+                                        <a class="page-link" @click="loadPage( n, 'scsbid', scsbidPagination)">{{ n }}</a>
+                                    </li>
+                                    <li class="page-item next-prev" :class="{ disabled: !scsbidPagination.next }">
+                                        <a class="page-link next-style" @click="loadPage( scsbidPagination.current_page + 1, 'scsbid', scsbidPagination)"></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                     
                 </div>
@@ -921,11 +997,13 @@ const swal = inject('$swal');
 const { wicas , wica , updateAuctionTimes } = cmmn();
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
-const {getBids, bidsData , bidPagination } = usebid();
+const {getBids, bidsData , bidPagination, getscsBids } = usebid();
 const { getLikes, likesData, isAuctionFavorited , like , setLikes , deleteLike , getAllLikes} = useLikes();
 const router = useRouter();
 const route = useRoute();
-const currentStatus = ref('all'); 
+const currentStatus = ref('all');
+const currentScsBidsStatus = ref('all'); 
+
 const { role, getRole } = useRoles();
 const currentTab = ref('allInfo'); 
 const { auctionsData, pagination, getAuctions, getAuctionsByDealer, getAuctionsByDealerLike } = useAuctions();
@@ -933,6 +1011,7 @@ const { auctionsData, pagination, getAuctions, getAuctionsByDealer, getAuctionsB
 const currentPage = ref(1); 
 const currentFavoritePage = ref(1); 
 const currentMyBidPage = ref(1); 
+const currentScsBidsPage = ref(1);
 const isLoading = ref(false);
 const showModal = ref(false); 
 //const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); 
@@ -945,10 +1024,18 @@ const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user')); 
 const isSpinning = ref(false);
 let statusLabel;
+let scsBidsstatusLabel;
+let sbsBidsTotal = 0;
+let bidsTotal = 0;
+let favoriteAuctionsTotal = 0; 
 //let likeMessage;
 
 const favoriteAuctionsData = ref({}); //관심 차량 데이터
 const favoriteAuctionsPagination = ref({}); //관심 차량 페이징
+
+const scsbidsData = ref([]); //낙찰 차량 데이터
+const scsbidPagination = ref({}); //낙찰 차량 페이징
+
 
 /**
 const initializeFavorites = () => {
@@ -1066,6 +1153,26 @@ const hasCompletedAuctions = computed(() => {
 
 function setCurrentTab(tab) {
     currentTab.value = tab;
+
+    switch (tab) {
+        case 'allInfo':
+            getAuctionsData();
+            break;
+        case 'interInfo':
+            currentStatus.value = 'all';
+            favoriteAuctionsGetData();
+            break;
+        case 'myBidInfo':
+            fetchFilteredBids();
+            break;
+        case 'scsbidInfo':
+            currentScsBidsStatus.value = 'all';
+            getScsBidsInfo();
+            break;
+        default:
+            console.error('Unknown page type');
+    }
+
 }
 
 function toggleModal() { 
@@ -1075,6 +1182,11 @@ function toggleModal() {
 function setFilter(status) { 
     currentStatus.value = status;
     favoriteAuctionsGetData();
+}
+
+function setScsBidsFilter(status){
+    currentScsBidsStatus.value = status;
+    getScsBidsInfo();
 }
 
 function handleClose() { 
@@ -1091,6 +1203,8 @@ function loadPage( page, type, pagination) {
     if (page < 1 || page > pagination.last_page) return;
     
     window.scrollTo(0, 0);
+    console.log('type=========');
+    console.log(type);
     
     switch (type) {
         case 'all':
@@ -1105,6 +1219,9 @@ function loadPage( page, type, pagination) {
             currentMyBidPage.value = page;
             fetchFilteredBids();
             break;
+        case 'scsbid':
+            currentScsBidsPage.value = page;
+            getScsBidsInfo();
         default:
             console.error('Unknown page type');
     }
@@ -1129,9 +1246,9 @@ const getAuctionsData = async () => {
         await getAuctions(currentPage.value , false , currentStatus.value);
     } else if(isDealer.value){
         await getAuctionsByDealer(currentPage.value , currentStatus.value);
-        filterLikeData(auctionsData.value);
-        favoriteAuctionsGetData();
-        fetchFilteredBids();
+        await filterLikeData(auctionsData.value);
+        await favoriteAuctionsGetData();
+        await fetchFilteredBids();
     }
 }
 
@@ -1173,6 +1290,16 @@ const filterLikeData = (auctions, likes="none") => {
     });
 }
 
+const getScsBidsInfo = async () =>{
+    console.log(currentScsBidsPage.value);
+    console.log(currentScsBidsStatus.value);
+
+    const scsBidsInfo = await getscsBids(currentScsBidsPage.value,true,false,currentScsBidsStatus.value);
+
+    scsbidsData.value = scsBidsInfo.data;
+    scsbidPagination.value = scsBidsInfo.rawData.data.meta;
+}
+
 let timer;
 
 onMounted(async () => {
@@ -1181,12 +1308,18 @@ onMounted(async () => {
     }
 
     await getAuctionsData();
+    bidsTotal = bidPagination.value.total;
+    favoriteAuctionsTotal = favoriteAuctionsPagination.value.total
 
     statusLabel = wicas.enum(store).addFirst('all', '전체').excl('cancel', '취소').ascVal().auctions();
-
+    scsBidsstatusLabel = wicas.enum(store).addFirst('all','전체').perm('dlvr','chosen').auctions();
     if (role.value.name === 'user') {
         isUser.value = true;
     }
+
+    //낙찰차량정보
+    await getScsBidsInfo(); 
+    sbsBidsTotal = scsbidPagination.value.total;
 
     timer = setInterval(() => {
         if(isUser.value){
@@ -1199,7 +1332,8 @@ onMounted(async () => {
 
         isLoading.value = true;
     }, 1000);
-
+    
+    
 });
 
 

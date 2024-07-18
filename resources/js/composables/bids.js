@@ -77,6 +77,26 @@ export default function useBid() {
         
     };
 
+    const getscsBids = async (page = 1, isSelect = false, isMyBid = false , status = "all") => {
+        let request = wicac.conn()
+        //.log()
+        .url('/api/bids')
+        .with(['auction'])
+        .page(`${page}`)
+        if (isSelect) {
+            const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
+            request = request.whereOr('auction.status',`${statusFilter}`)           
+        }
+    
+        if (isMyBid) {
+            request = request.whereOr('auction.status','ing,wait')
+        }
+        return request.callback(function(result) {
+            return result;
+        }).get();
+        
+    };
+
     //페이징 안 한 전체 bid
     const getHomeBids = async (mainIsOk = false) => {
         let request = wicac.conn()
@@ -222,5 +242,6 @@ export default function useBid() {
         auctionsData,
         bidPagination,
         getBidsByUserId,
+        getscsBids,
     };
 }

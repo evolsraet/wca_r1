@@ -44,7 +44,7 @@
                         <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
                         <p class="bid-icon text-secondary opacity-50 normal-16-font mb-0">입찰</p>
                         </router-link>
-                        <router-link :to="{  name: 'dealer.bids' }" class="item">
+                        <router-link :to="{  name: 'auction.index', state: { currentTab: 'scsbidInfo' }}" class="item">
                         <p><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
                         <p class="suc-bid-icon text-secondary opacity-50 normal-16-font mb-0">낙찰</p>
                         </router-link>
@@ -125,7 +125,7 @@
                     <div class="container card-body">
                         <div class="enter-view mt-3">
                             <h5>낙찰 완료 차량</h5>
-                            <router-link :to="{ name: 'dealer.bids' }" class="btn-apply">전체보기</router-link>
+                            <router-link :to="{ name: 'auction.index' , state: { currentTab: 'scsbidInfo' }}" class="btn-apply">전체보기</router-link>
                         </div>
                         <span class="text-secondary opacity-50">24시간 내 응대해 주세요!</span>
                         <!-- 차량이 존재 할 경우-->
@@ -222,7 +222,7 @@ const alertNoVehicle = (event) => {
     if (viewBids.value.length === 0) {
         alert("선택 완료된 차량이 없습니다.");
     } else {
-        router.push({ name: 'dealer.bids' });
+        router.push({ name: 'auction.index' , state: { currentTab: 'scsbidInfo' }});
     }
 };
 
