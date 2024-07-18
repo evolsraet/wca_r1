@@ -45,7 +45,7 @@
                       </div>
                     </div>
 
-                      <h4 v-if="auctionDetail.data.status === 'done' || auctionDetail.data.status === 'chosen'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
+                      <h4 v-if="auctionDetail.data.status === 'done' || auctionDetail.data.status === 'chosen' || auctionDetail.data.status === 'dlvr'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
                       <div class="mt-2 pb-1 d-flex gap-3 justify-content-between me-1">
                         <div></div>
                         <div class="d-flex gap-3 justify-content-end align-items-center mb-1">
@@ -84,7 +84,8 @@
                       </div>
                     </div>
                     <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
-                      <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
+                      <p v-if="!showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 숨기기</p>
+                      <p v-if="showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
                       <div class="mt-5" v-if="!showPdf">
                       <h5>진단 평가</h5>
                       <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
