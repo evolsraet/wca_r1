@@ -4,11 +4,15 @@
     <form @submit.prevent="updateProfile">
       <h4 class="mb-5">내 정보 수정</h4>
       <div class="form-group profile-content">
+        <div class="img-form">
         <div class="edit-photo-container" @click="triggerFileInput">
           <img :src="photoUrl" alt="Profile Photo" class="profile-photo" />
           <input type="file" ref="fileInput" @change="onFileChange" id="photo" class="d-none" />
         </div>
+        <div v-if="photoUrl !== profileDom" class="icon-trash-img"></div>
+        </div>
       </div>
+      <h5 class="text-secondary opacity-50 fs-5 mb-4">&#8251<span class="mx-2">정보 수정 시 심사를 받으실 수 있습니다.</span></h5>
       <div class="form-group">
         <label for="name">가입일자</label>
         <input type="text" v-model="user.created_at" id="createdAt" class="input-dis form-control" readonly/>
@@ -305,4 +309,15 @@ input[type="password"] {
   transform: none !important;
   bottom: 52px;
 }
+.img-form {
+    position: relative;
+    display: inline-block;
+  }
+  .icon-trash-img {
+    position: absolute;
+    bottom: 18px;
+    right: -23px;
+    z-index: 10;
+    cursor: pointer;
+  }
 </style>
