@@ -805,7 +805,7 @@
                               <div class="d-flex justify-content-between">
                                   <button type="button" class="mb-1 btn-close" @click="DealerbackView"></button>
                                   <div class="mt-3 d-flex align-items-center justify-content-end gap-3">
-                                    <p class="text-secondary opacity-50 icon-bid">입찰 {{ auctionDetail.data.bids.length }}</p>
+                                    <p class="text-secondary opacity-50 icon-bid">입찰 {{ auctionDetail.data.bids_count }}</p>
                                     <div class="text-secondary opacity-50 ml-2 icon-heart">관심 {{ auctionDetail.data.likes ? auctionDetail.data.likes.length : 0 }}</div>
                                   </div>
                                 </div>

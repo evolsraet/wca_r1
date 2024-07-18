@@ -150,8 +150,10 @@ export default function useAuth() {
         .callback(async function(result) {
             console.log('wicac.conn callback ' , result);
             if(result.isError) {
+                processing.value = false;
                 validationErrors.value = result.msg;
             } else {
+                processing.value = false;
                 swal({
                     icon: "success",
                     showConfirmButton: false,
