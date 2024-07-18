@@ -1,105 +1,80 @@
 <template>
   <div>
-    <!-- 사용자와 딜러에 따라 서로 다른 내용을 보여줍니다 -->
-    <div v-if="isUser">
-      <!-- 사용자 전용 콘텐츠 -->
-      <div class="border-0" @click="toggleCard">
-        <div class="card-body">
-          <div v-if="!isMobileView" class="enter-view">
-            <h5>내 매물관리</h5>
-            <router-link :to="{ name: 'auction.index' }" class="btn-apply">전체보기</router-link>
-          </div>
-          <!-- 차량이 존재할 경우 -->
-          <div v-if="auctionsData.length > 0" class="scrollable-content mt-4">
-            <div v-for="(auction, index) in auctionsData"
-              :key="auction.id"
-              @click="navigateToDetail(auction)"
-              :style="getAuctionStyle(auction)"
-              :class="['animated-auction', `delay-${index}`]">
-              <div class="complete-car">
-                <div class="my-auction">
-                  <div class="bid-bc p-2">
-                    <ul class="px-0 inspector_list max_width_900">
-                      <li class="m-auto">
-                        <div>
-                          <div class="d-flex gap-4 align-items-center">
-                            <div class="img_box">
-                              <img src="../../../img/car_example.png" alt="딜러 사진" class="mb-2 align-text-top">
-                            </div>
-                            <h5 class="mb-0">{{ auction.car_no }}</h5>
-                            <p v-if="auction.status === 'chosen'" class="ml-auto">
-                              <span class="blue-box02 bg-opacity-50">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                            </p>
-                            <p v-if="auction.status === 'cancel'" class="ml-auto">
-                              <span class="box bg-secondary">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                            </p>
-                            <p v-if="auction.status === 'wait'" class="ml-auto">
-                              <span class="blue-box02">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                            </p>
-                            <p v-if="auction.status === 'diag'" class="ml-auto">
-                              <span class="box bg-success bg-opacity-75">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                            </p>
-                            <p v-if="auction.status === 'ask'" class="ml-auto">
-                              <span class="box bg-warning bg-opacity-75">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                            </p>
-                            <p v-if="auction.status === 'ing'" class="ml-auto">
-                              <span class="box bg-danger">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                            </p>
-                            <p v-if="auction.status === 'done'" class="ml-auto">
-                              <span class="box bg-black">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                            </p>
-                            <p v-if="auction.status === 'dlvr'" class="ml-auto">
-                              <span class="box bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
-                            </p>
+    <!-- 공통 UI 구조 -->
+    <div class="border-0" @click="toggleCard">
+      <div class="card-body">
+        <div v-if="!isMobileView" class="enter-view">
+          <h5 v-if="isUser">내 매물관리</h5>
+          <h5 v-if="isDealer">딜러 매물관리</h5>
+          <router-link :to="{ name: 'auction.index' }" class="btn-apply">전체보기</router-link>
+        </div>
+
+        <!-- 차량이 존재할 경우 -->
+        <div v-if="auctionsData.length > 0" class="scrollable-content mt-4">
+          <div v-for="(auction, index) in auctionsData"
+            :key="auction.id"
+            v-if="isDealer ? auction.status === 'chosen' : true"
+            @click="navigateToDetail(auction)"
+            :style="getAuctionStyle(auction)"
+            :class="['animated-auction', `delay-${index}`]">
+            <div class="complete-car">
+              <div class="my-auction">
+                <div class="bid-bc p-2">
+                  <ul class="px-0 inspector_list max_width_900">
+                    <li class="m-auto">
+                      <div>
+                        <div class="d-flex gap-4 align-items-center">
+                          <div class="img_box">
+                            <img src="../../../img/car_example.png" alt="딜러 사진" class="mb-2 align-text-top">
                           </div>
+                          <h5 class="mb-0">{{ auction.car_no }}</h5>
+                          <p :class="getStatusClass(auction.status)" class="ml-auto">
+                            <span>{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
+                          </p>
+
                         </div>
-                      </li>
-                    </ul>
-                  </div>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
               </div>
             </div>
-            <router-link :to="{ name: 'home' }" class="bid-bc p-3">
-              <ul class="px-0 inspector_list max_width_900">
-                <li class="m-auto">
-                  <div>
-                    <p class="text-secondary opacity-50 d-flex justify-content-center">새 차량 등록하기<span class="ms-2 icon-auction-plus"></span></p>
-                  </div>
-                </li>
-              </ul>
-            </router-link>
           </div>
-          <!-- 선택 완료된 차량이 없는 경우 -->
-          <div v-else>
-            <div class="complete-car mt-4">
-              <div class="my-auction none-content">
-                <div class="none-complete-img"></div>
-                <div class="d-flex align-items-center flex-column gap-3">
-                  <div class="text-secondary opacity-50 d-flex align-items-center flex-column gap-5">
-                    <h4>등록된 차가 없어요</h4>
-                    <h5>차량 등록 후, 경매를 시작해보세요.</h5>
-                  </div>
-                  <router-link :to="{ name: 'home' }" class="btn primary-btn btn-apply-ty02 justify-content-around">차량 등록하기</router-link>
+          <router-link :to="{ name: 'home' }" class="bid-bc p-3">
+            <ul class="px-0 inspector_list max_width_900">
+              <li class="m-auto">
+                <div>
+                  <p class="text-secondary opacity-50 d-flex justify-content-center">새 차량 등록하기<span class="ms-2 icon-auction-plus"></span></p>
                 </div>
+              </li>
+            </ul>
+          </router-link>
+        </div>
+
+        <div v-else>
+          <div class="complete-car mt-4">
+            <div class="my-auction none-content">
+              <div class="none-complete-img"></div>
+              <div class="d-flex align-items-center flex-column gap-3">
+                <div class="text-secondary opacity-50 d-flex align-items-center flex-column gap-5">
+                  <h4 v-if="isUser">등록된 차가 없어요</h4>
+                  <h4 v-if="isDealer">탁송지를 등록해야 할 매물이 없습니다.</h4>
+                  <h5 v-if="isUser">차량 등록 후, 경매를 시작해보세요.</h5>
+                </div>
+                <router-link v-if="isUser" :to="{ name: 'home' }" class="btn primary-btn btn-apply-ty02 justify-content-between p-4">
+                  <span>차량 등록하기</span>
+                </router-link>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-    <div v-else-if="isDealer">
-      <!-- 딜러 전용 콘텐츠 -->
-      <div class="dealer-content">
-        <!-- 딜러 전용 UI 내용 여기에 추가 -->
-        <p>딜러용 콘텐츠가 여기에 표시됩니다.</p>
-      </div>
-    </div>
   </div>
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref } from 'vue';
+import { onMounted, onBeforeUnmount, ref,computed  } from 'vue';
 import { useRouter } from 'vue-router';
 import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
 import useAuctions from "@/composables/auctions";
@@ -115,8 +90,10 @@ const router = useRouter();
 const isMobileView = ref(window.innerWidth <= 640);
 const store = useStore();
 
-const isUser = ref(true); // 임시로 사용자를 true로 설정
-const isDealer = ref(false); // 임시로 딜러를 false로 설정
+const user = computed(() => store.getters['auth/user']);
+
+const isDealer = computed(() => user.value?.roles?.includes('dealer'));
+const isUser = computed(() => user.value?.roles?.includes('user'));
 
 function navigateToDetail(auction) {
   console.log("디테일 :", auction.id);
@@ -132,6 +109,29 @@ const checkScreenWidth = () => {
 function getAuctionStyle(auction) {
   const validStatuses = ['done', 'wait', 'ing', 'diag'];
   return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
+}
+
+function getStatusClass(status) {
+  switch (status) {
+    case 'chosen':
+      return 'blue-box02 bg-opacity-50';
+    case 'cancel':
+      return 'box bg-secondary';
+    case 'wait':
+      return 'blue-box02';
+    case 'diag':
+      return 'box bg-success bg-opacity-75';
+    case 'ask':
+      return 'box bg-warning bg-opacity-75';
+    case 'ing':
+      return 'box bg-danger';
+    case 'done':
+      return 'box bg-black';
+    case 'dlvr':
+      return 'box bg-info';
+    default:
+      return '';
+  }
 }
 
 onMounted(async () => {

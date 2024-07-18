@@ -121,44 +121,7 @@
                      </div>
                 </div>-->
                 </div>
-                <div class="container p-3 my-4" :style="cardStyle" @click="toggleCard">
-                    <div class="container card-body">
-                        <div class="enter-view mt-3">
-                            <h5>낙찰 완료 차량</h5>
-                            <router-link :to="{ name: 'auction.index' , state: { currentTab: 'scsbidInfo' }}" class="btn-apply">전체보기</router-link>
-                        </div>
-                        <span class="text-secondary opacity-50">24시간 내 응대해 주세요!</span>
-                        <!-- 차량이 존재 할 경우-->
-                        <div v-if="filteredDoneBids.length > 0" class="container">
-                            <div class="row">
-                            <div class="col-md-6 p-2" v-for="bid in filteredDoneBids.slice(0,2)" :key="bid.id">
-                                <div class="card my-auction mt-3">
-                                    <div class="card-img-top-placeholder border-rad">
-                                        <img src="../../../img/car_example.png">
-                                    </div>
-                                    <div class="card-body">
-                                        <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
-                                        <p>2020년 / 2.4km / 무사고</p>
-                                        <p class="text-secondary opacity-50">현대 쏘나타 (DN8)</p>
-                                       <!-- <p class="card-text text-secondary opacity-50">{{bid.auctionDetails.car_no}}</p>-->
-                                        <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                        <!-- 선택 완료된 차량이 없는경우-->
-                        <div v-else>
-                            <div class="complete-car">
-                                <div class="card my-auction mt-3">
-                                    <div class="none-complete">
-                                        <span class="text-secondary opacity-50">선택 완료된 차량이 없습니다.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <AuctionList/>
             </div>
         </div>
     </div>
@@ -174,6 +137,7 @@ import { useRouter } from 'vue-router';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
 import useAuctions from '@/composables/auctions'; // 경매 관련 작업을 위한 컴포저블
 import useLikes from '@/composables/useLikes';
+import AuctionList from "@/views/import/AuctionList.vue";
 
 const { getAllLikes, likesData, isAuctionFavorited } = useLikes();
 const item1 = ref(null);
