@@ -3809,19 +3809,19 @@ input[type="checkbox"] {
   }
 
 
-/* 리뷰 스타일 */
 
-  .review-swiper {
-    overflow: visible;
-    height: auto;
-    background-color: rgba($primary, 0.028) !important;
-    padding: 16px 25px;
-  }
 
-  .review-swiper .swiper-slide {
+.review-swiper {
+  overflow: visible;
+  height: auto;
+  background-color: rgba($primary, 0.028) !important;
+  padding: 16px 25px;
+  
+  .swiper-slide {
     width: 100%;
   }
-  .review-swiper .review-card {
+  
+  .review-card {
     display: block;
     width: 100%;
     appearance: none;
@@ -3838,24 +3838,26 @@ input[type="checkbox"] {
     text-decoration: none;
     transition: all 0.2s;
   }
+}
 
-  .main-text {
-    font-size: 16px;
-    font-weight: bold;
-    text-align: center;
-    border: solid 1px $primary;
-    border-radius: 20px;
-    padding: 5px;
-    color:$primary;
-    margin-bottom: 10px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  .tags {
-    display: flex;
-    gap: 10px;
-    flex-direction: row;
-    justify-content: center;
-  }
+.main-text {
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  border: solid 1px $primary;
+  border-radius: 20px;
+  padding: 5px;
+  color: $primary;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.tags {
+  display: flex;
+  gap: 10px;
+  flex-direction: row;
+  justify-content: center;
+  
   .tag {
     background-color: white;
     color: $primary !important;
@@ -3865,235 +3867,256 @@ input[type="checkbox"] {
     font-size: 14px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
+}
 
-  .input-container {
-    display: flex;
-    align-items: center;
-    border-bottom: 1px solid #ccc;
-    padding: 5px 10px;
-    width: 100%; /* 전체 너비 사용 */
-  }
+.input-container {
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding: 5px 10px;
+  width: 100%; /* 전체 너비 사용 */
+}
 
-  .refresh-icon {
-    display: inline-block;
-    width: 30px;
-    height: 30px;
-    background-color: #ccc;
-    color: white;
-    text-align: center;
-    line-height: 30px;
-    border-radius: 50%;
-    font-size: 16px;
-    cursor: pointer;
-    user-select: none;
-    transition: background-color 0.3s;
-  }
+.refresh-icon {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-color: #ccc;
+  color: white;
+  text-align: center;
+  line-height: 30px;
+  border-radius: 50%;
+  font-size: 16px;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.3s;
   
-  .refresh-icon:hover {
-      background-color: #bbb; 
+  &:hover {
+    background-color: #bbb;
   }
-
-
-  /* [사용자] - 경매 (딜러) 선택 */
-  .bid-content{
-    height: 83px;
-    background-color:$sub-color01;
-    color:white;
-  }
-  .cancelbox{
-    width:70px;
-    height: 24px;
-    border-radius: 6px;
-    padding: 3px 6px;
-    background-color: #2020207e;
-  }
-  .bid-bc{
-    background: #f7f9ff;
-  }
-  .bid-bc .inspector_list > li{
-    border-radius: 6px;
-    background: #fff;
-    min-width: 270px;
-    max-width: 500px;
-    box-shadow: 0px 3px 6px 0px rgba(178, 174, 190, 0.2);
-    padding: 1rem 1rem 1rem;
-    border-color: #ccc;
-    cursor: pointer;
-    transition: border 0.5s ease, box-shadow 0.5s ease; 
-  }
-.bid-bc .inspector_list > li .img_box {
-    width: 4.6rem;
-    height: 4.6rem;
-    min-width: 4.6rem;
-    border-radius: 100%;
-    overflow: hidden;
-    transition: border 0.5s ease; 
-  }
-.bid-bc .inspector_list > li .txt_box .name{
-    font-size: 1.3rem;
-}
-.bid-bc .inspector_list > li .txt_box .txt{
-    font-size: 1.1rem;
-}
-.bid-bc ul li:hover .txt_box .txt,
-.bid-bc ul li:hover .txt_box .name,
-.bid-bc ul li:hover .restar {
-    color: $sub-color01;
-    font-weight: bolder;
-    transition: color 0.5s ease; 
 }
 
-
-.bid-bc ul li:active,
-.bid-bc ul li:hover {
-    border: 1px solid $sub-color01;
-    box-shadow: 0px 8px 10px 0px rgba(174, 170, 187, 0.247);
-    transition: border 0.5s ease, box-shadow 0.5s ease;
-    color: $sub-color01; 
+/* [사용자] - 경매 (딜러) 선택 */
+.bid-content {
+  height: 83px;
+  background-color: $sub-color01;
+  color: white;
 }
 
-
-.bid-bc ul li:hover .btn-apply-ty03::after {
-    background-image: url('../img/Icon-right-blue.png');
-    width: 45px;
-    height: 41px;
-    transform: translateX(10px);
-    transition: transform 1s ease-out;
+.cancelbox {
+  width: 70px;
+  height: 24px;
+  border-radius: 6px;
+  padding: 3px 6px;
+  background-color: #2020207e;
 }
 
-.layover-style{
-    border-radius: 0px !important;
-    border: 1px solid #e1e1e1 !important;
+.bid-bc {
+  background: #f7f9ff;
+  
+  .inspector_list {
+    > li {
+      border-radius: 6px;
+      background: #fff;
+      min-width: 270px;
+      max-width: 500px;
+      box-shadow: 0px 3px 6px 0px rgba(178, 174, 190, 0.2);
+      padding: 1rem 1rem 1rem;
+      border-color: #ccc;
+      cursor: pointer;
+      transition: border 0.5s ease, box-shadow 0.5s ease;
+
+      .img_box {
+        width: 4.6rem;
+        height: 4.6rem;
+        min-width: 4.6rem;
+        border-radius: 100%;
+        overflow: hidden;
+        transition: border 0.5s ease;
+      }
+
+      .txt_box {
+        .name {
+          font-size: 1.3rem;
+        }
+
+        .txt {
+          font-size: 1.1rem;
+        }
+      }
+
+      &:hover {
+        .txt_box {
+          .txt,
+          .name,
+          .restar {
+            color: $sub-color01;
+            font-weight: bolder;
+            transition: color 0.5s ease;
+          }
+        }
+
+        .btn-apply-ty03::after {
+          background-image: url('../img/Icon-right-blue.png');
+          width: 45px;
+          height: 41px;
+          transform: translateX(10px);
+          transition: transform 1s ease-out;
+        }
+
+        border: 1px solid $sub-color01;
+        box-shadow: 0px 8px 10px 0px rgba(174, 170, 187, 0.247);
+        transition: border 0.5s ease, box-shadow 0.5s ease;
+        color: $sub-color01;
+      }
+    }
+  }
 }
+
+.layover-style {
+  border-radius: 0px !important;
+  border: 1px solid #e1e1e1 !important;
+}
+
 .notification-container {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100%;
-    justify-content: center;
-    background-color: white;
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.5s, transform 0.5s;
-  }
-  .notification-container.show {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  justify-content: center;
+  background-color: white;
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s, transform 0.5s;
+  
+  &.show {
     opacity: 1;
     transform: translateX(-50%) translateY(0);
   }
-
-  .video-container02 .video_type03 {
-    opacity: 0.3;/* 투명도 50% 적용 */
 }
+
 .video-container02 {
-    position: absolute;
-    left: -240px;
-    bottom: 0;
+  position: absolute;
+  left: -240px;
+  bottom: 0;
+  
+  .video_type03 {
+    opacity: 0.3; /* 투명도 50% 적용 */
+  }
 }
-.overlay-style {
-    height: 100vh;
-  }
-  @media (max-height: 810px) {
-    .overlay-style {
-      height: auto;
-    }
-  }
-  .custom-hr {
-    border: none;
-    border-top: 3px solid #d7d7d7;
-  }
 
-  /* 기본 라벨 스타일 */
-.status-selector label {
+.overlay-style {
+  height: 100vh;
+  
+  @media (max-height: 810px) {
+    height: auto;
+  }
+}
+
+.custom-hr {
+  border: none;
+  border-top: 3px solid #d7d7d7;
+}
+
+/* 기본 라벨 스타일 */
+.status-selector {
+  label {
     cursor: pointer;
     color: #b9b9b9; /* 기본 색상 */
-    transition: color 0.3s; 
-}
-
-/* 선택된 라벨의 스타일 */
-.status-selector input:checked + label {
-    color: #000; /* 진한 색상 */
-}
-
-/* swal 모달 스타일 커스텀*/
-/* 경매 취소시 모달*/
-.edit-photo-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 1rem;
-    cursor: pointer;
-    width: 150px;
-    height: 150px;
-    border: 2px dashed #ccc;
-    border-radius: 50%;
-    overflow: hidden;
-    position: relative;
+    transition: color 0.3s;
   }
+
+  input:checked + label {
+    color: #000; /* 진한 색상 */
+  }
+}
+
+/* swal 모달 스타일 커스텀 */
+/* 경매 취소시 모달 */
+.edit-photo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  width: 150px;
+  height: 150px;
+  border: 2px dashed #ccc;
+  border-radius: 50%;
+  overflow: hidden;
+  position: relative;
   
-  .edit-photo-container:hover {
+  &:hover {
     border-color: $primary-sub;
   }
-  .cancel-modal-confirmButton{
-    width: 60%;
-    background-color: #000 !important;
-    border-radius: 6px !important;
-    height: 45px;
-    width: 60%;
-  }
-  .cancel-modal-cancelButton{
-    display: inline-block;
-    font-weight: 400;
-    color: #6c757d !important; 
-    text-align: center;
-    vertical-align: middle;
-    user-select: none;
-    background-color: transparent;
-    border: 1px solid #6c757d !important; 
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    background-color: #fff !important;
-    line-height: 1.5;
-    border-radius: 0.25rem;
-    transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); 
-    width: 40%;
-  }
-  .cancel-modal-cancelButton:hover{
+}
+
+.cancel-modal-confirmButton {
+  width: 60%;
+  background-color: #000 !important;
+  border-radius: 6px !important;
+  height: 45px;
+}
+
+.cancel-modal-cancelButton {
+  display: inline-block;
+  font-weight: 400;
+  color: #6c757d !important;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  background-color: transparent;
+  border: 1px solid #6c757d !important;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  background-color: #fff !important;
+  line-height: 1.5;
+  border-radius: 0.25rem;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
+  width: 40%;
+  
+  &:hover {
     color: #fff;
-    background-color: #6c757d; 
+    background-color: #6c757d;
     border-color: #6c757d;
   }
+}
 
-  .swal2-html-container{
-    margin: 0px !important;
-  }
-  .cancel-modal-actions{
-    flex-direction: row;
-    flex-wrap: nowrap;
+.swal2-html-container {
+  margin: 0px !important;
+}
+
+.cancel-modal-actions {
+  flex-direction: row;
+  flex-wrap: nowrap;
+  width: 100%;
+  margin: 0px !important;
+  height: 100%;
+  margin: 0 auto;
+}
+
+.primary-check-confirmButton {
+    background-color:$primary;
+    $primary-sub: #2980b9; 
+    $sub-color01: #e74c3c; 
+}
+  .primary-check-confirmButton {
+    background-color: $primary !important;
+    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15);
     width: 100%;
-    margin: 0px !important;
-    height: 100%;
-    margin: 0 auto;
   }
   
-.primary-check-confirmButton{
-background-color:$primary !important;
-box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); 
-width: 100%;
-}
-.primary-check-actions{
+  .primary-check-actions {
     width: 100% !important;
     margin: 0px !important;
-}
-.primary-check-cancelButton{
+  }
+  
+  .primary-check-cancelButton {
     display: none !important;
-}
-
-
-
-
-
+  }
+  
 /* 리뷰 모달 커스텀*/
 .review-custom-confirmButton{
     border-color: #ff0000 !important;
@@ -4210,4 +4233,23 @@ width: 100%;
   .fade-in-transition-enter,
   .fade-in-transition-leave-to {
     opacity: 0;
+  }
+.average-score{
+    display: none;
+}
+@media (max-width: 1190px) and (min-width: 992px) {
+    .average-score-web {
+      display: none;
+    }
+    .average-score{
+        display: block;
+    }
+  }
+  @media (max-width: 416px) {
+    .average-score-web {
+      display: none;
+    }
+    .average-score{
+        display: block;
+    }
   }

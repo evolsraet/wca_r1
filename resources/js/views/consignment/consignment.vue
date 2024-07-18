@@ -18,7 +18,7 @@
         <h4 class="fst-normal mb-5">원하는 탁송일을 선택해 주세요</h4>
         <div class="d-flex justify-content-between">
           <h5>{{ monthLabel }}</h5>
-          <p class="text-secondary opacity-50">익일 9시 이후부터 탁송이 가능해요.</p>
+          <p class="text-secondary opacity-50">&#8251;탁송일은 익일 9시 이후부터 5일 이내로 탁송이 가능해요.</p>
         </div>
         <div class="date-time-picker">
           <div class="date-picker">
@@ -65,12 +65,12 @@
       <button type="button" class="btn btn-primary w-100" @click="toggleView">다음</button>
     </div>
     <div v-if="fileuploadvue" class="card p-3 my-4">
-      <h4>매도용 인감증명서를 첨부해 주세요</h4>
+      <h4>매도용 인감증명서를 준비해주세요</h4>
       <div class="form-group">
         <img id="imagePreview" :src="imageSrc" class="image-preview mx-2 my-4" v-if="imageSrc" />
-        <button type="button" class="btn btn-fileupload w-100 mt-4 w-100" @click="triggerFileUpload">
+       <!-- <button type="button" class="btn btn-fileupload w-100 mt-4 w-100" @click="triggerFileUpload">
           파일 첨부
-        </button>
+        </button>-->
         <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display: none;" id="file_user_photo">
         <div class="text-start text-secondary opacity-50 mt-2" v-if="registerForm.file_user_sign">사진 파일: {{ registerForm.file_user_sign }}</div>
       </div>
@@ -97,6 +97,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted, defineProps, defineEmits, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -104,7 +105,7 @@ import { cmmn } from '@/hooks/cmmn';
 import BankModal from '@/views/modal/bank/BankModal.vue';
 import profileDom from '/resources/img/profile_dom.png';
 
-const days = ref(getNextTwoDays());
+const days = ref(getNextFiveDays());
 const selectedDay = ref(null);
 const selectedTime = ref(null);
 const morningTimes = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30'];
@@ -122,7 +123,7 @@ const registerForm = ref({ file_user_sign: null, file_user_sign_name: '' });
 const imageSrc = ref('');
 const router = useRouter();
 const route = useRoute();
-const { amtComma } = cmmn();
+const { amtComma, wic } = cmmn();
 
 const selectedBid = ref(null);
 const userInfo = ref(null);
@@ -199,15 +200,15 @@ function getMonthLabel() {
   return `${month}월`;
 }
 
-function getNextTwoDays() {
+function getNextFiveDays() {
   const today = new Date();
   const daysArray = [];
   const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
   
-  for (let i = 1; i <= 2; i++) {
+  for (let i = 1; i <= 5; i++) {
     const nextDay = new Date(today);
     nextDay.setDate(today.getDate() + i);
-    const dayLabel = i === 1 ? `내일 (${weekDays[nextDay.getDay()]})` : `${nextDay.getDate()} (${weekDays[nextDay.getDay()]})`;
+    const dayLabel = `${nextDay.getDate()} (${weekDays[nextDay.getDay()]})`;
     daysArray.push({ date: nextDay, label: dayLabel });
   }
   return daysArray;
@@ -215,6 +216,7 @@ function getNextTwoDays() {
 
 const toggleView = () => {
   fileuploadvue.value = true;
+
 };
 
 function selectDay(index) {

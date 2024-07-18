@@ -1,7 +1,6 @@
 <template>
   <div class="container-fluid" v-if="auctionDetail">
-    <div v-if="!auctionChosn && !showReauctionView &&(auctionDetail.data.status === 'ing' && auctionDetail.data.bids_count !== 0 && isUser)"></div>
-    <div v-else-if="isDealer || !auctionChosn && !showReauctionView && (auctionDetail.data.status !== 'wait' && isUser) " class="container">
+    <div v-if="isDealer || !chosendlvr && !auctionChosn && !showReauctionView && (auctionDetail.data.status !== 'wait' && isUser) " class="container">
       <div class="web-content-style02">
         <div class="container p-1">
           <div>
@@ -83,7 +82,7 @@
                         </router-link>
                       </div>
                     </div>
-                    <div v-if="auctionDetail.data.status !== 'diag' || auctionDetail.data.status !== 'ask'">
+                    <div v-if="auctionDetail.data.status !== 'diag' && auctionDetail.data.status !== 'ask'">
                       <p v-if="!showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 숨기기</p>
                       <p v-if="showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
                       <div class="mt-5" v-if="!showPdf">
@@ -96,9 +95,9 @@
                               
                           ></iframe>
                       </div>
-                  </div>
-              </div>
-            </div>
+                      </div>
+                    </div>
+               </div>
                   <!--   <template v-if="auctionDetail.data.hope_price !== null">
                     <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
                       <p>현재 희망가</p>
@@ -414,14 +413,38 @@
                   <p class="text-center">경매 진행중 입니다.</p>
               </button>
             </BottomSheet02>
-          <!-- <BottomSheet02 v-else>
-              <h4 class="text-start my-2">경매 진행중</h4>
-              <P class="text-start text-secondary opacity-50">※ 입찰한 딜러가 있으면 즉시 선택이 가능합니다.</P>
-              <button class="bg-sub-color bold-18-font modal-bid d-flex p-3 mt-3 justify-content-between blinking" @click="auctionIngChosen">
-                  <p>딜러 선택이 가능해요!</p>
-                  <p class="d-flex align-items-center gap-2">바로가기<p class="icon-right-wh"></p></p>
-              </button>
-          </BottomSheet02> -->
+          <BottomSheet02 v-else>
+              <div class="wd-100 bid-content p-4">
+                  <div class="d-flex justify-content-between">
+                    <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
+                    <button class="mt-1" @click="openModal"><span class="cancelbox">경매취소</span></button>
+                  </div>
+                </div>
+                <div class="container p-3 mt-3">
+                <div class="d-flex justify-content-between align-items-baseline">
+                <h4 class="custom-highlight">딜러 선택하기</h4>
+                </div>
+                <p class="text-start text-secondary opacity-50">※ 입찰 금액이 가장 높은 순으로 5명까지만 표시돼요.</p>
+              </div>
+              <div class="bid-bc p-2 overflow-y-auto hv-25">
+                <ul v-for="(bid, index) in sortedTopBids" :key="bid.user_id" class="px-0 inspector_list max_width_900">
+                  <li @click="handleClick(bid, $event, index)" class="min-width-no mx-width-no">
+                    <div class="d-flex gap-4 align-items-center justify-content-between ">
+                      <div class="img_box">
+                        <img :src="getPhotoUrl(bid)" alt="Profile Photo" class="profile-photo" />
+                      </div>
+                      <div class="txt_box me-auto">
+                        <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
+                        <p class="txt">{{bid.price}} 만원</p>
+                        <p class="restar normal-16-font me-auto average-score">4.5점</p>
+                      </div>
+                      <p class="restar normal-16-font me-auto average-score-web">4.5점</p>
+                      <p class="btn-apply-ty03"></p>
+                    </div>
+                  </li>
+                </ul>
+                </div>
+          </BottomSheet02> 
         </div>
 
           <!--
@@ -840,7 +863,7 @@
                             
                         </div>
                         
-                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' && !connectDealerModal || auctionChosn && !connectDealerModal || !connectDealerModal && (auctionDetail.data.status === 'ing' && auctionDetail.data.bids_count !== 0 && isUser) ">
+                        <div class="container" v-if="isUser && auctionDetail.data.status === 'wait' && !connectDealerModal || auctionChosn && !connectDealerModal">
                           <div class="wd-100 bid-content p-4">
                             <div class="d-flex justify-content-between">
                               <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
@@ -973,7 +996,7 @@ const succesbidhope = ref(false);
 const amount = ref('');
 const koreanAmount = ref('원');
 const { numberToKoreanUnit , amtComma , wica , wicaLabel, wicas } = cmmn();
-
+const chosendlvr = ref(false);
 const reviewIsOk = ref(true);
 let likeMessage;
 
@@ -1563,6 +1586,7 @@ const ChosenConfirmSelection = async () => {
   if (selectedBid.value !== null && selectedIndex.value !== null) {
     await selectDealer(selectedBid.value, selectedIndex.value);
   }
+  chosendlvr.value = true;
   selectedBid.value = null;
   selectedIndex.value = null;
 };
@@ -1977,6 +2001,9 @@ const handleCancelBid = async () => {
     width: 80vw;
     margin: auto;
   }
+  .hv-25{
+    height: auto !important;
+  }
 }
 @media (max-width: 991px) {
   .container {
@@ -2234,11 +2261,5 @@ opacity: 0;
     max-width: 800px;
   }
 }
-#ac-evaluation {
-  cursor: pointer;
-}
 
-#ac-evaluation:hover {
-  color: red; /* 예시 스타일, 필요에 따라 수정 가능 */
-}
 </style>
