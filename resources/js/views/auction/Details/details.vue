@@ -799,7 +799,7 @@
                             </BottomSheet02>
                           </div>-->
 
-                      
+                      <!-- 딜러 입찰 -->
                           <BottomSheet03 initial="half" :dismissable="true"  v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && bidSession">
                             <div @click.stop="">
                               <div class="d-flex justify-content-between">
@@ -814,7 +814,7 @@
                                 <div class="input-container mt-5">
                                   <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
                                 </div>
-                                <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ koreanAmount }}</p>
+                                <p class="d-flex justify-content-end fw-bolder fs-4 text-primary p-2">{{ koreanAmount }}</p>
                                 <button type="button" class="tc-wh btn btn-primary w-100 my-4" @click="submitAuctionBid">입찰 완료</button>
                               </div>
                             </div>
