@@ -5,33 +5,59 @@
       <div class="card-body">
         <div v-if="!isMobileView" class="enter-view">
           <h5 v-if="isUser">내 매물관리</h5>
-          <h5 v-if="isDealer">딜러 매물관리</h5>
+          <div v-if="isDealer">
+          <h5>탁송지 미등록 매물</h5>
+          <p class="text-sendary opacity-50">낙찰된 매물중 탁송지 미등록 매물입니다</p>
+           </div>
           <router-link :to="{ name: 'auction.index' }" class="btn-apply">전체보기</router-link>
         </div>
 
         <!-- 차량이 존재할 경우 -->
-        <div v-if="auctionsData.length > 0" class="scrollable-content mt-4">
-          <div v-for="(auction, index) in auctionsData"
+        <div v-if="filteredAuctionsData.length > 0" class="scrollable-content mt-4 mb-4">
+          <div v-for="(auction, index) in filteredAuctionsData"
             :key="auction.id"
-            v-if="isDealer ? auction.status === 'chosen' : true"
             @click="navigateToDetail(auction)"
             :style="getAuctionStyle(auction)"
             :class="['animated-auction', `delay-${index}`]">
             <div class="complete-car">
               <div class="my-auction">
                 <div class="bid-bc p-2">
-                  <ul class="px-0 inspector_list max_width_900">
+                  <ul v-if="isUser" class="px-0 inspector_list max_width_900">
                     <li class="m-auto">
                       <div>
                         <div class="d-flex gap-4 align-items-center">
                           <div class="img_box">
-                            <img src="../../../img/car_example.png" alt="딜러 사진" class="mb-2 align-text-top">
+                            <img src="../../../img/car_example.png" alt="차량 사진" class="mb-2">
                           </div>
-                          <h5 class="mb-0">{{ auction.car_no }}</h5>
+                          <h5 class="mb-0 fs-4">{{ auction.car_no }}</h5>
                           <p :class="getStatusClass(auction.status)" class="ml-auto">
                             <span>{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
                           </p>
-
+                        </div>
+                      </div>
+                    </li>
+                  </ul>
+                  <ul v-else-if="isDealer" class="px-0 inspector_list max_width_900">
+                    <div class="ribbon-holder">
+                      <div class="ribbon">{{ amtComma(auction.final_price) }}</div>
+                    </div>
+                    <li>
+                      <div>
+                        <div class="d-flex gap-4 align-items-center app-d-flex">
+                          <div class="col-auto d-flex flex-column align-items-center">
+                          <div class=" img_box">
+                            <img src="../../../img/car_example.png" alt="차량 사진" class="mb-2">
+                          </div>
+                          <h5 class="mt-2 mb-0">{{ auction.car_no }}</h5>
+                        </div>
+                          <div class="col-auto">
+                            <p class="mb-0">지점 :</p>
+                            <!--<h5 class="mb-0 fs-4 tc-red">{{ auction.car_no }}</h5>-->
+                            <p class="mb-0">탁송지 주소 : </p>
+                          </div>
+                          <div class="col text-end">
+                            <button @click.stop="" class="btn btn-primary">주소지 등록</button>
+                          </div>
                         </div>
                       </div>
                     </li>
@@ -40,7 +66,7 @@
               </div>
             </div>
           </div>
-          <router-link :to="{ name: 'home' }" class="bid-bc p-3">
+          <router-link v-if="isUser" :to="{ name: 'home' }" class="bid-bc p-3">
             <ul class="px-0 inspector_list max_width_900">
               <li class="m-auto">
                 <div>
@@ -52,14 +78,15 @@
         </div>
 
         <div v-else>
-          <div class="complete-car mt-4">
+          <div class="complete-car my-4">
             <div class="my-auction none-content">
               <div class="none-complete-img"></div>
               <div class="d-flex align-items-center flex-column gap-3">
                 <div class="text-secondary opacity-50 d-flex align-items-center flex-column gap-5">
                   <h4 v-if="isUser">등록된 차가 없어요</h4>
-                  <h4 v-if="isDealer">탁송지를 등록해야 할 매물이 없습니다.</h4>
                   <h5 v-if="isUser">차량 등록 후, 경매를 시작해보세요.</h5>
+                  <h4 v-if="isDealer" class="mt-4 text-center">탁송지를 등록해야 할 매물이 없습니다.</h4>
+                  
                 </div>
                 <router-link v-if="isUser" :to="{ name: 'home' }" class="btn primary-btn btn-apply-ty02 justify-content-between p-4">
                   <span>차량 등록하기</span>
@@ -74,7 +101,7 @@
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref,computed  } from 'vue';
+import { onMounted, onBeforeUnmount, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
 import useAuctions from "@/composables/auctions";
@@ -82,10 +109,9 @@ import { initReviewSystem } from '@/composables/review';
 import { cmmn } from '@/hooks/cmmn';
 import { useStore } from 'vuex';
 
-const { wicas } = cmmn();
+const { wicas ,amtComma } = cmmn();
 const { auctionsData, getAuctions } = useAuctions();
 const { getUserReview, deleteReviewApi, reviewsData } = initReviewSystem();
-const { amtComma } = cmmn();
 const router = useRouter();
 const isMobileView = ref(window.innerWidth <= 640);
 const store = useStore();
@@ -134,6 +160,13 @@ function getStatusClass(status) {
   }
 }
 
+const filteredAuctionsData = computed(() => {
+  if (isDealer.value) {
+    return auctionsData.value.filter(auction => auction.status === 'chosen');
+  }
+  return auctionsData.value;
+});
+
 onMounted(async () => {
   await getAuctions();
   const user = store.getters['auth/user'];
@@ -151,8 +184,10 @@ onBeforeUnmount(() => {
 });
 </script>
 
-
 <style scoped>
+.none-content{
+  padding: 0px !important;
+}
 p {
     margin-top: 0;
     margin-bottom: 0rem !important;
@@ -390,7 +425,10 @@ border-radius: 6px !important;
     animation: slideUp 1s forwards;
     animation-delay: 0.5s;
 }
-
+.none-complete-img{
+  width: 133px !important;
+  height: 146px !important;
+}
 .animated-button {
     opacity: 0;
     transform: translateX(-20px);
