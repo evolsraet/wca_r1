@@ -31,7 +31,7 @@
                 <img src="../../../img/car_example.png" alt="Car">
               <div class="content p-0">
                 <div class="mov-sort d-flex flex-lg-row-reverse align-items-start justify-content-between">
-                <span class="date text-muted">{{ splitDate(card.date) }}</span>
+                <span class="date text-secondary opacity-50">{{ splitDate(card.date) }}</span>
                 <div class="rating m-0">
                   <label v-for="index in 5" :key="index" :for="'star' + index" class="cursor-dis rating__label rating__label--full">
                       <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
@@ -40,13 +40,13 @@
                 </div>
               </div>
               <!-- <h5 class="card-title">차량 종류 들어갈 예정:{{ card.title }}</h5>-->
-      <!--          <div class="d-sm-flex justify-content-between text-muted">
+      <!--          <div class="d-sm-flex justify-content-between text-secondary opacity-50">
                   <span class="deilname">담당 딜러 {{ card.dealer }} 님</span>
                   <span class="date">{{ splitDate(card.date) }}</span>
                 </div>-->
                 <div>
                 <p class="text-start card-text">{{ card.text }}</p>
-               <!-- <p class="auction-deadline text-muted">판매가<span>12000만원</span></p>-->
+               <!-- <p class="auction-deadline text-secondary opacity-50">판매가<span>12000만원</span></p>-->
                 </div>
                 
               </div>
@@ -56,7 +56,7 @@
             <div class="complete-car">
                 <div class="card my-auction mt-3">
                     <div class="none-complete">
-                        <span class="text-muted">아직 작성된 이용후기가 없습니다.</span>
+                        <span class="text-secondary opacity-50">아직 작성된 이용후기가 없습니다.</span>
                     </div>
                 </div>
             </div>

@@ -24,7 +24,7 @@
                                         비밀번호 초기화
                                     </button>
                                 </div>
-                                <p class="text-muted text-center mt-3">비밀번호 초기화 링크를 메일로 보내드립니다.</p>
+                                <p class="text-secondary opacity-50 text-center mt-3">비밀번호 초기화 링크를 메일로 보내드립니다.</p>
                             </div>
                         </form>
                     </div>

@@ -14,8 +14,8 @@
                     <div :class="animationClass" ref="animatedSection">
                         <div class="css-ifyyt1 gap-5">
                             <div class="font-title">
-                                <h5 class="text-muted font-title">내 차 판매에</h5>
-                                <h5 class="font-title text-muted">
+                                <h5 class="text-secondary opacity-50 font-title">내 차 판매에</h5>
+                                <h5 class="font-title text-secondary opacity-50">
                                     <span class="tc-red fw-semibold">28% </span>정도
                                     <span class="break-line"></span>  
                                     <span class="ellipsis-animation">가까워지는 중</span>
@@ -91,7 +91,7 @@
                                                     <label for="ch2">네,딜러에요!</label>
                                                 </div>
                                             </div>
-                                            <p class="text-muted">딜러라면 추가 정보 입력이 필요해요</p>
+                                            <p class="text-secondary opacity-50">딜러라면 추가 정보 입력이 필요해요</p>
                                             <a href="your-link.html" class="icon-link mt-5 mb-3">
                                                 <img src="../../../img/Icon-file.png" class="ms-2" alt="회원약관 및 개인정보 처리방침">위카모빌리티 회원약관 및 개인정보처리 방침
                                             </a>
@@ -105,7 +105,7 @@
                                                             파일 첨부
                                                         </button>
                                                         <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
-                                                        <div class="text-start text-muted" v-if="registerForm.file_user_photo_name">사진 파일 : {{ registerForm.file_user_photo_name }}</div>
+                                                        <div class="text-start text-secondary opacity-50" v-if="registerForm.file_user_photo_name">사진 파일 : {{ registerForm.file_user_photo_name }}</div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="dealerName">이름</label>
@@ -147,26 +147,26 @@
                                                         <li>매도용인감정보</li>
                                                         <li>매매업체 대표증 or 종사원증</li>
                                                         <div class="d-flex justify-content-flex-end">
-                                                            <a href="#" class="seal-info text-muted my-2 float-end" alt="인감정보양식 다운로드 링크">인감정보양식 다운로드</a>
+                                                            <a href="#" class="seal-info text-secondary opacity-50 my-2 float-end" alt="인감정보양식 다운로드 링크">인감정보양식 다운로드</a>
                                                         </div>
                                                         <p class="mt-4">사업자 등록증</p>
                                                         <input type="file" @change="handleFileUploadBiz" ref="fileInputRefBiz" style="display:none">
                                                         <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
                                                             파일 첨부
                                                         </button>
-                                                        <div class="text-start mb-3 text-muted" v-if="registerForm.file_user_biz_name">사업자 등록증 : {{ registerForm.file_user_biz_name }}</div>
+                                                        <div class="text-start mb-3 text-secondary opacity-50" v-if="registerForm.file_user_biz_name">사업자 등록증 : {{ registerForm.file_user_biz_name }}</div>
                                                         <p>매도용인감정보</p>
                                                         <input type="file" @change="handleFileUploadSign" ref="fileInputRefSign" style="display:none">
                                                         <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
                                                             파일 첨부
                                                         </button>
-                                                        <div class="text-start mb-3 text-muted" v-if="registerForm.file_user_sign_name">매도용인감정보 : {{ registerForm.file_user_sign_name }}</div>
+                                                        <div class="text-start mb-3 text-secondary opacity-50" v-if="registerForm.file_user_sign_name">매도용인감정보 : {{ registerForm.file_user_sign_name }}</div>
                                                         <p>매매업체 대표증 or 종사원증</p>
                                                         <input type="file" @change="handleFileUploadCert" ref="fileInputRefCert" style="display:none">
                                                         <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
                                                             파일 첨부
                                                         </button>
-                                                        <div class="text-start mb-5 text-muted" v-if="registerForm.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ registerForm.file_user_cert_name }}</div>
+                                                        <div class="text-start mb-5 text-secondary opacity-50" v-if="registerForm.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ registerForm.file_user_cert_name }}</div>
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="deliveryAdress">인수차량 도착지 주소</label>
@@ -518,7 +518,7 @@ body {
     font-weight: bold;
 }
 
-.text-muted {
+.text-secondary opacity-50 {
     color: #c8c8c8 !important;
 }
 

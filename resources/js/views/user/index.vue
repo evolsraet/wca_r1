@@ -36,8 +36,8 @@
                                             <div class="card-body">
                                                 <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                                                 <p>2020년 / 2.4km / 무사고</p>
-                                                <p class="card-text text-muted">(차량 기종 들어갈 예정) {{ review.id }}</p>
-                                                <p class="card-text text-muted">담당 딜러: {{ review.dealer.name }} 님</p>
+                                                <p class="card-text text-secondary opacity-50">(차량 기종 들어갈 예정) {{ review.id }}</p>
+                                                <p class="card-text text-secondary opacity-50">담당 딜러: {{ review.dealer.name }} 님</p>
                                                 <div>
                                                     <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
                                                 </div>
@@ -60,7 +60,7 @@
                             <div class="card my-auction mt-3">
                                 <div class="card-body">
                                     <div class="none-complete">
-                                        <span class="text-muted">아직 작성된 이용후기가 없습니다.</span>
+                                        <span class="text-secondary opacity-50">아직 작성된 이용후기가 없습니다.</span>
                                     </div>
                                 </div>
                             </div>
@@ -110,7 +110,7 @@
                                     <ul class="px-0 inspector_list max_width_900">
                                         <li class="m-auto">
                                             <div>
-                                                <p class="text-muted d-flex justify-content-center">새 차량 등록하기<span class="ms-2 icon-auction-plus"></span></p>
+                                                <p class="text-secondary opacity-50 d-flex justify-content-center">새 차량 등록하기<span class="ms-2 icon-auction-plus"></span></p>
                                             </div>
                                         </li>
                                     </ul>
@@ -122,7 +122,7 @@
                                     <div class="my-auction none-content">
                                         <div class="none-complete-img"></div>
                                         <div class="d-flex align-items-center flex-column gap-3">   
-                                            <div class="text-muted d-flex align-items-center flex-column gap-5">                                    
+                                            <div class="text-secondary opacity-50 d-flex align-items-center flex-column gap-5">                                    
                                                 <h4>등록된 차가 없어요</h4>
                                                 <h5>차량 등록후, 경매를 시작해보세요.</h5>
                                             </div>

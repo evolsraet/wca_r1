@@ -425,7 +425,7 @@ TODO:
                     </div>
                     <div v-if="isDealer" class="filter-content">
                         <!-- 페이지의 나머지 내용 -->
-                        <button @click="toggleModal" class="animCircle filter-button text-muted mx-2"> 필터</button>
+                        <button @click="toggleModal" class="animCircle filter-button text-secondary opacity-50 mx-2"> 필터</button>
                         <transition name="fade" mode="out-in">
                         <FilterModal v-if="showModal" @close="handleClose" />
                         </transition>
@@ -533,13 +533,13 @@ TODO:
                                                 </div>-->
                                                     <div class="card-body">
                                                         <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                        <p class="text-muted mt-0"> 2020 년 |<span class="mx-1">2.4km</span>| 무사고</p>
-                                                        <p class="text-muted mt-0">현대 소나타 (DN8)</p>
+                                                        <p class="text-secondary opacity-50 mt-0"> 2020 년 |<span class="mx-1">2.4km</span>| 무사고</p>
+                                                        <p class="text-secondary opacity-50 mt-0">현대 소나타 (DN8)</p>
                                                         <div class="d-flex">
                                                             <h5 class="card-title"><span class="blue-box fw-bold">무사고</span></h5>
                                                             <h5 v-if="auction.is_reauction !== 0"><span class="gray-box">재경매</span></h5>
                                                             <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                            <!--<p class="text-muted">{{ auction.car_no }}</p>-->
+                                                            <!--<p class="text-secondary opacity-50">{{ auction.car_no }}</p>-->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -552,7 +552,7 @@ TODO:
                                 <div class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="text-muted">차량 정보가 없습니다.</span>
+                                            <span class="text-secondary opacity-50">차량 정보가 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -622,13 +622,13 @@ TODO:
                                             </div>-->
                                             <div class="card-body">
                                                 <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                <p class="text-muted mt-0"> 2020 년 / 2.4km / 무사고</p>
-                                                <p class="text-muted mt-0">현대 소나타 (DN8)</p>
+                                                <p class="text-secondary opacity-50 mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                                <p class="text-secondary opacity-50 mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
                                                     <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                                                     <h5 v-if="auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
                                                     <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                    <p class="text-muted">{{ auction.car_no }}</p>
+                                                    <p class="text-secondary opacity-50">{{ auction.car_no }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -641,7 +641,7 @@ TODO:
                                             </span>
                                             <div class="card-body">
                                             <h5 class="card-title"><span class="blue-box">무사고</span>{{ auction.car_no }}</h5>
-                                            <p class="card-text text-muted">현대 쏘나타(DN8)</p>
+                                            <p class="card-text text-secondary opacity-50">현대 쏘나타(DN8)</p>
                                             </div>
                                         </div>-->
                                     </div>
@@ -652,7 +652,7 @@ TODO:
                                 <div class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="text-muted">관심 차량이 없습니다.</span>
+                                            <span class="text-secondary opacity-50">관심 차량이 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -681,14 +681,14 @@ TODO:
                                         <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                         <div class="card-body">
                                             <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
-                                            <p class="card-text text-muted">현대 쏘나타(DN8)</p>
+                                            <p class="card-text text-secondary opacity-50">현대 쏘나타(DN8)</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div v-if="!filteredDone" class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="text-muted">판매 차량이 없습니다.</span>
+                                            <span class="text-secondary opacity-50">판매 차량이 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -734,13 +734,13 @@ TODO:
                                             </div>
                                             <div class="card-body">
                                                 <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                <p class="text-muted mt-0"> 2020 년 / 2.4km / 무사고</p>
-                                                <p class="text-muted mt-0">현대 소나타 (DN8)</p>
+                                                <p class="text-secondary opacity-50 mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                                <p class="text-secondary opacity-50 mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
                                                     <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                                                     <h5 v-if="bid.auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
                                                     <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                    <p class="text-muted">{{ bid.auction.car_no }}</p>
+                                                    <p class="text-secondary opacity-50">{{ bid.auction.car_no }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -751,7 +751,7 @@ TODO:
                                 <div class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="text-muted">입찰한 차량이 없습니다.</span>
+                                            <span class="text-secondary opacity-50">입찰한 차량이 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -785,67 +785,67 @@ TODO:
                     <table class="table custom-border">
                         <tbody class="auction-table">
                             <tr>
-                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="gray-box">미참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain text-muted"></td>
+                                <td class="time-remain text-secondary opacity-50"></td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain text-muted"></td>
+                                <td class="time-remain text-secondary opacity-50"></td>
                                 <td><span class="auc-gray">진행중</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain text-muted"></td>
+                                <td class="time-remain text-secondary opacity-50"></td>
                                 <td><span class="auc-black">경매완료</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain text-muted"></td>
+                                <td class="time-remain text-secondary opacity-50"></td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain text-muted"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-secondary opacity-50"><span class="tc-red">46</span>분남음</td>
                                 <td><span class="auc-gray">진행중</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain text-muted"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-secondary opacity-50"><span class="tc-red">46</span>분남음</td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain text-muted"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-secondary opacity-50"><span class="tc-red">46</span>분남음</td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain text-muted"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-secondary opacity-50"><span class="tc-red">46</span>분남음</td>
                                 <td class="auc-state"><span class="auc-gray">진행중</span></td>
                             </tr>
                         </tbody>

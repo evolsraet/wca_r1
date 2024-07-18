@@ -60,7 +60,7 @@
                     파일 첨부
                 </button>
                 <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload" id="file_user_photo">
-                <div class="text-start text-muted">사진 파일: {{ fileName }}</div>
+                <div class="text-start text-secondary opacity-50">사진 파일: {{ fileName }}</div>
             </div>
     </form>
 </template>

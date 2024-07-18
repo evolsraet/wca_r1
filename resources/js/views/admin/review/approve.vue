@@ -35,27 +35,27 @@
                         <input type="hidden" id="dealer_id" :v-model="rv.dealer_id">
                     </div>
                     <div class="card-body">
-                        <p class="text-muted">차량명(추가예정)</p>
-                        <input class="input-dis form-control text-muted" readonly/>
+                        <p class="text-secondary opacity-50">차량명(추가예정)</p>
+                        <input class="input-dis form-control text-secondary opacity-50" readonly/>
                     </div>
                     <div class="card-body">
-                        <p class="text-muted">차량번호</p>
-                        <input v-model="car_no" class="input-dis form-control text-muted" readonly/>
+                        <p class="text-secondary opacity-50">차량번호</p>
+                        <input v-model="car_no" class="input-dis form-control text-secondary opacity-50" readonly/>
                     </div>
                     <div class="card-body">
-                        <p class="text-muted">매물번호(추가예정)</p>
-                        <input class="input-dis form-control text-muted" readonly/>
+                        <p class="text-secondary opacity-50">매물번호(추가예정)</p>
+                        <input class="input-dis form-control text-secondary opacity-50" readonly/>
                     </div>
                     <div class="card-body">
-                        <p class="text-muted">딜러명</p>
-                        <input v-model="dealer_name" class="input-dis form-control text-muted" readonly/>
+                        <p class="text-secondary opacity-50">딜러명</p>
+                        <input v-model="dealer_name" class="input-dis form-control text-secondary opacity-50" readonly/>
                     </div>
                     <div class="card-body">
-                        <p class="text-muted">판매가</p>
-                        <input v-model="price" class="input-dis form-control text-muted" readonly/>
+                        <p class="text-secondary opacity-50">판매가</p>
+                        <input v-model="price" class="input-dis form-control text-secondary opacity-50" readonly/>
                     </div>
                     <div class="card-body">
-                        <p class="text-muted">별점</p>
+                        <p class="text-secondary opacity-50">별점</p>
                         <div class="wrap">
                             <select class="form-select" :v-model="rv.star" id="starSelect" @change="changeStar($event)">
                                 <option value="1">1점</option>
@@ -67,7 +67,7 @@
                         </div>
                     </div>
                     <div class="card-body">
-                        <p class="text-muted">후기</p>
+                        <p class="text-secondary opacity-50">후기</p>
                         <textarea class="custom-textarea mt-2" rows="2" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content"></textarea>
                     </div>
                     <button class="mt-5 btn btn-primary w-100">저장</button>

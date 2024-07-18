@@ -9,7 +9,7 @@
             <div class="mb-4">
               <div>
                 <div class="d-flex align-items-baseline justify-content-between">
-                  <h4>No.3801<span class="text-muted ms-3 fw-lighter">차량번호 {{auction.car_no}}</span></h4>
+                  <h4>No.3801<span class="text-secondary opacity-50 ms-3 fw-lighter">차량번호 {{auction.car_no}}</span></h4>
                   <a class="btn-apply" @click="detailAuction()">자세히 보기</a>
                 </div>
                 <div class="sell-info mb-5">
@@ -32,22 +32,22 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <p class="text-muted">입금 상태</p>
+                    <p class="text-secondary opacity-50">입금 상태</p>
                     <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
                     <option value="done">입금 완료</option>
                     <option value="dlvr">입금 대기</option> <!-- dlvr자리 -->
                     </select>
                 </div>
                 <div class="card-body">
-                  <p class="text-muted">낙찰 금액</p>
+                  <p class="text-secondary opacity-50">낙찰 금액</p>
                   <input v-model="auction.final_price" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
                 </div>
                 <div class="card-body">
-                  <p class="text-muted">입금 총액</p>
+                  <p class="text-secondary opacity-50">입금 총액</p>
                   <input value="35,000,000 원" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
                 </div>
                 <div class="card-body">
-                  <p class="text-muted">미수금</p>
+                  <p class="text-secondary opacity-50">미수금</p>
                   <input value="5,000,000 원"  class="input-dis tc-red form-control bg-secondary bg-opacity-10" readonly/>
                 </div>
                 

@@ -9,7 +9,7 @@
                             <button type="button" class="btn-close" @click="handleCloseClick"></button>
                         </div>
                         <h5>추가 정보를 입력해주세요</h5>
-                        <p class="text-muted mt-5">사진 (본인 확인용)</p>
+                        <p class="text-secondary opacity-50 mt-5">사진 (본인 확인용)</p>
                         <div class="file-upload">
                             <div class="image-file">
                                 <div v-if="singleImage" class="image-preview">

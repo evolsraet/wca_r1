@@ -5,67 +5,67 @@
             <template v-else>
                 <h5>차량 정보 조회 되었어요</h5>
                 <ul class="machine-inform-title">
-                    <li class="text-muted">차량번호</li>
+                    <li class="text-secondary opacity-50">차량번호</li>
                     <li class="info-num">{{ carDetails.no }}</li>
                     <li class="car-icon"></li>
                 </ul>
                 <ul class="machine-inform">
-                    <li class="text-muted">제조사</li>
+                    <li class="text-secondary opacity-50">제조사</li>
                     <li class="sub-title"></li>
                 </ul>
                 <ul class="machine-inform">
-                    <li class="text-muted">모델</li>
+                    <li class="text-secondary opacity-50">모델</li>
                     <li class="sub-title">{{ carDetails.model }}</li>
                 </ul>
                 <ul class="machine-inform">
-                    <li class="text-muted">세부모델</li>
+                    <li class="text-secondary opacity-50">세부모델</li>
                     <li class="sub-title">{{ carDetails.modelSub }}</li>
                 </ul>
                 <ul class="machine-inform">
-                    <li class="text-muted">등급</li>
+                    <li class="text-secondary opacity-50">등급</li>
                     <li class="sub-title">{{ carDetails.grade }}</li>
                 </ul>
                 <ul class="machine-inform">
-                    <li class="text-muted">세부등급</li>
+                    <li class="text-secondary opacity-50">세부등급</li>
                     <li class="sub-title">{{ carDetails.gradeSub }}</li>
                 </ul>
                 <ul class="machine-inform-title">
-                    <li class="text-muted">최초등록일</li>
+                    <li class="text-secondary opacity-50">최초등록일</li>
                     <li class="info-num"></li>
                     <li class="car-aside-icon"></li>
                 </ul>
                 <ul class="machine-inform">
-                    <li class="text-muted">년식</li>
+                    <li class="text-secondary opacity-50">년식</li>
                     <li class="sub-title">{{ carDetails.year }}</li>
                 </ul>
                 <ul class="machine-inform">
-                    <li class="text-muted">차량유형</li>
+                    <li class="text-secondary opacity-50">차량유형</li>
                     <li class="sub-title">종합 승용차</li>
                 </ul>
                 <ul class="machine-inform-title">
-                    <li class="text-muted">배기량</li>
+                    <li class="text-secondary opacity-50">배기량</li>
                     <li class="info-num">2000cc</li>
                     <li class="gasoline-icon"></li>
                 </ul>
                 <ul class="machine-inform">
-                    <li class="text-muted">연료</li>
+                    <li class="text-secondary opacity-50">연료</li>
                     <li class="sub-title">{{ carDetails.fuel }}</li>
                 </ul>
                 <ul class="machine-inform">
-                    <li class="text-muted">미션</li>
+                    <li class="text-secondary opacity-50">미션</li>
                     <li class="sub-title">{{ carDetails.mission }}</li>
                 </ul>
                 <ul class="machine-inform-title">
-                    <li class="text-muted">용도변경이력</li>
+                    <li class="text-secondary opacity-50">용도변경이력</li>
                     <li class="info-num">-</li>
                     <li class="clean-icon"></li>
                 </ul>
                 <ul class="machine-inform">
-                    <li class="text-muted">튜닝이력</li>
+                    <li class="text-secondary opacity-50">튜닝이력</li>
                     <li class="sub-title">1회</li>
                 </ul>
                 <ul class="machine-inform">
-                    <li class="text-muted">리콜이력</li>
+                    <li class="text-secondary opacity-50">리콜이력</li>
                     <li class="sub-title">-</li>
                 </ul>
             </template>
@@ -73,7 +73,7 @@
          <BottomSheet02 class="mt-5">
                 <div>
                     <div class="top-content-style wd-100">
-                        <p class="text-muted bold-18-font">현재 시세 <span class="normal-14-font">(무사고 기준)</span></p>
+                        <p class="text-secondary opacity-50 bold-18-font">현재 시세 <span class="normal-14-font">(무사고 기준)</span></p>
                         <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
                     <div v-if="user?.name">
@@ -95,7 +95,7 @@
                             <div class="complete-car">
                                 <div class="card my-auction mt-3">
                                     <div class="none-complete-ty03">
-                                        <span class="text-muted">차량 조회에 성공하였습니다.</span>
+                                        <span class="text-secondary opacity-50">차량 조회에 성공하였습니다.</span>
                                     </div>
                                 </div>
                             </div>
@@ -122,7 +122,7 @@
                             <div class="complete-car">
                                 <div class="card my-auction mt-3">
                                     <div class="none-complete-ty02">
-                                        <span class="text-muted">로그인을 하면 경매 신청이 가능해요.</span>
+                                        <span class="text-secondary opacity-50">로그인을 하면 경매 신청이 가능해요.</span>
                                     </div>
                                 </div>
                             </div>
@@ -354,7 +354,7 @@ const secondModal = () => {
     
     const text = `<div class="content p-2 mt-0"> 
           <h3 class="mb-2 fw-semibold">필요 서류</h3>
-          <h5 class="text-muted fw-normal mb-4">미리 준비하면 더 빠르게 진행돼요!</h5>
+          <h5 class="text-secondary opacity-50 fw-normal mb-4">미리 준비하면 더 빠르게 진행돼요!</h5>
           <div class="text-start my-3 process"> 
             <h4 class="mb-3">개인</h4>
             <div class="d-flex justify-content-between">
@@ -363,7 +363,7 @@ const secondModal = () => {
                 <img src="${info1}" class="info-img">
                 <div class="text-center">
                   <p>필요서류 없음</p>
-                  <p class="text-muted">본인 소유 차량이 아닐경우<br>위임장 또는 소유자 인감<br>증명서가 필요합니다.</p>
+                  <p class="text-secondary opacity-50">본인 소유 차량이 아닐경우<br>위임장 또는 소유자 인감<br>증명서가 필요합니다.</p>
                 </div>
               </div>
               <div class="info-block">

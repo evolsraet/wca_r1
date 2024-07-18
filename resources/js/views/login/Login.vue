@@ -4,7 +4,7 @@
       <div v-if="isMobileView" class="p-4 app-specific-size">
         <div class="text-center">
           <h2 class="my-4 fw-bold"><mark class="custom-highlight">회원가입시</mark> 판매가 빨라져요</h2>
-          <p class="bold-link text-muted">소셜 로그인 및 이메일로 가입 할 수 있어요.</p>
+          <p class="bold-link text-secondary opacity-50">소셜 로그인 및 이메일로 가입 할 수 있어요.</p>
         </div>
       </div>
       <div class="register-content">
@@ -18,10 +18,10 @@
       </div>
         <div :class="animationClass" ref="animatedSection">
         <div class="css-ifyyt1 gap-5">
-          <div class="font-title"><h5 class="text-muted font-title">쉽고 빠른 내차팔기,</h5>
+          <div class="font-title"><h5 class="text-secondary opacity-50 font-title">쉽고 빠른 내차팔기,</h5>
         <h5 class="font-title">{{ wicaLabel.title() }} 와 함께해요.</h5>
       </div>
-      <p class="text-muted font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>
+      <p class="text-secondary opacity-50 font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>
     </div>
   </div>
 </div>
@@ -96,7 +96,7 @@
                       <span class="star-icon"></span>
                     </label>
                   </div>
-                  <div class="d-sm-flex justify-content-between text-muted">
+                  <div class="d-sm-flex justify-content-between text-secondary opacity-50">
                     <span class="deilname">담당 딜러 홍길동님</span>
                     <span class="date">2024-03-18</span>
                   </div>
@@ -117,7 +117,7 @@
                         </video>
                       </div>
                   <div class="my- text-left">
-                    <router-link :to="{ path: '/' }" class="register-link text-muted ms-2">이미 위카 회원이신가요?</router-link>
+                    <router-link :to="{ path: '/' }" class="register-link text-secondary opacity-50 ms-2">이미 위카 회원이신가요?</router-link>
                   </div>
                   <!-- 이메일 입력 -->
                   <div class="mb-2">
@@ -134,7 +134,7 @@
       
                   <!-- 소셜 로그인 섹션 -->
                   <div class="login-v2 mb-3">
-                    <h3 class="my-4 text-muted"><span>또는 소셜 로그인</span></h3>
+                    <h3 class="my-4 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
                     <ul class="login-v2-area">
                       <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal">Google</a></li>
                       <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal">Naver</a></li>
@@ -152,12 +152,12 @@
                 <div class="register-link text-center">
                   <router-link :to="{ path: '/register' }" class="register-link">회원가입하기</router-link>
                 </div>
-                <div class="text-muted mt-4 text-center">
+                <div class="text-secondary opacity-50 mt-4 text-center">
                   <p class="fs-6">
                     <span @click="openModal('privacy')" class="link-style pointer">개인정보 처리방침</span> |
                     <span @click="openModal('terms')" class="link-style pointer">이용약관</span>
                   </p>
-                  <p class="my-3 text-muted">ⓒ Watosys all rights reserved.</p>
+                  <p class="my-3 text-secondary opacity-50">ⓒ Watosys all rights reserved.</p>
                   </div>
               </form>
             </div>
@@ -174,7 +174,7 @@
             <form @submit.prevent="submitLogin">
               <div class="">
                 <div class="my-3 text-left">
-                  <router-link :to="{ path: '/' }" class="register-link text-muted ms-2">이미 위카 회원이신가요?</router-link>
+                  <router-link :to="{ path: '/' }" class="register-link text-secondary opacity-50 ms-2">이미 위카 회원이신가요?</router-link>
                 </div>
                 <!-- 이메일 입력 -->
                 <div class="mb-3">
@@ -198,7 +198,7 @@
 
                 <!-- 소셜 로그인 섹션 -->
                 <div class="login-v2 my-5">
-                  <h3 class="mb-4 text-muted"><span>또는 소셜 로그인</span></h3>
+                  <h3 class="mb-4 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
                   <ul class="login-v2-area">
                     <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal">Google</a></li>
                     <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal">Naver</a></li>
@@ -216,12 +216,12 @@
               <div class="register-link mt-5 text-center">
                 <router-link :to="{ path: '/register' }" class="register-link">회원가입하기</router-link>
               </div>
-              <div class="text-muted mt-4 text-center">
+              <div class="text-secondary opacity-50 mt-4 text-center">
                 <p class="fs-6">
                   <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
                   <span @click="openModal('terms')" class="link-style">이용약관</span>
                 </p>
-                <p class="my-3 text-muted">ⓒ Watosys all rights reserved.</p>
+                <p class="my-3 text-secondary opacity-50">ⓒ Watosys all rights reserved.</p>
                 </div>
             </form>
           </div>

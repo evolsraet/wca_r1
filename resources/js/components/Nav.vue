@@ -53,7 +53,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text process">입찰하기</span>
-                      <span class="text-muted font-1">새 매물 둘러보기</span>
+                      <span class="text-secondary opacity-50 font-1">새 매물 둘러보기</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'dealer.address'}" class="menu-item mt-0" @click="toggleNavbar">
@@ -62,7 +62,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text process">주소 관리</span>
-                      <span class="text-muted font-1">탁송 주소 관리</span>
+                      <span class="text-secondary opacity-50 font-1">탁송 주소 관리</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'dealer.bids'}" class="menu-item mt-0" @click="toggleNavbar">
@@ -71,7 +71,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text process">낙찰 차량관리</span>
-                      <span class="text-muted font-1">경매 낙찰차량 확인</span>
+                      <span class="text-secondary opacity-50 font-1">경매 낙찰차량 확인</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mt-0" @click="toggleNavbar">
@@ -80,7 +80,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text process">과거 낙찰 이력</span>
-                      <span class="text-muted font-1">경매 완료 매물</span>                       
+                      <span class="text-secondary opacity-50 font-1">경매 완료 매물</span>                       
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'index.claim' }" class="menu-item process mt-0" @click="toggleNavbar">
@@ -89,7 +89,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text">클레임</span>
-                      <span class="text-muted font-1">낙찰 차량에 문제가 있으신가요?</span>
+                      <span class="text-secondary opacity-50 font-1">낙찰 차량에 문제가 있으신가요?</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'index.notices' }" class="menu-item mt-0 process mb-4" @click="toggleNavbar">
@@ -98,7 +98,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text">공지사항</span>
-                      <span class="text-muted font-1">새소식</span>
+                      <span class="text-secondary opacity-50 font-1">새소식</span>
                     </div>
                   </router-link>
                 </div>
@@ -125,7 +125,7 @@
                 <div class="menu-illustration02 p-3">
                   <div class="sub-board-style02">
                     <div class="text-start">
-                      <p class="text-muted">경매를 시작해볼까요?</p>
+                      <p class="text-secondary opacity-50">경매를 시작해볼까요?</p>
                       <div class="d-flex align-items-center">
                         <router-link :to="{ name: 'home' }" class="process bold-18-font" @click="toggleNavbar">내 차 팔기</router-link>
                         <div class="icon right-icon-nav"></div>
@@ -144,7 +144,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text">내 차 팔기</span>
-                      <span class="text-muted font-1">{{ wicaLabel.title() }}이 척척</span>
+                      <span class="text-secondary opacity-50 font-1">{{ wicaLabel.title() }}이 척척</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'auction.index'}" class="menu-item mt-1" @click="toggleNavbar">
@@ -153,7 +153,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text">내 매물관리</span>
-                      <span class="text-muted font-1">경매 진행중인 매물</span>
+                      <span class="text-secondary opacity-50 font-1">경매 진행중인 매물</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'user.review'}" class="menu-item mt-1 mb-4" @click="toggleNavbar">
@@ -162,7 +162,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text">이용후기</span>
-                      <span class="text-muted font-1"> 다양한 판매 후기</span>
+                      <span class="text-secondary opacity-50 font-1"> 다양한 판매 후기</span>
                     </div>
                   </router-link>
                 </div>
@@ -200,7 +200,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text">차량 조회</span>
-                      <span class="text-muted font-1">내 차량 조회</span>
+                      <span class="text-secondary opacity-50 font-1">내 차량 조회</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'index.allreview' }" class="menu-item mt-1" @click="toggleNavbar">
@@ -209,7 +209,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text">이용후기</span>
-                      <span class="text-muted font-1"> 다양한 판매 후기</span>
+                      <span class="text-secondary opacity-50 font-1"> 다양한 판매 후기</span>
                     </div>
                   </router-link>
                   <router-link :to="{ name: 'index.introduce' }" class="menu-item mt-1 mb-3" @click="toggleNavbar">
@@ -218,7 +218,7 @@
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text">서비스 소개</span>
-                      <span class="text-muted font-1">위카 란?</span>
+                      <span class="text-secondary opacity-50 font-1">위카 란?</span>
                     </div>
                   </router-link>
                 </div>
@@ -264,7 +264,7 @@
                 <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
               </li>
               <li class="nav-item my-member-guest ms-auto">
-                <img src="../../img/Icon-person.png" class="nav-profile-login" alt="LoginImg" height="25px" width="25px"><router-link class="nav-link me-0 text-muted pb-0" to="/login" exact-active-class="active-link">로그인</router-link>
+                <img src="../../img/Icon-person.png" class="nav-profile-login" alt="LoginImg" height="25px" width="25px"><router-link class="nav-link me-0 text-secondary opacity-50 pb-0" to="/login" exact-active-class="active-link">로그인</router-link>
               </li>
             </template>
             <template v-else-if="isDealer">

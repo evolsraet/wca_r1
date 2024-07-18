@@ -30,14 +30,14 @@
                         <div class="mx-2 enter-view align-items-baseline mt-3 bold-18-font">  
                             <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                             </div>
-                            <div class="mx-2 text-muted my-4">
+                            <div class="mx-2 text-secondary opacity-50 my-4">
                             <p>년 / 2.4km / 무사고</p>
                             <p>현대 쏘나타 (DN8)</p>
                             <br>
                             <p>매물번호 / 564514</p>
                             <p>딜 러 명 / {{review.dealer.name}}</p>
                         </div>
-                        <!--<p class="mt-4 auction-deadline justify-content-sm-center text-muted">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>-->
+                        <!--<p class="mt-4 auction-deadline justify-content-sm-center text-secondary opacity-50">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>-->
                     </div>
                     <div class="right-container">
                         <bottom-sheet initial="half" :dismissable="true" class="mt-2">

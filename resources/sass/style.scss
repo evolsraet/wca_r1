@@ -88,10 +88,6 @@ video {
     font-weight: bold;
 }
 
-.text-muted {
-    color: #c8c8c8 !important;
-}
-
 .fw-bold {
     font-weight: bold !important;
 }
@@ -891,7 +887,7 @@ video {
     .video_type01 {
         display: none;
     }
-    a.text-muted.spacing {
+    a.text-secondary .spacing {
         margin: 0px;
     }
     .regiest-content .banner{

@@ -23,7 +23,7 @@
                                 <input
                                     v-model = "created_at"
                                     type="text"
-                                    class="form-control text-muted input-dis"
+                                    class="form-control text-secondary opacity-50 input-dis"
                                     readonly
                                 />
                             </div>
@@ -32,7 +32,7 @@
                                 <input
                                     v-model = "email"
                                     type="email"
-                                    class="form-control text-muted input-dis"
+                                    class="form-control text-secondary opacity-50 input-dis"
                                     readonly
                                 />
                                 

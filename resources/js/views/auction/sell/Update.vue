@@ -28,9 +28,9 @@
           </div>
           <!-- 주소 입력 -->
           <div class="form-group mb-5">
-            <input type="text" @click="editPostCode('daumPostcodeInput')" class="text-muted" v-model="addrPost" placeholder="우편번호" readonly>
+            <input type="text" @click="editPostCode('daumPostcodeInput')" class="text-secondary opacity-50" v-model="addrPost" placeholder="우편번호" readonly>
             <div>
-                <input type="text" v-model="addr" placeholder="주소" class="searchadress text-muted" readonly>
+                <input type="text" v-model="addr" placeholder="주소" class="searchadress text-secondary opacity-50" readonly>
                 <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
             </div>
             

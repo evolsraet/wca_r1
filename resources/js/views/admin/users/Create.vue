@@ -232,7 +232,7 @@
                                         파일 첨부
                                     </button>
                                     <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
-                                    <div class="text-start text-muted" v-if="dealer.file_user_photo_name">사진 파일 : {{ dealer.file_user_photo_name }}</div>
+                                    <div class="text-start text-secondary opacity-50" v-if="dealer.file_user_photo_name">사진 파일 : {{ dealer.file_user_photo_name }}</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="user-title" class="form-label"
@@ -242,7 +242,7 @@
                                     <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
                                         파일 첨부
                                     </button>
-                                    <div class="text-start mb-3 text-muted" v-if="dealer.file_user_biz_name">사업자 등록증 : {{ dealer.file_user_biz_name }}</div>
+                                    <div class="text-start mb-3 text-secondary opacity-50" v-if="dealer.file_user_biz_name">사업자 등록증 : {{ dealer.file_user_biz_name }}</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="user-title" class="form-label"
@@ -252,7 +252,7 @@
                                     <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
                                         파일 첨부
                                     </button>
-                                    <div class="text-start mb-3 text-muted" v-if="dealer.file_user_sign_name">매도용인감정보 : {{ dealer.file_user_sign_name }}</div>
+                                    <div class="text-start mb-3 text-secondary opacity-50" v-if="dealer.file_user_sign_name">매도용인감정보 : {{ dealer.file_user_sign_name }}</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="user-title" class="form-label"
@@ -262,7 +262,7 @@
                                     <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
                                         파일 첨부
                                     </button>
-                                    <div class="text-start mb-5 text-muted" v-if="dealer.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ dealer.file_user_cert_name }}</div>
+                                    <div class="text-start mb-5 text-secondary opacity-50" v-if="dealer.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ dealer.file_user_cert_name }}</div>
                                 </div>
 
                             </div>

@@ -7,8 +7,8 @@
                        <div class="number d-flex justify-content-between">심사중 <span class="tc-red">{{ animatedUserAskCnt }}</span></div>
                        <div class="number d-flex justify-content-between">정&nbsp;&nbsp;상 <span>{{ animatedUserOkCnt }}</span></div>
                        <div class="divider"></div>
-                       <!--<div class="d-flex justify-content-around text-muted">탈&nbsp;&nbsp;&nbsp;&nbsp;퇴 <span>12</span></div>-->
-                       <div class="d-flex justify-content-between text-muted">가입거부 <span>{{ animatedUserRejectCnt }}</span></div>
+                       <!--<div class="d-flex justify-content-around text-secondary opacity-50">탈&nbsp;&nbsp;&nbsp;&nbsp;퇴 <span>12</span></div>-->
+                       <div class="d-flex justify-content-between text-secondary opacity-50">가입거부 <span>{{ animatedUserRejectCnt }}</span></div>
                    </div>
                </div>
                <div class="section">
@@ -16,7 +16,7 @@
                    <div class="card">
                        <div class="number d-flex justify-content-between">입금 대기 <span class="tc-red">{{ animatedAuctionDlvrCnt }}</span></div>
                        <div class="divider"></div>
-                       <div class="d-flex justify-content-between text-muted">입금 완료 <span>{{ animatedAuctionDoneCnt }}</span></div>
+                       <div class="d-flex justify-content-between text-secondary opacity-50">입금 완료 <span>{{ animatedAuctionDoneCnt }}</span></div>
                    </div>
                </div>
                <div class="section">
@@ -26,9 +26,9 @@
                        <div class="number d-flex justify-content-between">진단 중<span class="tc-red">{{ animatedAuctionDiagCnt }}</span></div>
                        <div class="number d-flex justify-content-between">경매 중<span class="tc-red">{{ animatedAuctionWIAddCnt }}</span></div>
                        <div class="divider"></div>
-                       <div class="d-flex justify-content-between text-muted">신청 취소<span>{{ animatedAuctionCancelCnt }}</span></div>
-                       <div class="d-flex justify-content-between text-muted">선택 완료<span>{{ animatedAuctionChosenCnt }}</span></div>
-                       <div class="d-flex justify-content-between text-muted">경매 완료<span>{{ animatedAuctionDoneCnt }}</span></div>
+                       <div class="d-flex justify-content-between text-secondary opacity-50">신청 취소<span>{{ animatedAuctionCancelCnt }}</span></div>
+                       <div class="d-flex justify-content-between text-secondary opacity-50">선택 완료<span>{{ animatedAuctionChosenCnt }}</span></div>
+                       <div class="d-flex justify-content-between text-secondary opacity-50">경매 완료<span>{{ animatedAuctionDoneCnt }}</span></div>
                    </div>
                </div>
                <div class="section">
@@ -36,7 +36,7 @@
                    <div class="card">
                        <div class="number d-flex justify-content-between">작성<span class="tc-red">{{ animatedReviewWriteCnt }}</span></div>
                        <div class="divider"></div>
-                       <div class="d-flex justify-content-between text-muted">미작성 <span>{{ animatedReviewNotWriteCnt }}</span></div>
+                       <div class="d-flex justify-content-between text-secondary opacity-50">미작성 <span>{{ animatedReviewNotWriteCnt }}</span></div>
                    </div>
                </div>
            </div>
@@ -111,13 +111,13 @@
                                        <div class="mx-2 enter-view align-items-baseline mt-1 bold-18-font">  
                                            <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                                        </div>
-                                       <div class="text-muted mx-2">
+                                       <div class="text-secondary opacity-50 mx-2">
                                            <p> 년 / 2.4km / 무사고</p>
                                            <p>현대 쏘나타 (DN8)</p>
                                            <p>매물번호 / 564514</p>
                                            <p>딜 러 명 / </p>
                                        </div>
-                                       <p class="auction-deadline text-muted">판매가<span>12000만원</span></p>
+                                       <p class="auction-deadline text-secondary opacity-50">판매가<span>12000만원</span></p>
                                    </div>
                                </div>
                            </div>

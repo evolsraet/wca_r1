@@ -6,7 +6,7 @@
         <div class="dealer-info">
           <img :src="photoUrl(userData)" alt="Profile Photo" class="profile-photo" />
           <div class="deal-info">
-            <p class="text-muted">낙찰액</p>
+            <p class="text-secondary opacity-50">낙찰액</p>
             <h4>{{ amtComma(selectedBid?.price ?? 0) }}</h4>
             <p><span class="fw-medium">{{ userData?.dealer.name }}</span>&nbsp;딜러</p>
             <p class="restar">4.5점</p>
@@ -18,7 +18,7 @@
         <h4 class="fst-normal mb-5">원하는 탁송일을 선택해 주세요</h4>
         <div class="d-flex justify-content-between">
           <h5>{{ monthLabel }}</h5>
-          <p class="text-muted">익일 9시 이후부터 탁송이 가능해요.</p>
+          <p class="text-secondary opacity-50">익일 9시 이후부터 탁송이 가능해요.</p>
         </div>
         <div class="date-time-picker">
           <div class="date-picker">
@@ -72,7 +72,7 @@
           파일 첨부
         </button>
         <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display: none;" id="file_user_photo">
-        <div class="text-start text-muted mt-2" v-if="registerForm.file_user_sign">사진 파일: {{ registerForm.file_user_sign }}</div>
+        <div class="text-start text-secondary opacity-50 mt-2" v-if="registerForm.file_user_sign">사진 파일: {{ registerForm.file_user_sign }}</div>
       </div>
       <h4 class="mt-4">마지막으로 꼼꼼히 확인해 주세요!</h4>
       <div class="summary-box d-flex flex-column p-3 mt-3">

@@ -4,14 +4,14 @@
             <router-link to="/admin" class="navbar-brand col-md-3 col-lg-2 ms-1 px-3 fs-6 nuxt-link-active mini mb-2"></router-link>
             <span class="admin-icon admin-icon-profile admin-icon-large"></span>
             <p class="profile-name">{{ userName }}</p>
-            <p class="profile-name text-muted">{{ userEmail }}</p>
+            <p class="profile-name text-secondary opacity-50">{{ userEmail }}</p>
             <div class="d-flex mt-2 gap-3 mb-2">
-                <a href="/login" @click="logout" class="text-muted nav-link d-flex align-items-center ft-13 mx-1">
-                    <span class="d-none d-sm-inline text-muted ms-1">로그아웃</span>
+                <a href="/login" @click="logout" class="text-secondary opacity-50 nav-link d-flex align-items-center ft-13 mx-1">
+                    <span class="d-none d-sm-inline text-secondary opacity-50 ms-1">로그아웃</span>
                 </a>
                 <router-link :to="{ name: 'myinfo.edit' }" class="">
-                    <a href="#"  class="text-muted nav-link d-flex align-items-center ft-13">
-                        <span class="d-none d-sm-inline text-muted"><div class="admin-icon admin-icon-settings admin-icon-small-02 me-1 mb-1"></div>
+                    <a href="#"  class="text-secondary opacity-50 nav-link d-flex align-items-center ft-13">
+                        <span class="d-none d-sm-inline text-secondary opacity-50"><div class="admin-icon admin-icon-settings admin-icon-small-02 me-1 mb-1"></div>
                             수정
                         </span>
                     </a>  

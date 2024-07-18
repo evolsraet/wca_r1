@@ -3,7 +3,7 @@
       <div class="p-2">
         <div class="my-5">
           <h4>탁송 확인</h4>
-          <p class="text-center mt-5 text-muted">탁송 기사분이 탁송 완료 처리 버튼을 눌러주세요!</p>
+          <p class="text-center mt-5 text-secondary opacity-50">탁송 기사분이 탁송 완료 처리 버튼을 눌러주세요!</p>
           <button 
             :disabled="isCompletedButtonClicked"
             @click="handleCompleteClick"
@@ -83,7 +83,7 @@
       const textOk = `<div class="enroll_box" style="position: relative;">
         <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
         <p class="overlay_text02">탁송 완료 처리 되었습니다.</p>
-        <p class="overlay_text03 text-muted">※차량대금 지급후, 경매 완료 처리 됩니다.</p>
+        <p class="overlay_text03 text-secondary opacity-50">※차량대금 지급후, 경매 완료 처리 됩니다.</p>
       </div>`;
       wica.ntcn(swal)
         .useHtmlText() // HTML 태그 인 경우 활성화

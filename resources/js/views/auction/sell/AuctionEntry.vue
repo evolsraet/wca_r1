@@ -83,7 +83,7 @@
         <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
           파일 첨부
         </button>
-        <div class="text-start text-muted" v-if="fileUserOwnerName">위임장 / 소유자 인감 증명서: {{ fileUserOwnerName }}</div>
+        <div class="text-start text-secondary opacity-50" v-if="fileUserOwnerName">위임장 / 소유자 인감 증명서: {{ fileUserOwnerName }}</div>
         <div class="form-group dealer-check fw-bolder">
           <label for="dealer">법인 / 사업자차량</label>
           <div class="check_box">

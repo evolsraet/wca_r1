@@ -13,7 +13,7 @@
                 <div class="demo"></div>
               <h5>필터</h5>
               <div v-for="(items, category) in categories" :key="category" class="facturer mt-3">
-                <h5 class="text-muted">{{category}}</h5>
+                <h5 class="text-secondary opacity-50">{{category}}</h5>
                 <div class="manufacturer-model my-3">
                     <div v-for="(item, index) in items" :key="item.name"
                      class="item" :class="{ 'selected': item.selected }"
@@ -23,7 +23,7 @@
                 </div>
               </div>
               <div class="facturer mt-3">
-                <h5 class="text-muted">연식</h5>
+                <h5 class="text-secondary opacity-50">연식</h5>
                 <div class="model-year mt-4 pb-4 d-flex align-items-center">
                     <select v-model="selectedStartYear" class="form-control custom-select">
                         <option v-for="year in years" :key="'start-'+year" :value="year">
@@ -39,7 +39,7 @@
                 </div>
               </div>
               <div class="facturer mt-3">
-                <h5 class="text-muted">주행거리</h5>
+                <h5 class="text-secondary opacity-50">주행거리</h5>
                 <div class="range-slider">
                 <input type="range" min="0" max="200000" value="0" id="min-range" class="range-min">
                 <input type="range" min="0" max="200000" value="200000" id="max-range" class="range-max">

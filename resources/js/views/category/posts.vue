@@ -13,7 +13,7 @@
                             {{ category.name }}
                         </strong>
                         <h3 class="mb-0">{{ post.title }}</h3>
-                        <div class="mb-1 text-muted">Nov 12</div>
+                        <div class="mb-1 text-secondary opacity-50">Nov 12</div>
                         <p class="card-text mb-auto">{{ post.content.substring(0, 90) + "..." }}</p>
                         <router-link :to="{ name: 'public-posts.details', params: { id: post.id } }"
                                      class="stretched-link">Continue reading

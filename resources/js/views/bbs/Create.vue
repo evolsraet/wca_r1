@@ -34,7 +34,7 @@
                             <input type="hidden" id="dealer_id" :v-model="rv.dealer_id">
                             <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                         </div>
-                        <div class="mx-2 text-muted my-4">
+                        <div class="mx-2 text-secondary opacity-50 my-4">
                         <p> {{ carInfo.year }}년 / 2.4km / 무사고</p>
                         <p>현대 쏘나타 (DN8)</p>
                         <br>
@@ -42,13 +42,13 @@
                         <p>딜 러 명 / {{ auction.dealer_name }}</p>
                         </div>
                       <!--  <p class="card-title fs-5"><span class="blue-box">무사고</span>{{auction.car_no}}</p>-->
-                            <!--<p class="mt-2 card-text text-muted fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
+                            <!--<p class="mt-2 card-text text-secondary opacity-50 fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
                             <div class="enter-view mt-2">
-                                <p class="card-text text-muted fs-5 mov-text">딜러명<span class="process ms-3">{{ auction.dealer_name }}</span></p>
-                                <p class="card-text text-muted fs-5 web-text">12 삼 4567</p>
+                                <p class="card-text text-secondary opacity-50 fs-5 mov-text">딜러명<span class="process ms-3">{{ auction.dealer_name }}</span></p>
+                                <p class="card-text text-secondary opacity-50 fs-5 web-text">12 삼 4567</p>
                                 <a href="#"><span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">상세보기</span></a>
                             </div>-->
-                            <p class="mt-4 auction-deadline justify-content-sm-center text-muted">판매가<span>{{ amtComma(auction.win_bid.price) }}</span></p>
+                            <p class="mt-4 auction-deadline justify-content-sm-center text-secondary opacity-50">판매가<span>{{ amtComma(auction.win_bid.price) }}</span></p>
                             </div>
                             <div class="right-container">
                                 <bottom-sheet initial="half" :dismissable="true">
