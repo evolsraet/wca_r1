@@ -83,7 +83,7 @@
         <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
           파일 첨부
         </button>
-        <div class="text-start text-secondary opacity-50" v-if="fileUserOwnerName">위임장 / 소유자 인감 증명서: {{ fileUserOwnerName }}</div>
+        <div class="text-start text-secondary opacity-50" v-if="fileAuctionProxyName">위임장 / 소유자 인감 증명서: {{ fileAuctionProxyName }}</div>
         <div class="form-group dealer-check fw-bolder">
           <label for="dealer">법인 / 사업자차량</label>
           <div class="check_box">
@@ -144,8 +144,8 @@ const startY = ref(0);
 const currentY = ref(0);
 const isDragging = ref(false);
 const fileInputRefOwner = ref(null);
-const fileUserOwner = ref(null); // 추가: 파일 저장 변수
-const fileUserOwnerName = ref(''); // 추가: 파일 이름 저장 변수
+const fileAuctionProxy = ref(null); // 추가: 파일 저장 변수
+const fileAuctionProxyName = ref(''); // 추가: 파일 이름 저장 변수
 const auctionEntry = async () => {
   // 필수 정보를 확인
   /**
@@ -194,29 +194,41 @@ const auctionEntry = async () => {
     account: account.value,
     memo: memo.value,
     addr_post: addrPost.value,
-    // file_user_owner: fileUserOwner.value, // 업로드된 파일 추가
+    file_auction_proxy: fileAuctionProxy.value, // 업로드된 파일 추가
     status: "diag"
   };
-
-  try {
-    const result = await createAuction({ auction: auctionData });
-    if(result){
-        const textOk = `<div class="enroll_box" style="position: relative;">
-                  <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
-                  <p class="overlay_text02">경매 신청이 완료되었습니다.</p>
-                  <p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>
-                </div>`;
-      wica.ntcn(swal)
-      .useHtmlText() // HTML 태그 인 경우 활성화
-      .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
-      .addOption({ padding: 20 }) // swal 기타 옵션 추가
-      .callback(function (result) {
-        window.location.href = '/auction';
-      })
-      .confirm(textOk);
+  
+  if(isVerified.value){
+    try {
+      const result = await createAuction({ auction: auctionData });
+      if(result){
+          const textOk = `<div class="enroll_box" style="position: relative;">
+                    <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
+                    <p class="overlay_text02">경매 신청이 완료되었습니다.</p>
+                    <p class="overlay_text03">진단평가 완료까지 조금만 기다려주세요!</p>
+                  </div>`;
+        wica.ntcn(swal)
+        .useHtmlText() // HTML 태그 인 경우 활성화
+        .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+        .addOption({ padding: 20 }) // swal 기타 옵션 추가
+        .callback(function (result) {
+          window.location.href = '/auction';
+        })
+        .confirm(textOk);
+      }
+    } catch (error) {
     }
-  } catch (error) {
+  }else{
+    wica.ntcn(swal)
+    .title('')
+    .useHtmlText()
+    .icon('E')
+    .callback(function(result) {
+        //console.log(result);
+    }).alert('본인인증 후에 이용 가능한 서비스입니다.');
   }
+
+  
 };
 
 // 지역 변경 시 구/군 목록 업데이트 함수
@@ -332,8 +344,8 @@ const handleTouchMove = event => {
 const handleFileUploadOwner = event => {
   const file = event.target.files[0];
   if (file) {
-    fileUserOwner.value = file; // 파일 저장
-    fileUserOwnerName.value = file.name; // 파일 이름 저장
+    fileAuctionProxy.value = file; // 파일 저장
+    fileAuctionProxyName.value = file.name; // 파일 이름 저장
     console.log("위임장 / 소유자 인감 증명서:", file.name);
   } else {
     console.error('No file selected');
