@@ -496,7 +496,7 @@
               <p class="text-secondary opacity-50">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red ms-1">2024년 6월 26일 오후 6:12</span></p>
             </div>
             <div>
-              <button class="border-6 btn-fileupload my-4 shadow02"><a class="text-secondary opacity-50" >딜러 정보용 첨부파일</a></button>
+              <button class="border-6 btn-fileupload my-4 shadow02"><a class="text-secondary opacity-50" @click="AttachedInform">딜러 정보용 첨부파일</a></button>
               <!--<button class="border-6 btn-fileupload my-4 shadow02"><a :href=fileSignUrl download class="text-secondary opacity-50">매도용 인감증명서 다운로드</a></button>-->
             </div>
             <div v-if="fileOwnerUrl">
@@ -1385,6 +1385,23 @@ const handleConfirmDelete = async () => {
     console.error(error);
   }
 };
+
+const AttachedInform = () => {
+  const textOk = `<div class="enroll_box" style="position: relative;">
+                    <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
+                    <p class="overlay_text04">딜러 정보 첨부파일 추가</p>
+                  </div>`;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그인 경우 활성화
+    .btnBatch('R') // 확인 버튼 위치 지정, 기본은 L
+    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .callback(async function (result) { // callback 함수를 async로 변경
+    })
+    .confirm(textOk);
+}
+
 
 const toggleView = () => {
   showReauctionView.value = true;
