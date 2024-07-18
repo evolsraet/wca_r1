@@ -1,193 +1,113 @@
 <template>
-    <div v-if="!isMobileView" class="banner-top">
-        <div class="styled-div mt-0">
-            <img src="../../../img/main_banner.png" class="styled-img" alt="배너 이미지">
-            <div class="content d-flex">
-                <div>
-                    <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">내 차 판매는 <br>위카에서 !</h1>
-                    <!--<router-link :to="{ name: 'auction.index' }" href="" class="btn-apply animated-button">더 알아보기</router-link>-->
-                </div>
-                <div>
-                    <p>&nbsp;</p>
-                </div>
-            </div>
-        </div>
-    </div>
     <div>
-        <div class="regiest-content">
-            <div class="container my-4">
-                <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 pb-0 mt-4 mb-0">
-                    <h2 class="fw-bolder lh-base animated-text">내 차 판매는 <br>위카에서 !</h2>
-                    <router-link :to="{ name: 'auction.index' }" href="" class="btn-apply p-0 m-0 animated-button">더 알아보기</router-link>
-                </div>
-                <div class="layout-container02 mt-5">
-                    <!-- 딜러 프로필 요약 정보 -->
-                    <div class="p-2">
-                        <div class="apply-top text-start mb-0">
-                            <h3 class="review-title">이용후기</h3>
-                            <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
-                        </div>
-                        <div v-if="reviewsData.length > 0" class="container">
-                            <div class="row">
-                                <div class="col-md-6 p-2" v-for="review in reviewsData.slice(0,2)" :key="review.id">
-                                    <div class="card my-auction mt-3">
-                                        <div>
-                                            <div class="card-img-top-ty02 border-rad"></div>
-                                            <div class="card-body">
-                                                <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
-                                                <p>2020년 / 2.4km / 무사고</p>
-                                                <p class="card-text text-secondary opacity-50">(차량 기종 들어갈 예정) {{ review.id }}</p>
-                                                <p class="card-text text-secondary opacity-50">담당 딜러: {{ review.dealer.name }} 님</p>
-                                                <div>
-                                                    <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
-                                                </div>
-                                                <div>
-                                            <!--  시안상 별점 없음  <div class="rating">
-                                                    <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
-                                                        <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
-                                                        <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
-                                                    </label>
-                                                </div>
-                                                <p>{{ review.content }}</p>-->
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row row-cols-1 row-cols-md-1" v-else>
-                            <div class="card my-auction mt-3">
-                                <div class="card-body">
-                                    <div class="none-complete">
-                                        <span class="text-secondary opacity-50">아직 작성된 이용후기가 없습니다.</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="border-0" @click="toggleCard">
-                        <div class="card-body">
-                            <div v-if="!isMobileView" class="enter-view">
-                                <h5>내 매물관리</h5>
-                                <router-link :to="{ name: 'auction.index' }" class="btn-apply">전체보기</router-link>
-                            </div>
-                            <!-- 차량이 존재 할 경우 -->
-                            <div v-if="auctionsData.length > 0" class="scrollable-content mt-4">
-                                <div v-for="(auction, index) in auctionsData"
-                                    :key="auction.id"
-                                    @click="navigateToDetail(auction)"
-                                    :style="getAuctionStyle(auction)"
-                                    :class="['animated-auction', `delay-${index}`]">
-                                    <div class="complete-car">
-                                        <div class="my-auction">
-                                            <div class="bid-bc p-2">
-                                                <ul class="px-0 inspector_list max_width_900">
-                                                    <li class="m-auto">
-                                                        <div>
-                                                            <div class="d-flex gap-4 align-items-center">
-                                                                <div class="img_box">
-                                                                    <img src="../../../img/car_example.png" alt="딜러 사진" class="mb-2 align-text-top">
-                                                                </div>
-                                                                <h5 class="mb-0">{{ auction.car_no }}</h5>
-                                                                <p v-if="auction.status === 'chosen'" class="ml-auto"><span class="blue-box02 bg-opacity-50">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
-                                                                <p v-if="auction.status === 'cancel'" class="ml-auto"><span class="box bg-secondary">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
-                                                                <p v-if="auction.status === 'wait'" class="ml-auto"><span class="blue-box02">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
-                                                                <p v-if="auction.status === 'diag'" class="ml-auto"><span class="box bg-success bg-opacity-75">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
-                                                                <p v-if="auction.status === 'ask'" class="ml-auto"><span class="box bg-warning bg-opacity-75">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
-                                                                <p v-if="auction.status === 'ing'" class="ml-auto"><span class="box bg-danger">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
-                                                                <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
-                                                                <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
-                                                            </div>
-                                                        </div>
-                                                    </li>
-                                                </ul>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <router-link :to="{ name: 'home' }" class="bid-bc p-3">
-                                    <ul class="px-0 inspector_list max_width_900">
-                                        <li class="m-auto">
-                                            <div>
-                                                <p class="text-secondary opacity-50 d-flex justify-content-center">새 차량 등록하기<span class="ms-2 icon-auction-plus"></span></p>
-                                            </div>
-                                        </li>
-                                    </ul>
-                                </router-link>
-                            </div>
-                            <!-- 선택 완료된 차량이 없는경우-->
-                            <div v-else>
-                                <div class="complete-car mt-4">
-                                    <div class="my-auction none-content">
-                                        <div class="none-complete-img"></div>
-                                        <div class="d-flex align-items-center flex-column gap-3">   
-                                            <div class="text-secondary opacity-50 d-flex align-items-center flex-column gap-5">                                    
-                                                <h4>등록된 차가 없어요</h4>
-                                                <h5>차량 등록후, 경매를 시작해보세요.</h5>
-                                            </div>
-                                            <router-link :to="{ name: 'home' }" class="btn primary-btn btn-apply-ty02 justify-content-around">차량 등록하기</router-link>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+      <div v-if="!isMobileView" class="banner-top">
+          <div class="styled-div mt-0">
+              <img src="../../../img/main_banner.png" class="styled-img" alt="배너 이미지">
+              <div class="content d-flex">
+                  <div>
+                      <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">내 차 판매는 <br>위카에서 !</h1>
+                  </div>
+                  <div>
+                      <p>&nbsp;</p>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div>
+          <div class="regiest-content">
+              <div class="container my-4">
+                  <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 pb-0 mt-4 mb-0">
+                      <h2 class="fw-bolder lh-base animated-text">내 차 판매는 <br>위카에서 !</h2>
+                      <router-link :to="{ name: 'auction.index' }" href="" class="btn-apply p-0 m-0 animated-button">더 알아보기</router-link>
+                  </div>
+                  <div class="layout-container02 mt-5">
+                      <div class="p-2">
+                          <div class="apply-top text-start mb-0">
+                              <h3 class="review-title">이용후기</h3>
+                              <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
+                          </div>
+                          <div v-if="reviewsData.length > 0" class="container">
+                              <div class="row">
+                                  <div class="col-md-6 p-2" v-for="review in reviewsData.slice(0,2)" :key="review.id">
+                                      <div class="card my-auction mt-3">
+                                          <div>
+                                              <div class="card-img-top-ty02 border-rad"></div>
+                                              <div class="card-body">
+                                                  <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                                                  <p>2020년 / 2.4km / 무사고</p>
+                                                  <p class="card-text text-secondary opacity-50">(차량 기종 들어갈 예정) {{ review.id }}</p>
+                                                  <p class="card-text text-secondary opacity-50">담당 딜러: {{ review.dealer.name }} 님</p>
+                                                  <div>
+                                                      <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
+                                                  </div>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                          <div class="row row-cols-1 row-cols-md-1" v-else>
+                              <div class="card my-auction mt-3">
+                                  <div class="card-body">
+                                      <div class="none-complete">
+                                          <span class="text-secondary opacity-50">아직 작성된 이용후기가 없습니다.</span>
+                                      </div>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                      <AuctionList />
+                  </div>
+              </div>
+          </div>
+      </div>
+      <Footer />
     </div>
-    <Footer />
-</template>
-
-<script setup>
-import Footer from "@/views/layout/footer.vue"
-import { onMounted , onBeforeUnmount, ref } from 'vue';
-import { useRouter } from 'vue-router';
-import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
-import useAuctions from "@/composables/auctions";
-import { initReviewSystem } from '@/composables/review';
-import { cmmn } from '@/hooks/cmmn';
-import { useStore } from 'vuex';
-
-const { wicas } = cmmn();
-const { auctionsData, getAuctions } = useAuctions();
-const { getUserReview , deleteReviewApi , reviewsData } = initReviewSystem(); 
-const { amtComma } = cmmn();
-const router = useRouter();
-const isMobileView = ref(window.innerWidth <= 640);
-const store = useStore();
-function navigateToDetail(auction) {
-    console.log("디테일 :", auction.id);
-    router.push({ name: 'AuctionDetail', params: { id: auction.id } });
-}
-const checkScreenWidth = () => {
-    if (typeof window !== 'undefined') {
-      isMobileView.value = window.innerWidth <= 640;
-    }
-};
+  </template>
   
-function getAuctionStyle(auction) {
-    const validStatuses = ['done', 'wait', 'ing', 'diag'];
-    return validStatuses.includes(auction.status) ? { cursor: 'pointer' } : {};
-}
-
-onMounted(async() => {
-    await getAuctions();
-    const user =store.getters['auth/user'];
-    const userId = user.id;
-    console.log(userId);
-    await getUserReview(userId);
-    console.log(reviewsData.value);
-    setRandomPlaceholder();
-    window.addEventListener('resize', checkScreenWidth);
-    checkScreenWidth();
-});
-
-onBeforeUnmount(() => {
-  window.removeEventListener('resize', checkScreenWidth);
-});
-</script>
+  <script setup>
+  import Footer from "@/views/layout/footer.vue";
+  import AuctionList from "@/views/import/AuctionList.vue";
+  import { onMounted, onBeforeUnmount, ref } from 'vue';
+  import { useRouter } from 'vue-router';
+  import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
+  import { initReviewSystem } from '@/composables/review';
+  import { cmmn } from '@/hooks/cmmn';
+  import { useStore } from 'vuex';
+  
+  const { wicas } = cmmn();
+  const { getUserReview, deleteReviewApi, reviewsData } = initReviewSystem(); 
+  const { amtComma } = cmmn();
+  const router = useRouter();
+  const isMobileView = ref(window.innerWidth <= 640);
+  const store = useStore();
+  
+  function navigateToDetail(auction) {
+      console.log("디테일 :", auction.id);
+      router.push({ name: 'AuctionDetail', params: { id: auction.id } });
+  }
+  
+  const checkScreenWidth = () => {
+      if (typeof window !== 'undefined') {
+          isMobileView.value = window.innerWidth <= 640;
+      }
+  };
+  
+  onMounted(async() => {
+      const user = store.getters['auth/user'];
+      const userId = user.id;
+      console.log(userId);
+      await getUserReview(userId);
+      console.log(reviewsData.value);
+      setRandomPlaceholder();
+      window.addEventListener('resize', checkScreenWidth);
+      checkScreenWidth();
+  });
+  
+  onBeforeUnmount(() => {
+      window.removeEventListener('resize', checkScreenWidth);
+  });
+  </script>
 
 <style scoped>
 p {
