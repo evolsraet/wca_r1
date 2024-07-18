@@ -7,7 +7,7 @@
           <div class="modal-body p-2">
             <div class="content p-0 mt-0">  
               <h3 class="mb-2">필요 서류</h3>
-              <h4 class="tc-light-gray fw-normal mb-4">미리 준비하면 더 빠르게 진행돼요!</h4>
+              <h4 class="text-muted fw-normal mb-4">미리 준비하면 더 빠르게 진행돼요!</h4>
               <div class="text-start my-3 process"> 
                 <h4 class="mb-3">개인</h4>
                 <div class="d-flex justify-content-between">
@@ -16,7 +16,7 @@
                     <img src="../../../img/modal/info3.png" class="info-img">
                     <div class="text-center">
                       <p>필요서류 없음</p>
-                      <p class="tc-light-gray">본인 소유 차량이 아닐경우<br>위임장 또는 소유자 인감<br>증명서가 필요합니다.</p>
+                      <p class="text-muted">본인 소유 차량이 아닐경우<br>위임장 또는 소유자 인감<br>증명서가 필요합니다.</p>
                     </div>
                   </div>
                   <div class="info-block">

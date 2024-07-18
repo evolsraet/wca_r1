@@ -442,7 +442,7 @@
                                 </div>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                    <p class="card-text text-muted">현대 쏘나타(DN8) </p>
                                 </div>
                             </div>
                         </div>
@@ -455,7 +455,7 @@
                                 <div class="time-remaining">39분 남음</div>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">보험3건</span>12 삼 4567</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                    <p class="card-text text-muted">현대 쏘나타(DN8) </p>
                                 </div>
                             </div>
                         </div>
@@ -469,7 +469,7 @@
                                 <div class="wait-selection">선택 대기</div>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                    <p class="card-text text-muted">현대 쏘나타(DN8) </p>
                                 </div>
                             </div>
                         </div>
@@ -481,7 +481,7 @@
                                 <div class="time-remaining">39분 남음</div>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                    <p class="card-text text-muted">현대 쏘나타(DN8) </p>
                                 </div>
                             </div>
                         </div>
@@ -493,7 +493,7 @@
                                 <div class="time-remaining">39분 남음</div>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                    <p class="card-text text-muted">현대 쏘나타(DN8) </p>
                                 </div>
                             </div>
                         </div>
@@ -505,7 +505,7 @@
                                 <div class="time-remaining">39분 남음</div>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                    <p class="card-text text-muted">현대 쏘나타(DN8) </p>
                                 </div>
                             </div>
                         </div>
@@ -517,7 +517,7 @@
                                 <div class="time-remaining">39분 남음</div>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">보험3건</span>12 삼 4567</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                    <p class="card-text text-muted">현대 쏘나타(DN8) </p>
                                 </div>
                             </div>
                         </div>
@@ -529,7 +529,7 @@
                                 <div class="time-remaining">39분 남음</div>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                    <p class="card-text text-muted">현대 쏘나타(DN8) </p>
                                 </div>
                             </div>
                         </div>
@@ -541,7 +541,7 @@
                                 <div class="time-remaining">39분 남음</div>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">무사고</span>12 삼 4567</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8) </p>
+                                    <p class="card-text text-muted">현대 쏘나타(DN8) </p>
                                 </div>
                             </div>
                         </div>
@@ -551,67 +551,67 @@
                     <table class="table custom-border">
                         <tbody class="auction-table">
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="gray-box">미참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"></td>
+                                <td class="time-remain text-muted"></td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"></td>
+                                <td class="time-remain text-muted"></td>
                                 <td><span class="auc-gray">진행중</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"></td>
+                                <td class="time-remain text-muted"></td>
                                 <td><span class="auc-black">경매완료</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"></td>
+                                <td class="time-remain text-muted"></td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-muted"><span class="tc-red">46</span>분남음</td>
                                 <td><span class="auc-gray">진행중</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-muted"><span class="tc-red">46</span>분남음</td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-muted"><span class="tc-red">46</span>분남음</td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-muted">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-muted"><span class="tc-red">46</span>분남음</td>
                                 <td class="auc-state"><span class="auc-gray">진행중</span></td>
                             </tr>
                         </tbody>

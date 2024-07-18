@@ -18,10 +18,10 @@
       </div>
         <div :class="animationClass" ref="animatedSection">
         <div class="css-ifyyt1 gap-5">
-          <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
+          <div class="font-title"><h5 class="text-muted font-title">쉽고 빠른 내차팔기,</h5>
         <h5 class="font-title">{{ wicaLabel.title() }} 와 함께해요.</h5>
       </div>
-      <p class="tc-light-gray font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>
+      <p class="text-muted font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>
     </div>
   </div>
 </div>
@@ -157,7 +157,7 @@
                     <span @click="openModal('privacy')" class="link-style pointer">개인정보 처리방침</span> |
                     <span @click="openModal('terms')" class="link-style pointer">이용약관</span>
                   </p>
-                  <p class="my-3 tc-light-gray">ⓒ Watosys all rights reserved.</p>
+                  <p class="my-3 text-muted">ⓒ Watosys all rights reserved.</p>
                   </div>
               </form>
             </div>
@@ -221,7 +221,7 @@
                   <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
                   <span @click="openModal('terms')" class="link-style">이용약관</span>
                 </p>
-                <p class="my-3 tc-light-gray">ⓒ Watosys all rights reserved.</p>
+                <p class="my-3 text-muted">ⓒ Watosys all rights reserved.</p>
                 </div>
             </form>
           </div>

@@ -102,7 +102,7 @@
                                 파일 첨부
                             </button>
                             <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
-                            <div class="text-start tc-light-gray" v-if="editForm.file_user_photo_name">
+                            <div class="text-start text-muted" v-if="editForm.file_user_photo_name">
                                 사진 파일 : <a :href=fileImgUrl download>{{ editForm.file_user_photo_name }}</a>
                             </div>
                         </div>
@@ -203,7 +203,7 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
                                     파일 첨부
                                 </button>
-                                <div class="text-start tc-light-gray" v-if="editForm.file_user_biz_name">
+                                <div class="text-start text-muted" v-if="editForm.file_user_biz_name">
                                     사업자 등록증 파일 : <a :href=fileBizUrl download>{{ editForm.file_user_biz_name }}</a>
                                 </div>
                             </div>
@@ -215,7 +215,7 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
                                     파일 첨부
                                 </button>
-                                <div class="text-start tc-light-gray" v-if="editForm.file_user_sign_name">
+                                <div class="text-start text-muted" v-if="editForm.file_user_sign_name">
                                     매도용인감정보 파일 : <a :href=fileSignUrl download>{{ editForm.file_user_sign_name }}</a>
                                 </div>
                             </div>
@@ -227,7 +227,7 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
                                     파일 첨부
                                 </button>
-                                <div class="text-start tc-light-gray" v-if="editForm.file_user_cert_name">
+                                <div class="text-start text-muted" v-if="editForm.file_user_cert_name">
                                     매매업체 대표증 / 종사원증 파일 : <a :href=fileCertUrl download>{{ editForm.file_user_cert_name }}</a>
                                 </div>
                             </div>

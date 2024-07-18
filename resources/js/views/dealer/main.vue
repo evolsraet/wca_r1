@@ -10,7 +10,7 @@
                        <!-- <div class="dealer-info">
                             <img src="../../../img/myprofile_ex.png" alt="Profile Image" class="main-profile">
                             <div class="deal-info">
-                                <p class="tc-light-gray">{{ user.dealer.company }}</p>
+                                <p class="text-muted">{{ user.dealer.company }}</p>
                                 <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
                                 <p class="restar">(4.5점)</p>
                                 <div>
@@ -27,7 +27,7 @@
                             <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1 shadow-sm"><span>입찰 불가</span></p>
                             <p v-else-if="user.status === 'ok'" class="bidding mt-1 mb-1 shadow-sm"><span>입찰 가능</span></p>
                         </div>
-                        <p class="tc-light-gray mb-3 mt-2">입찰가능 유효시간 2024.03.20</p>-->
+                        <p class="text-muted mb-3 mt-2">입찰가능 유효시간 2024.03.20</p>-->
                     </div>
                         <div>
                             <div style="display: flex; align-items: flex-end;">
@@ -38,19 +38,19 @@
                     <div class="slide-up-ani activity-info bold-18-font process mb-0">
                          <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
                         <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
-                        <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
+                        <p class="interest-icon text-muted normal-16-font mb-0">관심</p>
                         </router-link>
                         <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo' }}" class="item">
                         <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
-                        <p class="bid-icon tc-light-gray normal-16-font mb-0">입찰</p>
+                        <p class="bid-icon text-muted normal-16-font mb-0">입찰</p>
                         </router-link>
                         <router-link :to="{  name: 'dealer.bids' }" class="item">
                         <p><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
-                        <p class="suc-bid-icon tc-light-gray normal-16-font mb-0">낙찰</p>
+                        <p class="suc-bid-icon text-muted normal-16-font mb-0">낙찰</p>
                         </router-link>
                      <!--   <div class="item">
                         <p><span class="tc-red" ref="item4">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
-                        <p class="purchase-icon tc-light-gray normal-16-font">완료</p>
+                        <p class="purchase-icon text-muted normal-16-font">완료</p>
                         </div>-->
                     </div>
                 </div>
@@ -65,25 +65,25 @@
                     <table class="table custom-border mt-5">
                         <thead style="display: none;">
                             <tr>
-                                <th class="tc-light-gray">날짜</th>
+                                <th class="text-muted">날짜</th>
                                 <th>제목</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td class="tc-light-gray note-date">2024-03-21</td>
+                                <td class="text-muted note-date">2024-03-21</td>
                                 <td>
                                     <span class="text-with-marker">부정행위 제보 처리 결과 공유 드립니다.</span>
                                 </td>
                             </tr>
                             <tr class="tr-recent-new">
-                                <td class="tc-light-gray note-date">2024-03-21</td>
+                                <td class="text-muted note-date">2024-03-21</td>
                                 <td>
                                     <span>2024 설 연휴 영업시간 안내</span>
                                 </td>
                             </tr>
                             <tr>
-                                <td class="tc-light-gray note-date">2024-03-21</td>
+                                <td class="text-muted note-date">2024-03-21</td>
                                 <td>
                                     <span>신규 딜러가입 일시 중단 안내</span>
                                 </td>
@@ -113,7 +113,7 @@
                                 <td>24-03-15</td>
                                 <td><span class="blue-box list-num">475192</span></td>
                                 <td>접수</td>
-                                <td class="tc-light-gray"><a href="#" class="btn-apply" @click.prevent="openAlarmModal">상세</a></td>
+                                <td class="text-muted"><a href="#" class="btn-apply" @click.prevent="openAlarmModal">상세</a></td>
                             </tr>
                         </tbody>
                     </table>
@@ -127,7 +127,7 @@
                             <h5>낙찰 완료 차량</h5>
                             <router-link :to="{ name: 'dealer.bids' }" class="btn-apply">전체보기</router-link>
                         </div>
-                        <span class="tc-light-gray">24시간 내 응대해 주세요!</span>
+                        <span class="text-muted">24시간 내 응대해 주세요!</span>
                         <!-- 차량이 존재 할 경우-->
                         <div v-if="filteredDoneBids.length > 0" class="container">
                             <div class="row">
@@ -139,8 +139,8 @@
                                     <div class="card-body">
                                         <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                                         <p>2020년 / 2.4km / 무사고</p>
-                                        <p class="tc-light-gray">현대 쏘나타 (DN8)</p>
-                                       <!-- <p class="card-text tc-light-gray">{{bid.auctionDetails.car_no}}</p>-->
+                                        <p class="text-muted">현대 쏘나타 (DN8)</p>
+                                       <!-- <p class="card-text text-muted">{{bid.auctionDetails.car_no}}</p>-->
                                         <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                                     </div>
                                 </div>
@@ -152,7 +152,7 @@
                             <div class="complete-car">
                                 <div class="card my-auction mt-3">
                                     <div class="none-complete">
-                                        <span class="tc-light-gray">선택 완료된 차량이 없습니다.</span>
+                                        <span class="text-muted">선택 완료된 차량이 없습니다.</span>
                                     </div>
                                 </div>
                             </div>

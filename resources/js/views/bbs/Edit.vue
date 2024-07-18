@@ -32,12 +32,12 @@
                       <!-- <p class="card-title fs-5"><span class="blue-box">무사고</span>{{review.auction.car_no}}</p>-->
                       <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                     </div>
-                  <!-- <p class="mt-2 card-text tc-light-gray fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
+                  <!-- <p class="mt-2 card-text text-muted fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
                     <div class="enter-view mt-2">
-                        <p class="card-text tc-light-gray fs-5 mov-text">딜러명<span class="process ms-3">{{review.dealer.name}} 딜러</span></p>
-                        <p class="card-text tc-light-gray fs-5 web-text">12 삼 4567</p>
+                        <p class="card-text text-muted fs-5 mov-text">딜러명<span class="process ms-3">{{review.dealer.name}} 딜러</span></p>
+                        <p class="card-text text-muted fs-5 web-text">12 삼 4567</p>
                     </div>--> 
-                    <div class="mx-2 tc-light-gray my-4">
+                    <div class="mx-2 text-muted my-4">
                         <p> 년 / 2.4km / 무사고</p>
                         <p>현대 쏘나타 (DN8)</p>
                         <br>
@@ -45,7 +45,7 @@
                         <p>딜 러 명 / {{review.dealer.name}}</p>
                         </div>
                   <!-- <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>{{ formatDateAndTime(review.auction.final_at )}}</span></p>-->
-                   <p class="mt-4 auction-deadline justify-content-sm-center tc-light-gray">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>
+                   <p class="mt-4 auction-deadline justify-content-sm-center text-muted">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>
                    <div class="container card-style p-0 mt-5">
                     </div>
                 </div>

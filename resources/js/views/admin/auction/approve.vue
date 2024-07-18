@@ -22,53 +22,53 @@
                 </div>
                 <!--
                 <div class="card-body">
-                  <p class="tc-light-gray">수정일자</p>
+                  <p class="text-muted">수정일자</p>
                   <input v-model="auction.updated_at" id="updatedAt" class="form-control" type="datetime-local">
                 </div>-->
                 <div class="card-body">
-                  <p class="tc-light-gray">차량번호</p>
+                  <p class="text-muted">차량번호</p>
                   <input v-model="auction.car_no" id="car_no" class="form-control"/>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">등록일자</p>
+                  <p class="text-muted">등록일자</p>
                   <input v-model="created_at" id="bank" class="input-dis form-control" readonly/>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">최종 수정일자</p>
+                  <p class="text-muted">최종 수정일자</p>
                   <input v-model="updated_at" id="bank" class="input-dis form-control" readonly/>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">소유자명</p>
+                  <p class="text-muted">소유자명</p>
                   <input v-model="auction.owner_name" id="owner_name" class="form-control"/>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">상태</p>
+                  <p class="text-muted">상태</p>
                   <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
                     <option v-for="(label, value) in statusLabel" :key="value" :value="value">{{ label }}</option>
                   </select>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">은행</p>
+                  <p class="text-muted">은행</p>
                   <input v-model="auction.bank" type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" class="input-dis form-control" readonly>
                 </div>
                 <BankModal :showDetails="showDetails" @update:showDetails="showDetails = $event" @select-bank="selectBank" />
                 <div class="card-body">
-                  <p class="tc-light-gray">계좌번호</p>
+                  <p class="text-muted">계좌번호</p>
                   <input v-model="auction.account" id="account" class="form-control"/>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">메모</p>
+                  <p class="text-muted">메모</p>
                   <input v-model="auction.memo" id="memo" class="form-control"/>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">지역</p>
+                  <p class="text-muted">지역</p>
                   <select class="form-select" :v-model="auction.region" @change="changeRegion" id="region">
                     <option value="" selected>시/도 선택</option>
                     <option v-for="region in regions" :key="region" :value="region">{{ region }}</option>
                   </select>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">우편주소</p>
+                  <p class="text-muted">우편주소</p>
                   <input v-model="auction.addr_post" placeholder="우편번호" class="input-dis form-control" readonly>
                   <div>
                     <input v-model="auction.addr1" class="input-dis form-control" readonly>
@@ -79,45 +79,45 @@
                   </div>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">상세주소</p>
+                  <p class="text-muted">상세주소</p>
                   <input v-model="auction.addr2" class="form-control" id="addr2">
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">경매마감일</p>
+                  <p class="text-muted">경매마감일</p>
                   <input v-model="auction.final_at" id="finalAt" class="form-control" type="datetime-local">
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">선택일</p>
+                  <p class="text-muted">선택일</p>
                   <input v-model="auction.choice_at" id="choiceAt" class="form-control" type="datetime-local">
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">완료일</p>
+                  <p class="text-muted">완료일</p>
                   <input v-model="auction.done_at" id="doneAt" class="form-control" type="datetime-local">
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">성공수수료</p>
+                  <p class="text-muted">성공수수료</p>
                   <input v-model="auction.success_fee" id="successFee" class="form-control" @input="updateKoreanAmount('successFee')">
-                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ successFeeKorean }}</p>
+                  <p class="d-flex justify-content-end text-muted p-2">{{ successFeeKorean }}</p>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">진단수수료</p>
+                  <p class="text-muted">진단수수료</p>
                   <input v-model="auction.diag_fee" id="diagFee" class="form-control" @input="updateKoreanAmount('diagFee')">
-                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ diagFeeKorean }}</p>
+                  <p class="d-flex justify-content-end text-muted p-2">{{ diagFeeKorean }}</p>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">총 비용</p>
+                  <p class="text-muted">총 비용</p>
                   <input v-model="auction.total_fee" id="totalFee" class="form-control" @input="updateKoreanAmount('totalFee')">
-                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ totalFeeKorean }}</p>
+                  <p class="d-flex justify-content-end text-muted p-2">{{ totalFeeKorean }}</p>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">희망가</p>
+                  <p class="text-muted">희망가</p>
                   <input v-model="auction.hope_price" id="hopePrice" class="form-control" @input="updateKoreanAmount('hopePrice')">
-                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ hopePriceFeeKorean }}</p>
+                  <p class="d-flex justify-content-end text-muted p-2">{{ hopePriceFeeKorean }}</p>
                 </div>
                 <div class="card-body">
-                  <p class="tc-light-gray">낙찰가</p>
+                  <p class="text-muted">낙찰가</p>
                   <input v-model="auction.final_price" id="finalPrice" class="form-control" @input="updateKoreanAmount('finalPrice')">
-                  <p class="d-flex justify-content-end tc-light-gray p-2">{{ finalPriceFeeKorean }}</p>
+                  <p class="d-flex justify-content-end text-muted p-2">{{ finalPriceFeeKorean }}</p>
                 </div>
                 <div></div>
                 <div class="mb-3">
@@ -126,7 +126,7 @@
                   <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadProxy">
                       파일 첨부
                   </button>
-                  <div class="text-start mb-5 tc-light-gray" v-if="auction.file_auction_proxy_name">매매업체 대표증 / 종사원증 : {{ auction.file_auction_proxy_name }}</div>
+                  <div class="text-start mb-5 text-muted" v-if="auction.file_auction_proxy_name">매매업체 대표증 / 종사원증 : {{ auction.file_auction_proxy_name }}</div>
                 </div>
                 <div class="mb-3">
                   <label for="user-title" class="form-label">매도자관련서류</label>
@@ -134,7 +134,7 @@
                   <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
                       파일 첨부
                   </button>
-                  <div class="text-start mb-5 tc-light-gray" v-if="auction.file_auction_owner_name">매매업체 대표증 / 종사원증 : {{ auction.file_auction_owner_name }}</div>
+                  <div class="text-start mb-5 text-muted" v-if="auction.file_auction_owner_name">매매업체 대표증 / 종사원증 : {{ auction.file_auction_owner_name }}</div>
                 </div>
               </div>
             </div>
@@ -182,75 +182,75 @@
             <div v-show="isVisible" class="container p-4">
               
               <ul class="machine-inform-title">
-                <li class="tc-light-gray">차량번호</li>
+                <li class="text-muted">차량번호</li>
                 <li class="info-num"></li>
                 <li class="car-icon"></li>
               </ul>
               <ul class="machine-inform">
-                <li class="tc-light-gray">제조사</li>
+                <li class="text-muted">제조사</li>
                 <li class="sub-title"></li>
               </ul>
               <ul class="machine-inform">
-                <li class="tc-light-gray">모델</li>
+                <li class="text-muted">모델</li>
                 <li class="sub-title"></li>
               </ul>
               <ul class="machine-inform">
-                <li class="tc-light-gray">세부모델</li>
+                <li class="text-muted">세부모델</li>
                 <li class="sub-title"></li>
               </ul>
               <ul class="machine-inform">
-                <li class="tc-light-gray">등급</li>
+                <li class="text-muted">등급</li>
                 <li class="sub-title"></li>
               </ul>
               <ul class="machine-inform">
-                <li class="tc-light-gray">세부등급</li>
+                <li class="text-muted">세부등급</li>
                 <li class="sub-title"></li>
               </ul>
               <ul class="machine-inform-title">
-                <li class="tc-light-gray">최초등록일</li>
+                <li class="text-muted">최초등록일</li>
                 <li class="info-num"></li>
                 <li class="car-aside-icon"></li>
               </ul>
               <ul class="machine-inform">
-                <li class="tc-light-gray">년식</li>
+                <li class="text-muted">년식</li>
                 <li class="sub-title"></li>
               </ul>
               <ul class="machine-inform">
-                <li class="tc-light-gray">차량유형</li>
+                <li class="text-muted">차량유형</li>
                 <li class="sub-title">종합 승용차</li>
               </ul>
               <ul class="machine-inform-title">
-                <li class="tc-light-gray">배기량</li>
+                <li class="text-muted">배기량</li>
                 <li class="info-num">2000cc</li>
                 <li class="gasoline-icon"></li>
               </ul>
               <ul class="machine-inform">
-                <li class="tc-light-gray">연료</li>
+                <li class="text-muted">연료</li>
                 <li class="sub-title"></li>
               </ul>
               <ul class="machine-inform">
-                <li class="tc-light-gray">미션</li>
+                <li class="text-muted">미션</li>
                 <li class="sub-title"></li>
               </ul>
               <ul class="machine-inform-title">
-                <li class="tc-light-gray">용도변경이력</li>
+                <li class="text-muted">용도변경이력</li>
                 <li class="info-num">-</li>
                 <li class="clean-icon"></li>
               </ul>
               <ul class="machine-inform">
-                <li class="tc-light-gray">튜닝이력</li>
+                <li class="text-muted">튜닝이력</li>
                 <li class="sub-title">1회</li>
               </ul>
               <ul class="machine-inform">
-                <li class="tc-light-gray">리콜이력</li>
+                <li class="text-muted">리콜이력</li>
                 <li class="sub-title">-</li>
               </ul>
               <ul class="machine-inform-title">
-                <li class="tc-light-gray">옵션정보</li>
+                <li class="text-muted">옵션정보</li>
               </ul>
               <div></div>
               <ul class="machine-inform-title">
-                <li class="tc-light-gray">추가옵션</li>
+                <li class="text-muted">추가옵션</li>
                 <li class="info-num">-</li>
               </ul>
               <div class="contour-style"></div>
@@ -258,19 +258,19 @@
                 <h5>이력</h5>
                 <div class="p-4 rounded text-body-emphasis bg-body-secondary">
                   <ul class="mt-0 machine-inform-title">
-                    <li class="tc-light-gray">용도 변경이력</li>
+                    <li class="text-muted">용도 변경이력</li>
                     <li class="info-num">-</li>
                   </ul>
                   <ul class="mt-0 machine-inform-title">
-                    <li class="tc-light-gray">소유자 변경</li>
+                    <li class="text-muted">소유자 변경</li>
                     <li class="info-num">1</li>
                   </ul>
                   <ul class="mt-0 machine-inform-title">
-                    <li class="tc-light-gray">압류/저당</li>
+                    <li class="text-muted">압류/저당</li>
                     <li class="info-num">-</li>
                   </ul>
                   <ul class="mt-0 mb-0 machine-inform-title">
-                    <li class="tc-light-gray">특수사고 이력</li>
+                    <li class="text-muted">특수사고 이력</li>
                     <li class="info-num">전손 0 침수0 도난0</li>
                   </ul>
                 </div>
@@ -339,15 +339,15 @@
                   <textarea class="input-dis custom-textarea mt-2" readonly style="resize: none;">{{ auctionDetails.data.memo }}</textarea>
                 </div>
                 <ul class="machine-inform-title">
-                  <li class="tc-light-gray">거래지역</li>
+                  <li class="text-muted">거래지역</li>
                   <li class="info-num">경기>성남시 중원구</li>
                 </ul>
                 <ul class="machine-inform-title">
-                  <li class="tc-light-gray">기타이력</li>
+                  <li class="text-muted">기타이력</li>
                   <li class="info-num">-</li>
                 </ul>
                 <ul class="machine-inform-title">
-                  <li class="tc-light-gray">차량명의</li>
+                  <li class="text-muted">차량명의</li>
                   <li class="info-num">개인</li>
                 </ul>
               </div>
