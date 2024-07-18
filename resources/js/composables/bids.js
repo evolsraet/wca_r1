@@ -77,6 +77,25 @@ export default function useBid() {
         
     };
 
+    const getMyBids = async (page = 1, isSelect = false, isMyBid = false , status = "all") => {
+        let request = wicac.conn()
+        //.log()
+        .url('/api/bids')
+        .with(['auction'])
+        .page(`${page}`)
+        if (isSelect) {
+            const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
+            request = request.whereOr('auction.status',`${statusFilter}`)           
+        }
+        if (isMyBid) {
+            request = request.whereOr('auction.status','ing,wait')
+        }
+        return request.callback(function(result) {
+            return result;
+        }).get();
+        
+    };
+
     const getscsBids = async (page = 1, isSelect = false, isMyBid = false , status = "all") => {
         let request = wicac.conn()
         //.log()
@@ -243,5 +262,6 @@ export default function useBid() {
         bidPagination,
         getBidsByUserId,
         getscsBids,
+        getMyBids,
     };
 }

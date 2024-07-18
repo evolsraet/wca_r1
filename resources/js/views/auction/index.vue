@@ -701,7 +701,7 @@ TODO:
                             <div v-if="bidsData.length > 0">
                                 <!-- 경매 목록 -->
                                 <div class="row">
-                                    <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="bid in bidsData" :key="bid.id" @click="navigateToDetail(bid.auction)">
+                                    <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="bid in myBidsData" :key="bid.id" @click="navigateToDetail(bid.auction)">
                                         <div class="card my-auction">
                                             <div v-if="isDealer">
                                                 <input class="toggle-heart" type="checkbox" :id="'favorite-' + bid.auction.id" :checked="bid.auction.isFavorited" @click.stop="toggleFavorite(bid.auction)" />
@@ -723,7 +723,7 @@ TODO:
                                             <div class="d-flex">
                                                 <span class="mx-2 timer">
                                                     <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
-                                                    <span v-if="bid.auction.timeLeft.days != '0' ">{{ bid.auction.timeLeft.days }}일 &nbsp; </span>{{ bid.auction.timeLeft.hours }}:{{ bid.auction.timeLeft.minutes }}:{{ bid.auction.timeLeft.seconds }}
+                                                    <span v-if="bid.timeLeft.days != '0' ">{{ bid.timeLeft.days }}일 &nbsp; </span>{{ bid.timeLeft.hours }}:{{ bid.timeLeft.minutes }}:{{ bid.timeLeft.seconds }}
                                                 </span>
                                                 <div v-if="isDealer">
                                                     <div class="participate-badge" v-if="bid.auction.isDealerParticipating">
@@ -759,15 +759,15 @@ TODO:
                             </div>
                             <nav>
                                 <ul class="pagination justify-content-center">
-                                    <li class="page-item" :class="{ disabled: !bidPagination.prev }">
+                                    <li class="page-item" :class="{ disabled: !myBidsPagination.prev }">
                                         
-                                        <a class="page-link prev-style" @click="loadPage( bidPagination.current_page - 1, 'bid', bidPagination)"></a>
+                                        <a class="page-link prev-style" @click="loadPage( myBidsPagination.current_page - 1, 'bid', myBidsPagination)"></a>
                                     </li>
-                                    <li v-for="n in bidPagination.last_page" :key="n" class="page-item" :class="{ active: n === bidPagination.current_page }">
-                                        <a class="page-link" @click="loadPage( n, 'bid', bidPagination)">{{ n }}</a>
+                                    <li v-for="n in myBidsPagination.last_page" :key="n" class="page-item" :class="{ active: n === myBidsPagination.current_page }">
+                                        <a class="page-link" @click="loadPage( n, 'bid', myBidsPagination)">{{ n }}</a>
                                     </li>
-                                    <li class="page-item next-prev" :class="{ disabled: !bidPagination.next }">
-                                        <a class="page-link next-style" @click="loadPage( bidPagination.current_page + 1, 'bid', bidPagination)"></a>
+                                    <li class="page-item next-prev" :class="{ disabled: !myBidsPagination.next }">
+                                        <a class="page-link next-style" @click="loadPage( myBidsPagination.current_page + 1, 'bid', myBidsPagination)"></a>
                                     </li>
                                 </ul>
                             </nav>
@@ -997,7 +997,7 @@ const swal = inject('$swal');
 const { wicas , wica , updateAuctionTimes } = cmmn();
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
-const {getBids, bidsData , bidPagination, getscsBids } = usebid();
+const {getBids, bidsData , bidPagination, getscsBids, getMyBids } = usebid();
 const { getLikes, likesData, isAuctionFavorited , like , setLikes , deleteLike , getAllLikes} = useLikes();
 const router = useRouter();
 const route = useRoute();
@@ -1012,6 +1012,7 @@ const currentPage = ref(1);
 const currentFavoritePage = ref(1); 
 const currentMyBidPage = ref(1); 
 const currentScsBidsPage = ref(1);
+const currentMyBidsPage = ref(1);
 const isLoading = ref(false);
 const showModal = ref(false); 
 //const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); 
@@ -1035,6 +1036,9 @@ const favoriteAuctionsPagination = ref({}); //관심 차량 페이징
 
 const scsbidsData = ref([]); //낙찰 차량 데이터
 const scsbidPagination = ref({}); //낙찰 차량 페이징
+
+const myBidsData = ref([]); //내 입찰 차량 데이터
+const myBidsPagination = ref({}); //내 입찰 차량 페이징
 
 
 /**
@@ -1163,7 +1167,7 @@ function setCurrentTab(tab) {
             favoriteAuctionsGetData();
             break;
         case 'myBidInfo':
-            fetchFilteredBids();
+            getMyBidsInfo();
             break;
         case 'scsbidInfo':
             currentScsBidsStatus.value = 'all';
@@ -1203,9 +1207,6 @@ function loadPage( page, type, pagination) {
     if (page < 1 || page > pagination.last_page) return;
     
     window.scrollTo(0, 0);
-    console.log('type=========');
-    console.log(type);
-    
     switch (type) {
         case 'all':
             currentPage.value = page;
@@ -1216,8 +1217,8 @@ function loadPage( page, type, pagination) {
             favoriteAuctionsGetData();
             break;
         case 'bid':
-            currentMyBidPage.value = page;
-            fetchFilteredBids();
+            currentMyBidsPage.value = page;
+            getMyBidsInfo();
             break;
         case 'scsbid':
             currentScsBidsPage.value = page;
@@ -1248,7 +1249,7 @@ const getAuctionsData = async () => {
         await getAuctionsByDealer(currentPage.value , currentStatus.value);
         await filterLikeData(auctionsData.value);
         await favoriteAuctionsGetData();
-        await fetchFilteredBids();
+        fetchFilteredBids();
     }
 }
 
@@ -1260,9 +1261,24 @@ const favoriteAuctionsGetData = async () => {
     filterLikeData(favoriteAuctionsData.value);
 }
 
-const fetchFilteredBids = async () => { 
+const fetchFilteredBids = async () => {
     await getAllLikes('Auction', user.value.id);
     bidsData.value.forEach(bid => {
+        bid.auction = auctionsData.value.find(auction => parseInt(auction.id) === bid.auction_id);
+        const matchedLike = likesData.value.find(like => parseInt(like.likeable_id) === bid.auction_id);
+        if (matchedLike) {
+            bid.auction.like = matchedLike;
+            bid.auction.isFavorited = true;
+        } else {
+            bid.auction.isFavorited = false;
+        }
+        bid.auction.isDealerParticipating = isDealerParticipating(bid.auction.id);
+    });
+};
+
+const fetchFilteredMyBids = async () => {
+    await getAllLikes('Auction', user.value.id);
+    myBidsData.value.forEach(bid => {
         bid.auction = auctionsData.value.find(auction => parseInt(auction.id) === bid.auction_id);
         const matchedLike = likesData.value.find(like => parseInt(like.likeable_id) === bid.auction_id);
         if (matchedLike) {
@@ -1290,10 +1306,16 @@ const filterLikeData = (auctions, likes="none") => {
     });
 }
 
-const getScsBidsInfo = async () =>{
-    console.log(currentScsBidsPage.value);
-    console.log(currentScsBidsStatus.value);
+const getMyBidsInfo = async() => {
+    const bidsInfo = await getMyBids(currentMyBidsPage.value, false, true, currentStatus.value);
+    updateAuctionTimes(bidsInfo.data);
+    
+    myBidsData.value = bidsInfo.data;
+    myBidsPagination.value = bidsInfo.rawData.data.meta;
+    fetchFilteredMyBids();
+}
 
+const getScsBidsInfo = async () => {
     const scsBidsInfo = await getscsBids(currentScsBidsPage.value,true,false,currentScsBidsStatus.value);
 
     scsbidsData.value = scsBidsInfo.data;
@@ -1308,7 +1330,6 @@ onMounted(async () => {
     }
 
     await getAuctionsData();
-    bidsTotal = bidPagination.value.total;
     favoriteAuctionsTotal = favoriteAuctionsPagination.value.total
 
     statusLabel = wicas.enum(store).addFirst('all', '전체').excl('cancel', '취소').ascVal().auctions();
@@ -1317,11 +1338,15 @@ onMounted(async () => {
         isUser.value = true;
     }
 
+    //내입찰차량정보
+    await getMyBidsInfo();
+    bidsTotal = myBidsPagination.value.total;
+
     //낙찰차량정보
     await getScsBidsInfo(); 
     sbsBidsTotal = scsbidPagination.value.total;
 
-    timer = setInterval(() => {
+    timer = setInterval(async () => {
         if(isUser.value){
             updateAuctionTimes(auctionsData.value);
         } else if(isDealer.value){
@@ -1332,8 +1357,6 @@ onMounted(async () => {
 
         isLoading.value = true;
     }, 1000);
-    
-    
 });
 
 
