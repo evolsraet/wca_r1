@@ -35,7 +35,7 @@
       </div>
       <div class="form-group">
         <label for="email">비밀번호 확인</label>
-        <input autocomplete="one-time-code" type="password_confirmation" v-model="profile.password_confirmation" id="password_confirmation" class="form-control"/>
+        <input autocomplete="one-time-code" type="password" v-model="profile.password_confirmation" id="password_confirmation" class="form-control"/>
       </div>
       <div v-if="isDealer">
         <div class="form-group">
