@@ -1,63 +1,7 @@
 <template>
     <div class="container">
-
-      <div class="main-container py-5 text-center container" v-if="isAdmin">
-        <section class="notice">
-            <div class="page-title">
-                  <div class="container">
-                      <h3>관리자 클레임</h3>
-                  </div>
-              </div>
-              <div id="board-search">
-                  <div class="container">
-                      <div class="search-window">
-                          <form action="">
-                              <div class="search-wrap">
-                                  <label for="search" class="blind">클레임 내용 검색</label>
-                                  <input id="search" type="search" name="" placeholder="검색어를 입력해주세요." value="">
-                                  <button type="submit" class="btn btn-dark">검색</button>
-                              </div>
-                          </form>
-                      </div>
-                  </div>
-              </div>
-            
-              <div id="board-list">
-                  <div class="container">
-                      <table class="board-table">
-                          <thead>
-                          <tr>
-                              <th scope="col" class="th-num">번호</th>
-                              <th scope="col" class="th-title">제목</th>
-                              <th scope="col" class="th-date">등록일</th>
-                          </tr>
-                          </thead>
-                          <tbody>
-                          <tr>
-                              <td>3</td>
-                              <th><a href="#!">[클레임] 개인정보 처리방침 변경안내처리방침</a></th>
-                              <td>2017.07.13</td>
-                          </tr>
-
-                          <tr>
-                              <td>2</td>
-                              <th><a href="#!">클레임 안내입니다. 이용해주셔서 감사합니다</a></th>
-                              <td>2017.06.15</td>
-                          </tr>
-
-                          <tr>
-                              <td>1</td>
-                              <th><a href="#!">클레임 안내입니다. 이용해주셔서 감사합니다</a></th>
-                              <td>2017.06.15</td>
-                          </tr>
-                          </tbody>
-                      </table>
-                  </div>
-              </div>
-
-          </section>
-      </div>
-      <div class="main-container py-5 text-center container"v-else-if="isDealer">
+      <div class="main-container py-5 container">
+        <h4 class="mb-4">클레임 현황</h4>
           <div class="search-type">
                         <input type="text" class="border-6" placeholder="모델명,차량번호,지역">
                         <button type="button" class="search-btn">검색</button>
@@ -76,35 +20,35 @@
                         <label for="completed" class="mx-2">완료</label>
                         </div>
                         </div>
-                  <!-- board seach area -->
-                  <div class="o_table_mobile my-5">
-                    <div class="tbl_basic tbl_dealer">
-                        <div class="select-dealer">
-                          <table>
-                              <tbody>
-                                  <tr>
-                                      <th>No.</th>
-                                      <th>등록일</th>
-                                      <th>매물번호</th>
-                                      <th>상태</th>
-                                      <th>관리</th>
-                                  </tr>
-                                  <tr>
-                                      <td>1</td>
-                                      <td>24-03-15</td>
-                                      <td><p class="blue-box-ty03">4751982</p></td>
-                                      <td>접수</td>
-                                      <td class="d-flex ms-2 justify-content-center btn-apply" @click.prevent="openAlarmModal">상세</td>
-                                  </tr>
-                              </tbody>
-                          </table>
-                          <AlarmModal ref="alarmModal" />
-                        </div>
-                    </div>
-                </div>
-          </div>  
-        </div>
-      <Footer/>
+                        <!-- board seach area -->
+                        <div class="o_table_mobile my-5">
+                          <div class="tbl_basic tbl_dealer">
+                              <div class="select-dealer">
+                                <table>
+                                    <tbody>
+                                        <tr>
+                                            <th>No.</th>
+                                            <th>등록일</th>
+                                            <th>매물번호</th>
+                                            <th>상태</th>
+                                            <th>관리</th>
+                                        </tr>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>24-03-15</td>
+                                            <td><p class="blue-box-ty03">4751982</p></td>
+                                            <td>접수</td>
+                                            <td class="d-flex ms-2 justify-content-center btn-apply" @click.prevent="openAlarmModal">상세</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                <AlarmModal ref="alarmModal" />
+                              </div>
+                          </div>
+                      </div>
+                </div>  
+              </div>
+            <Footer/>
   </template>
   
   <script setup>

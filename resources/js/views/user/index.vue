@@ -26,20 +26,23 @@
                               <h3 class="review-title">이용후기</h3>
                               <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
                           </div>
-                          <div v-if="reviewsData.length > 0" class="container">
+                          <div  v-if="auctionsData.length > 0" class="container">
                               <div class="row">
-                                  <div class="col-md-6 p-2" v-for="review in reviewsData.slice(0,2)" :key="review.id">
+                                  <div class="col-md-6 p-2 hover-ac pointer" v-for="auction in auctionsData.slice(0,2)" :key="auction.id" @click="navigateToDetail(auction.id)">
                                       <div class="card my-auction mt-3">
                                           <div>
-                                              <div class="card-img-top-ty02 border-rad"></div>
+                                            <div class="card-img-top-placeholder">
+                                                <img src="../../../img/car_example.png">
+                                            </div> 
                                               <div class="card-body">
                                                   <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
-                                                  <p>2020년 / 2.4km / 무사고</p>
-                                                  <p class="card-text text-secondary opacity-50">(차량 기종 들어갈 예정) {{ review.id }}</p>
-                                                  <p class="card-text text-secondary opacity-50">담당 딜러: {{ review.dealer.name }} 님</p>
-                                                  <div>
-                                                      <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
-                                                  </div>
+                                                  <p>2020년 | 2.4km | 무사고</p>
+                                                  <div class="d-flex justify-content-between align-items-baseline">
+                                                    <div>
+                                                        <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
+                                                        <h5 class="tc-red fs-5">{{ amtComma(auction.win_bid.price) }}</h5>
+                                                    </div>
+                                                </div>
                                               </div>
                                           </div>
                                       </div>
@@ -50,7 +53,7 @@
                               <div class="card my-auction mt-3">
                                   <div class="card-body">
                                       <div class="none-complete">
-                                          <span class="text-secondary opacity-50">아직 작성된 이용후기가 없습니다.</span>
+                                          <span class="text-secondary opacity-50">아직 작성가능한 이용후기가 없습니다.</span>
                                       </div>
                                   </div>
                               </div>
@@ -68,23 +71,27 @@
   <script setup>
   import Footer from "@/views/layout/footer.vue";
   import AuctionList from "@/views/import/AuctionList.vue";
-  import { onMounted, onBeforeUnmount, ref } from 'vue';
+  import { onMounted, onBeforeUnmount, ref ,computed} from 'vue';
   import { useRouter } from 'vue-router';
   import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
   import { initReviewSystem } from '@/composables/review';
   import { cmmn } from '@/hooks/cmmn';
   import { useStore } from 'vuex';
-  
+  import useAuctions from "@/composables/auctions";
+
+
+  const store = useStore();
+  const user = computed(() => store.getters['auth/user']);
   const { wicas } = cmmn();
-  const { getUserReview, deleteReviewApi, reviewsData } = initReviewSystem(); 
-  const { amtComma } = cmmn();
+  const { getUserReview , userDeleteReview , reviewsData , reviewPagination } = initReviewSystem(); 
+  const { auctionsData, getAuctions , pagination } = useAuctions();
+  const { amtComma , splitDate , getDayOfWeek} = cmmn();
   const router = useRouter();
   const isMobileView = ref(window.innerWidth <= 640);
-  const store = useStore();
-  
-  function navigateToDetail(auction) {
+
+  function navigateToDetail(auctionId) {
       console.log("디테일 :", auction.id);
-      router.push({ name: 'AuctionDetail', params: { id: auction.id } });
+      router.push({ name: 'user.create-review', params: { id: auctionId } });
   }
   
   const checkScreenWidth = () => {
@@ -94,14 +101,11 @@
   };
   
   onMounted(async() => {
-      const user = store.getters['auth/user'];
-      const userId = user.id;
-      console.log(userId);
-      await getUserReview(userId);
-      console.log(reviewsData.value);
+      await getAuctions(1,true);
       setRandomPlaceholder();
       window.addEventListener('resize', checkScreenWidth);
       checkScreenWidth();
+      console.log("리뷰데이터",auctionsData);
   });
   
   onBeforeUnmount(() => {

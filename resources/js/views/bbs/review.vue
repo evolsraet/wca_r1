@@ -28,14 +28,13 @@
                                     </div>
                                     <!--<h3 class="review-title">{{ auction.car_no }}</h3>-->
                                     <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
-                                        <p>2020년 / 2.4km / 무사고</p>
-                                        <span>(추후 추가 예정) 딜러</span>
+                                        <p>2020년 | 2.4km | 무사고</p>
                                         <div class="d-flex justify-content-between align-items-baseline">
                                             <div>
                                                 <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
                                             </div>
-                                                <h5 class="tc-red">{{ amtComma(auction.win_bid.price) }}</h5>
-                                        </div>
+                                                <h5 class="tc-red fs-5">{{ amtComma(auction.win_bid.price) }}</h5>
+                                            </div>
                                        <!-- <a class="btn-review" @click="navigateToDetail(auction.id)">후기작성</a>-->
                                     </div>
                                 </div>
@@ -77,7 +76,7 @@
                                         </ul>
                                     </div>
                                     <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
-                                    <p>2020년 / 2.4km / 무사고</p>
+                                    <p>2020년 | 2.4km | 무사고</p>
                                     <div class="d-flex justify-content-between">
                                         <div>
                                             <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>

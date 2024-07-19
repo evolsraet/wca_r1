@@ -75,13 +75,6 @@
                       <p class="text-secondary opacity-50">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red">&nbsp;2024년 6월 26일 오후 6:12</span></p>
                       </div>-->
                     </div>
-                    <div v-if="showNotification" class="container">
-                      <div class="notification-container show container px-3">
-                        <router-link :to="{ name: 'index.claim' }" class="btn wait-selection shadow-sm d-flex align-items-center justify-content-between gap-5">
-                          클레임 신청<p class="icon-right-wh"></p>
-                        </router-link>
-                      </div>
-                    </div>
                     <div v-if="auctionDetail.data.status !== 'diag' && auctionDetail.data.status !== 'ask'">
                       <p v-if="!showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 숨기기</p>
                       <p v-if="showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
@@ -558,244 +551,38 @@
                 class="my-4 btn-primary btn w-100"
                 @click="dealerAddrCompetion"
               >
-                <p>현 주소지 탁송하기</p>
-              </button>
-            </div>
-            <div v-if="showModal" class="modal-overlay p-3">
-            <div class="modal-container">
-              <div class="card-body">
-                <div class="text-start">
-                  <div class="d-flex">
-                  <h4 class="custom-highlight">탁송지 변경</h4>
-                  </div>
-                  <p>원하시는 탁송지를 선택해주세요.</p>
-                  <a href="/addr" class="fs-6 text-secondary opacity-50 link-hov">다른 주소지로 변경, 추가를 원하시나요?</a>
+                    <p>현 주소지 탁송하기</p>
+                  </button>
                 </div>
-                <div class="scrollable-content mt-4" ref="scrollableContent"></div>
+                    <div v-if="showModal" class="modal-overlay p-3">
+                    <div class="modal-container">
+                      <div class="card-body">
+                        <div class="text-start">
+                          <div class="d-flex">
+                          <h4 class="custom-highlight">탁송지 변경</h4>
+                          </div>
+                          <p>원하시는 탁송지를 선택해주세요.</p>
+                          <a href="/addr" class="fs-6 text-secondary opacity-50 link-hov">다른 주소지로 변경, 추가를 원하시나요?</a>
+                        </div>
+                        <div class="scrollable-content mt-4" ref="scrollableContent"></div>
+                      </div>
+                      <button @click="confirmSelection" class="btn btn-primary w-100">확인</button>
+                    </div>
+                    </div>
+                  </BottomSheet02>
+                  <BottomSheet02 v-if ="auctionDetail.data.status ==='done'">
+                    <div>
+                        <h4>낙찰 완료</h4>
+                        <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요? </p>
+                        <div>
+                          <router-link :to="{ name: 'index.claim' }" class="my-2 btn btn-primary w-100">
+                            클레임 신청
+                          </router-link>
+                        </div>
+                      </div>
+                    </BottomSheet02>
+                </div>
               </div>
-              <button @click="confirmSelection" class="btn btn-primary w-100">확인</button>
-            </div>
-            </div>
-          </BottomSheet02>
-          
-      </div>
-    </div>
-
-    
-
-                    <!--    <div v-if="isUser">
-                          -----[사용자]diag (진단평가)알때------->
-                    <!--      <div v-if="auctionDetail.data.status === 'diag' || auctionDetail.data.status === 'ask' " @click.stop="">
-                              <div class="steps-container">
-                                  <div class="step completing">
-                                      <div class="label completed">
-                                          STEP01
-                                      </div>
-                                  </div>
-                                  <div class="line"> </div>
-                                  <div class="step">
-                                      <div class="label">
-                                          STEP02
-                                      </div>
-                                  </div>
-                                  <div class="line"></div>
-                                  <div class="step">
-                                      <div class="label">
-                                          STEP03
-                                      </div>
-                                  </div>
-                              </div>
-                              <p class="auction-deadline">현재 등록신청 후 진단평가 진행 중 입니다.</p>
-                          </div>
-
-                          -----[사용자]취소 (진단평가)알때------->
-                         <!--   <div v-if="auctionDetail.data.status === 'cancel'" @click.stop="">
-                              <div class="steps-container">
-                                  <div class="step">
-                                      <div class="label">
-                                          STEP01
-                                      </div>
-                                  </div>
-                                  <div class="line"> </div>
-                                  <div class="step">
-                                      <div class="label">
-                                          STEP02
-                                      </div>
-                                  </div>
-                                  <div class="line"></div>
-                                  <div class="step">
-                                      <div class="label">
-                                          STEP03
-                                      </div>
-                                  </div>
-                              </div>
-                              <p class="auction-deadline">경매가 취소 되었습니다.</p>
-                          </div>
-                          <div v-if="auctionDetail.data.status === 'ing' " @click.stop="">
-                              <div class="steps-container">
-                                  <div class="step completing">
-                                      <div class="label completed">
-                                          STEP01
-                                      </div>
-                                      <div class="label label-style text-secondary opacity-50">매물 준비</div>
-                                  </div>
-                                  <div class="line"> </div>
-                                  <div class="step">
-                                      <div class="label">
-                                          STEP02
-                                      </div>
-                                      <div class="label label-style text-secondary opacity-50 completing-text">경매</div>
-                                  </div>
-                                  <div class="line"></div>
-                                  <div class="step">
-                                      <div class="label">
-                                          STEP03
-                                      </div>
-                                      <div class="label label-style text-secondary opacity-50">완료</div>
-                                  </div>
-                              </div>
-                              <p class="auction-deadline mt-4">현재 경매중 입니다.</p>
-                              <div class="o_table_mobile my-5">
-                                  <div class="tbl_basic tbl_dealer">
-                                      <div class="overflow-auto select-dealer">
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-
-                         [사용자]- 딜러 선택 (wait) 중일때  -->
-                      <!--      <div v-if="!selectedDealer && auctionDetail.data.status === 'wait'" @click.stop="">
-                              <div class="steps-container">
-                                  <div class="step completed">
-                                      <div class="label completed">
-                                          STEP01
-                                      </div>
-                                      <div class="label label-style text-secondary opacity-50">매물 준비</div>
-                                  </div>
-                                  <div class="line completed"> </div>
-                                  <div class="step completing">
-                                      <div class="label completed">
-                                          STEP02
-                                      </div>
-                                      <div class="label label-style text-secondary opacity-50 completing-text">경매</div>
-                                  </div>
-                                  <div class="line"></div>
-                                  <div class="step">
-                                      <div class="label">
-                                          STEP03
-                                      </div>
-                                      <div class="label label-style02 text-secondary opacity-50">완료</div>
-                                  </div>
-                              </div>
-                              <p class="auction-deadline mt-2">딜러를 선택해주세요.</p>
-                              <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
-                              <div class="btn-group mt-3 mb-2">
-                                  <button @click="openModal" type="button" class="btn btn-outline-dark">경매취소</button>
-                                  <button type="button" class="btn btn-dark" @click="toggleView">재경매</button>
-                              </div>
-                            
-                                  <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
-                             
-                               <p class="text-end text-secondary opacity-50">3번 더 재경매 할 수 있어요.</p>-->
-                         <!--       <div class="content mt-3 text-start process">
-                                  <h5 class="process">경매에 참여한 딜러</h5>
-                                  <p> 금액이 가장 높은 <span class="highlight">5명</span>까지만 표시돼요.</p>
-                                  <div class="overflow-auto select-dealer mt-3">
-                                      <table class="">
-                                          <tbody>
-                                              <tr v-for="(bid, index) in sortedTopBids" :key="bid.user_id">
-                                                  <td class="w-25"><img src="../../../../img/myprofile_ex.png" alt="딜러 사진" class="mb-2 align-text-top"></td>
-                                                  <td class="d-flex flex-column align-items-center w-75">
-                                                      <div :class="[(index === 0 ? 'red-box' : index < 3 ? 'blue-box' : 'gray-box'), 'rounded-pill', 'me-0']">
-                                                          {{ index + 1 }}위
-                                                      </div>
-                                                      <div class="bold-18-font">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</div>
-                                                  </td>
-                                                  <td class="w-30">
-                                                      <div class="d-flex flex-column align-items-left">
-                                                          <p class="text-secondary opacity-50">{{bid.dealerInfo ? bid.dealerInfo.company : 'Loading...'}}</p>
-                                                          <em class="lh-base tc-blue bold-18-font">{{amtComma(bid.price)}}</em>
-                                                      </div>
-                                                  </td>
-                                                  <td class="text-center align-middle w-auto">
-                                                      <input type="checkbox" :id="'checkbox-' + bid.user_id" class="custom-checkbox-input" @change="selectDealer(bid, $event, index + 1)">
-                                                      <label :for="'checkbox-' + bid.user_id" class="custom-checkbox-label"></label>
-                                                  </td>
-                                              </tr>
-                                          </tbody>
-                                      </table>
-                                   
-                                          <ConnectDealerModal v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo" @close="handleModalClose" @confirm="handleDealerConfirm" />
-                                     
-                                  </div>
-                              </div>
-                          </div>
-
-                          [사용자] - 딜러 선택 후 경매 했을떄 -->
-                         <!--   <div v-if="selectedDealer && auctionDetail.data.status === 'wait'" @click.stop="">
-                              <div class="steps-container">
-                                  <div class="step completed">
-                                      <div class="label completed">
-                                          STEP01
-                                      </div>
-                                      <div class="label label-style text-secondary opacity-50">매물 준비</div>
-                                  </div>
-                                  <div class="line completed"></div>
-                                  <div class="step completed">
-                                      <div class="label completed">
-                                          STEP02
-                                      </div>
-                                      <div class="label label-style text-secondary opacity-50 completing-text">경매</div>
-                                  </div>
-                                  <div class="line completed"></div>
-                                  <div class="step completing">
-                                      <div class="label completed">
-                                          STEP03
-                                      </div>
-                                      <div class="label label-style02 text-secondary opacity-50">완료</div>
-                                  </div>
-                              </div>
-                              <p class="auction-deadline">낙찰가 <span class="tc-red"> {{ amtComma(selectedDealer.price) }}</span></p>
-                              <p class="tc-red text-start mt-2">※ 3일 후 자동으로 경매완료 처리됩니다. </p>
-                              <div class="btn-group mt-3 mb-2">
-                                  <button type="button" class="btn btn-outline-dark" @click="cancelSelection">선택 취소</button>
-                                  <button type="button" class="btn btn-primary" @click="completeAuction">선택 완료</button>
-                              </div>
-                           
-                                <div v-if="completeAuctionModal" class="modal">
-                                  <div class="modal-content">
-                                    <h5>경매가 성공적으로 완료되었습니다.</h5>
-                                    <button @click="closeCompleteAuctionModal">확인</button>
-                                  </div>
-                                </div>
-                             
-    
-                              <h5 class="mt-5 text-start">내가 선택한 딜러</h5>
-                              <div class="select-content my-4">
-                                  <img src="../../../../img/myprofile_ex.png" alt="딜러 사진" width="100px">
-                                  <div class="text-container">
-                                      <h4 class="amount fw-semibold">{{ amtComma(selectedDealer.price) }}</h4>
-                                      <p class="info">{{ selectedDealer.userData.dealer.name }} | {{ selectedDealer.userData.dealer.company }}</p>
-                                  </div>
-                              </div>
-
-                              <div class="p-4 rounded text-body-emphasis bg-body-secondary">
-                                  <div class="info-item m-0 process">
-                                      <div class="phone"></div>
-                                      <p>010-1234-1234</p>
-                                  </div>
-                                  <div class="info-item m-0">
-                                      <div class="location"></div>
-                                      <p>
-                                          <span>{{ selectedDealer.userData.dealer.company_addr1 }},{{ selectedDealer.userData.dealer.company_addr2 }}</span>
-                                      </p>
-                                  </div>
-                                  <div class="info-item m-0">
-                                      <p class="text-start">{{ selectedDealer.userData.dealer.introduce || '소개 정보 없음' }}</p>
-                                  </div>
-                              </div>
-                          </div>-->
-
           
                      <!--  바텀 시트 show or black-->
                      <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
@@ -803,26 +590,6 @@
                             <div v-if="auctionDetail.data.status === 'wait'" @click.stop="">
                             
                             </div>
-
-                  <!--       <div v-if="!succesbidhope && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && !userBidCancelled && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price !== null" @click.stop="">
-                            <BottomSheet02>
-                              <p class="auction-deadline text-center">희망가 재경매를 시작합니다.</p>
-                              <p class="tc-red mt-2">경매 마감까지 {{ timeLeft.days }}일 {{ timeLeft.hours }}시간 {{ timeLeft.minutes }}분 {{ timeLeft.seconds }}초 남음</p>
-                              <div class="mt-3 d-flex justify-content-end gap-3">
-                                <p class="bid-icon text-secondary opacity-50 normal-16-font">입찰 {{ auctionDetail.data.bids.length }}</p>
-                                <p class="interest-icon text-secondary opacity-50 normal-16-font">관심 0</p>
-                              </div>
-                              <div>
-                                <h5 class="text-start mt-3 tc-primary">희망가에 경매하시겠습니까?</h5>
-                                <div class="input-container mt-4">
-                                  <input type="text" class="styled-input" placeholder="0" v-model="amount" :readonly="auctionDetail.data.hope_price !== null">
-                                </div>
-                                <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ amtComma(amount) }}</p>
-                                <p class="text-start tc-red mb-2">※ 희망가에 경매 시 즉시 낙찰이 가능합니다.</p>
-                                <button type="button" class="tc-wh btn btn-primary w-100" @click="submitAuctionBid">확인</button>
-                              </div>
-                            </BottomSheet02>
-                          </div>-->
 
                       <!-- 딜러 입찰 -->
                           <BottomSheet03 initial="half" :dismissable="true"  v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && bidSession">
