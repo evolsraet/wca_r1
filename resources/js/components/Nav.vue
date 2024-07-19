@@ -69,7 +69,7 @@
                       <span class="text-secondary opacity-50 font-1">새 매물 둘러보기</span>
                     </div>
                   </router-link>
-                  <router-link :to="{ name: 'dealer.address'}" class="menu-item mt-0" @click="toggleNavbar">
+              <!--    <router-link :to="{ name: 'dealer.address'}" class="menu-item mt-0" @click="toggleNavbar">
                     <div class="sd-menu">
                       <div class="icon icon-location-memu"></div>
                     </div>
@@ -77,7 +77,7 @@
                       <span class="menu-text process">주소 관리</span>
                       <span class="text-secondary opacity-50 font-1">탁송 주소 관리</span>
                     </div>
-                  </router-link>
+                  </router-link>-->
                   <!--
                   <router-link :to="{ name: 'dealer.bids'}" class="menu-item mt-0" @click="toggleNavbar">
                     <div class="sd-menu">
@@ -604,22 +604,7 @@
     position: relative;
   }
   
-  .has-gradient::after {
-    content: '';
-    position: fixed;
-    bottom: 54px;
-    right: 0;
-    width: 46vh;
-    height: 58px;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.8), rgba(255, 255, 255, 1));
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.3s ease-in-out;
-  }
-  
-  .has-gradient.visible::after {
-    opacity: 1;
-  }
+
   
   .middle-content-ty02 {
     display: flex;
