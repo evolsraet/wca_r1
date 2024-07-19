@@ -569,19 +569,19 @@
                       <button @click="confirmSelection" class="btn btn-primary w-100">확인</button>
                     </div>
                     </div>
-                  </BottomSheet02>
-                    <BottomSheet02 v-if ="auctionDetail.data.status ==='done' && isDealer">
-                      <div>
-                        <h4>낙찰 완료</h4>
-                        <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요? </p>
-                        <div>
-                          <router-link :to="{ name: 'index.claim' }" class="my-2 btn btn-primary w-100">
-                            클레임 신청
-                          </router-link>
-                        </div>
-                      </div>
-                    </BottomSheet02>
+                  </BottomSheet02> 
                 </div>
+                <BottomSheet02 v-if ="auctionDetail.data.status ==='done' && isDealer">
+                  <div>
+                    <h4>낙찰 완료</h4>
+                    <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요? </p>
+                    <div>
+                      <router-link :to="{ name: 'index.claim' }" class="my-2 btn btn-primary w-100">
+                        클레임 신청
+                      </router-link>
+                    </div>
+                  </div>
+                </BottomSheet02>
               </div>
           
                      <!--  바텀 시트 show or black-->
