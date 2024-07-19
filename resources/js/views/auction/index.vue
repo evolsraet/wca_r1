@@ -17,8 +17,8 @@ TODO:
                     </div>
                 </nav>
             </div>
-            <div v-if="isDealer" class="px-4 container mt-3">
-                <nav class="navbar navbar-expand navbar-light">
+            <div v-if="isDealer" class="px-3 container mt-3 overflow-x-auto">
+                <nav class="mx-width navbar navbar-expand navbar-light">
                     <div class="navbar-nav gap-2">
                         <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">진행 중인 매물</a>
                         <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 매물<span class="interest mx-2">{{ favoriteAuctionsPagination.total }}</span></a><!-- 관심 차량 숫자표기 -->
@@ -426,7 +426,7 @@ TODO:
                     </div>
                     <div v-if="isDealer" class="filter-content">
                         <!-- 페이지의 나머지 내용 -->
-                        <button @click="toggleModal" class="animCircle filter-button text-secondary opacity-50 mx-2"> 필터</button>
+                        <button @click="toggleModal" class="animCircle filter-button text-secondary opacity-20 mx-2"> 필터</button>
                         <transition name="fade" mode="out-in">
                         <FilterModal v-if="showModal" @close="handleClose" />
                         </transition>
