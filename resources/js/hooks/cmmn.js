@@ -1599,5 +1599,6 @@ export function cmmn() {
       wicaLabel,
       wicas,
       wicaData,
+      calculateTimeLeft,
     }
   }

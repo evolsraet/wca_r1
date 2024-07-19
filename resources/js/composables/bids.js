@@ -67,7 +67,7 @@ export default function useBid() {
         }
     
         if (isMyBid) {
-            request = request.whereOr('auction.status','ing,wait')
+            //request = request.whereOr('auction.status','ing,wait') //전체조건으로 해제함
         }
         return request.callback(function(result) {
             bidsData.value = result.data;
