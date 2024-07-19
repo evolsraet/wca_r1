@@ -6,7 +6,7 @@
     <div class="p-3">
         <form @submit.prevent="submitForm">
             <div class="container mov-wide">
-                    <div  v-for="auction in auctionsData" :key="auction.id">
+                    <div v-for="auction in auctionsData" :key="auction.id">
                         <div class="container-img">
                             <h5 class="my-3">후기 작성</h5>
                             <div class="left-img">
@@ -35,11 +35,11 @@
                             <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                         </div>
                         <div class="mx-2 text-secondary opacity-50 my-4">
-                        <p> {{ carInfo.year }}년 / 2.4km / 무사고</p>
+                        <p> {{ carInfo.year }}년 | 2.4km | 무사고</p>
                         <p>현대 쏘나타 (DN8)</p>
                         <br>
-                        <p>매물번호 / 564514</p>
-                        <p>딜 러 명 / {{ auction.dealer_name }}</p>
+                        <p>매물번호 | 564514</p>
+                        <p>딜 러 명 | {{ auction.dealer_name }}</p>
                         </div>
                       <!--  <p class="card-title fs-5"><span class="blue-box">무사고</span>{{auction.car_no}}</p>-->
                             <!--<p class="mt-2 card-text text-secondary opacity-50 fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
@@ -48,12 +48,12 @@
                                 <p class="card-text text-secondary opacity-50 fs-5 web-text">12 삼 4567</p>
                                 <a href="#"><span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">상세보기</span></a>
                             </div>-->
-                            <p class="mt-4 auction-deadline justify-content-sm-center text-secondary opacity-50">판매가<span>{{ amtComma(auction.win_bid.price) }}</span></p>
+                            <p class="mt-4 auction-deadline justify-content-sm-center text-secondary opacity-50">판매가<span class="fw-bolder fs-5 tc-primary">{{ amtComma(auction.win_bid.price) }}</span></p>
                             </div>
                             <div class="right-container">
-                                <bottom-sheet initial="half" :dismissable="true">
-                        <div class="sheet-content p-0">
-                            <div class="mt-3" @click.stop="">
+                            <bottom-sheet initial="half" :dismissable="true">
+                            <div class="sheet-content p-0">
+                                <div class="mt-3" @click.stop="">
                                 
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
