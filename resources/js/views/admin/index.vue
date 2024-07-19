@@ -2,7 +2,7 @@
     <div class="container mt-auto mb-auto" id="dashadmin">
            <div class="card-container mt-4">
                <div class="section">
-                   <h5 class="text-start">회원 {{ userAllCnt }}</h5>
+                   <h5 class="text-start"><span class="admin-icon admin-icon-menu"></span>회원 {{ userAllCnt }}</h5>
                    <div class="card">
                        <div class="number d-flex justify-content-between">심사중 <span class="tc-red">{{ animatedUserAskCnt }}</span></div>
                        <div class="number d-flex justify-content-between">정&nbsp;&nbsp;상 <span>{{ animatedUserOkCnt }}</span></div>
@@ -12,7 +12,7 @@
                    </div>
                </div>
                <div class="section">
-                   <h5 class="text-start">입금</h5>
+                   <h5 class="text-start"><span data-v-831d09df="" class="admin-icon admin-icon-menu02"></span>입금</h5>
                    <div class="card">
                        <div class="number d-flex justify-content-between">입금 대기 <span class="tc-red">{{ animatedAuctionDlvrCnt }}</span></div>
                        <div class="divider"></div>
@@ -20,7 +20,7 @@
                    </div>
                </div>
                <div class="section">
-                   <h5 class="text-start">매물 {{ auctionAllCnt }}</h5>
+                   <h5 class="text-start"><span data-v-ee657362="" class="admin-icon admin-icon-menu03"></span>매물 {{ auctionAllCnt }}</h5>
                    <div class="card">
                        <div class="number d-flex justify-content-between">신청 완료<span class="tc-red">{{ animatedAuctionAskCnt }}</span></div>
                        <div class="number d-flex justify-content-between">진단 중<span class="tc-red">{{ animatedAuctionDiagCnt }}</span></div>
@@ -32,7 +32,7 @@
                    </div>
                </div>
                <div class="section">
-                   <h5 class="text-start">후기 {{ reviewAllCnt }}</h5>
+                   <h5 class="text-start"><span data-v-ee657362="" class="admin-icon admin-icon-menu04"></span>후기 {{ reviewAllCnt }}</h5>
                    <div class="card">
                        <div class="number d-flex justify-content-between">작성<span class="tc-red">{{ animatedReviewWriteCnt }}</span></div>
                        <div class="divider"></div>
@@ -41,7 +41,7 @@
                </div>
            </div>
            <div class="mt-5 p-3">
-               <h4>공지사항</h4>
+               <h4><span data-v-ee657362="" class="admin-icon admin-icon-menu05"></span>공지사항</h4>
                <div class="tab-nav my-4">
                    <ul>
                        <li class="col-2">
