@@ -128,7 +128,7 @@
                   <div class="mb-2">
                     <label for="password" class="form-label">
                     </label>
-                    <input v-model="loginForm.password" id="password" type="password" class="form-control border-0 border-bottom" required autocomplete="current-password" placeholder="비밀번호를 입력해주세요.">
+                    <input v-model="loginForm.password" id="password" type="password" class="form-control border-0 border-bottom pe-2" required autocomplete="current-password" placeholder="비밀번호를 입력해주세요.">
                   </div>
                   <!-- 백엔드 오류 메시지 -->
       
