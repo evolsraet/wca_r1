@@ -3,7 +3,7 @@
     <!-- 공통 UI 구조 -->
     <div class="border-0" @click="toggleCard">
       <div class="card-body">
-        <div v-if="!isMobileView" class="enter-view">
+        <div class="enter-view">
           <h5 v-if="isUser">내 매물관리</h5>
           <div v-if="isDealer">
           <h5>탁송지 미등록 매물</h5>
