@@ -57,7 +57,7 @@ export default function useBid() {
     //isMyBid => 진행 중 입찰 건 filter
     const getBids = async (page = 1, isSelect = false, isMyBid = false , status = "all") => {
         let request = wicac.conn()
-        .log()
+        //.log()
         .url('/api/bids')
         .with(['auction'])
         .page(`${page}`)
@@ -81,7 +81,7 @@ export default function useBid() {
         return request.callback(function(result) {
             bidsData.value = result.data;
             bidPagination.value = result.rawData.data.meta;
-            return result.data;
+            return result;
         }).get();
         
     };

@@ -21,9 +21,9 @@ TODO:
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav gap-2">
                         <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">진행 중인 매물</a>
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 매물<span class="interest mx-2">{{ favoriteAuctionsTotal }}</span></a><!-- 관심 차량 숫자표기 -->
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('myBidInfo')" :class="{ active: currentTab === 'myBidInfo' }">내 입찰 매물<span class="interest mx-2">{{ bidsTotal }}</span></a>
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('scsbidInfo')" :class="{ active: currentTab === 'scsbidInfo' }">낙찰 매물<span class="interest mx-2">{{ sbsBidsTotal }}</span></a>
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 매물<span class="interest mx-2">{{ favoriteAuctionsPagination.total }}</span></a><!-- 관심 차량 숫자표기 -->
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('myBidInfo')" :class="{ active: currentTab === 'myBidInfo' }">내 입찰 매물<span class="interest mx-2">{{ bidsPagination.total }}</span></a>
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('scsbidInfo')" :class="{ active: currentTab === 'scsbidInfo' }">낙찰 매물<span class="interest mx-2">{{ scsbidPagination.total }}</span></a>
                     </div>
                 </nav>
             </div>
@@ -1035,14 +1035,11 @@ const isSpinning = ref(false);
 let statusLabel;
 let scsBidsstatusLabel;
 let myBidsStatusLabel;
-let sbsBidsTotal = 0;
-let bidsTotal = 0;
-let favoriteAuctionsTotal = 0; 
 //let likeMessage;
 
 const favoriteAuctionsData = ref({}); //관심 차량 데이터
 const favoriteAuctionsPagination = ref({}); //관심 차량 페이징
-
+const bidsPagination = ref({});
 const scsbidsData = ref([]); //낙찰 차량 데이터
 const scsbidPagination = ref({}); //낙찰 차량 페이징
 
@@ -1221,8 +1218,6 @@ function loadPage( page, type, pagination) {
     if (page < 1 || page > pagination.last_page) return;
     
     window.scrollTo(0, 0);
-    console.log('type=========');
-    console.log(type);
     
     switch (type) {
         case 'all':
@@ -1269,7 +1264,8 @@ const getAuctionsData = async () => {
         await fetchFilteredBids();
     }
 }
-
+const bidsResult = {};
+const response = {};
 const favoriteAuctionsGetData = async () => {
     let cStatue  = 'all';
     if(currentTab.value=='interInfo'){
@@ -1278,10 +1274,21 @@ const favoriteAuctionsGetData = async () => {
         cStatue = currentMyBidsStatus.value;
     }
 
-    await getBids(currentMyBidPage.value, false, true, cStatue);
-    const response = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , cStatue);
-    favoriteAuctionsData.value = response.data;
-    favoriteAuctionsPagination.value = response.rawData.data.meta;
+    bidsResult.value = await getBids(currentMyBidPage.value, false, true, cStatue);
+    response.value = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , cStatue);
+
+    if(currentTab.value=='allInfo'){
+        favoriteAuctionsPagination.value = response.value.rawData.data.meta;
+        bidsPagination.value = bidsResult.value.rawData.data.meta;
+    }
+    if(currentTab.value=='interInfo'){
+        favoriteAuctionsPagination.value = response.value.rawData.data.meta;
+    } else if(currentTab.value=='myBidInfo'){
+        bidsPagination.value = bidsResult.value.rawData.data.meta;
+    }
+    
+    
+    favoriteAuctionsData.value = response.value.data;
     filterLikeData(favoriteAuctionsData.value);
 }
 
@@ -1302,8 +1309,7 @@ const fetchFilteredBids = async () => {
 
 const filterLikeData = (auctions, likes="none") => {
     auctions.forEach(auction => {
-         likes = auction.likes;
-        
+        likes = auction.likes;
         const userLike = likes.find(like => like.likeable_id == auction.id && like.user_id == user.value.id);
         if (userLike) {
             auction.like = userLike;
@@ -1316,8 +1322,6 @@ const filterLikeData = (auctions, likes="none") => {
 }
 
 const getScsBidsInfo = async () =>{
-    console.log(currentScsBidsPage.value);
-    console.log(currentScsBidsStatus.value);
 
     const scsBidsInfo = await getscsBids(currentScsBidsPage.value,true,false,currentScsBidsStatus.value);
 
@@ -1337,8 +1341,6 @@ onMounted(async () => {
     }
 
     await getAuctionsData();
-    bidsTotal = bidPagination.value.total;
-    favoriteAuctionsTotal = favoriteAuctionsPagination.value.total;
 
     statusLabel = wicas.enum(store).addFirst('all', '전체').excl('cancel', '취소').ascVal().auctions();
     scsBidsstatusLabel = wicas.enum(store).addFirst('all','전체').perm('dlvr','chosen').auctions();
@@ -1350,8 +1352,7 @@ onMounted(async () => {
     }
 
     //낙찰차량정보
-    await getScsBidsInfo(); 
-    sbsBidsTotal = scsbidPagination.value.total;
+    await getScsBidsInfo();
 
     timer = setInterval(() => {
         if(isUser.value){
