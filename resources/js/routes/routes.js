@@ -292,6 +292,12 @@ export default [
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {
+                path: '/claim/:id',
+                name: 'index.claim-detail',
+                component: () => import('../views/notices/Detail.vue'),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+            },
+            {
                 path: '/login',
                 name: 'auth.login',
                 component: () => import('../views/login/Login.vue'),

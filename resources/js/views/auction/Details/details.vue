@@ -570,7 +570,7 @@
                     </div>
                     </div>
                   </BottomSheet02>
-                    <BottomSheet02 v-if ="auctionDetail.data.status ==='done'">
+                    <BottomSheet02 v-if ="auctionDetail.data.status ==='done' && isDealer">
                       <div>
                         <h4>낙찰 완료</h4>
                         <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요? </p>
