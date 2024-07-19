@@ -45,7 +45,20 @@
                   </div>
                 </div>
               </div>
-              <div class="footer-content">
+              <div class="p-3 mt-auto mb-4">
+                <div class="btn btn-primary w-100 p-0 m-0">
+                <div class="d-flex justify-content-around align-items-center">
+                <p class="me-2">내차 팔땐<br>위카 에서</p>
+                <div class="side-img">
+                <img src="../../img/side-nav/side-nav01.png" alt="사이드 바 이미지 01" width="200px">
+                </div>
+                
+                </div>
+              </div>
+              
+            </div>
+
+              <div class="footer-content mt-0">
                 <div class="p-2">
                   <router-link :to="{ name: 'auction.index'}" class="menu-item mt-0" @click="toggleNavbar">
                     <div class="sd-menu">
@@ -723,6 +736,14 @@
     align-items: center;
   }
   
+  @media (max-width: 420px) {
+    .side-img{
+      margin-top: -38px !important;
+    }
+    .side-img img{
+      width: 130px !important;
+    }
+  }
   @media (min-width: 768px) {
     .navbar-expand-md .navbar-collapse {
     display:grid !important;
@@ -730,7 +751,9 @@
       align-items: center;
     }
   }
-  
+  .side-img{
+    margin-top: -83px;
+  }
   .settings-icon {
     cursor: pointer;
     transition: transform 0.3s ease-in-out;
