@@ -108,7 +108,7 @@
     }
 </script>
 <script setup>
-import { ref, onMounted , reactive ,onBeforeUnmount , nextTick} from 'vue';
+import { ref, onMounted , reactive ,onBeforeUnmount , nextTick, inject} from 'vue';
 import { useRoute } from 'vue-router'; 
 import { initReviewSystem } from '@/composables/review'; // 별점 js
 import useAuctions from "@/composables/auctions";
@@ -116,7 +116,7 @@ import BottomSheet from '@/views/bottomsheet/BottomSheet.vue'
 import AlarmModal from '@/views/modal/AlarmModal.vue';
 import Footer from "@/views/layout/footer.vue"
 import { cmmn } from '@/hooks/cmmn';
-const { amtComma } = cmmn();
+const { amtComma, wica } = cmmn();
 
 const isMobileView = ref(window.innerWidth <= 640);
 const route = useRoute();
@@ -126,9 +126,10 @@ const { getAuctionById } = useAuctions();
 const auctionId = parseInt(route.params.id); 
 let auctionsData = ref();
 const carInfo = ref();
-const { review , submitReview , getCarInfo } = initReviewSystem(); 
+const { review , submitReview , getCarInfo, getReviewsDeleteList } = initReviewSystem(); 
 
 const alarmModal = ref(null);
+const swal = inject('$swal');
 
 const openAlarmModal = () => {
     console.log("openAlarmModal called");
@@ -149,8 +150,18 @@ const checkScreenWidth = () => {
       isMobileView.value = window.innerWidth <= 640;
     }
   };
-function submitForm(){
-    submitReview(rv);
+async function submitForm(){
+    let reviewDeleteChk = await getReviewsDeleteList(rv.auction_id);
+    console.log('reviewDeleteChk========================');
+    console.log(reviewDeleteChk);
+    if(reviewDeleteChk.length>0){
+        wica.ntcn(swal)
+        .title('')
+        .icon('E') //E:error , W:warning , I:info , Q:question
+        .alert('삭제된 리뷰는 다시 작성하실 수 없습니다.');
+    }else{
+        submitReview(rv);
+    }
 }
 
 //바텀 시트 토글시 스타일변경

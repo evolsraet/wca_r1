@@ -475,6 +475,20 @@ export function initReviewSystem() {
         
     }
 
+    const getReviewsDeleteList = async (auctionId) => {
+
+        const whereList = [];
+        whereList.push(`reviews.auction_id:${auctionId}`)
+     
+        return wicac.conn()
+        .url(`/api/reviews?where=reviews.auction_id:${auctionId}&withTrashed=''`)
+        .log()
+        .callback(function(result) {
+            return result.data;
+        })
+        .get();
+    }
+
    
 
     return {
@@ -493,6 +507,7 @@ export function initReviewSystem() {
         getCarInfo,
         getWriteReviewCnt,
         setInitialStarRating,
+        getReviewsDeleteList,
     }
 
 }
