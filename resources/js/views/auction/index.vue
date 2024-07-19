@@ -701,7 +701,7 @@ TODO:
                             <div class="registration-content overflow-hidden">
                                 <div class="text-start status-selector registration-content">
                                     <div v-for="(label, value) in myBidsStatusLabel" :key="value" class="mx-2">
-                                        <input type="radio" name="status" :value="value" :id="value" :checked="value === 'all' " @change="event => setMyBidsFilter(event.target.value)" />
+                                        <input type="radio" name="status" :value="value" :id="value" :checked="value === currentMyBidsStatus " @change="event => setMyBidsFilter(event.target.value)" />
                                         <label :for="value">{{ label }}</label>
                                     </div>
                                 </div>
@@ -1011,7 +1011,7 @@ const router = useRouter();
 const route = useRoute();
 const currentStatus = ref('all');
 const currentScsBidsStatus = ref('all'); 
-//const currentMyBidsStatus = ref('all');
+const currentMyBidsStatus = ref('all');
 
 const { role, getRole } = useRoles();
 const currentTab = ref('allInfo'); 
@@ -1173,7 +1173,8 @@ function setCurrentTab(tab) {
             favoriteAuctionsGetData();
             break;
         case 'myBidInfo':
-            currentStatus.value='all';
+            currentMyBidsStatus.value='all';
+            favoriteAuctionsGetData();
             fetchFilteredBids();
             break;
         case 'scsbidInfo':
@@ -1201,7 +1202,7 @@ function setScsBidsFilter(status){
 }
 
 function setMyBidsFilter(status){
-    currentStatus.value = status;
+    currentMyBidsStatus.value = status;
     favoriteAuctionsGetData();
     fetchFilteredBids();
 }
@@ -1270,8 +1271,15 @@ const getAuctionsData = async () => {
 }
 
 const favoriteAuctionsGetData = async () => {
-    await getBids(currentMyBidPage.value, false, true, currentStatus.value);
-    const response = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , currentStatus.value);
+    let cStatue  = 'all';
+    if(currentTab.value=='interInfo'){
+        cStatue = currentStatus.value;
+    } else if(currentTab.value=='myBidInfo'){
+        cStatue = currentMyBidsStatus.value;
+    }
+
+    await getBids(currentMyBidPage.value, false, true, cStatue);
+    const response = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , cStatue);
     favoriteAuctionsData.value = response.data;
     favoriteAuctionsPagination.value = response.rawData.data.meta;
     filterLikeData(favoriteAuctionsData.value);
@@ -1323,10 +1331,14 @@ onMounted(async () => {
     if (history.state.currentTab) {
         currentTab.value = history.state.currentTab;
     }
+    
+    if (history.state.status) {
+        currentMyBidsStatus.value = history.state.status;
+    }
 
     await getAuctionsData();
     bidsTotal = bidPagination.value.total;
-    favoriteAuctionsTotal = favoriteAuctionsPagination.value.total
+    favoriteAuctionsTotal = favoriteAuctionsPagination.value.total;
 
     statusLabel = wicas.enum(store).addFirst('all', '전체').excl('cancel', '취소').ascVal().auctions();
     scsBidsstatusLabel = wicas.enum(store).addFirst('all','전체').perm('dlvr','chosen').auctions();
