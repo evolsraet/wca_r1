@@ -570,8 +570,8 @@
                     </div>
                     </div>
                   </BottomSheet02>
-                  <BottomSheet02 v-if ="auctionDetail.data.status ==='done'">
-                    <div>
+                    <BottomSheet02 v-if ="auctionDetail.data.status ==='done'">
+                      <div>
                         <h4>낙찰 완료</h4>
                         <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요? </p>
                         <div>
@@ -602,7 +602,7 @@
                                   </div>
                                 </div>
                               <div>
-                                <h5 class="text-start process my-4">입찰 금액을 <br> 입력해주세요</h5>
+                                <h4 class="text-start process mb-5 mt-4">입찰 금액을 입력해주세요</h4>
                                 <div class="input-container mt-5">
                                   <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
                                 </div>

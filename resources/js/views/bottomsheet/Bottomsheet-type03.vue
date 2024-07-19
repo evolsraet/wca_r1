@@ -35,7 +35,7 @@ export default {
     return {
       showHead: false,
       showBottomSheet: false,
-      sheetHeight: 10,
+      sheetHeight: 'max-content',
       isDesktop: window.innerWidth >= 992
     };
   },
@@ -46,26 +46,16 @@ export default {
       } else {
         this.showBottomSheet = true;
         this.showHead = false;
-        if (!this.isDesktop) {
-          this.sheetHeight = window.innerHeight * 0.45;
-          this.$refs.sheet.style.height = `${this.sheetHeight}px`;
-        }
       }
     },
     closeSheet() {
       this.showBottomSheet = false;
-      this.sheetHeight = 10;
-      if (!this.isDesktop) {
-        this.$refs.sheet.style.height = `${this.sheetHeight}px`;
-      }
+      this.sheetHeight = max-content;
     },
     updateView() {
       this.isDesktop = window.innerWidth >= 992;
       if (this.isDesktop) {
-        this.$refs.sheet.style.height = 'auto';
-      } else if (this.showBottomSheet) {
-        this.sheetHeight = window.innerHeight * 0.45;
-        this.$refs.sheet.style.height = `${this.sheetHeight}px`;
+        this.$refs.sheet.style.height = 'max-content';
       }
     }
   },
@@ -74,16 +64,10 @@ export default {
     this.updateView();
     if (this.initial === 'half') {
       this.showBottomSheet = true;
-      if (!this.isDesktop) {
-        this.sheetHeight = window.innerHeight * 0.45;
-        this.$refs.sheet.style.height = `${this.sheetHeight}px`;
-      }
+
     } else {
       this.showHead = true;
       this.sheetHeight = 10;
-      if (!this.isDesktop) {
-        this.$refs.sheet.style.height = `${this.sheetHeight}px`;
-      }
     }
   },
   beforeDestroy() {
@@ -134,7 +118,7 @@ export default {
 }
 
 .sheet.half {
-  height: 40vh;
+  height: max-content;
 }
 
 .sheet.animate-slide-up {
@@ -193,9 +177,9 @@ export default {
 
 @media (min-width: 992px) {
   .sheet {
-    top: 50%;
+
     transform: translate(-50%, -50%);
-    height: auto;
+    height: max-content !important;
     max-height: none;
     width: auto;
     max-width: 800px;
