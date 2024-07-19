@@ -57,17 +57,26 @@ export default function useBid() {
     //isMyBid => 진행 중 입찰 건 filter
     const getBids = async (page = 1, isSelect = false, isMyBid = false , status = "all") => {
         let request = wicac.conn()
-        //.log()
+        .log()
         .url('/api/bids')
         .with(['auction'])
         .page(`${page}`)
         if (isSelect) {
             const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
-            request = request.whereOr('auction.status',`${statusFilter}`)           
+            request.whereOr('auction.status',`${statusFilter}`)           
         }
     
         if (isMyBid) {
-            //request = request.whereOr('auction.status','ing,wait') //전체조건으로 해제함
+            if(status != 'all'){
+                if(status == 'bid'){
+                    request.whereOr('auction.status','ing,wait');
+                } else if(status == 'cnsgnmUnregist'){
+                    request.addWhere('auction.status','dlvr');
+                    request.doesnthave(['auction.memo_digician:dlvr']);
+                } else{
+                    request.whereOr('auction.status',`${status}`);
+                }
+            }
         }
         return request.callback(function(result) {
             bidsData.value = result.data;

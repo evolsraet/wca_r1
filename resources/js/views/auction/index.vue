@@ -13,17 +13,17 @@ TODO:
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav gap-2">
                         <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('auctionDone')" :class="{ active: currentTab === 'auctionDone' }">판매한 차량<span class="interest mx-2">{{filteredDone.length}}</span></a>
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('auctionDone')" :class="{ active: currentTab === 'auctionDone' }">판매한 매물<span class="interest mx-2">{{filteredDone.length}}</span></a>
                     </div>
                 </nav>
             </div>
             <div v-if="isDealer" class="px-4 container mt-3">
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav gap-2">
-                        <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-2">{{ favoriteAuctionsTotal }}</span></a><!-- 관심 차량 숫자표기 -->
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('myBidInfo')" :class="{ active: currentTab === 'myBidInfo' }">내 입찰 차량<span class="interest mx-2">{{ bidsTotal }}</span></a>
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('scsbidInfo')" :class="{ active: currentTab === 'scsbidInfo' }">낙찰 차량<span class="interest mx-2">{{ sbsBidsTotal }}</span></a>
+                        <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">진행 중인 매물</a>
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 매물<span class="interest mx-2">{{ favoriteAuctionsTotal }}</span></a><!-- 관심 차량 숫자표기 -->
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('myBidInfo')" :class="{ active: currentTab === 'myBidInfo' }">내 입찰 매물<span class="interest mx-2">{{ bidsTotal }}</span></a>
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('scsbidInfo')" :class="{ active: currentTab === 'scsbidInfo' }">낙찰 매물<span class="interest mx-2">{{ sbsBidsTotal }}</span></a>
                     </div>
                 </nav>
             </div>
@@ -553,7 +553,7 @@ TODO:
                                 <div class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="text-secondary opacity-50">차량 정보가 없습니다.</span>
+                                            <span class="text-secondary opacity-50">매물 정보가 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -653,7 +653,7 @@ TODO:
                                 <div class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="text-secondary opacity-50">관심 차량이 없습니다.</span>
+                                            <span class="text-secondary opacity-50">관심 매물이 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -689,7 +689,7 @@ TODO:
                                 <div v-if="!filteredDone" class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="text-secondary opacity-50">판매 차량이 없습니다.</span>
+                                            <span class="text-secondary opacity-50">판매 매물이 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -698,6 +698,14 @@ TODO:
                             </div>
                         </div>
                         <div class="container my-4" v-if="currentTab === 'myBidInfo'">
+                            <div class="registration-content overflow-hidden">
+                                <div class="text-start status-selector registration-content">
+                                    <div v-for="(label, value) in myBidsStatusLabel" :key="value" class="mx-2">
+                                        <input type="radio" name="status" :value="value" :id="value" :checked="value === 'all' " @change="event => setMyBidsFilter(event.target.value)" />
+                                        <label :for="value">{{ label }}</label>
+                                    </div>
+                                </div>
+                            </div>
                             <div v-if="bidsData.length > 0">
                                 <!-- 경매 목록 -->
                                 <div class="row">
@@ -752,7 +760,7 @@ TODO:
                                 <div class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="text-secondary opacity-50">입찰한 차량이 없습니다.</span>
+                                            <span class="text-secondary opacity-50">입찰한 매물이 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -827,7 +835,7 @@ TODO:
                                 <div class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="text-secondary opacity-50">입찰한 차량이 없습니다.</span>
+                                            <span class="text-secondary opacity-50">입찰한 매물이 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -1003,6 +1011,7 @@ const router = useRouter();
 const route = useRoute();
 const currentStatus = ref('all');
 const currentScsBidsStatus = ref('all'); 
+//const currentMyBidsStatus = ref('all');
 
 const { role, getRole } = useRoles();
 const currentTab = ref('allInfo'); 
@@ -1025,6 +1034,7 @@ const isUser = computed(() => user.value?.roles?.includes('user'));
 const isSpinning = ref(false);
 let statusLabel;
 let scsBidsstatusLabel;
+let myBidsStatusLabel;
 let sbsBidsTotal = 0;
 let bidsTotal = 0;
 let favoriteAuctionsTotal = 0; 
@@ -1070,7 +1080,7 @@ const addLike = async (auctionId) => {
     //console.log('Like added for auction:', auctionId);
     const response = await setLikes(like);
     if(response.isSuccess){
-        wica.ntcn(swal).icon('S').title('관심 차량이 추가되었습니다.').fire();
+        wica.ntcn(swal).icon('S').title('관심 매물이 추가되었습니다.').fire();
         getAuctionsData();
     }
 };
@@ -1078,7 +1088,7 @@ const addLike = async (auctionId) => {
 const removeLike = async (auction) => {
     const response = await deleteLike(auction.like.id);
     if(response.isSuccess){
-        wica.ntcn(swal).icon('S').title('관심 차량이 취소되었습니다.').fire();
+        wica.ntcn(swal).icon('S').title('관심 매물이 취소되었습니다.').fire();
         getAuctionsData();
     }
     
@@ -1163,6 +1173,7 @@ function setCurrentTab(tab) {
             favoriteAuctionsGetData();
             break;
         case 'myBidInfo':
+            currentStatus.value='all';
             fetchFilteredBids();
             break;
         case 'scsbidInfo':
@@ -1187,6 +1198,12 @@ function setFilter(status) {
 function setScsBidsFilter(status){
     currentScsBidsStatus.value = status;
     getScsBidsInfo();
+}
+
+function setMyBidsFilter(status){
+    currentStatus.value = status;
+    favoriteAuctionsGetData();
+    fetchFilteredBids();
 }
 
 function handleClose() { 
@@ -1313,6 +1330,9 @@ onMounted(async () => {
 
     statusLabel = wicas.enum(store).addFirst('all', '전체').excl('cancel', '취소').ascVal().auctions();
     scsBidsstatusLabel = wicas.enum(store).addFirst('all','전체').perm('dlvr','chosen').auctions();
+    myBidsStatusLabel = wicas.enum(store).addFirst('all', '전체')
+                             .addFirst('bid', '입찰').add('cnsgnmUnregist', '탁송지 미등록')
+                             .excl('ask','diag','ing','wait').ascVal().auctions();
     if (role.value.name === 'user') {
         isUser.value = true;
     }
