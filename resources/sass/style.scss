@@ -4116,7 +4116,7 @@ input[type="checkbox"] {
     display: none !important;
   }
   
-/* 리뷰 모달 커스텀*/
+/* 리뷰 모달 커스텀 */
 .review-custom-confirmButton{
     border-color: #ff0000 !important;
     color: #fff !important;
@@ -4203,6 +4203,21 @@ input[type="checkbox"] {
 .intro-modal-container .swal2-html-container{
     padding: 2.5em 0.5em 0em !important;
 }
+
+.bank-modal-actions{
+    display: none !important;
+  }
+  .bank-modal-popup .swal2-html-container{
+    padding: 0px !important;
+  }
+.bank-modal {
+    padding: 0px !important; 
+}
+.bank-modal .swal2-html-container{
+    padding: 0px !important;
+}
+
+
 @media (min-width: 991px){
     .intro-modal-popup{
         width: 60%;
@@ -4252,15 +4267,20 @@ input[type="checkbox"] {
         display: block;
     }
   }
-.bank-modal-actions{
-    display: none !important;
+@media (max-width: 420px) {
+    .side-img{
+      margin-top: -38px !important;
+    }
+    .side-img img{
+      width: 130px !important;
+    }
+    .side-img02 img{
+      width: 96px !important;
+    }
   }
-  .bank-modal-popup .swal2-html-container{
-    padding: 0px !important;
-  }
-.bank-modal {
-    padding: 0px !important; 
+.side-img{
+ margin-top: -83px;
 }
-.bank-modal .swal2-html-container{
-    padding: 0px !important;
-}
+ .side-img02{
+ margin-top: -43px !important;
+ }

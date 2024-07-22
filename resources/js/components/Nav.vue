@@ -46,15 +46,7 @@
                 </div>
               </div>
               <div class="p-3 mt-auto mb-4">
-                <div class="btn btn-primary w-100 p-0 m-0">
-                <div class="d-flex justify-content-around align-items-center">
-                <p class="me-2">내차 팔땐<br>위카 에서</p>
-                <div class="side-img">
-                <img src="../../img/side-nav/side-nav01.png" alt="사이드 바 이미지 01" width="200px">
-                </div>
-                
-                </div>
-              </div>
+                <div v-html="randomButton"></div>
               
             </div>
 
@@ -329,7 +321,8 @@
   import useAuctions from '@/composables/auctions';
   import { cmmn } from '@/hooks/cmmn';
   import profileDom from '/resources/img/profile_dom.png';
-
+  import sidenav02 from '../../../resources/img/side-nav/side-nav02.png';
+  import sidenav01 from '../../../resources/img/side-nav/side-nav01.png';
   const photoUrl = ref(profileDom);
   const { wica , wicaLabel } = cmmn();
   const isMobile = ref(false);
@@ -461,8 +454,32 @@
     }
   }
 
+  const buttons = [
+  `<div class="btn btn-primary w-100 p-0 m-0">
+    <div class="d-flex justify-content-around align-items-center">
+      <p class="ms-2">내 차 <br>팔 땐</p>
+      <div class="side-img02">
+        <img src="${sidenav02}" alt="사이드 바 이미지 02" width="120px">
+      </div>
+      <p class="me-2">위 카<br> 에 서</p>
+    </div>
+  </div>`,
+  `<div class="btn btn-primary w-100 p-0 m-0">
+    <div class="d-flex justify-content-around align-items-center">
+      <p class="ms-2 text-start">고민은<br>판매만 늦출뿐!</p>
+      <div class="side-img">
+        <img src="${sidenav01}" alt="사이드 바 이미지 01" width="200px">
+      </div>
+    </div>
+  </div>`
+];
+
+const randomButton = ref('');
+
+
   onMounted(() => {
     fileExstCheck(user.value);
+     randomButton.value = buttons[Math.floor(Math.random() * buttons.length)];
     let navAuction = document.querySelectorAll('.nav-auction');
     let navReview = document.querySelectorAll('.nav-review');
     let navCarInq = document.querySelectorAll('.nav-inq');
@@ -721,23 +738,12 @@
     align-items: center;
   }
   
-  @media (max-width: 420px) {
-    .side-img{
-      margin-top: -38px !important;
-    }
-    .side-img img{
-      width: 130px !important;
-    }
-  }
   @media (min-width: 768px) {
     .navbar-expand-md .navbar-collapse {
     display:grid !important;
       flex-basis: auto;
       align-items: center;
     }
-  }
-  .side-img{
-    margin-top: -83px;
   }
   .settings-icon {
     cursor: pointer;
