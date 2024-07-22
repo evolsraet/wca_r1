@@ -86,11 +86,12 @@
                   <h4 v-if="isUser">등록된 차가 없어요</h4>
                   <h5 v-if="isUser">차량 등록 후, 경매를 시작해보세요.</h5>
                   <h4 v-if="isDealer" class="mt-4 text-center">탁송지를 등록해야 할 매물이 없습니다.</h4>
-                  
+                  <div v-if="isUser" class="px-2">
+                  <router-link :to="{ name:'home' }" class="w-100 btn primary-btn btn-apply-ty02 justify-content-between p-4">
+                    <span>차량 등록하기</span>
+                  </router-link>
+                    </div>
                 </div>
-                <router-link v-if="isUser" :to="{ name: 'home' }" class="btn primary-btn btn-apply-ty02 justify-content-between p-4">
-                  <span>차량 등록하기</span>
-                </router-link>
               </div>
             </div>
           </div>

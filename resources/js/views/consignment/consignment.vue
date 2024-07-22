@@ -57,8 +57,6 @@
           <label for="bankNumber" class="mt-3">계좌번호</label>
           <input type="text" v-model="account" placeholder="계좌번호 직접입력" :class="{'block': accountDetails}" class="account-num">
         </div>
-        <!-- 은행 선택 모달 -->
-        <BankModal :showDetails="showDetails" @update:showDetails="showDetails = $event" @select-bank="selectBank" />
       </div>
       <hr class="custom-hr" />
       <p class="text-center mb-2">매도용 인감증명서를 <br> 준비해 주세요.</p>
@@ -99,7 +97,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, defineProps, defineEmits, watch } from 'vue';
+import { ref, onMounted, defineProps, defineEmits, watch, nextTick, createApp,reactive,inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { cmmn } from '@/hooks/cmmn';
 import BankModal from '@/views/modal/bank/BankModal.vue';
@@ -241,10 +239,36 @@ function isPastTime(time) {
 
   return selectedDate < now;
 }
+const swal = inject('$swal');
+let statusLabel;
 
-function handleBankLabelClick() {
-  showDetails.value = true;
-}
+const handleBankLabelClick = async () => {
+  const module = await import('@/views/modal/bank/BankModal.vue');
+  const BankModalComponent = module.default;
+
+  swal.fire({
+    html: '<div id="modal-content"></div>',
+    customClass: 'bank-modal',
+    showCloseButton: true,
+    showConfirmButton: false,
+    width: '600px',
+    padding: '20px',
+    didOpen: () => {
+      nextTick(() => {
+        const modalContent = document.getElementById('modal-content');
+        if (modalContent) {
+          const app = createApp(BankModalComponent, {
+            onSelectBank: (bankName) => {
+              selectedBank.value = bankName;
+              swal.close();
+            }
+          });
+          app.mount(modalContent);
+        }
+      });
+    }
+  });
+};
 
 function selectBank(bankName) {
   selectedBank.value = bankName;
@@ -282,7 +306,6 @@ const photoUrl = (userData) => {
 };
 
 </script>
-
 
 <style scoped lang="scss">
 .container {
