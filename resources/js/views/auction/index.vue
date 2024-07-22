@@ -1354,6 +1354,13 @@ onMounted(async () => {
     //낙찰차량정보
     await getScsBidsInfo();
 
+    //초기 관심매물 개수
+    response.value = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , 'all');
+    favoriteAuctionsPagination.value = response.value.rawData.data.meta;
+
+    //초기 내입찰 개수
+    bidsPagination.value = bidsResult.value.rawData.data.meta;
+
     timer = setInterval(() => {
         if(isUser.value){
             updateAuctionTimes(auctionsData.value);
