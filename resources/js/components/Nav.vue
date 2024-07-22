@@ -1,9 +1,9 @@
 <template>
 <div id="UsersNav">
     <div class="overlay" style="display: none;"></div>
-    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, 'p-2']">
+    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, 'p-2' , 'px-5']">
       <div v-if="isAuctionDetailPage"></div>
-      <div class="container nav-font">
+      <div class="nav-font" :class="{ 'container': isContainer }">
         <button v-if="isDetailPage && isUser" @click="goBack" class="btn btn-back back-btn-icon"></button>
         <button v-else-if="isDetailPage && isDealer" @click="goBack" class="btn btn-back wh-btn-icon"></button>
         <!-- <p v-if="isDetailPage && isMobile">123</p>-->
@@ -237,85 +237,85 @@
             </div>
           </div>
         </div>
-        <div class="collapse navbar-collapse">
-          <ul class="mx-3 mov-navbar navbar-nav mt-2 mt-lg-0 w-100 d-flex align-items-center">
-            <template v-if="isUser">
-              <div class="d-flex">
-                <li class="nav-item">
-                  <router-link to="/" class="nav-link mx-3 nav-inq" aria-current="page" exact-active-class="active-link">내차조회</router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3 nav-auction" aria-current="page" exact-active-class="active-link">내 매물관리</router-link>
-                </li>
-                <li class="nav-item">
-                  <router-link :to="{ name: 'user.review'}" class="nav-link me-0 mx-3 nav-review" exact-active-class="active-link">이용후기</router-link>
-                </li>
-              </div>
-              <li class="nav-item my-member ms-auto dropdown">
-                <a class="tc-wh p-1 pb-0 mx-2 dropdown-toggle mb-1" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  {{ user.name }} 님
-                </a>
-                <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                  <li><router-link to="/edit-profile" class="dropdown-item">내 정보 수정</router-link></li>
-                  <li><a class="dropdown-item" href="/login" @click="logout">로그아웃</a></li>
-                </ul>
-              </li>
-            </template>
-            <template v-else-if="!user?.name">
-              <li class="nav-item">
-                <router-link :to="{ name: 'home'}" class="nav-link mx-3 nav-inq" exact-active-class="active-link">내차조회</router-link>
-              </li>
-              <li class="nav-item">
-                <router-link :to="{ name: 'index.allreview'}" class="nav-link me-0 mx-3-review nav-review" exact-active-class="active-link">이용후기</router-link>
-              </li>
-              <li class="nav-item">
-                <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
-              </li>
-              <li class="nav-item my-member-guest ms-auto">
-                <img src="../../img/Icon-person.png" class="nav-profile-login" alt="LoginImg" height="25px" width="25px"><router-link class="pt-1 nav-link me-0 text-secondary opacity-50 pb-0" to="/login" exact-active-class="active-link">로그인</router-link>
-              </li>
-            </template>
-            <template v-else-if="isDealer">
-              <li class="nav-item">
-                <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh mx-3 nav-auction" to="/register" exact-active-class="active-link">입찰하기</router-link>
-              </li>
-              <!--
-              <li class="nav-item">
-                <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">선택 완료 차량</router-link>
-              </li>
-              -->
-              <li class="nav-item">
-                <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">과거 낙찰 이력</router-link>
-              </li>
-              <li class="nav-item">
-                <router-link :to="{ name: 'index.claim'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">클레임</router-link>
-              </li>
-              <li class="nav-item">
-                <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3" exact-active-class="active-link">공지사항</router-link>
-              </li>
-              <li class="nav-item my-member-dealer ms-auto dropdown dropdown-arrow">
-                <a class="tc-wh p-1 pb-0 me-3 dropdown-toggle" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                <img :src="photoUrl" alt="Profile Photo" class="nav-profile" />{{ user.name }}
-                </a>
-                <ul class="dropdown-menu p-2" aria-labelledby="dealerDropdown">
-                  <li class="my-2"><router-link to="/profile" class="dropdown-item">내 정보</router-link></li>
-                <!--<li class="my-2"><router-link to="/edit-profile" class="dropdown-item">내 정보 수정</router-link></li>-->
-                  <li class="my-2"><a class="dropdown-item" href="/login" @click="logout">로그아웃</a></li>
-                </ul>
-              </li>
-            </template>
-          </ul>
-        </div>
         <a class="navbar-toggler p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
           <span :class="{'toggle-nav-wh': isDealer, 'toggle-nav-black': !isDealer}"></span>
         </a>
+      </div>
+      <div class="collapse navbar-collapse">
+        <ul class="mx-3 mov-navbar navbar-nav mt-2 mt-lg-0 w-100 d-flex align-items-center">
+          <template v-if="isUser">
+            <div class="d-flex">
+              <li class="nav-item">
+                <router-link to="/" class="nav-link mx-3 nav-inq" aria-current="page" exact-active-class="active-link">내차조회</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3 nav-auction" aria-current="page" exact-active-class="active-link">내 매물관리</router-link>
+              </li>
+              <li class="nav-item">
+                <router-link :to="{ name: 'user.review'}" class="nav-link me-0 mx-3 nav-review" exact-active-class="active-link">이용후기</router-link>
+              </li>
+            </div>
+            <li class="nav-item my-member ms-auto dropdown">
+              <a class="tc-wh p-1 pb-0 mx-2 dropdown-toggle mb-1" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ user.name }} 님
+              </a>
+              <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <li><router-link to="/edit-profile" class="dropdown-item">내 정보 수정</router-link></li>
+                <li><a class="dropdown-item" href="/login" @click="logout">로그아웃</a></li>
+              </ul>
+            </li>
+          </template>
+          <template v-else-if="!user?.name">
+            <li class="nav-item">
+              <router-link :to="{ name: 'home'}" class="nav-link mx-3 nav-inq" exact-active-class="active-link">내차조회</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link :to="{ name: 'index.allreview'}" class="nav-link me-0 mx-3-review nav-review" exact-active-class="active-link">이용후기</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
+            </li>
+            <li class="nav-item my-member-guest ms-auto">
+              <img src="../../img/Icon-person.png" class="nav-profile-login" alt="LoginImg" height="25px" width="25px"><router-link class="pt-1 nav-link me-0 text-secondary opacity-50 pb-0" to="/login" exact-active-class="active-link">로그인</router-link>
+            </li>
+          </template>
+          <template v-else-if="isDealer">
+            <li class="nav-item">
+              <router-link :to="{ name: 'auction.index'}" class="nav-link tc-wh mx-3 nav-auction" to="/register" exact-active-class="active-link">입찰하기</router-link>
+            </li>
+            <!--
+            <li class="nav-item">
+              <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">선택 완료 차량</router-link>
+            </li>
+            -->
+            <li class="nav-item">
+              <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">과거 낙찰 이력</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link :to="{ name: 'index.claim'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">클레임</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3" exact-active-class="active-link">공지사항</router-link>
+            </li>
+            <li class="nav-item my-member-dealer ms-auto dropdown dropdown-arrow">
+              <a class="tc-wh p-1 pb-0 me-3 dropdown-toggle" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <img :src="photoUrl" alt="Profile Photo" class="nav-profile" />{{ user.name }}
+              </a>
+              <ul class="dropdown-menu p-2" aria-labelledby="dealerDropdown">
+                <li class="my-2"><router-link to="/profile" class="dropdown-item">내 정보</router-link></li>
+              <!--<li class="my-2"><router-link to="/edit-profile" class="dropdown-item">내 정보 수정</router-link></li>-->
+                <li class="my-2"><a class="dropdown-item" href="/login" @click="logout">로그아웃</a></li>
+              </ul>
+            </li>
+          </template>
+        </ul>
       </div>
     </nav>
 </div>
   </template>
   
   <script setup>
-  import { ref, computed, onMounted, watch , nextTick  } from 'vue';
+  import { ref, computed, onMounted, watch , nextTick,onUnmounted  } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
   import { useStore } from 'vuex';
   import useAuth from '@/composables/auth';
@@ -338,6 +338,11 @@
   const showScrollGradient = ref(false);
   let scrollTimeout = null;
   const auctionDetailsLoaded = ref(false);
+  const isContainer = ref(false);
+
+function checkWidth() {
+  isContainer.value = window.innerWidth <= 991;
+}
   function toggleSettingsMenuMov() {
     showSettingsmov.value = !showSettingsmov.value;
   }
@@ -501,6 +506,8 @@ onMounted(fetchAuctionDetails);
 watch(() => route.params.id, fetchAuctionDetails); 
 
   onMounted(async () => {
+    checkWidth();
+    window.addEventListener('resize', checkWidth);
     fileExstCheck(user.value);
      randomButton.value = buttons[Math.floor(Math.random() * buttons.length)];
     let navAuction = document.querySelectorAll('.nav-auction');
@@ -514,7 +521,7 @@ watch(() => route.params.id, fetchAuctionDetails);
       getAuctions();
     }
   
-    const navbar = document.querySelector('.navbar-collapse');
+    const navbar = document.querySelector('.navbar-collshow');
     navbar.addEventListener('transitionend', () => {
       if (isNavbarShown.value) {
         checkScrollGradient();
@@ -630,7 +637,9 @@ watch(() => route.params.id, fetchAuctionDetails);
       }, 300);
     }
   }
-
+  onUnmounted(() => {
+  window.removeEventListener('resize', checkWidth);
+});
 
   </script>
   
@@ -864,6 +873,5 @@ watch(() => route.params.id, fetchAuctionDetails);
         display: block;
       }
 }
-
   </style>
   
