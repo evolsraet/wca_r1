@@ -16,50 +16,6 @@ class PermissionTableSeeder extends Seeder
      */
     public function run()
     {
-        $permissions = [
-            'role.super',
-            'role.admin',
-            'role.dealer',
-            'role.user',
-            'act.super',
-            'act.admin',
-            'act.dealer',
-            'act.user',
-        ];
-
-        $roles = [
-            'super' => [
-                'role.super',
-                'act.super',
-                'act.admin',
-                'act.dealer',
-                'act.user',
-            ],
-            'admin' => [
-                'role.admin',
-                'act.admin',
-                'act.dealer',
-                'act.user',
-            ],
-            'dealer' => [
-                'role.dealer',
-                'act.dealer',
-            ],
-            'user' => [
-                'role.user',
-                'act.user',
-            ],
-        ];
-
-        // 퍼미션 등록
-        foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission]);
-        }
-
-        // 롤 등록 및 싱크
-        foreach ($roles as $role_name => $perms) {
-            $role = Role::create(['name' => $role_name]);
-            $role->syncPermissions($perms);
-        }
+        // 기본 퍼미션 = 기본_권한및유저_생성 마이그레이션에서 실행됨
     }
 }

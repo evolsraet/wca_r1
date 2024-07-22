@@ -15,6 +15,7 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 class Post extends Model implements HasMedia
 {
     use HasFactory, InteractsWithMedia;
+    use ModelTrait;
 
     protected $fillable = ['title', 'content', 'user_id'];
 

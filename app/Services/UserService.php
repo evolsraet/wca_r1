@@ -51,7 +51,7 @@ class UserService
             // beforeData() 이전에 발리데이트 해야함
             $validatedData = validator($requestData, [
                 'name' => 'required|max:255',
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                // 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'phone' => 'required',
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ])->validate();
@@ -138,6 +138,14 @@ class UserService
 
             $data = $request->input('user');
             $data = $this->checkJson($data);
+
+            $validatedData = validator($data, [
+                'name' => 'sometimes|required|max:255',
+                'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
+                'phone' => 'sometimes|required',
+                'password' => ['sometimes', 'required', 'string', 'min:8', 'confirmed'],
+            ])->validate();
+
             $data = $this->beforeData($data);
 
             $data['dealer'] = $this->checkJson($request->input('dealer'));

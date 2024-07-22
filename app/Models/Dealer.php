@@ -11,6 +11,7 @@ class Dealer extends Model implements HasMedia
 {
     use HasFactory;
     use InteractsWithMedia;
+    use ModelTrait;
 
     // protected $fillable = [
     //     'user_id',

@@ -14,6 +14,8 @@ class Auction extends Model implements HasMedia
 {
     use HasFactory, SoftDeletes;
     use InteractsWithMedia;
+    use ModelTrait;
+
 
     // protected $fillable = [
     //     'bank',

@@ -155,6 +155,19 @@ trait CrudTrait
         // ?where=users.id:<:10|users.id:>:1
 
 
+        $this->whereRun($result);
+
+        // 후처리
+
+        $this->afterProcess(__FUNCTION__, request(), $result);
+
+        $result = $result->paginate($paginate);
+
+        return response()->api($this->resourceClass::collection($result));
+    }
+
+    private function whereRun($result)
+    {
         if (!empty(request('where'))) {
             // 그룹을 지정한다.
             // 예시: ?where=users.id:<:10|users.id:>:1_and_users.name:like:%홍길동%_or_users.id:>:20
@@ -197,14 +210,6 @@ trait CrudTrait
                 });
             }
         }
-
-        // 후처리
-
-        $this->afterProcess(__FUNCTION__, request(), $result);
-
-        $result = $result->paginate($paginate);
-
-        return response()->api($this->resourceClass::collection($result));
     }
 
     private function parseWhereClause($query, $wheres)
@@ -310,7 +315,7 @@ trait CrudTrait
 
     public function show($id)
     {
-        $this->beforeProcess(__FUNCTION__, request());
+        $this->beforeProcess(__FUNCTION__, request(), $data = null, $id);
 
         $modelClass = $this->getModelClass();
         $result = $modelClass::query();
@@ -327,6 +332,7 @@ trait CrudTrait
         });
 
         $this->middleProcess(__FUNCTION__, request(), $result, $id);
+        $this->whereRun($result);
         $result = $result->find($id);
 
         if (!$result) {
@@ -341,6 +347,8 @@ trait CrudTrait
     {
         $this->beforeProcess(__FUNCTION__, $request);
         $modelClass = $this->getModelClass();
+
+        Log::info(request()->all());
 
         DB::beginTransaction();
         try {

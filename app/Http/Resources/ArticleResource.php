@@ -7,7 +7,7 @@ use App\Http\Resources\BidResource;
 use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AuctionResource extends JsonResource
+class ArticleResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -36,27 +36,6 @@ class AuctionResource extends JsonResource
                 $parentArray[$field] = $this->$field->toDatetimeString();
             }
         }
-
-        $addArray['bids_count'] = Bid::where('auction_id', $parentArray['id'])->count();
-
-        // 상위 5개 입찰건
-        if ($parentArray['status'] != 'ask') {
-
-            $bidsQuery = Bid::where('auction_id', $parentArray['id'])
-                ->orderBy('price', 'desc')
-                ->limit(5)
-                ->get();
-
-            // 완료시 금액 공개
-            if (in_array($parentArray['status'], ['done', 'chosen', 'dlvr'])) {
-                if ($parentArray['bid_id']) {
-                    $addArray['win_bid'] = new BidResource(Bid::find($parentArray['bid_id']));
-                }
-            }
-
-            $addArray['top_bids'] = BidResource::collection($bidsQuery);
-        }
-
 
         return array_merge($parentArray, $addArray);
     }

@@ -10,6 +10,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 class Review extends Model
 {
     use HasFactory, SoftDeletes;
+    use ModelTrait;
 
     // 검색어로 검색가능한 경우
     public $searchable = [

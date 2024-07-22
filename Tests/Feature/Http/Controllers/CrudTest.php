@@ -49,7 +49,7 @@ class CrudTest extends TestCase
         $this->actingAs($user);
 
         // API 요청
-        $response = $this->getJson('/api/bids?where=auction.status:whereIn:done,wait');
+        $response = $this->getJson('/api/bids?with=auction&where=auction.status:whereIn:done,wait');
 
         // // 각 auction의 status 출력
         // foreach ($response->json('data') as $item) {

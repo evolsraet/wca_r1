@@ -95,7 +95,9 @@ class AppServiceProvider extends ServiceProvider
                 $response = array_merge($response, $additional);
             }
 
-            $response['data_count'] = count((array) $response['data']);
+            if (is_array($response['data'])) {
+                $response['data_count'] = count($response['data']);
+            }
 
             // print_r([$response, $code]);
             // die();
