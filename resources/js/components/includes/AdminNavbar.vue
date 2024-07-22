@@ -39,7 +39,7 @@
                     @click="toggleNavbar"
                     id="adminNav-user"
                 >
-                    <span class="tc-gray menu-text">회원</span>
+                    <span class="text-secondary menu-text opacity-50">회원</span>
                 </router-link>
                 <router-link 
                     :to="{ name: 'deposit.index' }" 
@@ -48,7 +48,7 @@
                     @click="toggleNavbar"
                     id="adminNav-deposit"
                 >
-                    <span class="tc-gray menu-text">입금</span>
+                    <span class="text-secondary menu-text opacity-50">입금</span>
                 </router-link>
                 <router-link 
                     :to="{ name: 'auctions.index' }" 
@@ -57,7 +57,7 @@
                     @click="toggleNavbar"
                     id="adminNav-auction"
                 >
-                    <span class="tc-gray menu-text">매물</span>
+                    <span class="text-secondary menu-text opacity-50">매물</span>
                 </router-link>
                 <router-link 
                     :to="{ name: 'review.index' }" 
@@ -66,7 +66,7 @@
                     @click="toggleNavbar"
                     id="adminNav-review"
                 >
-                    <span class="tc-gray menu-text">후기</span>
+                    <span class="text-secondary menu-text opacity-50">후기</span>
                 </router-link>
             </div>
         </ul>
@@ -215,7 +215,7 @@ watch(() => route.name, (to, from) => {
     z-index: 1020;
 }
 
-.tc-gray {
+.text-secondary {
     color: #aaaebe;
 }
 
@@ -224,8 +224,8 @@ watch(() => route.name, (to, from) => {
     text-decoration: none;
 }
 
-.menu-item:hover .tc-gray,
-.menu-item.active .tc-gray {
+.menu-item:hover .text-secondary,
+.menu-item.active .text-secondary {
     color: black !important;
 }
 .settings-menu.show .menu-item.active::after,

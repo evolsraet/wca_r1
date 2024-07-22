@@ -35,14 +35,14 @@
               </div>
             </div>
             <div class="top-content-style wd-100">
-                <p class="tc-light-gray">입찰 금액</p>
+                <p class="text-secondary opacity-50">입찰 금액</p>
                 <h4>{{ amtComma(bid?.price) }}</h4>
             </div>
             <div class="d-flex justify-content-center my-4">
               <img src="../../../../img/modal/car-objects-blur.png" alt="자동차 이미지" width="150px">
             </div>
             <div class="text-center">
-              <p class="my-4 tc-light-gray">선택 완료 시, 선택한 딜러에게 문자가 발송됩니다.</p>
+              <p class="my-4 text-secondary opacity-50">선택 완료 시, 선택한 딜러에게 문자가 발송됩니다.</p>
             </div>
             <div class="btn-group">
               <button class="btn btn-primary w-50 modal_close shadow bold-18-font" @click="confirmSelection">선택 하기</button>

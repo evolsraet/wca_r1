@@ -1,6 +1,6 @@
 <template>
 <h4><span class="admin-icon admin-icon-menu"></span>회원관리</h4>
-    <div class="row justify-content-center my-5">
+    <div class="container my-5">
         <div class="col-md-10">
             <div class="card border-0 shadow-none">
                 <div class="card-body">
@@ -102,7 +102,7 @@
                                 파일 첨부
                             </button>
                             <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
-                            <div class="text-start tc-light-gray" v-if="editForm.file_user_photo_name">
+                            <div class="text-start text-secondary opacity-50" v-if="editForm.file_user_photo_name">
                                 사진 파일 : <a :href=fileImgUrl download>{{ editForm.file_user_photo_name }}</a>
                             </div>
                         </div>
@@ -135,6 +135,9 @@
                                     />
                                     <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                                     </div>
+                                    <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                                        <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
+                                    </div>
                                     <div>
                                     <div class="form-group">
                                     <input
@@ -151,9 +154,6 @@
                                     class="form-control"
                                     placeholder="상세주소"
                                 />
-                                <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-                                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
-                                </div>
                             </div>
                             <div class="form-group">
                                 <label for="user-title" class="form-label my-3">인수차량 도착지 주소</label>
@@ -164,6 +164,9 @@
                                     readonly
                                 />
                                 <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
+                                </div>
+                                <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
                                 </div>
                             <div class="form-group">
                                 <div>
@@ -181,9 +184,6 @@
                                     class="form-control"
                                     placeholder="상세주소"
                                 />
-                                <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-                                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
-                                </div>
                             </div>
                             <div class="mb-3">
                                 <label for="user-title" class="form-label"
@@ -203,7 +203,7 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
                                     파일 첨부
                                 </button>
-                                <div class="text-start tc-light-gray" v-if="editForm.file_user_biz_name">
+                                <div class="text-start text-secondary opacity-50" v-if="editForm.file_user_biz_name">
                                     사업자 등록증 파일 : <a :href=fileBizUrl download>{{ editForm.file_user_biz_name }}</a>
                                 </div>
                             </div>
@@ -215,7 +215,7 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
                                     파일 첨부
                                 </button>
-                                <div class="text-start tc-light-gray" v-if="editForm.file_user_sign_name">
+                                <div class="text-start text-secondary opacity-50" v-if="editForm.file_user_sign_name">
                                     매도용인감정보 파일 : <a :href=fileSignUrl download>{{ editForm.file_user_sign_name }}</a>
                                 </div>
                             </div>
@@ -227,7 +227,7 @@
                                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
                                     파일 첨부
                                 </button>
-                                <div class="text-start tc-light-gray" v-if="editForm.file_user_cert_name">
+                                <div class="text-start text-secondary opacity-50" v-if="editForm.file_user_cert_name">
                                     매매업체 대표증 / 종사원증 파일 : <a :href=fileCertUrl download>{{ editForm.file_user_cert_name }}</a>
                                 </div>
                             </div>
@@ -322,7 +322,7 @@ function fileExstCheck(info){
             }
         }
 
-        if(info.files.hasOwnProperty('file_user_cert')){
+        if(info.files.hasOwnProperty('file_user_biz')){
             if(info.files.file_user_biz[0].hasOwnProperty('original_url')){
                 fileBizUrl.value = userInfo.files.file_user_biz[0].original_url;
             }

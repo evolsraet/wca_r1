@@ -13,16 +13,17 @@ TODO:
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav gap-2">
                         <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('auctionDone')" :class="{ active: currentTab === 'auctionDone' }">판매한 차량<span class="interest mx-2">{{filteredDone.length}}</span></a>
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('auctionDone')" :class="{ active: currentTab === 'auctionDone' }">판매한 매물<span class="interest mx-2">{{filteredDone.length}}</span></a>
                     </div>
                 </nav>
             </div>
-            <div v-if="isDealer" class="px-4 container mt-3">
-                <nav class="navbar navbar-expand navbar-light">
+            <div v-if="isDealer" class="px-3 container mt-3 overflow-x-auto">
+                <nav class="mx-width navbar navbar-expand navbar-light">
                     <div class="navbar-nav gap-2">
-                        <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 차량<span class="interest mx-2">{{ favoriteAuctionsPagination.total }}</span></a><!-- 관심 차량 숫자표기 -->
-                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('myBidInfo')" :class="{ active: currentTab === 'myBidInfo' }">내 입찰 차량<span class="interest mx-2">{{ bidPagination.total }}</span></a>
+                        <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">진행 중인 매물</a>
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('interInfo')" :class="{ active: currentTab === 'interInfo' }">관심 매물<span class="interest mx-2">{{ favoriteAuctionsPagination.total }}</span></a><!-- 관심 차량 숫자표기 -->
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('myBidInfo')" :class="{ active: currentTab === 'myBidInfo' }">내 입찰 매물<span class="interest mx-2">{{ bidsPagination.total }}</span></a>
+                        <a class="nav-item nav-link pe-0" @click="setCurrentTab('scsbidInfo')" :class="{ active: currentTab === 'scsbidInfo' }">낙찰 매물<span class="interest mx-2">{{ scsbidPagination.total }}</span></a>
                     </div>
                 </nav>
             </div>
@@ -425,7 +426,7 @@ TODO:
                     </div>
                     <div v-if="isDealer" class="filter-content">
                         <!-- 페이지의 나머지 내용 -->
-                        <button @click="toggleModal" class="animCircle filter-button tc-light-gray mx-2"> 필터</button>
+                        <button @click="toggleModal" class="animCircle filter-button text-secondary opacity-20 mx-2"> 필터</button>
                         <transition name="fade" mode="out-in">
                         <FilterModal v-if="showModal" @close="handleClose" />
                         </transition>
@@ -533,13 +534,13 @@ TODO:
                                                 </div>-->
                                                     <div class="card-body">
                                                         <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                        <p class="tc-light-gray mt-0"> 2020 년 |<span class="mx-1">2.4km</span>| 무사고</p>
-                                                        <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
+                                                        <p class="text-secondary opacity-50 mt-0"> 2020 년 |<span class="mx-1">2.4km</span>| 무사고</p>
+                                                        <p class="text-secondary opacity-50 mt-0">현대 소나타 (DN8)</p>
                                                         <div class="d-flex">
                                                             <h5 class="card-title"><span class="blue-box fw-bold">무사고</span></h5>
                                                             <h5 v-if="auction.is_reauction !== 0"><span class="gray-box">재경매</span></h5>
                                                             <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                            <!--<p class="tc-light-gray">{{ auction.car_no }}</p>-->
+                                                            <!--<p class="text-secondary opacity-50">{{ auction.car_no }}</p>-->
                                                         </div>
                                                     </div>
                                                 </div>
@@ -552,7 +553,7 @@ TODO:
                                 <div class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="tc-light-gray">차량 정보가 없습니다.</span>
+                                            <span class="text-secondary opacity-50">매물 정보가 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -622,13 +623,13 @@ TODO:
                                             </div>-->
                                             <div class="card-body">
                                                 <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
-                                                <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
+                                                <p class="text-secondary opacity-50 mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                                <p class="text-secondary opacity-50 mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
                                                     <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                                                     <h5 v-if="auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
                                                     <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                    <p class="tc-light-gray">{{ auction.car_no }}</p>
+                                                    <p class="text-secondary opacity-50">{{ auction.car_no }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -641,7 +642,7 @@ TODO:
                                             </span>
                                             <div class="card-body">
                                             <h5 class="card-title"><span class="blue-box">무사고</span>{{ auction.car_no }}</h5>
-                                            <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
+                                            <p class="card-text text-secondary opacity-50">현대 쏘나타(DN8)</p>
                                             </div>
                                         </div>-->
                                     </div>
@@ -652,7 +653,7 @@ TODO:
                                 <div class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="tc-light-gray">관심 차량이 없습니다.</span>
+                                            <span class="text-secondary opacity-50">관심 매물이 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -681,14 +682,14 @@ TODO:
                                         <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                         <div class="card-body">
                                             <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
-                                            <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
+                                            <p class="card-text text-secondary opacity-50">현대 쏘나타(DN8)</p>
                                         </div>
                                     </div>
                                 </div>
                                 <div v-if="!filteredDone" class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="tc-light-gray">판매 차량이 없습니다.</span>
+                                            <span class="text-secondary opacity-50">판매 매물이 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -697,6 +698,14 @@ TODO:
                             </div>
                         </div>
                         <div class="container my-4" v-if="currentTab === 'myBidInfo'">
+                            <div class="registration-content overflow-hidden">
+                                <div class="text-start status-selector registration-content">
+                                    <div v-for="(label, value) in myBidsStatusLabel" :key="value" class="mx-2">
+                                        <input type="radio" name="status" :value="value" :id="value" :checked="value === currentMyBidsStatus " @change="event => setMyBidsFilter(event.target.value)" />
+                                        <label :for="value">{{ label }}</label>
+                                    </div>
+                                </div>
+                            </div>
                             <div v-if="bidsData.length > 0">
                                 <!-- 경매 목록 -->
                                 <div class="row">
@@ -720,7 +729,7 @@ TODO:
                                                 <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(bid.auction.status)" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(bid.auction.status).auctions() }}</span>
                                             </div>
                                             <div class="d-flex">
-                                                <span class="mx-2 timer">
+                                                <span v-if="(bid.auction.status === 'ing' || bid.auction.status === 'wait') && bid.auction.timeLeft" class="mx-2 timer">
                                                     <img src="../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
                                                     <span v-if="bid.auction.timeLeft.days != '0' ">{{ bid.auction.timeLeft.days }}일 &nbsp; </span>{{ bid.auction.timeLeft.hours }}:{{ bid.auction.timeLeft.minutes }}:{{ bid.auction.timeLeft.seconds }}
                                                 </span>
@@ -734,13 +743,13 @@ TODO:
                                             </div>
                                             <div class="card-body">
                                                 <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                <p class="tc-light-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
-                                                <p class="tc-light-gray mt-0">현대 소나타 (DN8)</p>
+                                                <p class="text-secondary opacity-50 mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                                <p class="text-secondary opacity-50 mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
                                                     <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                                                     <h5 v-if="bid.auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
                                                     <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                    <p class="tc-light-gray">{{ bid.auction.car_no }}</p>
+                                                    <p class="text-secondary opacity-50">{{ bid.auction.car_no }}</p>
                                                 </div>
                                             </div>
                                         </div>
@@ -751,7 +760,7 @@ TODO:
                                 <div class="complete-car">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
-                                            <span class="tc-light-gray">입찰한 차량이 없습니다.</span>
+                                            <span class="text-secondary opacity-50">입찰한 매물이 없습니다.</span>
                                         </div>
                                     </div>
                                 </div>
@@ -771,6 +780,81 @@ TODO:
                                 </ul>
                             </nav>
                         </div>
+                        <div class="container my-4" v-if="currentTab === 'scsbidInfo'">
+                            <div class="registration-content overflow-hidden">
+                                <div class="text-start status-selector registration-content">
+                                    <div v-for="(label, value) in scsBidsstatusLabel" :key="value" class="mx-2">
+                                        <input type="radio" name="status" :value="value" :id="value" :checked="value === 'all' " @change="event => setScsBidsFilter(event.target.value)" />
+                                        <label :for="value">{{ label }}</label>
+                                    </div>
+                                </div>
+                            </div>
+                                <div v-if="scsbidsData.length > 0">
+                                    <!-- 경매 목록 -->
+                                    <div class="row">
+                                        <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="scsBid in scsbidsData" :key="scsBid.id" @click="navigateToDetail(scsBid.auction)">
+                                            <div class="card my-auction">
+                                                <!-- 경매 상태가 'ask'이거나 'diag'일 경우 -->
+                                                <div v-if="scsBid.auction.status === 'ask' || scsBid.auction.status === 'diag'">
+                                                    <div class="card-img-demo">
+                                                        <img src="../../../img/demo.png" alt="경매대기 데모이미지" class="mb-3">
+                                                    </div>
+                                                </div>
+                                                <div v-else="scsBid.auction.status !== 'ask' || scsBid.auction.status !== 'diag'" :class="{ 'grayscale_img': scsBid.auction.status === 'done' || scsBid.auction.status === 'cancel' ||(isDealer && scsBid.auction.status === 'chosen') }" class="card-img-top-placeholder">
+                                                    <img src="../../../img/car_example.png">
+                                                </div>
+                                                <span v-if="scsBid.auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(scsBid.auction.status).auctions() }}</span>
+                                                <div>
+                                                    <span v-if="['done', 'cancel', 'chosen', 'diag', 'ask'].includes(scsBid.auction.status)" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(scsBid.auction.status).auctions() }}</span>
+                                                </div>
+                                                <div class="d-flex">
+                                                    <div v-if="isDealer">
+                                                        <div class="participate-badge" v-if="scsBid.auction.isDealerParticipating">
+                                                            <span class="hand-icon">
+                                                                <img src="../../../img/Icon-hand.png" alt="Hand Icon">
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="card-body">
+                                                    <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                    <p class="text-secondary opacity-50 mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                                    <p class="text-secondary opacity-50 mt-0">현대 소나타 (DN8)</p>
+                                                    <div class="d-flex">
+                                                        <h5 class="card-title"><span class="blue-box">무사고</span></h5>
+                                                        <h5 v-if="scsBid.auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                                                        <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
+                                                        <p class="text-secondary opacity-50">{{ scsBid.auction.car_no }}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            <div v-else>
+                                <div class="complete-car">
+                                    <div class="card my-auction mt-3">
+                                        <div class="none-complete">
+                                            <span class="text-secondary opacity-50">입찰한 매물이 없습니다.</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <nav>
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item" :class="{ disabled: !scsbidPagination.prev }">
+                                        
+                                        <a class="page-link prev-style" @click="loadPage( scsbidPagination.current_page - 1, 'scsbid', scsbidPagination)"></a>
+                                    </li>
+                                    <li v-for="n in scsbidPagination.last_page" :key="n" class="page-item" :class="{ active: n === scsbidPagination.current_page }">
+                                        <a class="page-link" @click="loadPage( n, 'scsbid', scsbidPagination)">{{ n }}</a>
+                                    </li>
+                                    <li class="page-item next-prev" :class="{ disabled: !scsbidPagination.next }">
+                                        <a class="page-link next-style" @click="loadPage( scsbidPagination.current_page + 1, 'scsbid', scsbidPagination)"></a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
                     </div>
                     
                 </div>
@@ -785,67 +869,67 @@ TODO:
                     <table class="table custom-border">
                         <tbody class="auction-table">
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="gray-box">미참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"></td>
+                                <td class="time-remain text-secondary opacity-50"></td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"></td>
+                                <td class="time-remain text-secondary opacity-50"></td>
                                 <td><span class="auc-gray">진행중</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"></td>
+                                <td class="time-remain text-secondary opacity-50"></td>
                                 <td><span class="auc-black">경매완료</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"></td>
+                                <td class="time-remain text-secondary opacity-50"></td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-secondary opacity-50"><span class="tc-red">46</span>분남음</td>
                                 <td><span class="auc-gray">진행중</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-secondary opacity-50"><span class="tc-red">46</span>분남음</td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-secondary opacity-50"><span class="tc-red">46</span>분남음</td>
                                 <td><span class="auc-blue">선택대기</span></td>
                             </tr>
                             <tr>
-                                <td class="auction_no tc-light-gray">경매번호<span>202307200006</span></td>
+                                <td class="auction_no text-secondary opacity-50">경매번호<span>202307200006</span></td>
                                 <td class="part_whether"><span class="blue-box">참여</span></td>
                                 <td class="car_name">신형 카니발<span class="car_date ms-1">2020-12-30<span class="car_mileage ms-1">7,000</span></span>
                                 </td>
-                                <td class="time-remain tc-light-gray"><span class="tc-red">46</span>분남음</td>
+                                <td class="time-remain text-secondary opacity-50"><span class="tc-red">46</span>분남음</td>
                                 <td class="auc-state"><span class="auc-gray">진행중</span></td>
                             </tr>
                         </tbody>
@@ -918,14 +1002,17 @@ import { cmmn } from '@/hooks/cmmn';
 import { isError } from 'lodash';
 
 const swal = inject('$swal');
-const { wicas , wica , updateAuctionTimes } = cmmn();
+const { wicas , wica , updateAuctionTimes , calculateTimeLeft } = cmmn();
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
-const {getBids, bidsData , bidPagination } = usebid();
+const {getBids, bidsData , bidPagination, getscsBids } = usebid();
 const { getLikes, likesData, isAuctionFavorited , like , setLikes , deleteLike , getAllLikes} = useLikes();
 const router = useRouter();
 const route = useRoute();
-const currentStatus = ref('all'); 
+const currentStatus = ref('all');
+const currentScsBidsStatus = ref('all'); 
+const currentMyBidsStatus = ref('all');
+
 const { role, getRole } = useRoles();
 const currentTab = ref('allInfo'); 
 const { auctionsData, pagination, getAuctions, getAuctionsByDealer, getAuctionsByDealerLike } = useAuctions();
@@ -933,6 +1020,7 @@ const { auctionsData, pagination, getAuctions, getAuctionsByDealer, getAuctionsB
 const currentPage = ref(1); 
 const currentFavoritePage = ref(1); 
 const currentMyBidPage = ref(1); 
+const currentScsBidsPage = ref(1);
 const isLoading = ref(false);
 const showModal = ref(false); 
 //const interestCount = computed(() => auctionsData.value.filter(auction => auction.isInterested).length); 
@@ -945,10 +1033,16 @@ const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user')); 
 const isSpinning = ref(false);
 let statusLabel;
+let scsBidsstatusLabel;
+let myBidsStatusLabel;
 //let likeMessage;
 
 const favoriteAuctionsData = ref({}); //관심 차량 데이터
 const favoriteAuctionsPagination = ref({}); //관심 차량 페이징
+const bidsPagination = ref({});
+const scsbidsData = ref([]); //낙찰 차량 데이터
+const scsbidPagination = ref({}); //낙찰 차량 페이징
+
 
 /**
 const initializeFavorites = () => {
@@ -983,7 +1077,7 @@ const addLike = async (auctionId) => {
     //console.log('Like added for auction:', auctionId);
     const response = await setLikes(like);
     if(response.isSuccess){
-        wica.ntcn(swal).icon('S').title('관심 차량이 추가되었습니다.').fire();
+        wica.ntcn(swal).icon('S').title('관심 매물이 추가되었습니다.').fire();
         getAuctionsData();
     }
 };
@@ -991,7 +1085,7 @@ const addLike = async (auctionId) => {
 const removeLike = async (auction) => {
     const response = await deleteLike(auction.like.id);
     if(response.isSuccess){
-        wica.ntcn(swal).icon('S').title('관심 차량이 취소되었습니다.').fire();
+        wica.ntcn(swal).icon('S').title('관심 매물이 취소되었습니다.').fire();
         getAuctionsData();
     }
     
@@ -1066,6 +1160,28 @@ const hasCompletedAuctions = computed(() => {
 
 function setCurrentTab(tab) {
     currentTab.value = tab;
+
+    switch (tab) {
+        case 'allInfo':
+            getAuctionsData();
+            break;
+        case 'interInfo':
+            currentStatus.value = 'all';
+            favoriteAuctionsGetData();
+            break;
+        case 'myBidInfo':
+            currentMyBidsStatus.value='all';
+            favoriteAuctionsGetData();
+            fetchFilteredBids();
+            break;
+        case 'scsbidInfo':
+            currentScsBidsStatus.value = 'all';
+            getScsBidsInfo();
+            break;
+        default:
+            console.error('Unknown page type');
+    }
+
 }
 
 function toggleModal() { 
@@ -1075,6 +1191,17 @@ function toggleModal() {
 function setFilter(status) { 
     currentStatus.value = status;
     favoriteAuctionsGetData();
+}
+
+function setScsBidsFilter(status){
+    currentScsBidsStatus.value = status;
+    getScsBidsInfo();
+}
+
+function setMyBidsFilter(status){
+    currentMyBidsStatus.value = status;
+    favoriteAuctionsGetData();
+    fetchFilteredBids();
 }
 
 function handleClose() { 
@@ -1105,6 +1232,9 @@ function loadPage( page, type, pagination) {
             currentMyBidPage.value = page;
             fetchFilteredBids();
             break;
+        case 'scsbid':
+            currentScsBidsPage.value = page;
+            getScsBidsInfo();
         default:
             console.error('Unknown page type');
     }
@@ -1129,24 +1259,42 @@ const getAuctionsData = async () => {
         await getAuctions(currentPage.value , false , currentStatus.value);
     } else if(isDealer.value){
         await getAuctionsByDealer(currentPage.value , currentStatus.value);
-        filterLikeData(auctionsData.value);
-        favoriteAuctionsGetData();
-        fetchFilteredBids();
+        await filterLikeData(auctionsData.value);
+        await favoriteAuctionsGetData();
+        await fetchFilteredBids();
     }
 }
-
+const bidsResult = {};
+const response = {};
 const favoriteAuctionsGetData = async () => {
-    await getBids(currentMyBidPage.value, false, true, currentStatus.value);
-    const response = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , currentStatus.value);
-    favoriteAuctionsData.value = response.data;
-    favoriteAuctionsPagination.value = response.rawData.data.meta;
+    let cStatue  = 'all';
+    if(currentTab.value=='interInfo'){
+        cStatue = currentStatus.value;
+    } else if(currentTab.value=='myBidInfo'){
+        cStatue = currentMyBidsStatus.value;
+    }
+
+    bidsResult.value = await getBids(currentMyBidPage.value, false, true, cStatue);
+    response.value = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , cStatue);
+
+    if(currentTab.value=='allInfo'){
+        favoriteAuctionsPagination.value = response.value.rawData.data.meta;
+        bidsPagination.value = bidsResult.value.rawData.data.meta;
+    }
+    if(currentTab.value=='interInfo'){
+        favoriteAuctionsPagination.value = response.value.rawData.data.meta;
+    } else if(currentTab.value=='myBidInfo'){
+        bidsPagination.value = bidsResult.value.rawData.data.meta;
+    }
+    
+    
+    favoriteAuctionsData.value = response.value.data;
     filterLikeData(favoriteAuctionsData.value);
 }
 
 const fetchFilteredBids = async () => { 
     await getAllLikes('Auction', user.value.id);
     bidsData.value.forEach(bid => {
-        bid.auction = auctionsData.value.find(auction => parseInt(auction.id) === bid.auction_id);
         const matchedLike = likesData.value.find(like => parseInt(like.likeable_id) === bid.auction_id);
         if (matchedLike) {
             bid.auction.like = matchedLike;
@@ -1155,13 +1303,13 @@ const fetchFilteredBids = async () => {
             bid.auction.isFavorited = false;
         }
         bid.auction.isDealerParticipating = isDealerParticipating(bid.auction.id);
+        bid.auction.timeLeft = calculateTimeLeft(bid.auction);
     });
 };
 
 const filterLikeData = (auctions, likes="none") => {
     auctions.forEach(auction => {
-         likes = auction.likes;
-        
+        likes = auction.likes;
         const userLike = likes.find(like => like.likeable_id == auction.id && like.user_id == user.value.id);
         if (userLike) {
             auction.like = userLike;
@@ -1173,20 +1321,47 @@ const filterLikeData = (auctions, likes="none") => {
     });
 }
 
+const getScsBidsInfo = async () =>{
+
+    const scsBidsInfo = await getscsBids(currentScsBidsPage.value,true,false,currentScsBidsStatus.value);
+
+    scsbidsData.value = scsBidsInfo.data;
+    scsbidPagination.value = scsBidsInfo.rawData.data.meta;
+}
+
 let timer;
 
 onMounted(async () => {
     if (history.state.currentTab) {
         currentTab.value = history.state.currentTab;
     }
+    
+    if (history.state.status) {
+        currentMyBidsStatus.value = history.state.status;
+    }
 
     await getAuctionsData();
 
     statusLabel = wicas.enum(store).addFirst('all', '전체').excl('cancel', '취소').ascVal().auctions();
-
+    scsBidsstatusLabel = wicas.enum(store).addFirst('all','전체').perm('dlvr','chosen').auctions();
+    myBidsStatusLabel = wicas.enum(store).addFirst('all', '전체')
+                             .addFirst('bid', '입찰').add('cnsgnmUnregist', '탁송지 미등록')
+                             .excl('ask','diag','ing','wait').ascVal().auctions();
     if (role.value.name === 'user') {
         isUser.value = true;
     }
+    if(isDealer.value){
+        //낙찰차량정보
+        await getScsBidsInfo();
+
+        //초기 관심매물 개수
+        response.value = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , 'all');
+        favoriteAuctionsPagination.value = response.value.rawData.data.meta;
+
+        //초기 내입찰 개수
+        bidsPagination.value = bidsResult.value.rawData.data.meta;
+    }
+    
 
     timer = setInterval(() => {
         if(isUser.value){
@@ -1199,7 +1374,8 @@ onMounted(async () => {
 
         isLoading.value = true;
     }, 1000);
-
+    
+    
 });
 
 

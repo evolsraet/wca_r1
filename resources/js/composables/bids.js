@@ -63,6 +63,56 @@ export default function useBid() {
         .page(`${page}`)
         if (isSelect) {
             const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
+            request.whereOr('auction.status',`${statusFilter}`)           
+        }
+    
+        if (isMyBid) {
+            if(status != 'all'){
+                if(status == 'bid'){
+                    request.whereOr('auction.status','ing,wait');
+                } else if(status == 'cnsgnmUnregist'){
+                    request.addWhere('auction.status','dlvr');
+                    request.doesnthave(['auction.memo_digician:dlvr']);
+                } else{
+                    request.whereOr('auction.status',`${status}`);
+                }
+            }
+        }
+        return request.callback(function(result) {
+            bidsData.value = result.data;
+            bidPagination.value = result.rawData.data.meta;
+            return result;
+        }).get();
+        
+    };
+
+    const getMyBids = async (page = 1, isSelect = false, isMyBid = false , status = "all") => {
+        let request = wicac.conn()
+        //.log()
+        .url('/api/bids')
+        .with(['auction'])
+        .page(`${page}`)
+        if (isSelect) {
+            const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
+            request = request.whereOr('auction.status',`${statusFilter}`)           
+        }
+        if (isMyBid) {
+            request = request.whereOr('auction.status','ing,wait')
+        }
+        return request.callback(function(result) {
+            return result;
+        }).get();
+        
+    };
+
+    const getscsBids = async (page = 1, isSelect = false, isMyBid = false , status = "all") => {
+        let request = wicac.conn()
+        //.log()
+        .url('/api/bids')
+        .with(['auction'])
+        .page(`${page}`)
+        if (isSelect) {
+            const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
             request = request.whereOr('auction.status',`${statusFilter}`)           
         }
     
@@ -70,9 +120,7 @@ export default function useBid() {
             request = request.whereOr('auction.status','ing,wait')
         }
         return request.callback(function(result) {
-            bidsData.value = result.data;
-            bidPagination.value = result.rawData.data.meta;
-            return result.data;
+            return result;
         }).get();
         
     };
@@ -222,5 +270,7 @@ export default function useBid() {
         auctionsData,
         bidPagination,
         getBidsByUserId,
+        getscsBids,
+        getMyBids,
     };
 }

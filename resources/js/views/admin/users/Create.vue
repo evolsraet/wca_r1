@@ -1,6 +1,6 @@
 <template>
     <h4><span class="admin-icon admin-icon-menu"></span>회원관리</h4>
-        <div class="row justify-content-center my-5">
+        <div class="container my-5">
             <div class="col-md-10">
                 <div class="card border-0 shadow-none">
                     <div class="card-body">
@@ -164,6 +164,9 @@
                                         readonly
                                         />
                                         <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
+                                        <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                                            <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
+                                        </div>
                                         <input
                                             type="text"
                                             v-model="dealer.company_addr1"
@@ -178,9 +181,6 @@
                                         placeholder="상세주소"
                                         required
                                     />
-                                    <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-                                        <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
-                                    </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="user-title" class="form-label">인수차량 도착지 주소</label>
@@ -192,6 +192,9 @@
                                         readonly
                                     />
                                     <button type="button" class="search-btn2" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
+                                    <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                                        <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
+                                    </div>
                                     <div>
                                         <input
                                             type="text"
@@ -209,9 +212,6 @@
                                         placeholder="상세주소"
                                         required
                                     />
-                                    <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-                                        <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
-                                    </div>
                                 </div>
     
                                 <div class="mb-3">
@@ -232,7 +232,7 @@
                                         파일 첨부
                                     </button>
                                     <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display:none" id="file_user_photo">
-                                    <div class="text-start tc-light-gray" v-if="dealer.file_user_photo_name">사진 파일 : {{ dealer.file_user_photo_name }}</div>
+                                    <div class="text-start text-secondary opacity-50" v-if="dealer.file_user_photo_name">사진 파일 : {{ dealer.file_user_photo_name }}</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="user-title" class="form-label"
@@ -242,7 +242,7 @@
                                     <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
                                         파일 첨부
                                     </button>
-                                    <div class="text-start mb-3 tc-light-gray" v-if="dealer.file_user_biz_name">사업자 등록증 : {{ dealer.file_user_biz_name }}</div>
+                                    <div class="text-start mb-3 text-secondary opacity-50" v-if="dealer.file_user_biz_name">사업자 등록증 : {{ dealer.file_user_biz_name }}</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="user-title" class="form-label"
@@ -252,7 +252,7 @@
                                     <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
                                         파일 첨부
                                     </button>
-                                    <div class="text-start mb-3 tc-light-gray" v-if="dealer.file_user_sign_name">매도용인감정보 : {{ dealer.file_user_sign_name }}</div>
+                                    <div class="text-start mb-3 text-secondary opacity-50" v-if="dealer.file_user_sign_name">매도용인감정보 : {{ dealer.file_user_sign_name }}</div>
                                 </div>
                                 <div class="mb-3">
                                     <label for="user-title" class="form-label"
@@ -262,7 +262,7 @@
                                     <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
                                         파일 첨부
                                     </button>
-                                    <div class="text-start mb-5 tc-light-gray" v-if="dealer.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ dealer.file_user_cert_name }}</div>
+                                    <div class="text-start mb-5 text-secondary opacity-50" v-if="dealer.file_user_cert_name">매매업체 대표증 / 종사원증 : {{ dealer.file_user_cert_name }}</div>
                                 </div>
 
                             </div>
@@ -472,5 +472,8 @@ function handleFileUploadCert(event) {
     background-position: center;
     background-size: 20px 20px;
     font-size: 0;
+}
+.search-btn {
+    transform: translateY(-129%) !important;
 }
     </style>

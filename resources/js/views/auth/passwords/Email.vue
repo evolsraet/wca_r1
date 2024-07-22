@@ -1,6 +1,6 @@
 <template>
     <div class="container mov-wide">
-        <div class="row justify-content-center my-5">
+        <div class="container my-5">
             <div>
                 <h5 class="my-3">비밀번호 초기화</h5>
                 <div class="card border-0 shadow-sm">
@@ -24,7 +24,7 @@
                                         비밀번호 초기화
                                     </button>
                                 </div>
-                                <p class="tc-light-gray text-center mt-3">비밀번호 초기화 링크를 메일로 보내드립니다.</p>
+                                <p class="text-secondary opacity-50 text-center mt-3">비밀번호 초기화 링크를 메일로 보내드립니다.</p>
                             </div>
                         </form>
                     </div>

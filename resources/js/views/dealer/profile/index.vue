@@ -10,47 +10,45 @@
                 </div>
                 <div class="styled-div mt-0">
                     <div class="profile">
-                        <div class="dealer-info">
+                        <div class="dealer-info align-items-center">
                             <img :src="photoUrl" alt="Profile Photo" class="profile-photo" />
-                            <div class="deal-info">
-                                <p class="tc-light-gray">{{ user.dealer.company }} </p>
+                            <div class="deal-info align-items-center">
+                                <p class="text-secondary opacity-50">{{ user.dealer.company }} </p>
                                 <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
                                 <p class="restar">4.5점</p>
-                                <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1 shadow-sm"><span>입찰 불가</span></p>
-                                <p v-else-if="user.status === 'ok'" class="bidding mt-1 mb-1 shadow-sm"><span>입찰 가능</span></p>
                             </div>
                         </div>
                     </div>
                     <div class="activity-info bold-18-font mt-5">
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
                         <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
-                        <p class="interest-icon tc-light-gray normal-16-font mb-0">관심</p>
+                        <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
                         </router-link>
                         <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo' }}" class="item">
                         <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
-                        <p class="bid-icon tc-light-gray normal-16-font mb-0">입찰</p>
+                        <p class="bid-icon text-secondary opacity-50 normal-16-font mb-0">입찰</p>
                         </router-link>
-                        <router-link :to="{  name: 'dealer.bids' }" class="item">
+                        <router-link :to="{  name: 'auction.index' , state: { currentTab: 'scsbidInfo' }}" class="item">
                         <p><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
-                        <p class="suc-bid-icon tc-light-gray normal-16-font mb-0">낙찰</p>
+                        <p class="suc-bid-icon text-secondary opacity-50 normal-16-font mb-0">낙찰</p>
                         </router-link>
                         <!--
                         <div class="item">
                             <p><span class="tc-red">0</span> 건</p>
-                            <p class="interest-icon tc-light-gray normal-16-font">관심</p>
+                            <p class="interest-icon text-secondary opacity-50 normal-16-font">관심</p>
                         </div>
                         <div class="item">
                             <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
-                            <p class="bid-icon tc-light-gray normal-16-font">입찰</p>
+                            <p class="bid-icon text-secondary opacity-50 normal-16-font">입찰</p>
                         </div>
                         <div class="item">
                             <p><span class="tc-red">{{ filteredViewBids.length }}</span> 건</p>
-                            <p class="suc-bid-icon tc-light-gray normal-16-font">낙찰</p>
+                            <p class="suc-bid-icon text-secondary opacity-50 normal-16-font">낙찰</p>
                         </div>
                         -->
                      <!--   <div class="item">
                             <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
-                            <p class="purchase-icon tc-light-gray normal-16-font">매입</p>
+                            <p class="purchase-icon text-secondary opacity-50 normal-16-font">매입</p>
                         </div>-->
                     </div>
                 </div>
@@ -89,7 +87,7 @@
                     </div>
                 </div>
                 <div class="intro mt-3">
-                    <h5 class="tc-light-gray mb-3">소개</h5>
+                    <h5 class="text-secondary opacity-50 mb-3">소개</h5>
                     <p>{{ user.dealer.introduce }}</p>
                 </div>
             </div>
@@ -98,7 +96,7 @@
                 <div class="enter-view mt-3 mb-2">
                     <h5>지난 낙찰건</h5>
                 </div>
-                <span class="tc-light-gray">딜러가 낙찰받은 매물들이에요.</span>
+                <span class="text-secondary opacity-50">딜러가 낙찰받은 매물들이에요.</span>
                 <!--
                 <div v-if="filteredViewBids.length == 0">
                     <p class="tc-red bold-18-font my-2">낙찰 받은 매물이 없습니다.</p>
@@ -114,14 +112,14 @@
                                 <span v-if="bid.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                 <div class="card-body">
                                     <h5 class="card-title"><span class="blue-box">무사고</span>{{bid.car_no}}</h5>
-                                    <p class="card-text tc-light-gray">현대 쏘나타(DN8)</p>
+                                    <p class="card-text text-secondary opacity-50">현대 쏘나타(DN8)</p>
                                 </div>
                             </div>
                         </div>
                         <div v-if="!isData" class="complete-car">
                             <div class="card my-auction mt-3">
                                 <div class="none-complete">
-                                    <span class="tc-light-gray">낙찰 받은 매물이 없습니다.</span>
+                                    <span class="text-secondary opacity-50">낙찰 받은 매물이 없습니다.</span>
                                 </div>
                             </div>
                         </div>

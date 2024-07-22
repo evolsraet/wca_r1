@@ -265,12 +265,14 @@ export default [
                 component: () => import('../views/dealer/profile/index.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
+            /*
             {
                 path: '/dealerbids',
                 name: 'dealer.bids',
                 component: () => import('../views/dealer/dealer.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
+            */
             {
                 path: '/bidhistory',
                 name: 'dealer.bidList',
@@ -287,6 +289,12 @@ export default [
                 path: '/claim',
                 name: 'index.claim',
                 component: () => import('../views/notices/claim.vue'),
+                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+            },
+            {
+                path: '/claim/:id',
+                name: 'index.claim-detail',
+                component: () => import('../views/notices/Detail.vue'),
                 beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
             },
             {

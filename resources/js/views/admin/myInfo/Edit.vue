@@ -1,6 +1,6 @@
 <template>
     <h4><span class="admin-icon admin-icon-menu"></span>내 정보</h4>
-        <div class="row justify-content-center my-5">
+        <div class="container my-5">
             <div class="col-md-10">
                 <div class="card border-0 shadow-none">
                     <div class="card-body">
@@ -23,7 +23,7 @@
                                 <input
                                     v-model = "created_at"
                                     type="text"
-                                    class="form-control tc-light-gray input-dis"
+                                    class="form-control text-secondary opacity-50 input-dis"
                                     readonly
                                 />
                             </div>
@@ -32,7 +32,7 @@
                                 <input
                                     v-model = "email"
                                     type="email"
-                                    class="form-control tc-light-gray input-dis"
+                                    class="form-control text-secondary opacity-50 input-dis"
                                     readonly
                                 />
                                 

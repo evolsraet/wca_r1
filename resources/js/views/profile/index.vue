@@ -1,14 +1,19 @@
 
 <template>
   <div class="container p-5">
+    <h4 class="mb-5">내 정보 수정</h4>
+    <!--
     <form @submit.prevent="updateProfile">
-      <h4 class="mb-5">내 정보 수정</h4>
       <div class="form-group profile-content">
+        <div class="img-form">
         <div class="edit-photo-container" @click="triggerFileInput">
           <img :src="photoUrl" alt="Profile Photo" class="profile-photo" />
           <input type="file" ref="fileInput" @change="onFileChange" id="photo" class="d-none" />
         </div>
+        <div v-if="photoUrl !== profileDom" class="icon-trash-img"></div>
+        </div>
       </div>
+      <h5 class="text-secondary opacity-50 fs-5 mb-4">&#8251<span class="mx-2">정보 수정 시 심사를 받으실 수 있습니다.</span></h5>
       <div class="form-group">
         <label for="name">가입일자</label>
         <input type="text" v-model="user.created_at" id="createdAt" class="input-dis form-control" readonly/>
@@ -31,7 +36,7 @@
       </div>
       <div class="form-group">
         <label for="email">비밀번호 확인</label>
-        <input autocomplete="one-time-code" type="password_confirmation" v-model="profile.password_confirmation" id="password_confirmation" class="form-control"/>
+        <input autocomplete="one-time-code" type="password" v-model="profile.password_confirmation" id="password_confirmation" class="form-control"/>
       </div>
       <div v-if="isDealer">
         <div class="form-group">
@@ -73,10 +78,21 @@
       </div>
       <button type="submit" class="mt-3 w-100 btn btn-primary">저장</button>
     </form>
+    -->
+    <div class="container p-5">
+      <UserRegisterForm/>
+    </div>
+    
+
   </div>
 </template>
 
 <script setup>
+  import UserRegisterForm from "@/views/import/UserRegister.vue";
+</script>
+
+<script >
+/*
 import { ref, onMounted ,computed , inject } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter, useRoute } from 'vue-router';
@@ -86,12 +102,17 @@ import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import { previousFriday } from 'date-fns';
 import useUsers from "@/composables/users";
+import UserRegisterForm from "@/views/import/UserRegister.vue";
+*/
 
+/*
 const { getUser , user } = useUsers();
 const router = useRouter();
 const photoUrl = ref(profileDom);
 const store = useStore();
 const swal = inject('$swal')
+*/
+/*
 const profile = ref({
   name: '',
   dealer_name: '',
@@ -109,6 +130,9 @@ const profile = ref({
   introduce : '',
   file_user_photo: null
 });
+*/
+
+/*
 const userId = ref(null);
 const isDealer = ref(false);
 const { openPostcode , closePostcode , wica , wicac } = cmmn();
@@ -132,7 +156,8 @@ const onFileChange = (e) => {
     reader.readAsDataURL(file);
   }
 };
-
+*/
+/*
 const updateProfile = async () => {
 
   let payload = {
@@ -195,7 +220,9 @@ const updateProfile = async () => {
     }).confirm();
 
 };
+*/
 
+/*
 function fileExstCheck(info){
     if(info.hasOwnProperty('files')){
         if(info.files.hasOwnProperty('file_user_photo')){
@@ -205,7 +232,9 @@ function fileExstCheck(info){
         }
     }
 }
+*/
 
+/*
 const setUserProfileData = async () => {
 
   userId.value = store.getters['auth/user'].id;
@@ -214,7 +243,7 @@ const setUserProfileData = async () => {
   //console.log(user);
 
   isDealer.value = user.value?.roles?.includes('dealer') || false;
-
+  
   if (user) {
     profile.value.name = user.value.name;
     profile.value.phone = user.value.phone;
@@ -233,9 +262,11 @@ const setUserProfileData = async () => {
     if (user.value.files) {
       fileExstCheck(user.value);
     }
-  } 
+  }
+    
 };
-
+*/
+/*
 function editPostCode(elementName) {
   openPostcode(elementName)
     .then(({ zonecode, address }) => {
@@ -251,13 +282,16 @@ function editPostCodeReceive(elementName) {
       profile.value.receive_addr1 = address;
     })
 }
-
+*/
+/*
 onMounted(async () => {
   //await store.dispatch("auth/getUser");
   setUserProfileData();
 });
+*/
 </script>
 
+<!--
 <style scoped>
 .profile {
   max-width: 400px;
@@ -305,4 +339,16 @@ input[type="password"] {
   transform: none !important;
   bottom: 52px;
 }
+.img-form {
+    position: relative;
+    display: inline-block;
+  }
+  .icon-trash-img {
+    position: absolute;
+    bottom: 18px;
+    right: -23px;
+    z-index: 10;
+    cursor: pointer;
+  }
 </style>
+-->

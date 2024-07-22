@@ -24,10 +24,10 @@
         </div>
         <div :class="animationClass" ref="animatedSection">
         <div class="css-ifyyt1 gap-5">
-          <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
+          <div class="font-title"><h5 class="text-secondary opacity-50 font-title">쉽고 빠른 내차팔기,</h5>
         <h5 class="font-title">{{ wicaLabel.title() }}과 함께해요.</h5>
       </div>
-     <p class="tc-light-gray font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>
+     <p class="text-secondary opacity-50 font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>
     </div>
   </div>
   </div>
@@ -76,10 +76,10 @@
           </div>
         <div :class="animationClass" ref="animatedSection">
         <div class="css-ifyyt1 gap-5">
-          <div class="font-title"><h5 class="tc-light-gray font-title">쉽고 빠른 내차팔기,</h5>
+          <div class="font-title"><h5 class="text-secondary opacity-50 font-title">쉽고 빠른 내차팔기,</h5>
         <h5 class="font-title">위카와 함께해요.</h5>
       </div>
-      <p class="tc-light-gray font-sub-title">13,314명이 위카와 함께 했어요!</p>
+      <p class="text-secondary opacity-50 font-sub-title">13,314명이 위카와 함께 했어요!</p>
     </div>
   </div>
   </div>-->
@@ -140,7 +140,7 @@
                             <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
                         </label>
                     </div>
-                    <div class="d-sm-flex justify-content-between text-muted">
+                    <div class="d-sm-flex justify-content-between text-secondary opacity-50">
                         <span class="deilname">담당 딜러 {{ review.dealer.name }} 님</span>
                         <span class="date">{{ splitDate(review.created_at) }}</span>
                     </div>
@@ -185,12 +185,12 @@
                         <router-link :to="{ path: '/login' }" class="btn btn-outline-primary tc-red">로그인</router-link>
                       </div>
                     </div>
-                    <div class="text-muted mt-4 text-center">
+                    <div class="text-secondary opacity-50 mt-4 text-center">
                       <p class="fs-6">
                         <span @click="openModal('privacy')" class="link-style pointer">개인정보 처리방침</span> |
                         <span @click="openModal('terms')" class="link-style pointer">이용약관</span>
                       </p>
-                      <p class="my-3 tc-light-gray">ⓒ Watosys all rights reserved.</p>
+                      <p class="my-3 text-secondary opacity-50">ⓒ Watosys all rights reserved.</p>
                     </div>
                   </div>
                 </form>
@@ -236,12 +236,12 @@
                     <div class="d-flex justify-content-end my-2" v-if="!user?.name">
                       <router-link :to="{ path: '/login' }" class="btn btn-outline-primary tc-red">로그인</router-link>
                     </div>
-                    <div class="text-muted mt-4 text-center">
+                    <div class="text-secondary opacity-50 mt-4 text-center">
                       <p class="fs-6">
                         <span @click="openModal('privacy')" class="link-style pointer">개인정보 처리방침</span> |
                         <span @click="openModal('terms')" class="link-style pointer">이용약관</span>
                       </p>
-                      <p class="my-3 tc-light-gray">ⓒ Watosys all rights reserved.</p>
+                      <p class="my-3 text-secondary opacity-50">ⓒ Watosys all rights reserved.</p>
                     </div>
                   </div>
                 </div>

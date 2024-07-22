@@ -2,46 +2,46 @@
     <div class="container mt-auto mb-auto" id="dashadmin">
            <div class="card-container mt-4">
                <div class="section">
-                   <h5 class="text-start">회원 {{ userAllCnt }}</h5>
+                   <h5 class="text-start"><span class="admin-icon admin-icon-menu"></span>회원 {{ userAllCnt }}</h5>
                    <div class="card">
                        <div class="number d-flex justify-content-between">심사중 <span class="tc-red">{{ animatedUserAskCnt }}</span></div>
                        <div class="number d-flex justify-content-between">정&nbsp;&nbsp;상 <span>{{ animatedUserOkCnt }}</span></div>
                        <div class="divider"></div>
-                       <!--<div class="d-flex justify-content-around tc-light-gray">탈&nbsp;&nbsp;&nbsp;&nbsp;퇴 <span>12</span></div>-->
-                       <div class="d-flex justify-content-between tc-light-gray">가입거부 <span>{{ animatedUserRejectCnt }}</span></div>
+                       <!--<div class="d-flex justify-content-around text-secondary opacity-50">탈&nbsp;&nbsp;&nbsp;&nbsp;퇴 <span>12</span></div>-->
+                       <div class="d-flex justify-content-between text-secondary opacity-50">가입거부 <span>{{ animatedUserRejectCnt }}</span></div>
                    </div>
                </div>
                <div class="section">
-                   <h5 class="text-start">입금</h5>
+                   <h5 class="text-start"><span data-v-831d09df="" class="admin-icon admin-icon-menu02"></span>입금</h5>
                    <div class="card">
                        <div class="number d-flex justify-content-between">입금 대기 <span class="tc-red">{{ animatedAuctionDlvrCnt }}</span></div>
                        <div class="divider"></div>
-                       <div class="d-flex justify-content-between tc-light-gray">입금 완료 <span>{{ animatedAuctionDoneCnt }}</span></div>
+                       <div class="d-flex justify-content-between text-secondary opacity-50">입금 완료 <span>{{ animatedAuctionDoneCnt }}</span></div>
                    </div>
                </div>
                <div class="section">
-                   <h5 class="text-start">매물 {{ auctionAllCnt }}</h5>
+                   <h5 class="text-start"><span data-v-ee657362="" class="admin-icon admin-icon-menu03"></span>매물 {{ auctionAllCnt }}</h5>
                    <div class="card">
                        <div class="number d-flex justify-content-between">신청 완료<span class="tc-red">{{ animatedAuctionAskCnt }}</span></div>
                        <div class="number d-flex justify-content-between">진단 중<span class="tc-red">{{ animatedAuctionDiagCnt }}</span></div>
                        <div class="number d-flex justify-content-between">경매 중<span class="tc-red">{{ animatedAuctionWIAddCnt }}</span></div>
                        <div class="divider"></div>
-                       <div class="d-flex justify-content-between tc-light-gray">신청 취소<span>{{ animatedAuctionCancelCnt }}</span></div>
-                       <div class="d-flex justify-content-between tc-light-gray">선택 완료<span>{{ animatedAuctionChosenCnt }}</span></div>
-                       <div class="d-flex justify-content-between tc-light-gray">경매 완료<span>{{ animatedAuctionDoneCnt }}</span></div>
+                       <div class="d-flex justify-content-between text-secondary opacity-50">신청 취소<span>{{ animatedAuctionCancelCnt }}</span></div>
+                       <div class="d-flex justify-content-between text-secondary opacity-50">선택 완료<span>{{ animatedAuctionChosenCnt }}</span></div>
+                       <div class="d-flex justify-content-between text-secondary opacity-50">경매 완료<span>{{ animatedAuctionDoneCnt }}</span></div>
                    </div>
                </div>
                <div class="section">
-                   <h5 class="text-start">후기 {{ reviewAllCnt }}</h5>
+                   <h5 class="text-start"><span data-v-ee657362="" class="admin-icon admin-icon-menu04"></span>후기 {{ reviewAllCnt }}</h5>
                    <div class="card">
                        <div class="number d-flex justify-content-between">작성<span class="tc-red">{{ animatedReviewWriteCnt }}</span></div>
                        <div class="divider"></div>
-                       <div class="d-flex justify-content-between tc-light-gray">미작성 <span>{{ animatedReviewNotWriteCnt }}</span></div>
+                       <div class="d-flex justify-content-between text-secondary opacity-50">미작성 <span>{{ animatedReviewNotWriteCnt }}</span></div>
                    </div>
                </div>
            </div>
            <div class="mt-5 p-3">
-               <h4>공지사항</h4>
+               <h4><span data-v-ee657362="" class="admin-icon admin-icon-menu05"></span>공지사항</h4>
                <div class="tab-nav my-4">
                    <ul>
                        <li class="col-2">
@@ -111,13 +111,13 @@
                                        <div class="mx-2 enter-view align-items-baseline mt-1 bold-18-font">  
                                            <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                                        </div>
-                                       <div class="tc-light-gray mx-2">
+                                       <div class="text-secondary opacity-50 mx-2">
                                            <p> 년 / 2.4km / 무사고</p>
                                            <p>현대 쏘나타 (DN8)</p>
                                            <p>매물번호 / 564514</p>
                                            <p>딜 러 명 / </p>
                                        </div>
-                                       <p class="auction-deadline tc-light-gray">판매가<span>12000만원</span></p>
+                                       <p class="auction-deadline text-secondary opacity-50">판매가<span>12000만원</span></p>
                                    </div>
                                </div>
                            </div>

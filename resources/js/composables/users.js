@@ -3,6 +3,7 @@ import { useRouter } from 'vue-router'
 import { cmmn } from '@/hooks/cmmn';
 
 export default function useUsers() {
+    const processing = ref(false);
     const users = ref([])
     const user = ref({
         name: ''
@@ -350,6 +351,188 @@ export default function useUsers() {
 
     }
 
+    const setRegisterUser = async(profileData) => {
+        if (processing.value) return;
+
+        processing.value = true;
+        validationErrors.value = {};
+
+        let payload = {
+            user: {
+                name: profileData.name,
+                email: profileData.email,
+                phone: profileData.phone,
+                password: profileData.password,
+                password_confirmation: profileData.password_confirmation,
+            }
+        };
+        if (profileData.isDealer) {
+            payload.dealer ={
+                name: profileData.dealer_name,
+                phone: profileData.dealerContact,
+                birthday: profileData.dealerBirthDate,
+                company: profileData.company,
+                company_duty: profileData.dealerCompanyDuty,
+                company_post: profileData.company_post,
+                company_addr1: profileData.company_addr1,
+                company_addr2: profileData.company_addr2,
+                receive_post: profileData.receive_post,
+                receive_addr1: profileData.receive_addr1,
+                receive_addr2: profileData.receive_addr2,
+                introduce: profileData.introduce,
+            }
+            payload.user.role = 'dealer'; 
+        } else {
+            payload.user.role = 'user';
+        } 
+        console.log("전체 데이터:" , payload.user.role);
+        console.log("역할:" , payload);
+        const formData = new FormData();
+        
+        formData.append('user',JSON.stringify(payload.user));
+        formData.append('dealer',JSON.stringify(payload.dealer));
+
+        if(profileData.file_user_photo){
+            formData.append('file_user_photo', profileData.file_user_photo);
+        }
+        if(profileData.file_user_biz){
+            formData.append('file_user_biz', profileData.file_user_biz);
+        }
+        if(profileData.file_user_cert){
+            formData.append('file_user_cert', profileData.file_user_cert);
+        }
+        if(profileData.file_user_sign){
+            formData.append('file_user_sign', profileData.file_user_sign);
+        }
+        for (const x of formData) {
+            console.log(x);
+        };
+        wicac.conn()
+        .url(`/api/users`)
+        .param(formData)
+        .multipart()            
+        .callback(async function(result) {
+            console.log('wicac.conn callback ' , result);
+            if(result.isError) {
+                processing.value = false;
+                validationErrors.value = result.msg;
+                wica.ntcn(swal)
+                .title('가입 실패')
+                .icon('E') //E:error , W:warning , I:info , Q:question
+                .alert('회원가입에 실패하였습니다.');
+            } else {
+                processing.value = false;
+                wica.ntcn(swal)
+                .icon('I') //E:error , W:warning , I:info , Q:question
+                .callback(function(result) {
+                    if (result.isOk) {
+                        router.push({ name: "auth.login" });
+                    }
+                })
+                .alert('회원가입이 완료되었습니다');
+               
+                
+            }
+        })
+        .post();
+    }
+
+    const updateProfile = async (profile,userId) => {
+        let payload = {
+            user : {
+              name : profile.value.name,    
+            },
+            dealer: {
+                name: profile.value.dealer_name,
+                company: profile.value.company,
+                company_post: profile.value.company_post,
+                company_addr1:profile.value.company_addr1,
+                company_addr2: profile.value.company_addr2,
+                introduce: profile.value.introduce,
+                company_duty: profile.value.dealerCompanyDuty,
+                receive_post: profile.value.receive_post,
+                receive_addr1: profile.value.receive_addr1,
+                receive_addr2: profile.value.receive_addr2,
+            },
+            file_user_biz:profile.value.file_user_biz,
+            file_user_cert:profile.value.file_user_cert,
+            file_user_sign:profile.value.file_user_sign,
+        };
+        if (profile.value.password && profile.value.password !== '') {
+          payload.user.password = profile.value.password;
+        }
+      
+        if (profile.value.password_confirmation && profile.value.password_confirmation !== '') {
+          payload.user.password_confirmation = profile.value.password_confirmation;
+        }
+        console.log(JSON.stringify(payload));
+        const formData = new FormData();
+        formData.append('user', JSON.stringify(payload.user));
+        if(profile.value.isDealer){
+          formData.append('dealer', JSON.stringify(payload.dealer));
+          if (payload.file_user_biz) {
+            formData.append('file_user_biz', payload.file_user_biz);
+          }
+          if (payload.file_user_cert) {
+            formData.append('file_user_cert', payload.file_user_cert);
+          }
+          if (payload.file_user_sign) {
+            formData.append('file_user_sign', payload.file_user_sign);
+          }
+        }
+      
+        if (profile.value.file_user_photo) {
+          formData.append('file_user_photo', profile.value.file_user_photo);
+        }
+      
+        
+      
+        wica.ntcn(swal)
+        .title('수정하시겠습니까?') // 알림 제목
+        .icon('Q') //E:error , W:warning , I:info , Q:question
+        .callback(async function(result) {
+            if (result.isOk) {
+                //기존 파일 이미지 삭제
+                if(profile.value.photoImgChg){
+                  wicac.conn()
+                  .url(`/api/media`)
+                  .log()
+                  .param({
+                    "uuid" : [
+                      profile.value.photoUUID,
+                    ]
+                  })
+                  .callback(async function(result) {
+                  })
+                  .delete();
+                }
+      
+                wicac.conn()
+                .url(`/api/users/${userId}`)
+                .param(formData)
+                .multipartUpdate()
+                .callback(async function(result) {
+                    if(result.isSuccess){
+                      wica.ntcn(swal)
+                      .icon('I') //E:error , W:warning , I:info , Q:question
+                      .callback(function(result2) {
+                          if (result2.isOk) {
+                            location.reload();
+                          }  
+                      })
+                      .alert('내 정보가 정상적으로 수정되었습니다.');
+                    } else{
+                      wica.ntcn(swal)
+                      .title('변경 실패')
+                      .icon('E') //E:error , W:warning , I:info , Q:question
+                      .alert('내 정보 변경에 실패하였습니다.');
+                    }
+                })
+                .post();
+            }
+        }).confirm();
+    }
+
     const deleteUser = async (id) => {
         wica.ntcn(swal)
         .param({ _id : id }) // 리턴값에 전달 할 데이터
@@ -398,6 +581,8 @@ export default function useUsers() {
         isLoading,
         adminStoreUser,
         fileUserSignUpload,
-        pagination
+        pagination,
+        setRegisterUser,
+        updateProfile
     }
 }
