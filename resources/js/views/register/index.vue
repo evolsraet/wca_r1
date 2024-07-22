@@ -130,12 +130,12 @@
                                                     <div class="form-group">
                                                         <label for="dealeradress">소속상사 주소</label>
                                                         <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis" v-model="registerForm.dealerCompanyPost" placeholder="우편번호" readonly>
+                                                        <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                                                         <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                                                             <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
                                                         </div>
                                                         <div>
                                                             <input type="text" v-model="registerForm.dealercompany_addr1" placeholder="주소" class="input-dis" readonly>
-                                                            <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                                                         </div>
                                                         
                                                         <input type="text" v-model="registerForm.dealercompany_addr2" placeholder="상세주소">
@@ -171,15 +171,15 @@
                                                     <div class="form-group">
                                                         <label for="deliveryAdress">인수차량 도착지 주소</label>
                                                         <input type="text" class="input-dis" v-model="registerForm.dealerReceivePost" placeholder="우편번호" readonly>
-                                                        <div>
-                                                            <input  type="text" class="input-dis" v-model="registerForm.dealerReceiveAddr1" placeholder="주소" readonly>
-                                                            <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
-                                                        </div>
-                                                        
-                                                        <input type="text" v-model="registerForm.dealerReceiveAddr2" placeholder="상세주소">
+                                                        <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
                                                         <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                                                             <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
                                                         </div>
+                                                        <div>
+                                                            <input  type="text" class="input-dis" v-model="registerForm.dealerReceiveAddr1" placeholder="주소" readonly>
+                                                        </div>
+                                                        
+                                                        <input type="text" v-model="registerForm.dealerReceiveAddr2" placeholder="상세주소">
                                                     </div>
                                                     <div class="form-group">
                                                         <label for="introduce">소개</label>
@@ -886,5 +886,6 @@ animation: ellipsis 1.5s steps(4, end) infinite;
 
 .search-btn {
     right: 22px !important;
+    transform: translateY(50%) !important;
 }
 </style>
