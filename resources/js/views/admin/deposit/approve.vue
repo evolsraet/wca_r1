@@ -284,11 +284,6 @@ body, html {
 }
 
 
-
-
-.my-auction{
-  background-color: #f7f8fb !important;
-}
 .bottom-sheet {
   height: auto !important;
 }

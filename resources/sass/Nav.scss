@@ -46,7 +46,7 @@
 
 }
 .under-line{
-    background-color: #f7f8fb;
+    background-color: $sub-color02;
     width: 100%;
     height: 6px;
 }
@@ -78,7 +78,7 @@
     padding: 2px;
     height: 45px;
     margin-right: 17px !important;
-    background-color:#f7f8fb;
+    background-color:$sub-color02;
 }
 .menu-item {
     display: flex;

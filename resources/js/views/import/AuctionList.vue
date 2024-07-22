@@ -323,7 +323,7 @@ background: none;
     height: auto;
     overflow-y: hidden;
     padding: 30px 30px 30px 30px;
-    background-color: #f7f8fb;
+    background-color: $sub-color02;
 }
 
 .styled-div .content {

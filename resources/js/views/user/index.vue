@@ -241,13 +241,6 @@ border-radius: 10px;
 background: none;
 }
 
-.scrollable-content {
-    height: auto;
-    overflow-y: hidden;
-    padding: 30px 30px 30px 30px;
-    background-color: #f7f8fb;
-}
-
 .styled-div .content {
 position: absolute;
 top: 0;

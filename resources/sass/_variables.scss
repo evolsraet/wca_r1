@@ -17,7 +17,7 @@ $primary-hover:#b92a30;
 
 $sub-color:#ff837a;
 $sub-color01: #4263EA;
-$sub-color02: #EBEFFD;
+$sub-color02: #f7f8fb;
 
 h4{
     font-size: 1.35em !important; 
@@ -45,7 +45,7 @@ h5{
     font-weight: normal;
 }
 .input-dis{
-    background-color: whitesmoke !important;
+    background-color: $sub-color02 !important;
     color: #aaaebe !important;
 }
 
@@ -168,7 +168,7 @@ background-color: $sub-color !important;
 
 
 
-.tc-blue{color:blue}
+.tc-blue{color:$sub-color01 !important;}
 /* box 스타일 */
 .blue-box {
     display: inline-block;

@@ -749,27 +749,6 @@ watch(() => route.params.id, fetchAuctionDetails);
     cursor: pointer;
   }
   
-  .logo-content {
-    background-color: #f7f8fb;
-    width: -webkit-fill-available;
-    height: 65px;
-    position: fixed;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  .sd-menu {
-    width: 48px;
-    height: 48px;
-    background-color: #f7f8fb;
-    border-radius: 6px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  
   .settings-icon {
     cursor: pointer;
     transition: transform 0.3s ease-in-out;

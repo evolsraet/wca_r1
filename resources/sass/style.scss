@@ -660,7 +660,7 @@ video {
     width: 100%; 
     padding-left: 25px;
     padding-right: 25px;
-    background-color:#f7f8fb;
+    background-color:$sub-color02;
     border-radius: 6px; 
 }
 
@@ -1861,7 +1861,7 @@ video {
 .card-img-top-placeholder {
     overflow: hidden;
     height: 200px;
-    background-color: #f7f8fb; 
+    background-color: $sub-color02; 
     border-radius: 6px;
 }
 .card-img-top-placeholder img {
@@ -1886,7 +1886,7 @@ video {
 .card-img-demo {
     width: 100%;
     height: 180px;
-    background-color: #f7f8fb;
+    background-color: $sub-color02;
     display: flex;
     align-items: flex-end;
     justify-content: center;
@@ -2891,7 +2891,7 @@ input[type="checkbox"] {
 .diag-img {
     width: 100%;
     height: 240px;
-    background-color: #f7f8fb;
+    background-color: $sub-color02;
     background-image: url('../img/diag.png');
     background-position: center;
     background-repeat: no-repeat;
@@ -4289,4 +4289,33 @@ input[type="checkbox"] {
     .card-img-top-ty02 {
         height: 35vw;
     }
+}
+.logo-content {
+    background-color: $sub-color02;
+    width: -webkit-fill-available;
+    height: 65px;
+    position: fixed;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .sd-menu {
+    width: 48px;
+    height: 48px;
+    background-color: $sub-color02;
+    border-radius: 6px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .my-auction{
+    background-color: $sub-color02 !important;
+  }
+  .scrollable-content {
+    height: auto;
+    overflow-y: hidden;
+    padding: 30px 30px 30px 30px;
+    background-color: #f7f8fb;
 }
