@@ -1,6 +1,6 @@
 <template>
     <h4><span class="admin-icon admin-icon-menu"></span>회원관리</h4>
-        <div class="row justify-content-center my-5">
+        <div class="container my-5">
             <div class="col-md-10">
                 <div class="card border-0 shadow-none">
                     <div class="card-body">

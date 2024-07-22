@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div class="row justify-content-center my-5">
+        <div class="container my-5">
             <div class="col-md-6">
                 <div class="card border-0 shadow-sm">
                     <div class="card-header bg-transparent">{{ $t('register') }}</div>
