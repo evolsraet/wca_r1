@@ -51,7 +51,8 @@
                   <p class="text-secondary opacity-50">은행</p>
                   <input v-model="auction.bank" type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" class="input-dis form-control" readonly>
                 </div>
-                <BankModal :showDetails="showDetails" @update:showDetails="showDetails = $event" @select-bank="selectBank" />
+                <!--<component :is="currentComponent" v-bind:id="dynamicId"></component>-->
+              <!--  <BankModal  :showDetails="showDetails" @update:showDetails="showDetails = $event" @select-bank="selectBank" />-->
                 <div class="card-body">
                   <p class="text-secondary opacity-50">계좌번호</p>
                   <input v-model="auction.account" id="account" class="form-control"/>
@@ -359,13 +360,10 @@
   </div>
   </div>
 </template>
-
 <script setup>
-
-import { ref, onMounted, reactive, watchEffect ,onBeforeUnmount , nextTick } from 'vue';
+import { ref, onMounted, reactive, watchEffect, onBeforeUnmount, nextTick, inject, createApp, defineComponent, h } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
-import BankModal from '@/views/modal/bank/BankModal.vue';
 import file from "@/components/file.vue";
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
@@ -377,43 +375,34 @@ const showDetails = ref(false);
 const isActive = ref(false);
 const isMobileView = ref(window.innerWidth <= 640);
 const checkScreenWidth = () => {
-    if (typeof window !== 'undefined') {
-      isMobileView.value = window.innerWidth <= 640;
-    }
-  };
+  if (typeof window !== 'undefined') {
+    isMobileView.value = window.innerWidth <= 640;
+  }
+};
 const auction = reactive({ 
-    bank : '',
-    account : '',
-    car_no: '',
-    owner_name: '',
-    bank: '',
-    account: '',
-    memo: '',
-    region:'',
-    addr_post: '',
-    status : '',
-    addr1: '',
-    addr2: '',
-    final_at: '',
-    choice_at: '',
-    done_at: '',
-    success_fee: '',
-    diag_fee: '',
-    total_fee: '',
-    hope_price: '',
-    final_price: '',
-    file_auction_proxy:'',
-    file_auction_proxy_name : '',
-    file_auction_owner: '',
-    file_auction_owner_name :'',
+  bank: '',
+  account: '',
+  car_no: '',
+  owner_name: '',
+  memo: '',
+  region: '',
+  addr_post: '',
+  status: '',
+  addr1: '',
+  addr2: '',
+  final_at: '',
+  choice_at: '',
+  done_at: '',
+  success_fee: '',
+  diag_fee: '',
+  total_fee: '',
+  hope_price: '',
+  final_price: '',
+  file_auction_proxy: '',
+  file_auction_proxy_name: '',
+  file_auction_owner: '',
+  file_auction_owner_name: ''
 });
-
-/*
-const userData = reactive({
-  file_user_owner : '',
-  file_user_owner_name : '',
-});
-*/
 
 const route = useRoute();
 const { getAuctionById, updateAuctionStatus, isLoading, updateAuction } = useAuctions();
@@ -423,7 +412,7 @@ const isVisible = ref(false);
 const showBottomSheet = ref(true);
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' });
 const isFileAttached = ref(false);
-const { openPostcode , closePostcode, amtComma, formatCurrency, wicas } = cmmn();
+const { openPostcode, closePostcode, amtComma, formatCurrency, wicas, wica } = cmmn();
 const successFeeKorean = ref('0 원');
 const diagFeeKorean = ref('0 원');
 const totalFeeKorean = ref('0 원');
@@ -431,7 +420,7 @@ const hopePriceFeeKorean = ref('0 원');
 const finalPriceFeeKorean = ref('0 원');
 const fileAuctionProxy = ref(null);
 const fileAuctionOwner = ref(null);
-
+const swal = inject('$swal');
 let created_at;
 let updated_at;
 
@@ -439,44 +428,50 @@ const store = useStore();
 
 let statusLabel;
 
-// 은행 선택 라벨 클릭 시 처리 함수
-const handleBankLabelClick = () => {
-  showDetails.value = true;
-  nextTick(() => {
-    isActive.value = true;
+const handleBankLabelClick = async () => {
+  const module = await import('@/views/modal/bank/BankModal.vue');
+  const BankModalComponent = module.default;
+
+  swal.fire({
+    html: '<div id="modal-content"></div>',
+    customClass: 'bank-modal',
+    showCloseButton: true,
+    showConfirmButton: false,
+    width: '600px',
+    padding: '20px',
+    didOpen: () => {
+      nextTick(() => {
+        const modalContent = document.getElementById('modal-content');
+        if (modalContent) {
+          const app = createApp(BankModalComponent, {
+            onSelectBank: (bankName) => {
+              auction.bank = bankName;
+              swal.close();
+            }
+          });
+          app.mount(modalContent);
+        }
+      });
+    }
   });
 };
 
-// 은행 선택 처리 함수
-const selectBank = bankName => {
-  auction.bank = bankName;
-  showDetails.value = false;
-  isActive.value = false;
-};
-
-// 은행 선택 모달 닫기 함수
-const closeDetailContent = () => {
-  showDetails.value = false;
-  isActive.value = false;
-};
-
 const updateKoreanAmount = (price) => {
-  if(price == 'successFee'){
+  if (price == 'successFee') {
     successFeeKorean.value = formatCurrency(auction.success_fee);
   }
-  if(price == 'diagFee'){
+  if (price == 'diagFee') {
     diagFeeKorean.value = formatCurrency(auction.diag_fee);
   }
-  if(price == 'totalFee'){
+  if (price == 'totalFee') {
     totalFeeKorean.value = formatCurrency(auction.total_fee);
   }
-  if(price == 'hopePrice'){
+  if (price == 'hopePrice') {
     hopePriceFeeKorean.value = amtComma(auction.hope_price);
   }
-  if(price == 'finalPrice'){
+  if (price == 'finalPrice') {
     finalPriceFeeKorean.value = amtComma(auction.final_price);
   }
-  
 };
 
 function changeStatus(event) {
@@ -544,37 +539,37 @@ function editPostCode(elementName) {
 }
 
 function handleFileUploadProxy(event) {
-    const file = event.target.files[0];
-    if (file) {
-        auction.file_auction_proxy = file;
-        auction.file_auction_proxy_name = file.name;
-        console.log("Owner file:", file.name);
-    }
+  const file = event.target.files[0];
+  if (file) {
+    auction.file_auction_proxy = file;
+    auction.file_auction_proxy_name = file.name;
+    console.log("Owner file:", file.name);
+  }
 }
 
 function handleFileUploadOwner(event) {
-    const file = event.target.files[0];
-    if (file) {
-        auction.file_auction_owner = file;
-        auction.file_auction_owner_name = file.name;
-        console.log("Owner file:", file.name);
-    }
+  const file = event.target.files[0];
+  if (file) {
+    auction.file_auction_owner = file;
+    auction.file_auction_owner_name = file.name;
+    console.log("Owner file:", file.name);
+  }
 }
 
 function triggerFileUploadProxy() {
-    if (fileAuctionProxy.value) {
-      fileAuctionProxy.value.click();
-    } else {
-        console.error("위임장 또는 소유자 인감 증명서 파일을 찾을 수 없습니다.");
-    }
+  if (fileAuctionProxy.value) {
+    fileAuctionProxy.value.click();
+  } else {
+    console.error("위임장 또는 소유자 인감 증명서 파일을 찾을 수 없습니다.");
+  }
 }
 
 function triggerFileUploadOwner() {
-    if (fileAuctionOwner.value) {
-      fileAuctionOwner.value.click();
-    } else {
-        console.error("위임장 또는 소유자 인감 증명서 파일을 찾을 수 없습니다.");
-    }
+  if (fileAuctionOwner.value) {
+    fileAuctionOwner.value.click();
+  } else {
+    console.error("위임장 또는 소유자 인감 증명서 파일을 찾을 수 없습니다.");
+  }
 }
 
 onMounted(async () => {
@@ -586,56 +581,54 @@ onMounted(async () => {
   document.getElementById("status").value = data.status;
 
   watchEffect(() => {
-      updated_at = data.updated_at;
-      created_at = data.created_at;
-      auction.car_no = data.car_no;
-      auction.owner_name = data.owner_name;
-      auction.status = data.status;
-      document.getElementById("status").value = data.status;
-      auction.region = data.region;
-      document.getElementById("region").value = data.region;
-      auction.bank = data.bank;
-      auction.account = data.account;
-      auction.memo = data.memo;
-      auction.addr_post = data.addr_post;
-      auction.addr1 = data.addr1;
-      auction.addr2 = data.addr2;
-      auction.final_at = data.final_at;
-      auction.choice_at = data.choice_at;
-      auction.done_at = data.done_at;
-      auction.success_fee = data.success_fee;
-      auction.diag_fee = data.diag_fee;
-      auction.total_fee = data.total_fee;
-      auction.hope_price = data.hope_price;
-      auction.final_price = data.final_price;
-      auction.bank = data.bank;
-      auction.account = data.account;
+    updated_at = data.updated_at;
+    created_at = data.created_at;
+    auction.car_no = data.car_no;
+    auction.owner_name = data.owner_name;
+    auction.status = data.status;
+    document.getElementById("status").value = data.status;
+    auction.region = data.region;
+    document.getElementById("region").value = data.region;
+    auction.bank = data.bank;
+    auction.account = data.account;
+    auction.memo = data.memo;
+    auction.addr_post = data.addr_post;
+    auction.addr1 = data.addr1;
+    auction.addr2 = data.addr2;
+    auction.final_at = data.final_at;
+    auction.choice_at = data.choice_at;
+    auction.done_at = data.done_at;
+    auction.success_fee = data.success_fee;
+    auction.diag_fee = data.diag_fee;
+    auction.total_fee = data.total_fee;
+    auction.hope_price = data.hope_price;
+    auction.final_price = data.final_price;
+    auction.bank = data.bank;
+    auction.account = data.account;
 
-      if(data.success_fee){
-        successFeeKorean.value = formatCurrency(data.success_fee);
-      }
-      if(data.diag_fee){
-        diagFeeKorean.value = formatCurrency(data.diag_fee);
-      }
-      if(data.total_fee){
-        totalFeeKorean.value = formatCurrency(data.total_fee);
-      }
-      if(data.hope_price){
-        hopePriceFeeKorean.value = amtComma(data.hope_price);
-      }
-      if(data.final_price){
-        finalPriceFeeKorean.value = amtComma(data.final_price);
-      }
-      
+    if (data.success_fee) {
+      successFeeKorean.value = formatCurrency(data.success_fee);
+    }
+    if (data.diag_fee) {
+      diagFeeKorean.value = formatCurrency(data.diag_fee);
+    }
+    if (data.total_fee) {
+      totalFeeKorean.value = formatCurrency(data.total_fee);
+    }
+    if (data.hope_price) {
+      hopePriceFeeKorean.value = amtComma(data.hope_price);
+    }
+    if (data.final_price) {
+      finalPriceFeeKorean.value = amtComma(data.final_price);
+    }
   });
-
 });
-
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', checkScreenWidth);
-}); 
+});
 </script>
+
 
 <style scoped>
 .bottom-sheet {

@@ -4253,3 +4253,9 @@ input[type="checkbox"] {
         display: block;
     }
   }
+.bank-modal-actions{
+    display: none !important;
+  }
+  .bank-modal-popup .swal2-html-container{
+    padding: 0px !important;
+  }

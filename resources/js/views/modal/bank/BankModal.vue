@@ -1,10 +1,9 @@
 <!-- src/views/modal/BankModal.vue -->
 <template>
-    <transition name="fade">
-      <div class="show-content" :class="{ 'active': showDetails }" @click.self="closeDetailContent" v-if="showDetails">
+      <div>
         <div class="detail-content02" :class="{ 'active': isActive }" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd">
           <div class="nav-header">
-            <button type="button" class="btn-close p-3" @click.stop="closeDetailContent"></button>
+
           </div>
           <div class="content mt-0 p-0">
             <div>
@@ -165,17 +164,18 @@
           </div>
         </div>
       </div>
-    </transition>
   </template>
   
   <script setup>
-  import { ref, nextTick, watch ,defineEmits } from 'vue';
+  import { ref, defineProps, onMounted, onUnmounted } from 'vue';
   
   const props = defineProps({
-    showDetails: Boolean,
+    onSelectBank: {
+      type: Function,
+      required: true
+    }
   });
   
-  const emit = defineEmits(['select-bank']);
   const isActive = ref(false);
   const selectedTab = ref('bank');
   const startY = ref(0);
@@ -184,15 +184,17 @@
   
   const closeDetailContent = () => {
     isActive.value = false;
-    emit('update:showDetails', false);
   };
   
-  const selectTab = tab => {
+  const selectTab = (tab) => {
     selectedTab.value = tab;
   };
   
-  const selectBank = bankName => {
-    emit('select-bank', bankName);
+  const selectBank = (bankName) => {
+    if (props.onSelectBank) {
+      props.onSelectBank(bankName);
+    }
+    closeDetailContent();
   };
   
   const handleTouchStart = (event) => {
@@ -220,17 +222,20 @@
     }
   };
   
-  watch(() => props.showDetails, (val) => {
-    if (val) {
-      document.body.style.overflow = 'hidden';
-      nextTick(() => {
-        isActive.value = true;
-      });
-    } else {
-      document.body.style.overflow = '';
-    }
+  // Event binding on mount and unmount
+  onMounted(() => {
+    document.addEventListener('touchstart', handleTouchStart);
+    document.addEventListener('touchmove', handleTouchMove);
+    document.addEventListener('touchend', handleTouchEnd);
+  });
+  
+  onUnmounted(() => {
+    document.removeEventListener('touchstart', handleTouchStart);
+    document.removeEventListener('touchmove', handleTouchMove);
+    document.removeEventListener('touchend', handleTouchEnd);
   });
   </script>
+  
   
   <style scoped>
   .show-content {
@@ -244,22 +249,14 @@
     justify-content: center;
     align-items: flex-end;
     z-index: 9999;
-    visibility: hidden; /* 초기 상태에서는 숨김 */
-    transition: visibility 0.3s ease-in-out;
   }
   
-  .show-content.active {
-    visibility: visible; /* 활성화될 때 보여지게 함 */
-  }
   
   .detail-content02 {
     background: #fff;
     width: 100%;
-    max-width: 500px;
-    max-height: 88%;
     border-radius: 25px;
     transition: transform 0.3s ease-in-out;
-    transform: translateY(-14px);
   }
   
   .detail-content02.active {
