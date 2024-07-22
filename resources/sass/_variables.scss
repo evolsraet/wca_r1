@@ -18,6 +18,8 @@ $primary-hover:#b92a30;
 $sub-color:#ff837a;
 $sub-color01: #4263EA;
 $sub-color02: #f7f8fb;
+$sub-color03: #aaaebe;
+
 
 h4{
     font-size: 1.35em !important; 
@@ -46,7 +48,7 @@ h5{
 }
 .input-dis{
     background-color: $sub-color02 !important;
-    color: #aaaebe !important;
+    color: $sub-color03 !important;
 }
 
 .cursor-dis{
@@ -127,9 +129,9 @@ background-color: $sub-color !important;
     display: block;
     width: 100%;
     height: 38px;
-    color: #aaaebe;
+    color: $sub-color03;
     background-color: #fff;
-    border: 1px solid #aaaebe;
+    border: 1px solid $sub-color03;
     border-radius: 6px;
     padding: 0 15px;
     line-height: 38px;
@@ -293,7 +295,7 @@ background-color: $sub-color !important;
     margin-right: 10px;
     border-radius: 16px;
     background: #e5e7eb !important;
-    color: #aaaebe !important;
+    color: $sub-color03 !important;
     font-size: 14px;
     line-height: 25px;
     text-align: center;
@@ -307,7 +309,7 @@ background-color: $sub-color !important;
     height: 30px;
     margin-right: 10px;
     border-radius: 20px;
-    background: #aaaebe !important;
+    background: $sub-color03 !important;
     color: #ffffff !important;
     font-size: 15px;
     text-align: center;
@@ -375,7 +377,7 @@ background-color: $sub-color !important;
     height: 30px;
     padding: 3px 15px;
     border-radius: 6px;
-    background-color: #aaaebe;
+    background-color: $sub-color03;
 }
 .bidding{
     color: #fff;

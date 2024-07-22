@@ -962,7 +962,7 @@ video {
 }
 
 .btn-apply {
-    color: #aaaebe !important;
+    color: $sub-color03 !important;
 }
 
 .banner {
@@ -1251,7 +1251,7 @@ video {
 // 사이드바 스타일
 .sider-content {
     h5 {
-      color: #aaaebe;
+      color: $sub-color03;
       font-size: 18px;
       font-weight: 500;
     }
@@ -1573,7 +1573,7 @@ video {
 .sub-nav .nav-container .nav-item {
     padding-right: 18px;
     padding-left: 20px;
-    color: #aaaebe;
+    color: $sub-color03;
 }
 
 .next-style{
