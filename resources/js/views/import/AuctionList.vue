@@ -230,6 +230,9 @@ p {
     .my-4{
         margin-top: 0px !important;
     }
+    .enter-view{
+      display: none;
+    }
 }
 @media (max-width: 1200px){
     .container {

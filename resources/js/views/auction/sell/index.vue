@@ -102,7 +102,7 @@
                         </div>
                             <InfoModal v-if="showModal" @close="closeModal" @refresh="startLoading"/>
                     
-                        <div class="flex items-center justify-end mt-5">
+                        <div class="flex items-center justify-end mt-3 mb-2">
                             <button class="btn primary-btn w-100"  @click="UserapplyAuction">경매 신청하기</button>
                         </div>
                     </div>
@@ -127,7 +127,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center justify-end mb-3 mt-5">
+                        <div class="flex items-center justify-end mb-2 mt-3">
                             <button class="btn btn-primary w-100" @click="applyAuction">경매 신청하기</button>
                         </div>
                     </div>

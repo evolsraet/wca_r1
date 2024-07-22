@@ -1,7 +1,7 @@
 <!-- src/views/modal/BankModal.vue -->
 <template>
       <div>
-        <div class="detail-content02" :class="{ 'active': isActive }" @touchstart="handleTouchStart" @touchmove="handleTouchMove" @touchend="handleTouchEnd">
+        <div class="detail-content02" :class="{ 'active': isActive }">
           <div class="nav-header">
 
           </div>
@@ -98,13 +98,13 @@
             <div class="bank-content" v-if="selectedTab === 'securities'">
               <div class="bank-scroll">
                 <div class="grid bank-selection p-2">
-                  <div class="bank-item" data-bank="토스증궝" @click="selectBank('토스증궝')">
-                    <img src="../../../../img/bank-img/toss.png" alt="토스증궝">
-                    <span>토스증궝</span>
+                  <div class="bank-item" data-bank="토스증권" @click="selectBank('토스증권')">
+                    <img src="../../../../img/bank-img/toss.png" alt="토스증권">
+                    <span>토스증권</span>
                   </div>
                   <div class="bank-item" data-bank="카카오페이증권" @click="selectBank('카카오페이증권')">
                     <img src="../../../../img/bank-img/kakaopay.png" alt="카카오페이증권">
-                    <span>카카오페이증권</span>
+                    <span>카카오페이<br>증권</span>
                   </div>
                   <div class="bank-item" data-bank="미래에셋" @click="selectBank('미래에셋')">
                     <img src="../../../../img/bank-img/miraeeset .png" alt="미래에셋증권">
