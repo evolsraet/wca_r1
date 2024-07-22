@@ -6,10 +6,11 @@
       <div class="container nav-font">
         <button v-if="isDetailPage && isUser" @click="goBack" class="btn btn-back back-btn-icon"></button>
         <button v-else-if="isDetailPage && isDealer" @click="goBack" class="btn btn-back wh-btn-icon"></button>
-       <!-- <p v-if="isDetailPage && isMobile">123</p>-->
+        <!-- <p v-if="isDetailPage && isMobile">123</p>-->
         <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand-dealer"></router-link>
-        <router-link v-else-if="isUser" to="/user" class="navbar-brand logo-container"></router-link>
+        <router-link v-else-if="!isDetailPage && isUser" to="/user" class="navbar-brand logo-container"></router-link>
         <router-link v-else to="/" class="navbar-brand"></router-link>
+        <p v-if="isDetailPage02" class="web-style fs-5 fw-bolder custom-letter-spacing">{{ carDetailsNo }}</p>
         <div class="collapse navbar-collapse navbar-collshow" id="navbarSupportedContent">
           <div v-if="isDealer" class="navbar-nav nav-style">
             <div class="nav-header d-flex justify-content-between align-items-center">
@@ -314,7 +315,7 @@
   </template>
   
   <script setup>
-  import { ref, computed, onMounted, watch , nextTick } from 'vue';
+  import { ref, computed, onMounted, watch , nextTick  } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
   import { useStore } from 'vuex';
   import useAuth from '@/composables/auth';
@@ -337,7 +338,6 @@
   const showScrollGradient = ref(false);
   let scrollTimeout = null;
   const auctionDetailsLoaded = ref(false);
-
   function toggleSettingsMenuMov() {
     showSettingsmov.value = !showSettingsmov.value;
   }
@@ -387,7 +387,6 @@
     const sortedAuctions = [...auctionsData.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     return sortedAuctions[0];
   });
-  
   const isDiagnosing = computed(() => latestAuction.value && latestAuction.value.status === 'diag' || latestAuction.value.status === 'ask');
   const isAuctioning = computed(() => latestAuction.value && latestAuction.value.status === 'ing');
   const isSelectingDealer = computed(() => latestAuction.value && latestAuction.value.status === 'wait');
@@ -404,10 +403,13 @@
          /^\/completionsuccess\/\d+$/.test(route.path);
 });
 
-  
-  const isAuctionDetailPage = computed(() => {
-    return route.name === 'AuctionDetail';
-  });
+const isDetailPage02 = computed(() => {
+  return /^\/auction\/\d+$/.test(route.path) ||
+         /^\/completionsuccess\/\d+$/.test(route.path);
+});
+const isAuctionDetailPage = computed(() => {
+  return route.name === 'AuctionDetail';
+});
   
   const goBack = () => {
     router.back();
@@ -476,8 +478,29 @@
 
 const randomButton = ref('');
 
+/* 경매 상세 부분 상단 차량 번호 노출*/
+const carDetailsNo = ref('');
 
-  onMounted(() => {
+const fetchAuctionDetails = async () => {
+  await getAuctions();
+  const auctionId = Number(route.params.id); 
+  console.log("경매 ID:", auctionId);
+
+  const auction = auctionsData.value.find(auction => {
+    console.log("경매 항목 ID:", auction.id); 
+    return auction.id === auctionId;
+  });
+
+  if (auction) {
+    carDetailsNo.value = auction.car_no;
+    console.log("차 상세번호:", carDetailsNo.value);
+  } else {
+  }
+};
+onMounted(fetchAuctionDetails);
+watch(() => route.params.id, fetchAuctionDetails); 
+
+  onMounted(async () => {
     fileExstCheck(user.value);
      randomButton.value = buttons[Math.floor(Math.random() * buttons.length)];
     let navAuction = document.querySelectorAll('.nav-auction');
@@ -738,13 +761,6 @@ const randomButton = ref('');
     align-items: center;
   }
   
-  @media (min-width: 768px) {
-    .navbar-expand-md .navbar-collapse {
-    display:grid !important;
-      flex-basis: auto;
-      align-items: center;
-    }
-  }
   .settings-icon {
     cursor: pointer;
     transition: transform 0.3s ease-in-out;
@@ -836,5 +852,18 @@ const randomButton = ref('');
   .timeline li.active ~ li .small-circle {
     background-color: #d3d3d3;
   }
+  .web-style{
+      display: none;
+    }
+
+  @media (max-width: 991px) {
+    .container-md, .container-sm, .container {
+        max-width: none !important;
+    }
+      .web-style{
+        display: block;
+      }
+}
+
   </style>
   

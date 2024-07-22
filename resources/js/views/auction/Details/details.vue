@@ -1648,7 +1648,6 @@ onMounted(async () => {
   window.addEventListener('resize', checkScreenWidth);
     checkScreenWidth();
   
-    console.log("!!!!!!!!!!!!!!!!!!!!:",auctionDetail.value);
 
   /*if (auctionDetail.value.data.status === 'done' && isDealer.value) {
     showNotification.value = true;

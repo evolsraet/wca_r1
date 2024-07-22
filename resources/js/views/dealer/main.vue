@@ -295,6 +295,14 @@ p {
     flex-direction: column;
     flex-wrap: nowrap;
     align-items:normal;
+    max-width: none !important;
     }
+.p-4{
+    padding: 0px !important;
 }
+.layout-container02 .container  {
+    max-width: none !important;
+}
+}
+
 </style>
