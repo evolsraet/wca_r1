@@ -10,14 +10,12 @@
                 </div>
                 <div class="styled-div mt-0">
                     <div class="profile">
-                        <div class="dealer-info">
+                        <div class="dealer-info align-items-center">
                             <img :src="photoUrl" alt="Profile Photo" class="profile-photo" />
-                            <div class="deal-info">
+                            <div class="deal-info align-items-center">
                                 <p class="text-secondary opacity-50">{{ user.dealer.company }} </p>
                                 <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
                                 <p class="restar">4.5점</p>
-                                <p v-if="user.status === 'fail'" class="no-bidding mt-1 mb-1 shadow-sm"><span>입찰 불가</span></p>
-                                <p v-else-if="user.status === 'ok'" class="bidding mt-1 mb-1 shadow-sm"><span>입찰 가능</span></p>
                             </div>
                         </div>
                     </div>
