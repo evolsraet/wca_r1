@@ -473,4 +473,7 @@ function handleFileUploadCert(event) {
     background-size: 20px 20px;
     font-size: 0;
 }
+.search-btn {
+    transform: translateY(-129%) !important;
+}
     </style>
