@@ -322,7 +322,7 @@ function fileExstCheck(info){
             }
         }
 
-        if(info.files.hasOwnProperty('file_user_cert')){
+        if(info.files.hasOwnProperty('file_user_biz')){
             if(info.files.file_user_biz[0].hasOwnProperty('original_url')){
                 fileBizUrl.value = userInfo.files.file_user_biz[0].original_url;
             }

@@ -37,6 +37,8 @@
                                     <p class="mb-4 fw-bold">회원 정보를 입력해주세요</p>
                                 </div>
                                 <div class="form-body">
+                                    <UserRegisterForm/>
+                                    <!--
                                     <form @submit.prevent="submitRegister">
                                         <div class="form-group">
                                             <label for="name">이름</label>
@@ -95,7 +97,7 @@
                                             <a href="your-link.html" class="icon-link mt-5 mb-3">
                                                 <img src="../../../img/Icon-file.png" class="ms-2" alt="회원약관 및 개인정보 처리방침">위카모빌리티 회원약관 및 개인정보처리 방침
                                             </a>
-                                            <!-- 딜러 체크 -->
+                                            
                                             <transition name="slide-fade">
                                                 <div v-if="registerForm.dealer" class="hidden-content mt-4">
                                                     <div class="form-group">
@@ -188,13 +190,14 @@
                                                 </div>
                                             </transition>
                                         </div>
-                                        <!-- Buttons -->
+                                        
                                         <div class="flex items-center justify-end mt-4">
                                             <button type="submit" class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
                                                 약관 동의 및 회원가입
                                             </button>
                                         </div>
                                     </form>
+                                    -->
                                 </div>
                             </div>
                         </div>
@@ -212,7 +215,10 @@ import {
 } from 'vue';
 import useAuth from '@/composables/auth';
 import { cmmn } from '@/hooks/cmmn';
+import UserRegisterForm from "@/views/import/UserRegister.vue";
+/**
 const { openPostcode , closePostcode} = cmmn();
+
 const {
     registerForm,
     validationErrors,
@@ -307,7 +313,7 @@ function handleFileUploadCert(event) {
         console.log("Certification file:", file.name);
     }
 }
-
+ */
 /** 
 function openPostcode() {
     new daum.Postcode({

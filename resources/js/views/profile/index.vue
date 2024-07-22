@@ -1,8 +1,9 @@
 
 <template>
   <div class="container p-5">
+    <h4 class="mb-5">내 정보 수정</h4>
+    <!--
     <form @submit.prevent="updateProfile">
-      <h4 class="mb-5">내 정보 수정</h4>
       <div class="form-group profile-content">
         <div class="img-form">
         <div class="edit-photo-container" @click="triggerFileInput">
@@ -77,10 +78,21 @@
       </div>
       <button type="submit" class="mt-3 w-100 btn btn-primary">저장</button>
     </form>
+    -->
+    <div class="container p-5">
+      <UserRegisterForm/>
+    </div>
+    
+
   </div>
 </template>
 
 <script setup>
+  import UserRegisterForm from "@/views/import/UserRegister.vue";
+</script>
+
+<script >
+/*
 import { ref, onMounted ,computed , inject } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter, useRoute } from 'vue-router';
@@ -90,12 +102,17 @@ import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import { previousFriday } from 'date-fns';
 import useUsers from "@/composables/users";
+import UserRegisterForm from "@/views/import/UserRegister.vue";
+*/
 
+/*
 const { getUser , user } = useUsers();
 const router = useRouter();
 const photoUrl = ref(profileDom);
 const store = useStore();
 const swal = inject('$swal')
+*/
+/*
 const profile = ref({
   name: '',
   dealer_name: '',
@@ -113,6 +130,9 @@ const profile = ref({
   introduce : '',
   file_user_photo: null
 });
+*/
+
+/*
 const userId = ref(null);
 const isDealer = ref(false);
 const { openPostcode , closePostcode , wica , wicac } = cmmn();
@@ -136,7 +156,8 @@ const onFileChange = (e) => {
     reader.readAsDataURL(file);
   }
 };
-
+*/
+/*
 const updateProfile = async () => {
 
   let payload = {
@@ -199,7 +220,9 @@ const updateProfile = async () => {
     }).confirm();
 
 };
+*/
 
+/*
 function fileExstCheck(info){
     if(info.hasOwnProperty('files')){
         if(info.files.hasOwnProperty('file_user_photo')){
@@ -209,7 +232,9 @@ function fileExstCheck(info){
         }
     }
 }
+*/
 
+/*
 const setUserProfileData = async () => {
 
   userId.value = store.getters['auth/user'].id;
@@ -218,7 +243,7 @@ const setUserProfileData = async () => {
   //console.log(user);
 
   isDealer.value = user.value?.roles?.includes('dealer') || false;
-
+  
   if (user) {
     profile.value.name = user.value.name;
     profile.value.phone = user.value.phone;
@@ -237,9 +262,11 @@ const setUserProfileData = async () => {
     if (user.value.files) {
       fileExstCheck(user.value);
     }
-  } 
+  }
+    
 };
-
+*/
+/*
 function editPostCode(elementName) {
   openPostcode(elementName)
     .then(({ zonecode, address }) => {
@@ -255,13 +282,16 @@ function editPostCodeReceive(elementName) {
       profile.value.receive_addr1 = address;
     })
 }
-
+*/
+/*
 onMounted(async () => {
   //await store.dispatch("auth/getUser");
   setUserProfileData();
 });
+*/
 </script>
 
+<!--
 <style scoped>
 .profile {
   max-width: 400px;
@@ -321,3 +351,4 @@ input[type="password"] {
     cursor: pointer;
   }
 </style>
+-->
