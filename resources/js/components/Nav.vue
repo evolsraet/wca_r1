@@ -461,14 +461,14 @@
       <div class="side-img02">
         <img src="${sidenav02}" alt="사이드 바 이미지 02" width="120px">
       </div>
-      <p class="me-2">위 카<br> 에 서</p>
+      <p class="me-2 fw-bodler">위 카<br> 에 서</p>
     </div>
   </div>`,
   `<div class="btn btn-primary w-100 p-0 m-0">
     <div class="d-flex justify-content-around align-items-center">
-      <p class="ms-2 text-start">고민은<br>판매만 늦출뿐!</p>
+      <p class="ms-2 text-start fw-bodler">고민은<br>판매만 늦출뿐!</p>
       <div class="side-img">
-        <img src="${sidenav01}" alt="사이드 바 이미지 01" width="200px">
+        <img src="${sidenav01}" alt="사이드 바 이미지 01" width="180px">
       </div>
     </div>
   </div>`

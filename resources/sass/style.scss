@@ -4284,3 +4284,8 @@ input[type="checkbox"] {
  .side-img02{
  margin-top: -43px !important;
  }
+ @media (max-height: 430px) {
+    .card-img-top-ty02 {
+        height: 35vw;
+    }
+}
