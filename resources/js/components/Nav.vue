@@ -279,7 +279,7 @@
                 <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
               </li>
               <li class="nav-item my-member-guest ms-auto">
-                <img src="../../img/Icon-person.png" class="nav-profile-login" alt="LoginImg" height="25px" width="25px"><router-link class="nav-link me-0 text-secondary opacity-50 pb-0" to="/login" exact-active-class="active-link">로그인</router-link>
+                <img src="../../img/Icon-person.png" class="nav-profile-login" alt="LoginImg" height="25px" width="25px"><router-link class="pt-1 nav-link me-0 text-secondary opacity-50 pb-0" to="/login" exact-active-class="active-link">로그인</router-link>
               </li>
             </template>
             <template v-else-if="isDealer">
