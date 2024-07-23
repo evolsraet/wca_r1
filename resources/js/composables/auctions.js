@@ -343,14 +343,12 @@ const AuctionCarInfo = async (carInfoForm) => {
         formData.append('file_auction_proxy', auctionData.auction.file_auction_proxy);
     }
     
-    /*
+    
     return wicac.conn()
     .url(`/api/auctions`)
     .param(formData) 
     .multipart()
     .callback(function (result) {
-        console.log('result======================');
-        console.log(result);
         if(result.isError){
             validationErrors.value = result.rawData.response.data.errors;
             //fileUserOwnerDeleteById(userData.id);
@@ -362,9 +360,9 @@ const AuctionCarInfo = async (carInfoForm) => {
         }
     })
     .post();
-    */
-
     
+
+    /*
     return wicac.conn()
     .url(`/api/auctions`)
     .param(payload)
@@ -387,7 +385,7 @@ const AuctionCarInfo = async (carInfoForm) => {
         }
     })
     .post();
-    
+    */
 
 };
 //재경매- (희망가) 변경
@@ -470,7 +468,8 @@ const updateAuction = async (id,auction) => {
             wicac.conn()
             .url(`/api/auctions/${id}`) //호출 URL
             //.multipart() //첨부파일 있을 경우 선언
-            .param(auctionForm)
+            .param(formData)
+            .multipartUpdate()
             .callback(function(result) {
                 console.log('wicac.conn callback ' , result);
                 if(result.isSuccess){
@@ -494,7 +493,7 @@ const updateAuction = async (id,auction) => {
                     }).alert('관리자에게 문의해주세요.');
                 }
             })
-            .put();
+            .post();
         }
     }).confirm();
 }
