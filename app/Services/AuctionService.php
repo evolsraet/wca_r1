@@ -44,6 +44,7 @@ class AuctionService
                     request()->merge(['mode' => $request->status]);
                 }
 
+                // 모드별 분기
                 if (request()->has('mode')) {
                     switch (request()->mode) {
                         case 'reauction':
@@ -94,16 +95,6 @@ class AuctionService
                             }
                             break;
                     }
-                }
-                if (
-                    request()->has('mode') && request()->reauction
-
-                    // 본인일 경우
-                ) {
-                    $auction->status = 'ing';
-                    $auction->is_reauction = true;
-                    $auction->final_at = now()->addDays(env('REAUCTION_DAY'));
-                } elseif (request()->has('mode') && request()->reauction) {
                 }
 
                 $this->modifyOnlyMe($auction);
@@ -158,5 +149,6 @@ class AuctionService
 
         $auction->user_id = auth()->user()->id;
         $auction->status = 'ask';
+        $auction->final_at = null;
     }
 }

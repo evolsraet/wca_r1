@@ -259,15 +259,6 @@ class UserService
         // return response()->api(new UserResource($item));
     }
 
-    public function checkJson($data)
-    {
-        if (gettype($data) == 'string') {
-            $data = json_decode($data, true);
-        }
-
-        return $data;
-    }
-
     public function beforeData($data)
     {
         // 관리자 전용 수정

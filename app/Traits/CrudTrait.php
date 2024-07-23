@@ -358,6 +358,7 @@ trait CrudTrait
         DB::beginTransaction();
         try {
             $data = $request->get($this->getModelName());
+            $data = $this->checkJson($data);
             $item = new $modelClass();
 
             // 상위 객체 데이터를 먼저 처리합니다.
@@ -394,8 +395,32 @@ trait CrudTrait
 
             $this->afterProcess(__FUNCTION__, $request, $item);
 
+            // 파일
+            $model = new $modelClass();
+            $file_result = [];
+            foreach ($model->files as $key => $row) {
+                if ($request->hasFile($key)) {
+                    $files = $request->file($key);
+                    // 파일이 배열이 아닌 경우 배열로 변환
+                    if (!is_array($files)) {
+                        $files = [$files];
+                    }
+                    foreach ($files as $file) {
+                        // $files_one 배열에 있는 파일들은 자동으로 기존 파일을 삭제하고 새 파일로 대체됨
+                        $file_result[] = $item->addMedia($file)->preservingOriginal()->toMediaCollection($key);
+                    }
+                }
+            }
+
             DB::commit();
-            return response()->api(new $this->resourceClass($item));
+            return response()->api(
+                (new $this->resourceClass($item))
+                    ->additional([
+                        'file_result' => $file_result, // media 로 추가된 부분 응답이 온다
+                        // '_logs' => $logs,
+                        // '_post_files' => $request->files,
+                    ])
+            );
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
@@ -437,6 +462,23 @@ trait CrudTrait
 
             $this->afterProcess(__FUNCTION__, request(), $item);
 
+            // 파일
+            $file_result = [];
+            $model = new $modelClass();
+            foreach ($model->files as $key => $row) {
+                if ($request->hasFile($key)) {
+                    $files = $request->file($key);
+                    // 파일이 배열이 아닌 경우 배열로 변환
+                    if (!is_array($files)) {
+                        $files = [$files];
+                    }
+                    foreach ($files as $file) {
+                        // $files_one 배열에 있는 파일들은 자동으로 기존 파일을 삭제하고 새 파일로 대체됨
+                        $file_result[] = $item->addMedia($file)->preservingOriginal()->toMediaCollection($key);
+                    }
+                }
+            }
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollback();
@@ -446,7 +488,14 @@ trait CrudTrait
             // throw new \Exception('error', $e->getCode());
         }
 
-        return response()->api(new $this->resourceClass($item));
+        return response()->api(
+            (new $this->resourceClass($item))
+                ->additional([
+                    'file_result' => $file_result, // media 로 추가된 부분 응답이 온다
+                    // '_logs' => $logs,
+                    // '_post_files' => $request->files,
+                ])
+        );
     }
 
     public function destroy($id)
@@ -502,5 +551,14 @@ trait CrudTrait
             // ]);
             throw new \Exception("권한이 없습니다.");
         }
+    }
+
+    public function checkJson($data)
+    {
+        if (gettype($data) == 'string') {
+            $data = json_decode($data, true);
+        }
+
+        return $data;
     }
 }
