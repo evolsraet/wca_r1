@@ -184,8 +184,7 @@ const auctionEntry = async () => {
 };
 
 const onRegionChange = () => {
-  availableDistricts.value = updateDistricts(selectedRegion.value);
-  selectedDistrict.value = '';
+  updateDistricts(selectedRegion.value);
 };
 
 const verifyOwner = () => {
