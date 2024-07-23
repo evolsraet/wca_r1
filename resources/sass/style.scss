@@ -4,6 +4,7 @@
 video {
 	height: auto !important;
 	margin: auto !important;
+    max-width: 80%;
 }
 .container-fluid {
 	padding-left: 0;
@@ -1295,8 +1296,8 @@ video {
 .search-btn {
     cursor: pointer;
     position: absolute;
-    right: 5px;
-    transform: translateY(-130%);
+    right: 9px;
+    transform: translateY(-113%);
     height: 40px;
     width: 40px;
     border: none;
@@ -3257,7 +3258,7 @@ input[type="checkbox"] {
     justify-content: space-between;
     background: #F5F5F6;
     border-radius: 30px;
-    padding: 10px;
+    padding: 10px 4px 0px 9px;
 }
 
 .no-resize {
@@ -4310,9 +4311,7 @@ input[type="checkbox"] {
     justify-content: center;
     align-items: center;
   }
-  .my-auction{
-    background-color: $sub-color02 !important;
-  }
+
   .scrollable-content {
     height: auto;
     overflow-y: hidden;

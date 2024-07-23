@@ -63,7 +63,6 @@
       <button type="button" class="btn btn-primary w-100" @click="toggleView">다음</button>
     </div>
     <div v-if="fileuploadvue" class="card p-3 my-4">
-      <h4>매도용 인감증명서를 준비해주세요</h4>
       <div class="form-group">
         <img id="imagePreview" :src="imageSrc" class="image-preview mx-2 my-4" v-if="imageSrc" />
        <!-- <button type="button" class="btn btn-fileupload w-100 mt-4 w-100" @click="triggerFileUpload">
@@ -73,6 +72,7 @@
         <div class="text-start text-secondary opacity-50 mt-2" v-if="registerForm.file_user_sign">사진 파일: {{ registerForm.file_user_sign }}</div>
       </div>
       <h4 class="mt-4">마지막으로 꼼꼼히 확인해 주세요!</h4>
+      <h5 class="tc-red fs-6">&#8251; 매도용 인감증명서를 준비해주세요</h5>
       <div class="summary-box d-flex flex-column p-3 mt-3">
         <div class="d-flex justify-content-start gap-5 mb-2">
           <p class="mb-0">낙찰액</p>
@@ -91,6 +91,7 @@
           <p class="mb-0"><span class="me-2">{{ selectedBank }}</span>|<span class="ms-2">{{ account }}</span></p>
         </div>
       </div>
+        <p class="text-secondary opacity-75 text-center mt-3">취소와 변경이 어려우니 유의해 주세요.</p>
       <button class="btn btn-primary my-3 w-100" @click="confirmSelection">완료</button>
     </div>
   </div>
@@ -121,7 +122,8 @@ const registerForm = ref({ file_user_sign: null, file_user_sign_name: '' });
 const imageSrc = ref('');
 const router = useRouter();
 const route = useRoute();
-const { amtComma, wic } = cmmn();
+const { amtComma, wica } = cmmn();
+
 
 const selectedBid = ref(null);
 const userInfo = ref(null);
@@ -213,8 +215,40 @@ function getNextFiveDays() {
 }
 
 const toggleView = () => {
-  fileuploadvue.value = true;
+  const textOk = `
+    <h4 class="mt-4">마지막으로 꼼꼼히 확인해 주세요!</h4>
+    <h5 class="tc-red fs-6">&#8251; 매도용 인감증명서를 준비해주세요</h5>
+    <div class="summary-box d-flex flex-column p-3 mt-3">
+      <div class="d-flex justify-content-start gap-5 mb-2">
+        <p class="mb-0">낙찰액</p>
+        <p class="mb-0">${amtComma(selectedBid.value?.price ?? 0)}</p>
+      </div>
+      <div class="d-flex justify-content-start gap-5">
+        <p class="mb-0"><span class="me-3">딜</span>러</p>
+        <p class="mb-0">${userInfo.value?.dealer?.name}</p>
+      </div>
+      <div class="d-flex justify-content-start gap-5 mt-2">
+        <p class="mb-0">탁송일</p>
+        <p class="mb-0"><span>${yearLabel.value} </span>&nbsp;${monthLabel.value} ${selectedDateLabel.value} ${selectedTime.value}</p>
+      </div>
+      <div class="d-flex justify-content-start gap-5 mt-2">
+        <p class="mb-0"><span class="me-3">은</span>행</p>
+        <p class="mb-0"><span class="me-2">${selectedBank.value}</span>|<span class="ms-2">${account.value}</span></p>
+      </div>
+    </div>
+    <p class="text-secondary opacity-75 text-center mt-3">취소와 변경이 어려우니 유의해 주세요.</p>
+  `;
 
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+    .addOption({ padding: 20}) // swal 기타 옵션 추가
+    .callback(function (result) {
+      if (result.isOk) {
+        confirmSelection();
+        }
+      })
+    .confirm(textOk);
 };
 
 function selectDay(index) {

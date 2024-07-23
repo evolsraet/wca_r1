@@ -124,18 +124,18 @@ export default function useUsers() {
                 role: editForm.role
             },
             dealer: {
+                name: editForm.dealer_name,
                 company: editForm.company,
                 company_post: editForm.company_post,
                 company_addr1: editForm.company_addr1,
                 company_addr2: editForm.company_addr2,
                 introduce: editForm.introduce,
+                company_duty: editForm.dealerCompanyDuty,
                 receive_post: editForm.receive_post,
                 receive_addr1: editForm.receive_addr1,
                 receive_addr2: editForm.receive_addr2,
             }
         };
-
-        
     
         console.log(JSON.stringify(payload));
         const formData = new FormData();
@@ -174,6 +174,10 @@ export default function useUsers() {
                         console.log('wicac.conn callback ' , result);
                         if(result.isError) {
                             validationErrors.value = result.msg;
+                            wica.ntcn(swal)
+                            .title('변경 실패')
+                            .icon('E') //E:error , W:warning , I:info , Q:question
+                            .alert('회원정보 변경에 실패하였습니다.');
                         } else {
                             wica.ntcn(swal).icon('S').title('정상 처리 되었습니다.').fire();
                             //console.log(response);
@@ -185,50 +189,50 @@ export default function useUsers() {
             }).confirm();
     };
 
-    const adminStoreUser = async (user,dealer) => {
+    const adminStoreUser = async (profileData) => {
         if (isLoading.value) return;
         let payload = {
             user: {
-                name: user.name,
-                email: user.email,
-                status: user.status,
-                password:user.password,
-                password_confirmation: user.password_confirmation,
-                phone: user.phone,
-                role: user.role
+                name: profileData.name,
+                email: profileData.email,
+                status: 'ok',
+                password:profileData.password,
+                password_confirmation: profileData.password_confirmation,
+                phone: profileData.phone,
+                role: profileData.role
             },
             dealer: {
-                name:dealer.name,
-                phone:dealer.phone,
-                birthday:dealer.birthday,
-                company_duty:dealer.company_duty,
-                company:dealer.company,
-                company_post:dealer.company_post,
-                company_addr1:dealer.company_addr1,
-                company_addr2:dealer.company_addr2,
-                introduce:dealer.introduce,
-                receive_post:dealer.receive_post,
-                receive_addr1:dealer.receive_addr1,
-                receive_addr2:dealer.receive_addr2
+                name:profileData.dealer_name,
+                phone:profileData.phone,
+                birthday:profileData.dealerBirthDate,
+                company:profileData.company,
+                company_duty:profileData.dealerCompanyDuty,
+                company_post:profileData.company_post,
+                company_addr1:profileData.company_addr1,
+                company_addr2:profileData.company_addr2,
+                introduce:profileData.introduce,
+                receive_post:profileData.receive_post,
+                receive_addr1:profileData.receive_addr1,
+                receive_addr2:profileData.receive_addr2
             }
         };
         
         const formData = new FormData();
         formData.append('user', JSON.stringify(payload.user));
-        if(user.role == "dealer"){
+        if(profileData.role == "dealer"){
             formData.append('dealer', JSON.stringify(payload.dealer));
         }
-        if (dealer.file_user_photo) {
-            formData.append('file_user_photo', dealer.file_user_photo);
+        if (profileData.file_user_photo) {
+            formData.append('file_user_photo', profileData.file_user_photo);
         }
-        if (dealer.file_user_biz) {
-            formData.append('file_user_biz', dealer.file_user_biz);
+        if (profileData.file_user_biz) {
+            formData.append('file_user_biz', profileData.file_user_biz);
         }
-        if (dealer.file_user_cert) {
-            formData.append('file_user_cert', dealer.file_user_cert);
+        if (profileData.file_user_cert) {
+            formData.append('file_user_cert', profileData.file_user_cert);
         }
-        if (dealer.file_user_sign) {
-            formData.append('file_user_sign', dealer.file_user_sign);
+        if (profileData.file_user_sign) {
+            formData.append('file_user_sign', profileData.file_user_sign);
         }
         for (const x of formData) {
             console.log(x);
