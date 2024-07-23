@@ -475,3 +475,9 @@ background-color: $sub-color !important;
 .mx-width{
     width: max-content;
 }
+@media (min-width: 768px) {
+    .navbar-expand-md .navbar-collapse {
+        display: grid;
+        flex-basis: auto;
+    }
+}

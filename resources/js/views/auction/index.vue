@@ -622,7 +622,7 @@ TODO:
                                                 <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
                                             </div>-->
                                             <div class="card-body">
-                                                <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
                                                 <p class="text-secondary opacity-50 mt-0"> 2020 년 / 2.4km / 무사고</p>
                                                 <p class="text-secondary opacity-50 mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
@@ -742,7 +742,7 @@ TODO:
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
                                                 <p class="text-secondary opacity-50 mt-0"> 2020 년 / 2.4km / 무사고</p>
                                                 <p class="text-secondary opacity-50 mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
@@ -817,7 +817,7 @@ TODO:
                                                     </div>
                                                 </div>
                                                 <div class="card-body">
-                                                    <p class="card-title fs-5">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                    <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
                                                     <p class="text-secondary opacity-50 mt-0"> 2020 년 / 2.4km / 무사고</p>
                                                     <p class="text-secondary opacity-50 mt-0">현대 소나타 (DN8)</p>
                                                     <div class="d-flex">

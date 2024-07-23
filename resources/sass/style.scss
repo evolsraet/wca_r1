@@ -4,6 +4,7 @@
 video {
 	height: auto !important;
 	margin: auto !important;
+    max-width: 80%;
 }
 .container-fluid {
 	padding-left: 0;
@@ -4310,9 +4311,7 @@ input[type="checkbox"] {
     justify-content: center;
     align-items: center;
   }
-  .my-auction{
-    background-color: $sub-color02 !important;
-  }
+
   .scrollable-content {
     height: auto;
     overflow-y: hidden;
