@@ -147,7 +147,8 @@ class UserService
             ])->validate();
 
             $data = $this->beforeData($data);
-
+            // print_r($data);
+            // die();
             $data['dealer'] = $this->checkJson($request->input('dealer'));
 
 

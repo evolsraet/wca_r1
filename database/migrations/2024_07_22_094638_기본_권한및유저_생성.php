@@ -84,7 +84,7 @@ return new class extends Migration
             'email' => 'admin@demo.com',
             'password' => '123123123',
             'status' => 'ok',
-            'phone' => '010-3425-8175',
+            'phone' => '010-1111-1111',
         ];
 
         // 사용자
@@ -93,7 +93,7 @@ return new class extends Migration
             'email' => 'user@demo.com',
             'password' => '123123123',
             'status' => 'ok',
-            'phone' => '010-3425-8175',
+            'phone' => '010-2222-2222',
         ];
 
         // 딜러
@@ -102,7 +102,7 @@ return new class extends Migration
             'email' => 'dealer@demo.com',
             'password' => '123123123',
             'status' => 'ok',
-            'phone' => '010-3425-8175',
+            'phone' => '010-3333-3333',
         ];
 
         foreach ($users as $role => $user) {

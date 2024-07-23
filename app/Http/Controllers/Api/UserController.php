@@ -38,6 +38,8 @@ class UserController extends Controller
 
     public function resetPasswordLink(Request $request, $phone)
     {
+        $phone = preg_replace('/[^0-9]/', '', $phone);
+
         // 라라벡 phone 복호화가능한 암호화
         $expire = now()->addHours(3)->format('Y-m-d H:i:s');
         $encryptCode = Crypt::encryptString("{$phone}/{$expire}");

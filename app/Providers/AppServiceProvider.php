@@ -103,6 +103,10 @@ class AppServiceProvider extends ServiceProvider
                 $response['data_count'] = count($response['data']);
             }
 
+            if (env('APP_ENV') != 'production') {
+                $response['request'] = request()->json();
+            }
+
             // print_r([$response, $code]);
             // die();
             return response()->json($response, (int) $code);

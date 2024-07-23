@@ -179,6 +179,11 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Review::class);
     }
 
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
+
     public function auctions()
     {
         return $this->hasMany(Auction::class);

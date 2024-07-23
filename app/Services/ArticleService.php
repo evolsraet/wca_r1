@@ -55,6 +55,10 @@ class ArticleService
 
                 // 클레임 - 본인것만
                 if ($this->board->id === 'claim') {
+                    // 로그인 확인
+                    if (!auth()->check()) {
+                        throw new \Exception('로그인이 필요합니다.');
+                    }
                     request()->merge(['where' => request()->where . "|user_id:" . auth()->user()->id]);
                 }
 

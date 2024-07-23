@@ -66,12 +66,12 @@ class LibController extends Controller
         }
     }
 
-    public function deleteMultipleMedia(Request $request)
+    public function deleteMultipleMedia(Request $request, $uuids)
     {
         DB::beginTransaction();
         try {
             $mediaService = new MediaService;
-            $uuids = $request->input('uuids', []);
+            $uuids = explode(',', $uuids);
             $count = $mediaService->deleteMediaByUuids($uuids);
 
             DB::commit();

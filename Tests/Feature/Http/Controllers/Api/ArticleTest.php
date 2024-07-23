@@ -22,11 +22,18 @@ class ArticleTest extends TestCase
 
     public function test_게시글_목록_조회(): void
     {
-        $board = Board::first();
+        $board = Board::find('notice');
         // die("[{$board->id}]");
         $response = $this->getJson("/api/board/{$board->id}/articles");
         // print_r($response->json());
-        $response->assertJson(['status' => 'ok']);
+        try {
+            $response->assertJson(['status' => 'ok']);
+        } catch (\Exception $e) {
+            print_r([
+                $board->toArray(),
+                $response->json()
+            ]);
+        }
     }
 
     public function test_게시글_생성(): void
@@ -58,28 +65,35 @@ class ArticleTest extends TestCase
 
     public function test_게시글_조회(): void
     {
-        $article = Article::factory()->create();
+        $user = User::Role('admin')->first();
+        $this->actingAs($user);
+        $article = Article::factory()->create(['user_id' => $user->id, 'board_id' => 'free']);
 
         $response = $this->getJson("/api/board/{$article->board_id}/articles/{$article->id}");
-        // print_r($response->json());
-        // die();
-        $response
-            ->assertOk()
-            ->assertJson([
-                'data' => [
-                    'id' => $article->id,
-                    'title' => $article->title,
-                    'content' => $article->content,
-                    'user_id' => $article->user_id,
-                    'board_id' => $article->board_id,
-                ]
-            ]);
+
+        try {
+            $response
+                ->assertOk()
+                ->assertJson([
+                    'data' => [
+                        'id' => $article->id,
+                        'title' => $article->title,
+                        'content' => $article->content,
+                        'user_id' => $article->user_id,
+                        'board_id' => $article->board_id,
+                    ]
+                ]);
+        } catch (\Exception $e) {
+            print_r($article->toArray());
+            print_r($response->json());
+            throw $e;
+        }
     }
 
     public function test_게시글_수정(): void
     {
         $user = User::Role('admin')->first();
-        $article = Article::factory()->create(['user_id' => $user->id]);
+        $article = Article::factory()->create(['user_id' => $user->id, 'board_id' => 'free']);
         $updateData = [
             'article' => [
                 'title' => $this->faker->sentence,

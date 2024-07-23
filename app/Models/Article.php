@@ -30,6 +30,11 @@ class Article extends Model implements HasMedia
         return $this->belongsTo(Board::class, 'board_id');
     }
 
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 
     // 파일
     public function registerMediaCollections(): void
