@@ -68,11 +68,16 @@
         <div v-if="userEditURL" class="form-group">
           <label for="email">변경 비밀번호</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password" id="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합"/>
+          <div v-if="userEditURL" class="text-danger mt-1">
+              <div v-for="message in validationErrors?.password">
+                  {{ message }}
+              </div>
+          </div>
         </div>
         <div v-if="userEditURL || registerURL || adminCreateURL" class="form-group">
           <label for="email">비밀번호 확인</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password_confirmation" id="password_confirmation" class="form-control" placeholder="비밀번호를 다시 입력해주세요"/>
-          <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
+          <div v-if="registerURL || adminCreateURL || userEditURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.password_confirmation">
                   {{ message }}
               </div>
@@ -308,7 +313,7 @@
     status:'',
     role:'',
     //디비외
-    photoImgChg : 'false',
+    photoImgChg : false,
     photoUUID : '',
   });
   const userId = ref(null);

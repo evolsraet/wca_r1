@@ -442,6 +442,8 @@ export default function useUsers() {
     }
 
     const updateProfile = async (profile,userId) => {
+        validationErrors.value = {};
+
         let payload = {
             user : {
               name : profile.value.name,    
@@ -498,14 +500,10 @@ export default function useUsers() {
             if (result.isOk) {
                 //기존 파일 이미지 삭제
                 if(profile.value.photoImgChg){
+                    console.log('이미지삭제=============================');
                   wicac.conn()
-                  .url(`/api/media`)
+                  .url(`/api/media/${profile.value.photoUUID}`)
                   .log()
-                  .param({
-                    "uuid" : [
-                      profile.value.photoUUID,
-                    ]
-                  })
                   .callback(async function(result) {
                   })
                   .delete();
@@ -526,6 +524,7 @@ export default function useUsers() {
                       })
                       .alert('내 정보가 정상적으로 수정되었습니다.');
                     } else{
+                      validationErrors.value = result.msg;
                       wica.ntcn(swal)
                       .title('변경 실패')
                       .icon('E') //E:error , W:warning , I:info , Q:question
