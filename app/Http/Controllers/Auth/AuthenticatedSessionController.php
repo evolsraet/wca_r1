@@ -45,7 +45,9 @@ class AuthenticatedSessionController extends Controller
         //     'debbug' => 'hahahoho',
         // ]], 404);
 
-        $user = User::where('email', $request->email)->first();
+
+
+        $user = User::where('email', $request->email)->orWhere('phone', $request->email)->first();
 
         if ($user->status == 'ask') {
             throw new \Exception('심사중인 회원입니다.');

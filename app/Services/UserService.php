@@ -51,8 +51,8 @@ class UserService
             // beforeData() 이전에 발리데이트 해야함
             $validatedData = validator($requestData, [
                 'name' => 'required|max:255',
-                // 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'phone' => 'required',
+                'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users'],
+                'phone' => ['required', 'string', 'unique:users'],
                 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ])->validate();
 
@@ -141,7 +141,7 @@ class UserService
 
             $validatedData = validator($data, [
                 'name' => 'sometimes|required|max:255',
-                'email' => ['sometimes', 'required', 'string', 'email', 'max:255', 'unique:users'],
+                'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users'],
                 'phone' => 'sometimes|required',
                 'password' => ['sometimes', 'required', 'string', 'min:8', 'confirmed'],
             ])->validate();
