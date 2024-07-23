@@ -13,49 +13,53 @@
         <div v-if="userEditURL">
           <h5 class="text-secondary opacity-50 fs-5 mb-4">&#8251<span class="mx-2">정보 수정 시 심사를 받으실 수 있습니다.</span></h5>
         </div>
-        <div v-if="userEditURL" class="form-group">
+        <div v-if="userEditURL || adminEditURL" class="form-group">
           <label for="name">가입일자</label>
           <input type="text" v-model="user.created_at" id="createdAt" class="input-dis form-control" readonly/>
+        </div>
+        <div v-if="adminEditURL" class="form-group">
+          <label for="name">최종 수정일</label>
+          <input type="text" v-model="user.updated_at" id="updated_at" class="input-dis form-control" readonly/>
         </div>
         <div class="form-group">
           <label for="name">이름</label>
           <input type="text" v-model="profile.name" id="name" class="form-control" placeholder="이름"/>
-          <div v-if="registerURL" class="text-danger mt-1">
+          <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.name">
                   {{ message }}
               </div>
           </div>
         </div>
-        <div v-if="userEditURL" class="form-group">
+        <div v-if="userEditURL || adminEditURL" class="form-group">
           <label for="name">전화번호</label>
           <input type="text" id="phone" v-model="profile.phone" class="input-dis form-control" readonly/>
         </div>
-        <div v-if="registerURL" class="form-group">
+        <div v-if="registerURL || adminCreateURL" class="form-group">
           <label for="name">전화번호</label>
           <input type="text" id="phone" v-model="profile.phone" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
-          <div v-if="registerURL" class="text-danger mt-1">
+          <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
             <div v-for="message in validationErrors?.phone">
                 {{ message }}
             </div>
           </div>
         </div>
-        <div v-if="registerURL" class="form-group">
+        <div v-if="registerURL || adminCreateURL" class="form-group">
           <label for="email">이메일</label>
           <input type="text" v-model="profile.email" id="email" class="form-control" placeholder="example@demo.com"/>
-          <div v-if="registerURL" class="text-danger mt-1">
+          <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.email">
                   {{ message }}
               </div>
           </div>
         </div>
-        <div v-if="userEditURL" class="form-group">
+        <div v-if="userEditURL || adminEditURL" class="form-group">
           <label for="email">이메일</label>
           <input type="text" v-model="profile.email" id="email" class="input-dis form-control" readonly/>
         </div>
-        <div v-if="registerURL" class="form-group">
+        <div v-if="registerURL || adminCreateURL" class="form-group">
           <label for="email">비밀번호</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password" id="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합"/>
-          <div v-if="registerURL" class="text-danger mt-1">
+          <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.password">
                   {{ message }}
               </div>
@@ -65,14 +69,42 @@
           <label for="email">변경 비밀번호</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password" id="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합"/>
         </div>
-        <div class="form-group">
+        <div v-if="userEditURL || registerURL || adminCreateURL" class="form-group">
           <label for="email">비밀번호 확인</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password_confirmation" id="password_confirmation" class="form-control" placeholder="비밀번호를 다시 입력해주세요"/>
-          <div v-if="registerURL" class="text-danger mt-1">
+          <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.password_confirmation">
                   {{ message }}
               </div>
           </div>
+        </div>
+        <div v-if="adminEditURL" class="mb-3">
+            <label for="email" class="form-label">승인여부</label>
+            <select class="form-select" :v-model="profile.status" @change="changeStatus($event)" id="status">
+                <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == profile.status">{{ label }}</option>
+            </select>
+        </div>
+        <div v-if="adminEditURL" class="mb-3">
+            <label for="user-title" class="form-label"
+                >사진(본인 확인용)</label
+            >
+            <div class="file-upload-container">
+                <img :src="photoUrl" alt="Profile Photo" class="profile-photo" v-if="profile.file_user_photo_name"/>
+            </div>
+            <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadPhoto">
+                파일 첨부
+            </button>
+            <input type="file" @change="handleFileUploadPhoto" ref="fileInputPhoto" style="display:none" id="file_user_photo">
+            <div class="text-start text-secondary opacity-50" v-if="profile.file_user_photo_name">
+                사진 파일 : <a :href=photoUrl download>{{ profile.file_user_photo_name }}</a>
+            </div>
+        </div>
+        <div v-if="adminEditURL || adminCreateURL" class="mb-3">
+            <label for="role" class="form-label">회원유형</label>
+            <select class="form-select" :v-model="profile.role" @change="changeRoles($event)" id="role">
+                <option value="user" :selected="profile.role == 'user'">일반</option>
+                <option value="dealer" :selected="profile.role == 'dealer'">딜러</option>
+            </select>
         </div>
         <div class="text-center" v-if="registerURL">
           <div class="form-group dealer-check">
@@ -88,7 +120,7 @@
           </a>
         </div>
         <div v-if="isDealer || profile.isDealer">
-          <div v-if="registerURL" class="mb-3">
+          <div v-if="registerURL || adminCreateURL" class="mb-3">
                 <label for="user-title" class="form-label"
                     >사진 (본인 확인용)</label
                 >
@@ -104,11 +136,11 @@
             <label for="dealerName">딜러 이름</label>
             <input type="text" v-model="profile.dealer_name" id="dealerName" class="form-control" placeholder="이름"/>
           </div>
-          <div v-if="registerURL" class="form-group">
+          <div v-if="registerURL || adminCreateURL" class="form-group">
             <label for="name">연락처</label>
             <input type="text" id="phone" v-model="profile.dealerContact" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
           </div>
-          <div v-if="registerURL" class="form-group">
+          <div v-if="registerURL || adminCreateURL" class="form-group">
               <label for="dealerBirthDate">생년월일</label>
               <input type="date" id="dealerBirthDate" v-model="profile.dealerBirthDate" placeholder="1990-12-30">
           </div>
@@ -124,7 +156,7 @@
             <label for="dealer">소속상사 주소 </label>
             <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_post" class="input-dis form-control" placeholder="우편번호" readonly/>
           <div class="input-with-button">
-            <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_post" class="input-dis form-control" placeholder="주소" readonly/>
+            <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_addr1" class="input-dis form-control" placeholder="주소" readonly/>
             <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
           </div>
             <input type="text" v-model="profile.company_addr2" class="form-control" placeholder="상세주소"/>
@@ -203,6 +235,16 @@
         <div v-if="registerURL">
           <button type="submit" class="mt-3 w-100 btn btn-primary">약관 동의 및 회원가입</button>
         </div>
+        <div v-if="adminEditURL" class="mt-4">
+          <button class="w-100 btn btn-primary">
+            <span>저장</span>
+          </button>
+        </div>
+        <div v-if="adminCreateURL" class="mt-4">
+          <button class="w-100 btn btn-primary">
+            <span>등록</span>
+          </button>
+        </div>
       </form>
   </template>
   
@@ -210,13 +252,12 @@
   <script setup>
   import { ref, onMounted ,computed , inject } from 'vue';
   import { useStore } from 'vuex';
-  import { useRouter, useRoute } from 'vue-router';
+  import { useRoute } from 'vue-router';
   import profileDom from '/resources/img/profile_dom.png'; 
   import { cmmn } from '@/hooks/cmmn';
   import useUsers from "@/composables/users";
   
-  const { getUser , user, setRegisterUser, updateProfile, validationErrors } = useUsers();
-  const router = useRouter();
+  const { getUser , user, setRegisterUser, updateProfile, updateUser,adminStoreUser, validationErrors } = useUsers();
   const route = useRoute();
   
   const photoUrl = ref(profileDom);
@@ -231,6 +272,8 @@
   
   const userEditURL = ref(false);
   const registerURL = ref(false);
+  const adminEditURL = ref(false);
+  const adminCreateURL = ref(false);
 
   const store = useStore();
   const swal = inject('$swal');
@@ -262,14 +305,17 @@
     file_user_sign_name:"",
     file_user_cert:"",
     file_user_cert_name:"",
+    status:'',
+    role:'',
     //디비외
     photoImgChg : 'false',
     photoUUID : '',
   });
   const userId = ref(null);
   const isDealer = ref(false);
-  const { openPostcode , closePostcode , wica , wicac } = cmmn();
+  const { openPostcode , closePostcode , wica , wicac, wicas } = cmmn();
   
+  let statusLabel;
   
   const triggerFileInput = () => {
     fileInput.value.click();
@@ -296,6 +342,7 @@
             if(info.files.file_user_photo[0].hasOwnProperty('original_url')){
                 photoUrl.value = info.files.file_user_photo[0].original_url;
                 profile.value.photoUUID = info.files.file_user_photo[0].uuid;
+                profile.value.file_user_photo_name = info.files.file_user_photo[0].file_name;
             }
         }
 
@@ -323,19 +370,22 @@
   }
   
   const setUserProfileData = async () => {
-  
-    userId.value = store.getters['auth/user'].id;
-    
+    if(userEditURL.value){
+      userId.value = store.getters['auth/user'].id;
+    }else if(adminEditURL.value){
+      userId.value = route.params.id;
+    }
     await getUser(userId.value);
     //console.log(user);
   
     profile.value.isDealer = user.value?.roles?.includes('dealer') || false;
-    console.log('user==========================');
-    console.log(user);
+    profile.value.role = user.value.roles;
+
     if (user) {
       profile.value.name = user.value.name;
       profile.value.phone = user.value.phone;
       profile.value.email = user.value.email;
+      profile.value.status = user.value.status;
       if (profile.value.isDealer) {
         profile.value.dealer_name = user.value.dealer.name;
         profile.value.company = user.value.dealer.company;
@@ -352,9 +402,7 @@
         fileExstCheck(user.value);
       }
     } 
-
-    console.log('profile===============');
-    console.log(profile);
+    
   };
   
   function editPostCode(elementName) {
@@ -375,14 +423,19 @@
   
   onMounted(async () => {
     //await store.dispatch("auth/getUser");
-    console.log('path==========================');
-    console.log(route.path);
 
     if(route.path == '/edit-profile'){
       userEditURL.value = true; 
       await setUserProfileData();
-    }else if(route.path == '/register'){
+    } else if(route.path == '/register'){
       registerURL.value = true;
+    } else if(route.path.includes('/admin/users/edit/')){
+      statusLabel = wicas.enum(store).users();
+      adminEditURL.value = true;
+      await setUserProfileData();
+    } else if(route.path =='/admin/users/create'){
+      statusLabel = wicas.enum(store).users();
+      adminCreateURL.value = true;
     }
     
   });
@@ -392,8 +445,25 @@
       updateProfile(profile,userId.value);
     }else if(route.path == '/register'){
       setRegisterUser(profile.value);
+    }else if(route.path.includes('/admin/users/edit/')){
+      updateUser(profile.value,userId.value);
+    }else if(route.path.includes('/admin/users/create')){
+      adminStoreUser(profile.value);
     }
   }
+
+  function changeStatus(event) {
+    profile.value.status = event.target.value;
+  }
+
+  function changeRoles(event) {
+    profile.value.role = event.target.value;
+    if(profile.value.role == 'user'){
+      profile.value.isDealer = false;
+    }else if(profile.value.role == 'dealer'){
+      profile.value.isDealer = true;
+    }
+}
 
   //파일 관련 함수
   function handleFileUploadSign(event) {
