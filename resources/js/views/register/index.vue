@@ -36,7 +36,7 @@
                                 <div class="text-left">
                                     <p class="mb-4 fw-bold">회원 정보를 입력해주세요</p>
                                 </div>
-                                <div class="form-body">
+                              
                                     <UserRegisterForm/>
                                     <!--
                                     <form @submit.prevent="submitRegister">
@@ -198,7 +198,6 @@
                                         </div>
                                     </form>
                                     -->
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -455,8 +454,8 @@ body {
 
 .card {
     border-radius: 20px;
-    padding: 16px;
-    max-width: 410px;
+    padding: 10px;
+    max-width: 422px;
 }
 
 .sidebar {
@@ -517,34 +516,9 @@ body {
     max-width: 390px;
 }
 
-/*******************************
-   text-style
-********************************/
-.bold-link {
-    font-weight: bold;
+.search-btn{
+    right:15px !important;
 }
-
-.text-secondary opacity-50 {
-    color: #c8c8c8 !important;
-}
-
-.fw-bold {
-    font-weight: bold !important;
-}
-
-.custom-highlight {
-    background: linear-gradient(transparent 50%, #ffe7eb 50%);
-}
-
-.btn-lg {
-    font-size: 1rem !important;
-}
-
-.icon-link {
-    color: grey;
-    text-decoration: underline !important;
-}
-
 /*******************************
    regist form
 ********************************/

@@ -155,26 +155,26 @@
           <div class="form-group">
             <label for="dealer">소속상사 주소 </label>
             <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_post" class="input-dis form-control" placeholder="우편번호" readonly/>
+            <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
+            <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
+            </div>
           <div class="input-with-button">
             <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_addr1" class="input-dis form-control" placeholder="주소" readonly/>
-            <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
           </div>
             <input type="text" v-model="profile.company_addr2" class="form-control" placeholder="상세주소"/>
-          <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-              <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
-          </div>
           </div>
           <div class="form-group">
             <label for="dealer">인수차량 도착지 주소</label>
             <input type="text" v-model="profile.receive_post" class="input-dis form-control" placeholder="우편번호" readonly />
-            <div class="input-with-button">
-              <input type="text" v-model="profile.receive_addr1" class="input-dis form-control" placeholder="주소" readonly />
-              <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
-            </div>
-            <input type="text" v-model="profile.receive_addr2" class="form-control" placeholder="상세주소"/>
+            <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
             <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
               <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
             </div>
+            <div class="input-with-button">
+              <input type="text" v-model="profile.receive_addr1" class="input-dis form-control" placeholder="주소" readonly />
+            </div>
+            <input type="text" v-model="profile.receive_addr2" class="form-control" placeholder="상세주소"/>
           </div>
           <div class="form-group">
             <label for="dealer">소개</label>
@@ -577,20 +577,12 @@
     border: 1px solid #ccc;
   }
   .profile-photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
+    position: relative !important;
+    width: 150px;
   }
   
   .d-none {
     display: none;
-  }
-  .search-btn{
-    transform: none !important;
-    bottom: 52px;
   }
   .img-form {
       position: relative;
@@ -631,5 +623,12 @@
       color: grey;
       text-decoration: underline !important;
   }
+  .form-group input[type=date] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 10px;
+}
   </style>
   

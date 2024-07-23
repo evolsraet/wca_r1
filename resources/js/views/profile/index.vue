@@ -2,6 +2,9 @@
 <template>
   <div class="container p-5">
     <h4 class="mb-5">내 정보 수정</h4>
+    <div class="col-md-10">
+          <div class="card border-0 shadow-none">
+              <div class="card-body">
     <!--
     <form @submit.prevent="updateProfile">
       <div class="form-group profile-content">
@@ -79,12 +82,11 @@
       <button type="submit" class="mt-3 w-100 btn btn-primary">저장</button>
     </form>
     -->
-    <div class="container p-5">
       <UserRegisterForm/>
     </div>
-    
-
+    </div>
   </div>
+</div>
 </template>
 
 <script setup>
@@ -290,7 +292,6 @@ onMounted(async () => {
 });
 */
 </script>
-
 <!--
 <style scoped>
 .profile {
@@ -335,10 +336,7 @@ input[type="password"] {
 .d-none {
   display: none;
 }
-.search-btn{
-  transform: none !important;
-  bottom: 52px;
-}
+
 .img-form {
     position: relative;
     display: inline-block;
