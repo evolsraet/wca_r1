@@ -24,10 +24,6 @@ class AuctionController extends Controller
      * #    'file_auction_owner'  => '매도자관련서류', (관리자가 저장 후 낙찰 딜러에게 표시된다)
      * @lrd:end
      */
-    public function store(Request $request)
-    {
-        return $this->service->store($request);
-    }
 
     public function swapNumber($a, $b)
     {

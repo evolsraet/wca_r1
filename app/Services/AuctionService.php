@@ -34,11 +34,78 @@ class AuctionService
                 $this->filterResultsBasedOnRole($auction);
                 break;
             case 'store':
-                // TODO: 본인인증 검증 추가
+                // 본인인증 검증 추가
                 $this->validateAndSetAuctionData($request, $auction);
                 break;
             case 'update':
-                // TODO: 상황별 업데이트 처리
+                // 상태변경
+                // request()->mode 가 있을 경우 그대로 두고, 없으면서 $acution->status 가 변경됬을 경우 그 request()->mode 에 $acution->status 대입
+                if (!request()->has('mode') && $auction->isDirty('status')) {
+                    request()->merge(['mode' => $request->status]);
+                }
+
+                if (request()->has('mode')) {
+                    switch (request()->mode) {
+                        case 'reauction':
+                            // 재경매 : 옥션변수가 오고, 재옥션 상태가 아니고, auction->status 가 wait 일 경우,  상태변경
+                            if (!$auction->is_reauction && $auction->status == 'wait') {
+                                $auction->status = 'ing';
+                                $auction->is_reauction = true;
+                                $auction->final_at = now()->addDays(env('REAUCTION_DAY'));
+                            } else {
+                                throw new \Exception('재경매변경 가능상태가 아닙니다.');
+                            }
+                            break;
+
+                        case 'diag':
+                            // 진단으로 변경
+                            if (!$auction->is_reauction && $auction->status == 'ask') {
+                                $auction->status = 'diag';
+                                $auction->final_at = now()->addDays(env('AUCTION_DAY'));
+                            } else {
+                                throw new \Exception('진단변경 가능상태가 아닙니다.');
+                            }
+                            break;
+
+                        case 'dlvr':
+                            // 배송으로 변경
+                            if ($auction->status == 'chosen') {
+                                $auction->status = 'dlvr';
+                            } else {
+                                throw new \Exception('배송변경 가능상태가 아닙니다.');
+                            }
+                            break;
+
+                        case 'done':
+                            // 완료으로 변경
+                            if (in_array($auction->status, ['dlvr', 'chosen'])) {
+                                $auction->status = 'done';
+                            } else {
+                                throw new \Exception('배송변경 가능상태가 아닙니다.');
+                            }
+                            break;
+
+                        case 'cancel':
+                            // 취소으로 변경
+                            if (!in_array($auction->status, ['done', 'dlvr'])) {
+                                $auction->status = 'cancel';
+                            } else {
+                                throw new \Exception('취소변경 가능상태가 아닙니다.');
+                            }
+                            break;
+                    }
+                }
+                if (
+                    request()->has('mode') && request()->reauction
+
+                    // 본인일 경우
+                ) {
+                    $auction->status = 'ing';
+                    $auction->is_reauction = true;
+                    $auction->final_at = now()->addDays(env('REAUCTION_DAY'));
+                } elseif (request()->has('mode') && request()->reauction) {
+                }
+
                 $this->modifyOnlyMe($auction);
                 break;
             case 'destroy':
