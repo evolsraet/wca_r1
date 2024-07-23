@@ -57,10 +57,11 @@ export default function useAuctions() {
     }
 
     const getAuctionsByDealer = async (page = 1 , status="all") => {
-
+        /*
         if(status != 'all'){
             apiList.push(`auctions.status:${status}`)
-        }
+        }*/
+
         let request = wicac.conn()
             .log()
             .url(`/api/auctions`)
@@ -85,7 +86,6 @@ export default function useAuctions() {
             .url(`/api/auctions`)
             .with(['likes'])
             .page(`${page}`)
-
         if(userId != null){
             request = request.whereOr('likes.user_id',`${userId}`);
         } 
@@ -335,7 +335,7 @@ const AuctionCarInfo = async (carInfoForm) => {
         }
     }
 
-    /*
+    
     const formData = new FormData();
     formData.append('auction', JSON.stringify(payload.auction));
     if(auctionData.auction.file_auction_proxy){
@@ -343,6 +343,7 @@ const AuctionCarInfo = async (carInfoForm) => {
         formData.append('file_auction_proxy', auctionData.auction.file_auction_proxy);
     }
     
+    /*
     return wicac.conn()
     .url(`/api/auctions`)
     .param(formData) 
@@ -455,6 +456,9 @@ const updateAuction = async (id,auction) => {
     formData.append('auction', JSON.stringify(auctionForm.auction));
     if(auction.file_auction_proxy){
         formData.append('file_auction_proxy', auction.file_auction_proxy);
+    }
+    if(auction.file_auction_owner){
+        formData.append('file_auction_owner', auction.file_auction_owner);
     }
 
     wica.ntcn(swal)
