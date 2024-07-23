@@ -95,13 +95,16 @@ class AppServiceProvider extends ServiceProvider
                 $response = array_merge($response, $additional);
             }
 
-            if (is_array($response['data'])) {
+            // 카운트만 조회한 경우
+            if (isset($response['data']['count'])) {
+                $response['data_count'] = $response['data']['count'];
+                $response['data'] = null;
+            } elseif (is_array($response['data']) || $response['data'] instanceof \Illuminate\Support\Collection) {
                 $response['data_count'] = count($response['data']);
             }
 
             // print_r([$response, $code]);
             // die();
-            // 참고 :: 정상이지만, Laravel Request Docs (LRD) 에서는 항상 200 으로 응답된다.
             return response()->json($response, (int) $code);
             // return response()->json($response, 401);
         });

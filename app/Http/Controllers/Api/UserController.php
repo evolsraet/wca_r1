@@ -62,7 +62,15 @@ class UserController extends Controller
 
         // TODO: 폰번호로 링크 보내기
 
-        return response()->api(['link' => env('APP_URL') . "/resetPasswordLogin/{$encryptCode}"], "세시간까지 유효한 링크가 생성되었습니다.", 'ok', 200);
+        return response()->api(
+            [
+                'link' => env('APP_URL') . "/resetPasswordLogin/{$encryptCode}",
+                'encryptCode' => $encryptCode,
+            ],
+            "세시간까지 유효한 링크가 생성되었습니다.",
+            'ok',
+            200
+        );
     }
 
     public function resetPasswordLogin(Request $request, $encryptCode)

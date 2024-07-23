@@ -161,9 +161,14 @@ trait CrudTrait
 
         $this->afterProcess(__FUNCTION__, request(), $result);
 
-        $result = $result->paginate($paginate);
-
-        return response()->api($this->resourceClass::collection($result));
+        // mode=count 체크
+        if (request('mode') === 'count') {
+            $count = $result->count();
+            return response()->api(['count' => $count]);
+        } else {
+            $result = $result->paginate($paginate);
+            return response()->api($this->resourceClass::collection($result));
+        }
     }
 
     private function whereRun($result)
