@@ -57,6 +57,15 @@
                         </div>
                     </router-link>
                 </li>
+                <li class="nav-item mb-4">
+                    <router-link :to="{ name: 'posts.index' }" class="nav-link side-navbar-link" id="adminSidebar-review">
+                        <div class="d-flex align-items-center">
+                            <div class="admin-icon admin-icon-review admin-icon-small mx-2"></div>
+                            <span class="d-none d-sm-inline ps-2" >공지 관리</span>
+                            <div class="admin-icon admin-icon-coin admin-icon-pass m-auto"></div>
+                        </div>
+                    </router-link>
+                </li>
             </ul>
         </div>
     </nav>
