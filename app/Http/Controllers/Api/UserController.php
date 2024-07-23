@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Services\UserService;
 use Illuminate\Http\UploadedFile;
 use App\Traits\CrudControllerTrait;
 use Database\Factories\UserFactory;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\UserResource;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Crypt;
 
 class UserController extends Controller
 {
@@ -22,6 +26,67 @@ class UserController extends Controller
         // print_r('userControllerTrait-');
         // print_r(config('auth.defaults.guard'));
         // die();
+    }
+
+    /**
+     * 비밀번호 재설정
+     *
+     * @LRD\Request({
+     *     @LRD\Parameter("phone", type="string", required=true, description="사용자 전화번호")
+     * })
+     */
+
+    public function resetPasswordLink(Request $request, $phone)
+    {
+        // 라라벡 phone 복호화가능한 암호화
+        $expire = now()->addHours(3)->format('Y-m-d H:i:s');
+        $encryptCode = Crypt::encryptString("{$phone}/{$expire}");
+
+
+        $user = User::where('phone', $phone)->first();
+
+        if (!$user) {
+            throw new \Exception('사용자를 찾을 수 없습니다.');
+        }
+
+        Log::info(
+            [
+                $phone,
+                $encryptCode,
+                Crypt::decryptString($encryptCode),
+                $user->toArray(),
+
+            ]
+        );
+
+
+        // TODO: 폰번호로 링크 보내기
+
+        return response()->api(['link' => env('APP_URL') . "/resetPasswordLogin/{$encryptCode}"], "세시간까지 유효한 링크가 생성되었습니다.", 'ok', 200);
+    }
+
+    public function resetPasswordLogin(Request $request, $encryptCode)
+    {
+        $code = Crypt::decryptString($encryptCode);
+        $codeDecode = explode('/', $code);
+        $phone = $codeDecode[0];
+        $expire = $codeDecode[1];
+
+        Log::info([$phone, $expire, now()->format('Y-m-d H:i:s')]);
+
+        if ($expire < now()->format('Y-m-d H:i:s')) {
+            throw new \Exception('링크가 만료되었습니다.');
+        }
+
+        $user = User::where('phone', $phone)->first();
+        if (!$user) {
+            throw new \Exception('사용자를 찾을 수 없습니다.');
+        }
+
+        // 로그인
+        Auth::login($user);
+
+        return response()->api(null, "로그인 성공했습니다.\n[{$expire}]까지 비밀번호를 변경해주세요.", 'ok', 200);
     }
 
     public function test(Request $request)

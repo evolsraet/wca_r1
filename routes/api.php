@@ -30,6 +30,8 @@ Route::get('users/me', [UserController::class, 'me'])->middleware('auth:sanctum'
 Route::get('users/abilities', [UserController::class, 'abilities'])->middleware('auth:sanctum');
 // Route::post('users/test', [UserController::class, 'test']);   // 회원가입은 인증없이
 Route::post('users/confirmPassword', [UserController::class, 'confirmPassword'])->middleware('auth:sanctum');
+Route::get('users/resetPasswordLink/{phone}', [UserController::class, 'resetPasswordLink']);
+Route::get('users/resetPasswordLogin/{encryptCode}', [UserController::class, 'resetPasswordLogin']);
 Route::apiResource('users', UserController::class)
     ->middleware('auth:sanctum')
     ->withoutMiddleware('auth:sanctum', ['store', 'test']);
