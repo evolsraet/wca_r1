@@ -1,9 +1,12 @@
-import { ref, reactive, inject } from "vue";
+import { ref, reactive, inject, computed } from "vue";
 import { useRouter } from "vue-router";
 import { AbilityBuilder, createMongoAbility } from "@casl/ability";
 import { ABILITY_TOKEN } from "@casl/vue";
 import store from "../store";
+
 import { cmmn } from '@/hooks/cmmn';
+
+
 
 let user = reactive({
     name: "",
@@ -192,35 +195,66 @@ export default function useAuth() {
 
     };
 
-    const submitForgotPassword = async () => {
-        swal({
-            icon: 'error',
-            title: '준비중',
-            showConfirmButton: false
-        });
-        if (processing.value) return;
-
-        processing.value = true;
+    const submitForgotPassword = async (phone) => {
         validationErrors.value = {};
 
-        await axios
-            .post("/api/forget-password", forgotForm)
-            .then(async (response) => {
-                swal({
-                    icon: "success",
-                    title: "비밀번호 재설정 링크를 이메일로 보냈습니다! 메일함을 확인해 주세요.",
-                    showConfirmButton: false,
-                    timer: 1500,
-                });
-                // await router.push({ name: 'admin.index' })
-            })
-            .catch((error) => {
-                if (error.response?.data) {
-                    validationErrors.value = error.response.data.errors;
-                }
-            })
-            .finally(() => (processing.value = false));
+        return wicac.conn()
+        .log() 
+        .url(`api/users/resetPasswordLink/${phone}`)
+        .callback(function(result) {
+            if(result.isSuccess){
+                wica.ntcn(swal)
+                .icon('I')
+                .callback(function(result2) {
+                    if(result2.isOk){             
+                                                
+                    }
+                })
+                .alert('비밀번호 재설정 링크를 보냈습니다.');
+                return result;
+            }else{
+                wica.ntcn(swal)
+                .icon('E')
+                .callback(function(result2) {
+                })
+                .alert(result.msg);
+            }
+        })
+        .get();
     };
+
+    const forgotPasswordLogin = async (code) => {
+        return await wicac.conn()
+        .log()
+        .url(`/api/users/resetPasswordLogin/${code}`)
+        .callback(function(result) {
+            if(result.isSuccess){
+                return result;
+            }else{
+                wica.ntcn(swal)
+                .icon('E')
+                .callback(function(result2) {
+                    if(result2.isOk){             
+                        router.push({ name: "home" });                          
+                    }
+                })
+                .alert(result.msg);
+            }
+        })
+        .get();
+    }
+    
+    const getUserMe = async () => {
+        return wicac.conn()
+        .log()
+        .url(`/api/users/me`)
+        .callback(function(result) {
+            if(result.isSuccess){
+                return result;
+            }
+        })
+        .get();
+    }
 
     const submitResetPassword = async () => {
         if (processing.value) return;
@@ -315,5 +349,7 @@ export default function useAuth() {
         getUser,
         logout,
         getAbilities,
+        getUserMe,
+        forgotPasswordLogin,
     };
 }

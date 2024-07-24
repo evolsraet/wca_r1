@@ -22,7 +22,7 @@ export default {
       for (let label of loopLabel) {
         wicac.conn()
         .log()
-        .url('api/lib/fields/'+label)
+        .url('/api/lib/fields/'+label)
         .callback(function(result) {
           commit("SET_DATA", {key:label, val:result.data});
         })

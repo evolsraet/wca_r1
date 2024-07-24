@@ -309,6 +309,11 @@ export default [
                 component: () => import('../views/auth/passwords/Reset.vue'),
                 beforeEnter: guest,
             },
+            {
+                path: '/resetPasswordLogin/:code',
+                name: 'auth.resetPasswordLogin',
+                component: () => import('../views/auth/passwords/resetPasswordLogin.vue'),
+            },
         ]
     },
     {
