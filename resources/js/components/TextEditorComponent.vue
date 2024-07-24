@@ -27,7 +27,6 @@ onMounted(() => {
 })
 
 watch(editorData, () => {
-    console.log('sdddss')
     emit('update:modelValue', editorData.value)
 })
 </script>
