@@ -315,7 +315,7 @@
   </template>
   
   <script setup>
-  import { ref, computed, onMounted, watch , nextTick,onUnmounted  } from 'vue';
+  import { ref, computed, onMounted, watch, nextTick, onUnmounted } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
   import { useStore } from 'vuex';
   import useAuth from '@/composables/auth';
@@ -324,8 +324,9 @@
   import profileDom from '/resources/img/profile_dom.png';
   import sidenav02 from '../../../resources/img/side-nav/side-nav02.png';
   import sidenav01 from '../../../resources/img/side-nav/side-nav01.png';
+  
   const photoUrl = ref(profileDom);
-  const { wica , wicaLabel } = cmmn();
+  const { wica, wicaLabel } = cmmn();
   const isMobile = ref(false);
   const { getAuctions, auctionsData } = useAuctions();
   const { logout } = useAuth();
@@ -339,10 +340,10 @@
   let scrollTimeout = null;
   const auctionDetailsLoaded = ref(false);
   const isContainer = ref(false);
-
-function checkWidth() {
-  isContainer.value = window.innerWidth <= 991;
-}
+  
+  function checkWidth() {
+    isContainer.value = window.innerWidth <= 991;
+  }
   function toggleSettingsMenuMov() {
     showSettingsmov.value = !showSettingsmov.value;
   }
@@ -361,7 +362,7 @@ function checkWidth() {
   const redirectByName = (routeName) => {
     router.push({ name: routeName });
   };
-
+  
   const homePath = computed(() => {
     if (isDealer.value) {
       return { name: 'dealer.index' };
@@ -373,6 +374,8 @@ function checkWidth() {
   });
   
   const fetchFilteredViewBids = async () => {
+    if(isUser || isDealer){
+    if (!isAuthenticated.value) return;
     console.log('Original Bids:', bidsData.value);
     const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
     console.log('Bids with Details:', bidsWithDetails);  // Bids with Details 데이터 출력
@@ -381,6 +384,7 @@ function checkWidth() {
       return bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id;
     });
     console.log('Bids with Auction Details:', filteredViewBids.value);
+  }
   };
   
   const userHasAuction = computed(() => {
@@ -392,29 +396,21 @@ function checkWidth() {
     const sortedAuctions = [...auctionsData.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     return sortedAuctions[0];
   });
-  const isDiagnosing = computed(() => latestAuction.value && latestAuction.value.status === 'diag' || latestAuction.value.status === 'ask');
-  const isAuctioning = computed(() => latestAuction.value && latestAuction.value.status === 'ing');
-  const isSelectingDealer = computed(() => latestAuction.value && latestAuction.value.status === 'wait');
-  const isCompleted = computed(() => latestAuction.value && latestAuction.value.status === 'chosen' || latestAuction.value && latestAuction.value.status === 'done');
-  
-  const isDiagnosisCompleted = computed(() => ['ing', 'wait', 'chosen'].includes(latestAuction.value?.status));
-  const isAuctionCompleted = computed(() => ['wait', 'chosen'].includes(latestAuction.value?.status));
-  const isDealerSelectionCompleted = computed(() => latestAuction.value?.status === 'chosen');
-  
-  const isDetailPage = computed(() => {
-  return /^\/auction\/\d+$/.test(route.path) ||
-         route.path === '/selldt' ||
-         route.path === '/selldt2' ||
-         /^\/completionsuccess\/\d+$/.test(route.path);
-});
 
-const isDetailPage02 = computed(() => {
-  return /^\/auction\/\d+$/.test(route.path) ||
-         /^\/completionsuccess\/\d+$/.test(route.path);
-});
-const isAuctionDetailPage = computed(() => {
-  return route.name === 'AuctionDetail';
-});
+  const isDetailPage = computed(() => {
+    return /^\/auction\/\d+$/.test(route.path) ||
+           route.path === '/selldt' ||
+           route.path === '/selldt2' ||
+           /^\/completionsuccess\/\d+$/.test(route.path);
+  });
+  
+  const isDetailPage02 = computed(() => {
+    return /^\/auction\/\d+$/.test(route.path) ||
+           /^\/completionsuccess\/\d+$/.test(route.path);
+  });
+  const isAuctionDetailPage = computed(() => {
+    return route.name === 'AuctionDetail';
+  });
   
   const goBack = () => {
     router.back();
@@ -450,7 +446,7 @@ const isAuctionDetailPage = computed(() => {
       content.classList.remove('visible');
     }
   }
-
+  
   function fileExstCheck(info){
     if(info.hasOwnProperty('files')){
       if(info.files.hasOwnProperty('file_user_photo')){
@@ -460,60 +456,78 @@ const isAuctionDetailPage = computed(() => {
       }
     }
   }
-
+  
   const buttons = [
-  `<div class="btn btn-primary w-100 p-0 m-0">
-    <div class="d-flex justify-content-around align-items-center">
-      <p class="ms-2">내 차 <br>팔 땐</p>
-      <div class="side-img02">
-        <img src="${sidenav02}" alt="사이드 바 이미지 02" width="120px">
+    `<div class="btn btn-primary w-100 p-0 m-0">
+      <div class="d-flex justify-content-around align-items-center">
+        <p class="ms-2">내 차 <br>팔 땐</p>
+        <div class="side-img02">
+          <img src="${sidenav02}" alt="사이드 바 이미지 02" width="120px">
+        </div>
+        <p class="me-2 fw-bodler">위 카<br> 에 서</p>
       </div>
-      <p class="me-2 fw-bodler">위 카<br> 에 서</p>
-    </div>
-  </div>`,
-  `<div class="btn btn-primary w-100 p-0 m-0">
-    <div class="d-flex justify-content-around align-items-center">
-      <p class="ms-2 text-start fw-bodler">고민은<br>판매만 늦출뿐!</p>
-      <div class="side-img">
-        <img src="${sidenav01}" alt="사이드 바 이미지 01" width="180px">
+    </div>`,
+    `<div class="btn btn-primary w-100 p-0 m-0">
+      <div class="d-flex justify-content-around align-items-center">
+        <p class="ms-2 text-start fw-bodler">고민은<br>판매만 늦출뿐!</p>
+        <div class="side-img">
+          <img src="${sidenav01}" alt="사이드 바 이미지 01" width="180px">
+        </div>
       </div>
-    </div>
-  </div>`
-];
-
-const randomButton = ref('');
-
-/* 경매 상세 부분 상단 차량 번호 노출*/
-const carDetailsNo = ref('');
-
-const fetchAuctionDetails = async () => {
-  await getAuctions();
-  const auctionId = Number(route.params.id); 
-  console.log("경매 ID:", auctionId);
-
-  const auction = auctionsData.value.find(auction => {
-    console.log("경매 항목 ID:", auction.id); 
-    return auction.id === auctionId;
-  });
-
-  if (auction) {
-    carDetailsNo.value = auction.car_no;
-    console.log("차 상세번호:", carDetailsNo.value);
-  } else {
+    </div>`
+  ];
+  
+  const randomButton = ref('');
+  
+  /* 경매 상세 부분 상단 차량 번호 노출*/
+  const carDetailsNo = ref('');
+  
+  const isAuthenticated = computed(() => !!user.value);
+  
+  const fetchAuctionDetails = async () => {
+  if(isUser || isDealer){
+    if (!isAuthenticated.value) return;
+  
+    await getAuctions();
+    const auctionId = Number(route.params.id); 
+    console.log("경매 ID:", auctionId);
+  
+    const auction = auctionsData.value.find(auction => {
+      console.log("경매 항목 ID:", auction.id); 
+      return auction.id === auctionId;
+    });
+  
+    if (auction) {
+      carDetailsNo.value = auction.car_no;
+      console.log("차 상세번호:", carDetailsNo.value);
+    } else {
+    }
   }
-};
-onMounted(fetchAuctionDetails);
-watch(() => route.params.id, fetchAuctionDetails); 
-
+  };
+  
+  onMounted(() => {
+  if (isUser.value || isDealer.value) {
+    fetchAuctionDetails();
+  }
+});
+  
+watch(() => route.params.id, () => {
+  if (isUser.value || isDealer.value) {
+    fetchAuctionDetails();
+  }
+});
+  
   onMounted(async () => {
     checkWidth();
     window.addEventListener('resize', checkWidth);
-    fileExstCheck(user.value);
-     randomButton.value = buttons[Math.floor(Math.random() * buttons.length)];
+    if (isUser || isDealer) {
+      fileExstCheck(user.value);
+      randomButton.value = buttons[Math.floor(Math.random() * buttons.length)];
+    }
     let navAuction = document.querySelectorAll('.nav-auction');
     let navReview = document.querySelectorAll('.nav-review');
     let navCarInq = document.querySelectorAll('.nav-inq');
-
+  
     const content = document.querySelector('.toggle-nav-content');
     content.addEventListener('scroll', checkScrollGradient);
     checkScrollGradient();
@@ -559,20 +573,20 @@ watch(() => route.params.id, fetchAuctionDetails);
   };
   updateIsMobile();
   window.addEventListener('resize', updateIsMobile);
-
+  
   watch(() => route.name, (to, from) => {
       //console.log('라우터 이름:', to);
-
+  
       const removeActiveLink = (elements) => {
         elements.forEach(element => {
           element.classList.remove('active-link');
         });
       };
-
+  
       removeActiveLink(navAuction);
       removeActiveLink(navReview);
       removeActiveLink(navCarInq);
-
+  
       //내차조회
       if (to === 'sell' || to === 'selldt2') {
         nextTick(() => {
@@ -587,7 +601,7 @@ watch(() => route.params.id, fetchAuctionDetails);
           })
         }
       }
-
+  
       //매물
       if (to === 'AuctionDetail' || to === 'completionsuccess') {
         nextTick(() => {
@@ -603,7 +617,7 @@ watch(() => route.params.id, fetchAuctionDetails);
           })
         }
       }
-
+  
       //이용후기
       if (to === 'user.edit-review' || to === 'index.allreview' || to == "user.create-review" || to == "user.review-detail") {
         nextTick(() => {
@@ -620,9 +634,9 @@ watch(() => route.params.id, fetchAuctionDetails);
         }
       }
     } , { immediate: true });
-
+  
   });
-    
+  
   function toggleOverlay(show) {
     const overlay = document.querySelector('.overlay');
     if (show) {
@@ -639,9 +653,10 @@ watch(() => route.params.id, fetchAuctionDetails);
   }
   onUnmounted(() => {
   window.removeEventListener('resize', checkWidth);
-});
-
+  });
+  
   </script>
+  
   
   <style scoped>
   .toggle-nav-content {
