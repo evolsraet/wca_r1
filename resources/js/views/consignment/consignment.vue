@@ -18,9 +18,9 @@
         <h4 class="fst-normal mb-5">원하는 탁송일을 선택해 주세요</h4>
         <div class="d-flex justify-content-between">
           <h5>{{ monthLabel }}</h5>
-          <p class="text-secondary opacity-50">&#8251;탁송일은 익일 9시 이후부터 5일 이내로 탁송이 가능해요.</p>
         </div>
-        <div class="date-time-picker">
+        <p class="text-secondary opacity-50">&#8251;탁송일은 익일 9시 이후부터 5일 이내로 탁송이 가능해요.</p>
+        <div class="date-time-picker overflow-x-auto">
           <div class="date-picker">
             <div v-for="(day, index) in days" :key="index" class="date-container d">
               <div class="day-label">{{ day.label }}</div>

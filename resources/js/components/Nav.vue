@@ -741,7 +741,7 @@ watch(() => route.params.id, fetchAuctionDetails);
   }
   
   .btn-back {
-    width: 25px;
+    width: 46px;
     height: 25px;
     border: none;
     font-size: 1.5rem;
