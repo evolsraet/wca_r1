@@ -78,6 +78,31 @@ export default [
         component: GuestLayout,
         children: [
             {
+                name: 'board.index',
+                path: 'board/:boardId',
+                component: BoardLayout,
+                children: [
+                    {
+                        name: 'posts.index',
+                        path: '',
+                        component: PostsIndex,
+                        meta: { breadCrumb: 'Posts' }
+                    },
+                    {
+                        name: 'posts.create',
+                        path: 'create',
+                        component: PostsCreate,
+                        meta: { breadCrumb: 'Add new post' }
+                    },
+                    {
+                        name: 'posts.edit',
+                        path: 'edit/:id',
+                        component: PostsEdit,
+                        meta: { breadCrumb: 'Edit post' }
+                    },
+                ],
+            },
+            {
                 path: '/',
                 name: 'home',
                 component: () => import('../views/home/index.vue'),
@@ -304,31 +329,6 @@ export default [
                 meta: { breadCrumb: 'Profile' }
             },
             
-            {
-                name: 'board.index',
-                path: 'board/:boardId',
-                component: BoardLayout,
-                children: [
-                    {
-                        name: 'posts.index',
-                        path: '',
-                        component: PostsIndex,
-                        meta: { breadCrumb: 'Posts' }
-                    },
-                    {
-                        name: 'posts.create',
-                        path: 'create',
-                        component: PostsCreate,
-                        meta: { breadCrumb: 'Add new post' }
-                    },
-                    {
-                        name: 'posts.edit',
-                        path: 'edit/:id',
-                        component: PostsEdit,
-                        meta: { breadCrumb: 'Edit post' }
-                    },
-                ],
-            },
             {
                 name: 'categories.index',
                 path: 'categories',

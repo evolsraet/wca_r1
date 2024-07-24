@@ -91,7 +91,7 @@
                       <span class="text-secondary opacity-50 font-1">경매 완료 매물</span>                       
                     </div>
                   </router-link>
-                  <router-link :to="{ name: 'index.claim' }" class="menu-item process mt-0" @click="toggleNavbar">
+                  <router-link :to="{ name: 'posts.index', params: { boardId: 'claim' } }" class="menu-item process mt-0" @click="toggleNavbar">
                     <div class="sd-menu">
                       <div class="icon icon-document"></div>
                     </div>
@@ -100,7 +100,7 @@
                       <span class="text-secondary opacity-50 font-1">낙찰 차량에 문제가 있으신가요?</span>
                     </div>
                   </router-link>
-                  <router-link :to="{ name: 'index.notices' }" class="menu-item mt-0 process mb-4" @click="toggleNavbar">
+                  <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="menu-item mt-0 process mb-4" @click="toggleNavbar">
                     <div class="sd-menu">
                       <div class="icon icon-dash"></div>
                     </div>
@@ -292,10 +292,10 @@
               <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">과거 낙찰 이력</router-link>
             </li>
             <li class="nav-item">
-              <router-link :to="{ name: 'index.claim'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">클레임</router-link>
+              <router-link :to="{ name: 'posts.index', params: { boardId: 'claim' } }" class="nav-link tc-wh mx-3" exact-active-class="active-link">클레임</router-link>
             </li>
             <li class="nav-item">
-              <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3" exact-active-class="active-link">공지사항</router-link>
+              <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="nav-link tc-wh mx-3" exact-active-class="active-link">공지사항</router-link>
             </li>
             <li class="nav-item my-member-dealer ms-auto dropdown dropdown-arrow">
               <a class="tc-wh p-1 pb-0 me-3 dropdown-toggle" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
