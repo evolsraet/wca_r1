@@ -1,75 +1,120 @@
 <template>
-    <div class="row my-5">
-        <div class="col-md-8">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <!-- Title -->
-                    <div class="mb-3">
-                        <label for="post-title" class="form-label">
-                            Title
-                        </label>
-                        <input v-model="post.title" id="post-title" type="text" class="form-control" readonly>
-                    </div>
-                    <!-- Content -->
-                    <div class="mb-3">
-                        <label for="post-content" class="form-label">
-                            Content
-                        </label>
-                        <TextEditorComponent v-model="post.content" readonly />
-                    </div>
-                </div>
+    <form @submit.prevent="submitForm">
+      <div class="row my-5 mov-wide m-auto">
+        <div class="card border-0 shadow-none">
+          <div class="card-body">
+            <div class="d-flex justify-content-between">
+              <h6 class="mt-3">제목</h6>
+              <div>
+                <button :disabled="isLoading" class="primary-btn">
+                  <div v-show="isLoading" class=""></div>
+                  <span v-if="isLoading">Processing...</span>
+                  <p class="d-flex lh-base justify-content-center gap-2" v-else>
+                    <span class="image-icon-pen"></span>수정
+                  </p>
+                </button>
+              </div>
             </div>
-        </div>
-        <div class="col-md-4">
-            <div class="card border-0 shadow-sm">
-                <div class="card-body">
-                    <h6>Category</h6>
-                    <!-- Category -->
-                    <div class="mb-3">
-                        <v-select multiple v-model="post.categories" :options="categoryList"
-                                  :reduce="category => category" label="category" class="form-control" placeholder="Select category" disabled />
-                    </div>
-                </div>
+            <!-- Title -->
+            <div class="mb-3">
+              <label for="post-title" class="form-label">제목</label>
+              <input v-model="post.title" id="post-title" type="text" class="form-control">
+              <div class="text-danger mt-1">
+                <div v-if="validationErrors.title">{{ validationErrors.title }}</div>
+              </div>
             </div>
+            <!-- Content -->
+            <div class="mb-3">
+              <label for="post-content" class="form-label">컨텐츠 내용</label>
+              <TextEditorComponent v-model="post.content"/>
+              <div class="text-danger mt-1">
+                <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
-</template>
-
-<script setup>
-import { onMounted, reactive, watchEffect } from "vue";
-import { useRoute } from "vue-router";
-import { initPostSystem } from "@/composables/posts";
-import TextEditorComponent from "@/components/TextEditorComponent.vue";
-import vSelect from "vue-select";
-
-const { post: postData, getPost, categories: categoryList, getBoardCategories } = initPostSystem();
-
-const post = reactive({
+      </div>
+    </form>
+  </template>
+  
+  <script setup>
+  import { onMounted, reactive, ref, inject, watchEffect } from "vue";
+  import TextEditorComponent from "@/components/TextEditorComponent.vue";
+  import { useForm, defineRule } from "vee-validate";
+  import { required, min } from "@/validation/rules";
+  import { initPostSystem } from "@/composables/posts";
+  import { useRouter, useRoute } from 'vue-router';
+  
+  defineRule("required", required);
+  defineRule("min", min);
+  
+  const { validate } = useForm();
+  const { post: postData, getPost, updatePost, validationErrors, isLoading } = initPostSystem();
+  
+  const post = reactive({
     title: '',
-    content: '',
-    categories: [],
-    thumbnail: ''
-});
-
-const route = useRoute();
-
-onMounted(() => {
-    getPost(route.params.id);
-    getBoardCategories();
-});
-
-watchEffect(() => {
+    content: ''
+    // categories: [], // 카테고리 
+    // thumbnail: '' // 썸네일 
+  });
+  
+  const swal = inject('$swal');
+  const router = useRouter();
+  const route = useRoute();
+  const postId = route.params.id;
+  
+  console.log('postId:', postId); 
+  
+  onMounted(() => {
+    getPost(postId);
+  });
+  
+  watchEffect(() => {
     if (postData.value) {
-        post.title = postData.value.title;
-        post.content = postData.value.content;
-        post.categories = postData.value.categories;
+      post.title = postData.value.title;
+      post.content = postData.value.content;
+      // fileName.value = postData.value.thumbnail || ""; 
     }
-});
-</script>
-
-<style scoped>
-.img-thumbnail {
-    max-width: 100%;
-    height: auto;
-}
-</style>
+  });
+  
+  async function submitForm() {
+    const form = await validate();
+    if (form.valid) {
+      try {
+        const response = await updatePost(postId, post);
+        console.log( '성공:', response); 
+        console.log('반영 데이터:', response.data);
+        // post 값을 업데이트된 데이터로 설정
+        post.title = response.data.title;
+        post.content = response.data.content;
+        
+        swal({
+          icon: 'success',
+          title: 'Post updated successfully'
+        });
+        router.push({ name: 'posts.index' }); 
+      } catch (error) {
+        if (error.response?.data) {
+          Object.assign(validationErrors, error.response.data.errors);
+        }
+      }
+    } else {
+      Object.assign(validationErrors, form.errors);
+    }
+  }
+  </script>
+  
+  <style scoped>
+  .primary-btn {
+    width: 90px;
+    border-radius: 30px;
+    height: 38px !important;
+  }
+  
+  .image-icon-pen {
+    width: 18px;
+    height: 18px;
+    line-height: unset;
+  }
+  </style>
+  

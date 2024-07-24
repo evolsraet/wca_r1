@@ -126,13 +126,13 @@ const submitNotice = async (postData) => {
     validationErrors.value = {};
 
     const serializedPost = new FormData();
-    serializedPost.append('articles[title]', postData.title);
-    serializedPost.append('articles[content]', postData.content);
+    serializedPost.append('article[title]', postData.title);
+    serializedPost.append('article[content]', postData.content);
     postData.categories.forEach((category, index) => {
-        serializedPost.append(`articles[categories][${index}]`, category);
+        serializedPost.append(`article[categories][${index}]`, category);
     });
     if (fileInputRef.value.files[0]) {
-      serializedPost.append('articles[thumbnail]', fileInputRef.value.files[0]);
+      serializedPost.append('article[thumbnail]', fileInputRef.value.files[0]);
     }
 
     try {

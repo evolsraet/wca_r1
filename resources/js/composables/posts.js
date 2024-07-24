@@ -16,8 +16,9 @@ export function initPostSystem() {
     const isLoading = ref(false);
     const swal = inject('$swal');
     const categories = ref([]);
-    const boardId = ref('notice'); // 게시판 ID를 'notice'로 설정
+    const boardId = ref('notice');
     const { wicac , wica } = cmmn();
+    const userId = 2; // 사용자 ID를 예시로 설정합니다. 실제 ID로 바꾸세요.
 
     const getBoardCategories = async () => {
         try {
@@ -91,11 +92,14 @@ export function initPostSystem() {
         const serializedPost = new FormData();
         serializedPost.append('title', postData.title);
         serializedPost.append('content', postData.content);
+        serializedPost.append('categories', JSON.stringify(postData.categories));
+        serializedPost.append('board_id', boardId.value);  // 추가된 부분
+        serializedPost.append('user_id', userId);  // 추가된 부분
         if (postData.thumbnail) {
             serializedPost.append('thumbnail', postData.thumbnail);
         }
     
-        console.log('Serialized Post Data:', Object.fromEntries(serializedPost.entries())); // 전송 데이터 로그 출력
+        console.log('Serialized Post Data:', Object.fromEntries(serializedPost)); // 전송 데이터 로그 출력
     
         try {
             const response = await axios.post(`/api/board/${boardId.value}/articles`, serializedPost, {
@@ -118,31 +122,49 @@ export function initPostSystem() {
             isLoading.value = false;
         }
     };
-    
-    const updatePost = async (postData) => {
-        if (isLoading.value) return;
 
+    
+    const updatePost = async (postId, postData) => {
+        if (isLoading.value) return;
+    
         isLoading.value = true;
         validationErrors.value = {};
-
+    
+        const data = {
+            article: {
+                title: postData.title,
+                content: postData.content,
+            }
+        };
+    
+        console.log('보냄:', data); 
+    
         try {
-            const response = await axios.put(`/api/board/${boardId.value}/articles/${postData.id}`, postData);
-            console.log('Update Post Response:', response.data); // 응답 데이터 로그 출력
-            router.push({ name: 'posts.index' });
-            swal({
-                icon: 'success',
-                title: 'Post updated successfully'
+            const response = await axios.put(`/api/board/${boardId.value}/articles/${postId}`, data, {
+                headers: {
+                    "content-type": "application/json"
+                }
             });
+            console.log('응답:', response.data); 
+    
+            
+            post.value = response.data.data;
+            return response.data; 
         } catch (error) {
             if (error.response?.data) {
                 validationErrors.value = error.response.data.errors;
-                console.log('Validation Errors:', validationErrors.value); // 유효성 검사 오류 로그 출력
+                console.log('유효성 검사 오류:', validationErrors.value); 
             }
+            throw error; 
         } finally {
             isLoading.value = false;
         }
     };
-
+    
+    
+    
+    
+    
     const deletePost = async (id) => {
         wica.ntcn(swal)
             .param({ _id: id }) // 리턴값에 전달 할 데이터
