@@ -83,10 +83,12 @@
                   <p class="text-secondary opacity-50">상세주소</p>
                   <input v-model="auction.addr2" class="form-control" id="addr2">
                 </div>
+                <!--
                 <div class="card-body">
                   <p class="text-secondary opacity-50">경매마감일</p>
                   <input v-model="auction.final_at" id="finalAt" class="form-control" type="datetime-local">
                 </div>
+                -->
                 <div class="card-body">
                   <p class="text-secondary opacity-50">선택일</p>
                   <input v-model="auction.choice_at" id="choiceAt" class="form-control" type="datetime-local">
@@ -390,7 +392,7 @@ const auction = reactive({
   status: '',
   addr1: '',
   addr2: '',
-  final_at: '',
+ // final_at: '',
   choice_at: '',
   done_at: '',
   success_fee: '',
@@ -595,7 +597,7 @@ onMounted(async () => {
     auction.addr_post = data.addr_post;
     auction.addr1 = data.addr1;
     auction.addr2 = data.addr2;
-    auction.final_at = data.final_at;
+    //auction.final_at = data.final_at;
     auction.choice_at = data.choice_at;
     auction.done_at = data.done_at;
     auction.success_fee = data.success_fee;

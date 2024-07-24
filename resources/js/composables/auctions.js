@@ -198,7 +198,6 @@ const getAuctionById = async (id) => {
     .with(['bids','reviews','likes'])
     //.page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
     .callback(async function(result) {
-        console.log(result);
         auction.value = result.data;
         auction.value.dealer_name = null;
         if (auction.value.win_bid) {
@@ -323,7 +322,6 @@ const AuctionCarInfo = async (carInfoForm) => {
         auction : {
             owner_name: auctionData.auction.owner_name,
             car_no: auctionData.auction.car_no,
-            final_at: auctionData.auction.final_at,
             region: auctionData.auction.region,
             addr1: auctionData.auction.addr1,
             addr2: auctionData.auction.addr2,
@@ -438,7 +436,7 @@ const updateAuction = async (id,auction) => {
             status : auction.status,
             addr1: auction.addr1,
             addr2: auction.addr2,
-            final_at: auction.final_at,
+            //final_at: auction.final_at,
             choice_at: auction.choice_at,
             done_at: auction.done_at,
             success_fee: auction.success_fee,
@@ -459,6 +457,7 @@ const updateAuction = async (id,auction) => {
         formData.append('file_auction_owner', auction.file_auction_owner);
     }
 
+    
     wica.ntcn(swal)
     .title('변경하시겠습니까?') // 알림 제목
     .icon('Q') //E:error , W:warning , I:info , Q:question
@@ -496,6 +495,46 @@ const updateAuction = async (id,auction) => {
             .post();
         }
     }).confirm();
+    
+    
+    /*
+    wica.ntcn(swal)
+    .title('변경하시겠습니까?') // 알림 제목
+    .icon('Q') //E:error , W:warning , I:info , Q:question
+    .useHtmlText()
+    .callback(async function(result) {
+        if(result.isOk){
+            wicac.conn()
+            .url(`/api/auctions/${id}`) //호출 URL
+            //.multipart() //첨부파일 있을 경우 선언
+            .param(auctionForm)
+            .callback(function(result) {
+                console.log('wicac.conn callback ' , result);
+                if(result.isSuccess){
+                    wica.ntcn(swal)
+                    .useHtmlText()
+                    .icon('I')
+                    .callback(function(result) {
+                        if(result.isOk){
+                            //location.reload();
+                            getAuctions()
+                            router.push({name: 'auctions.index'})
+                        }
+                    }).alert('변경되었습니다');
+                }else{
+                    wica.ntcn(swal)
+                    .title('오류가 발생하였습니다.')
+                    .useHtmlText()
+                    .icon('E')
+                    .callback(function(result) {
+                        console.log(result);
+                    }).alert('관리자에게 문의해주세요.');
+                }
+            })
+            .put();
+        }
+    }).confirm();
+    */
 }
 
 //딜러 선택

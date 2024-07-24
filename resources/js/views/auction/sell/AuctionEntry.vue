@@ -140,7 +140,6 @@ const auctionEntry = async () => {
   const auctionData = {
     owner_name: ownerName.value,
     car_no: carNumber.value,
-    final_at: finalAt.value,
     region: selectedRegion.value,
     addr1: addr.value,
     addr2: addrdt.value,
