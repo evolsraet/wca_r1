@@ -502,7 +502,10 @@ const fetchAuctionDetails = async () => {
   } else {
   }
 };
-onMounted(fetchAuctionDetails);
+
+if (isUser.value || isDealer.value) {
+    onMounted(fetchAuctionDetails);
+}
 watch(() => route.params.id, fetchAuctionDetails); 
 
   onMounted(async () => {
