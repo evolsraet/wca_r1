@@ -1,22 +1,18 @@
-/**
- * TODO:딜러 권한 부여서 메인으로 안남어가는 현상(auth.js 로그인 부분과 충돌)
- * 
- */
-import Cookies from 'js-cookie'
+import { createRouter, createWebHistory } from 'vue-router';
 import store from "../store";
+import Cookies from 'js-cookie';
 
-const AuthenticatedLayout = () => import('../layouts/Authenticated.vue')
-const GuestLayout = ()  => import('../layouts/Guest.vue');
+const AuthenticatedLayout = () => import('../layouts/Authenticated.vue');
+const GuestLayout = () => import('../layouts/Guest.vue');
+const BoardLayout = () => import('../views/layout/BoardLayout.vue');
 
-const PostsIndex  = ()  => import('../views/admin/posts/Index.vue');
-const PostsCreate  = ()  => import('../views/admin/posts/Create.vue');
-const PostsEdit  = ()  => import('../views/admin/posts/Edit.vue');
+const PostsIndex = () => import('../views/admin/posts/Index.vue');
+const PostsCreate = () => import('../views/admin/posts/Create.vue');
+const PostsEdit = () => import('../views/admin/posts/Edit.vue');
 
 function requireLogin(to, from, next) {
     let isLogin = false;
     isLogin = !!store.state.auth.authenticated;
-    console.log(1111);
-    console.log(store.state.auth.user);
     if (isLogin) {
         next()
     } else {
@@ -34,6 +30,7 @@ function guest(to, from, next) {
         next()
     }
 }
+
 function requireRole(role) {
     return function (to, from, next) {
         let isLogin = !!store.state.auth.authenticated;
@@ -46,44 +43,41 @@ function requireRole(role) {
         }
     };
 }
+
 function requireAct(act) {
     return function (to, from, next) {
-        if(act != null && act && act != undefined ) {
+        if (act != null && act && act != undefined) {
             const isLogin = store.state.auth.authenticated && store.state.auth.user;
-            if(!isLogin) {
+            if (!isLogin) {
                 next('/login');
             } else {
                 const userActs = store.state.auth.user.act;
-                console.log(userActs);
                 let canProceed = false;
                 userActs.forEach(element => {
-                    if(act.includes(element)) {
+                    if (act.includes(element)) {
                         canProceed = true;
-                       // console.log('canProceed : ' + element);
-                    } else {
-                       // console.log('notProceed : ' + element);
                     }
                 });
-                if(canProceed) next();
+                if (canProceed) next();
                 else next('/');
             }
         } else {
             next();
         }
-
     };
 }
+
 function takingVerificationHomeRole(next) {
     let isLogin = !!store.state.auth.authenticated;    
-    if(isLogin) {
+    if (isLogin) {
         let isAdmin = store.state.auth.user && store.state.auth.user.roles.includes('admin');
         let isDealer = store.state.auth.user && store.state.auth.user.roles.includes('dealer');
         let isUser = store.state.auth.user && store.state.auth.user.roles.includes('user');
-        if(isAdmin) {
+        if (isAdmin) {
             next('/admin');
-        } else if(isDealer) {
+        } else if (isDealer) {
             next('/dealer');
-        } else if(isUser) {
+        } else if (isUser) {
             next();
         } else {
             next();
@@ -93,11 +87,10 @@ function takingVerificationHomeRole(next) {
     }
 }
 
-//url 추후에 리네임 
+// url 추후에 리네임 
 export default [
     {
         path: '/',
-        // redirect: { name: 'login' },
         component: GuestLayout,
         children: [
             {
@@ -112,70 +105,69 @@ export default [
                 path: '/user',
                 name: 'user.index',
                 component: () => import('../views/user/index.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.user']),
             },
             {
                 path: '/auction/:id',
                 name: 'AuctionDetail',
                 component: () => import('../views/auction/Details/details.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
-            },        
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer', 'act.user']),
+            },
             {
                 path: '/profiledt',
                 name: 'profile',
                 component: () => import('../views/profile/index.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
-            },  
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer', 'act.user']),
+            },
             {
                 path: '/edit-profile',
                 name: 'edit-profile',
                 component: () => import('../views/profile/index.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
-            },  
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer', 'act.user']),
+            },
             {
                 path: '/sell',
                 name: 'sell',
                 component: () => import('../views/auction/sell/index.vue'),
-
             },
             {
                 path: '/selldt',
                 name: 'selldt',
                 component: () => import('../views/auction/sell/Details.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.user']),
             },
             {
                 path: '/selldt2',
                 name: 'selldt2',
                 component: () => import('../views/auction/sell/AuctionEntry.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.user']),
             },
             {
                 path: '/updateinfo',
                 name: 'sell.update-info',
                 component: () => import('../views/auction/sell/Update.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.user']),
             },
             {
                 path: '/addr-create',
                 name: 'addr.create',
                 component: () => import('../views/dealer/addr/Create.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
             {
                 path: '/addr-update',
                 name: 'addr.update',
                 component: () => import('../views/dealer/addr/Update.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
             {
                 path: '/addr',
                 name: 'dealer.address',
                 component: () => import('../views/dealer/addr/address.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
             {
-                path: 'posts',
+                path: '/posts',
                 name: 'public-posts.index',
                 component: () => import('../views/posts/index.vue'),
             },
@@ -183,39 +175,36 @@ export default [
                 path: '/auction',
                 name: 'auction.index',
                 component: () => import('../views/auction/index.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer','act.user']),
-              
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer', 'act.user']),
             },
             {
                 path: '/dealerbid',
                 name: 'autction.dealerbid',
                 component: () => import('../views/dealer/auction/index.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
-              
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
             {
                 path: '/completion',
                 name: 'AuctionCompletionPage',
                 component: () => import('../views/consignment/consignment.vue'),
-              },
-              {
+            },
+            {
                 path: '/completionsuccess/:id',
                 name: 'completionsuccess',
                 component: () => import('../views/consignment/success.vue'),
-              },
+            },
             {
                 path: '/dealermodal',
                 name: 'dealermodal',
                 component: () => import('../views/modal/auction/connectDealer.vue'),
-              
             },
             {
-                path: 'posts/:id',
+                path: '/posts/:id',
                 name: 'public-posts.details',
                 component: () => import('../views/posts/details.vue'),
             },
             {
-                path: 'category/:id',
+                path: '/category/:id',
                 name: 'category-posts.index',
                 component: () => import('../views/category/posts.vue'),
             },
@@ -223,19 +212,19 @@ export default [
                 path: '/list-do',
                 name: 'user.review',
                 component: () => import('../views/bbs/review.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.user']),
             },
             {
                 path: '/view-do/:id',
                 name: 'user.create-review',
                 component: () => import('../views/bbs/Create.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.user']),
             },
             {
                 path: '/edit-do/:id',
                 name: 'user.edit-review',
                 component: () => import('../views/bbs/Edit.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.user']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.user']),
             },
             {
                 path: '/alllist-do',
@@ -245,57 +234,48 @@ export default [
             {
                 path: '/review/:id',
                 name: 'user.review-detail',
-                component: () => import('../views/bbs/Detail.vue'), 
-            },     
+                component: () => import('../views/bbs/Detail.vue'),
+            },
             {
                 path: '/introduce',
                 name: 'index.introduce',
                 component: () => import('../views/home/intro.vue'),
             },
-            
             {
                 path: '/dealer',
                 name: 'dealer.index',
                 component: () => import('../views/dealer/main.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
             {
                 path: '/profile',
                 name: 'dealer.profile',
                 component: () => import('../views/dealer/profile/index.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
-            /*
-            {
-                path: '/dealerbids',
-                name: 'dealer.bids',
-                component: () => import('../views/dealer/dealer.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
-            },
-            */
             {
                 path: '/bidhistory',
                 name: 'dealer.bidList',
                 component: () => import('../views/dealer/history/bidList.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
             {
                 path: '/notices',
                 name: 'index.notices',
                 component: () => import('../views/notices/Notices.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
             {
                 path: '/claim',
                 name: 'index.claim',
                 component: () => import('../views/notices/claim.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
             {
                 path: '/claim/:id',
                 name: 'index.claim-detail',
                 component: () => import('../views/notices/Detail.vue'),
-                beforeEnter: requireAct(['act.super','act.admin','act.dealer']),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
             {
                 path: '/login',
@@ -303,19 +283,19 @@ export default [
                 component: () => import('../views/login/Login.vue'),
             },
             {
-                path: 'register',
+                path: '/register',
                 name: 'auth.register',
                 component: () => import('../views/register/index.vue'),
                 beforeEnter: guest,
             },
             {
-                path: 'forgot-password',
+                path: '/forgot-password',
                 name: 'auth.forgot-password',
                 component: () => import('../views/auth/passwords/Email.vue'),
                 beforeEnter: guest,
             },
             {
-                path: 'reset-password/:token',
+                path: '/reset-password/:token',
                 name: 'auth.reset-password',
                 component: () => import('../views/auth/passwords/Reset.vue'),
                 beforeEnter: guest,
@@ -325,11 +305,7 @@ export default [
     {
         path: '/admin',
         component: AuthenticatedLayout,
-        // redirect: {
-        //     name: 'admin.index'
-        // },
-        //beforeEnter: requireLogin,
-        beforeEnter: requireAct(['act.super','act.admin']),
+        beforeEnter: requireAct(['act.super', 'act.admin']),
         children: [
             {
                 name: 'admin.index',
@@ -344,22 +320,28 @@ export default [
                 meta: { breadCrumb: 'Profile' }
             },
             {
-                name: 'posts.index',
                 path: 'posts',
-                component: PostsIndex,
-                meta: { breadCrumb: 'Posts' }
-            },
-            {
-                name: 'posts.create',
-                path: 'posts/create',
-                component: PostsCreate,
-                meta: { breadCrumb: 'Add new post' }
-            },
-            {
-                name: 'posts.edit',
-                path: 'posts/edit/:id',
-                component: PostsEdit,
-                meta: { breadCrumb: 'Edit post' }
+                component: BoardLayout,
+                children: [
+                    {
+                        name: 'posts.index',
+                        path: '',
+                        component: PostsIndex,
+                        meta: { breadCrumb: 'Posts' }
+                    },
+                    {
+                        name: 'posts.create',
+                        path: 'create',
+                        component: PostsCreate,
+                        meta: { breadCrumb: 'Add new post' }
+                    },
+                    {
+                        name: 'posts.edit',
+                        path: 'edit/:id',
+                        component: PostsEdit,
+                        meta: { breadCrumb: 'Edit post' }
+                    },
+                ],
             },
             {
                 name: 'categories.index',
@@ -482,5 +464,4 @@ export default [
         name: 'NotFound',
         component: () => import("../views/errors/404.vue"),
     },
-    
 ];
