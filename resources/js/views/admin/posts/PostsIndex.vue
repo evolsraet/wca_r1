@@ -16,7 +16,7 @@
         <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
         <button type="button" class="search-btn" @click="fetchPosts">검색</button>
       </div>
-      <div v-if="boardId === 'claim'" class="container mb-1">
+      <div v-if="boardId === 'claim'" class="container">
         <div class="d-flex justify-content-end">
           <div class="text-start status-selector">
             <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
@@ -61,7 +61,7 @@
                 <th v-if="isDealer || isUser" class="px-6 py-3 bg-gray-50 text-left" style="width: 45%;">
                   <div class="flex flex-row justify-content-center" @click="updateOrdering('content')">
                     <div class="font-medium text-uppercase" :class="{'font-bold text-blue-600': orderColumn === 'content'}">
-                      컨텐츠
+                      내용
                     </div>
                   </div>
                 </th>
