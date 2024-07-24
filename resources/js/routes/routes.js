@@ -4,44 +4,29 @@ import Cookies from 'js-cookie';
 
 const AuthenticatedLayout = () => import('../layouts/Authenticated.vue');
 const GuestLayout = () => import('../layouts/Guest.vue');
-const BoardLayout = () => import('../views/layout/BoardLayout.vue');
+import BoardLayout from '@/views/layout/BoardLayout.vue';
 
-const PostsIndex = () => import('../views/admin/posts/Index.vue');
-const PostsCreate = () => import('../views/admin/posts/Create.vue');
-const PostsEdit = () => import('../views/admin/posts/Edit.vue');
+const PostsIndex = () => import('../views/admin/posts/PostsIndex.vue');
+const PostsCreate = () => import('../views/admin/posts/PostsCreate.vue');
+const PostsEdit = () => import('../views/admin/posts/PostsEdit.vue');
 
 function requireLogin(to, from, next) {
     let isLogin = false;
     isLogin = !!store.state.auth.authenticated;
     if (isLogin) {
-        next()
+        next();
     } else {
-        next('/login')
+        next('/login');
     }
 }
 
 function guest(to, from, next) {
-    let isLogin;
-    isLogin = !!store.state.auth.authenticated;
-
+    let isLogin = !!store.state.auth.authenticated;
     if (isLogin) {
-        next('/')
+        next('/');
     } else {
-        next()
+        next();
     }
-}
-
-function requireRole(role) {
-    return function (to, from, next) {
-        let isLogin = !!store.state.auth.authenticated;
-        let hasRole = store.state.auth.user && store.state.auth.user.roles.includes(role);
-
-        if (isLogin && hasRole) {
-            next();
-        } else {
-            next('/login');  
-        }
-    };
 }
 
 function requireAct(act) {
@@ -68,7 +53,7 @@ function requireAct(act) {
 }
 
 function takingVerificationHomeRole(next) {
-    let isLogin = !!store.state.auth.authenticated;    
+    let isLogin = !!store.state.auth.authenticated;
     if (isLogin) {
         let isAdmin = store.state.auth.user && store.state.auth.user.roles.includes('admin');
         let isDealer = store.state.auth.user && store.state.auth.user.roles.includes('dealer');
@@ -86,7 +71,6 @@ function takingVerificationHomeRole(next) {
         next();
     }
 }
-
 // url 추후에 리네임 
 export default [
     {
@@ -319,8 +303,10 @@ export default [
                 component: () => import('../views/admin/profile/index.vue'),
                 meta: { breadCrumb: 'Profile' }
             },
+            
             {
-                path: 'posts',
+                name: 'board.index',
+                path: 'board/:boardId',
                 component: BoardLayout,
                 children: [
                     {

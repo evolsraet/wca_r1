@@ -56,7 +56,7 @@ import { useForm, useField, defineRule } from "vee-validate";
 import { required, min } from "@/validation/rules";
 import { cmmn } from '@/hooks/cmmn';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 defineRule("required", required);
 defineRule("min", min);
@@ -84,14 +84,16 @@ const categoriesList = ref([]);
 const { wicac, wica } = cmmn();
 const swal = inject('$swal');
 const router = useRouter();
+const route = useRoute();
+const boardId = route.params.boardId;
 
 const getBoardData = async () => {
     try {
         const response = await axios.get('/api/board');
         if (Array.isArray(response.data.data)) {
-            const noticeBoard = response.data.data.find(board => board.id === 'notice');
-            if (noticeBoard) {
-                categoriesList.value = JSON.parse(noticeBoard.categories);
+            const board = response.data.data.find(board => board.id === boardId);
+            if (board) {
+                categoriesList.value = JSON.parse(board.categories);
             }
         } 
     } catch (error) {
@@ -107,19 +109,21 @@ function handleFileUpload(event) {
   const file = event.target.files[0];
   if (file) {
     fileName.value = file.name;
+    post.thumbnail = file;
   }
 }
 
 function submitForm() {
   validate().then((form) => {
     if (form.valid) {
-      submitNotice(post);
+      submitPost(post);
     } else {
       Object.assign(validationErrors, form.errors);
     }
   });
 }
-const submitNotice = async (postData) => {
+
+const submitPost = async (postData) => {
     if (isLoading.value) return;
 
     isLoading.value = true;
@@ -131,17 +135,17 @@ const submitNotice = async (postData) => {
     postData.categories.forEach((category, index) => {
         serializedPost.append(`article[categories][${index}]`, category);
     });
-    if (fileInputRef.value.files[0]) {
-      serializedPost.append('article[thumbnail]', fileInputRef.value.files[0]);
+    if (postData.thumbnail) {
+      serializedPost.append('article[thumbnail]', postData.thumbnail);
     }
 
     try {
-        const response = await axios.post(`/api/board/notice/articles`, serializedPost, {
+        const response = await axios.post(`/api/board/${boardId}/articles`, serializedPost, {
             headers: {
                 "content-type": "multipart/form-data"
             }
         });
-        router.push({ name: 'posts.index' });
+        router.push({ name: 'posts.index', params: { boardId } });
         wica.ntcn(swal)
             .icon('I')
             .alert('공지사항이 성공적으로 저장되었습니다.');
@@ -153,7 +157,6 @@ const submitNotice = async (postData) => {
         isLoading.value = false;
     }
 };
-
 
 onMounted(() => {
   getBoardData();
