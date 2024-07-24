@@ -17,7 +17,6 @@ export function initPostSystem() {
     const swal = inject('$swal');
     const categories = ref([]);
     const { wicac , wica } = cmmn();
-    const userId = ref(2); // This is just an example, you can get the real user ID from the authenticated user context.
 
     const getBoardCategories = async () => {
         try {

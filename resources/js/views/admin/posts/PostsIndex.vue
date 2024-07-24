@@ -5,10 +5,8 @@
     <router-link :to="{ name: 'posts.create', params: { boardId } }" class="border-red-write">
       <div class="image-icon-pen"></div>
     </router-link>
-    <div class="search-type2 mb-5">
-      <div class="border-xsl">
-        <div class="image-icon-excel"></div>
-      </div>
+    <div class="search-type2 justify-content-end mb-5">
+
       <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
       <button type="button" class="search-btn" @click="fetchPosts">검색</button>
     </div>
