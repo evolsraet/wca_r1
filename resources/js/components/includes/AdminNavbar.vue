@@ -30,7 +30,7 @@
       <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
     </div>
     <div :class="['menu-container', { show: isMenuOpen || !isAdminPage }]" id="navbarSupportedContent">
-        <ul class="navbar-nav ms-auto mb-lg-0">
+        <ul class="d-flex mb-0 ps-3 ms-auto mb-lg-0 overflow-x-auto">
             <div class="navbar-nav flex-row justify-content-center gap-5 bold-18-font"> 
                 <router-link 
                     :to="{ name: 'users.index' }" 
@@ -39,7 +39,7 @@
                     @click="toggleNavbar"
                     id="adminNav-user"
                 >
-                    <span class="text-secondary menu-text opacity-50">회원</span>
+                    <span class="text-secondary menu-text opacity-50">회원 관리</span>
                 </router-link>
                 <router-link 
                     :to="{ name: 'deposit.index' }" 
@@ -48,7 +48,7 @@
                     @click="toggleNavbar"
                     id="adminNav-deposit"
                 >
-                    <span class="text-secondary menu-text opacity-50">입금</span>
+                    <span class="text-secondary menu-text opacity-50">입금 관리</span>
                 </router-link>
                 <router-link 
                     :to="{ name: 'auctions.index' }" 
@@ -57,7 +57,7 @@
                     @click="toggleNavbar"
                     id="adminNav-auction"
                 >
-                    <span class="text-secondary menu-text opacity-50">매물</span>
+                    <span class="text-secondary menu-text opacity-50">매물 관리</span>
                 </router-link>
                 <router-link 
                     :to="{ name: 'review.index' }" 
@@ -66,7 +66,25 @@
                     @click="toggleNavbar"
                     id="adminNav-review"
                 >
-                    <span class="text-secondary menu-text opacity-50">후기</span>
+                    <span class="text-secondary menu-text opacity-50">후기 관리</span>
+                </router-link>
+                <router-link 
+                    :to="{ name: 'review.index' }" 
+                    class="menu-item mt-2" 
+                    :class="{ active: isActive('review.index') }"
+                    @click="toggleNavbar"
+                    id="adminNav-review"
+                >
+                    <span class="text-secondary menu-text opacity-50">공지사항 관리</span>
+                </router-link>
+                <router-link 
+                    :to="{ name: 'review.index' }" 
+                    class="menu-item mt-2" 
+                    :class="{ active: isActive('review.index') }"
+                    @click="toggleNavbar"
+                    id="adminNav-review"
+                >
+                    <span class="text-secondary menu-text opacity-50">클레임 관리</span>
                 </router-link>
             </div>
         </ul>
@@ -220,6 +238,7 @@ watch(() => route.name, (to, from) => {
 }
 
 .menu-item {
+    white-space: nowrap; 
     position: relative;
     text-decoration: none;
 }

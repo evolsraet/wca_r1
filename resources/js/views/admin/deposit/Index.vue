@@ -198,6 +198,7 @@ function setFilter(status) { // 필터 설정
 
     margin-top: 0px !important;
 }
+
 @media screen and (max-width: 481px) 
 {
 .web_style{
@@ -214,7 +215,7 @@ function setFilter(status) { // 필터 설정
   }
 }
 .search-type2 .search-btn{
-    top: 53px !important;  
+    top: 47px !important;  
     right: 4px !important;
 }
 .blue-box {

@@ -311,7 +311,7 @@
     padding: 0 10px !important;  
 }
 .search-type2 .search-btn{
-    top: 53px !important;  
+    top: 47px !important;  
     right: 4px !important;
 }
     </style>
