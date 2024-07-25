@@ -122,7 +122,6 @@ class UserService
 
     public function update($id, Request $request)
     {
-        // // // TODO: put 에서 파일 안넘어옴
         // print_r('user_update_');
         // print_r($request->file());
         // die();
@@ -165,8 +164,6 @@ class UserService
             //     $dealerData = $this->checkJson($data['dealer']);
             //     unset($data['dealer']);
             // }
-
-            // TODO: 비번 있을경우 컨펌
 
             $model = new User;
 
