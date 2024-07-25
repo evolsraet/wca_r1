@@ -143,7 +143,11 @@
                   </div>
                 </div>
               </div>
-              <div class="footer-content">
+              <div class="p-3 mt-auto mb-4">
+                <div v-html="randomButton"></div>
+              
+            </div>
+              <div class="footer-content mt-0">
                 <div class="under-line"></div>
                 <div class="p-2">
                   <router-link :to="{ name: 'home' }" class="menu-item mt-0" @click="toggleNavbar">
@@ -164,13 +168,22 @@
                       <span class="text-secondary opacity-50 font-1">경매 진행중인 매물</span>
                     </div>
                   </router-link>
-                  <router-link :to="{ name: 'user.review'}" class="menu-item mt-1 mb-4" @click="toggleNavbar">
+                  <router-link :to="{ name: 'user.review'}" class="menu-item mt-1" @click="toggleNavbar">
                     <div class="sd-menu">
                       <div class="icon icon-ratings"></div>
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text">이용후기</span>
                       <span class="text-secondary opacity-50 font-1"> 다양한 판매 후기</span>
+                    </div>
+                  </router-link>
+                  <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="menu-item mt-0 process " @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-dash"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">공지사항</span>
+                      <span class="text-secondary opacity-50 font-1">새소식</span>
                     </div>
                   </router-link>
                 </div>
@@ -199,7 +212,11 @@
                   </div>
                 </div>
               </div>
-              <div class="footer-content">
+              <div class="p-3 mt-auto mb-4">
+                <div v-html="randomButton"></div>
+              
+            </div>
+              <div class="footer-content mt-0">
                 <div class="under-line"></div>
                 <div class="p-2">
                   <router-link :to="{ name: 'home' }" class="menu-item mt-0" @click="toggleNavbar">
@@ -229,6 +246,15 @@
                       <span class="text-secondary opacity-50 font-1">위카 란?</span>
                     </div>
                   </router-link>
+                  <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="menu-item mt-0 process mb-4" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-dash"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">공지사항</span>
+                      <span class="text-secondary opacity-50 font-1">새소식</span>
+                    </div>
+                  </router-link>
                 </div>
               </div>
               <div class="logo-content">
@@ -246,13 +272,16 @@
           <template v-if="isUser">
             <div class="d-flex">
               <li class="nav-item">
-                <router-link to="/" class="nav-link mx-3 nav-inq" aria-current="page" exact-active-class="active-link">내차조회</router-link>
+                <router-link to="/" class="nav-link mx-2 nav-inq" aria-current="page" exact-active-class="active-link">내차조회</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3 nav-auction" aria-current="page" exact-active-class="active-link">내 매물관리</router-link>
+                <router-link :to="{ name: 'auction.index'}" class="nav-link mx-2 nav-auction" aria-current="page" exact-active-class="active-link">내 매물관리</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'user.review'}" class="nav-link me-0 mx-3 nav-review" exact-active-class="active-link">이용후기</router-link>
+                <router-link :to="{ name: 'user.review'}" class="nav-link mx-2 nav-review" exact-active-class="active-link">이용후기</router-link>
+              </li>
+              <li class="nav-item">
+              <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="nav-link mx-2 " exact-active-class="active-link">공지사항</router-link>
               </li>
             </div>
             <li class="nav-item my-member ms-auto dropdown">
@@ -866,6 +895,9 @@ watch(() => route.params.id, () => {
       .web-style{
         display: block;
       }
+      .navbar-expand-md .navbar-collapse {
+        display: block !important;
+    }
 }
   </style>
   
