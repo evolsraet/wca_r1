@@ -397,6 +397,10 @@ const AuctionReauction = async (id, data) => {
         auction: data
     };
 
+    if(data.status == 'wait'){
+        requestData.mode = 'reauction';
+    }
+
     wicac.conn()
     .url(`/api/auctions/${id}`) 
     .param(requestData)
@@ -446,6 +450,9 @@ const updateAuction = async (id,auction) => {
             final_price: auction.final_price,
         }
     }
+    
+    
+
     console.log(JSON.stringify(auctionForm));
 
     const formData = new FormData();
