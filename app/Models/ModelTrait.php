@@ -22,4 +22,17 @@ trait ModelTrait
 
         return $model;
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::updating(function ($comment) {
+            foreach ((array) $comment->immutable as $field) {
+                if ($comment->isDirty($field)) {
+                    $comment->$field = $comment->getOriginal($field);
+                }
+            }
+        });
+    }
 }

@@ -20,13 +20,10 @@ class LikeController extends Controller
 
     public function toggle($likeable_type_model, $likeable_id)
     {
-        $likeable_type = "App\\Models\\" . Str::studly($likeable_type_model);
-
-        // TODO: CrudTrait 수정 - $request 가 아닌 request() 를 사용한다. $request 사용 유도
         // $request = request();
         $request = request()->merge([
             'like' => [
-                'likeable_type' => $likeable_type,
+                'likeable_type' => $likeable_type_model,
                 'likeable_id' => $likeable_id
             ],
         ]);
@@ -35,7 +32,7 @@ class LikeController extends Controller
         // die();
 
         $like = Like::where('likeable_id', $likeable_id)
-            ->where('likeable_type', $likeable_type)
+            ->where('likeable_type', $this->service->typeToModel($likeable_type_model))
             ->where('user_id', auth()->user()->id)
             ->first();
 

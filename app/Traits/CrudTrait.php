@@ -577,13 +577,51 @@ trait CrudTrait
     }
 
     // 리퀘스트에 추가
-    private function addRequest($which, $val, $seperate = ',')
+    private function addRequest($which, $val, $separate = ',')
     {
         $current = request()->get($which, '');
-        $changeArray = array_filter(explode($seperate, $current));
+        $changeArray = array_filter(explode($separate, $current));
         if (!in_array($val, $changeArray)) {
             $changeArray[] = $val;
         }
-        request()->merge([$which => implode($seperate, $changeArray)]);
+        request()->merge([$which => implode($separate, $changeArray)]);
+    }
+
+    private function modifyRequest($which, $key, $newValue, $separate = ',')
+    {
+        $current = request()->get($which, '');
+        $itemArray = array_filter(explode($separate, $current));
+
+        foreach ($itemArray as $index => $item) {
+            if (strpos($item, $key) === 0) {
+                $parts = explode(':', $item);
+                if (count($parts) >= 2) {
+                    $parts[1] = $newValue;
+                    $itemArray[$index] = implode(':', $parts);
+                }
+            }
+        }
+
+        request()->merge([$which => implode($separate, $itemArray)]);
+    }
+
+    private function getRequest($which, $key, $separate = ',')
+    {
+        $current = request()->get($which);
+        $itemArray = explode($separate, $current);
+
+        foreach ($itemArray as $item) {
+            $parts = explode(':', $item);
+            if ($parts[0] === $key) {
+                return $item;
+            }
+        }
+
+        return null;
+    }
+
+    protected function typeToModel($type)
+    {
+        return 'App\\Models\\' . ucfirst($type);
     }
 }

@@ -6,6 +6,7 @@ use App\Models\Like;
 use App\Traits\CrudTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use App\Http\Resources\LikeResource;
 
 class LikeService
@@ -17,6 +18,11 @@ class LikeService
         // CrudTrait
         $this->defaultCrudTrait('like');
     }
+
+    protected function beforeProcess($method, $request, $data = null, $id = null)
+    {
+    }
+
 
     protected function middleProcess($method, $request, $result, $id = null)
     {
@@ -40,7 +46,7 @@ class LikeService
                 break;
             case 'store':
                 // 저장일때 자동 내 아이디 삽입
-                // $result->likeable_type = auth()->user()->id;
+                $result->likeable_type = $this->typeToModel($result->likeable_type);
                 $result->user_id = auth()->user()->id;
                 break;
         }

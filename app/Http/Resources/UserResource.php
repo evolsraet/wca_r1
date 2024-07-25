@@ -3,6 +3,8 @@
 namespace App\Http\Resources;
 
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use App\Http\Resources\DealerResource;
 use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -20,9 +22,10 @@ class UserResource extends JsonResource
     public function toArray($request)
     {
         $parentArray = parent::toArray($request);
-        $additionalArray = [
-            'roles' => $this->roles->pluck('name'),
-        ];
+        $additionalArray = [];
+        if (!request()->get('userForComment')) {
+            $additionalArray['roles'] = $this->roles->pluck('name');
+        }
 
         // 관리자 또는 본인일 경우 숨겨진 속성을 노출
         if (auth()->check() && (auth()->user()->hasPermissionTo('act.admin') || auth()->id() === $this->resource->id)) {

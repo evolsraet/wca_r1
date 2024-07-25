@@ -109,7 +109,7 @@ class AppServiceProvider extends ServiceProvider
 
             // print_r([$response, $code]);
             // die();
-            return response()->json($response, (int) $code);
+            return response()->json($response, (int) $code)->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             // return response()->json($response, 401);
         });
     }

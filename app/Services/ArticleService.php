@@ -19,7 +19,7 @@ class ArticleService
 
     public function __construct()
     {
-        $boardId = Route::current()->parameter('board');
+        $boardId = request()->route('board') ?? 'notice';
         $this->board = Board::findOrFail($boardId);
         // print_r([
         //     $boardId,
@@ -104,6 +104,7 @@ class ArticleService
                 // store 의 $request 는 배열
                 $data->board_id = $this->board->id;
                 $data->user_id = auth()->user()->id;
+                $data->category = '접수';
 
                 // 발리데이션
                 $validateCondition = [];

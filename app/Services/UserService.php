@@ -205,13 +205,13 @@ class UserService
                 // $item->dealer()->updateOrCreate 는 제대로 기능안함. create 만 하려고함
 
                 if ($item->dealer()->exists()) {
-                    print_r(
-                        [
-                            '업데이트',
-                            '데이터' => $data['dealer'],
-                        ]
-                    );
-                    die();
+                    // print_r(
+                    //     [
+                    //         '업데이트',
+                    //         '데이터' => $data['dealer'],
+                    //     ]
+                    // );
+                    // die();
                     // 기존 Dealer 업데이트
                     $item->dealer()->update($data['dealer']);
                     // TODO: 변경불가 사항 업데이트 시 상태변경 (누구에게 알림?)
@@ -302,6 +302,7 @@ class UserService
 
     protected function modifyAuth($data)
     {
+        // throw new \Exception(auth()->user()->id . ' / ' . $data->id);
         if (
             auth()->user()->id !== $data->id
             && !auth()->user()->hasPermissionTo('act.admin')
@@ -321,10 +322,8 @@ class UserService
                 $item->role(['user', 'dealer']);
             }
         } elseif ($method === 'show') {
-            if (
-                auth()->check() &&
-                !auth()->user()->hasPermissionTo('act.admin')
-            ) {
+            if (auth()->check() && !auth()->user()->hasPermissionTo('act.admin')) {
+                $item->where('id', auth()->user()->id);
                 $item->role(['user', 'dealer']);
             }
         } elseif ($method === 'destroy') {

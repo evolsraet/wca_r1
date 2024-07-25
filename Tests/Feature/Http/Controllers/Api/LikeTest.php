@@ -34,9 +34,11 @@ class LikeTest extends TestCase
         $user = User::factory()->create();
 
         $like = Like::factory()->make([
+            'likeable_type' => 'auction',
             'likeable_id' => $auction->id,
             'user_id' => $user->id
         ]);
+
         $data = [
             'like' => $like->toArray()
         ];

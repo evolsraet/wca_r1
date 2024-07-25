@@ -64,7 +64,7 @@ return new class extends Migration
 
         DB::table('boards')->insert([
             'id' => 'claim',
-            'categories' => null,
+            'categories' => json_encode(['접수', '처리중', '처리완료'], JSON_UNESCAPED_UNICODE),
             'index_permission' => null,
             'show_permission' => 'act.dealer',
             'write_permission' => 'act.dealer',

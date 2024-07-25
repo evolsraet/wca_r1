@@ -138,9 +138,6 @@ class User extends Authenticatable implements HasMedia
         static::addGlobalScope('withDealer', function ($builder) {
             $builder->with('dealer');
         });
-        static::addGlobalScope('withRoles', function ($builder) {
-            $builder->with('roles');
-        });
 
         // static::retrieved(function ($user) {
         //     print_r(auth()->check());

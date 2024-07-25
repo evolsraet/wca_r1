@@ -8,11 +8,12 @@ use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\RoleController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\BoardController;
 
+use App\Http\Controllers\Api\BoardController;
 use App\Http\Controllers\Api\ReviewController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\AuctionController;
+use App\Http\Controllers\Api\CommentController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PermissionController;
@@ -53,7 +54,8 @@ Route::apiResource('reviews', ReviewController::class)
 
 Route::apiResource('board', BoardController::class);
 Route::apiResource('board.articles', ArticleController::class);
-
+Route::apiResource('comments', CommentController::class);
+// dd(Route::getRoutes());
 // like
 Route::post('likes/toggle/{likeable_type_model}/{likeable_id}', [LikeController::class, 'toggle'])->middleware('auth:sanctum');
 Route::apiResource('likes', LikeController::class)->middleware('auth:sanctum');

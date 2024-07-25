@@ -45,8 +45,6 @@ class AuthenticatedSessionController extends Controller
         //     'debbug' => 'hahahoho',
         // ]], 404);
 
-
-
         $user = User::where('email', $request->email)->orWhere('phone', $request->email)->first();
 
         if ($user->status == 'ask') {
@@ -98,13 +96,14 @@ class AuthenticatedSessionController extends Controller
     public function register(RegisterRequest $request)
     {
         // dd('register');
-        $user = User::where('email', $request['email'])->first();
+        $user = User::where('phone', $request['phone'])->first();
 
         if ($user) {
             return response(['error' => 1, 'message' => 'user already exists'], 409);
         }
 
         $user = User::create([
+            'phone' => $request['phone'],
             'email' => $request['email'],
             'password' => Hash::make($request['password']),
             'name' => $request['name'],

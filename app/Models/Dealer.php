@@ -32,8 +32,8 @@ class Dealer extends Model implements HasMedia
     protected $guarded = [];
 
     protected $hidden = [
-        'phone',
-        'birthday'
+        // 'phone',
+        // 'birthday'
     ];
 
     protected $fieldName = [

@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Models\Bid;
+use App\Models\Comment;
 use App\Http\Resources\BidResource;
 use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -26,6 +27,8 @@ class ArticleResource extends JsonResource
             // 'bids' => BidResource::collection(),
         ];
 
+        $addArray['comments_count'] = Comment::where('commentable_type', 'App\Models\Article')->where('commentable_id', $this->id)->count();
+
         // 관계 리소스로 리턴
         $this->relationResource($request, $parentArray);
 
@@ -36,6 +39,7 @@ class ArticleResource extends JsonResource
                 $parentArray[$field] = $this->$field->toDatetimeString();
             }
         }
+
 
         return array_merge($parentArray, $addArray);
     }

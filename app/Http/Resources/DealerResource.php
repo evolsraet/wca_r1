@@ -34,6 +34,12 @@ class DealerResource extends JsonResource
             }
         }
 
+        // 관리자나 본인이 아닐경우, phone, birthday 속성 제거
+        if (!$request->user()->hasPermissionTo('act.admin') && $request->user()->id !== $this->id) {
+            unset($parentArray['phone']);
+            unset($parentArray['birthday']);
+        }
+
         return array_merge($parentArray, $addArray);
     }
 }
