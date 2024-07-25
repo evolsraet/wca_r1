@@ -342,7 +342,7 @@ watch(
   }
 }
 .search-type2 .search-btn{
-    top: 54px !important;   
+    top: 47px !important;   
 }
 
 @media screen and (max-width: 937px) {

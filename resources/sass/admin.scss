@@ -71,6 +71,16 @@
       width: 10px !important;
       height: 14px !important;
   }
+  .admin-icon-pen{
+    background-image: url('../img/admin/penicon.png');
+    width: 15px !important;
+    height: 14px !important;
+  }
+  .admin-icon-noti {
+    background-image: url('../img/admin/notif.png');
+    width: 15px !important;
+    height: 14px !important;
+}
     /* topbar 아이콘 스타일*/
 
   .admin-icon-dashboard-top{
@@ -126,6 +136,12 @@
           height: 14px !important;
           transform: translateX(5px);
       }
+      .admin-icon-pen {
+        background-image: url('../img/admin/penred.png');
+    }
+      .admin-icon-noti {
+        background-image: url('../img/admin/notifred.png');
+    }
   }
 }
   
