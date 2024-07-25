@@ -129,6 +129,9 @@
                 <label for="user-title" class="form-label"
                     >사진 (본인 확인용)</label
                 >
+                <div class="file-upload-container">
+                    <img :src="photoUrl" alt="Profile Photo" class="profile-photo" v-if="profile.file_user_photo_name"/>
+                </div>
                 <input type="file" @change="handleFileUploadPhoto" ref="fileInputPhoto" style="display:none">
                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadPhoto">
                     파일 첨부
