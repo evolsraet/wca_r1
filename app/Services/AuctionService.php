@@ -20,6 +20,8 @@ class AuctionService
     // 요청 전 처리: 권한 검증
     protected function beforeProcess($method, $request, $id = null)
     {
+        $this->addRequest('with', 'media');
+
         if ($method == 'store' && (!auth()->check() || !auth()->user()->hasRole('user'))) {
             throw new \Exception('권한이 없습니다.');
         }

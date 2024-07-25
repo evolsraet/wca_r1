@@ -575,4 +575,15 @@ trait CrudTrait
     {
         return $request;
     }
+
+    // 리퀘스트에 추가
+    private function addRequest($which, $val, $seperate = ',')
+    {
+        $current = request()->get($which, '');
+        $changeArray = array_filter(explode($seperate, $current));
+        if (!in_array($val, $changeArray)) {
+            $changeArray[] = $val;
+        }
+        request()->merge([$which => implode($seperate, $changeArray)]);
+    }
 }

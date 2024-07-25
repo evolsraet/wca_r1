@@ -3,12 +3,15 @@
 namespace App\Models;
 
 use App\Models\Bid;
+use App\Models\Like;
+use App\Models\User;
 use App\Models\Review;
+use Spatie\MediaLibrary\HasMedia;
 use Illuminate\Database\Eloquent\Model;
+use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Spatie\MediaLibrary\HasMedia;
-use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class Auction extends Model implements HasMedia
 {
@@ -36,6 +39,7 @@ class Auction extends Model implements HasMedia
         'file_auction_proxy'  => '위임장/소유자 인감증명서',
         'file_auction_owner'  => '매도자관련서류',
     ];
+    public $files_one = [];
 
     // 검색어로 검색가능한 경우
     public $searchable = [
@@ -88,5 +92,30 @@ class Auction extends Model implements HasMedia
     public function reviews()
     {
         return $this->hasMany(Review::class);
+    }
+
+
+    // 파일
+    public function registerMediaCollections(): void
+    {
+        foreach ($this->files as $file => $name) {
+            $mediaCollection = $this->addMediaCollection($file)
+                ->useFallbackUrl('/images/placeholder.jpg')
+                ->useFallbackPath(public_path('/images/placeholder.jpg'));
+
+            // $files_one 배열에 있는 항목에만 singleFile() 적용
+            if (array_key_exists($file, $this->files_one)) {
+                $mediaCollection->singleFile();
+            }
+        }
+    }
+
+    public function registerMediaConversions(Media $media = null): void
+    {
+        if (env('RESIZE_IMAGE') === true) {
+            $this->addMediaConversion('resized-image')
+                ->width(env('IMAGE_WIDTH', 300))
+                ->height(env('IMAGE_HEIGHT', 300));
+        }
     }
 }

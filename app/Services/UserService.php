@@ -25,6 +25,12 @@ class UserService
         $this->defaultCrudTrait('user');
     }
 
+    protected function beforeProcess($method, $request, $id = null)
+    {
+        $this->addRequest('with', 'media');
+    }
+
+
     public function store(Request $request)
     {
         DB::beginTransaction();
@@ -302,10 +308,6 @@ class UserService
         ) {
             throw new \Exception("권한이 없습니다.");
         }
-    }
-
-    protected function beforeProcess($method, $request, $id = null)
-    {
     }
 
     protected function middleProcess($method, $request, $item, $id = null)
