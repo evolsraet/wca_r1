@@ -9,7 +9,7 @@
           {{ boardTextMessage }}
         </p>
       </div>
-      <router-link v-if="!isDealer && !isUser" :to="{ name: 'posts.create', params: { boardId } }" class="border-red-write">
+      <router-link v-if="(!isDealer && !isUser) && boardId === 'notice'" :to="{ name: 'posts.create', params: { boardId } }" class="border-red-write">
         <div class="image-icon-pen"></div>
       </router-link>
       <div class="search-type2 justify-content-end mb-2">
