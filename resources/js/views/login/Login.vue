@@ -119,11 +119,25 @@
                   <div class="my- text-left">
                     <router-link :to="{ path: '/' }" class="register-link text-secondary opacity-50 ms-2">이미 위카 회원이신가요?</router-link>
                   </div>
+                  <div class="text-end status-selector">
+                    <input type="radio" name="status" v-model="loginForm.status" value="emailLogin" id="emailLogin" hidden checked @change="setLoginFilter('emailLogin')">
+                    <label for="emailLogin" class="mx-2">이메일 로그인</label>
+
+                    <input type="radio" name="status" v-model="loginForm.status" value="phoneLogin" id="phoneLogin" hidden @change="setLoginFilter('phoneLogin')">
+                    <label for="phoneLogin">휴대폰 로그인</label>
+                  </div>
                   <!-- 이메일 입력 -->
-                  <div class="mb-2">
+                  <div v-if="isEmailLogin" class="mb-2">
                     <label for="email" class="form-label"></label>
                     <input v-model="loginForm.email" id="email" type="email" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="이메일을 입력해주세요.">
                   </div>
+                  <!-- 전화번호 입력 -->
+                   
+                  <div v-if="!isEmailLogin" class="mb-2">
+                    <label for="email" class="form-label"></label>
+                    <input v-model="loginForm.phone" id="phone" type="text" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="전화번호를 입력해주세요.">
+                  </div>
+                  
                   <!-- 비밀번호 입력 -->
                   <div class="mb-2">
                     <label for="password" class="form-label">
@@ -176,11 +190,26 @@
                 <div class="my-3 text-left">
                   <router-link :to="{ path: '/' }" class="register-link text-secondary opacity-50 ms-2">이미 위카 회원이신가요?</router-link>
                 </div>
+                <div class="text-end status-selector">
+                    <input type="radio" name="status" v-model="loginForm.status" value="emailLogin" id="emailLogin" hidden checked @change="setLoginFilter('emailLogin')">
+                    <label for="emailLogin" class="mx-2">이메일 로그인</label>
+
+                    <input type="radio" name="status" v-model="loginForm.status" value="phoneLogin" id="phoneLogin" hidden @change="setLoginFilter('phoneLogin')">
+                    <label for="phoneLogin">휴대폰 로그인</label>
+                </div>
                 <!-- 이메일 입력 -->
-                <div class="mb-3">
+                <div v-if="isEmailLogin" class="mb-3">
                   <label for="email" class="form-label">email</label>
                   <input v-model="loginForm.email" id="email" type="email" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="이메일을 입력해주세요.">
                   <div v-for="message in validationErrors?.email">
+                      {{ message }}
+                  </div>
+                </div>
+                <!-- 전화번호 입력 -->
+                <div v-if="!isEmailLogin" class="mb-3">
+                  <label for="email" class="form-label">phone</label>
+                  <input v-model="loginForm.phone" id="phone" type="text" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="전화번호를 입력해주세요.">
+                  <div v-for="message in validationErrors?.phone">
                       {{ message }}
                   </div>
                 </div>
@@ -259,7 +288,8 @@ const updateCarName = () => {
 const isModalOpen = ref(false);
 const modalContent = ref('');
 const loginCardRef = ref(null);
-const loginForm = ref({ email: '', password: '' });
+const loginForm = ref({ email: '', password: '' , phone:'', status:'emailLogin'});
+const isEmailLogin = ref(true);
 const validationErrors = ref({});
 const processing = ref(false);
 const alarmModal = ref(null);
@@ -316,6 +346,15 @@ const openAlarmModal = () => {
 const closeModal = () => {
   isModalOpen.value = false;
 };
+
+function setLoginFilter(status){
+  loginForm.value.status = status;
+  if(status == 'emailLogin'){
+    isEmailLogin.value = true;
+  } else{
+    isEmailLogin.value = false;
+  }
+}
 
 const submitLogin = async () => {
   if (processing.value) return;
