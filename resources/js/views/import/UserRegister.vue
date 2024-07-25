@@ -129,6 +129,9 @@
                 <label for="user-title" class="form-label"
                     >사진 (본인 확인용)</label
                 >
+                <div class="file-upload-container">
+                    <img :src="photoUrl" alt="Profile Photo" class="profile-photo" v-if="profile.file_user_photo_name"/>
+                </div>
                 <input type="file" @change="handleFileUploadPhoto" ref="fileInputPhoto" style="display:none">
                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadPhoto">
                     파일 첨부
@@ -141,11 +144,11 @@
             <label for="dealerName">딜러 이름</label>
             <input type="text" v-model="profile.dealer_name" id="dealerName" class="form-control" placeholder="이름"/>
           </div>
-          <div v-if="registerURL || adminCreateURL" class="form-group">
+          <div v-if="registerURL || adminCreateURL || adminEditURL" class="form-group">
             <label for="name">연락처</label>
             <input type="text" id="phone" v-model="profile.dealerContact" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
           </div>
-          <div v-if="registerURL || adminCreateURL" class="form-group">
+          <div v-if="registerURL || adminCreateURL || adminEditURL" class="form-group">
               <label for="dealerBirthDate">생년월일</label>
               <input type="date" id="dealerBirthDate" v-model="profile.dealerBirthDate" placeholder="1990-12-30">
           </div>
