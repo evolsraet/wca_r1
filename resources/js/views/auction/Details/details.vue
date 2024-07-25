@@ -570,18 +570,23 @@
                     </div>
                     </div>
                   </BottomSheet02> 
-                </div>
-                <BottomSheet02 v-if ="auctionDetail.data.status ==='done' && isDealer">
-                  <div>
-                    <h4>낙찰 완료</h4>
-                    <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요? </p>
+                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer">
                     <div>
-                      <router-link :to="{ name: 'index.claim' }" class="my-2 btn btn-primary w-100">
-                        클레임 신청
-                      </router-link>
+                      <h4>낙찰 완료</h4>
+                      <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요?</p>
+                      <div>
+                        <router-link 
+                          :to="{ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId } }" 
+                          class="my-2 btn btn-primary w-100"
+                          :class="{ 'disabled': isClaimed }"
+                          @click.prevent="!isClaimed && navigateToClaim"
+                        >
+                          클레임 신청
+                        </router-link>
+                      </div>
                     </div>
-                  </div>
-                </BottomSheet02>
+                  </BottomSheet02>
+                </div>
               </div>
           
                      <!--  바텀 시트 show or black-->
@@ -725,6 +730,7 @@ import auctionModal from '@/views/modal/auction/auctionModal.vue';
 import consignment from '@/views/consignment/consignment.vue';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
 import profileDom from '/resources/img/profile_dom.png';
+import { initPostSystem } from "@/composables/posts";
 
 import drift from '../../../../../resources/img/drift.png';
 import carObjects from '../../../../../resources/img/modal/car-objects-blur.png';
@@ -736,7 +742,7 @@ import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
 import useLikes from '@/composables/useLikes';
 import { isEqual } from 'date-fns';
-
+const { posts, getPosts, deletePost, isLoading, getBoardCategories ,pagination} = initPostSystem();
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
 const auctionChosn = ref(false);
 const showNotification = ref(false);
@@ -889,7 +895,26 @@ const sortedTopBids = computed(() => {
 
   return topBids;
 });
+const isClaimed = ref(false);
+const fetchPosts = async () => {
+  await getPosts(
+    'claim',
+    1,
+    '',
+    '',
+    '',
+    '',
+    '',
+    'created_at',
+    'desc'
+  );
 
+  // posts에서 extra1이 auctionId와 같은지 확인합니다.
+  isClaimed.value = posts.value.some(post => post.extra1 === auctionId.value);
+};
+const navigateToClaim = () => {
+  router.push({ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId.value } });
+};
 const heightPrice = ref(0);
 // 숫자 애니메이션 함수
 /*const animateHeightPrice = (newPrice) => {
@@ -1619,6 +1644,7 @@ const startPolling = () => {
 let timer;
 const currentTime = ref(new Date());
 onMounted(async () => {
+  fetchPosts();
   timer = setInterval(() => {
     currentTime.value = new Date();
   }, 1000);

@@ -44,7 +44,7 @@
                     </div>
                   </div>
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">
+                <th v-if="boardId === 'notice'" class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">
                   <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">카테고리</span>
                 </th>
                 <th class="px-6 py-3 text-left" style="width: 20%;">
@@ -65,22 +65,22 @@
                     </div>
                   </div>
                 </th>
-                <th v-if="!isDealer && !isUser" class="px-6 py-3 bg-gray-50 text-left">수정/삭제</th>
+                <th class="px-6 py-3 bg-gray-50 col-2">수정/삭제</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="post in posts" :key="post.id">
-                <td v-if="!isDealer && !isUser" class="px-6 py-4 text-sm">{{ post.created_at }}</td>
-                <td class="px-6 py-4 text-sm">
-                  <div v-for="category in post.categories" :key="category">{{ category }}</div>
+                <td v-if="!isDealer && !isUser" class="px-6 py-4 text-sm text-overflow">{{ post.created_at }}</td>
+                <td v-if="boardId === 'notice'" class="px-6 py-4 text-sm text-overflow">
+                  <div>{{ post.category }}</div>
                 </td>
-                <td class="px-6 py-4 text-sm">{{ post.title }}</td>
-                <td v-if="isDealer || isUser" class="px-6 py-4 text-sm text-overflow">{{ post.content }}</td>
-                <td v-if="!isDealer && !isUser" class="px-6 py-4 text-sm">
+                <td class="px-6 py-4 text-sm text-overflow">{{ post.title }}</td>
+                <td v-if="isDealer || isUser" class="px-6 py-4 text-sm text-overflow" v-html="post.content"></td>
+                <td class="px-6 py-4 text-sm text-overflow">
                   <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id } }" class="badge">
                     <div class="icon-edit-img"></div>
                   </router-link>
-                  <a href="#" @click.prevent="deletePost(boardId, post.id)" class="ms-2 badge web_style">
+                  <a href="#" @click.prevent="deletePost(boardId, post.id)" class="col-2 ms-2 badge web_style">
                     <div class="icon-trash-img"></div>
                   </a>
                 </td>
@@ -90,8 +90,18 @@
         </div>
       </div>
       <div class="card-footer">
-        <!-- Pagination or other footer content -->
-      </div>
+      <ul class="pagination justify-content-center">
+        <li class="page-item" :class="{ disabled: currentPage === 1 }">
+          <a class="page-link prev-style" @click="loadPage(currentPage - 1)" :disabled="currentPage === 1"></a>
+        </li>
+        <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === currentPage }">
+          <a class="page-link" @click="loadPage(n)">{{ n }}</a>
+        </li>
+        <li class="page-item next-prev" :class="{ disabled: currentPage === pagination.last_page }">
+          <a class="page-link next-style" @click="loadPage(currentPage + 1)" :disabled="currentPage === pagination.last_page"></a>
+        </li>
+      </ul>
+    </div>
     </div>
   </div>
 </template>
@@ -101,21 +111,27 @@ import { ref, onMounted, watch, computed } from "vue";
 import { useRoute } from 'vue-router';
 import { initPostSystem } from "@/composables/posts";
 import { useStore } from 'vuex';
-const { posts, getPosts, deletePost, isLoading, getBoardCategories } = initPostSystem();
+const { posts, getPosts, deletePost, isLoading, getBoardCategories ,pagination} = initPostSystem();
 const route = useRoute();
 const boardId = ref(route.params.boardId);
-
+const currentPage = ref(1);
 const store = useStore();
 const search_title = ref("");
 const orderColumn = ref("created_at");
 const orderDirection = ref("desc");
-const pagination = ref({});
 const user = computed(() => store.getters['auth/user']);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
 
-const fetchPosts = (page = 1) => {
-  getPosts(
+async function loadPage(page) { // 페이지 로드
+  if (page < 1 || page > pagination.value.last_page) return;
+  currentPage.value = page;
+  await fetchPosts(page);
+  window.scrollTo(0, 0);
+}
+
+const fetchPosts = async (page = 1) => {
+  await getPosts(
     boardId.value,  // 전달된 boardId 사용
     page,
     '',
@@ -125,9 +141,8 @@ const fetchPosts = (page = 1) => {
     '',
     orderColumn.value,
     orderDirection.value
-  ).then(response => {
-    pagination.value = response.pagination;
-  });
+  );
+  currentPage.value = pagination.value.current_page; // Ensure currentPage is synced with pagination
 };
 
 const updateOrdering = (column) => {
@@ -212,5 +227,8 @@ watch(route, (newRoute) => {
         align-items: flex-end;
         flex-direction: column;
     }
+}
+.tbl_basic table tr td{
+  padding: 20px 11px !important;
 }
 </style>

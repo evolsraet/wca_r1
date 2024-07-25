@@ -1,22 +1,23 @@
 import { ref, reactive, inject } from 'vue';
 import { useRouter } from 'vue-router';
-import axios from 'axios';
 import { cmmn } from '@/hooks/cmmn';
+import axios from 'axios';
 
 export function initPostSystem() {
     const posts = ref([]);
     const post = ref({
         title: '',
         content: '',
-        categories: [],
+        category: '',
         thumbnail: ''
     });
+    const pagination = ref({});
     const router = useRouter();
     const validationErrors = ref({});
     const isLoading = ref(false);
     const swal = inject('$swal');
     const categories = ref([]);
-    const { wicac , wica } = cmmn();
+    const { wicac, wica } = cmmn();
 
     const getBoardCategories = async () => {
         try {
@@ -26,7 +27,7 @@ export function initPostSystem() {
                 if (noticeBoard) {
                     categories.value = JSON.parse(noticeBoard.categories);
                 }
-            } 
+            }
         } catch (error) {
             console.error('Error fetching board data:', error);
         }
@@ -34,37 +35,18 @@ export function initPostSystem() {
 
     const getPosts = async (
         boardId,
-        page = 1,
-        search_category = '',
-        search_id = '',
-        search_title = '',
-        search_content = '',
-        search_global = '',
-        order_column = 'created_at',
-        order_direction = 'desc'
+        page=1
     ) => {
-        isLoading.value = true;
-        try {
-            const response = await axios.get(`/api/board/${boardId}/articles`, {
-                params: {
-                    page,
-                    search_category,
-                    search_id,
-                    search_title,
-                    search_content,
-                    search_global,
-                    order_column,
-                    order_direction
-                }
-            });
-            posts.value = response.data.data;
-            return response.data;
-        } catch (error) {
-            console.error(error);
-            throw error;
-        } finally {
-            isLoading.value = false;
-        }
+        return wicac.conn()
+            .url(`/api/board/${boardId}/articles`)
+            .page(`${page}`)
+            .callback(function(result) {
+                posts.value = result.data;
+                pagination.value = result.rawData.data.meta;
+                console.log("페이지 네이션 : ",pagination.value)
+                return result.data;
+            })
+            .get();
     };
 
     const getPost = async (boardId, id) => {
@@ -82,20 +64,20 @@ export function initPostSystem() {
 
     const storePost = async (boardId, postData) => {
         if (isLoading.value) return;
-    
+
         isLoading.value = true;
         validationErrors.value = {};
-    
+
         const serializedPost = new FormData();
         serializedPost.append('article[title]', postData.title);
         serializedPost.append('article[content]', postData.content);
-        postData.categories.forEach((category, index) => {
-            serializedPost.append(`article[categories][${index}]`, category);
-        });
+        if (boardId === 'notice') {
+            serializedPost.append('article[category]', postData.category);
+        }
         if (postData.thumbnail) {
             serializedPost.append('article[thumbnail]', postData.thumbnail);
         }
-    
+
         try {
             const response = await axios.post(`/api/board/${boardId}/articles`, serializedPost, {
                 headers: {
@@ -115,20 +97,24 @@ export function initPostSystem() {
             isLoading.value = false;
         }
     };
-    
+
     const updatePost = async (boardId, postId, postData) => {
         if (isLoading.value) return;
-    
+
         isLoading.value = true;
         validationErrors.value = {};
-    
+
         const data = {
             article: {
                 title: postData.title,
                 content: postData.content,
             }
         };
-    
+
+        if (boardId === 'notice') {
+            data.article.category = postData.category;
+        }
+
         try {
             const response = await axios.put(`/api/board/${boardId}/articles/${postId}`, data, {
                 headers: {
@@ -145,19 +131,19 @@ export function initPostSystem() {
             isLoading.value = false;
         }
     };
-    
+
     const deletePost = async (boardId, id) => {
         try {
             wica.ntcn(swal)
-                .param({ _id: id }) // 리턴값에 전달 할 데이터
-                .title('삭제하시겠습니까?') // 알림 제목
-                .icon('W') // E:error , W:warning , I:info , Q:question
+                .param({ _id: id })
+                .title('삭제하시겠습니까?')
+                .icon('W')
                 .callback(async function(result) {
                     if (result.isOk) {
                         const response = await axios.delete(`/api/board/${boardId}/articles/${id}`);
                         wica.ntcn(swal)
-                            .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
-                            .icon('I') // E:error , W:warning , I:info , Q:question
+                            .addClassNm('cmm-review-custom')
+                            .icon('I')
                             .alert('게시물이 정상적으로 삭제되었습니다.');
                         getPosts(boardId);
                     }
@@ -167,7 +153,7 @@ export function initPostSystem() {
             console.error('Error deleting post:', error);
             wica.ntcn(swal)
                 .title('오류가 발생하였습니다.')
-                .icon('E') // E:error , W:warning , I:info , Q:question
+                .icon('E')
                 .alert('관리자에게 문의해주세요.');
         }
     };
@@ -183,6 +169,7 @@ export function initPostSystem() {
         validationErrors,
         isLoading,
         categories,
-        getBoardCategories
+        getBoardCategories,
+        pagination
     };
 }
