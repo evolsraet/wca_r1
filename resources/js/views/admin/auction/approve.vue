@@ -132,7 +132,7 @@
                   <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionProxyFileList.length > 0 || fileProxyUrl">
                     매매업체 대표증 / 종사원증 : 
                     <li v-for="(file, index) in fileAuctionProxyFileList" :key="index">
-                        <a :href=file.original_url download>{{ file.file_name }}</a>
+                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img"></span>
                     </li>
                     <li v-if="fileProxyUrl">
                       <a :href=fileProxyUrl download>{{ auction.file_auction_proxy_name }}</a>
@@ -148,7 +148,7 @@
                   <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionOwnerFileList.length > 0 || fileOwnerUrl">
                     매매업체 대표증 / 종사원증 : 
                     <li v-for="(file, index) in fileAuctionOwnerFileList" :key="index">
-                        <a :href=file.original_url download>{{ file.file_name }}</a>
+                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img"></span>
                     </li>
                     <li v-if="fileOwnerUrl">
                       <a :href=fileOwnerUrl download>{{ auction.file_auction_owner_name }}</a>
