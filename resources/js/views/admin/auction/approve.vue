@@ -129,7 +129,15 @@
                   <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadProxy">
                       파일 첨부
                   </button>
-                  <div class="text-start mb-5 text-secondary opacity-50" v-if="auction.file_auction_proxy_name">매매업체 대표증 / 종사원증 : {{ auction.file_auction_proxy_name }}</div>
+                  <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionProxyFileList.length > 0 || fileProxyUrl">
+                    매매업체 대표증 / 종사원증 : 
+                    <li v-for="(file, index) in fileAuctionProxyFileList" :key="index">
+                        <a :href=file.original_url download>{{ file.file_name }}</a>
+                    </li>
+                    <li v-if="fileProxyUrl">
+                      <a :href=fileProxyUrl download>{{ auction.file_auction_proxy_name }}</a>
+                    </li>
+                  </div>
                 </div>
                 <div class="mb-3">
                   <label for="user-title" class="form-label">매도자관련서류</label>
@@ -137,7 +145,15 @@
                   <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
                       파일 첨부
                   </button>
-                  <div class="text-start mb-5 text-secondary opacity-50" v-if="auction.file_auction_owner_name">매매업체 대표증 / 종사원증 : {{ auction.file_auction_owner_name }}</div>
+                  <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionOwnerFileList.length > 0 || fileOwnerUrl">
+                    매매업체 대표증 / 종사원증 : 
+                    <li v-for="(file, index) in fileAuctionOwnerFileList" :key="index">
+                        <a :href=file.original_url download>{{ file.file_name }}</a>
+                    </li>
+                    <li v-if="fileOwnerUrl">
+                      <a :href=fileOwnerUrl download>{{ auction.file_auction_owner_name }}</a>
+                    </li>
+                  </div>
                 </div>
               </div>
             </div>
@@ -423,6 +439,13 @@ const finalPriceFeeKorean = ref('0 원');
 const fileAuctionProxy = ref(null);
 const fileAuctionOwner = ref(null);
 const swal = inject('$swal');
+const fileOwnerUrl = ref('');
+const fileProxyUrl =ref('');
+const fileAuctionProxyList = ref([]);
+const fileAuctionProxyFileList = ref([]);
+const fileAuctionOwnerList = ref([]);
+const fileAuctionOwnerFileList = ref([]);
+
 let created_at;
 let updated_at;
 
@@ -499,11 +522,56 @@ function toggleSheet() {
   showBottomSheet.value = !showBottomSheet.value;
 }
 
+function fileExstCheck(info){
+      if(info.hasOwnProperty('files')){
+        if(info.files.hasOwnProperty('file_auction_proxy')){
+          fileAuctionProxyList.value = info.files.file_auction_proxy;
+            if(fileAuctionProxyList.value.length>0){
+              for(let i=0; fileAuctionProxyList.value.length>i; i++){
+                fileAuctionProxyFileList.value.push({
+                  original_url: fileAuctionProxyList.value[i].original_url,
+                  file_name: fileAuctionProxyList.value[i].file_name
+                })
+              }
+            }
+            /*
+            if(info.files.file_auction_proxy[0].hasOwnProperty('original_url')){
+              fileProxyUrl.value = info.files.file_auction_proxy[0].original_url;
+              auction.file_auction_proxy_name = info.files.file_auction_proxy[0].file_name;
+            }
+            */
+        }
+
+        if(info.files.hasOwnProperty('file_auction_owner')){
+          fileAuctionOwnerList.value = info.files.file_auction_owner;
+            if(fileAuctionOwnerList.value.length>0){
+              for(let i=0; fileAuctionOwnerList.value.length>i; i++){
+                fileAuctionOwnerFileList.value.push({
+                  original_url: fileAuctionOwnerList.value[i].original_url,
+                  file_name: fileAuctionOwnerList.value[i].file_name
+                })
+              }
+            }
+            /*
+            if(info.files.hasOwnProperty('file_auction_owner')){
+              if(info.files.file_auction_owner[0].hasOwnProperty('original_url')){
+                fileOwnerUrl.value = info.files.file_auction_owner[0].original_url;
+                auction.file_auction_owner_name = info.files.file_auction_owner[0].file_name;
+              }
+            }
+            */
+        }
+
+        
+      }
+  }
+
 const fetchAuctionDetails = async () => {
   try {
     const id = route.params.id;
     const data = await getAuctionById(id);
     auctionDetails.value = data;
+    fileExstCheck(data.data);
     console.log('Fetched auction details:', data);
   } catch (error) {
     console.error('Error fetching auction details:', error);
@@ -545,7 +613,13 @@ function handleFileUploadProxy(event) {
   if (file) {
     auction.file_auction_proxy = file;
     auction.file_auction_proxy_name = file.name;
-    console.log("Owner file:", file.name);
+    /*
+    fileAuctionProxyFileList.value.push({
+      original_url: URL.createObjectURL(file),
+      file_name: file.name
+    })
+    */
+    fileProxyUrl.value = URL.createObjectURL(file);
   }
 }
 
@@ -554,7 +628,13 @@ function handleFileUploadOwner(event) {
   if (file) {
     auction.file_auction_owner = file;
     auction.file_auction_owner_name = file.name;
-    console.log("Owner file:", file.name);
+    /*
+    fileAuctionOwnerFileList.value.push({
+      original_url: URL.createObjectURL(file),
+      file_name: file.name
+    })
+    */
+    fileOwnerUrl.value = URL.createObjectURL(file);
   }
 }
 
