@@ -199,6 +199,10 @@ class User extends Authenticatable implements HasMedia
         return $this->hasMany(Like::class);
     }
 
+    public function addressbooks()
+    {
+        return $this->hasMany(Addressbook::class);
+    }
 
     // 파일
     public function registerMediaCollections(): void

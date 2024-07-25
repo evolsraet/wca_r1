@@ -149,7 +149,7 @@ class ArticleTest extends TestCase
         ];
 
         $response = $this->actingAs($otherUser)
-            ->putJson("/api/board/notice/articles/{$article->id}", $updateData);
+            ->putJson("/api/board/{$article->board_id}/articles/{$article->id}", $updateData);
 
 
         $this->assertNotSuccessful($response);
@@ -162,7 +162,7 @@ class ArticleTest extends TestCase
         $article = Article::factory()->create(['user_id' => $user->id]);
 
         $response = $this->actingAs($otherUser)
-            ->deleteJson("/api/board/notice/articles/{$article->id}");
+            ->deleteJson("/api/board/{$article->board_id}/articles/{$article->id}");
 
         $this->assertNotSuccessful($response);
     }

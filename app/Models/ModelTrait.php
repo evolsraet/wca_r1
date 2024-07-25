@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Log;
 
 trait ModelTrait
 {
+    // protected $dateFormat = 'Y-m-d H:i:s';
+
     public static function findOrFail($id, $columns = ['*'])
     {
         $model = static::find($id, $columns);

@@ -56,10 +56,15 @@ class ArticleService
                 // 클레임 - 본인것만
                 if ($this->board->id === 'claim') {
                     // 로그인 확인
-                    if (!auth()->check()) {
-                        throw new \Exception('로그인이 필요합니다.');
+                    if (!auth()->check() || !auth()->user()->can('act.dealer')) {
+                        throw new \Exception('권한이 없습니다.');
                     }
-                    request()->merge(['where' => request()->where . "|user_id:" . auth()->user()->id]);
+
+                    // 관리자 외 본인것만
+                    if (!auth()->user()->can('act.admin')) {
+                        $where = request()->has('where') ? request()->where . '|' : '';
+                        request()->merge(['where' => $where . "articles.user_id:" . auth()->user()->id]);
+                    }
                 }
 
                 // 게시판 권한
@@ -99,6 +104,19 @@ class ArticleService
                 // store 의 $request 는 배열
                 $data->board_id = $this->board->id;
                 $data->user_id = auth()->user()->id;
+
+                // 발리데이션
+                $validateCondition = [];
+                $validateCondition['title'] = 'required|string|max:255';
+
+                if ($this->board->id === 'claim') {
+                    $validateCondition['extra1'] = 'required|numeric';
+                } elseif ($this->board->categories) {
+                    $validateCondition['category'] = 'required|string';
+                }
+
+                $validatedData = validator((array) $request, $validateCondition)
+                    ->validate();
 
                 // 로그인
                 if (!auth()->check()) {

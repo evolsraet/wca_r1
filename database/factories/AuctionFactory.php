@@ -17,7 +17,6 @@ class AuctionFactory extends Factory
             'user_id' => $user->id,
             'owner_name' => $this->faker->name,
             'car_no' => $this->faker->bothify('??###'),
-            // 'status' => $this->faker->randomElement(['cancel', 'done', 'chosen', 'wait', 'ing', 'diag', 'ask']),
             'status' => $this->faker->randomElement(array_keys((new Auction)->enums['status'])),
             'region' => $this->faker->word,
             'addr_post' => $this->faker->postcode,

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('board_id')->comment('보드 아이디');
+            $table->string('category')->nullable()->comment('카테고리');
             $table->string('title')->comment('제목');
             $table->text('content')->comment('내용');
             $table->unsignedBigInteger('user_id')->comment('작성자');

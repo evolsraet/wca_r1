@@ -359,6 +359,7 @@ trait CrudTrait
         try {
             $data = $request->get($this->getModelName());
             $data = $this->checkJson($data);
+            $data = $this->beforeStoreData($data);
             $item = new $modelClass();
 
             // 상위 객체 데이터를 먼저 처리합니다.
@@ -398,7 +399,7 @@ trait CrudTrait
             // 파일
             $model = new $modelClass();
             $file_result = [];
-            foreach ($model->files as $key => $row) {
+            foreach ((array) (array) $model->files as $key => $row) {
                 if ($request->hasFile($key)) {
                     $files = $request->file($key);
                     // 파일이 배열이 아닌 경우 배열로 변환
@@ -445,7 +446,10 @@ trait CrudTrait
             $item = $modelClass::query();
 
             $item = $item->findOrFail($id);
-            $data = request()->get($this->getModelName());
+
+            $data = $request->get($this->getModelName());
+            $data = $this->checkJson($data);
+            $data = $this->beforeUpdateData($data);
 
             foreach ((array) $data as $key => $row) {
                 // 하위 모델 자동 저장
@@ -457,7 +461,7 @@ trait CrudTrait
                 }
             }
 
-            $this->middleProcess(__FUNCTION__, request(), $item, $id);
+            $this->middleProcess(__FUNCTION__, $request, $item, $id);
             $item->save();
 
             $this->afterProcess(__FUNCTION__, request(), $item);
@@ -465,7 +469,7 @@ trait CrudTrait
             // 파일
             $file_result = [];
             $model = new $modelClass();
-            foreach ($model->files as $key => $row) {
+            foreach ((array) $model->files as $key => $row) {
                 if ($request->hasFile($key)) {
                     $files = $request->file($key);
                     // 파일이 배열이 아닌 경우 배열로 변환
@@ -560,5 +564,15 @@ trait CrudTrait
         }
 
         return $data;
+    }
+
+    private function beforeUpdateData($request)
+    {
+        return $request;
+    }
+
+    private function beforeStoreData($request)
+    {
+        return $request;
     }
 }

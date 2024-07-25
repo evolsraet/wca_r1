@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\AuctionController;
 use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\CategoryController;
 use App\Http\Controllers\Api\PermissionController;
+use App\Http\Controllers\Api\AddressbookController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 
@@ -56,6 +57,8 @@ Route::apiResource('board.articles', ArticleController::class);
 // like
 Route::post('likes/toggle/{likeable_type_model}/{likeable_id}', [LikeController::class, 'toggle'])->middleware('auth:sanctum');
 Route::apiResource('likes', LikeController::class)->middleware('auth:sanctum');
+
+Route::apiResource('addressbooks', AddressbookController::class)->middleware('auth:sanctum');
 
 Route::delete('media/{uuid}', [LibController::class, 'deleteMultipleMedia'])->middleware('auth:sanctum');
 Route::get('lib/fields/{table}', [LibController::class, 'fields'])->middleware('auth:sanctum');

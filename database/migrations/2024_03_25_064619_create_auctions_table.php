@@ -16,7 +16,6 @@ class CreateAuctionsTable extends Migration
             $table->string('status')->default('ask')->comment('진행상태');
             $table->unsignedBigInteger('diag_id')->nullable()->comment('진단아이디');
             $table->timestamp('diag_check_at')->nullable()->comment('진단확인일');
-            $table->softDeletes();
             $table->string('region')->nullable()->comment('지역');
             $table->string('addr_post')->nullable()->comment('우편번호');
             $table->string('addr1')->nullable()->comment('주소');
@@ -39,7 +38,13 @@ class CreateAuctionsTable extends Migration
             $table->boolean('verified')->default(0)->comment('');
             $table->unsignedInteger('hit')->default(0)->comment('조회수');
             $table->unsignedInteger('hope_price')->nullable()->comment('희망가');
+
+            $table->string('dest_addr_post')->nullable()->comment('도착지 우편번호');
+            $table->string('dest_addr1')->nullable()->comment('도착지 주소');
+            $table->string('dest_addr2')->nullable()->comment('도착지 상세주소');
+
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

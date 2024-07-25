@@ -10,7 +10,6 @@ class Board extends Model
     use HasFactory;
     use ModelTrait;
 
-
     protected $primaryKey = 'id';
     protected $keyType = 'string';
     public $incrementing = false;
