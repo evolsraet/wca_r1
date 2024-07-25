@@ -3,8 +3,7 @@
     <div class="row my-5 mov-wide m-auto">
       <div class="card border-0 shadow-none">
         <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <h6 class="mt-3">카테고리</h6>
+          <div class="d-flex justify-content-end">
             <div>
               <button :disabled="isLoading" class="primary-btn">
                 <div v-show="isLoading" class=""></div>
@@ -16,10 +15,11 @@
             </div>
           </div>
           <!-- Category -->
-          <div class="mb-3">
-            <v-select multiple v-model="post.categories" :options="categoriesList" :reduce="category => category" label="category" class="form-control" placeholder="Select category"/>
+          <div v-if="boardId === 'notice'" class="mb-3">
+            <h6 class="mt-3">카테고리</h6>
+            <v-select v-model="post.category" :options="categoriesList" :reduce="category => category" label="category" class="form-control" placeholder="Select category"/>
             <div class="text-danger mt-1">
-              <div v-if="validationErrors.categories">{{ validationErrors.categories }}</div>
+              <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
             </div>
           </div>
           <!-- Title -->
@@ -57,6 +57,7 @@ import { required, min } from "@/validation/rules";
 import { cmmn } from '@/hooks/cmmn';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
+import vSelect from 'vue-select';
 
 defineRule("required", required);
 defineRule("min", min);
@@ -73,7 +74,8 @@ const { value: content } = useField("content", null, { initialValue: "" });
 const post = reactive({
   title,
   content,
-  categories: ref([]),
+  category: '',
+  thumbnail: null,
 });
 
 const fileInputRef = ref(null);
@@ -86,19 +88,20 @@ const swal = inject('$swal');
 const router = useRouter();
 const route = useRoute();
 const boardId = route.params.boardId;
+const auctionId = route.params.auctionId; // Retrieve auctionId from route params
 
 const getBoardData = async () => {
-    try {
-        const response = await axios.get('/api/board');
-        if (Array.isArray(response.data.data)) {
-            const board = response.data.data.find(board => board.id === boardId);
-            if (board) {
-                categoriesList.value = JSON.parse(board.categories);
-            }
-        } 
-    } catch (error) {
-        console.error('Error fetching board data:', error);
+  try {
+    const response = await axios.get('/api/board');
+    if (Array.isArray(response.data.data)) {
+      const board = response.data.data.find(board => board.id === boardId);
+      if (board) {
+        categoriesList.value = JSON.parse(board.categories);
+      }
     }
+  } catch (error) {
+    console.error('Error fetching board data:', error);
+  }
 };
 
 function triggerFileUpload() {
@@ -124,38 +127,41 @@ function submitForm() {
 }
 
 const submitPost = async (postData) => {
-    if (isLoading.value) return;
+  if (isLoading.value) return;
 
-    isLoading.value = true;
-    validationErrors.value = {};
+  isLoading.value = true;
+  validationErrors.value = {};
 
-    const serializedPost = new FormData();
-    serializedPost.append('article[title]', postData.title);
-    serializedPost.append('article[content]', postData.content);
-    postData.categories.forEach((category, index) => {
-        serializedPost.append(`article[categories][${index}]`, category);
+  const serializedPost = new FormData();
+  serializedPost.append('article[title]', postData.title);
+  serializedPost.append('article[content]', postData.content);
+  if (boardId === 'notice') {
+    serializedPost.append('article[category]', postData.category);
+  }
+  if (boardId === 'claim') {
+    serializedPost.append('article[extra1]', auctionId); // Include auctionId as extra1 when boardId is 'claim'
+  }
+  if (postData.thumbnail) {
+    serializedPost.append('article[thumbnail]', postData.thumbnail);
+  }
+
+  try {
+    const response = await axios.post(`/api/board/${boardId}/articles`, serializedPost, {
+      headers: {
+        "content-type": "multipart/form-data"
+      }
     });
-    if (postData.thumbnail) {
-      serializedPost.append('article[thumbnail]', postData.thumbnail);
+    router.push({ name: 'posts.index', params: { boardId } });
+    wica.ntcn(swal)
+      .icon('I')
+      .alert('공지사항이 성공적으로 저장되었습니다.');
+  } catch (error) {
+    if (error.response?.data) {
+      Object.assign(validationErrors, error.response.data.errors);
     }
-
-    try {
-        const response = await axios.post(`/api/board/${boardId}/articles`, serializedPost, {
-            headers: {
-                "content-type": "multipart/form-data"
-            }
-        });
-        router.push({ name: 'posts.index', params: { boardId } });
-        wica.ntcn(swal)
-            .icon('I')
-            .alert('공지사항이 성공적으로 저장되었습니다.');
-    } catch (error) {
-        if (error.response?.data) {
-            Object.assign(validationErrors, error.response.data.errors);
-        }
-    } finally {
-        isLoading.value = false;
-    }
+  } finally {
+    isLoading.value = false;
+  }
 };
 
 onMounted(() => {
