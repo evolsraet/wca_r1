@@ -10,15 +10,6 @@ const PostsIndex = () => import('../views/admin/posts/PostsIndex.vue');
 const PostsCreate = () => import('../views/admin/posts/PostsCreate.vue');
 const PostsEdit = () => import('../views/admin/posts/PostsEdit.vue');
 
-function requireLogin(to, from, next) {
-    let isLogin = false;
-    isLogin = !!store.state.auth.authenticated;
-    if (isLogin) {
-        next();
-    } else {
-        next('/login');
-    }
-}
 
 function guest(to, from, next) {
     let isLogin = !!store.state.auth.authenticated;
@@ -71,37 +62,24 @@ function takingVerificationHomeRole(next) {
         next();
     }
 }
+async function determineLayout(to, from, next) {
+    const isAdmin = store.state.auth.user && store.state.auth.user.act.includes('act.admin');
+    if (isAdmin) {
+        const component = await AuthenticatedLayout();
+        to.matched[0].components.default = component.default;
+    } else {
+        const component = await GuestLayout();
+        to.matched[0].components.default = component.default;
+    }
+    next();
+}
+
 // url 추후에 리네임 
 export default [
     {
         path: '/',
         component: GuestLayout,
         children: [
-            {
-                name: 'board.index',
-                path: 'board/:boardId',
-                component: BoardLayout,
-                children: [
-                    {
-                        name: 'posts.index',
-                        path: '',
-                        component: PostsIndex,
-                        meta: { breadCrumb: 'Posts' }
-                    },
-                    {
-                        name: 'posts.create',
-                        path: 'create',
-                        component: PostsCreate,
-                        meta: { breadCrumb: 'Add new post' }
-                    },
-                    {
-                        name: 'posts.edit',
-                        path: 'edit/:id',
-                        component: PostsEdit,
-                        meta: { breadCrumb: 'Edit post' }
-                    },
-                ],
-            },
             {
                 path: '/',
                 name: 'home',
@@ -314,6 +292,30 @@ export default [
                 name: 'auth.resetPasswordLogin',
                 component: () => import('../views/auth/passwords/resetPasswordLogin.vue'),
             },
+            {
+                path: '/board/:boardId',
+                beforeEnter: determineLayout,
+                children: [
+                    {
+                        path: '',
+                        name: 'posts.index',
+                        component: PostsIndex,
+                        meta: { breadCrumb: 'Posts' }
+                    },
+                    {
+                        path: 'create',
+                        name: 'posts.create',
+                        component: PostsCreate,
+                        meta: { breadCrumb: 'Add new post' }
+                    },
+                    {
+                        path: 'edit/:id',
+                        name: 'posts.edit',
+                        component: PostsEdit,
+                        meta: { breadCrumb: 'Edit post' }
+                    },
+                ]
+            },
         ]
     },
     {
@@ -333,7 +335,6 @@ export default [
                 component: () => import('../views/admin/profile/index.vue'),
                 meta: { breadCrumb: 'Profile' }
             },
-            
             {
                 name: 'categories.index',
                 path: 'categories',
