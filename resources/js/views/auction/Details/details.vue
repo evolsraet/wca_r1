@@ -1081,10 +1081,8 @@ const selectedIndex = ref(null);
 const reauction = async () => {
   const id = route.params.id;
   let data = {
-  status: 'ing',
-  is_reauction:1,
-  final_at: getThreeDaysFromNow(),
-};
+    status: 'wait',
+  };
 
   if (isSellChecked.value) {
     data.hope_price = amount.value;
