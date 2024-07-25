@@ -115,7 +115,6 @@ export default function useUsers() {
     }
 
     const updateUser = async (editForm, id) => {
-        console.log(JSON.stringify(editForm));
         if (isLoading.value) return;
         let payload = {
             user: {
@@ -125,19 +124,20 @@ export default function useUsers() {
             },
             dealer: {
                 name: editForm.dealer_name,
+                phone: editForm.dealerContact,
+                birthday : editForm.dealerBirthDate,
                 company: editForm.company,
+                company_duty: editForm.dealerCompanyDuty,
                 company_post: editForm.company_post,
                 company_addr1: editForm.company_addr1,
                 company_addr2: editForm.company_addr2,
                 introduce: editForm.introduce,
-                company_duty: editForm.dealerCompanyDuty,
                 receive_post: editForm.receive_post,
                 receive_addr1: editForm.receive_addr1,
                 receive_addr2: editForm.receive_addr2,
             }
         };
-    
-        console.log(JSON.stringify(payload));
+        
         const formData = new FormData();
         formData.append('user', JSON.stringify(payload.user));
         if(editForm.role == "dealer"){
@@ -203,7 +203,7 @@ export default function useUsers() {
             },
             dealer: {
                 name:profileData.dealer_name,
-                phone:profileData.phone,
+                phone:profileData.dealerContact,
                 birthday:profileData.dealerBirthDate,
                 company:profileData.company,
                 company_duty:profileData.dealerCompanyDuty,
