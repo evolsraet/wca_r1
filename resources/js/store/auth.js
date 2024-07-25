@@ -39,10 +39,22 @@ export default {
   actions: {
     async login({ commit }, credentials) {
       commit('CLEAR_ERROR_MESSAGE');
-
+      let loginForm = {};
+      //이메일 로그인
+      if(credentials.status == 'emailLogin'){
+        loginForm = { 
+          email: credentials.email,
+          password: credentials.password ,
+        }
+      }else if(credentials.status == 'phoneLogin'){ //전화번호 로그인
+        loginForm = { 
+          phone: credentials.phone,
+          password: credentials.password
+        }
+      }
       return wicac.conn()
       .url(`/login`) //호출 URL
-      .param(credentials)
+      .param(loginForm)
       .callback(function(result) {
           if(result.isError) {
             commit("SET_USER", '123123123');

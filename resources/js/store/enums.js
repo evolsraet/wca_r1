@@ -22,7 +22,7 @@ export default {
       for (let label of loopLabel) {
         wicac.conn()
         //.log()
-        .url('api/lib/enums/'+label)
+        .url('/api/lib/enums/'+label)
         .callback(function(result) {
           commit("SET_DATA", {key:label, val:result.data});
         })

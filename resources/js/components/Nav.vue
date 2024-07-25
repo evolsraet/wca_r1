@@ -1,7 +1,7 @@
 <template>
 <div id="UsersNav">
     <div class="overlay" style="display: none;"></div>
-    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, 'p-2' , 'px-5']">
+    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, 'p-2' , 'px-4']">
       <div v-if="isAuctionDetailPage"></div>
       <div class="nav-font" :class="{ 'container': isContainer }">
         <button v-if="isDetailPage && isUser" @click="goBack" class="btn btn-back back-btn-icon"></button>
@@ -91,7 +91,7 @@
                       <span class="text-secondary opacity-50 font-1">경매 완료 매물</span>                       
                     </div>
                   </router-link>
-                  <router-link :to="{ name: 'index.claim' }" class="menu-item process mt-0" @click="toggleNavbar">
+                  <router-link :to="{ name: 'posts.index', params: { boardId: 'claim' } }" class="menu-item process mt-0" @click="toggleNavbar">
                     <div class="sd-menu">
                       <div class="icon icon-document"></div>
                     </div>
@@ -100,7 +100,7 @@
                       <span class="text-secondary opacity-50 font-1">낙찰 차량에 문제가 있으신가요?</span>
                     </div>
                   </router-link>
-                  <router-link :to="{ name: 'index.notices' }" class="menu-item mt-0 process mb-4" @click="toggleNavbar">
+                  <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="menu-item mt-0 process mb-4" @click="toggleNavbar">
                     <div class="sd-menu">
                       <div class="icon icon-dash"></div>
                     </div>
@@ -143,7 +143,11 @@
                   </div>
                 </div>
               </div>
-              <div class="footer-content">
+              <div class="p-3 mt-auto mb-4">
+                <div v-html="randomButton"></div>
+              
+            </div>
+              <div class="footer-content mt-0">
                 <div class="under-line"></div>
                 <div class="p-2">
                   <router-link :to="{ name: 'home' }" class="menu-item mt-0" @click="toggleNavbar">
@@ -164,13 +168,22 @@
                       <span class="text-secondary opacity-50 font-1">경매 진행중인 매물</span>
                     </div>
                   </router-link>
-                  <router-link :to="{ name: 'user.review'}" class="menu-item mt-1 mb-4" @click="toggleNavbar">
+                  <router-link :to="{ name: 'user.review'}" class="menu-item mt-1" @click="toggleNavbar">
                     <div class="sd-menu">
                       <div class="icon icon-ratings"></div>
                     </div>
                     <div class="d-flex flex-column">
                       <span class="menu-text">이용후기</span>
                       <span class="text-secondary opacity-50 font-1"> 다양한 판매 후기</span>
+                    </div>
+                  </router-link>
+                  <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="menu-item mt-0 process " @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-dash"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">공지사항</span>
+                      <span class="text-secondary opacity-50 font-1">새소식</span>
                     </div>
                   </router-link>
                 </div>
@@ -199,7 +212,11 @@
                   </div>
                 </div>
               </div>
-              <div class="footer-content">
+              <div class="p-3 mt-auto mb-4">
+                <div v-html="randomButton"></div>
+              
+            </div>
+              <div class="footer-content mt-0">
                 <div class="under-line"></div>
                 <div class="p-2">
                   <router-link :to="{ name: 'home' }" class="menu-item mt-0" @click="toggleNavbar">
@@ -229,6 +246,15 @@
                       <span class="text-secondary opacity-50 font-1">위카 란?</span>
                     </div>
                   </router-link>
+                  <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="menu-item mt-0 process mb-4" @click="toggleNavbar">
+                    <div class="sd-menu">
+                      <div class="icon icon-dash"></div>
+                    </div>
+                    <div class="d-flex flex-column">
+                      <span class="menu-text">공지사항</span>
+                      <span class="text-secondary opacity-50 font-1">새소식</span>
+                    </div>
+                  </router-link>
                 </div>
               </div>
               <div class="logo-content">
@@ -246,13 +272,16 @@
           <template v-if="isUser">
             <div class="d-flex">
               <li class="nav-item">
-                <router-link to="/" class="nav-link mx-3 nav-inq" aria-current="page" exact-active-class="active-link">내차조회</router-link>
+                <router-link to="/" class="nav-link mx-2 nav-inq" aria-current="page" exact-active-class="active-link">내차조회</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'auction.index'}" class="nav-link mx-3 nav-auction" aria-current="page" exact-active-class="active-link">내 매물관리</router-link>
+                <router-link :to="{ name: 'auction.index'}" class="nav-link mx-2 nav-auction" aria-current="page" exact-active-class="active-link">내 매물관리</router-link>
               </li>
               <li class="nav-item">
-                <router-link :to="{ name: 'user.review'}" class="nav-link me-0 mx-3 nav-review" exact-active-class="active-link">이용후기</router-link>
+                <router-link :to="{ name: 'user.review'}" class="nav-link mx-2 nav-review" exact-active-class="active-link">이용후기</router-link>
+              </li>
+              <li class="nav-item">
+              <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="nav-link mx-2 " exact-active-class="active-link">공지사항</router-link>
               </li>
             </div>
             <li class="nav-item my-member ms-auto dropdown">
@@ -292,10 +321,10 @@
               <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">과거 낙찰 이력</router-link>
             </li>
             <li class="nav-item">
-              <router-link :to="{ name: 'index.claim'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">클레임</router-link>
+              <router-link :to="{ name: 'posts.index', params: { boardId: 'claim' } }" class="nav-link tc-wh mx-3" exact-active-class="active-link">클레임</router-link>
             </li>
             <li class="nav-item">
-              <router-link :to="{ name: 'index.notices' }" class="nav-link tc-wh mx-3" exact-active-class="active-link">공지사항</router-link>
+              <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="nav-link tc-wh mx-3" exact-active-class="active-link">공지사항</router-link>
             </li>
             <li class="nav-item my-member-dealer ms-auto dropdown dropdown-arrow">
               <a class="tc-wh p-1 pb-0 me-3 dropdown-toggle" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -315,7 +344,7 @@
   </template>
   
   <script setup>
-  import { ref, computed, onMounted, watch , nextTick,onUnmounted  } from 'vue';
+  import { ref, computed, onMounted, watch, nextTick, onUnmounted } from 'vue';
   import { useRouter, useRoute } from 'vue-router';
   import { useStore } from 'vuex';
   import useAuth from '@/composables/auth';
@@ -324,8 +353,9 @@
   import profileDom from '/resources/img/profile_dom.png';
   import sidenav02 from '../../../resources/img/side-nav/side-nav02.png';
   import sidenav01 from '../../../resources/img/side-nav/side-nav01.png';
+  
   const photoUrl = ref(profileDom);
-  const { wica , wicaLabel } = cmmn();
+  const { wica, wicaLabel } = cmmn();
   const isMobile = ref(false);
   const { getAuctions, auctionsData } = useAuctions();
   const { logout } = useAuth();
@@ -339,10 +369,10 @@
   let scrollTimeout = null;
   const auctionDetailsLoaded = ref(false);
   const isContainer = ref(false);
-
-function checkWidth() {
-  isContainer.value = window.innerWidth <= 991;
-}
+  
+  function checkWidth() {
+    isContainer.value = window.innerWidth <= 991;
+  }
   function toggleSettingsMenuMov() {
     showSettingsmov.value = !showSettingsmov.value;
   }
@@ -361,7 +391,7 @@ function checkWidth() {
   const redirectByName = (routeName) => {
     router.push({ name: routeName });
   };
-
+  
   const homePath = computed(() => {
     if (isDealer.value) {
       return { name: 'dealer.index' };
@@ -373,6 +403,8 @@ function checkWidth() {
   });
   
   const fetchFilteredViewBids = async () => {
+    if(isUser || isDealer){
+    if (!isAuthenticated.value) return;
     console.log('Original Bids:', bidsData.value);
     const bidsWithDetails = await Promise.all(bidsData.value.map(fetchAuctionDetails));
     console.log('Bids with Details:', bidsWithDetails);  // Bids with Details 데이터 출력
@@ -381,6 +413,7 @@ function checkWidth() {
       return bid.auctionDetails && bid.auctionDetails.bid_id === user.value.id;
     });
     console.log('Bids with Auction Details:', filteredViewBids.value);
+  }
   };
   
   const userHasAuction = computed(() => {
@@ -392,29 +425,21 @@ function checkWidth() {
     const sortedAuctions = [...auctionsData.value].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     return sortedAuctions[0];
   });
-  const isDiagnosing = computed(() => latestAuction.value && latestAuction.value.status === 'diag' || latestAuction.value.status === 'ask');
-  const isAuctioning = computed(() => latestAuction.value && latestAuction.value.status === 'ing');
-  const isSelectingDealer = computed(() => latestAuction.value && latestAuction.value.status === 'wait');
-  const isCompleted = computed(() => latestAuction.value && latestAuction.value.status === 'chosen' || latestAuction.value && latestAuction.value.status === 'done');
-  
-  const isDiagnosisCompleted = computed(() => ['ing', 'wait', 'chosen'].includes(latestAuction.value?.status));
-  const isAuctionCompleted = computed(() => ['wait', 'chosen'].includes(latestAuction.value?.status));
-  const isDealerSelectionCompleted = computed(() => latestAuction.value?.status === 'chosen');
-  
-  const isDetailPage = computed(() => {
-  return /^\/auction\/\d+$/.test(route.path) ||
-         route.path === '/selldt' ||
-         route.path === '/selldt2' ||
-         /^\/completionsuccess\/\d+$/.test(route.path);
-});
 
-const isDetailPage02 = computed(() => {
-  return /^\/auction\/\d+$/.test(route.path) ||
-         /^\/completionsuccess\/\d+$/.test(route.path);
-});
-const isAuctionDetailPage = computed(() => {
-  return route.name === 'AuctionDetail';
-});
+  const isDetailPage = computed(() => {
+    return /^\/auction\/\d+$/.test(route.path) ||
+           route.path === '/selldt' ||
+           route.path === '/selldt2' ||
+           /^\/completionsuccess\/\d+$/.test(route.path);
+  });
+  
+  const isDetailPage02 = computed(() => {
+    return /^\/auction\/\d+$/.test(route.path) ||
+           /^\/completionsuccess\/\d+$/.test(route.path);
+  });
+  const isAuctionDetailPage = computed(() => {
+    return route.name === 'AuctionDetail';
+  });
   
   const goBack = () => {
     router.back();
@@ -450,7 +475,7 @@ const isAuctionDetailPage = computed(() => {
       content.classList.remove('visible');
     }
   }
-
+  
   function fileExstCheck(info){
     if(info.hasOwnProperty('files')){
       if(info.files.hasOwnProperty('file_user_photo')){
@@ -460,60 +485,78 @@ const isAuctionDetailPage = computed(() => {
       }
     }
   }
-
+  
   const buttons = [
-  `<div class="btn btn-primary w-100 p-0 m-0">
-    <div class="d-flex justify-content-around align-items-center">
-      <p class="ms-2">내 차 <br>팔 땐</p>
-      <div class="side-img02">
-        <img src="${sidenav02}" alt="사이드 바 이미지 02" width="120px">
+    `<div class="btn btn-primary w-100 p-0 m-0">
+      <div class="d-flex justify-content-around align-items-center">
+        <p class="ms-2">내 차 <br>팔 땐</p>
+        <div class="side-img02">
+          <img src="${sidenav02}" alt="사이드 바 이미지 02" width="120px">
+        </div>
+        <p class="me-2 fw-bodler">위 카<br> 에 서</p>
       </div>
-      <p class="me-2 fw-bodler">위 카<br> 에 서</p>
-    </div>
-  </div>`,
-  `<div class="btn btn-primary w-100 p-0 m-0">
-    <div class="d-flex justify-content-around align-items-center">
-      <p class="ms-2 text-start fw-bodler">고민은<br>판매만 늦출뿐!</p>
-      <div class="side-img">
-        <img src="${sidenav01}" alt="사이드 바 이미지 01" width="180px">
+    </div>`,
+    `<div class="btn btn-primary w-100 p-0 m-0">
+      <div class="d-flex justify-content-around align-items-center">
+        <p class="ms-2 text-start fw-bodler">고민은<br>판매만 늦출뿐!</p>
+        <div class="side-img">
+          <img src="${sidenav01}" alt="사이드 바 이미지 01" width="180px">
+        </div>
       </div>
-    </div>
-  </div>`
-];
-
-const randomButton = ref('');
-
-/* 경매 상세 부분 상단 차량 번호 노출*/
-const carDetailsNo = ref('');
-
-const fetchAuctionDetails = async () => {
-  await getAuctions();
-  const auctionId = Number(route.params.id); 
-  console.log("경매 ID:", auctionId);
-
-  const auction = auctionsData.value.find(auction => {
-    console.log("경매 항목 ID:", auction.id); 
-    return auction.id === auctionId;
-  });
-
-  if (auction) {
-    carDetailsNo.value = auction.car_no;
-    console.log("차 상세번호:", carDetailsNo.value);
-  } else {
+    </div>`
+  ];
+  
+  const randomButton = ref('');
+  
+  /* 경매 상세 부분 상단 차량 번호 노출*/
+  const carDetailsNo = ref('');
+  
+  const isAuthenticated = computed(() => !!user.value);
+  
+  const fetchAuctionDetails = async () => {
+  if(isUser || isDealer){
+    if (!isAuthenticated.value) return;
+  
+    await getAuctions();
+    const auctionId = Number(route.params.id); 
+    console.log("경매 ID:", auctionId);
+  
+    const auction = auctionsData.value.find(auction => {
+      console.log("경매 항목 ID:", auction.id); 
+      return auction.id === auctionId;
+    });
+  
+    if (auction) {
+      carDetailsNo.value = auction.car_no;
+      console.log("차 상세번호:", carDetailsNo.value);
+    } else {
+    }
   }
-};
-onMounted(fetchAuctionDetails);
-watch(() => route.params.id, fetchAuctionDetails); 
-
+  };
+  
+  onMounted(() => {
+  if (isUser.value || isDealer.value) {
+    fetchAuctionDetails();
+  }
+});
+  
+watch(() => route.params.id, () => {
+  if (isUser.value || isDealer.value) {
+    fetchAuctionDetails();
+  }
+});
+  
   onMounted(async () => {
     checkWidth();
     window.addEventListener('resize', checkWidth);
-    fileExstCheck(user.value);
-     randomButton.value = buttons[Math.floor(Math.random() * buttons.length)];
+    if (isUser || isDealer) {
+      fileExstCheck(user.value);
+      randomButton.value = buttons[Math.floor(Math.random() * buttons.length)];
+    }
     let navAuction = document.querySelectorAll('.nav-auction');
     let navReview = document.querySelectorAll('.nav-review');
     let navCarInq = document.querySelectorAll('.nav-inq');
-
+  
     const content = document.querySelector('.toggle-nav-content');
     content.addEventListener('scroll', checkScrollGradient);
     checkScrollGradient();
@@ -559,20 +602,20 @@ watch(() => route.params.id, fetchAuctionDetails);
   };
   updateIsMobile();
   window.addEventListener('resize', updateIsMobile);
-
+  
   watch(() => route.name, (to, from) => {
       //console.log('라우터 이름:', to);
-
+  
       const removeActiveLink = (elements) => {
         elements.forEach(element => {
           element.classList.remove('active-link');
         });
       };
-
+  
       removeActiveLink(navAuction);
       removeActiveLink(navReview);
       removeActiveLink(navCarInq);
-
+  
       //내차조회
       if (to === 'sell' || to === 'selldt2') {
         nextTick(() => {
@@ -587,7 +630,7 @@ watch(() => route.params.id, fetchAuctionDetails);
           })
         }
       }
-
+  
       //매물
       if (to === 'AuctionDetail' || to === 'completionsuccess') {
         nextTick(() => {
@@ -603,7 +646,7 @@ watch(() => route.params.id, fetchAuctionDetails);
           })
         }
       }
-
+  
       //이용후기
       if (to === 'user.edit-review' || to === 'index.allreview' || to == "user.create-review" || to == "user.review-detail") {
         nextTick(() => {
@@ -620,9 +663,9 @@ watch(() => route.params.id, fetchAuctionDetails);
         }
       }
     } , { immediate: true });
-
+  
   });
-    
+  
   function toggleOverlay(show) {
     const overlay = document.querySelector('.overlay');
     if (show) {
@@ -639,9 +682,10 @@ watch(() => route.params.id, fetchAuctionDetails);
   }
   onUnmounted(() => {
   window.removeEventListener('resize', checkWidth);
-});
-
+  });
+  
   </script>
+  
   
   <style scoped>
   .toggle-nav-content {
@@ -741,7 +785,7 @@ watch(() => route.params.id, fetchAuctionDetails);
   }
   
   .btn-back {
-    width: 25px;
+    width: 46px;
     height: 25px;
     border: none;
     font-size: 1.5rem;
@@ -851,6 +895,9 @@ watch(() => route.params.id, fetchAuctionDetails);
       .web-style{
         display: block;
       }
+      .navbar-expand-md .navbar-collapse {
+        display: block !important;
+    }
 }
   </style>
   
