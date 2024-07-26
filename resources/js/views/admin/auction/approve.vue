@@ -132,7 +132,7 @@
                   <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionProxyFileList.length > 0 || fileProxyUrl">
                     매매업체 대표증 / 종사원증 : 
                     <li v-for="(file, index) in fileAuctionProxyFileList" :key="index">
-                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img"></span>
+                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img" @click="triggerFileDelete(file.uuid)"></span>
                     </li>
                     <li v-if="fileProxyUrl">
                       <a :href=fileProxyUrl download>{{ auction.file_auction_proxy_name }}</a>
@@ -148,7 +148,7 @@
                   <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionOwnerFileList.length > 0 || fileOwnerUrl">
                     매매업체 대표증 / 종사원증 : 
                     <li v-for="(file, index) in fileAuctionOwnerFileList" :key="index">
-                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img"></span>
+                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img" @click="triggerFileDelete(file.uuid)"></span>
                     </li>
                     <li v-if="fileOwnerUrl">
                       <a :href=fileOwnerUrl download>{{ auction.file_auction_owner_name }}</a>
@@ -419,7 +419,8 @@ const auction = reactive({
   file_auction_proxy: '',
   file_auction_proxy_name: '',
   file_auction_owner: '',
-  file_auction_owner_name: ''
+  file_auction_owner_name: '',
+  deletFileList:'',
 });
 
 const route = useRoute();
@@ -523,48 +524,55 @@ function toggleSheet() {
 }
 
 function fileExstCheck(info){
-      if(info.hasOwnProperty('files')){
-        if(info.files.hasOwnProperty('file_auction_proxy')){
-          fileAuctionProxyList.value = info.files.file_auction_proxy;
-            if(fileAuctionProxyList.value.length>0){
-              for(let i=0; fileAuctionProxyList.value.length>i; i++){
-                fileAuctionProxyFileList.value.push({
-                  original_url: fileAuctionProxyList.value[i].original_url,
-                  file_name: fileAuctionProxyList.value[i].file_name
-                })
-              }
+    if(info.hasOwnProperty('files')){
+      if(info.files.hasOwnProperty('file_auction_proxy')){
+        fileAuctionProxyList.value = info.files.file_auction_proxy;
+          if(fileAuctionProxyList.value.length>0){
+            for(let i=0; fileAuctionProxyList.value.length>i; i++){
+              fileAuctionProxyFileList.value.push({
+                original_url: fileAuctionProxyList.value[i].original_url,
+                file_name: fileAuctionProxyList.value[i].file_name,
+                uuid: fileAuctionProxyList.value[i].uuid
+              })
             }
-            /*
-            if(info.files.file_auction_proxy[0].hasOwnProperty('original_url')){
-              fileProxyUrl.value = info.files.file_auction_proxy[0].original_url;
-              auction.file_auction_proxy_name = info.files.file_auction_proxy[0].file_name;
-            }
-            */
-        }
-
-        if(info.files.hasOwnProperty('file_auction_owner')){
-          fileAuctionOwnerList.value = info.files.file_auction_owner;
-            if(fileAuctionOwnerList.value.length>0){
-              for(let i=0; fileAuctionOwnerList.value.length>i; i++){
-                fileAuctionOwnerFileList.value.push({
-                  original_url: fileAuctionOwnerList.value[i].original_url,
-                  file_name: fileAuctionOwnerList.value[i].file_name
-                })
-              }
-            }
-            /*
-            if(info.files.hasOwnProperty('file_auction_owner')){
-              if(info.files.file_auction_owner[0].hasOwnProperty('original_url')){
-                fileOwnerUrl.value = info.files.file_auction_owner[0].original_url;
-                auction.file_auction_owner_name = info.files.file_auction_owner[0].file_name;
-              }
-            }
-            */
-        }
-
-        
+          }
+          /*
+          if(info.files.file_auction_proxy[0].hasOwnProperty('original_url')){
+            fileProxyUrl.value = info.files.file_auction_proxy[0].original_url;
+            auction.file_auction_proxy_name = info.files.file_auction_proxy[0].file_name;
+          }
+          */
       }
-  }
+
+      if(info.files.hasOwnProperty('file_auction_owner')){
+        fileAuctionOwnerList.value = info.files.file_auction_owner;
+          if(fileAuctionOwnerList.value.length>0){
+            for(let i=0; fileAuctionOwnerList.value.length>i; i++){
+              fileAuctionOwnerFileList.value.push({
+                original_url: fileAuctionOwnerList.value[i].original_url,
+                file_name: fileAuctionOwnerList.value[i].file_name,
+                uuid: fileAuctionOwnerList.value[i].uuid
+              })
+            }
+          }
+          /*
+          if(info.files.hasOwnProperty('file_auction_owner')){
+            if(info.files.file_auction_owner[0].hasOwnProperty('original_url')){
+              fileOwnerUrl.value = info.files.file_auction_owner[0].original_url;
+              auction.file_auction_owner_name = info.files.file_auction_owner[0].file_name;
+            }
+          }
+          */
+      }
+
+      
+    }
+}
+
+function triggerFileDelete(fileUuid){
+  auction.deletFileList +=fileUuid+',';
+  //fileAuctionProxyFileList.value = fileAuctionProxyFileList.value.filter(file => file.uuid !== uuid);
+}
 
 const fetchAuctionDetails = async () => {
   try {

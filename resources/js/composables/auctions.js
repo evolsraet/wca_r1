@@ -492,7 +492,10 @@ const updateAuction = async (id,auction) => {
                     .callback(function(result) {
                         if(result.isOk){
                             //location.reload();
-                            getAuctions()
+                            getAuctions();
+                            if(auction.deletFileList){
+                                setDeleteFileAuction(auction.deletFileList);
+                            }
                             router.push({name: 'auctions.index'})
                         }
                     }).alert('변경되었습니다');
@@ -730,6 +733,18 @@ const getDoneAuctions = async (bidsNumList,page) => {
         .addOrWhere('auctions.bid_id','117')
         */
 };
+
+const setDeleteFileAuction = async(uuidList) => {
+    if (uuidList.endsWith(',')) {
+        uuidList = uuidList.slice(0, -1);
+    }
+    wicac.conn()
+    .url(`/api/media/${uuidList}`)
+    .log()
+    .callback(async function(result) {
+    })
+    .delete();
+}
 
 
     return {
