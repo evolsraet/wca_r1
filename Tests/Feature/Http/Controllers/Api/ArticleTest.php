@@ -39,7 +39,7 @@ class ArticleTest extends TestCase
     public function test_게시글_생성(): void
     {
         $user = User::Role('admin')->first();
-        $board = Board::first();
+        $board = Board::where('id', 'free')->first();
         $articleData = [
             'article' => [
                 'title' => 'article title',

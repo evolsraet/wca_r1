@@ -107,7 +107,7 @@ class AuthTest extends TestCase
         $this->assertGuest(); // 인증안됨
     }
 
-    public function test회원가입(): void
+    public function test_회원가입(): void
     {
         $user = User::factory()->make();
         $data = [
