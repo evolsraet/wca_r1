@@ -3478,7 +3478,16 @@ input[type="checkbox"] {
     background-position: center; 
     background-repeat: no-repeat; 
 }
-
+.icon-close-img{
+    width: 11px;
+    height: 9px;
+    background-image: url('../img/feather-closle.png'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat; 
+    display: inline-block;
+    margin-left: 10px;
+}
 
 .icon-trash-img{
     width: 20px;

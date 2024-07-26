@@ -46,7 +46,7 @@
                             <tr v-for="notice in latestNotices" :key="notice.id">
                                
                                 <td class="col-4">{{ notice.title }}</td>
-                                <td class="text-with-marker">{{ notice.content }}</td>
+                                <td class="text-with-marker" v-html="notice.content"></td>
                             </tr>
                         </tbody>
                     </table>

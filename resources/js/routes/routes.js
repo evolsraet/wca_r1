@@ -303,6 +303,12 @@ export default [
                         meta: { breadCrumb: 'Posts' }
                     },
                     {
+                        path: 'create/:auctionId', 
+                        name: 'posts.create.withAuctionId',
+                        component: PostsCreate,
+                        meta: { breadCrumb: 'Add new post' }
+                      },
+                    {
                         path: 'create',
                         name: 'posts.create',
                         component: PostsCreate,

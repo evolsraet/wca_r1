@@ -450,12 +450,19 @@ const updateAuction = async (id,auction) => {
             final_price: auction.final_price,
         }
     }
-    
+
+    const formData = new FormData();
+
+    if(auction.status == 'diag'){
+        auctionForm.auction.status = 'ask';
+
+        auctionForm.mode = 'diag';
+        formData.append('mode', auctionForm.mode);
+    }
     
 
     console.log(JSON.stringify(auctionForm));
 
-    const formData = new FormData();
     formData.append('auction', JSON.stringify(auctionForm.auction));
     if(auction.file_auction_proxy){
         formData.append('file_auction_proxy', auction.file_auction_proxy);
@@ -485,18 +492,25 @@ const updateAuction = async (id,auction) => {
                     .callback(function(result) {
                         if(result.isOk){
                             //location.reload();
-                            getAuctions()
+                            getAuctions();
+                            if(auction.deletFileList){
+                                setDeleteFileAuction(auction.deletFileList);
+                            }
                             router.push({name: 'auctions.index'})
                         }
                     }).alert('변경되었습니다');
                 }else{
+                    let errMsg = '관리자에게 문의해주세요.';
+                    if(result.msg){
+                        errMsg = result.msg;
+                    }
                     wica.ntcn(swal)
                     .title('오류가 발생하였습니다.')
                     .useHtmlText()
                     .icon('E')
                     .callback(function(result) {
                         console.log(result);
-                    }).alert('관리자에게 문의해주세요.');
+                    }).alert(errMsg);
                 }
             })
             .post();
@@ -719,6 +733,18 @@ const getDoneAuctions = async (bidsNumList,page) => {
         .addOrWhere('auctions.bid_id','117')
         */
 };
+
+const setDeleteFileAuction = async(uuidList) => {
+    if (uuidList.endsWith(',')) {
+        uuidList = uuidList.slice(0, -1);
+    }
+    wicac.conn()
+    .url(`/api/media/${uuidList}`)
+    .log()
+    .callback(async function(result) {
+    })
+    .delete();
+}
 
 
     return {

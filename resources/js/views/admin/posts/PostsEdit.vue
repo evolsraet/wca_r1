@@ -3,8 +3,7 @@
     <div class="row my-5 mov-wide m-auto">
       <div class="card border-0 shadow-none">
         <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <h6 class="mt-3">제목</h6>
+          <div class="d-flex justify-content-end">
             <div>
               <button :disabled="isLoading" class="primary-btn">
                 <div v-show="isLoading" class=""></div>
@@ -13,6 +12,18 @@
                   <span class="image-icon-pen"></span>수정
                 </p>
               </button>
+            </div>
+          </div>
+          <!-- Category -->
+          <div class="mb-3" v-if="boardId === 'notice'">
+            <label for="post-category" label="category" class="form-label">카테고리</label>
+            <select v-model="post.category" id="post-category" class="form-control">
+              <option v-for="category in categories" :key="category" :value="category">
+                {{ category }}
+              </option>
+            </select>
+            <div class="text-danger mt-1">
+              <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
             </div>
           </div>
           <!-- Title -->
@@ -49,11 +60,12 @@ defineRule("required", required);
 defineRule("min", min);
 
 const { validate } = useForm();
-const { post: postData, getPost, updatePost, validationErrors, isLoading } = initPostSystem();
+const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories } = initPostSystem();
 
 const post = reactive({
   title: '',
-  content: ''
+  content: '',
+  category: ''
 });
 
 const swal = inject('$swal');
@@ -62,10 +74,8 @@ const route = useRoute();
 const postId = route.params.id;
 const boardId = route.params.boardId;
 
-console.log('postId:', postId); 
-console.log('boardId:', boardId);
-
-onMounted(() => {
+onMounted(async () => {
+  await getBoardCategories();
   getPost(boardId, postId);
 });
 
@@ -73,6 +83,7 @@ watchEffect(() => {
   if (postData.value) {
     post.title = postData.value.title;
     post.content = postData.value.content;
+    post.category = postData.value.category || '';
   }
 });
 
@@ -80,11 +91,19 @@ async function submitForm() {
   const form = await validate();
   if (form.valid) {
     try {
-      const response = await updatePost(boardId, postId, post);
-      console.log( '성공:', response); 
-      console.log('반영 데이터:', response.data);
+      const updateData = {
+        title: post.title,
+        content: post.content,
+      };
+
+      if (boardId === 'notice') {
+        updateData.category = post.category;
+      }
+
+      const response = await updatePost(boardId, postId, updateData);
       post.title = response.data.title;
       post.content = response.data.content;
+      post.category = response.data.category;
       
       swal({
         icon: 'success',
