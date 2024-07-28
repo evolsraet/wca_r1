@@ -135,9 +135,7 @@ const submitPost = async (postData) => {
   const serializedPost = new FormData();
   serializedPost.append('article[title]', postData.title);
   serializedPost.append('article[content]', postData.content);
-  if (boardId === 'notice') {
-    serializedPost.append('article[category]', postData.category);
-  }
+  serializedPost.append('article[category]', postData.category);
   if (boardId === 'claim') {
     serializedPost.append('article[extra1]', auctionId); // Include auctionId as extra1 when boardId is 'claim'
   }
@@ -155,6 +153,7 @@ const submitPost = async (postData) => {
     wica.ntcn(swal)
       .icon('I')
       .alert('공지사항이 성공적으로 저장되었습니다.');
+      console.log("업데이트 정보:",post.category);
   } catch (error) {
     if (error.response?.data) {
       Object.assign(validationErrors, error.response.data.errors);

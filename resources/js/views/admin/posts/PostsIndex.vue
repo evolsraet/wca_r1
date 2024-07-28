@@ -44,8 +44,9 @@
                     </div>
                   </div>
                 </th>
-                <th v-if="boardId === 'notice'" class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">
-                  <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">카테고리</span>
+                <th class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">
+                  <span v-if="boardId === 'claim'" class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">상태</span>
+                  <span v-else class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">카테고리</span>
                 </th>
                 <th class="px-6 py-3 text-left" style="width: 20%;">
                   <div class="flex flex-row justify-content-center" @click="updateOrdering('title')">
@@ -67,19 +68,19 @@
                 </th>
                 <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left">차량번호</th>
           
-                <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left">수정/삭제</th>
+                <th v-if="boardId !== 'claim' && !isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-3 bg-gray-50 text-left">수정/삭제</th>
               </tr>
             </thead>
             <tbody>
               <tr v-for="post in posts" :key="post.id">
                 <td v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-4 text-sm text-overflow">{{ post.created_at }}</td>
-                <td v-if="boardId === 'notice'" class="px-6 py-4 text-sm text-overflow">
+                <td class="px-6 py-4 text-sm text-overflow">
                   <div>{{ post.category }}</div>
                 </td>
                 <td class="px-6 py-4 text-sm text-overflow"><span v-if="boardId === 'claim'" class="my-2">[문의] </span>{{ post.title }}</td>
-                <td class="px-6 py-4 text-sm text-overflow" v-html="post.content"></td>
+                <td class="px-6 py-4 text-sm text-overflow">{{ stripHtmlTags(post.content) }}</td>
                 <td v-if="boardId === 'claim'"><span class="blue-box mb-0 mx-0">{{ auctionDetails[post.extra1]?.data?.car_no || '' }}</span></td>
-                <td v-if="boardId === 'claim'" class="px-6 py-4 text-sm text-overflow">
+                <td v-if="boardId !== 'claim'&& !isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm text-overflow">
                   <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id } }" class="badge">
                     <div class="icon-edit-img"></div>
                   </router-link>
@@ -108,6 +109,7 @@
     </div>
   </div>
 </template>
+
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
 import { useRoute } from 'vue-router';
@@ -116,7 +118,7 @@ import { useStore } from 'vuex';
 import useAuctions from "@/composables/auctions";
 
 const { posts, getPosts, deletePost, isLoading, getBoardCategories, pagination } = initPostSystem();
-const { getAuctionById } = useAuctions(); // Assuming getAuctionById is the correct function
+const { getAuctionById } = useAuctions(); 
 const route = useRoute();
 const boardId = ref(route.params.boardId);
 const currentPage = ref(1);
@@ -128,8 +130,13 @@ const user = computed(() => store.getters['auth/user']);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
 
-// Create a reactive object to store auction details
 const auctionDetails = ref({});
+
+const stripHtmlTags = (html) => {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+};
 
 async function loadPage(page) { // 페이지 로드
   if (page < 1 || page > pagination.value.last_page) return;
@@ -220,7 +227,6 @@ watch(route, (newRoute) => {
   }
 });
 </script>
-
 
 <style scoped>
 .search-type2 .search-btn{
