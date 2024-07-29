@@ -45,14 +45,20 @@ class AuctionResource extends JsonResource
 
         // 상위 5개 입찰건
         if ($parentArray['status'] != 'ask') {
-            $addArray['top_bids'] = $this->whenLoaded('topBids', function () use ($auction) {
-                return BidResource::collection($auction->topBids);
-            });
+            $addArray['top_bids'] = BidResource::collection(
+                $this->whenLoaded(
+                    'bids',
+                    function () use ($auction) {
+                        return $auction->bids->sortByDesc('price')->take(5);
+                    },
+                    function () use ($auction) {
+                        return $auction->bids()->orderByDesc('price')->take(5)->get();
+                    }
+                )
+            );
 
             if (in_array($parentArray['status'], ['done', 'chosen', 'dlvr'])) {
-                $addArray['win_bid'] = $this->whenLoaded('winBid', function () use ($auction) {
-                    return new BidResource($auction->winBid, $auction->user_id);
-                });
+                $addArray['win_bid'] = new BidResource($auction->bids->firstWhere('id', $auction->bid_id));
             }
         }
 
