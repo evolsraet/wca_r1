@@ -44,8 +44,9 @@
                     </div>
                   </div>
                 </th>
-                <th v-if="boardId === 'notice'" class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">
-                  <span class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">카테고리</span>
+                <th class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">
+                  <span v-if="boardId === 'claim'" class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">상태</span>
+                  <span v-else class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">카테고리</span>
                 </th>
                 <th class="px-6 py-3 text-left" style="width: 20%;">
                   <div class="flex flex-row justify-content-center" @click="updateOrdering('title')">
@@ -67,19 +68,24 @@
                 </th>
                 <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left">차량번호</th>
           
-                <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left">수정/삭제</th>
+                <th v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-3 bg-gray-50 text-left">수정/삭제</th>
               </tr>
             </thead>
             <tbody>
-              <tr v-for="post in posts" :key="post.id">
+              <tr 
+              v-for="post in posts" 
+              :key="post.id" 
+              @click="handleRowClick(post.id)"
+              :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}"
+            >
                 <td v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-4 text-sm text-overflow">{{ post.created_at }}</td>
-                <td v-if="boardId === 'notice'" class="px-6 py-4 text-sm text-overflow">
+                <td class="px-6 py-4 text-sm text-overflow">
                   <div>{{ post.category }}</div>
                 </td>
                 <td class="px-6 py-4 text-sm text-overflow"><span v-if="boardId === 'claim'" class="my-2">[문의] </span>{{ post.title }}</td>
-                <td class="px-6 py-4 text-sm text-overflow" v-html="post.content"></td>
+                <td class="px-6 py-4 text-sm text-overflow">{{ stripHtmlTags(post.content) }}</td>
                 <td v-if="boardId === 'claim'"><span class="blue-box mb-0 mx-0">{{ auctionDetails[post.extra1]?.data?.car_no || '' }}</span></td>
-                <td v-if="boardId === 'claim'" class="px-6 py-4 text-sm text-overflow">
+                <td v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm text-overflow">
                   <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id } }" class="badge">
                     <div class="icon-edit-img"></div>
                   </router-link>
@@ -107,17 +113,22 @@
     </div>
     </div>
   </div>
+  <div v-if="isDealer && isUser">
+  <Footer />
+</div>
 </template>
+
 <script setup>
 import { ref, onMounted, watch, computed } from "vue";
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import { initPostSystem } from "@/composables/posts";
 import { useStore } from 'vuex';
 import useAuctions from "@/composables/auctions";
 
 const { posts, getPosts, deletePost, isLoading, getBoardCategories, pagination } = initPostSystem();
-const { getAuctionById } = useAuctions(); // Assuming getAuctionById is the correct function
+const { getAuctionById } = useAuctions(); 
 const route = useRoute();
+const router = useRouter();
 const boardId = ref(route.params.boardId);
 const currentPage = ref(1);
 const store = useStore();
@@ -128,8 +139,14 @@ const user = computed(() => store.getters['auth/user']);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
 
-// Create a reactive object to store auction details
 const auctionDetails = ref({});
+const hideButton = ref(false);
+
+const stripHtmlTags = (html) => {
+  const div = document.createElement('div');
+  div.innerHTML = html;
+  return div.textContent || div.innerText || '';
+};
 
 async function loadPage(page) { // 페이지 로드
   if (page < 1 || page > pagination.value.last_page) return;
@@ -139,6 +156,7 @@ async function loadPage(page) { // 페이지 로드
 }
 
 const fetchPosts = async (page = 1) => {
+  hideButton.value = false;  // Reset button visibility
   await getPosts(
     boardId.value,  // 전달된 boardId 사용
     page,
@@ -169,11 +187,21 @@ const updateOrdering = (column) => {
 const setFilter = (filter) => {
   fetchPosts();
 };
+const navigatedThroughHandleRowClick = ref(false);
+const handleRowClick = (postId) => {
+    hideButton.value = true;
+    navigatedThroughHandleRowClick.value = true; 
+    router.push({ name: 'posts.edit', params: { boardId: boardId.value, id: postId }, query: { navigatedThroughHandleRowClick: true } });
+};
+
+const isClickableRow = () => {
+  return (boardId.value === 'claim' || boardId.value === 'notice');
+};
 
 const boardText = computed(() => {
   switch(boardId.value) {
     case 'notice':
-      return '게시판';
+      return '공지사항';
     case 'claim':
       return '클레임';
     default:
@@ -183,7 +211,7 @@ const boardText = computed(() => {
 
 const boardTextMessage = computed(() => {
   if (boardId.value === 'notice') {
-    return `빠르고 신속하게 위카 ${boardText.value} 전해드립니다.`;
+    return `빠르고 신속하게 ${boardText.value} 전해드립니다.`;
   } else if (boardId.value === 'claim') {
     return `클레임 작성은 내 정보 > 지난 낙찰건 > 클레임 작성 에서 가능합니다.`;
   } else {
@@ -193,13 +221,12 @@ const boardTextMessage = computed(() => {
 
 const fetchAllAuctionDetails = async () => {
   try {
-    // Iterate over each post and fetch auction details
     for (const post of posts.value) {
-      console.log("post.extra1:", post.extra1); // Check if post.extra1 is valid
+      console.log("post.extra1:", post.extra1); 
       if (post.extra1) {
         const details = await getAuctionById(post.extra1);
         auctionDetails.value[post.extra1] = details;
-        console.log("Fetched Details:", details); // Verify fetched details
+        console.log("Fetched Details:", details);
       }
     }
     console.log("Auction Details Object:", auctionDetails.value);
@@ -221,7 +248,6 @@ watch(route, (newRoute) => {
 });
 </script>
 
-
 <style scoped>
 .search-type2 .search-btn{
   top: 55px !important;
@@ -232,6 +258,10 @@ watch(route, (newRoute) => {
   overflow: hidden; 
   text-overflow: ellipsis;
   white-space: nowrap; 
+}
+
+.pointer-cursor {
+  cursor: pointer;
 }
 
 @media screen and (max-width: 481px) {

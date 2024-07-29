@@ -44,9 +44,8 @@
                         </thead>
                         <tbody>
                             <tr v-for="notice in latestNotices" :key="notice.id">
-                               
-                                <td class="col-4">{{ notice.title }}</td>
-                                <td class="text-with-marker" v-html="notice.content"></td>
+                                <td class="col-4">{{ stripHtmlTags(notice.title) }}</td>
+                                <td class="text-with-marker">{{ stripHtmlTags(notice.content) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -61,7 +60,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
-import Footer from "@/views/layout/footer.vue"
+import Footer from "@/views/layout/footer.vue";
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
@@ -92,6 +91,12 @@ const myBidCount = ref(0);
 const latestNotices = computed(() => {
     return posts.value.slice(0, 3);
 });
+
+const stripHtmlTags = (html) => {
+    const div = document.createElement('div');
+    div.innerHTML = html;
+    return div.textContent || div.innerText || '';
+};
 
 const fetchPosts = async () => {
     await getPosts('notice', 1, '', '', '', '', '', 'created_at', 'desc');

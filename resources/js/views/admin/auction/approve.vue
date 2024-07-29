@@ -132,10 +132,10 @@
                   <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionProxyFileList.length > 0 || fileProxyUrl">
                     매매업체 대표증 / 종사원증 : 
                     <li v-for="(file, index) in fileAuctionProxyFileList" :key="index">
-                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img" @click="triggerFileDelete(file.uuid)"></span>
+                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
                     </li>
                     <li v-if="fileProxyUrl">
-                      <a :href=fileProxyUrl download>{{ auction.file_auction_proxy_name }}</a>
+                      <a :href=fileProxyUrl download>{{ auction.file_auction_proxy_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerProxyFileDelete()"></span>
                     </li>
                   </div>
                 </div>
@@ -148,10 +148,10 @@
                   <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionOwnerFileList.length > 0 || fileOwnerUrl">
                     매매업체 대표증 / 종사원증 : 
                     <li v-for="(file, index) in fileAuctionOwnerFileList" :key="index">
-                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img" @click="triggerFileDelete(file.uuid)"></span>
+                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
                     </li>
                     <li v-if="fileOwnerUrl">
-                      <a :href=fileOwnerUrl download>{{ auction.file_auction_owner_name }}</a>
+                      <a :href=fileOwnerUrl download>{{ auction.file_auction_owner_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerOwnerFileDelete()"></span>
                     </li>
                   </div>
                 </div>
@@ -571,7 +571,20 @@ function fileExstCheck(info){
 
 function triggerFileDelete(fileUuid){
   auction.deletFileList +=fileUuid+',';
-  //fileAuctionProxyFileList.value = fileAuctionProxyFileList.value.filter(file => file.uuid !== uuid);
+  fileAuctionProxyFileList.value = fileAuctionProxyFileList.value.filter(file => file.uuid !== fileUuid);
+  fileAuctionOwnerFileList.value = fileAuctionOwnerFileList.value.filter(file => file.uuid !== fileUuid);
+}
+
+function triggerOwnerFileDelete(){
+  auction.file_auction_owner = '';
+  auction.file_auction_owner_name = '';
+  fileOwnerUrl.value = '';
+}
+
+function triggerProxyFileDelete(){
+  auction.file_auction_proxy = '';
+  auction.file_auction_proxy_name = '';
+  fileProxyUrl.value = '';
 }
 
 const fetchAuctionDetails = async () => {
@@ -621,12 +634,6 @@ function handleFileUploadProxy(event) {
   if (file) {
     auction.file_auction_proxy = file;
     auction.file_auction_proxy_name = file.name;
-    /*
-    fileAuctionProxyFileList.value.push({
-      original_url: URL.createObjectURL(file),
-      file_name: file.name
-    })
-    */
     fileProxyUrl.value = URL.createObjectURL(file);
   }
 }
@@ -636,12 +643,6 @@ function handleFileUploadOwner(event) {
   if (file) {
     auction.file_auction_owner = file;
     auction.file_auction_owner_name = file.name;
-    /*
-    fileAuctionOwnerFileList.value.push({
-      original_url: URL.createObjectURL(file),
-      file_name: file.name
-    })
-    */
     fileOwnerUrl.value = URL.createObjectURL(file);
   }
 }
@@ -755,5 +756,9 @@ onBeforeUnmount(() => {
 }
 .search-btn {
   transform: translateY(-241%) !important; 
+}
+
+.cursor-pointer{
+  cursor: pointer;
 }
 </style>

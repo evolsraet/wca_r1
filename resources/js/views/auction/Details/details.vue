@@ -897,6 +897,7 @@ const sortedTopBids = computed(() => {
 });
 const isClaimed = ref(false);
 const fetchPosts = async () => {
+  if(auctionDetail.status === 'done'){
   await getPosts(
     'claim',
     1,
@@ -909,8 +910,10 @@ const fetchPosts = async () => {
     'desc'
   );
 
+
   // posts에서 extra1이 auctionId와 같은지 확인합니다.
   isClaimed.value = posts.value.some(post => post.extra1 === auctionId.value);
+}
 };
 const navigateToClaim = () => {
   router.push({ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId.value } });

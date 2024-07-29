@@ -142,7 +142,7 @@ export default [
                 beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
             {
-                path: '/addr-update',
+                path: '/addr-update/:id',
                 name: 'addr.update',
                 component: () => import('../views/dealer/addr/Update.vue'),
                 beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
