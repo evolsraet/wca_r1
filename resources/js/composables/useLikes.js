@@ -9,7 +9,7 @@ export default function useLikes() {
     const { wicac } = cmmn();
     
     const like = reactive({
-        likeable_type: `App\\Models\\Auction`,
+        likeable_type: `\Auction`,
         user_id:'',
         likeable_id:'',
     })
