@@ -37,11 +37,7 @@ class AuctionResource extends JsonResource
                 $parentArray[$field] = $auction->$field->toDatetimeString();
             }
         }
-        $addArray['bids_count'] = $this->whenLoaded('bids', function () use ($auction) {
-            return $auction->bids->count();
-        }, function () use ($auction) {
-            return $auction->bids()->count();
-        });
+        $addArray['bids_count'] = Bid::where('auction_id', $auction->id)->count();
 
         // 상위 5개 입찰건
         if ($parentArray['status'] != 'ask') {

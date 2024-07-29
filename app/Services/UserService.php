@@ -335,16 +335,13 @@ class UserService
             if (auth()->user()->can('act.dealer')) {
                 $item->where('id', auth()->user()->id);
             } elseif (auth()->user()->can('act.user')) {
-                // 본인 이거나 내 매물과 관련된 딜러들만
-                $auction_ids = Auction::where('user_id', auth()->user()->id)->pluck('id');
-                $bid_user_ids = Bid::whereIn('auction_id', $auction_ids)->pluck('user_id');
-
                 // Log::info($auction_ids);
                 // Log::info($bid_user_ids);
 
-                $item->where(function ($query) use ($bid_user_ids) {
-                    $query->where('id', auth()->user()->id)
-                        ->orWhereIn('id', $bid_user_ids);
+                $item->where(function ($query) {
+                    $query
+                        ->role('dealer')
+                        ->orWhere('id', auth()->user()->id);
                 });
             }
         }

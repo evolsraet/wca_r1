@@ -41,7 +41,7 @@ class BidResource extends JsonResource
         $this->relationResource($request, $parentArray);
 
         $user = Auth::user();
-        $isAuthorized = $user && ($user->hasRole('admin')
+        $isAuthorized = $user && ($user->hasPermissionTo('act.admin')
             || $user->id === $this->user_id
             || $user->id === $auctionUserId);
 
