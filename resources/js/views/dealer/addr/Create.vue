@@ -38,9 +38,11 @@
       </div>
     </div>
   </div>
+  <Footer />
 </template>
 
 <script setup>
+import Footer from "@/views/layout/footer.vue";
 import { ref, onMounted, inject, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -123,5 +125,8 @@ h4::after {
   position: absolute;
   bottom: 0;
   left: 0;
+}
+.search-btn{
+  transform: translateY(-125%) !important;
 }
 </style>

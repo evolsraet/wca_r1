@@ -9,7 +9,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-end">
             <div>
-              <button v-if="!navigatedThroughHandleRowClick" :disabled="isLoading" class="primary-btn">
+              <button v-if="navigatedThroughHandleRowClick" :disabled="isLoading" class="primary-btn">
                 <div v-show="isLoading" class=""></div>
                 <span v-if="isLoading">Processing...</span>
                 <p class="d-flex lh-base justify-content-center gap-2" v-else>

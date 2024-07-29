@@ -26,7 +26,7 @@
                 </div>
                 <input type="text" v-model="contact.addr2" class="form-control" />
               </div>
-              <div class="my-4">
+              <div class="my-4" v-if="!navigatedThroughHandleRowClick">
                 <button class="w-100 btn btn-primary">
                   <span>등록</span>
                 </button>
@@ -48,7 +48,6 @@ import { useStore } from 'vuex';
 import useUsers from "@/composables/users";
 import { cmmn } from '@/hooks/cmmn';
 import { initAddressBookSystem } from '@/composables/addressbooks';
-
 const store = useStore();
 const user = computed(() => store.getters['auth/user']);
 const { getUser } = useUsers();
@@ -56,6 +55,7 @@ const { getContact, updateContact, contact } = initAddressBookSystem();
 
 const router = useRouter();
 const route = useRoute();
+const navigatedThroughHandleRowClick = ref(route.query.navigatedThroughHandleRowClick === 'true');
 const swal = inject('$swal');
 const contactId = ref(route.params.id); // 현재 페이지의 id 값을 가져옴
 const validationErrors = ref({});
@@ -124,5 +124,8 @@ h4::after {
   position: absolute;
   bottom: 0;
   left: 0;
+}
+.search-btn{
+  transform: translateY(-125%) !important;
 }
 </style>

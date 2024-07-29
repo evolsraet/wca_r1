@@ -35,12 +35,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="contact in filteredContacts" :key="contact.id" class="address-row">
+                            <tr v-for="contact in filteredContacts" :key="contact.id" @click="navigateToUpdate(contact.id)" class="address-row" style="cursor: pointer;">
                                 <td class="px-6 pb-3 pt-1 text-sm">{{ contact.created_at }}</td>
                                 <td class="px-6 pb-3 pt-1 text-sm">{{ contact.name }}</td>
                                 <td class="px-6 pb-3 pt-1 text-sm text-overflow">{{ contact.addr_post }}, {{ contact.addr1 }}, {{ contact.addr2 }}</td>
                                 <td class="px-6 pb-3 pt-1 text-sm">
-                                    <router-link :to="{ name: 'addr.update', params: { id: contact.id } }" class="ms-2 badge web_style">
+                                    <router-link @click.stop :to="{ name: 'addr.update', params: { id: contact.id } }" class="ms-2 badge web_style">
                                         <div class="icon-edit-img"></div>
                                     </router-link>
                                     <a href="#" @click.prevent="deleteContact(contact.id)" class="ms-2 badge web_style">
@@ -100,6 +100,11 @@ async function loadPage(page) {
 const searchContacts = async () => {
   await getContacts();
 };
+const navigatedThroughHandleRowClick = ref(false);
+const navigateToUpdate = (id) => {
+  navigatedThroughHandleRowClick.value = true; 
+  router.push({ name: 'addr.update', params: { id }, query: { navigatedThroughHandleRowClick: true } });
+};
 
 onMounted(() => {
     getContacts();
@@ -145,5 +150,8 @@ onMounted(() => {
         align-items: flex-end;
         flex-direction: column;
     }
+}
+.search-type2 .search-btn{
+    top: 58px !important;
 }
 </style>
