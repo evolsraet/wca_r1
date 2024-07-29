@@ -51,9 +51,11 @@
       </div>
     </div>
   </form>
+  <Footer />
 </template>
 
 <script setup>
+import Footer from "@/views/layout/footer.vue";
 import { onMounted, reactive, ref, inject, watchEffect, computed } from "vue";
 import TextEditorComponent from "@/components/TextEditorComponent.vue";
 import { useForm, defineRule } from "vee-validate";

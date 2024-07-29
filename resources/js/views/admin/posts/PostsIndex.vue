@@ -113,6 +113,9 @@
     </div>
     </div>
   </div>
+  <div v-if="isDealer && isUser">
+  <Footer />
+</div>
 </template>
 
 <script setup>
