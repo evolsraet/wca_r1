@@ -81,7 +81,9 @@ class ArticleService
 
                 // 클레임 - 본인것만
                 if ($this->board->id === 'claim') {
-                    request()->merge(['where' => request()->where . "|user_id:" . auth()->user()->id]);
+                    if (!auth()->user()->can('act.admin')) {
+                        request()->merge(['where' => request()->where . "|articles.user_id:" . auth()->user()->id]);
+                    }
                 }
 
                 // 게시판 권한
@@ -104,7 +106,9 @@ class ArticleService
                 // store 의 $request 는 배열
                 $data->board_id = $this->board->id;
                 $data->user_id = auth()->user()->id;
-                $data->category = '접수';
+                if ($this->board->id === 'claim' && !auth()->user()->can('act.admin')) {
+                    $data->category = '접수';
+                }
 
                 // 발리데이션
                 $validateCondition = [];
