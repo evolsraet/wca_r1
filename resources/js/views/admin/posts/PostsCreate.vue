@@ -159,7 +159,7 @@ const submitPost = async (postData) => {
         .useHtmlText()
         .icon('E') //E:error , W:warning , I:info , Q:question
         .alert('관리자에게 문의해주세요.');
-        //Object.assign(validationErrors, result.data.errors);
+        //Object.assign(validationErrors, result.msg);
         isLoading.value = false;
       }
   })
