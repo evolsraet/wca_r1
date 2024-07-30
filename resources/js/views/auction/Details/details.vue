@@ -541,13 +541,13 @@
               <h4 class="mt-2">탁송 주소지</h4>
               <p class="text-start text-secondary opacity-50">※ 현 주소지로 탁송이 진행 됩니다. </p>
               <div class="d-flex justify-content-end">
-                <button class=" btn-outline-primary btn sm-height" @click="dealerAddrConnect">주소지 변경</button>
+                <button v-if="destAddrBtn" class=" btn-outline-primary btn sm-height" @click="dealerAddrConnect">주소지 변경</button>
               </div>
               <div class="fw-semibold">
-                <p>우편번호 :<span class="tc-red ms-1">{{ selectedAuction ? selectedAuction.zipCode : user.dealer.company_post }}</span></p>
-                <p>주<span class="ms-4">소</span> :<span class="tc-red ms-2">{{ selectedAuction ? selectedAuction.address : user.dealer.company_addr1 }}</span></p>
+                <p>우편번호 :<span class="tc-red ms-1">{{ selectedAuction.addr_post }}</span></p>
+                <p>주<span class="ms-4">소</span> :<span class="tc-red ms-2">{{ selectedAuction.addr1+' , '+selectedAuction.addr2 }}</span></p>
               </div>
-              <button
+              <button v-if="destAddrBtn"
                 class="my-4 btn-primary btn w-100"
                 @click="dealerAddrCompetion"
               >
@@ -724,6 +724,7 @@ import { gsap } from 'gsap';
 import useUsers from '@/composables/users';
 import useRoles from '@/composables/roles';
 import useAuctions from '@/composables/auctions';
+import { initAddressBookSystem } from '@/composables/addressbooks';
 import useBids from '@/composables/bids';
 import modal from '@/views/modal/modal.vue';
 import auctionModal from '@/views/modal/auction/auctionModal.vue';
@@ -742,6 +743,7 @@ import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
 import useLikes from '@/composables/useLikes';
 import { isEqual } from 'date-fns';
+const { getContacts, contacts } = initAddressBookSystem();
 const { posts, getPosts, deletePost, isLoading, getBoardCategories ,pagination} = initPostSystem();
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
 const auctionChosn = ref(false);
@@ -776,6 +778,8 @@ let likeMessage;
 const fileOwnerUrl = ref('');
 const fileSignUrl =ref('');
 
+const destAddrBtn = ref(true);
+
 const swal = inject('$swal');
 const myBidPrice = computed(() => {
   const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id);
@@ -799,7 +803,6 @@ const checkScreenWidth = () => {
   };
 
 const toggleFavorite = (auction) => {
-  console.log(auction)
   auction.isFavorited = !auction.isFavorited;
   //console.log(auction.isFavorited);
   if (auction.isFavorited) {
@@ -870,7 +873,7 @@ const scrollButtonStyle = ref({ display: 'none' });
 const showReauctionView = ref(false);
 
 const auctionDetail = ref(null);
-const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus } = useAuctions();
+const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress } = useAuctions();
 const { submitBid, cancelBid,getBidById } = useBids();
 const carDetails = ref({});
 const highestBid = ref(0);
@@ -985,12 +988,10 @@ watch(
   },
   { immediate: true } 
 );
-const DOMauctionsData = ref([
-  { id: 1, name: '주소명칭1', address: '주소1', zipCode: '우편번호1' },
-  { id: 2, name: '주소명칭2', address: '주소2', zipCode: '우편번호2' },
-]);
+const DOMauctionsData = ref([]);
+//{ id: 1, name: '주소명칭1', address: '주소1', zipCode: '우편번호1' },
 
-const selectedAuction = ref(null); 
+const selectedAuction = ref({}); 
 const temporarySelectedAuction = ref(null); 
 const showModal = ref(false); 
 const scrollableContent = ref(null); 
@@ -1014,7 +1015,9 @@ const dealerAddrConnect = () => {
   });
 };
 
-const renderAuctionItems = () => {
+const renderAuctionItems = async() => {
+  await getContacts();
+  DOMauctionsData.value=contacts.value;
   const scrollableContentElement = scrollableContent.value;
   if (!scrollableContentElement) {
     console.error('Scrollable content element is null.');
@@ -1034,9 +1037,9 @@ const renderAuctionItems = () => {
             <ul class="px-0 inspector_list max_width_900">
               <li class="min-width-no mx-width-no">
                 <div class="text-start fw-semibold">
-                  <p>명칭: ${auction.name}</p>
-                  <p>주소: ${auction.address}</p>
-                  <p>우편번호: ${auction.zipCode}</p>
+                  <p>이름: ${auction.name}</p>
+                  <p>주소: ${auction.addr1} , ${auction.addr2}</p>
+                  <p>우편번호: ${auction.addr_post}</p>
                 </div>
               </li>
             </ul>
@@ -1569,11 +1572,10 @@ const fetchAuctionDetail = async () => {
   const auctionId = parseInt(route.params.id);
   try {
     auctionDetail.value = await getAuctionById(auctionId);
+    /*
     const userInfoData = await getUser(auctionDetail.value.data.user_id);
-
-
     fileExstCheck(userInfoData);
-    
+    */
 
 
     const userLike = auctionDetail.value.data.likes.find(like => like.user_id === user.value.id);
@@ -1663,6 +1665,23 @@ onMounted(async () => {
 
   if(auctionDetail.value?.data?.status === 'ing' && isUser.value){
     startPolling();
+  }
+
+  if(auctionDetail.value?.data?.status == 'chosen' && isDealer.value){
+    if(auctionDetail.value.data.dest_addr_post){
+      destAddrBtn.value = false;
+      selectedAuction.value = {
+        addr1 : auctionDetail.value.data.dest_addr1,
+        addr2 : auctionDetail.value.data.dest_addr2,
+        addr_post : auctionDetail.value.data.dest_addr_post,
+      }
+    }else{
+      selectedAuction.value = {
+        addr1 : user.value.dealer.company_addr1,
+        addr2 : user.value.dealer.company_addr2,
+        addr_post : user.value.dealer.company_post,
+      }
+    }
   }
 
   window.addEventListener('scroll', checkScroll);
@@ -1764,6 +1783,10 @@ const handleCancelBid = async () => {
     alert('입찰 취소에 실패했습니다.');
   }
 };
+
+const dealerAddrCompetion = async () => {
+  setdestddress(auctionDetail.value.data.id,selectedAuction.value);
+}
 
 </script>
 

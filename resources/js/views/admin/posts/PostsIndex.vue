@@ -89,8 +89,8 @@
                   <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id } }" class="badge">
                     <div class="icon-edit-img"></div>
                   </router-link>
-                  <a href="#" @click.prevent="deletePost(boardId, post.id)" class="ms-2 badge web_style">
-                    <div class="icon-trash-img"></div>
+                  <a href="#" @click.stop class="ms-2 badge web_style">
+                    <div @click.prevent="deletePost(boardId, post.id)" class="icon-trash-img"></div>
                   </a>
                 </td>
               </tr>
@@ -124,6 +124,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { initPostSystem } from "@/composables/posts";
 import { useStore } from 'vuex';
 import useAuctions from "@/composables/auctions";
+import Footer from "@/components/Footer.vue";
+const selectedPostId = ref(null);
 
 const { posts, getPosts, deletePost, isLoading, getBoardCategories, pagination } = initPostSystem();
 const { getAuctionById } = useAuctions(); 
