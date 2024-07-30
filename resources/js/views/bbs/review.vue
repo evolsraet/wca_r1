@@ -40,7 +40,7 @@
                                 </div>
                         </div>
                         <div v-else>
-                            가 없습니다.
+                            작성 가능한 이용 후기가 없습니다.
                         </div>
                         <nav>
                             <ul class="pagination justify-content-center">
