@@ -323,7 +323,7 @@ animation: scroll 20s linear infinite;
 }
 .cardtype02 img {
 width: 100%;
-height: 90px;
+height: 200px;
 object-fit: cover;
 margin: 14px 0 14px;
 border-radius: 6px;
