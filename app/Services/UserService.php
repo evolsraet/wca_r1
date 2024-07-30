@@ -2,9 +2,11 @@
 
 namespace App\Services;
 
-use App\Models\Role;
+use App\Models\Bid;
 // use Spatie\Permission\Models\Role;
+use App\Models\Role;
 use App\Models\User;
+use App\Models\Auction;
 use App\Traits\CrudTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -314,20 +316,34 @@ class UserService
     protected function middleProcess($method, $request, $item, $id = null)
     {
         if ($method === 'index') {
-            // $item->with('role');
-            // print_r(auth()->user()->hasPermissionTo);
-            // die();
-            if (auth()->check() && !auth()->user()->hasPermissionTo('act.admin')) {
-                $item->where('id', auth()->user()->id);
-                $item->role(['user', 'dealer']);
-            }
+            $this->readAuth($item);
         } elseif ($method === 'show') {
-            if (auth()->check() && !auth()->user()->hasPermissionTo('act.admin')) {
-                $item->where('id', auth()->user()->id);
-                $item->role(['user', 'dealer']);
-            }
+            $this->readAuth($item);
         } elseif ($method === 'destroy') {
             $this->modifyAuth($item);
+        }
+    }
+
+    protected function readAuth($item)
+    {
+        $item->with('roles');
+
+        if (auth()->check() && !auth()->user()->hasPermissionTo('act.admin')) {
+            $item->role(['user', 'dealer']);
+
+            // 딜러는 본인만, 유저는 본인과 연관된 딜러만
+            if (auth()->user()->can('act.dealer')) {
+                $item->where('id', auth()->user()->id);
+            } elseif (auth()->user()->can('act.user')) {
+                // Log::info($auction_ids);
+                // Log::info($bid_user_ids);
+
+                $item->where(function ($query) {
+                    $query
+                        ->role('dealer')
+                        ->orWhere('id', auth()->user()->id);
+                });
+            }
         }
     }
 }
