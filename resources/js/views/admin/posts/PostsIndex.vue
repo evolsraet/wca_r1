@@ -48,7 +48,7 @@
                   <span v-if="boardId === 'claim'" class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">상태</span>
                   <span v-else class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">카테고리</span>
                 </th>
-                <th class="px-6 py-3 text-left" style="width: 20%;">
+                <th class="px-6 py-3 text-left" style="width: 10%;">
                   <div class="flex flex-row justify-content-center" @click="updateOrdering('title')">
                     <div class="font-medium text-uppercase" :class="{'font-bold text-blue-600': orderColumn === 'title'}">
                       제목
