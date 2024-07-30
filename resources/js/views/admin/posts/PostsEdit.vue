@@ -59,17 +59,17 @@
         코멘트가 없습니다.
       </div>
       <div v-else>
-      <div v-for="comment in post.comments" :key="comment.id" class="comment-item">
-        <div class="d-flex align-items-start">
-          <div class="comment-body">
-            <div class="d-flex justify-content-between">
-              <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
-              <p class="comment-date">{{ comment.created_at }}</p>
+        <div v-for="comment in post.comments" :key="comment.id" class="comment-item" :class="{ 'new-comment-highlight': comment.isNew }">
+          <div class="d-flex align-items-start">
+            <div class="comment-body">
+              <div class="d-flex justify-content-between">
+                <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
+                <p class="comment-date">{{ comment.created_at }}</p>
+              </div>
+              <p class="comment-content">{{ comment.content }}</p>
             </div>
-            <p class="comment-content">{{ comment.content }}</p>
           </div>
         </div>
-      </div>
     </div>
   </div>
 
@@ -211,21 +211,27 @@ async function addComment() {
   if (newComment.content.trim()) {
     try {
       const commentData = {
-        commentable_id: postId, 
-        content: newComment.content 
+        commentable_id: postId,
+        content: newComment.content
       };
-      await addCommentAPI(commentData);
+      const response = await addCommentAPI(commentData);
+      const newCommentData = response.data;
+
+      post.comments = [...post.comments, newCommentData];
+
+      newCommentData.isNew = true;
+      setTimeout(() => {
+        newCommentData.isNew = false;
+      }, 3000);
+
+      newComment.content = '';
 
       swal({
         icon: 'success',
         title: '댓글이 성공적으로 추가되었습니다.',
       }).then(() => {
-        // 현재 페이지를 리다이렉트하여 새로고침
-        router.replace({ path: router.currentRoute.value.fullPath });
+        location.reload();
       });
-
-      // 코멘트 입력 필드 초기화
-      newComment.content = '';
     } catch (error) {
       swal({
         icon: 'error',
@@ -240,6 +246,9 @@ async function addComment() {
     });
   }
 }
+
+
+
 
 
 
@@ -318,6 +327,19 @@ async function addComment() {
   border: 1px solid #ddd;
   padding: 10px;
   width: 100%;
+}
+.new-comment-highlight {
+  animation: fadeInHighlight 1s ease-in-out;
+  background-color: #e0f7fa;
+}
+
+@keyframes fadeInHighlight {
+  0% {
+    background-color: #e0f7fa;
+  }
+  100% {
+    background-color: white;
+  }
 }
 
 </style>
