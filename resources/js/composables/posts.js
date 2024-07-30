@@ -53,6 +53,8 @@ export function initPostSystem() {
                 .url(`/api/board/${boardId}/articles/${id}`) 
                 .with(['comments']) 
                 .callback(function(result) {
+                    console.log('result==========================');
+                    console.log(result);
                     post.value = result.data;
                     return result.data;
                 })
@@ -121,53 +123,54 @@ export function initPostSystem() {
         const serializedPost = new FormData();
         serializedPost.append('article', JSON.stringify(data.article));
 
-         wicac.conn()
-        .url(`/api/board/${boardId}/articles/${postId}`) 
-        .multipartUpdate() 
-        .param(serializedPost)
-        .callback(function(result) {
-            if(result.isSuccess){
-                let successMsg='';
-                if(boardId === 'notice'){
-                    successMsg = '공지사항이 성공적으로 수정되었습니다.';
-                }else{
-                    successMsg = '클레임이 성공적으로 수정되었습니다.';
-                }
-                wica.ntcn(swal)
-                .icon('I')
-                .callback(function(result2) {
-                    if(result2.isOk){
+        if(postData.board_attach){
+            serializedPost.append('board_attach', postData.board_attach);
+        }
+
+        let alimMsg = ''
+        if(boardId === 'notice'){
+            alimMsg = '해당 공지사항을 수정 하시겠습니까?';
+        }else{
+            alimMsg = '해당 클레임을 수정 하시겠습니까?';
+        }
+
+        wica.ntcn(swal)
+        .icon('Q') //E:error , W:warning , I:info , Q:question , S:success
+        .useClose() // 닫기 버튼 활성화본
+        .callback(function(result3) {
+            if(result3.isOk){
+                wicac.conn()
+                .url(`/api/board/${boardId}/articles/${postId}`) 
+                .multipartUpdate() 
+                .param(serializedPost)
+                .callback(function(result) {
+                    if(result.isSuccess){
+                        let successMsg='';
+                        if(boardId === 'notice'){
+                            successMsg = '공지사항이 성공적으로 수정되었습니다.';
+                        }else{
+                            successMsg = '클레임이 성공적으로 수정되었습니다.';
+                        }
+                        wica.ntcn(swal)
+                        .icon('I')
+                        .callback(function(result2) {
+                            if(result2.isOk){
+                                isLoading.value = false;
+                                router.push({ name: 'posts.index', params: { boardId } }); 
+                                //return result.data;                           
+                            }
+                        })
+                        .alert(successMsg);
+                        
+                    }else{
                         isLoading.value = false;
-                        router.push({ name: 'posts.index', params: { boardId } }); 
-                        //return result.data;                           
+                        validationErrors.value = result.msg;
                     }
                 })
-                .alert(successMsg);
-                
-            }else{
-                isLoading.value = false;
-                validationErrors.value = result.msg;
+                .post();
             }
         })
-        .post();
-
-        /*
-        try {
-            const response = await axios.put(`/api/board/${boardId}/articles/${postId}`, data, {
-                headers: {
-                    "content-type": "application/json"
-                }
-            });
-            return response.data;
-        } catch (error) {
-            if (error.response?.data) {
-                validationErrors.value = error.response.data.errors;
-            }
-            throw error;
-        } finally {
-            isLoading.value = false;
-        }
-        */
+        .alert(alimMsg);
     };
 
     const deletePost = async (boardId, id) => {
