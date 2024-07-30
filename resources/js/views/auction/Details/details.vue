@@ -565,6 +565,19 @@
                           <a href="/addr" class="fs-6 text-secondary opacity-50 link-hov">다른 주소지로 변경, 추가를 원하시나요?</a>
                         </div>
                         <div class="scrollable-content mt-4" ref="scrollableContent"></div>
+                        <div class="card-footer">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                                <a class="page-link prev-style" @click="loadPage(currentPage - 1)" :disabled="currentPage === 1"></a>
+                                </li>
+                                <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === currentPage }">
+                                <a class="page-link" @click="loadPage(n)">{{ n }}</a>
+                                </li>
+                                <li class="page-item next-prev" :class="{ disabled: currentPage === pagination.last_page }">
+                                <a class="page-link next-style" @click="loadPage(currentPage + 1)" :disabled="currentPage === pagination.last_page"></a>
+                                </li>
+                            </ul>
+                        </div>
                       </div>
                       <button @click="confirmSelection" class="btn btn-primary w-100">확인</button>
                     </div>
@@ -743,8 +756,8 @@ import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
 import useLikes from '@/composables/useLikes';
 import { isEqual } from 'date-fns';
-const { getContacts, contacts } = initAddressBookSystem();
-const { posts, getPosts, deletePost, isLoading, getBoardCategories ,pagination} = initPostSystem();
+const { getContacts, contacts, pagination } = initAddressBookSystem();
+const { posts, getPosts, deletePost, isLoading, getBoardCategories } = initPostSystem();
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
 const auctionChosn = ref(false);
 const showNotification = ref(false);
@@ -879,6 +892,7 @@ const carDetails = ref({});
 const highestBid = ref(0);
 const lowestBid = ref(0);
 const fileUserSignData = ref({});
+const currentPage = ref(1);
 
 const sortedTopBids = computed(() => {
   if (!auctionDetail.value?.data?.top_bids) {
@@ -1015,8 +1029,8 @@ const dealerAddrConnect = () => {
   });
 };
 
-const renderAuctionItems = async() => {
-  await getContacts();
+const renderAuctionItems = async(page = 1) => {
+  await getContacts(page);
   DOMauctionsData.value=contacts.value;
   const scrollableContentElement = scrollableContent.value;
   if (!scrollableContentElement) {
@@ -1087,7 +1101,8 @@ const confirmSelection = () => {
   } else {
     alert("선택을 해줘야합니다.");
   }
-  showModal.value = false; 
+  showModal.value = false;
+  currentPage.value = 1;
 };
 
 
@@ -1786,6 +1801,13 @@ const handleCancelBid = async () => {
 
 const dealerAddrCompetion = async () => {
   setdestddress(auctionDetail.value.data.id,selectedAuction.value);
+}
+
+async function loadPage(page) {
+  if (page < 1 || page > pagination.value.last_page) return;
+  currentPage.value = page;
+  renderAuctionItems(page);
+  window.scrollTo(0, 0);
 }
 
 </script>

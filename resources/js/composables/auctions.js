@@ -739,9 +739,9 @@ const setdestddress = async (id,addrInfo) => {
         auction: {
             dest_addr_post : addrInfo.addr_post,
             dest_addr1 : addrInfo.addr1,
-            dest_addr2 : addrInfo.addr2,
-            status : 'dlvr'
-        }
+            dest_addr2 : addrInfo.addr2
+        },
+        mode : 'dealerInfo '
     };
 
     wica.ntcn(swal)
