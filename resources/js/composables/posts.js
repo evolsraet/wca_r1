@@ -121,19 +121,33 @@ export function initPostSystem() {
         const serializedPost = new FormData();
         serializedPost.append('article', JSON.stringify(data.article));
 
-        wicac.conn()
+         wicac.conn()
         .url(`/api/board/${boardId}/articles/${postId}`) 
-        .multipartUpdate() //첨부파일을 포함한 업데이트 요청인 경우
+        .multipartUpdate() 
         .param(serializedPost)
         .callback(function(result) {
             if(result.isSuccess){
-                isLoading.value = false;
-                return result.data;
+                let successMsg='';
+                if(boardId === 'notice'){
+                    successMsg = '공지사항이 성공적으로 수정되었습니다.';
+                }else{
+                    successMsg = '클레임이 성공적으로 수정되었습니다.';
+                }
+                wica.ntcn(swal)
+                .icon('I')
+                .callback(function(result2) {
+                    if(result2.isOk){
+                        isLoading.value = false;
+                        router.push({ name: 'posts.index', params: { boardId } }); 
+                        //return result.data;                           
+                    }
+                })
+                .alert(successMsg);
+                
             }else{
                 isLoading.value = false;
                 validationErrors.value = result.msg;
             }
-            
         })
         .post();
 
