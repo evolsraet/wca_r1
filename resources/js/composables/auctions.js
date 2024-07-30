@@ -560,7 +560,6 @@ const updateAuction = async (id,auction) => {
 
 //딜러 선택
 const chosenDealer = async (id, data) => {
-    console.log('=====딜러선택------==================');
     if (isLoading.value) return;
 
     isLoading.value = true;
@@ -734,6 +733,50 @@ const getDoneAuctions = async (bidsNumList,page) => {
         */
 };
 
+
+const setdestddress = async (id,addrInfo) => {
+    const data = {
+        auction: {
+            dest_addr_post : addrInfo.addr_post,
+            dest_addr1 : addrInfo.addr1,
+            dest_addr2 : addrInfo.addr2,
+            status : 'dlvr'
+        }
+    };
+
+    wica.ntcn(swal)
+    .title('현 주소지로 탁송신청하시겠습니까?') // 알림 제목
+    .icon('Q') //E:error , W:warning , I:info , Q:question
+    .callback(async function(result) {
+        if(result.isOk){
+            wicac.conn()
+            .url(`/api/auctions/${id}`)
+            .param(data)
+            .callback(function(result2) {
+                if(result2.isSuccess){
+                    wica.ntcn(swal)
+                    .icon('I') //E:error , W:warning , I:info , Q:question
+                    .callback(function(result3) {
+                        if (result3.isOk) {
+                            location.reload();
+                        }  
+                    })
+                    .alert('현 주소지로 탁송신청이 되었습니다.');
+                }else{
+                    wica.ntcn(swal)
+                    .title('오류가 발생하였습니다.')
+                    .useHtmlText()
+                    .icon('I') //E:error , W:warning , I:info , Q:question
+                    .alert('관리자에게 문의해주세요.');
+                }
+            })
+            .put();
+        }
+    }).confirm();
+
+    
+}
+
 const setDeleteFileAuction = async(uuidList) => {
     if (uuidList.endsWith(',')) {
         uuidList = uuidList.slice(0, -1);
@@ -775,7 +818,8 @@ const setDeleteFileAuction = async(uuidList) => {
         refreshCarInfo,
         updateAuction,
         getAuctionsByDealer,
-        getDoneAuctions
+        getDoneAuctions,
+        setdestddress,
     };
     
 }
