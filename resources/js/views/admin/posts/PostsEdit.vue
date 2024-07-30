@@ -47,6 +47,14 @@
               <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
             </div>
           </div>
+          <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
+            파일 첨부
+          </button>
+          <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
+          <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
+            <a :href=boardAttachUrl download>{{ post.board_attach_name }}</a>
+            <span class="icon-close-img cursor-pointer" @click="triggerFileDelete()"></span>
+          </div>
         </div>
       </div>
     </div>
@@ -127,7 +135,9 @@ const post = reactive({
   title: '',
   content: '',
   category: '',
-  comments: []
+  comments: [],
+  board_attach : '',
+  board_attach_name : ''
 });
 
 const newComment = reactive({
@@ -142,6 +152,8 @@ const postId = route.params.id;
 const boardId = ref(route.params.boardId);
 const navigatedThroughHandleRowClick = ref('false');
 const user = computed(() => store.getters['auth/user']);
+const boardAttachUrl = ref('');
+const fileInputRef = ref(null);
 
 // 댓글 수정 상태를 관리
 const editCommentIndex = ref([]);
@@ -235,12 +247,13 @@ async function submitForm() {
         title: post.title,
         content: post.content,
         comments: post.comments,
+        board_attach : post.board_attach
       };
 
       if (boardId.value === 'notice') {
         updateData.category = post.category;
       }
-      
+
       await updatePost(boardId.value, postId, updateData);
     
   } else {
@@ -283,6 +296,31 @@ async function addComment() {
       icon: 'warning',
       title: '댓글 내용을 입력해주세요.',
     });
+  }
+}
+
+//파일관련
+function triggerFileDelete() {
+  post.board_attach_name = '';
+  post.board_attach='';
+  boardAttachUrl.value = '';
+}
+
+function triggerFileUpload() {
+  if (fileInputRef.value) {
+      fileInputRef.value.click();
+  } else {
+      console.error("파일을 찾을 수 없습니다.");
+  }
+};
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    post.board_attach = file;
+    post.board_attach_name = file.name;
+    boardAttachUrl.value = URL.createObjectURL(file);
+    //console.log("Certification file:", file.name);
   }
 }
 </script>
@@ -348,6 +386,10 @@ async function addComment() {
   text-overflow: clip; 
   max-width: none; 
   word-wrap: break-word; 
+}
+
+.cursor-pointer{
+  cursor: pointer;
 }
 
 </style>
