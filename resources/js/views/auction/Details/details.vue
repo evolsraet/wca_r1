@@ -558,8 +558,9 @@
                     <div class="modal-container">
                       <div class="card-body">
                         <div class="text-start">
-                          <div class="d-flex">
-                          <h4 class="custom-highlight">탁송지 변경</h4>
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="custom-highlight">탁송지 변경</h4>
+                            <button type="button" class="mb-1 btn-close" @click="closeAddr"></button>
                           </div>
                           <p>원하시는 탁송지를 선택해주세요.</p>
                           <a href="/addr" class="fs-6 text-secondary opacity-50 link-hov">다른 주소지로 변경, 추가를 원하시나요?</a>
@@ -1028,7 +1029,9 @@ const dealerAddrConnect = () => {
     }
   });
 };
-
+const closeAddr = () => {
+  showModal.value = false; 
+}
 const renderAuctionItems = async(page = 1) => {
   await getContacts(page);
   DOMauctionsData.value=contacts.value;
