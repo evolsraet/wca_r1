@@ -521,11 +521,36 @@
             </div>
             <div v-if ="auctionDetail.data.status ==='chosen' && isUser">
             <hr>
-            <div class="d-flex justify-content-between align-items-baseline">
-            <h4 class="custom-highlight">탁송 확인</h4>
+          <div class="mt-2 d-flex justify-content-between align-items-baseline">
+            <h4 class="custom-highlight">탁송 서비스 이용고객안내</h4>
+          </div>
+            <div>
+              <ul class="timeline p-0 mt-4">
+                <li>
+                  <div class="d-flex gap-2">
+                    <div class="circle">1</div>
+                    <span>키와 서류를 전달해 주세요.</span>
+                  </div>
+                </li>
+                <div class="small-circles my-3"></div>
+                <li>
+                  <div class="d-flex gap-2">
+                    <div class="circle">2</div>
+                    <span>상단의 탁송 완료 처리 버튼을 탁송 <br>기사분에게 제시해 주세요.</span>
+                  </div>
+                </li>
+                <div class="small-circles mb-3"></div>
+                <li>
+                  <div class="d-flex gap-2">
+                    <div class="circle">3</div>
+                    <span>차량대금 지급 후, 경매 완료 처리 됩니다.</span>
+                  </div>
+                </li>
+              </ul>
             </div>
-            <p class="text-start text-secondary opacity-50">※ 탁송 서비스 안내는 ' 탁송 확인 '에서 확인 가능합니다. </p>
-            <button
+            
+          <!--   <p class="text-start text-secondary opacity-50">※ 탁송 서비스 안내는 ' 탁송 확인 '에서 확인 가능합니다. </p>
+           <button
               class="my-4 btn-primary bold-18-font modal-bid d-flex p-3 justify-content-between blinking"
               @click="competionsuccess"
             >
@@ -534,7 +559,7 @@
                 바로가기
                 <p class="icon-right-wh"></p>
               </p>
-            </button>
+            </button>-->
             </div>
               <div v-if ="auctionDetail.data.status ==='chosen' && isDealer">
                 <hr>
