@@ -331,7 +331,7 @@ class UserService
         if (auth()->check() && !auth()->user()->hasPermissionTo('act.admin')) {
             $item->role(['user', 'dealer']);
 
-            // 딜러는 본인만, 유저는 본인과 연관된 딜러만
+            // 딜러는 본인만, 유저는 본인과 모든 딜러
             if (auth()->user()->can('act.dealer')) {
                 $item->where('id', auth()->user()->id);
             } elseif (auth()->user()->can('act.user')) {

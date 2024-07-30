@@ -543,10 +543,11 @@ trait CrudTrait
         // }
     }
 
-    protected function modifyOnlyMe($data)
+    protected function modifyOnlyMe($data, $force = false)
     {
         if (
-            auth()->user()->id !== $data->user_id
+            !$force
+            && auth()->user()->id !== $data->user_id
             && !auth()->user()->hasPermissionTo('act.admin')
         ) {
             // dd([

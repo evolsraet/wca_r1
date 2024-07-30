@@ -46,9 +46,27 @@ class AuctionService
                     request()->merge(['mode' => $request->status]);
                 }
 
+                $this->modifyOnlyMe($auction, request()->mode == 'dealerInfo');
+
                 // 모드별 분기
                 if (request()->has('mode')) {
                     switch (request()->mode) {
+                        case 'dealerInfo':
+
+                            // 허용된 필드 목록
+                            $allowedFields = ['dest_addr_post', 'dest_addr1', 'dest_addr2'];
+
+                            // 변경된 속성만 가져오기
+                            $dirtyAttributes = $auction->getDirty();
+
+                            // 허용되지 않은 필드만 원래 값으로 되돌림
+                            foreach ($dirtyAttributes as $key => $value) {
+                                if (!in_array($key, $allowedFields)) {
+                                    $auction->$key = $auction->getOriginal($key);
+                                }
+                            }
+
+                            break;
                         case 'reauction':
                             // 재경매 : 옥션변수가 오고, 재옥션 상태가 아니고, auction->status 가 wait 일 경우,  상태변경
                             if (!$auction->is_reauction && $auction->status == 'wait') {
@@ -99,7 +117,6 @@ class AuctionService
                     }
                 }
 
-                $this->modifyOnlyMe($auction);
                 break;
             case 'destroy':
                 $this->modifyOnlyMe($auction);
