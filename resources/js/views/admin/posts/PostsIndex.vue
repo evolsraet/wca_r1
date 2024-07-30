@@ -74,19 +74,17 @@
             <tbody>
               <tr 
               v-for="post in posts" 
-              :key="post.id" 
-              @click="handleRowClick(post.id)"
-              :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}"
-            >
+              :key="post.id"
+              >
                 <td v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-4 text-sm text-overflow">{{ post.created_at }}</td>
                 <td class="px-6 py-4 text-sm text-overflow">
                   <div>{{ post.category }}</div>
                 </td>
-                <td class="px-6 py-4 text-sm text-overflow"><span v-if="boardId === 'claim'" class="my-2">[문의] </span>{{ post.title }}</td>
-                <td class="px-6 py-4 text-sm text-overflow">{{ stripHtmlTags(post.content) }}</td>
+                <td class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)"><span v-if="boardId === 'claim'" class="my-2">[문의] </span>{{ post.title }}</td>
+                <td class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)">{{ stripHtmlTags(post.content) }}</td>
                 <td v-if="boardId === 'claim'"><span class="blue-box mb-0 mx-0">{{ auctionDetails[post.extra1]?.data?.car_no || '' }}</span></td>
                 <td v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm text-overflow">
-                  <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id } }" class="badge">
+                  <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id }, query: { navigatedThroughHandleRowClick: false } }" class="badge">
                     <div class="icon-edit-img"></div>
                   </router-link>
                   <a href="#" @click.stop class="ms-2 badge web_style">
