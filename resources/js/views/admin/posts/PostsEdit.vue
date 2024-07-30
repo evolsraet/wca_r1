@@ -48,15 +48,33 @@
             </div>
           </div>
           <!-- Comments Section -->
-          <div v-if="!isDealer && boardId ==='claim'" class="mb-3">
+          <div v-if="!isDealer && boardId === 'claim'" class="mb-3">
             <label for="comments" class="form-label">코멘트</label>
-            <textarea 
-              v-model="post.comments" 
-              id="comments" 
-              class="form-control" 
-              rows="10" 
-              style="resize: none;"
-            ></textarea>
+            <div class="comment-list">
+              <div v-if="post.comments.length === 0" class="no-comments text-center tc-primary">코멘트가 없습니다.</div>
+              <div v-else>
+              <div v-for="comment in post.comments" :key="comment.id" class="comment-item">
+                <div class="d-flex align-items-start">
+                  <div class="comment-body">
+                    <div class="d-flex justify-content-between">
+                      <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
+                      <p class="comment-date">{{ comment.created_at }}</p>
+                    </div>
+                    <p class="comment-content">{{ comment.content }}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+            <!-- New Comment Form -->
+            <div class="new-comment">
+              <label for="new-comment-content" class="form-label">새 코멘트</label>
+              <textarea v-model="newComment.content"class="form-contro l" rows="3" placeholder="댓글을 입력하세요..."></textarea>
+              <div class="d-flex justify-content-end my-2">
+                <button @click="addComment" class="btn btn-primary mt-2">댓글 추가</button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -64,6 +82,7 @@
   </form>
   <Footer />
 </template>
+
 
 <script setup>
 import Footer from "@/views/layout/footer.vue";
@@ -84,7 +103,11 @@ const post = reactive({
   title: '',
   content: '',
   category: '',
-  comments: ''
+  comments: []
+});
+
+const newComment = reactive({
+  content: ''
 });
 
 const plainTextContent = ref('');
@@ -95,9 +118,9 @@ const postId = route.params.id;
 const boardId = ref(route.params.boardId);
 const navigatedThroughHandleRowClick = ref(route.query.navigatedThroughHandleRowClick === 'true');
 
-// Assume these variables determine if the user is an admin or a dealer
-const isAdmin = ref(false); // Replace with actual logic
-const isDealer = ref(false); // Replace with actual logic
+
+const isAdmin = ref(false); 
+const isDealer = ref(false);
 
 const boardText = computed(() => {
   switch(boardId.value) {
@@ -131,7 +154,7 @@ onMounted(async () => {
     post.title = postData.value.title;
     post.content = postData.value.content;
     post.category = postData.value.category || '';
-    post.comments = postData.value.comments || '';
+    post.comments = postData.value.comments || [];
     plainTextContent.value = stripHtml(postData.value.content);
   }
 });
@@ -141,7 +164,7 @@ watchEffect(() => {
     post.title = postData.value.title;
     post.content = postData.value.content;
     post.category = postData.value.category || '';
-    post.comments = postData.value.comments || '';
+    post.comments = postData.value.comments || [];
     plainTextContent.value = stripHtml(postData.value.content);
   }
 });
@@ -180,8 +203,23 @@ async function submitForm() {
     Object.assign(validationErrors, form.errors);
   }
 }
-</script>
 
+function addComment() {
+  if (newComment.content.trim()) {
+    post.comments.push({
+      id: Date.now(), // 임시 ID 생성
+      user: { name: '사용자' }, // 여기에 실제 사용자 정보를 추가
+      content: newComment.content
+    });
+    newComment.content = '';
+  } else {
+    swal({
+      icon: 'warning',
+      title: '댓글 내용을 입력해주세요.'
+    });
+  }
+}
+</script>
 <style scoped>
 .primary-btn {
   width: 90px;
@@ -194,4 +232,68 @@ async function submitForm() {
   height: 18px;
   line-height: unset;
 }
+
+.comment-list {
+  margin-top: 20px;
+  padding-top: 10px;
+  max-height: 300px; 
+  overflow-y: auto; 
+  border-top: 1px solid #ddd;
+}
+
+.comment-item {
+  display: flex;
+  background-color: #fff;
+  border-radius: 8px;
+  border: 1px solid #e1e1e1;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 15px;
+}
+
+.comment-body {
+  flex: 1;
+}
+
+.comment-author {
+  font-weight: 600;
+  margin-bottom: 5px;
+  color: #333;
+}
+
+.comment-date {
+  font-size: 0.85em;
+  color: #999;
+}
+
+.comment-content {
+  margin-top: 5px;
+  line-height: 1.5;
+  color: #555;
+}
+
+/* 새로운 댓글 작성란 */
+.new-comment {
+  margin-top: 30px;
+  padding: 15px;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.new-comment textarea {
+  resize: none;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  width: 100%;
+}
+
 </style>

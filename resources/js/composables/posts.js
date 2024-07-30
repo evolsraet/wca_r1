@@ -52,8 +52,14 @@ export function initPostSystem() {
     const getPost = async (boardId, id) => {
         isLoading.value = true;
         try {
-            const response = await axios.get(`/api/board/${boardId}/articles/${id}`);
-            post.value = response.data.data;
+            return wicac.conn()
+                .url(`/api/board/${boardId}/articles/${id}`) 
+                .with(['comments']) 
+                .callback(function(result) {
+                    post.value = result.data;
+                    return result.data;
+                })
+                .get(); 
         } catch (error) {
             console.error(error);
             throw error;
@@ -61,6 +67,7 @@ export function initPostSystem() {
             isLoading.value = false;
         }
     };
+    
 
     const storePost = async (boardId, postData) => {
         if (isLoading.value) return;
