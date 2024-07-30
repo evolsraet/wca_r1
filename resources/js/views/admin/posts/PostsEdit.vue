@@ -47,40 +47,44 @@
               <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
             </div>
           </div>
-          <!-- Comments Section -->
-          <div v-if="!isDealer && boardId === 'claim'" class="mb-3">
-            <label for="comments" class="form-label">코멘트</label>
-            <div class="comment-list">
-              <div v-if="post.comments.length === 0" class="no-comments text-center tc-primary">코멘트가 없습니다.</div>
-              <div v-else>
-              <div v-for="comment in post.comments" :key="comment.id" class="comment-item">
-                <div class="d-flex align-items-start">
-                  <div class="comment-body">
-                    <div class="d-flex justify-content-between">
-                      <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
-                      <p class="comment-date">{{ comment.created_at }}</p>
-                    </div>
-                    <p class="comment-content">{{ comment.content }}</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-            <!-- New Comment Form -->
-            <div class="new-comment">
-              <label for="new-comment-content" class="form-label">새 코멘트</label>
-              <textarea v-model="newComment.content"class="form-contro l" rows="3" placeholder="댓글을 입력하세요..."></textarea>
-              <div class="d-flex justify-content-end my-2">
-                <button @click="addComment" class="btn btn-primary mt-2">댓글 추가</button>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
   </form>
+  <!-- Comments Section -->
+  <div v-if="!isDealer && boardId === 'claim'" class="row my-5 mov-wide m-auto container">
+    <label for="comments" class="form-label">코멘트</label>
+    <div class="comment-list">
+      <div v-if="post.comments && post.comments.length === 0" class="no-comments text-center tc-primary">
+        코멘트가 없습니다.
+      </div>
+      <div v-else>
+      <div v-for="comment in post.comments" :key="comment.id" class="comment-item">
+        <div class="d-flex align-items-start">
+          <div class="comment-body">
+            <div class="d-flex justify-content-between">
+              <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
+              <p class="comment-date">{{ comment.created_at }}</p>
+            </div>
+            <p class="comment-content">{{ comment.content }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <!-- New Comment Form -->
+    <div class="new-comment">
+      <label for="new-comment-content" class="form-label">새 코멘트</label>
+      <textarea v-model="newComment.content"class="form-contro l" rows="3" placeholder="댓글을 입력하세요..."></textarea>
+      <div class="d-flex justify-content-end my-2">
+        <button @click="addComment" class="btn btn-primary mt-2">댓글 추가</button>
+      </div>
+    </div>
+  </div>
+  <div v-if="isDealer">
   <Footer />
+</div>
 </template>
 
 
@@ -97,7 +101,7 @@ defineRule("required", required);
 defineRule("min", min);
 
 const { validate } = useForm();
-const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories } = initPostSystem();
+const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories,addCommentAPI  } = initPostSystem();
 
 const post = reactive({
   title: '',
@@ -203,22 +207,43 @@ async function submitForm() {
     Object.assign(validationErrors, form.errors);
   }
 }
-
-function addComment() {
+async function addComment() {
   if (newComment.content.trim()) {
-    post.comments.push({
-      id: Date.now(), // 임시 ID 생성
-      user: { name: '사용자' }, // 여기에 실제 사용자 정보를 추가
-      content: newComment.content
-    });
-    newComment.content = '';
+    try {
+      const commentData = {
+        commentable_id: postId, 
+        content: newComment.content 
+      };
+      await addCommentAPI(commentData);
+
+      swal({
+        icon: 'success',
+        title: '댓글이 성공적으로 추가되었습니다.',
+      }).then(() => {
+        // 현재 페이지를 리다이렉트하여 새로고침
+        router.replace({ path: router.currentRoute.value.fullPath });
+      });
+
+      // 코멘트 입력 필드 초기화
+      newComment.content = '';
+    } catch (error) {
+      swal({
+        icon: 'error',
+        title: '댓글 추가 중 오류가 발생했습니다.',
+      });
+      console.error('Error adding comment:', error);
+    }
   } else {
     swal({
       icon: 'warning',
-      title: '댓글 내용을 입력해주세요.'
+      title: '댓글 내용을 입력해주세요.',
     });
   }
 }
+
+
+
+
 </script>
 <style scoped>
 .primary-btn {
@@ -242,7 +267,6 @@ function addComment() {
 }
 
 .comment-item {
-  display: flex;
   background-color: #fff;
   border-radius: 8px;
   border: 1px solid #e1e1e1;

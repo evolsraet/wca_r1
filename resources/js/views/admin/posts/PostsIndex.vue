@@ -124,6 +124,8 @@ import { useRoute, useRouter } from 'vue-router';
 import { initPostSystem } from "@/composables/posts";
 import { useStore } from 'vuex';
 import useAuctions from "@/composables/auctions";
+import Footer from "@/components/Footer.vue";
+const selectedPostId = ref(null);
 
 const { posts, getPosts, deletePost, isLoading, getBoardCategories, pagination } = initPostSystem();
 const { getAuctionById } = useAuctions(); 

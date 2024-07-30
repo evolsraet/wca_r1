@@ -33,10 +33,7 @@ export function initPostSystem() {
         }
     };
 
-    const getPosts = async (
-        boardId,
-        page=1
-    ) => {
+    const getPosts = async (boardId, page = 1) => {
         return wicac.conn()
             .url(`/api/board/${boardId}/articles`)
             .page(`${page}`)
@@ -68,7 +65,6 @@ export function initPostSystem() {
         }
     };
     
-
     const storePost = async (boardId, postData) => {
         if (isLoading.value) return;
 
@@ -165,6 +161,22 @@ export function initPostSystem() {
         }
     };
 
+    const addCommentAPI = async (commentData) => {
+        try {
+          const response = await axios.post('/api/comments', {
+            comment: {
+              commentable_type: 'article',
+              commentable_id: commentData.commentable_id,
+              content: commentData.content
+            }
+          });
+          return response.data;
+        } catch (error) {
+          console.error('Error adding comment:', error);
+          throw error;
+        }
+      };
+      
     return {
         posts,
         post,
@@ -173,6 +185,7 @@ export function initPostSystem() {
         storePost,
         updatePost,
         deletePost,
+        addCommentAPI,
         validationErrors,
         isLoading,
         categories,
