@@ -72,8 +72,8 @@
                     <div class="icon-edit-img"></div>
                   </router-link>
                   <a href="#" @click.stop class="ms-2 badge web_style">
-                    <div @click.prevent="deletePost(boardId, post.id)" class="icon-trash-img"></div>
-                  </a>
+                  <div @click.prevent="handleDeleteComment(comment.id)" class="icon-trash-img"></div>
+                </a>
               </div>
             </div>
           </div>
@@ -105,12 +105,14 @@ import { required, min } from "@/validation/rules";
 import { initPostSystem } from "@/composables/posts";
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from 'vuex';
+import { cmmn } from '@/hooks/cmmn';
 defineRule("required", required);
 defineRule("min", min);
-
+const { wica } = cmmn();
 const { validate } = useForm();
 const store = useStore();
-const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories,addCommentAPI  } = initPostSystem();
+
+const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories,addCommentAPI,deleteComment  } = initPostSystem();
 const isCommentByCurrentUser = (commentUserId) => {
 return user.value.id === commentUserId;
 };
@@ -218,6 +220,14 @@ async function submitForm() {
     Object.assign(validationErrors, form.errors);
   }
 }
+
+async function handleDeleteComment(commentId) {
+        await deleteComment(commentId);
+
+}
+
+
+
 async function addComment() {
   if (newComment.content.trim()) {
     try {
@@ -306,6 +316,7 @@ async function addComment() {
 .comment-body {
   flex: 1;
   white-space: pre-wrap; 
+  width: -webkit-fill-available;
 }
 
 .comment-author {

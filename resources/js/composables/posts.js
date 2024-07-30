@@ -177,6 +177,62 @@ export function initPostSystem() {
         }
       };
       
+      const deleteComment = async (commentId) => {
+        try {
+          console.log('Attempting to delete comment with ID:', commentId);
+          wica.ntcn(swal)
+            .param({ _id: commentId })
+            .title('삭제하시겠습니까?')
+            .addClassNm('cmm-comment')
+            .icon('I') // W:warning 아이콘 사용
+            .callback(async function(result) {
+              if (result.isOk) {
+                try {
+                  const response = await axios.delete(`/api/comments/${commentId}`, {
+                    params: {
+                      where: 'comments.commentable_type:like:article'
+                    }
+                  });
+                  console.log('Delete response:', response);
+                  if (response.status === 200) {
+                    // 댓글이 정상적으로 삭제되었을 때
+                    wica.ntcn(swal)
+                      .addClassNm('cmm-remove')
+                      .icon('I') // I:info 아이콘 사용
+                      .alert('댓글이 정상적으로 삭제되었습니다.')
+                      setTimeout(() => {
+                        location.reload(); 
+                      }, 1000);
+                  } else {
+                    // 삭제 실패 시
+                    wica.ntcn(swal)
+                      .title('댓글 삭제 실패')
+                      .icon('E') // E:error 아이콘 사용
+                      .alert('댓글 삭제에 실패했습니다.');
+                  }
+                } catch (error) {
+                  console.error('Error deleting comment:', error);
+                  wica.ntcn(swal)
+                    .title('오류가 발생하였습니다.')
+                    .icon('E') // E:error 아이콘 사용
+                    .alert('댓글 삭제 중 오류가 발생했습니다.');
+                }
+              }
+            })
+            .confirm('삭제된 정보는 복구할 수 없습니다.');
+        } catch (error) {
+          console.error('Error deleting comment:', error);
+          wica.ntcn(swal)
+            .title('오류가 발생하였습니다.')
+            .icon('E') // E:error 아이콘 사용
+            .alert('관리자에게 문의해주세요.');
+        }
+      };
+      
+      
+      
+    
+
     return {
         posts,
         post,
@@ -186,6 +242,7 @@ export function initPostSystem() {
         updatePost,
         deletePost,
         addCommentAPI,
+        deleteComment,
         validationErrors,
         isLoading,
         categories,
