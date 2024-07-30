@@ -52,7 +52,7 @@
     </div>
   </form>
   <!-- Comments Section -->
-  <div v-if="!isDealer && boardId === 'claim'" class="row my-5 mov-wide m-auto container">
+  <div v-if="!isDealer && boardId === 'claim' && navigatedThroughHandleRowClick" class="row my-5 mov-wide m-auto container">
       <!-- Comments List -->
       <label for="comments" class="form-label">코멘트</label>
       <div class="comment-list">
@@ -140,7 +140,7 @@ const router = useRouter();
 const route = useRoute();
 const postId = route.params.id;
 const boardId = ref(route.params.boardId);
-const navigatedThroughHandleRowClick = ref(route.query.navigatedThroughHandleRowClick === 'true');
+const navigatedThroughHandleRowClick = ref('false');
 const user = computed(() => store.getters['auth/user']);
 
 // 댓글 수정 상태를 관리
@@ -203,6 +203,8 @@ function stripHtml(html) {
 }
 
 onMounted(async () => {
+  navigatedThroughHandleRowClick.value = route.query.navigatedThroughHandleRowClick == 'true';
+
   await getBoardCategories();
   await getPost(boardId.value, postId);
   if (postData.value) {
