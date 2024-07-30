@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="submitForm">
-    <div class="row my-5 mov-wide m-auto container">
+    <div class="row my-2 mov-wide m-auto container">
       <div class="card border-0 shadow-none">
         <h4 class="mt-4">{{ boardText }}</h4>
         <p class="text-secondary opacity-75 fs-6 mb-4">
@@ -67,6 +67,14 @@
                 <p class="comment-date">{{ comment.created_at }}</p>
               </div>
               <p class="comment-content">{{ comment.content }}</p>
+              <div v-if="isCommentByCurrentUser(comment.user_id)" class="d-flex justify-content-end align-items-center">
+                <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id } }" class="badge">
+                    <div class="icon-edit-img"></div>
+                  </router-link>
+                  <a href="#" @click.stop class="ms-2 badge web_style">
+                    <div @click.prevent="deletePost(boardId, post.id)" class="icon-trash-img"></div>
+                  </a>
+              </div>
             </div>
           </div>
         </div>
@@ -96,13 +104,16 @@ import { useForm, defineRule } from "vee-validate";
 import { required, min } from "@/validation/rules";
 import { initPostSystem } from "@/composables/posts";
 import { useRouter, useRoute } from 'vue-router';
-
+import { useStore } from 'vuex';
 defineRule("required", required);
 defineRule("min", min);
 
 const { validate } = useForm();
+const store = useStore();
 const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories,addCommentAPI  } = initPostSystem();
-
+const isCommentByCurrentUser = (commentUserId) => {
+return user.value.id === commentUserId;
+};
 const post = reactive({
   title: '',
   content: '',
@@ -121,7 +132,7 @@ const route = useRoute();
 const postId = route.params.id;
 const boardId = ref(route.params.boardId);
 const navigatedThroughHandleRowClick = ref(route.query.navigatedThroughHandleRowClick === 'true');
-
+const user = computed(() => store.getters['auth/user']);
 
 const isAdmin = ref(false); 
 const isDealer = ref(false);
@@ -270,8 +281,9 @@ async function addComment() {
 .comment-list {
   margin-top: 20px;
   padding-top: 10px;
-  max-height: 300px; 
+  max-height: 500px; 
   overflow-y: auto; 
+  overflow-x: hidden;
   border-top: 1px solid #ddd;
 }
 
@@ -293,6 +305,7 @@ async function addComment() {
 
 .comment-body {
   flex: 1;
+  white-space: pre-wrap; 
 }
 
 .comment-author {
@@ -307,12 +320,13 @@ async function addComment() {
 }
 
 .comment-content {
-  margin-top: 5px;
-  line-height: 1.5;
-  color: #555;
+  white-space: normal; 
+  overflow: visible; 
+  text-overflow: clip; 
+  max-width: none; 
+  word-wrap: break-word; 
 }
 
-/* 새로운 댓글 작성란 */
 .new-comment {
   margin-top: 30px;
   padding: 15px;
