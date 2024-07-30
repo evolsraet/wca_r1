@@ -185,7 +185,7 @@ watchEffect(() => {
     plainTextContent.value = stripHtml(postData.value.content);
   }
 });
-
+/* 글 수정시 */ 
 async function submitForm() {
   const form = await validate();
   if (form.valid) {
@@ -225,9 +225,7 @@ async function handleDeleteComment(commentId) {
         await deleteComment(commentId);
 
 }
-
-
-
+/* 코멘트 추가 (댓글작성시) */ 
 async function addComment() {
   if (newComment.content.trim()) {
     try {
@@ -238,21 +236,14 @@ async function addComment() {
       const response = await addCommentAPI(commentData);
       const newCommentData = response.data;
 
-      post.comments = [...post.comments, newCommentData];
-
       newCommentData.isNew = true;
+      post.comments = [newCommentData, ...post.comments];
+
       setTimeout(() => {
         newCommentData.isNew = false;
       }, 3000);
 
       newComment.content = '';
-
-      swal({
-        icon: 'success',
-        title: '댓글이 성공적으로 추가되었습니다.',
-      }).then(() => {
-        location.reload();
-      });
     } catch (error) {
       swal({
         icon: 'error',
@@ -267,9 +258,6 @@ async function addComment() {
     });
   }
 }
-
-
-
 
 
 
@@ -336,35 +324,6 @@ async function addComment() {
   text-overflow: clip; 
   max-width: none; 
   word-wrap: break-word; 
-}
-
-.new-comment {
-  margin-top: 30px;
-  padding: 15px;
-  border: 1px solid #e1e1e1;
-  border-radius: 8px;
-  background-color: #fafafa;
-}
-
-.new-comment textarea {
-  resize: none;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  padding: 10px;
-  width: 100%;
-}
-.new-comment-highlight {
-  animation: fadeInHighlight 1s ease-in-out;
-  background-color: #e0f7fa;
-}
-
-@keyframes fadeInHighlight {
-  0% {
-    background-color: #e0f7fa;
-  }
-  100% {
-    background-color: white;
-  }
 }
 
 </style>

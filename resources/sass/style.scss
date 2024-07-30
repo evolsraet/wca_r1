@@ -4353,3 +4353,34 @@ input[type="checkbox"] {
     padding: 30px 30px 30px 30px;
     background-color: #f7f8fb;
 }
+
+
+/* 코멘트 css */
+
+.new-comment {
+  margin-top: 30px;
+  padding: 15px;
+  border: 1px solid #e1e1e1;
+  border-radius: 8px;
+}
+
+.new-comment textarea {
+  resize: none;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+  padding: 10px;
+  width: 100%;
+}
+.new-comment-highlight {
+  animation: fadeInHighlight 1.3s ease-in-out;
+  background-color: rgba($primary, 0.208);;
+}
+
+@keyframes fadeInHighlight {
+  0% {
+    background-color: rgba($primary, 0.208);;
+  }
+  100% {
+    background-color: white;
+  }
+}
