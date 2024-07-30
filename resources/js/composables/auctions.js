@@ -329,7 +329,8 @@ const AuctionCarInfo = async (carInfoForm) => {
             account: auctionData.auction.account,
             memo: auctionData.auction.memo,
             addr_post: auctionData.auction.addr_post,
-            status: auctionData.auction.status
+            status: auctionData.auction.status,
+            is_biz:auctionData.auction.is_biz
         }
     }
 
