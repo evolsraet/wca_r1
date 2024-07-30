@@ -9,7 +9,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-end">
             <div>
-              <button v-if="navigatedThroughHandleRowClick" :disabled="isLoading" class="primary-btn">
+              <button v-if="!navigatedThroughHandleRowClick" :disabled="isLoading" class="primary-btn">
                 <div v-show="isLoading" class=""></div>
                 <span v-if="isLoading">Processing...</span>
                 <p class="d-flex lh-base justify-content-center gap-2" v-else>
@@ -41,11 +41,22 @@
           <!-- Content -->
           <div class="mb-3">
             <label for="post-content" class="form-label">컨텐츠 내용</label>
-            <textarea v-if="navigatedThroughHandleRowClick" v-model="plainTextContent" id="post-content" class="form-control" rows="10" disabled></textarea>
+            <textarea v-if="navigatedThroughHandleRowClick" v-model="plainTextContent" id="post-content" class="form-control" rows="10" disabled style="resize: none;"></textarea>
             <TextEditorComponent v-else v-model="post.content"/>
             <div class="text-danger mt-1">
               <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
             </div>
+          </div>
+          <!-- Comments Section -->
+          <div v-if="!isDealer && boardId ==='claim'" class="mb-3">
+            <label for="comments" class="form-label">코멘트</label>
+            <textarea 
+              v-model="post.comments" 
+              id="comments" 
+              class="form-control" 
+              rows="10" 
+              style="resize: none;"
+            ></textarea>
           </div>
         </div>
       </div>
@@ -72,7 +83,8 @@ const { post: postData, getPost, updatePost, validationErrors, isLoading, catego
 const post = reactive({
   title: '',
   content: '',
-  category: ''
+  category: '',
+  comments: ''
 });
 
 const plainTextContent = ref('');
@@ -82,6 +94,10 @@ const route = useRoute();
 const postId = route.params.id;
 const boardId = ref(route.params.boardId);
 const navigatedThroughHandleRowClick = ref(route.query.navigatedThroughHandleRowClick === 'true');
+
+// Assume these variables determine if the user is an admin or a dealer
+const isAdmin = ref(false); // Replace with actual logic
+const isDealer = ref(false); // Replace with actual logic
 
 const boardText = computed(() => {
   switch(boardId.value) {
@@ -115,6 +131,7 @@ onMounted(async () => {
     post.title = postData.value.title;
     post.content = postData.value.content;
     post.category = postData.value.category || '';
+    post.comments = postData.value.comments || '';
     plainTextContent.value = stripHtml(postData.value.content);
   }
 });
@@ -124,6 +141,7 @@ watchEffect(() => {
     post.title = postData.value.title;
     post.content = postData.value.content;
     post.category = postData.value.category || '';
+    post.comments = postData.value.comments || '';
     plainTextContent.value = stripHtml(postData.value.content);
   }
 });
@@ -135,6 +153,7 @@ async function submitForm() {
       const updateData = {
         title: post.title,
         content: post.content,
+        comments: post.comments,
       };
 
       if (boardId.value === 'notice') {
@@ -145,6 +164,7 @@ async function submitForm() {
       post.title = response.data.title;
       post.content = response.data.content;
       post.category = response.data.category;
+      post.comments = response.data.comments;
       
       swal({
         icon: 'success',
