@@ -43,8 +43,11 @@
       <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
         파일 첨부
       </button>
-      <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload" id="file_user_photo">
-      <div class="text-start text-secondary opacity-50">사진 파일: {{ fileName }}</div>
+      <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
+      <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
+        <a :href=boardAttachUrl download>{{ post.board_attach_name }}</a>
+        <span class="icon-close-img cursor-pointer" @click="triggerFileDelete()"></span>
+      </div>
     </div>
   </form>
 </template>
@@ -75,7 +78,8 @@ const post = reactive({
   title,
   content,
   category: '',
-  thumbnail: null,
+  board_attach : '',
+  board_attach_name : ''
 });
 
 const fileInputRef = ref(null);
@@ -89,6 +93,7 @@ const router = useRouter();
 const route = useRoute();
 const boardId = route.params.boardId;
 const auctionId = route.params.auctionId; // Retrieve auctionId from route params
+const boardAttachUrl = ref('');
 
 const getBoardData = async () => {
   try {
@@ -103,18 +108,6 @@ const getBoardData = async () => {
     console.error('Error fetching board data:', error);
   }
 };
-
-function triggerFileUpload() {
-  fileInputRef.value.click();
-}
-
-function handleFileUpload(event) {
-  const file = event.target.files[0];
-  if (file) {
-    fileName.value = file.name;
-    post.thumbnail = file;
-  }
-}
 
 function submitForm() {
   validate().then((form) => {
@@ -139,48 +132,63 @@ const submitPost = async (postData) => {
   if (boardId === 'claim') {
     serializedPost.append('article[extra1]', auctionId); // Include auctionId as extra1 when boardId is 'claim'
   }
-  if (postData.thumbnail) {
-    serializedPost.append('article[thumbnail]', postData.thumbnail);
+  if(postData.board_attach){
+    serializedPost.append('board_attach', postData.board_attach);
   }
+
   wicac.conn()
-  .url(`/api/board/${boardId}/articles`) //호출 URL
-  .multipart() //첨부파일 있을 경우 선언
+  .url(`/api/board/${boardId}/articles`)
+  .multipart() 
   .param(serializedPost)
   .callback(function(result) {
       if(result.isSuccess){
+        let successMsg = '';
+        if(boardId == 'claim'){
+          successMsg = '클레임이 성공적으로 저장되었습니다.';
+        }else{
+          successMsg = '공지사항이 성공적으로 저장되었습니다.';
+        }
         router.push({ name: 'posts.index', params: { boardId } });
         wica.ntcn(swal)
         .icon('I')
-        .alert('공지사항이 성공적으로 저장되었습니다.');
+        .alert(successMsg);
         isLoading.value = false;
       } else {
-        Object.assign(validationErrors, result.data.errors);
+        wica.ntcn(swal)
+        .title('오류가 발생하였습니다.')
+        .useHtmlText()
+        .icon('E') //E:error , W:warning , I:info , Q:question
+        .alert('관리자에게 문의해주세요.');
+        //Object.assign(validationErrors, result.msg);
         isLoading.value = false;
       }
   })
   .post();
-
-  /*
-  try {
-    const response = await axios.post(`/api/board/${boardId}/articles`, serializedPost, {
-      headers: {
-        "content-type": "multipart/form-data"
-      }
-    });
-    router.push({ name: 'posts.index', params: { boardId } });
-    wica.ntcn(swal)
-      .icon('I')
-      .alert('공지사항이 성공적으로 저장되었습니다.');
-      console.log("업데이트 정보:",post.category);
-  } catch (error) {
-    if (error.response?.data) {
-      Object.assign(validationErrors, error.response.data.errors);
-    }
-  } finally {
-    isLoading.value = false;
-  }
-*/
 };
+
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    post.board_attach = file;
+    post.board_attach_name = file.name;
+    boardAttachUrl.value = URL.createObjectURL(file);
+    //console.log("Certification file:", file.name);
+  }
+}
+
+function triggerFileUpload() {
+  if (fileInputRef.value) {
+      fileInputRef.value.click();
+  } else {
+      console.error("파일을 찾을 수 없습니다.");
+  }
+};
+
+function triggerFileDelete() {
+  post.board_attach_name = '';
+  post.board_attach='';
+  boardAttachUrl.value = '';
+}
 
 onMounted(() => {
   getBoardData();
@@ -202,5 +210,8 @@ onMounted(() => {
 
 .btn-fileupload {
   width: 25% !important;
+}
+.cursor-pointer{
+  cursor: pointer;
 }
 </style>

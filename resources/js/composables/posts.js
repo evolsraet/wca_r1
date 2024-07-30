@@ -118,6 +118,26 @@ export function initPostSystem() {
             data.article.category = postData.category;
         }
 
+        const serializedPost = new FormData();
+        serializedPost.append('article', JSON.stringify(data.article));
+
+        wicac.conn()
+        .url(`/api/board/${boardId}/articles/${postId}`) 
+        .multipartUpdate() //첨부파일을 포함한 업데이트 요청인 경우
+        .param(serializedPost)
+        .callback(function(result) {
+            if(result.isSuccess){
+                isLoading.value = false;
+                return result.data;
+            }else{
+                isLoading.value = false;
+                validationErrors.value = result.msg;
+            }
+            
+        })
+        .post();
+
+        /*
         try {
             const response = await axios.put(`/api/board/${boardId}/articles/${postId}`, data, {
                 headers: {
@@ -133,6 +153,7 @@ export function initPostSystem() {
         } finally {
             isLoading.value = false;
         }
+        */
     };
 
     const deletePost = async (boardId, id) => {

@@ -689,7 +689,7 @@ const deleteAuction = async (id,urlPath) => {
                     wica.ntcn(swal)
                     .title('오류가 발생하였습니다.')
                     .useHtmlText()
-                    .icon('I') //E:error , W:warning , I:info , Q:question
+                    .icon('E') //E:error , W:warning , I:info , Q:question
                     .alert('관리자에게 문의해주세요.');
                 }
             })
@@ -721,7 +721,7 @@ const getDoneAuctions = async (bidsNumList,page) => {
                 wica.ntcn(swal)
                 .title('오류가 발생하였습니다.')
                 .useHtmlText()
-                .icon('I') //E:error , W:warning , I:info , Q:question
+                .icon('E') //E:error , W:warning , I:info , Q:question
                 .alert('관리자에게 문의해주세요.');
             }
         })
@@ -766,7 +766,7 @@ const setdestddress = async (id,addrInfo) => {
                     wica.ntcn(swal)
                     .title('오류가 발생하였습니다.')
                     .useHtmlText()
-                    .icon('I') //E:error , W:warning , I:info , Q:question
+                    .icon('E') //E:error , W:warning , I:info , Q:question
                     .alert('관리자에게 문의해주세요.');
                 }
             })
