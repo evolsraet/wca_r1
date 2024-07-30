@@ -53,33 +53,41 @@
   </form>
   <!-- Comments Section -->
   <div v-if="!isDealer && boardId === 'claim'" class="row my-5 mov-wide m-auto container">
-    <label for="comments" class="form-label">코멘트</label>
-    <div class="comment-list">
-      <div v-if="post.comments && post.comments.length === 0" class="no-comments text-center tc-primary">
-        코멘트가 없습니다.
-      </div>
-      <div v-else>
-        <div v-for="comment in post.comments" :key="comment.id" class="comment-item" :class="{ 'new-comment-highlight': comment.isNew }">
-          <div class="d-flex align-items-start">
-            <div class="comment-body">
-              <div class="d-flex justify-content-between">
-                <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
-                <p class="comment-date">{{ comment.created_at }}</p>
-              </div>
-              <p class="comment-content">{{ comment.content }}</p>
-              <div v-if="isCommentByCurrentUser(comment.user_id)" class="d-flex justify-content-end align-items-center">
-                <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id } }" class="badge">
-                    <div class="icon-edit-img"></div>
-                  </router-link>
-                  <a href="#" @click.stop class="ms-2 badge web_style">
-                  <div @click.prevent="handleDeleteComment(comment.id)" class="icon-trash-img"></div>
-                </a>
+      <!-- Comments List -->
+      <label for="comments" class="form-label">코멘트</label>
+      <div class="comment-list">
+        <div v-if="post.comments && post.comments.length === 0" class="no-comments text-center tc-primary">
+          코멘트가 없습니다.
+        </div>
+        <div v-else>
+          <div v-for="(comment, index) in post.comments" :key="comment.id" class="comment-item" :class="{ 'new-comment-highlight': comment.isNew }">
+            <div class="d-flex align-items-start">
+              <div class="comment-body">
+                <div v-if="!editCommentIndex.includes(index)">
+                  <div class="d-flex justify-content-between">
+                    <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
+                    <p class="comment-date">{{ comment.created_at }}</p>
+                  </div>
+                  <p class="comment-content">{{ comment.content }}</p>
+                </div>
+                <div v-else>
+                  <textarea v-model="comment.content" class="form-control" rows="6"></textarea>
+                  <button @click="saveComment(index, comment.id)" class="btn btn-primary mt-2">수정</button>
+                </div>
+                <div v-if="isCommentByCurrentUser(comment.user_id)" class="d-flex justify-content-end align-items-center">
+                  <div class="badge" @click="toggleEditComment(index)">
+                    <div class="pointer icon-edit-img"></div>
+                  </div>
+                  <div @click.stop class="ms-2 badge web_style">
+                    <div @click.prevent="handleDeleteComment(comment.id)" class="pointer icon-trash-img"></div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-    </div>
-  </div>
+      </div>
+
 
     <!-- New Comment Form -->
     <div class="new-comment">
@@ -94,7 +102,6 @@
   <Footer />
 </div>
 </template>
-
 
 <script setup>
 import Footer from "@/views/layout/footer.vue";
@@ -112,9 +119,9 @@ const { wica } = cmmn();
 const { validate } = useForm();
 const store = useStore();
 
-const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories,addCommentAPI,deleteComment  } = initPostSystem();
+const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories,addCommentAPI,deleteComment,editComment  } = initPostSystem();
 const isCommentByCurrentUser = (commentUserId) => {
-return user.value.id === commentUserId;
+  return user.value.id === commentUserId;
 };
 const post = reactive({
   title: '',
@@ -136,6 +143,35 @@ const boardId = ref(route.params.boardId);
 const navigatedThroughHandleRowClick = ref(route.query.navigatedThroughHandleRowClick === 'true');
 const user = computed(() => store.getters['auth/user']);
 
+// 댓글 수정 상태를 관리
+const editCommentIndex = ref([]);
+
+// 수정 아이콘 클릭 시 호출
+function toggleEditComment(index) {
+  if (editCommentIndex.value.includes(index)) {
+    // 이미 수정 중인 경우 편집 모드 해제
+    editCommentIndex.value = editCommentIndex.value.filter(i => i !== index);
+  } else {
+    // 수정 모드로 전환
+    editCommentIndex.value.push(index);
+  }
+}
+
+// 댓글 저장 시 호출되는 함수
+async function saveComment(index, commentId) {
+  try {
+    const comment = post.comments[index];
+    await editComment(commentId, comment.content);
+    editCommentIndex.value = editCommentIndex.value.filter(i => i !== index);
+  } catch (error) {
+    console.error('Error saving comment:', error);
+    swal({
+      icon: 'error',
+      title: '댓글 수정 중 오류가 발생했습니다.',
+    });
+  }
+}
+
 const isAdmin = ref(false); 
 const isDealer = ref(false);
 
@@ -149,6 +185,7 @@ const boardText = computed(() => {
       return boardId.value;
   }
 });
+
 const boardTextMessage = computed(() => {
   if (boardId.value === 'notice') {
     return `빠르고 신속하게 ${boardText.value} 전해드립니다.`;
@@ -158,6 +195,7 @@ const boardTextMessage = computed(() => {
     return '';
   }
 });
+
 function stripHtml(html) {
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = html;
@@ -185,6 +223,7 @@ watchEffect(() => {
     plainTextContent.value = stripHtml(postData.value.content);
   }
 });
+
 /* 글 수정시 */ 
 async function submitForm() {
   const form = await validate();
@@ -222,9 +261,9 @@ async function submitForm() {
 }
 
 async function handleDeleteComment(commentId) {
-        await deleteComment(commentId);
-
+  await deleteComment(commentId);
 }
+
 /* 코멘트 추가 (댓글작성시) */ 
 async function addComment() {
   if (newComment.content.trim()) {
@@ -258,11 +297,8 @@ async function addComment() {
     });
   }
 }
-
-
-
-
 </script>
+
 <style scoped>
 .primary-btn {
   width: 90px;

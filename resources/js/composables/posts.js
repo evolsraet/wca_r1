@@ -229,7 +229,58 @@ export function initPostSystem() {
         }
       };
       
-      
+      const editComment = async (commentId, newContent) => {
+        try {
+            console.log('Attempting to edit comment with ID:', commentId);
+            wica.ntcn(swal)
+                .param({ _id: commentId })
+                .title('댓글을 수정하시겠습니까?')
+                .addClassNm('cmm-comment')
+                .icon('I') // I:info 아이콘 사용
+                .callback(async function(result) {
+                    if (result.isOk) {
+                        try {
+                            const response = await axios.put(`/api/comments/${commentId}`, {
+                                comment: {
+                                    content: newContent
+                                }
+                            });
+                            console.log('Edit response:', response);
+                            if (response.status === 200) {
+                                // 댓글이 정상적으로 수정되었을 때
+                                wica.ntcn(swal)
+                                    .addClassNm('cmm-update')
+                                    .icon('I') // I:info 아이콘 사용
+                                    .alert('댓글이 정상적으로 수정되었습니다.');
+                                setTimeout(() => {
+                                    location.reload(); 
+                                }, 1000);
+                            } else {
+                                // 수정 실패 시
+                                wica.ntcn(swal)
+                                    .title('댓글 수정 실패')
+                                    .icon('E') // E:error 아이콘 사용
+                                    .alert('댓글 수정에 실패했습니다.');
+                            }
+                        } catch (error) {
+                            console.error('Error editing comment:', error);
+                            wica.ntcn(swal)
+                                .title('오류가 발생하였습니다.')
+                                .icon('E') // E:error 아이콘 사용
+                                .alert('댓글 수정 중 오류가 발생했습니다.');
+                        }
+                    }
+                })
+                .confirm('');
+        } catch (error) {
+            console.error('Error editing comment:', error);
+            wica.ntcn(swal)
+                .title('오류가 발생하였습니다.')
+                .icon('E') // E:error 아이콘 사용
+                .alert('관리자에게 문의해주세요.');
+        }
+    };
+    
       
     
 
@@ -243,6 +294,7 @@ export function initPostSystem() {
         deletePost,
         addCommentAPI,
         deleteComment,
+        editComment,
         validationErrors,
         isLoading,
         categories,
