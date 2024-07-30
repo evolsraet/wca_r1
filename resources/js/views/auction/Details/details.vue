@@ -609,7 +609,7 @@
                     </div>
                     </div>
                   </BottomSheet02> 
-                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer">
+                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer && isMyBid">
                     <div>
                       <h4>낙찰 완료</h4>
                       <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요?</p>
@@ -919,6 +919,7 @@ const highestBid = ref(0);
 const lowestBid = ref(0);
 const fileUserSignData = ref({});
 const currentPage = ref(1);
+const isMyBid = ref(false);
 
 const sortedTopBids = computed(() => {
   if (!auctionDetail.value?.data?.top_bids) {
@@ -1038,7 +1039,7 @@ const scrollableContent = ref(null);
 
 const selectAuction = (id) => {
   temporarySelectedAuction.value = DOMauctionsData.value.find(auction => auction.id === id);
-  console.log('선택된 항목:', temporarySelectedAuction.value); 
+  //console.log('선택된 항목:', temporarySelectedAuction.value); 
 };
 
 const dealerAddrConnect = () => {
@@ -1724,6 +1725,18 @@ onMounted(async () => {
         addr2 : user.value.dealer.company_addr2,
         addr_post : user.value.dealer.company_post,
       }
+    }
+  }
+
+  if(auctionDetail.value?.data?.status == 'done' && isDealer.value){
+    const bidsList = auctionDetail.value.data.bids;
+    const bidId = auctionDetail.value.data.bid_id;
+    const foundBid = bidsList.find(bid => bid.id === bidId);
+
+    if (foundBid) {
+      isMyBid.value= true;
+    } else {
+      isMyBid.value= false;
     }
   }
 
