@@ -230,7 +230,7 @@ watchEffect(() => {
 async function submitForm() {
   const form = await validate();
   if (form.valid) {
-    try {
+    
       const updateData = {
         title: post.title,
         content: post.content,
@@ -240,23 +240,9 @@ async function submitForm() {
       if (boardId.value === 'notice') {
         updateData.category = post.category;
       }
-
-      const response = await updatePost(boardId.value, postId, updateData);
-      post.title = response.data.title;
-      post.content = response.data.content;
-      post.category = response.data.category;
-      post.comments = response.data.comments;
       
-      swal({
-        icon: 'success',
-        title: 'Post updated successfully'
-      });
-      router.push({ name: 'posts.index', params: { boardId: boardId.value } }); 
-    } catch (error) {
-      if (error.response?.data) {
-        Object.assign(validationErrors, error.response.data.errors);
-      }
-    }
+      await updatePost(boardId.value, postId, updateData);
+    
   } else {
     Object.assign(validationErrors, form.errors);
   }
