@@ -165,10 +165,17 @@ function getStatusClass(status) {
 
 const filteredAuctionsData = computed(() => {
   if (isDealer.value) {
-    return auctionsData.value.filter(auction => auction.status === 'chosen');
+    return auctionsData.value.filter(auction => 
+      auction.status === 'chosen' && (
+        (auction.dest_addr1 === '' || auction.dest_addr1 === null) &&
+        (auction.dest_addr2 === '' || auction.dest_addr2 === null) &&
+        (auction.dest_addr_post === '' || auction.dest_addr_post === null)
+      )
+    );
   }
   return auctionsData.value;
 });
+
 
 onMounted(async () => {
   await getAuctions();

@@ -2,7 +2,7 @@
 <template>
   <div class="container p-5">
     <h4 class="mb-5">내 정보 수정</h4>
-    <div class="col-md-10">
+    <div>
           <div class="card border-0 shadow-none">
               <div class="card-body">
     <!--
