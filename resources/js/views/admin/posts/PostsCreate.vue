@@ -142,7 +142,25 @@ const submitPost = async (postData) => {
   if (postData.thumbnail) {
     serializedPost.append('article[thumbnail]', postData.thumbnail);
   }
+  wicac.conn()
+  .url(`/api/board/${boardId}/articles`) //호출 URL
+  .multipart() //첨부파일 있을 경우 선언
+  .param(serializedPost)
+  .callback(function(result) {
+      if(result.isSuccess){
+        router.push({ name: 'posts.index', params: { boardId } });
+        wica.ntcn(swal)
+        .icon('I')
+        .alert('공지사항이 성공적으로 저장되었습니다.');
+        isLoading.value = false;
+      } else {
+        Object.assign(validationErrors, result.data.errors);
+        isLoading.value = false;
+      }
+  })
+  .post();
 
+  /*
   try {
     const response = await axios.post(`/api/board/${boardId}/articles`, serializedPost, {
       headers: {
@@ -161,6 +179,7 @@ const submitPost = async (postData) => {
   } finally {
     isLoading.value = false;
   }
+*/
 };
 
 onMounted(() => {
