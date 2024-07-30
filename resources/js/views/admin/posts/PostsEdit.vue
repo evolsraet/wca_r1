@@ -47,13 +47,15 @@
               <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
             </div>
           </div>
-          <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
-            파일 첨부
-          </button>
-          <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
-          <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
-            <a :href=boardAttachUrl download>{{ post.board_attach_name }}</a>
-            <span class="icon-close-img cursor-pointer" @click="triggerFileDelete()"></span>
+          <div v-if="!navigatedThroughHandleRowClick">
+            <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
+              파일 첨부
+            </button>
+            <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
+            <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
+              <a :href=boardAttachUrl download>{{ post.board_attach_name }}</a>
+              <span class="icon-close-img cursor-pointer" @click="triggerFileDelete()"></span>
+            </div>
           </div>
         </div>
       </div>
