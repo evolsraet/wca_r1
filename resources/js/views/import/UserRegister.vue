@@ -144,11 +144,11 @@
             <label for="dealerName">딜러 이름</label>
             <input type="text" v-model="profile.dealer_name" id="dealerName" class="form-control" placeholder="이름"/>
           </div>
-          <div v-if="registerURL || adminCreateURL || adminEditURL" class="form-group">
+          <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
             <label for="name">연락처</label>
             <input type="text" id="phone" v-model="profile.dealerContact" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
           </div>
-          <div v-if="registerURL || adminCreateURL || adminEditURL" class="form-group">
+          <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
               <label for="dealerBirthDate">생년월일</label>
               <input type="date" id="dealerBirthDate" v-model="profile.dealerBirthDate" placeholder="1990-12-30">
           </div>
@@ -396,6 +396,8 @@
       profile.value.status = user.value.status;
       if (profile.value.isDealer) {
         profile.value.dealer_name = user.value.dealer.name;
+        profile.value.dealerContact = user.value.dealer.phone;
+        profile.value.dealerBirthDate = user.value.dealer.birthday;
         profile.value.company = user.value.dealer.company;
         profile.value.company_post = user.value.dealer.company_post;
         profile.value.company_addr1 = user.value.dealer.company_addr1;
