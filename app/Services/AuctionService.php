@@ -6,6 +6,8 @@ use App\Traits\CrudTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\BidResource;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Redis;
 use App\HttpResources\AuctionResource;
 
 class AuctionService
@@ -48,11 +50,12 @@ class AuctionService
 
                 $this->modifyOnlyMe($auction, request()->mode == 'dealerInfo');
 
+                // TODO: 딜러정보가 탁송 입력되고, 고객 탁송필요 정보가 모두 입력되면 dlvr 로 변경해야한다
+
                 // 모드별 분기
                 if (request()->has('mode')) {
                     switch (request()->mode) {
                         case 'dealerInfo':
-
                             // 허용된 필드 목록
                             $allowedFields = ['dest_addr_post', 'dest_addr1', 'dest_addr2'];
 
@@ -128,7 +131,15 @@ class AuctionService
     protected function afterProcess($method, $request, $auction, $id = null)
     {
         if ($method == 'show') {
-            $auction->increment('hit');  // 조회수 증가
+            $userId = auth()->id();
+            $auctionId = $auction->id;
+            $key = "auction_view_{$userId}_{$auctionId}";
+
+            if (!Redis::get($key)) {
+                Log::info("조회수 증가 user : {$userId} , auction : {$auctionId}");
+                $auction->increment('hit');  // 조회수 증가
+                Redis::setex($key, 86400, true);  // 24시간 동안 유효한 키 설정
+            }
         }
     }
 

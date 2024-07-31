@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
-use App\Validators\FieldCommentValidator;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use App\Services\KoreanHolidays;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
+use App\Validators\FieldCommentValidator;
 use Illuminate\Validation\Factory as ValidationFactory;
 
 class AppServiceProvider extends ServiceProvider
@@ -111,6 +113,37 @@ class AppServiceProvider extends ServiceProvider
             // die();
             return response()->json($response, (int) $code)->setEncodingOptions(JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
             // return response()->json($response, 401);
+        });
+
+        Carbon::macro('addWeekdaysExcludingHolidays', function ($days) {
+            $koreanHolidays = new KoreanHolidays();
+            $date = $this->copy();
+            $count = 0;
+
+            while ($count < $days) {
+                $date->addDay();
+
+                // 주말 체크
+                if ($date->isWeekend()) {
+                    continue;
+                }
+
+                // 공휴일 체크
+                $holidays = $koreanHolidays->getHolidays($date->year, $date->month);
+                $isHoliday = collect($holidays)->contains(function ($holiday) use ($date) {
+                    return $holiday->year == $date->year &&
+                        $holiday->month == $date->month &&
+                        $holiday->day == $date->day;
+                });
+
+                if ($isHoliday) {
+                    continue;
+                }
+
+                $count++;
+            }
+
+            return $date;
         });
     }
 }

@@ -2,9 +2,11 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use App\Models\Bid;
 use Illuminate\Support\Str;
 use App\Http\Resources\BidResource;
+use Illuminate\Support\Facades\Log;
 use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -23,6 +25,8 @@ class AuctionResource extends JsonResource
     {
         // 모델 인스턴스를 변수에 저장
         $auction = $this->resource;
+        // print_r(['auction' => $auction->toArray()]);
+        // die();
 
         $parentArray = parent::toArray($request);
         $addArray = [];
@@ -30,13 +34,6 @@ class AuctionResource extends JsonResource
         // 관계 리소스로 리턴
         $this->relationResource($request, $parentArray);
 
-        // 날짜 필드를 Y-m-d 포맷으로 변환
-        $timestampFields = ['created_at', 'updated_at', 'deleted_at'];
-        foreach ($timestampFields as $field) {
-            if (isset($auction->$field)) {
-                $parentArray[$field] = $auction->$field->toDatetimeString();
-            }
-        }
         $addArray['bids_count'] = Bid::where('auction_id', $auction->id)->count();
 
         // 상위 5개 입찰건
@@ -56,10 +53,35 @@ class AuctionResource extends JsonResource
             if (in_array($parentArray['status'], ['done', 'chosen', 'dlvr'])) {
                 $addArray['win_bid'] = new BidResource($auction->bids->firstWhere('id', $auction->bid_id));
             }
+
+            if (in_array($parentArray['status'], ['chosen'])) {
+                $addArray['takson_end_at'] = $auction->choice_at->addWeekdaysExcludingHolidays(env('TAKSONG_DAY', 0));
+            }
+        }
+
+        // 날짜 필드를 Y-m-d 포맷으로 변환
+        // $timestampFields = ['created_at', 'updated_at', 'deleted_at'];
+        // foreach ($timestampFields as $field) {
+        //     if (isset($auction->$field)) {
+        //         $parentArray[$field] = $auction->$field->toDatetimeString();
+        //     }
+        // }
+
+        $this->withFiles($parentArray, $addArray);
+
+        // 날짜 필드를 Y-m-d 포맷으로 변환
+        foreach ($parentArray as $key => $value) {
+            if (str_ends_with($key, '_at') && $value !== null) {
+                $parentArray[$key] = $this->$key->toDatetimeString();
+            }
+        }
+        foreach ($addArray as $key => $value) {
+            if (str_ends_with($key, '_at') && $value !== null) {
+                $addArray[$key] = $value->toDatetimeString();
+            }
         }
 
         // 파일들
-        $this->withFiles($parentArray, $addArray);
         return array_merge($parentArray, $addArray);
     }
 }

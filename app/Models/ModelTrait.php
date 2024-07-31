@@ -27,6 +27,7 @@ trait ModelTrait
     {
         parent::boot();
 
+        // $immutable  수정 시 원본 데이터로 복원
         static::updating(function ($comment) {
             foreach ((array) $comment->immutable as $field) {
                 if ($comment->isDirty($field)) {

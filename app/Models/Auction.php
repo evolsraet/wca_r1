@@ -27,11 +27,18 @@ class Auction extends Model implements HasMedia
 
     public $guarded = [];
 
-    protected $dates = [
-        'final_at',
-        'choice_at',
-        'done_at',
-        'diag_check_at',
+    // protected $dates = [
+    //     'final_at',
+    //     'choice_at',
+    //     'done_at',
+    //     'diag_check_at',
+    // ];
+
+    protected $casts = [
+        'final_at' => 'datetime',
+        'choice_at' => 'datetime',
+        'done_at' => 'datetime',
+        'diag_check_at' => 'datetime',
     ];
 
     // 업로드 가능한 파일들
