@@ -40,7 +40,7 @@ class ArticleResource extends JsonResource
             }
         }
 
-
+        $this->withFiles($parentArray, $addArray);
         return array_merge($parentArray, $addArray);
     }
 }
