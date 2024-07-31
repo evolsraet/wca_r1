@@ -53,6 +53,8 @@ export function initPostSystem() {
                 .url(`/api/board/${boardId}/articles/${id}`) 
                 .with(['comments']) 
                 .callback(function(result) {
+                    console.log('result==========================');
+                    console.log(result);
                     post.value = result.data;
                     return result.data;
                 })
@@ -118,21 +120,57 @@ export function initPostSystem() {
             data.article.category = postData.category;
         }
 
-        try {
-            const response = await axios.put(`/api/board/${boardId}/articles/${postId}`, data, {
-                headers: {
-                    "content-type": "application/json"
-                }
-            });
-            return response.data;
-        } catch (error) {
-            if (error.response?.data) {
-                validationErrors.value = error.response.data.errors;
-            }
-            throw error;
-        } finally {
-            isLoading.value = false;
+        const serializedPost = new FormData();
+        serializedPost.append('article', JSON.stringify(data.article));
+
+        if(postData.board_attach){
+            serializedPost.append('board_attach', postData.board_attach);
         }
+
+        let alimMsg = ''
+        if(boardId === 'notice'){
+            alimMsg = '해당 공지사항을 수정 하시겠습니까?';
+        }else{
+            alimMsg = '해당 클레임을 수정 하시겠습니까?';
+        }
+
+        wica.ntcn(swal)
+        .icon('Q') //E:error , W:warning , I:info , Q:question , S:success
+        .useClose() // 닫기 버튼 활성화본
+        .callback(function(result3) {
+            if(result3.isOk){
+                wicac.conn()
+                .url(`/api/board/${boardId}/articles/${postId}`) 
+                .multipartUpdate() 
+                .param(serializedPost)
+                .callback(function(result) {
+                    if(result.isSuccess){
+                        let successMsg='';
+                        if(boardId === 'notice'){
+                            successMsg = '공지사항이 성공적으로 수정되었습니다.';
+                        }else{
+                            successMsg = '클레임이 성공적으로 수정되었습니다.';
+                        }
+                        wica.ntcn(swal)
+                        .icon('I')
+                        .callback(function(result2) {
+                            if(result2.isOk){
+                                isLoading.value = false;
+                                router.push({ name: 'posts.index', params: { boardId } }); 
+                                //return result.data;                           
+                            }
+                        })
+                        .alert(successMsg);
+                        
+                    }else{
+                        isLoading.value = false;
+                        validationErrors.value = result.msg;
+                    }
+                })
+                .post();
+            }
+        })
+        .alert(alimMsg);
     };
 
     const deletePost = async (boardId, id) => {
@@ -177,6 +215,113 @@ export function initPostSystem() {
         }
       };
       
+      const deleteComment = async (commentId) => {
+        try {
+          console.log('Attempting to delete comment with ID:', commentId);
+          wica.ntcn(swal)
+            .param({ _id: commentId })
+            .title('삭제하시겠습니까?')
+            .addClassNm('cmm-comment')
+            .icon('I') // W:warning 아이콘 사용
+            .callback(async function(result) {
+              if (result.isOk) {
+                try {
+                  const response = await axios.delete(`/api/comments/${commentId}`, {
+                    params: {
+                      where: 'comments.commentable_type:like:article'
+                    }
+                  });
+                  console.log('Delete response:', response);
+                  if (response.status === 200) {
+                    // 댓글이 정상적으로 삭제되었을 때
+                    wica.ntcn(swal)
+                      .addClassNm('cmm-remove')
+                      .icon('I') // I:info 아이콘 사용
+                      .alert('댓글이 정상적으로 삭제되었습니다.')
+                      setTimeout(() => {
+                        location.reload(); 
+                      }, 1000);
+                  } else {
+                    // 삭제 실패 시
+                    wica.ntcn(swal)
+                      .title('댓글 삭제 실패')
+                      .icon('E') // E:error 아이콘 사용
+                      .alert('댓글 삭제에 실패했습니다.');
+                  }
+                } catch (error) {
+                  console.error('Error deleting comment:', error);
+                  wica.ntcn(swal)
+                    .title('오류가 발생하였습니다.')
+                    .icon('E') // E:error 아이콘 사용
+                    .alert('댓글 삭제 중 오류가 발생했습니다.');
+                }
+              }
+            })
+            .confirm('삭제된 정보는 복구할 수 없습니다.');
+        } catch (error) {
+          console.error('Error deleting comment:', error);
+          wica.ntcn(swal)
+            .title('오류가 발생하였습니다.')
+            .icon('E') // E:error 아이콘 사용
+            .alert('관리자에게 문의해주세요.');
+        }
+      };
+      
+      const editComment = async (commentId, newContent) => {
+        try {
+            console.log('Attempting to edit comment with ID:', commentId);
+            wica.ntcn(swal)
+                .param({ _id: commentId })
+                .title('댓글을 수정하시겠습니까?')
+                .addClassNm('cmm-comment')
+                .icon('I') // I:info 아이콘 사용
+                .callback(async function(result) {
+                    if (result.isOk) {
+                        try {
+                            const response = await axios.put(`/api/comments/${commentId}`, {
+                                comment: {
+                                    content: newContent
+                                }
+                            });
+                            console.log('Edit response:', response);
+                            if (response.status === 200) {
+                                // 댓글이 정상적으로 수정되었을 때
+                                wica.ntcn(swal)
+                                    .addClassNm('cmm-update')
+                                    .icon('I') // I:info 아이콘 사용
+                                    .alert('댓글이 정상적으로 수정되었습니다.');
+                                setTimeout(() => {
+                                    location.reload(); 
+                                }, 1000);
+                            } else {
+                                // 수정 실패 시
+                                wica.ntcn(swal)
+                                    .title('댓글 수정 실패')
+                                    .icon('E') // E:error 아이콘 사용
+                                    .alert('댓글 수정에 실패했습니다.');
+                            }
+                        } catch (error) {
+                            console.error('Error editing comment:', error);
+                            wica.ntcn(swal)
+                                .title('오류가 발생하였습니다.')
+                                .icon('E') // E:error 아이콘 사용
+                                .alert('댓글 수정 중 오류가 발생했습니다.');
+                        }
+                    }
+                })
+                .confirm('');
+        } catch (error) {
+            console.error('Error editing comment:', error);
+            wica.ntcn(swal)
+                .title('오류가 발생하였습니다.')
+                .icon('E') // E:error 아이콘 사용
+                .alert('관리자에게 문의해주세요.');
+        }
+    };
+    
+      
+    
+
     return {
         posts,
         post,
@@ -186,6 +331,8 @@ export function initPostSystem() {
         updatePost,
         deletePost,
         addCommentAPI,
+        deleteComment,
+        editComment,
         validationErrors,
         isLoading,
         categories,

@@ -451,6 +451,8 @@ export default function useUsers() {
             dealer: {
                 name: profile.value.dealer_name,
                 company: profile.value.company,
+                phone: profile.value.dealerContact,
+                birthday : profile.value.dealerBirthDate,
                 company_post: profile.value.company_post,
                 company_addr1:profile.value.company_addr1,
                 company_addr2: profile.value.company_addr2,
@@ -500,7 +502,6 @@ export default function useUsers() {
             if (result.isOk) {
                 //기존 파일 이미지 삭제
                 if(profile.value.photoImgChg){
-                    console.log('이미지삭제=============================');
                   wicac.conn()
                   .url(`/api/media/${profile.value.photoUUID}`)
                   .log()

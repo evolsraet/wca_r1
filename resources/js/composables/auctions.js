@@ -329,7 +329,8 @@ const AuctionCarInfo = async (carInfoForm) => {
             account: auctionData.auction.account,
             memo: auctionData.auction.memo,
             addr_post: auctionData.auction.addr_post,
-            status: auctionData.auction.status
+            status: auctionData.auction.status,
+            is_biz:auctionData.auction.is_biz
         }
     }
 
@@ -689,7 +690,7 @@ const deleteAuction = async (id,urlPath) => {
                     wica.ntcn(swal)
                     .title('오류가 발생하였습니다.')
                     .useHtmlText()
-                    .icon('I') //E:error , W:warning , I:info , Q:question
+                    .icon('E') //E:error , W:warning , I:info , Q:question
                     .alert('관리자에게 문의해주세요.');
                 }
             })
@@ -721,7 +722,7 @@ const getDoneAuctions = async (bidsNumList,page) => {
                 wica.ntcn(swal)
                 .title('오류가 발생하였습니다.')
                 .useHtmlText()
-                .icon('I') //E:error , W:warning , I:info , Q:question
+                .icon('E') //E:error , W:warning , I:info , Q:question
                 .alert('관리자에게 문의해주세요.');
             }
         })
@@ -739,9 +740,9 @@ const setdestddress = async (id,addrInfo) => {
         auction: {
             dest_addr_post : addrInfo.addr_post,
             dest_addr1 : addrInfo.addr1,
-            dest_addr2 : addrInfo.addr2,
-            status : 'dlvr'
-        }
+            dest_addr2 : addrInfo.addr2
+        },
+        mode : 'dealerInfo '
     };
 
     wica.ntcn(swal)
@@ -766,7 +767,7 @@ const setdestddress = async (id,addrInfo) => {
                     wica.ntcn(swal)
                     .title('오류가 발생하였습니다.')
                     .useHtmlText()
-                    .icon('I') //E:error , W:warning , I:info , Q:question
+                    .icon('E') //E:error , W:warning , I:info , Q:question
                     .alert('관리자에게 문의해주세요.');
                 }
             })

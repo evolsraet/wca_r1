@@ -521,11 +521,36 @@
             </div>
             <div v-if ="auctionDetail.data.status ==='chosen' && isUser">
             <hr>
-            <div class="d-flex justify-content-between align-items-baseline">
-            <h4 class="custom-highlight">탁송 확인</h4>
+          <div class="mt-2 d-flex justify-content-between align-items-baseline">
+            <h4 class="custom-highlight">탁송 서비스 이용고객안내</h4>
+          </div>
+            <div>
+              <ul class="timeline p-0 mt-4">
+                <li>
+                  <div class="d-flex gap-2">
+                    <div class="circle">1</div>
+                    <span>키와 서류를 전달해 주세요.</span>
+                  </div>
+                </li>
+                <div class="small-circles my-3"></div>
+                <li>
+                  <div class="d-flex gap-2">
+                    <div class="circle">2</div>
+                    <span>상단의 탁송 완료 처리 버튼을 탁송 <br>기사분에게 제시해 주세요.</span>
+                  </div>
+                </li>
+                <div class="small-circles mb-3"></div>
+                <li>
+                  <div class="d-flex gap-2">
+                    <div class="circle">3</div>
+                    <span>차량대금 지급 후, 경매 완료 처리 됩니다.</span>
+                  </div>
+                </li>
+              </ul>
             </div>
-            <p class="text-start text-secondary opacity-50">※ 탁송 서비스 안내는 ' 탁송 확인 '에서 확인 가능합니다. </p>
-            <button
+            
+          <!--   <p class="text-start text-secondary opacity-50">※ 탁송 서비스 안내는 ' 탁송 확인 '에서 확인 가능합니다. </p>
+           <button
               class="my-4 btn-primary bold-18-font modal-bid d-flex p-3 justify-content-between blinking"
               @click="competionsuccess"
             >
@@ -534,7 +559,7 @@
                 바로가기
                 <p class="icon-right-wh"></p>
               </p>
-            </button>
+            </button>-->
             </div>
               <div v-if ="auctionDetail.data.status ==='chosen' && isDealer">
                 <hr>
@@ -558,19 +583,33 @@
                     <div class="modal-container">
                       <div class="card-body">
                         <div class="text-start">
-                          <div class="d-flex">
-                          <h4 class="custom-highlight">탁송지 변경</h4>
+                          <div class="d-flex justify-content-between align-items-center">
+                            <h4 class="custom-highlight">탁송지 변경</h4>
+                            <button type="button" class="mb-1 btn-close" @click="closeAddr"></button>
                           </div>
                           <p>원하시는 탁송지를 선택해주세요.</p>
                           <a href="/addr" class="fs-6 text-secondary opacity-50 link-hov">다른 주소지로 변경, 추가를 원하시나요?</a>
                         </div>
                         <div class="scrollable-content mt-4" ref="scrollableContent"></div>
+                        <div class="card-footer">
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" :class="{ disabled: currentPage === 1 }">
+                                <a class="page-link prev-style" @click="loadPage(currentPage - 1)" :disabled="currentPage === 1"></a>
+                                </li>
+                                <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === currentPage }">
+                                <a class="page-link" @click="loadPage(n)">{{ n }}</a>
+                                </li>
+                                <li class="page-item next-prev" :class="{ disabled: currentPage === pagination.last_page }">
+                                <a class="page-link next-style" @click="loadPage(currentPage + 1)" :disabled="currentPage === pagination.last_page"></a>
+                                </li>
+                            </ul>
+                        </div>
                       </div>
                       <button @click="confirmSelection" class="btn btn-primary w-100">확인</button>
                     </div>
                     </div>
                   </BottomSheet02> 
-                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer">
+                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer && isMyBid">
                     <div>
                       <h4>낙찰 완료</h4>
                       <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요?</p>
@@ -743,8 +782,8 @@ import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
 import useLikes from '@/composables/useLikes';
 import { isEqual } from 'date-fns';
-const { getContacts, contacts } = initAddressBookSystem();
-const { posts, getPosts, deletePost, isLoading, getBoardCategories ,pagination} = initPostSystem();
+const { getContacts, contacts, pagination } = initAddressBookSystem();
+const { posts, getPosts, deletePost, isLoading, getBoardCategories } = initPostSystem();
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
 const auctionChosn = ref(false);
 const showNotification = ref(false);
@@ -879,6 +918,8 @@ const carDetails = ref({});
 const highestBid = ref(0);
 const lowestBid = ref(0);
 const fileUserSignData = ref({});
+const currentPage = ref(1);
+const isMyBid = ref(false);
 
 const sortedTopBids = computed(() => {
   if (!auctionDetail.value?.data?.top_bids) {
@@ -998,7 +1039,7 @@ const scrollableContent = ref(null);
 
 const selectAuction = (id) => {
   temporarySelectedAuction.value = DOMauctionsData.value.find(auction => auction.id === id);
-  console.log('선택된 항목:', temporarySelectedAuction.value); 
+  //console.log('선택된 항목:', temporarySelectedAuction.value); 
 };
 
 const dealerAddrConnect = () => {
@@ -1014,9 +1055,11 @@ const dealerAddrConnect = () => {
     }
   });
 };
-
-const renderAuctionItems = async() => {
-  await getContacts();
+const closeAddr = () => {
+  showModal.value = false; 
+}
+const renderAuctionItems = async(page = 1) => {
+  await getContacts(page);
   DOMauctionsData.value=contacts.value;
   const scrollableContentElement = scrollableContent.value;
   if (!scrollableContentElement) {
@@ -1087,7 +1130,8 @@ const confirmSelection = () => {
   } else {
     alert("선택을 해줘야합니다.");
   }
-  showModal.value = false; 
+  showModal.value = false;
+  currentPage.value = 1;
 };
 
 
@@ -1684,6 +1728,18 @@ onMounted(async () => {
     }
   }
 
+  if(auctionDetail.value?.data?.status == 'done' && isDealer.value){
+    const bidsList = auctionDetail.value.data.bids;
+    const bidId = auctionDetail.value.data.bid_id;
+    const foundBid = bidsList.find(bid => bid.id === bidId);
+
+    if (foundBid) {
+      isMyBid.value= true;
+    } else {
+      isMyBid.value= false;
+    }
+  }
+
   window.addEventListener('scroll', checkScroll);
 
   try {
@@ -1786,6 +1842,13 @@ const handleCancelBid = async () => {
 
 const dealerAddrCompetion = async () => {
   setdestddress(auctionDetail.value.data.id,selectedAuction.value);
+}
+
+async function loadPage(page) {
+  if (page < 1 || page > pagination.value.last_page) return;
+  currentPage.value = page;
+  renderAuctionItems(page);
+  window.scrollTo(0, 0);
 }
 
 </script>

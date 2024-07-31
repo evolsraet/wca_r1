@@ -19,12 +19,24 @@
       <div v-if="boardId === 'claim'" class="container">
         <div class="d-flex justify-content-end">
           <div class="text-start status-selector">
-            <input type="radio" name="status" value="all" id="all" hidden checked @change="setFilter('all')">
-            <label for="all" class="mx-2">전체</label>
-            <input type="radio" name="status" value="ing" id="ongoing" hidden @change="setFilter('ing')">
-            <label for="ongoing">진행중</label>
-            <input type="radio" name="status" value="done" id="completed" hidden @change="setFilter('done')">
-            <label for="completed" class="mx-2">완료</label>
+            <input type="radio" name="status" value="all" id="all-claim" hidden v-model="filter">
+            <label :class="{ active: filter === 'all' }" for="all-claim" class="mx-2">전체</label>
+            <input type="radio" name="status" value="ing" id="ongoing-claim" hidden v-model="filter">
+            <label :class="{ active: filter === 'ing' }" for="ongoing-claim">진행중</label>
+            <input type="radio" name="status" value="done" id="completed-claim" hidden v-model="filter">
+            <label :class="{ active: filter === 'done' }" for="completed-claim" class="mx-2">완료</label>
+          </div>
+        </div>
+      </div>
+      <div v-if="boardId === 'notice'" class="container">
+        <div class="d-flex justify-content-end">
+          <div class="text-start status-selector">
+            <input type="radio" name="status" value="all" id="all-notice" hidden v-model="filter">
+            <label :class="{ active: filter === 'all' }" for="all-notice" class="mx-2">전체</label>
+            <template v-for="(category, index) in categoriesList" :key="index">
+              <input type="radio" name="status" :value="category" :id="`category-${index}`" hidden v-model="filter">
+              <label :class="{ active: filter === category }" :for="`category-${index}`" class="mx-2">{{ category }}</label>
+            </template>
           </div>
         </div>
       </div>
@@ -48,7 +60,7 @@
                   <span v-if="boardId === 'claim'" class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">상태</span>
                   <span v-else class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">카테고리</span>
                 </th>
-                <th class="px-6 py-3 text-left" style="width: 20%;">
+                <th class="px-6 py-3 text-left" style="width: 10%;">
                   <div class="flex flex-row justify-content-center" @click="updateOrdering('title')">
                     <div class="font-medium text-uppercase" :class="{'font-bold text-blue-600': orderColumn === 'title'}">
                       제목
@@ -73,20 +85,18 @@
             </thead>
             <tbody>
               <tr 
-              v-for="post in posts" 
-              :key="post.id" 
-              @click="handleRowClick(post.id)"
-              :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}"
-            >
+              v-for="post in filteredPosts" 
+              :key="post.id"
+              >
                 <td v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-4 text-sm text-overflow">{{ post.created_at }}</td>
                 <td class="px-6 py-4 text-sm text-overflow">
                   <div>{{ post.category }}</div>
                 </td>
-                <td class="px-6 py-4 text-sm text-overflow"><span v-if="boardId === 'claim'" class="my-2">[문의] </span>{{ post.title }}</td>
-                <td class="px-6 py-4 text-sm text-overflow">{{ stripHtmlTags(post.content) }}</td>
+                <td class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)"><span v-if="boardId === 'claim'" class="my-2">[문의] </span>{{ post.title }}</td>
+                <td class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)">{{ stripHtmlTags(post.content) }}</td>
                 <td v-if="boardId === 'claim'"><span class="blue-box mb-0 mx-0">{{ auctionDetails[post.extra1]?.data?.car_no || '' }}</span></td>
                 <td v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm text-overflow">
-                  <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id } }" class="badge">
+                  <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id }, query: { navigatedThroughHandleRowClick: false } }" class="badge">
                     <div class="icon-edit-img"></div>
                   </router-link>
                   <a href="#" @click.stop class="ms-2 badge web_style">
@@ -124,7 +134,9 @@ import { useRoute, useRouter } from 'vue-router';
 import { initPostSystem } from "@/composables/posts";
 import { useStore } from 'vuex';
 import useAuctions from "@/composables/auctions";
-import Footer from "@/components/Footer.vue";
+import axios from 'axios';
+import Footer from "@/views/layout/footer.vue";
+
 const selectedPostId = ref(null);
 
 const { posts, getPosts, deletePost, isLoading, getBoardCategories, pagination } = initPostSystem();
@@ -140,6 +152,13 @@ const orderDirection = ref("desc");
 const user = computed(() => store.getters['auth/user']);
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
+const filter = ref('all');
+const categoriesList = ref([]);
+
+const setFilter = (selectedFilter) => {
+  filter.value = selectedFilter;
+  fetchPosts();  // 필터링된 게시물을 가져오기 위해 fetchPosts 호출
+};
 
 const auctionDetails = ref({});
 const hideButton = ref(false);
@@ -148,6 +167,20 @@ const stripHtmlTags = (html) => {
   const div = document.createElement('div');
   div.innerHTML = html;
   return div.textContent || div.innerText || '';
+};
+
+const getBoardData = async () => {
+  try {
+    const response = await axios.get('/api/board');
+    if (Array.isArray(response.data.data)) {
+      const board = response.data.data.find(board => board.id === boardId.value);
+      if (board) {
+        categoriesList.value = JSON.parse(board.categories);
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching board data:', error);
+  }
 };
 
 async function loadPage(page) { // 페이지 로드
@@ -159,17 +192,19 @@ async function loadPage(page) { // 페이지 로드
 
 const fetchPosts = async (page = 1) => {
   hideButton.value = false;  // Reset button visibility
+
   await getPosts(
     boardId.value,  // 전달된 boardId 사용
     page,
     '',
     '',
     search_title.value,
-    '',
+    filter.value,  // 필터링 조건 전달
     '',
     orderColumn.value,
     orderDirection.value
   );
+
   currentPage.value = pagination.value.current_page;
   if (boardId.value === 'claim') {
     await fetchAllAuctionDetails();
@@ -186,9 +221,6 @@ const updateOrdering = (column) => {
   fetchPosts();
 };
 
-const setFilter = (filter) => {
-  fetchPosts();
-};
 const navigatedThroughHandleRowClick = ref(false);
 const handleRowClick = (postId) => {
     hideButton.value = true;
@@ -221,17 +253,28 @@ const boardTextMessage = computed(() => {
   }
 });
 
+// computed property to filter posts based on the selected filter
+const filteredPosts = computed(() => {
+  if (filter.value === 'all') {
+    return posts.value;
+  }
+  return posts.value.filter(post => {
+    if (boardId.value === 'claim') {
+      return post.status === filter.value;
+    } else if (boardId.value === 'notice') {
+      return post.category === filter.value;
+    }
+  });
+});
+
 const fetchAllAuctionDetails = async () => {
   try {
     for (const post of posts.value) {
-      console.log("post.extra1:", post.extra1); 
       if (post.extra1) {
         const details = await getAuctionById(post.extra1);
         auctionDetails.value[post.extra1] = details;
-        console.log("Fetched Details:", details);
       }
     }
-    console.log("Auction Details Object:", auctionDetails.value);
   } catch (error) {
     console.error("Error fetching auction details: ", error);
   }
@@ -240,6 +283,7 @@ const fetchAllAuctionDetails = async () => {
 onMounted(async () => {
   getBoardCategories();
   await fetchPosts();
+  getBoardData();
 });
 
 watch(route, (newRoute) => {
@@ -265,6 +309,8 @@ watch(route, (newRoute) => {
 .pointer-cursor {
   cursor: pointer;
 }
+
+
 
 @media screen and (max-width: 481px) {
     .web_style {

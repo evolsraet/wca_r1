@@ -1,6 +1,6 @@
 <template>
   <form @submit.prevent="submitForm">
-    <div class="row my-5 mov-wide m-auto container">
+    <div class="row my-2 mov-wide m-auto container">
       <div class="card border-0 shadow-none">
         <h4 class="mt-4">{{ boardText }}</h4>
         <p class="text-secondary opacity-75 fs-6 mb-4">
@@ -47,31 +47,57 @@
               <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
             </div>
           </div>
+          <div v-if="!navigatedThroughHandleRowClick">
+            <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
+              파일 첨부
+            </button>
+            <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
+            <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
+              <a :href=boardAttachUrl download>{{ post.board_attach_name }}</a>
+              <span class="icon-close-img cursor-pointer" @click="triggerFileDelete()"></span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </form>
   <!-- Comments Section -->
-  <div v-if="!isDealer && boardId === 'claim'" class="row my-5 mov-wide m-auto container">
-    <label for="comments" class="form-label">코멘트</label>
-    <div class="comment-list">
-      <div v-if="post.comments && post.comments.length === 0" class="no-comments text-center tc-primary">
-        코멘트가 없습니다.
-      </div>
-      <div v-else>
-        <div v-for="comment in post.comments" :key="comment.id" class="comment-item" :class="{ 'new-comment-highlight': comment.isNew }">
-          <div class="d-flex align-items-start">
-            <div class="comment-body">
-              <div class="d-flex justify-content-between">
-                <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
-                <p class="comment-date">{{ comment.created_at }}</p>
+  <div v-if="!isDealer && boardId === 'claim' && navigatedThroughHandleRowClick" class="row my-5 mov-wide m-auto container">
+      <!-- Comments List -->
+      <label for="comments" class="form-label">코멘트</label>
+      <div class="comment-list">
+        <div v-if="post.comments && post.comments.length === 0" class="no-comments text-center tc-primary">
+          코멘트가 없습니다.
+        </div>
+        <div v-else>
+          <div v-for="(comment, index) in post.comments" :key="comment.id" class="comment-item" :class="{ 'new-comment-highlight': comment.isNew }">
+            <div class="d-flex align-items-start">
+              <div class="comment-body">
+                <div v-if="!editCommentIndex.includes(index)">
+                  <div class="d-flex justify-content-between">
+                    <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
+                    <p class="comment-date">{{ comment.created_at }}</p>
+                  </div>
+                  <p class="comment-content">{{ comment.content }}</p>
+                </div>
+                <div v-else>
+                  <textarea v-model="comment.content" class="form-control" rows="6"></textarea>
+                  <button @click="saveComment(index, comment.id)" class="btn btn-primary mt-2">수정</button>
+                </div>
+                <div v-if="isCommentByCurrentUser(comment.user_id)" class="d-flex justify-content-end align-items-center">
+                  <div class="badge" @click="toggleEditComment(index)">
+                    <div class="pointer icon-edit-img"></div>
+                  </div>
+                  <div @click.stop class="ms-2 badge web_style">
+                    <div @click.prevent="handleDeleteComment(comment.id)" class="pointer icon-trash-img"></div>
+                  </div>
+                </div>
               </div>
-              <p class="comment-content">{{ comment.content }}</p>
             </div>
           </div>
         </div>
-    </div>
-  </div>
+      </div>
+
 
     <!-- New Comment Form -->
     <div class="new-comment">
@@ -87,7 +113,6 @@
 </div>
 </template>
 
-
 <script setup>
 import Footer from "@/views/layout/footer.vue";
 import { onMounted, reactive, ref, inject, watchEffect, computed } from "vue";
@@ -96,18 +121,25 @@ import { useForm, defineRule } from "vee-validate";
 import { required, min } from "@/validation/rules";
 import { initPostSystem } from "@/composables/posts";
 import { useRouter, useRoute } from 'vue-router';
-
+import { useStore } from 'vuex';
+import { cmmn } from '@/hooks/cmmn';
 defineRule("required", required);
 defineRule("min", min);
-
+const { wica } = cmmn();
 const { validate } = useForm();
-const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories,addCommentAPI  } = initPostSystem();
+const store = useStore();
 
+const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories,addCommentAPI,deleteComment,editComment  } = initPostSystem();
+const isCommentByCurrentUser = (commentUserId) => {
+  return user.value.id === commentUserId;
+};
 const post = reactive({
   title: '',
   content: '',
   category: '',
-  comments: []
+  comments: [],
+  board_attach : '',
+  board_attach_name : ''
 });
 
 const newComment = reactive({
@@ -120,8 +152,39 @@ const router = useRouter();
 const route = useRoute();
 const postId = route.params.id;
 const boardId = ref(route.params.boardId);
-const navigatedThroughHandleRowClick = ref(route.query.navigatedThroughHandleRowClick === 'true');
+const navigatedThroughHandleRowClick = ref('false');
+const user = computed(() => store.getters['auth/user']);
+const boardAttachUrl = ref('');
+const fileInputRef = ref(null);
 
+// 댓글 수정 상태를 관리
+const editCommentIndex = ref([]);
+
+// 수정 아이콘 클릭 시 호출
+function toggleEditComment(index) {
+  if (editCommentIndex.value.includes(index)) {
+    // 이미 수정 중인 경우 편집 모드 해제
+    editCommentIndex.value = editCommentIndex.value.filter(i => i !== index);
+  } else {
+    // 수정 모드로 전환
+    editCommentIndex.value.push(index);
+  }
+}
+
+// 댓글 저장 시 호출되는 함수
+async function saveComment(index, commentId) {
+  try {
+    const comment = post.comments[index];
+    await editComment(commentId, comment.content);
+    editCommentIndex.value = editCommentIndex.value.filter(i => i !== index);
+  } catch (error) {
+    console.error('Error saving comment:', error);
+    swal({
+      icon: 'error',
+      title: '댓글 수정 중 오류가 발생했습니다.',
+    });
+  }
+}
 
 const isAdmin = ref(false); 
 const isDealer = ref(false);
@@ -136,6 +199,7 @@ const boardText = computed(() => {
       return boardId.value;
   }
 });
+
 const boardTextMessage = computed(() => {
   if (boardId.value === 'notice') {
     return `빠르고 신속하게 ${boardText.value} 전해드립니다.`;
@@ -145,6 +209,7 @@ const boardTextMessage = computed(() => {
     return '';
   }
 });
+
 function stripHtml(html) {
   const tempDiv = document.createElement('div');
   tempDiv.innerHTML = html;
@@ -152,6 +217,8 @@ function stripHtml(html) {
 }
 
 onMounted(async () => {
+  navigatedThroughHandleRowClick.value = route.query.navigatedThroughHandleRowClick == 'true';
+
   await getBoardCategories();
   await getPost(boardId.value, postId);
   if (postData.value) {
@@ -173,40 +240,34 @@ watchEffect(() => {
   }
 });
 
+/* 글 수정시 */ 
 async function submitForm() {
   const form = await validate();
   if (form.valid) {
-    try {
+    
       const updateData = {
         title: post.title,
         content: post.content,
         comments: post.comments,
+        board_attach : post.board_attach
       };
 
       if (boardId.value === 'notice') {
         updateData.category = post.category;
       }
 
-      const response = await updatePost(boardId.value, postId, updateData);
-      post.title = response.data.title;
-      post.content = response.data.content;
-      post.category = response.data.category;
-      post.comments = response.data.comments;
-      
-      swal({
-        icon: 'success',
-        title: 'Post updated successfully'
-      });
-      router.push({ name: 'posts.index', params: { boardId: boardId.value } }); 
-    } catch (error) {
-      if (error.response?.data) {
-        Object.assign(validationErrors, error.response.data.errors);
-      }
-    }
+      await updatePost(boardId.value, postId, updateData);
+    
   } else {
     Object.assign(validationErrors, form.errors);
   }
 }
+
+async function handleDeleteComment(commentId) {
+  await deleteComment(commentId);
+}
+
+/* 코멘트 추가 (댓글작성시) */ 
 async function addComment() {
   if (newComment.content.trim()) {
     try {
@@ -217,21 +278,14 @@ async function addComment() {
       const response = await addCommentAPI(commentData);
       const newCommentData = response.data;
 
-      post.comments = [...post.comments, newCommentData];
-
       newCommentData.isNew = true;
+      post.comments = [newCommentData, ...post.comments];
+
       setTimeout(() => {
         newCommentData.isNew = false;
       }, 3000);
 
       newComment.content = '';
-
-      swal({
-        icon: 'success',
-        title: '댓글이 성공적으로 추가되었습니다.',
-      }).then(() => {
-        location.reload();
-      });
     } catch (error) {
       swal({
         icon: 'error',
@@ -247,13 +301,32 @@ async function addComment() {
   }
 }
 
+//파일관련
+function triggerFileDelete() {
+  post.board_attach_name = '';
+  post.board_attach='';
+  boardAttachUrl.value = '';
+}
 
+function triggerFileUpload() {
+  if (fileInputRef.value) {
+      fileInputRef.value.click();
+  } else {
+      console.error("파일을 찾을 수 없습니다.");
+  }
+};
 
-
-
-
-
+function handleFileUpload(event) {
+  const file = event.target.files[0];
+  if (file) {
+    post.board_attach = file;
+    post.board_attach_name = file.name;
+    boardAttachUrl.value = URL.createObjectURL(file);
+    //console.log("Certification file:", file.name);
+  }
+}
 </script>
+
 <style scoped>
 .primary-btn {
   width: 90px;
@@ -270,8 +343,9 @@ async function addComment() {
 .comment-list {
   margin-top: 20px;
   padding-top: 10px;
-  max-height: 300px; 
+  max-height: 500px; 
   overflow-y: auto; 
+  overflow-x: hidden;
   border-top: 1px solid #ddd;
 }
 
@@ -293,6 +367,8 @@ async function addComment() {
 
 .comment-body {
   flex: 1;
+  white-space: pre-wrap; 
+  width: -webkit-fill-available;
 }
 
 .comment-author {
@@ -307,39 +383,15 @@ async function addComment() {
 }
 
 .comment-content {
-  margin-top: 5px;
-  line-height: 1.5;
-  color: #555;
+  white-space: normal; 
+  overflow: visible; 
+  text-overflow: clip; 
+  max-width: none; 
+  word-wrap: break-word; 
 }
 
-/* 새로운 댓글 작성란 */
-.new-comment {
-  margin-top: 30px;
-  padding: 15px;
-  border: 1px solid #e1e1e1;
-  border-radius: 8px;
-  background-color: #fafafa;
-}
-
-.new-comment textarea {
-  resize: none;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  padding: 10px;
-  width: 100%;
-}
-.new-comment-highlight {
-  animation: fadeInHighlight 1s ease-in-out;
-  background-color: #e0f7fa;
-}
-
-@keyframes fadeInHighlight {
-  0% {
-    background-color: #e0f7fa;
-  }
-  100% {
-    background-color: white;
-  }
+.cursor-pointer{
+  cursor: pointer;
 }
 
 </style>

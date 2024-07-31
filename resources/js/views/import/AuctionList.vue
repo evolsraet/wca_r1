@@ -51,12 +51,12 @@
                           <h5 class="mt-2 mb-0">{{ auction.car_no }}</h5>
                         </div>
                           <div class="col-auto">
-                            <p class="mb-0">지점 :</p>
+                            <p class="mb-0">우편번호 : {{ addrInfo.addr_post }}</p>
                             <!--<h5 class="mb-0 fs-4 tc-red">{{ auction.car_no }}</h5>-->
-                            <p class="mb-0">탁송지 주소 : </p>
+                            <p class="mb-0">주 소 : {{ addrInfo.addr1+' , '+addrInfo.addr2 }}</p>
                           </div>
                           <div class="col text-end">
-                            <button @click.stop="" class="btn btn-primary">주소지 등록</button>
+                            <button @click.stop="dealerAddrConnect(auction.id)" class="btn btn-primary">주소지 등록</button>
                           </div>
                         </div>
                       </div>
@@ -66,6 +66,8 @@
               </div>
             </div>
           </div>
+
+          
           <router-link v-if="isUser" :to="{ name: 'home' }" class="bid-bc p-3">
             <ul class="px-0 inspector_list max_width_900">
               <li class="m-auto">
@@ -111,11 +113,12 @@ import { cmmn } from '@/hooks/cmmn';
 import { useStore } from 'vuex';
 
 const { wicas ,amtComma } = cmmn();
-const { auctionsData, getAuctions } = useAuctions();
+const { auctionsData, getAuctions, setdestddress } = useAuctions();
 const { getUserReview, deleteReviewApi, reviewsData } = initReviewSystem();
 const router = useRouter();
 const isMobileView = ref(window.innerWidth <= 640);
 const store = useStore();
+const addrInfo = ref({});
 
 const user = computed(() => store.getters['auth/user']);
 
@@ -123,7 +126,6 @@ const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
 
 function navigateToDetail(auction) {
-  console.log("디테일 :", auction.id);
   router.push({ name: 'AuctionDetail', params: { id: auction.id } });
 }
 
@@ -163,10 +165,17 @@ function getStatusClass(status) {
 
 const filteredAuctionsData = computed(() => {
   if (isDealer.value) {
-    return auctionsData.value.filter(auction => auction.status === 'chosen');
+    return auctionsData.value.filter(auction => 
+      auction.status === 'chosen' && (
+        (auction.dest_addr1 === '' || auction.dest_addr1 === null) &&
+        (auction.dest_addr2 === '' || auction.dest_addr2 === null) &&
+        (auction.dest_addr_post === '' || auction.dest_addr_post === null)
+      )
+    );
   }
   return auctionsData.value;
 });
+
 
 onMounted(async () => {
   await getAuctions();
@@ -178,11 +187,25 @@ onMounted(async () => {
   setRandomPlaceholder();
   window.addEventListener('resize', checkScreenWidth);
   checkScreenWidth();
+
+
+  //탁송지 미등록 주소 설정
+  if(isDealer.value){
+      addrInfo.value = {
+        addr1 : user.dealer.company_addr1,
+        addr2 : user.dealer.company_addr2,
+        addr_post : user.dealer.company_post,
+      }
+  }
 });
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', checkScreenWidth);
 });
+
+const dealerAddrConnect = (auctionId) => {
+  setdestddress(auctionId,addrInfo.value);
+}
 </script>
 
 <style scoped>
@@ -464,7 +487,7 @@ border-radius: 6px !important;
     to {
         opacity: 1;
         transform: scale(1);
-    }
+  }
 }
 
 .scrollable-content .complete-car:nth-child(1) .animated-auction { animation-delay: 1.2s; }

@@ -77,10 +77,10 @@
           파일 첨부
         </button>
         <div class="text-start text-secondary opacity-50" v-if="fileAuctionProxyName">위임장 / 소유자 인감 증명서: {{ fileAuctionProxyName }}</div>
-        <div class="form-group dealer-check fw-bolder">
-          <label for="dealer">법인 / 사업자차량</label>
+        <div class="form-group dealer-check fw-bolder pb-2">
+          <p for="dealer">법인 / 사업자차량</p>
           <div class="check_box">
-            <input type="checkbox" id="ch2" class="form-control">
+            <input type="checkbox" id="ch2" v-model="isBizChecked" class="form-control">
             <label for="ch2"></label>
           </div>
         </div>
@@ -95,7 +95,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, inject, createApp } from 'vue';
+import { ref, onMounted, nextTick, inject, createApp,computed  } from 'vue';
 import { useStore } from 'vuex';
 import Modal from '@/views/modal/modal.vue';
 import BankModal from '@/views/modal/bank/BankModal.vue';
@@ -134,6 +134,15 @@ const isDragging = ref(false);
 const fileInputRefOwner = ref(null);
 const fileAuctionProxy = ref(null); // 추가: 파일 저장 변수
 const fileAuctionProxyName = ref(''); // 추가: 파일 이름 저장 변수
+const isBizChecked = ref(false); // 체크박스 상태를 저장하는 변수
+const is_biz = computed({
+  get() {
+    return isBizChecked.value ? 1 : 0;
+  },
+  set(value) {
+    isBizChecked.value = value === 1;
+  }
+});
 
 const auctionEntry = async () => {
   // 필수 정보를 확인
@@ -148,9 +157,10 @@ const auctionEntry = async () => {
     memo: memo.value,
     addr_post: addrPost.value,
     file_auction_proxy: fileAuctionProxy.value, // 업로드된 파일 추가
+    is_biz : is_biz.value,
     status: "diag"
   };
-  
+  console.log(auctionData);
   if(isVerified.value){
     try {
       const result = await createAuction({ auction: auctionData });
