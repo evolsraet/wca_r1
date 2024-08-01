@@ -59,7 +59,7 @@
             <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
             <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
               <a :href=boardAttachUrl download>{{ post.board_attach_name }}</a>
-              <span class="icon-close-img cursor-pointer" @click="triggerFileDelete()"></span>
+              <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(post.fileUUID)"></span>
             </div>
           </div>
         </div>
@@ -144,7 +144,9 @@ const post = reactive({
   category: '',
   comments: [],
   board_attach : '',
-  board_attach_name : ''
+  board_attach_name : '',
+  fileUUID : '',
+  fileDeleteChk : false
 });
 
 const newComment = reactive({
@@ -221,12 +223,25 @@ function stripHtml(html) {
   return tempDiv.textContent || tempDiv.innerText || '';
 }
 
+function fileExstCheck(info){
+  if(info.hasOwnProperty('files')){
+    if(info.files.hasOwnProperty('board_attach')){
+        if(info.files.board_attach[0].hasOwnProperty('original_url')){
+          boardAttachUrl.value = info.files.board_attach[0].original_url;
+          post.board_attach_name = info.files.board_attach[0].file_name;
+          post.fileUUID = info.files.board_attach[0].uuid;
+        }
+    }
+  }
+}
+
 onMounted(async () => {
   navigatedThroughHandleRowClick.value = route.query.navigatedThroughHandleRowClick == 'true';
 
   await getBoardCategories();
   await getPost(boardId.value, postId);
   if (postData.value) {
+    fileExstCheck(postData.value);
     post.title = postData.value.title;
     post.content = postData.value.content;
     post.category = postData.value.category || '';
@@ -254,7 +269,9 @@ async function submitForm() {
         title: post.title,
         content: post.content,
         comments: post.comments,
-        board_attach : post.board_attach
+        board_attach : post.board_attach,
+        fileUUID : post.fileUUID,
+        fileDeleteChk : post.fileDeleteChk
       };
 
       if (boardId.value === 'notice') {
@@ -307,10 +324,13 @@ async function addComment() {
 }
 
 //파일관련
-function triggerFileDelete() {
+function triggerFileDelete(UUID) {
   post.board_attach_name = '';
   post.board_attach='';
   boardAttachUrl.value = '';
+  if(UUID){
+    post.fileDeleteChk = true;
+  }
 }
 
 function triggerFileUpload() {
@@ -327,7 +347,6 @@ function handleFileUpload(event) {
     post.board_attach = file;
     post.board_attach_name = file.name;
     boardAttachUrl.value = URL.createObjectURL(file);
-    //console.log("Certification file:", file.name);
   }
 }
 </script>

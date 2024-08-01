@@ -40,7 +40,6 @@ export function initPostSystem() {
             .callback(function(result) {
                 posts.value = result.data;
                 pagination.value = result.rawData.data.meta;
-                console.log("페이지 네이션 : ",pagination.value)
                 return result.data;
             })
             .get();
@@ -51,10 +50,10 @@ export function initPostSystem() {
         try {
             return wicac.conn()
                 .url(`/api/board/${boardId}/articles/${id}`) 
-                .with(['comments']) 
+                .with(['comments',
+                        'media'
+                ]) 
                 .callback(function(result) {
-                    console.log('result==========================');
-                    console.log(result);
                     post.value = result.data;
                     return result.data;
                 })
@@ -145,6 +144,10 @@ export function initPostSystem() {
                 .param(serializedPost)
                 .callback(function(result) {
                     if(result.isSuccess){
+                        if(postData.fileDeleteChk && postData.fileUUID){
+                            deleteBoardAttachFile(postData.fileUUID);
+                        }
+
                         let successMsg='';
                         if(boardId === 'notice'){
                             successMsg = '공지사항이 성공적으로 수정되었습니다.';
@@ -318,6 +321,15 @@ export function initPostSystem() {
                 .alert('관리자에게 문의해주세요.');
         }
     };
+
+    const deleteBoardAttachFile = async (UUID) =>{
+        wicac.conn()
+        .url(`/api/media/${UUID}`)
+        .log()
+        .callback(async function(result) {
+        })
+        .delete();
+    }
     
       
     
