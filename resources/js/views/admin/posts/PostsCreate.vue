@@ -1,7 +1,12 @@
 <template>
+  <div></div>
   <form @submit.prevent="submitForm">
     <div class="row my-5 mov-wide m-auto">
       <div class="card border-0 shadow-none">
+        <h4 class="mt-4">{{ boardText }}</h4>
+        <p class="text-secondary opacity-75 fs-6 mb-4">
+          {{ boardTextMessage }}
+        </p>
         <div class="card-body">
           <div class="d-flex justify-content-end">
             <div>
@@ -53,7 +58,7 @@
 </template>
 
 <script setup>
-import { onMounted, reactive, ref, inject } from "vue";
+import { onMounted, reactive, ref, inject ,computed} from "vue";
 import TextEditorComponent from "@/components/TextEditorComponent.vue";
 import { useForm, useField, defineRule } from "vee-validate";
 import { required, min } from "@/validation/rules";
@@ -69,7 +74,23 @@ const schema = {
   title: "required|min:5",
   content: "required|min:50",
 };
-
+const boardText = computed(() => {
+  switch(boardId) {
+    case 'notice':
+      return '공지사항';
+    case 'claim':
+      return '클레임';
+    default:
+      return boardId;
+  }
+});
+const boardTextMessage = computed(() => {
+  if (boardId === 'notice') {
+    return `${boardText.value}을 작성해주세요.`;
+  } 
+    return '';
+  
+});
 const { validate } = useForm({ validationSchema: schema });
 const { value: title } = useField("title", null, { initialValue: "" });
 const { value: content } = useField("content", null, { initialValue: "" });
@@ -130,7 +151,7 @@ const submitPost = async (postData) => {
   serializedPost.append('article[content]', postData.content);
   serializedPost.append('article[category]', postData.category);
   if (boardId === 'claim') {
-    serializedPost.append('article[extra1]', auctionId); // Include auctionId as extra1 when boardId is 'claim'
+    serializedPost.append('article[extra1]', auctionId);
   }
   if(postData.board_attach){
     serializedPost.append('board_attach', postData.board_attach);
