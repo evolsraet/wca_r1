@@ -17,7 +17,7 @@
           <!-- Category -->
           <div v-if="boardId === 'notice'" class="mb-3">
             <h6 class="mt-3">카테고리</h6>
-            <v-select v-model="post.category" :options="categoriesList" :reduce="category => category" label="category" class="form-control" placeholder="Select category"/>
+            <v-select v-model="post.category" :options="categoriesList" :reduce="category => category" label="category" class="form-control" placeholder=""/>
             <div class="text-danger mt-1">
               <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
             </div>

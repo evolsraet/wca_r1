@@ -6,7 +6,7 @@
         <p class="text-secondary opacity-75 fs-6 mb-4">
           {{ boardTextMessage }}
         </p>
-        <div class="card-body">
+        <div class="card-body my-2">
           <div class="d-flex justify-content-end">
             <div>
               <button v-if="!navigatedThroughHandleRowClick" :disabled="isLoading" class="primary-btn">
@@ -21,11 +21,16 @@
           <!-- Category -->
           <div class="mb-3" v-if="boardId === 'notice'">
             <label for="post-category" class="form-label">카테고리</label>
-            <select v-model="post.category" id="post-category" class="form-control" :disabled="navigatedThroughHandleRowClick">
-              <option v-for="category in categories" :key="category" :value="category">
-                {{ category }}
-              </option>
-            </select>
+            <v-select
+  v-model="post.category"
+  :options="categories"
+  :reduce="category => category"
+  class="form-control"
+  :disabled="navigatedThroughHandleRowClick"
+  placeholder=""
+/>
+
+
             <div class="text-danger mt-1">
               <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
             </div>
@@ -62,7 +67,7 @@
     </div>
   </form>
   <!-- Comments Section -->
-  <div v-if="!isDealer && boardId === 'claim' && navigatedThroughHandleRowClick" class="row my-5 mov-wide m-auto container">
+  <div v-if="boardId === 'claim' && navigatedThroughHandleRowClick" class="row my-5 mov-wide m-auto container">
       <!-- Comments List -->
       <label for="comments" class="form-label">코멘트</label>
       <div class="comment-list">
@@ -393,5 +398,8 @@ function handleFileUpload(event) {
 .cursor-pointer{
   cursor: pointer;
 }
-
+.form-control:disabled {
+    background-color: #fbfbfb !important;
+    opacity: 1;
+}
 </style>
