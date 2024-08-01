@@ -108,7 +108,7 @@
       </div>
     </div>
   </div>
-  <div v-if="isDealer">
+  <div v-if="isDealer || isUser">
   <Footer />
 </div>
 </template>
@@ -185,9 +185,9 @@ async function saveComment(index, commentId) {
     });
   }
 }
-
+const isUser = computed(() => user.value?.roles?.includes('user'));
 const isAdmin = ref(false); 
-const isDealer = ref(false);
+const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 
 const boardText = computed(() => {
   switch(boardId.value) {

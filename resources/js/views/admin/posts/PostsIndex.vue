@@ -111,7 +111,7 @@
     </div>
     </div>
   </div>
-  <div v-if="isDealer && isUser">
+  <div v-if="isDealer || isUser">
   <Footer />
 </div>
 </template>
