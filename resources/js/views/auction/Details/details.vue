@@ -609,7 +609,7 @@
                     </div>
                     </div>
                   </BottomSheet02> 
-                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer && isMyBid">
+                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer">
                     <div>
                       <h4>낙찰 완료</h4>
                       <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요?</p>
@@ -710,7 +710,7 @@
                             </li>
                           </ul>
                           <!-- 취소 모달 -->
-                          <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
+                       <!-- <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />--> 
                         </div>
                          <!-- 딜러 선택시 모달 -->
                     
@@ -919,7 +919,6 @@ const highestBid = ref(0);
 const lowestBid = ref(0);
 const fileUserSignData = ref({});
 const currentPage = ref(1);
-const isMyBid = ref(false);
 
 const sortedTopBids = computed(() => {
   if (!auctionDetail.value?.data?.top_bids) {
@@ -1039,7 +1038,7 @@ const scrollableContent = ref(null);
 
 const selectAuction = (id) => {
   temporarySelectedAuction.value = DOMauctionsData.value.find(auction => auction.id === id);
-  //console.log('선택된 항목:', temporarySelectedAuction.value); 
+  console.log('선택된 항목:', temporarySelectedAuction.value); 
 };
 
 const dealerAddrConnect = () => {
@@ -1055,6 +1054,7 @@ const dealerAddrConnect = () => {
     }
   });
 };
+const selectedAuctionId = ref(null);
 const closeAddr = () => {
   showModal.value = false; 
 }
@@ -1188,7 +1188,8 @@ const reauction = async () => {
 /* 사용자 경매 취소 눌렀을시의 모달 */ 
 const openModal = () => {
 //isModalVisible.value = true;
-  selectedAuctionId.value = auctionDetail.value?.data.id;
+  console.log("옥션 디테일 :",auctionDetail?.value?.data.id);
+  selectedAuctionId.value = auctionDetail?.value?.data.id;
   const text= `<div class="enroll_box" style="position: relative;">
                   <img src="${drift}" alt="자동차 이미지" width="160" height="160">
                   <p class="overlay_text02">경매를 취소하시겠습니까?</p>
@@ -1725,18 +1726,6 @@ onMounted(async () => {
         addr2 : user.value.dealer.company_addr2,
         addr_post : user.value.dealer.company_post,
       }
-    }
-  }
-
-  if(auctionDetail.value?.data?.status == 'done' && isDealer.value){
-    const bidsList = auctionDetail.value.data.bids;
-    const bidId = auctionDetail.value.data.bid_id;
-    const foundBid = bidsList.find(bid => bid.id === bidId);
-
-    if (foundBid) {
-      isMyBid.value= true;
-    } else {
-      isMyBid.value= false;
     }
   }
 
