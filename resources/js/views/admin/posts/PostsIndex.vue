@@ -16,18 +16,6 @@
         <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
         <button type="button" class="search-btn" @click="fetchPosts">검색</button>
       </div>
-      <div v-if="boardId === 'claim'" class="container">
-        <div class="d-flex justify-content-end">
-          <div class="text-start status-selector">
-            <input type="radio" name="status" value="all" id="all-claim" hidden v-model="filter">
-            <label :class="{ active: filter === 'all' }" for="all-claim" class="mx-2">전체</label>
-            <input type="radio" name="status" value="ing" id="ongoing-claim" hidden v-model="filter">
-            <label :class="{ active: filter === 'ing' }" for="ongoing-claim">진행중</label>
-            <input type="radio" name="status" value="done" id="completed-claim" hidden v-model="filter">
-            <label :class="{ active: filter === 'done' }" for="completed-claim" class="mx-2">완료</label>
-          </div>
-        </div>
-      </div>
       <div v-if="boardId === 'notice'" class="container">
         <div class="d-flex justify-content-end">
           <div class="text-start status-selector">
