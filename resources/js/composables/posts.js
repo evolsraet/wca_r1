@@ -9,7 +9,8 @@ export function initPostSystem() {
         title: '',
         content: '',
         category: '',
-        thumbnail: ''
+        thumbnail:'',
+        is_secret: 0 
     });
     const pagination = ref({});
     const router = useRouter();
@@ -75,6 +76,7 @@ export function initPostSystem() {
         const serializedPost = new FormData();
         serializedPost.append('article[title]', postData.title);
         serializedPost.append('article[content]', postData.content);
+        serializedPost.append('article[is_secret]', isBizChecked.value ? 1 : 0); 
         if (boardId === 'notice') {
             serializedPost.append('article[category]', postData.category);
         }

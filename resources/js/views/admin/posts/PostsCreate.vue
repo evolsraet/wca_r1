@@ -53,10 +53,19 @@
         <a :href=boardAttachUrl download>{{ post.board_attach_name }}</a>
         <span class="icon-close-img cursor-pointer" @click="triggerFileDelete()"></span>
       </div>
-    </div>
-  </form>
+   <!-- 비밀글 생성 <div class="p-0 my-3 d-flex gap-2">
+      <p class="text-secondary opacity-70">비밀글: </p>
+      <div class="d-flex align-items-center">
+        <p :class="{ 'fw-bolder': isBizChecked }">비밀글을 설정 하시겠습니까?</p>
+        <div class="check_box">
+          <input type="checkbox" id="ch2" v-model="isBizChecked" class="form-control" />
+          <label for="ch2"></label>
+        </div>
+      </div>
+    </div>-->
+  </div>
+</form>
 </template>
-
 <script setup>
 import { onMounted, reactive, ref, inject ,computed} from "vue";
 import TextEditorComponent from "@/components/TextEditorComponent.vue";
@@ -69,7 +78,7 @@ import vSelect from 'vue-select';
 
 defineRule("required", required);
 defineRule("min", min);
-
+const isBizChecked = ref(false);
 const schema = {
   title: "required|min:5",
   content: "required|min:50",
@@ -100,7 +109,8 @@ const post = reactive({
   content,
   category: '',
   board_attach : '',
-  board_attach_name : ''
+  board_attach_name : '',
+  is_secret: 0 
 });
 
 const fileInputRef = ref(null);
@@ -113,7 +123,7 @@ const swal = inject('$swal');
 const router = useRouter();
 const route = useRoute();
 const boardId = route.params.boardId;
-const auctionId = route.params.auctionId; // Retrieve auctionId from route params
+const auctionId = route.params.auctionId; 
 const boardAttachUrl = ref('');
 
 const getBoardData = async () => {
@@ -150,6 +160,7 @@ const submitPost = async (postData) => {
   serializedPost.append('article[title]', postData.title);
   serializedPost.append('article[content]', postData.content);
   serializedPost.append('article[category]', postData.category);
+  serializedPost.append('article[is_secret]', isBizChecked.value ? 1 : 0); 
   if (boardId === 'claim') {
     serializedPost.append('article[extra1]', auctionId);
   }
@@ -215,6 +226,28 @@ onMounted(() => {
   getBoardData();
 });
 </script>
+
+<style scoped>
+.primary-btn {
+  width: 90px;
+  border-radius: 30px;
+  height: 38px !important;
+}
+
+.image-icon-pen {
+  width: 18px;
+  height: 18px;
+  line-height: unset;
+}
+
+.btn-fileupload {
+  width: 25% !important;
+}
+.cursor-pointer{
+  cursor: pointer;
+}
+</style>
+
 
 <style scoped>
 .primary-btn {
