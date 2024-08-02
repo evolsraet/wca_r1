@@ -550,7 +550,7 @@ TODO:
                                 </div>
                             </div>
                             <div v-else>
-                                <div class="complete-car">
+                                <div class="complete-car my-3">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
                                             <span class="text-secondary opacity-50">매물 정보가 없습니다.</span>
@@ -650,7 +650,7 @@ TODO:
                             </div>
                             <div v-else>
                                 <!-- 하트 토글된 경매가 없을 경우의 메시지 -->
-                                <div class="complete-car">
+                                <div class="complete-car my-3">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
                                             <span class="text-secondary opacity-50">관심 매물이 없습니다.</span>
@@ -686,7 +686,7 @@ TODO:
                                         </div>
                                     </div>
                                 </div>
-                                <div v-if="!filteredDone" class="complete-car">
+                                <div v-if="!filteredDone" class="complete-car my-3">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
                                             <span class="text-secondary opacity-50">판매 매물이 없습니다.</span>
@@ -757,7 +757,7 @@ TODO:
                                 </div>
                             </div>
                             <div v-else>
-                                <div class="complete-car">
+                                <div class="complete-car my-3">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
                                             <span class="text-secondary opacity-50">입찰한 매물이 없습니다.</span>
@@ -832,7 +832,7 @@ TODO:
                                     </div>
                                 </div>
                             <div v-else>
-                                <div class="complete-car">
+                                <div class="complete-car my-3">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
                                             <span class="text-secondary opacity-50">입찰한 매물이 없습니다.</span>

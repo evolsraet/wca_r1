@@ -92,7 +92,7 @@
                             </div> 
                         </div>
                         <div class="none-info">
-                            <div class="complete-car">
+                            <div class="complete-car my-3">
                                 <div class="card my-auction mt-3">
                                     <div class="none-complete-ty03">
                                         <span class="text-secondary opacity-50">차량 조회에 성공하였습니다.</span>
@@ -119,7 +119,7 @@
                             </div> 
                         </div>
                         <div class="none-info">
-                            <div class="complete-car">
+                            <div class="complete-car my-3">
                                 <div class="card my-auction mt-3">
                                     <div class="none-complete-ty02">
                                         <span class="text-secondary opacity-50">로그인을 하면 경매 신청이 가능해요.</span>

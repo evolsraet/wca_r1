@@ -1074,7 +1074,7 @@ const renderAuctionItems = async(page = 1) => {
     auctionItem.classList.add('auction-item');
     auctionItem.setAttribute('data-id', auction.id);
     auctionItem.innerHTML = `
-      <div class="complete-car">
+      <div class="complete-car my-3">
         <div class="my-auction">
           <div class="bid-bc p-2" style="max-height: 480px;">
             <ul class="px-0 inspector_list max_width_900">

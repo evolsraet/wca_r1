@@ -116,7 +116,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div v-if="!isData" class="complete-car">
+                        <div v-if="!isData" class="complete-car my-3">
                             <div class="card my-auction mt-3">
                                 <div class="none-complete">
                                     <span class="text-secondary opacity-50">낙찰 받은 매물이 없습니다.</span>
