@@ -629,7 +629,7 @@ TODO:
                                                     <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                                                     <h5 v-if="auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
                                                     <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                    <p class="text-secondary opacity-50">{{ auction.car_no }}</p>
+                                                   <!-- <p class="text-secondary opacity-50">{{ auction.car_no }}</p>-->
                                                 </div>
                                             </div>
                                         </div>
@@ -681,7 +681,7 @@ TODO:
                                         <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
                                         <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                         <div class="card-body">
-                                            <h5 class="card-title"><span class="blue-box">무사고</span>{{auction.car_no}}</h5>
+                                            <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                                             <p class="card-text text-secondary opacity-50">현대 쏘나타(DN8)</p>
                                         </div>
                                     </div>
@@ -749,7 +749,7 @@ TODO:
                                                     <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                                                     <h5 v-if="bid.auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
                                                     <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                    <p class="text-secondary opacity-50">{{ bid.auction.car_no }}</p>
+                                                   <!--<p class="text-secondary opacity-50">{{ bid.auction.car_no }}</p>--> 
                                                 </div>
                                             </div>
                                         </div>
@@ -824,7 +824,7 @@ TODO:
                                                         <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                                                         <h5 v-if="scsBid.auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
                                                         <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
-                                                        <p class="text-secondary opacity-50">{{ scsBid.auction.car_no }}</p>
+                                                      <!--<p class="text-secondary opacity-50">{{ scsBid.auction.car_no }}</p>-->  
                                                     </div>
                                                 </div>
                                             </div>
