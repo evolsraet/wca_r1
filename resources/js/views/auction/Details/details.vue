@@ -1481,7 +1481,7 @@ const completeAuction = async () => {
 
   const data = {
     status: 'chosen',
-   // choice_at: formattedDate,
+    choice_at: formattedDate,
     final_price: selectedDealer.value.price,
     bid_id: selectedDealer.value.id,
   };
