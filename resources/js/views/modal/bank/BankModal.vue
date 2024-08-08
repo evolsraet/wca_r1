@@ -288,7 +288,6 @@
   
   .menu-item.active {
     font-weight: bold;
-    border-bottom: 2px solid #000;
   }
   .menu-item::after {
   content: '';
