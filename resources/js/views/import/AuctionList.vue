@@ -210,8 +210,13 @@ const dealerAddrConnect = (auctionId) => {
 </script>
 
 <style scoped>
+@media (max-width:991px){
+  .address-line {
+    width: auto !important;
+  }
+}
 .address-line { 
-    min-width: 50px;
+    width: 14vw;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
