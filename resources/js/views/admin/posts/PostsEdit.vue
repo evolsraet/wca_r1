@@ -2,6 +2,12 @@
   <form @submit.prevent="submitForm">
     <div class="row my-2 mov-wide m-auto container">
       <div class="card border-0 shadow-none">
+        <div class="d-flex justify-content-start mt-4">
+          <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder fs-6">
+            <span class="icon-arrow-left me-2">←</span>목록으로
+          </button>
+        </div>
+        <!-- Form Header -->
         <h4 class="mt-4">{{ boardText }}</h4>
         <p class="text-secondary opacity-75 fs-6 mb-4">
           {{ boardTextMessage }}
@@ -22,15 +28,13 @@
           <div class="mb-3" v-if="boardId === 'notice'">
             <label for="post-category" class="form-label">카테고리</label>
             <v-select
-  v-model="post.category"
-  :options="categories"
-  :reduce="category => category"
-  class="form-control"
-  :disabled="navigatedThroughHandleRowClick"
-  placeholder=""
-/>
-
-
+              v-model="post.category"
+              :options="categories"
+              :reduce="category => category"
+              class="form-control"
+              :disabled="navigatedThroughHandleRowClick"
+              placeholder=""
+            />
             <div class="text-danger mt-1">
               <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
             </div>
@@ -58,7 +62,7 @@
             </button>
             <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
             <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
-              <a :href=boardAttachUrl download>{{ post.board_attach_name }}</a>
+              <a :href="boardAttachUrl" download>{{ post.board_attach_name }}</a>
               <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(post.fileUUID)"></span>
             </div>
           </div>
@@ -68,54 +72,52 @@
   </form>
   <!-- Comments Section -->
   <div v-if="boardId === 'claim' && navigatedThroughHandleRowClick" class="row my-5 mov-wide m-auto container">
-      <!-- Comments List -->
-      <label for="comments" class="form-label">코멘트</label>
-      <div class="comment-list">
-        <div v-if="post.comments && post.comments.length === 0" class="no-comments text-center tc-primary">
-          코멘트가 없습니다.
-        </div>
-        <div v-else>
-          <div v-for="(comment, index) in post.comments" :key="comment.id" class="comment-item" :class="{ 'new-comment-highlight': comment.isNew }">
-            <div class="d-flex align-items-start">
-              <div class="comment-body">
-                <div v-if="!editCommentIndex.includes(index)">
-                  <div class="d-flex justify-content-between">
-                    <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
-                    <p class="comment-date">{{ comment.created_at }}</p>
-                  </div>
-                  <p class="comment-content">{{ comment.content }}</p>
+    <!-- Comments List -->
+    <label for="comments" class="form-label">코멘트</label>
+    <div class="comment-list">
+      <div v-if="post.comments && post.comments.length === 0" class="no-comments text-center tc-primary">
+        코멘트가 없습니다.
+      </div>
+      <div v-else>
+        <div v-for="(comment, index) in post.comments" :key="comment.id" class="comment-item" :class="{ 'new-comment-highlight': comment.isNew }">
+          <div class="d-flex align-items-start">
+            <div class="comment-body">
+              <div v-if="!editCommentIndex.includes(index)">
+                <div class="d-flex justify-content-between">
+                  <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
+                  <p class="comment-date">{{ comment.created_at }}</p>
                 </div>
-                <div v-else>
-                  <textarea v-model="comment.content" class="form-control" rows="6"></textarea>
-                  <button @click="saveComment(index, comment.id)" class="btn btn-primary mt-2">수정</button>
+                <p class="comment-content">{{ comment.content }}</p>
+              </div>
+              <div v-else>
+                <textarea v-model="comment.content" class="form-control" rows="6"></textarea>
+                <button @click="saveComment(index, comment.id)" class="btn btn-primary mt-2">수정</button>
+              </div>
+              <div v-if="isCommentByCurrentUser(comment.user_id)" class="d-flex justify-content-end align-items-center">
+                <div class="badge" @click="toggleEditComment(index)">
+                  <div class="pointer icon-edit-img"></div>
                 </div>
-                <div v-if="isCommentByCurrentUser(comment.user_id)" class="d-flex justify-content-end align-items-center">
-                  <div class="badge" @click="toggleEditComment(index)">
-                    <div class="pointer icon-edit-img"></div>
-                  </div>
-                  <div @click.stop class="ms-2 badge web_style">
-                    <div @click.prevent="handleDeleteComment(comment.id)" class="pointer icon-trash-img"></div>
-                  </div>
+                <div @click.stop class="ms-2 badge web_style">
+                  <div @click.prevent="handleDeleteComment(comment.id)" class="pointer icon-trash-img"></div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-
-
+    </div>
     <!-- New Comment Form -->
     <div class="new-comment">
       <label for="new-comment-content" class="form-label">새 코멘트</label>
-      <textarea v-model="newComment.content"class="form-contro l" rows="3" placeholder="댓글을 입력하세요..."></textarea>
+      <textarea v-model="newComment.content" class="form-control" rows="3" placeholder="댓글을 입력하세요..."></textarea>
       <div class="d-flex justify-content-end my-2">
         <button @click="addComment" class="btn btn-primary mt-2">댓글 추가</button>
       </div>
     </div>
   </div>
   <div v-if="isDealer || isUser">
-  <Footer />
-</div>
+    <Footer />
+  </div>
 </template>
 
 <script setup>
@@ -134,7 +136,7 @@ const { wica } = cmmn();
 const { validate } = useForm();
 const store = useStore();
 
-const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories,addCommentAPI,deleteComment,editComment  } = initPostSystem();
+const { post: postData, getPost, updatePost, validationErrors, isLoading, categories, getBoardCategories, addCommentAPI, deleteComment, editComment } = initPostSystem();
 const isCommentByCurrentUser = (commentUserId) => {
   return user.value.id === commentUserId;
 };
@@ -143,10 +145,10 @@ const post = reactive({
   content: '',
   category: '',
   comments: [],
-  board_attach : '',
-  board_attach_name : '',
-  fileUUID : '',
-  fileDeleteChk : false
+  board_attach: '',
+  board_attach_name: '',
+  fileUUID: '',
+  fileDeleteChk: false
 });
 
 const newComment = reactive({
@@ -226,11 +228,11 @@ function stripHtml(html) {
 function fileExstCheck(info){
   if(info.hasOwnProperty('files')){
     if(info.files.hasOwnProperty('board_attach')){
-        if(info.files.board_attach[0].hasOwnProperty('original_url')){
-          boardAttachUrl.value = info.files.board_attach[0].original_url;
-          post.board_attach_name = info.files.board_attach[0].file_name;
-          post.fileUUID = info.files.board_attach[0].uuid;
-        }
+      if(info.files.board_attach[0].hasOwnProperty('original_url')){
+        boardAttachUrl.value = info.files.board_attach[0].original_url;
+        post.board_attach_name = info.files.board_attach[0].file_name;
+        post.fileUUID = info.files.board_attach[0].uuid;
+      }
     }
   }
 }
@@ -264,22 +266,20 @@ watchEffect(() => {
 async function submitForm() {
   const form = await validate();
   if (form.valid) {
-    
-      const updateData = {
-        title: post.title,
-        content: post.content,
-        comments: post.comments,
-        board_attach : post.board_attach,
-        fileUUID : post.fileUUID,
-        fileDeleteChk : post.fileDeleteChk
-      };
+    const updateData = {
+      title: post.title,
+      content: post.content,
+      comments: post.comments,
+      board_attach: post.board_attach,
+      fileUUID: post.fileUUID,
+      fileDeleteChk: post.fileDeleteChk
+    };
 
-      if (boardId.value === 'notice') {
-        updateData.category = post.category;
-      }
+    if (boardId.value === 'notice') {
+      updateData.category = post.category;
+    }
 
-      await updatePost(boardId.value, postId, updateData);
-    
+    await updatePost(boardId.value, postId, updateData);
   } else {
     Object.assign(validationErrors, form.errors);
   }
@@ -326,7 +326,7 @@ async function addComment() {
 //파일관련
 function triggerFileDelete(UUID) {
   post.board_attach_name = '';
-  post.board_attach='';
+  post.board_attach = '';
   boardAttachUrl.value = '';
   if(UUID){
     post.fileDeleteChk = true;
@@ -335,11 +335,11 @@ function triggerFileDelete(UUID) {
 
 function triggerFileUpload() {
   if (fileInputRef.value) {
-      fileInputRef.value.click();
+    fileInputRef.value.click();
   } else {
-      console.error("파일을 찾을 수 없습니다.");
+    console.error("파일을 찾을 수 없습니다.");
   }
-};
+}
 
 function handleFileUpload(event) {
   const file = event.target.files[0];
@@ -348,6 +348,10 @@ function handleFileUpload(event) {
     post.board_attach_name = file.name;
     boardAttachUrl.value = URL.createObjectURL(file);
   }
+}
+
+function goBackToList() {
+  router.push({ name: 'posts.index', params: { boardId: boardId.value } });
 }
 </script>
 
@@ -414,7 +418,7 @@ function handleFileUpload(event) {
   word-wrap: break-word; 
 }
 
-.cursor-pointer{
+.cursor-pointer {
   cursor: pointer;
 }
 .form-control:disabled {

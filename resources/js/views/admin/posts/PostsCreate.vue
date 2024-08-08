@@ -3,6 +3,11 @@
   <form @submit.prevent="submitForm">
     <div class="row my-5 mov-wide m-auto">
       <div class="card border-0 shadow-none">
+        <div class="d-flex justify-content-start mt-4">
+          <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder fs-6">
+            <span class="icon-arrow-left me-2">←</span>목록으로
+          </button>
+        </div>
         <h4 class="mt-4">{{ boardText }}</h4>
         <p class="text-secondary opacity-75 fs-6 mb-4">
           {{ boardTextMessage }}
@@ -103,7 +108,9 @@ const boardTextMessage = computed(() => {
 const { validate } = useForm({ validationSchema: schema });
 const { value: title } = useField("title", null, { initialValue: "" });
 const { value: content } = useField("content", null, { initialValue: "" });
-
+function goBackToList() {
+  router.push({ name: 'posts.index', params: { boardId: boardId.value } });
+}
 const post = reactive({
   title,
   content,

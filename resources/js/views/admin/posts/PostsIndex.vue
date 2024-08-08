@@ -59,7 +59,7 @@
                     </div>
                   </div>
                 </th>
-                <th  class="px-6 py-3 bg-gray-50 text-left" style="width: 45%;">
+                <th  class="px-6 py-3 bg-gray-50 text-left" style="width: 30%;">
                   <div class="flex flex-row justify-content-center" @click="updateOrdering('content')">
                     <div class="font-medium text-uppercase" :class="{'font-bold text-blue-600': orderColumn === 'content'}">
                       내용
