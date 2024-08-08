@@ -29,7 +29,7 @@
                           <div class="img_box">
                             <img src="../../../img/car_example.png" alt="차량 사진" class="mb-2">
                           </div>
-                          <h5 class="mb-0 fs-4">{{ auction.car_no }}</h5>
+                          <h5 class="text-nowrap mb-0 fs-4 font-size">{{ auction.car_no }}</h5>
                           <p :class="getStatusClass(auction.status)" class="ml-auto">
                             <span>{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
                           </p>
@@ -234,7 +234,15 @@ p {
     margin-top: 0;
     margin-bottom: 0rem !important;
 }
-
+@media (max-width: 396px){
+  .bid-bc .inspector_list > li .img_box {
+    width: 4.6rem !important;
+    height: 4.4rem !important;
+  }
+  .font-size{
+    font-size: calc(1.26rem + -1vw) !important;
+  }
+}
 @media (max-width: 650px){
     .layout-container02 {
         display: flex !important;
