@@ -1,6 +1,6 @@
 <template>
   <div class="container d-flex flex-column gap-5">
-    <div v-if="!fileuploadvue" class="p-3 my-4">
+    <div v-if="!fileUploadView" class="p-3 my-4">
       <h4 class="my-1 mb-5">탁송 요청</h4>
       <div class="profile ms-0 p-0">
         <div class="dealer-info">
@@ -22,7 +22,7 @@
         <p class="text-secondary opacity-50">&#8251;탁송일은 익일 9시 이후부터 5일 이내로 탁송이 가능해요.</p>
         <div class="date-time-picker overflow-x-auto">
           <div class="date-picker">
-            <div v-for="(day, index) in days" :key="index" class="date-container d">
+            <div v-for="(day, index) in days" :key="index" class="date-container">
               <div class="day-label">{{ day.label }}</div>
               <div :class="['date', { selected: selectedDay === index }]" @click="selectDay(index)">
                 {{ day.date.getDate() }}
@@ -32,25 +32,22 @@
           <div class="my-3 time-picker" v-if="selectedDay !== null">
             <h4>오전</h4>
             <div class="time-section">
-              <div v-for="time in morningTimes" :key="time" :class="['time', { selected: selectedTime === time, disabled: isPastTime(time) }]" @click="selectTime(time)">
+              <div v-for="time in morningTimes" :key="time" :class="['time', { selected: selectedTime === time, disabled: isPastTime(time) || isBeyondEndTime(time) }]" @click="selectTime(time)">
                 {{ time }}
               </div>
             </div>
             <h4 class="mt-3">오후</h4>
             <div class="time-section">
-              <div v-for="time in afternoonTimes" :key="time" :class="['time', { selected: selectedTime === time, disabled: isPastTime(time) }]" @click="selectTime(time)">
+              <div v-for="time in afternoonTimes" :key="time" :class="['time', { selected: selectedTime === time, disabled: isPastTime(time) || isBeyondEndTime(time) }]" @click="selectTime(time)">
                 {{ time }}
               </div>
             </div>
           </div>
         </div>
       </div>
-      
       <hr class="custom-hr" />
-      
       <div>
         <h4 class="mt-4">탁송비를 입금받을 계좌를 알려주세요</h4>
-        <!-- 은행 선택 -->
         <div class="form-group mt-4">
           <label for="bankNumber">은행</label>
           <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly>
@@ -62,12 +59,9 @@
       <p class="text-center mb-2">매도용 인감증명서를 <br> 준비해 주세요.</p>
       <button type="button" class="btn btn-primary w-100" @click="toggleView">다음</button>
     </div>
-    <div v-if="fileuploadvue" class="card p-3 my-4">
+    <div v-if="fileUploadView" class="card p-3 my-4">
       <div class="form-group">
         <img id="imagePreview" :src="imageSrc" class="image-preview mx-2 my-4" v-if="imageSrc" />
-       <!-- <button type="button" class="btn btn-fileupload w-100 mt-4 w-100" @click="triggerFileUpload">
-          파일 첨부
-        </button>-->
         <input type="file" @change="handleFileUpload" ref="fileInputRef" style="display: none;" id="file_user_photo">
         <div class="text-start text-secondary opacity-50 mt-2" v-if="registerForm.file_user_sign">사진 파일: {{ registerForm.file_user_sign }}</div>
       </div>
@@ -84,34 +78,34 @@
         </div>
         <div class="d-flex justify-content-start gap-5 mt-2">
           <p class="mb-0">탁송일</p>
-          <p class="mb-0"><span>{{yearLabel}} </span>&nbsp;{{ monthLabel}} {{ selectedDateLabel }} {{ selectedTime }}</p>
+          <p class="mb-0"><span>{{ yearLabel }}</span>&nbsp;{{ monthLabel }} {{ selectedDateLabel }} {{ selectedTime }}</p>
         </div>
         <div class="d-flex justify-content-start gap-5 mt-2">
           <p class="mb-0"><span class="me-3">은</span>행</p>
           <p class="mb-0"><span class="me-2">{{ selectedBank }}</span>|<span class="ms-2">{{ account }}</span></p>
         </div>
       </div>
-        <p class="text-secondary opacity-75 text-center mt-3">취소와 변경이 어려우니 유의해 주세요.</p>
+      <p class="text-secondary opacity-75 text-center mt-3">취소와 변경이 어려우니 유의해 주세요.</p>
       <button class="btn btn-primary my-3 w-100" @click="confirmSelection">완료</button>
     </div>
   </div>
 </template>
-
 <script setup>
-import { ref, onMounted, defineProps, defineEmits, watch, nextTick, createApp,reactive,inject } from 'vue';
+import { ref, onMounted, defineProps, defineEmits, watch, nextTick, createApp, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { cmmn } from '@/hooks/cmmn';
 import BankModal from '@/views/modal/bank/BankModal.vue';
 import profileDom from '/resources/img/profile_dom.png';
+import useAuctions from '@/composables/auctions';
 
-const days = ref(getNextFiveDays());
+const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress } = useAuctions();
 const selectedDay = ref(null);
 const selectedTime = ref(null);
 const morningTimes = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30'];
 const afternoonTimes = ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00'];
 const monthLabel = ref(getMonthLabel());
 const yearLabel = ref(getYearLabel());
-const fileuploadvue = ref(false);
+const fileUploadView = ref(false);
 const selectedBank = ref('');
 const account = ref('');
 const showDetails = ref(false);
@@ -123,10 +117,10 @@ const imageSrc = ref('');
 const router = useRouter();
 const route = useRoute();
 const { amtComma, wica } = cmmn();
-
-
+const auctionDetail = ref(null);
 const selectedBid = ref(null);
 const userInfo = ref(null);
+const days = ref([]); // Define the days variable here
 
 const props = defineProps({
   bid: Object,
@@ -162,12 +156,24 @@ const confirmSelection = () => {
   });
 };
 
+const fetchAuctionDetail = async () => {
+  try {
+    const auctionId = route.params.id;  // Assuming auction ID is in route params
+    auctionDetail.value = await getAuctionById(auctionId);
+    days.value = getNextAvailableDays(auctionDetail.value.data.choice_at, auctionDetail.value.data.takson_end_at);
+    console.log('Auction Detail:', auctionDetail.value);  // Log auctionDetail to console
+  } catch (error) {
+    console.error('Error fetching auction details:', error);
+  }
+};
+
 onMounted(async () => {
   const script = document.createElement('script');
   script.src = "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
   script.onload = () => console.log('Daum Postcode script loaded');
   document.head.appendChild(script);
-
+  await getAuctions();
+  await fetchAuctionDetail();
   document.body.style.overflowX = 'hidden';
 });
 
@@ -187,7 +193,7 @@ const selectDealer = async (bid, index) => {
     console.error('Error fetching dealer data:', error);
   }
 };
-/* 현재 년도에 대한 함수*/
+
 function getYearLabel() {
   const today = new Date();
   const year = today.getFullYear();
@@ -200,17 +206,21 @@ function getMonthLabel() {
   return `${month}월`;
 }
 
-function getNextFiveDays() {
-  const today = new Date();
+function getNextAvailableDays(choiceAt, taksonEndAt) {
+  const choiceDate = new Date(choiceAt);
+  const endDate = new Date(taksonEndAt);
   const daysArray = [];
   const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
-  
-  for (let i = 1; i <= 5; i++) {
-    const nextDay = new Date(today);
-    nextDay.setDate(today.getDate() + i);
+
+  for (let i = 0; i <= 5; i++) {
+    const nextDay = new Date(choiceDate);
+    nextDay.setDate(choiceDate.getDate() + i);
+    if (nextDay > endDate) break;
+
     const dayLabel = `${nextDay.getDate()} (${weekDays[nextDay.getDay()]})`;
     daysArray.push({ date: nextDay, label: dayLabel });
   }
+
   return daysArray;
 }
 
@@ -246,6 +256,7 @@ const toggleView = () => {
     .callback(function (result) {
       if (result.isOk) {
         confirmSelection();
+        window.location.href = '/auction';
         }
       })
     .confirm(textOk);
@@ -253,28 +264,41 @@ const toggleView = () => {
 
 function selectDay(index) {
   selectedDay.value = index;
-  selectedTime.value = null; // 선택된 시간을 초기화
+  selectedTime.value = null;
   selectedDateLabel.value = days.value[index].label;
 }
 
 function selectTime(time) {
-  if (!isPastTime(time)) {
+  if (!isPastTime(time) && !isBeyondEndTime(time)) {
     selectedTime.value = time;
   }
 }
 
 function isPastTime(time) {
-  if (selectedDay.value === null) return true;
-
   const [hours, minutes] = time.split(':').map(Number);
   const now = new Date();
   const selectedDate = new Date(days.value[selectedDay.value].date);
   selectedDate.setHours(hours, minutes);
 
-  return selectedDate < now;
+  if (selectedDay.value === 0 && selectedDate < now) {
+    return true;
+  }
+  return false;
 }
+
+function isBeyondEndTime(time) {
+  const [hours, minutes] = time.split(':').map(Number);
+  const selectedDate = new Date(days.value[selectedDay.value].date);
+  selectedDate.setHours(hours, minutes);
+
+  const endDate = new Date(auctionDetail.value.data.takson_end_at);
+  if (selectedDate > endDate) {
+    return true;
+  }
+  return false;
+}
+
 const swal = inject('$swal');
-let statusLabel;
 
 const handleBankLabelClick = async () => {
   const module = await import('@/views/modal/bank/BankModal.vue');
@@ -338,7 +362,6 @@ const photoUrl = (userData) => {
     ? userInfo.value.files.file_user_photo[0].original_url
     : profileDom;
 };
-
 </script>
 
 <style scoped lang="scss">
@@ -453,9 +476,11 @@ const photoUrl = (userData) => {
   font-size: 16px;
   color: #333;
 }
+
 .container {
   width: auto;
 }
+
 @media (min-width: 992px) {
   .mov-wide {
     width: 55vw;
