@@ -53,7 +53,8 @@
                           <div class="col-auto">
                             <p class="mb-0">우편번호 : {{ addrInfo.addr_post }}</p>
                             <!--<h5 class="mb-0 fs-4 tc-red">{{ auction.car_no }}</h5>-->
-                            <p class="mb-0">주 소 : {{ addrInfo.addr1+' , '+addrInfo.addr2 }}</p>
+                            <p class="address-line mb-0">주 소 : {{ addrInfo.addr1}}</p>
+                            <p class="mb-0">상 세 주 소 : {{ addrInfo.addr2}}</p>
                           </div>
                           <div class="col text-end">
                             <button @click.stop="dealerAddrConnect(auction.id)" class="btn btn-primary">주소지 등록</button>
@@ -209,8 +210,20 @@ const dealerAddrConnect = (auctionId) => {
 </script>
 
 <style scoped>
+.address-line { 
+    min-width: 50px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.bid-bc .inspector_list > li{
+  min-width: min-content;
+}
 .none-content{
   padding: 0px !important;
+}
+button.btn{
+  width: 105px !important;
 }
 p {
     margin-top: 0;
@@ -346,7 +359,6 @@ background: none;
     height: auto;
     overflow-y: hidden;
     padding: 30px 30px 30px 30px;
-    background-color: $sub-color02;
 }
 
 .styled-div .content {
