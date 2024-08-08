@@ -584,10 +584,7 @@ File upload.vue
   text-align: center;
 }
 
-.detail-content02 .menu-item.active,.detail-content02 .menu-item:hover {
-  border-bottom: 3px solid darkgrey;
-  border-radius: 2px;
-}
+
 /*
 .detail-content02 .menu-item::after {
   content: '';
@@ -604,8 +601,8 @@ File upload.vue
   background: gray;
 }
 .bank-content{
-  height: 50vh;
   flex: 1;
+  height: 500px;
   overflow-y: auto;
 }
 .bank-scroll{
