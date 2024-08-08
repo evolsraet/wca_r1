@@ -1,15 +1,15 @@
 <template>
   <form @submit.prevent="submitForm">
-    <div class="row my-2 mov-wide m-auto container">
+    <div class="row my-2 mov-wide m-auto container mb-5">
       <div class="card border-0 shadow-none">
 
-        <div class="d-flex justify-content-start mt-4">
+        <div class="d-flex justify-content-start my-3">
           <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder fs-6">
             <span class="icon-arrow-left me-2">←</span>목록으로
           </button>
         </div>
         <!-- Form Header -->
-        <h4 class="mt-4">{{ boardText }}</h4>
+        <h4 class="mt-2">{{ boardText }}</h4>
         <p class="text-secondary opacity-75 fs-6 mb-4">
           {{ boardTextMessage }}
         </p>
