@@ -2,6 +2,7 @@
   <form @submit.prevent="submitForm">
     <div class="row my-2 mov-wide m-auto container">
       <div class="card border-0 shadow-none">
+
         <div class="d-flex justify-content-start mt-4">
           <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder fs-6">
             <span class="icon-arrow-left me-2">←</span>목록으로
