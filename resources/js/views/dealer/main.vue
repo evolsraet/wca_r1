@@ -43,7 +43,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="notice in latestNotices" :key="notice.id">
+                            <tr v-if="latestNotices.length === 0">
+                                <td colspan="2" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
+                            </tr>
+                            <tr v-else v-for="notice in latestNotices" :key="notice.id">
                                 <td class="col-4">{{ stripHtmlTags(notice.title) }}</td>
                                 <td class="text-with-marker">{{ stripHtmlTags(notice.content) }}</td>
                             </tr>
@@ -56,7 +59,6 @@
     </div>
     <Footer />
 </template>
-
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import useBid from "@/composables/bids";
