@@ -3,10 +3,13 @@
 namespace App\Traits;
 
 use Illuminate\Support\Str;
+use App\Exports\ModelExport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Http\Controllers\Api\LibController;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 trait CrudTrait
 {
@@ -158,13 +161,45 @@ trait CrudTrait
         $this->whereRun($result);
 
         // 후처리
-
         $this->afterProcess(__FUNCTION__, request(), $result);
 
         // mode=count 체크
         if (request('mode') === 'count') {
             $count = $result->count();
             return response()->api(['count' => $count]);
+        } elseif (request('mode') === 'excelDown') {
+            $columns = (new LibController)->fields($this->tableName);
+
+            // columns가 JsonResponse 객체인 경우 배열로 변환
+            if ($columns instanceof \Illuminate\Http\JsonResponse) {
+                $columns = $columns->getData(true);
+            }
+
+            $data = [];
+            $result->chunk(1000, function ($records) use (&$data) {
+                foreach ($records as $record) {
+                    $resourceData = (new $this->resourceClass($record))->toArray(request());
+
+                    // 각 필드를 문자열로 변환
+                    $rowData = [];
+                    foreach ($resourceData as $key => $value) {
+                        if (is_array($value) || is_object($value)) {
+                            $rowData[$key] = json_encode($value);
+                        } else {
+                            $rowData[$key] = (string) $value;
+                        }
+                    }
+
+                    $data[] = $rowData;
+                }
+            });
+
+            // columns가 배열인지 확인
+            if (!is_array($columns)) {
+                throw new \Exception('Columns must be an array');
+            }
+
+            return Excel::download(new ModelExport($data, $columns), $this->tableName . '.xlsx');
         } else {
             $result = $result->paginate($paginate);
             return response()->api($this->resourceClass::collection($result));

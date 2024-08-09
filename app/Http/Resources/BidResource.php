@@ -20,6 +20,10 @@ class BidResource extends JsonResource
 
     public function toArray($request)
     {
+        if (is_null($this->resource)) {
+            return [];
+        }
+
         $auctionId = $this->auction_id;
         $auctionUserId = self::$auctionUserIds[$auctionId] ?? null;
 
