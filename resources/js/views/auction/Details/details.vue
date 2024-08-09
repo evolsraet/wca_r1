@@ -507,14 +507,9 @@
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
             <div class="text-start mt-2">
-              <p class="text-secondary opacity-50">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1">{{auctionDetail.data.final_price}}</span></p>
-              <p class="text-secondary opacity-50">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1">({{auctionDetail.data.bank}}은행) {{auctionDetail.data.account}}</span></p>
-              <p class="text-secondary opacity-50">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :</p>
-              <div v-if="isUser && auctionDetail.data.status == 'chosen'">
-                <button class="btn primary-btn w-100 my-2" @click="showModal2">
-                  탁송일 입력하기
-                </button>
-              </div>
+              <p class="text-secondary ">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1 fw-bold">{{auctionDetail.data.final_price}}</span></p>
+              <p class="text-secondary ">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p>
+              <p class="text-secondary ">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.taksong_wish_at}}</span></p>
             </div>
             <div>
               <button class="border-6 btn-fileupload my-4 shadow02 text-secondary opacity-50" @click="AttachedInform">딜러 첨부파일</button>
