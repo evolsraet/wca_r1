@@ -513,6 +513,7 @@
             </div>
             <div>
               <button class="border-6 btn-fileupload my-4 shadow02 text-secondary opacity-50" @click="AttachedInform">딜러 첨부파일</button>
+              <button v-if="auctionDetail.data.taksong_wish_at === null" @click="showModal2" class="btn btn-primary w-100">탁송일 입력하기</button>
               <!--<button class="border-6 btn-fileupload my-4 shadow02"><a :href=fileSignUrl download class="text-secondary opacity-50">매도용 인감증명서 다운로드</a></button>-->
             </div>
             <div v-if="fileOwnerUrl">
