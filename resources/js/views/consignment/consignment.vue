@@ -158,10 +158,10 @@ const confirmSelection = () => {
 
 const fetchAuctionDetail = async () => {
   try {
-    const auctionId = route.params.id;  // Assuming auction ID is in route params
+    const auctionId = route.params.id;  
     auctionDetail.value = await getAuctionById(auctionId);
     days.value = getNextAvailableDays(auctionDetail.value.data.choice_at, auctionDetail.value.data.takson_end_at);
-    console.log('Auction Detail:', auctionDetail.value);  // Log auctionDetail to console
+    console.log('Auction Detail:', auctionDetail.value);  
   } catch (error) {
     console.error('Error fetching auction details:', error);
   }
