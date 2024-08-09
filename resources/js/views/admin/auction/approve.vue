@@ -46,6 +46,7 @@
                   <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
                     <option v-for="(label, value) in statusLabel" :key="value" :value="value">{{ label }}</option>
                   </select>
+                  <p class="opacity-50 text-red">*신청완료 -> 진단대기 -> 경매진행 순서로 진단대기를 거쳐야 경매마감일자가 나옵니다. </p>
                 </div>
                 <div class="card-body">
                   <p class="text-secondary opacity-50">은행</p>
@@ -155,6 +156,14 @@
                     </li>
                   </div>
                 </div>
+                <div class="form-group dealer-check fw-bolder pb-2">
+                  <p for="dealer">법인 / 사업자차량</p>
+                  <div class="check_box">
+                    <input type="checkbox" id="ch2" v-model="auction.isBizChecked" class="form-control">
+                    <label for="ch2"></label>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
@@ -421,6 +430,7 @@ const auction = reactive({
   file_auction_owner: '',
   file_auction_owner_name: '',
   deletFileList:'',
+  isBizChecked:false,
 });
 
 const route = useRoute();
@@ -670,7 +680,8 @@ onMounted(async () => {
   await fetchAuctionDetails();
   const data = auctionDetails.value.data;
   document.getElementById("status").value = data.status;
-
+  console.log('data=============================');
+console.log(data);
   watchEffect(() => {
     updated_at = data.updated_at;
     created_at = data.created_at;
@@ -696,7 +707,10 @@ onMounted(async () => {
     auction.final_price = data.final_price;
     auction.bank = data.bank;
     auction.account = data.account;
-
+    if(data.is_biz == 1){
+      auction.isBizChecked = true;
+    }
+  
     if (data.success_fee) {
       successFeeKorean.value = formatCurrency(data.success_fee);
     }
@@ -713,6 +727,9 @@ onMounted(async () => {
       finalPriceFeeKorean.value = amtComma(data.final_price);
     }
   });
+
+  console.log('auctionData===============');
+  console.log(auction);
 });
 
 onBeforeUnmount(() => {
@@ -722,6 +739,9 @@ onBeforeUnmount(() => {
 
 
 <style scoped>
+.text-red{
+  color: red;
+}
 .bottom-sheet {
   height: auto !important;
 }

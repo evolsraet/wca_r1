@@ -454,6 +454,7 @@ const updateAuction = async (id,auction) => {
             total_fee: auction.total_fee,
             hope_price: auction.hope_price,
             final_price: auction.final_price,
+            is_biz: auction.isBizChecked,
         }
     }
 
