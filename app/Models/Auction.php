@@ -37,6 +37,7 @@ class Auction extends Model implements HasMedia
     protected $casts = [
         'final_at' => 'datetime',
         'choice_at' => 'datetime',
+        'taksong_wish_at' => 'datetime',
         'done_at' => 'datetime',
         'diag_check_at' => 'datetime',
     ];
