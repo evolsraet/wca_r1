@@ -3,11 +3,6 @@
   <form @submit.prevent="submitForm">
     <div class="row my-5 mov-wide m-auto">
       <div class="card border-0 shadow-none">
-        <div class="d-flex justify-content-start my-3">
-          <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder fs-6">
-            <span class="icon-arrow-left me-2">←</span>목록으로
-          </button>
-        </div>
         <h4 class="mt-2">{{ boardText }}</h4>
         <p class="text-secondary opacity-75 fs-6 mb-4">
           {{ boardTextMessage }}
@@ -49,10 +44,10 @@
             </div>
           </div>
         </div>
+        <button type="button" class="btn btn-fileupload w-100 my-3" @click="triggerFileUpload">
+          파일 첨부
+        </button>
       </div>
-      <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
-        파일 첨부
-      </button>
       <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
       <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
         <a :href=boardAttachUrl download>{{ post.board_attach_name }}</a>
@@ -68,6 +63,11 @@
         </div>
       </div>
     </div>-->
+    <div class="d-flex justify-content-start my-3">
+    <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder w-100 fs-6 btn btn-primary">
+      <span class="icon-arrow-left me-2">←</span>목록으로
+    </button>
+  </div>
   </div>
 </form>
 </template>
@@ -270,7 +270,7 @@ onMounted(() => {
 }
 
 .btn-fileupload {
-  width: 25% !important;
+  width: 100% !important;
 }
 .cursor-pointer{
   cursor: pointer;

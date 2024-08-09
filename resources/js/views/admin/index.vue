@@ -53,20 +53,27 @@
                     </ul>
                     <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
                 </div>
-            <div class="o_table_mobile my-5">
+            <div class="o_table_mobile">
                 <div class="tbl_basic tbl_dealer">    
-                    <div class="mt-5">
+                    <div class="mt-2">
                         <table class="table" v-if="activeTab === 'available'">
                             <thead>
                                 <tr>
-                                    <th>날짜</th>
+                                    <th>NO.</th>
                                     <th>제목</th>
+                                    <th>카테고리</th>
+                                    <th>날짜</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="notice in limitedNotices" :key="notice.id">
+                                <tr v-if="limitedNotices.length === 0">
+                                    <td class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
+                                </tr>
+                                <tr v-for="(notice, index) in limitedNotices" :key="notice.id">
+                                    <td style="width: 10%;">{{ index + 1 }}</td>
+                                    <td style="width: 15%;">[ {{ notice.category }} ]</td>
+                                    <td>{{ stripHtmlTags(notice.title) }}</td>
                                     <td class="date">{{ formatDate(notice.created_at) }}</td>
-                                    <td class="content col-4">{{ stripHtmlTags(notice.content) }}</td>
                                 </tr>
                             </tbody>
                         </table>

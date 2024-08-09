@@ -1,12 +1,11 @@
 <template>
-    <div class="container">
+    <div class="container pt-4">
         <div class="col-lg-8 mx-auto py-md-5">
-            <div class="proceeding"></div>
       <p class="fw-bold mb-3">낙찰 이력</p>
       <main>
-      <BarChart :chartData="chartData" :options="chartOptions" />
+      <BarChart :chartData="chartData" :options="chartOptions" class="my-4"/>
       </main>
-      <p class="fw-bold my-5">차종별 낙찰 이력</p>
+      <p class="fw-bold my-3">차종별 낙찰 이력</p>
       <div class="mb-4 d-sm-flex align-items-sm-center ">
           <p class="refresh-icon" @click="refreshChartData">↻</p>
           <div class="select-container">
@@ -21,7 +20,7 @@
         </div>
       </div>
       <main>
-        <LineChart :chartData="lineChartData" :options="lineChartOptions" :key="chartKey" />
+        <LineChart :chartData="lineChartData" :options="lineChartOptions" :key="chartKey" class="my-4"/>
       </main>
     </div>
     
