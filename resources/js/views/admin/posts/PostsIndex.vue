@@ -354,4 +354,22 @@ watch(route, (newRoute) => {
 .tbl_basic table tr td{
   padding: 20px 11px !important;
 }
+.status-selector {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.status-selector label {
+  white-space: nowrap;
+  margin-right: 10px;
+}
+@media (max-width: 767px) {
+  .status-selector {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 </style>
