@@ -75,11 +75,7 @@ class AuctionResource extends JsonResource
                 $parentArray[$key] = $this->$key->toDatetimeString();
             }
         }
-        foreach ($addArray as $key => $value) {
-            if (str_ends_with($key, '_at') && $value !== null) {
-                $addArray[$key] = $value->toDatetimeString();
-            }
-        }
+
 
         // 파일들
         return array_merge($parentArray, $addArray);
