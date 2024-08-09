@@ -85,7 +85,10 @@
               <tr v-if="filteredPosts.length === 0 && boardId === 'claim' && !isDealer">
                   <td colspan="5" class="text-center text-secondary opacity-50">클레임 없습니다</td>
               </tr>
-              <tr v-else-if="filteredPosts.length === 0 && boardId === 'notice' && !isDealer">
+              <tr v-else-if="filteredPosts.length === 0 && boardId === 'notice' && (isDealer||isUser)">
+                  <td colspan="4" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
+              </tr>
+              <tr v-else-if="filteredPosts.length === 0 && boardId === 'notice' && (!isDealer||!isUser)">
                   <td colspan="5" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
               </tr>
               <tr 
