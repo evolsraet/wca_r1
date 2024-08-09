@@ -417,7 +417,6 @@ const auction = reactive({
   status: '',
   addr1: '',
   addr2: '',
- // final_at: '',
   choice_at: '',
   done_at: '',
   success_fee: '',
@@ -680,8 +679,6 @@ onMounted(async () => {
   await fetchAuctionDetails();
   const data = auctionDetails.value.data;
   document.getElementById("status").value = data.status;
-  console.log('data=============================');
-console.log(data);
   watchEffect(() => {
     updated_at = data.updated_at;
     created_at = data.created_at;
@@ -698,8 +695,15 @@ console.log(data);
     auction.addr1 = data.addr1;
     auction.addr2 = data.addr2;
     //auction.final_at = data.final_at;
-    auction.choice_at = data.choice_at;
-    auction.done_at = data.done_at;
+
+    if(data.choice_at){
+      const formattedValue = data.choice_at.replace(" ", "T").substring(0, 16);  // 형식 변환
+      auction.choice_at = formattedValue;
+    }
+    if(data.done_at){
+      const formattedValue = data.done_at.replace(" ", "T").substring(0, 16);  // 형식 변환
+      auction.done_at = formattedValue;
+    }
     auction.success_fee = data.success_fee;
     auction.diag_fee = data.diag_fee;
     auction.total_fee = data.total_fee;
@@ -727,9 +731,6 @@ console.log(data);
       finalPriceFeeKorean.value = amtComma(data.final_price);
     }
   });
-
-  console.log('auctionData===============');
-  console.log(auction);
 });
 
 onBeforeUnmount(() => {
