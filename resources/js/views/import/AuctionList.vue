@@ -9,7 +9,7 @@
           <h5>탁송지 미등록 매물</h5>
           <p class="text-sendary opacity-50">낙찰된 매물중 탁송지 미등록 매물입니다</p>
            </div>
-          <router-link :to="{ name: 'auction.index' }" class="btn-apply">전체보기</router-link>
+           <router-link :to="{ name: 'auction.index',state: { currentTab: 'myBidInfo',status: 'cnsgnmUnregist' } }" class="btn-apply">전체보기</router-link>
         </div>
 
         <!-- 차량이 존재할 경우 -->

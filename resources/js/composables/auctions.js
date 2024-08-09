@@ -12,6 +12,8 @@ export default function useAuctions() {
     const router = useRouter();
     const processing = ref(false);
     const validationErrors = ref({});
+    const bidsDataAuction = ref([]);
+    const bidPaginationAuction = ref({});
 
     const isLoading = ref(false);
     const swal = inject('$swal');
@@ -56,7 +58,7 @@ export default function useAuctions() {
 
     }
 
-    const getAuctionsByDealer = async (page = 1 , status="all") => {
+    const getAuctionsByDealer = async (page = 1 , status="all",search_title='') => {
         /*
         if(status != 'all'){
             apiList.push(`auctions.status:${status}`)
@@ -65,6 +67,7 @@ export default function useAuctions() {
         let request = wicac.conn()
             .log()
             .url(`/api/auctions`)
+            .search(search_title)
             .with(['bids', 'likes'])
             .whereOr('auctions.status','ing,wait')
         if(page == "all"){
@@ -80,10 +83,11 @@ export default function useAuctions() {
         }).get();
     }
 
-    const getAuctionsByDealerLike = async (page = 1 , userId = null , status = "all") => {
+    const getAuctionsByDealerLike = async (page = 1 , userId = null , status = "all" ,search_title = '') => {
         let request = wicac.conn()
             .log()
             .url(`/api/auctions`)
+            .search(search_title)
             .with(['likes'])
             .page(`${page}`)
         if(userId != null){
@@ -97,9 +101,8 @@ export default function useAuctions() {
         }).get();
     }
 
-    const getAuctions = async (page = 1, isReviews = false , status = 'all') => {
+    const getAuctions = async (page = 1, isReviews = false , status = 'all', search_text='') => {
         const apiList = [];
-    
         if(status != 'all'){
             apiList.push(`auctions.status:${status}`)
         }
@@ -112,7 +115,8 @@ export default function useAuctions() {
             .where([
                 'auctions.status:done',
                 'auctions.bid_id:>:0'
-            ]) 
+            ])
+            .search(search_text)
             .with([
                 'reviews'
             ]) 
@@ -133,6 +137,7 @@ export default function useAuctions() {
             //.log() //로그 출력
             .url(`/api/auctions`) //호출 URL
             .with(['bids','likes'])
+            .search(search_text)
             .where(apiList) 
             .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
             .callback(function(result) {
@@ -797,7 +802,6 @@ const setdestddress = async (id,addrInfo) => {
         }
     }).confirm();
 
-    
 }
 
 const setDeleteFileAuction = async(uuidList) => {
@@ -811,6 +815,58 @@ const setDeleteFileAuction = async(uuidList) => {
     })
     .delete();
 }
+
+const getBidsAuction = async (page = 1 , status = "all") => {
+    let request = wicac.conn()
+    //.log()
+    .url('/api/auctions')
+    .with(['bids'])
+    .page(`${page}`)
+    if(status != 'all'){
+        if(status == 'bid'){
+            request.whereOr('auctions.status','ing,wait');
+        } else if(status == 'cnsgnmUnregist'){
+            request.addWhere('auctions.status','dlvr');
+            request.doesnthave(['auctions.memo_digician:dlvr']);
+        } else{
+            request.whereOr('auctions.status',`${status}`);
+        }
+    }
+    
+    return request.callback(function(result) {
+        bidsDataAuction.value = result.data;
+        bidPaginationAuction.value = result.rawData.data.meta;
+        return result;
+    }).get();
+    
+};
+
+const getAuctionsWithBids = async (page = 1 , status = "all", userId = '', search_text='') => {
+    const apiList = [];
+    apiList.push(`bids.user_id:`+userId);
+
+    let request = wicac.conn()
+    .url('/api/auctions')
+    .log()
+    .with(['bids,likes'])
+    .search(search_text)
+    .page(`${page}`)
+    .where(apiList)
+    if(status != 'all'){
+        if(status == 'bid'){
+            request.whereOr('auctions.status','ing,wait');
+        } else if(status == 'cnsgnmUnregist'){
+            request.addWhere('auctions.status','chosen');
+        } else{
+            request.whereOr('auctions.status',`${status}`);
+        }
+    }
+    
+    return request.callback(function(result) {
+        return result;
+    }).get();
+    
+};
 
 
     return {
@@ -844,6 +900,10 @@ const setDeleteFileAuction = async(uuidList) => {
         getDoneAuctions,
         setdestddress,
         setTacksong,
+        getBidsAuction,
+        bidsDataAuction,
+        bidPaginationAuction,
+        getAuctionsWithBids,
     };
     
 }

@@ -55,11 +55,12 @@ export default function useBid() {
     
     //isSelect => 선택 차량 (선택,탁송 filter)
     //isMyBid => 진행 중 입찰 건 filter
-    const getBids = async (page = 1, isSelect = false, isMyBid = false , status = "all") => {
+    const getBids = async (page = 1, isSelect = false, isMyBid = false , status = "all", search_text='') => {
         let request = wicac.conn()
-        //.log()
+        .log()
         .url('/api/bids')
         .with(['auction'])
+        .search(search_text)
         .page(`${page}`)
         if (isSelect) {
             const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
@@ -78,6 +79,12 @@ export default function useBid() {
                 }
             }
         }
+        /** 
+        if(search_text){
+            request.whereOr('auction.car_no',`${search_text}`);
+        }
+        */
+
         return request.callback(function(result) {
             bidsData.value = result.data;
             bidPagination.value = result.rawData.data.meta;
@@ -105,19 +112,20 @@ export default function useBid() {
         
     };
 
-    const getscsBids = async (page = 1, isSelect = false, isMyBid = false , status = "all") => {
+    const getscsBids = async (page = 1, isSelect = false, isMyBid = false , status = "all", search_title = '') => {
         let request = wicac.conn()
         //.log()
-        .url('/api/bids')
-        .with(['auction'])
+        .url('/api/auctions')
+        .search(search_title)
+        .with(['bids'])
         .page(`${page}`)
         if (isSelect) {
             const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
-            request = request.whereOr('auction.status',`${statusFilter}`)           
+            request = request.whereOr('auctions.status',`${statusFilter}`)           
         }
     
         if (isMyBid) {
-            request = request.whereOr('auction.status','ing,wait')
+            request = request.whereOr('auctions.status','ing,wait')
         }
         return request.callback(function(result) {
             return result;
