@@ -28,6 +28,7 @@ class CreateAuctionsTable extends Migration
             $table->boolean('is_biz')->default(0)->comment('법인/사업자차량');
             $table->timestamp('final_at')->nullable()->comment('경매마감일');
             $table->timestamp('choice_at')->nullable()->comment('선택일');
+            $table->timestamp('taksong_wish_at')->nullable()->comment('탁송희망일');
             $table->timestamp('done_at')->nullable()->comment('완료일');
             // $table->foreignId('bid_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
             // 순서 문제로 bids_table 생성에서 추가

@@ -38,6 +38,7 @@ Route::apiResource('users', UserController::class)
     ->middleware('auth:sanctum')
     ->withoutMiddleware('auth:sanctum', ['store', 'test']);
 
+
 // auction
 Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);
 Route::apiResource('auctions', AuctionController::class)
