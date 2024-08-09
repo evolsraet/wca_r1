@@ -19,7 +19,7 @@ $sub-color:#ff837a;
 $sub-color01: #4263EA;
 $sub-color02: #f7f8fb;
 $sub-color03: #aaaebe;
-
+$sub-color04: #EBEFFD;
 .btn-outline-primary:hover{
     color: white !important;
 }
@@ -52,7 +52,9 @@ h5{
     background-color: $sub-color02 !important;
     color: $sub-color03 !important;
 }
-
+.tc-gray{
+    color: $sub-color03 !important;
+}
 .cursor-dis{
     cursor: default !important;
 }
@@ -179,7 +181,7 @@ background-color: $sub-color !important;
     margin-right: 10px;
     margin-bottom: 10px;
     border-radius: 16px;
-    background-color:#4264ea3d !important;
+    background-color:$sub-color04 !important;
     color: blue !important;
     font-size: 14px;
     line-height: 25px;
