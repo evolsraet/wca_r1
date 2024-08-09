@@ -1,13 +1,8 @@
 <template>
+  <div class="container row my-2 mov-wide m-auto mb-5">
   <form @submit.prevent="submitForm">
-    <div class="row my-2 mov-wide m-auto container mb-5">
+    <div>
       <div class="card border-0 shadow-none">
-
-        <div class="d-flex justify-content-start my-3">
-          <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder fs-6">
-            <span class="icon-arrow-left me-2">←</span>목록으로
-          </button>
-        </div>
         <!-- Form Header -->
         <h4 class="mt-2">{{ boardText }}</h4>
         <p class="text-secondary opacity-75 fs-6 mb-4">
@@ -116,6 +111,12 @@
       </div>
     </div>
   </div>
+  <div class="d-flex justify-content-start my-3">
+    <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder w-100 fs-6 btn btn-primary">
+      <span class="icon-arrow-left me-2">←</span>목록으로
+    </button>
+  </div>
+</div>
   <div v-if="isDealer || isUser">
     <Footer />
   </div>

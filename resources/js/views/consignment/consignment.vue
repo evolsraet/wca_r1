@@ -98,7 +98,7 @@ import BankModal from '@/views/modal/bank/BankModal.vue';
 import profileDom from '/resources/img/profile_dom.png';
 import useAuctions from '@/composables/auctions';
 
-const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress } = useAuctions();
+const {setTacksong,  getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress } = useAuctions();
 const selectedDay = ref(null);
 const selectedTime = ref(null);
 const morningTimes = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30'];
@@ -120,7 +120,7 @@ const { amtComma, wica } = cmmn();
 const auctionDetail = ref(null);
 const selectedBid = ref(null);
 const userInfo = ref(null);
-const days = ref([]); // Define the days variable here
+const days = ref([]);
 
 const props = defineProps({
   bid: Object,
@@ -145,23 +145,56 @@ watch(() => props.bid, (newVal) => {
 }, { immediate: true });
 
 const selectedDateLabel = ref('');
+const confirmSelection = async () => {
+  const auctionId = auctionDetail.value?.data?.id;
+  
+  if (auctionId && selectedDay.value !== null && selectedTime.value) {
+    const selectedDate = days.value[selectedDay.value].date;
+    const year = selectedDate.getFullYear();
+    const month = (selectedDate.getMonth() + 1).toString().padStart(2, '0');
+    const day = selectedDate.getDate().toString().padStart(2, '0');
+    
+    const [hours, minutes] = selectedTime.value.split(':');
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:00`;
 
-const confirmSelection = () => {
+    const data = {
+      auction: {
+        taksong_wish_at: formattedDate,
+        bank: selectedBank.value,
+        account: account.value,
+      }
+    };
+
+    console.log('Sending the following data to the API:', data);
+
+    try {
+      await setTacksong(auctionId, data);
+      console.log('Request successful');
+    } catch (error) {
+      console.error('Error during API request:', error);
+    }
+  } else {
+    console.error('Auction ID, selected date, or time is missing');
+  }
+  
   emit('confirm', {
     bid: selectedBid.value,
     userData: userInfo.value,
-    selectedDate: selectedDay.value !== null ? days.value[selectedDay.value].date : null,
+    selectedDate: days.value[selectedDay.value].date,
     fileSignData: registerForm.value,
-    selectedTime: selectedTime.value
+    selectedTime: selectedTime.value,
   });
 };
 
+
+
+
 const fetchAuctionDetail = async () => {
   try {
-    const auctionId = route.params.id;  // Assuming auction ID is in route params
+    const auctionId = route.params.id;  
     auctionDetail.value = await getAuctionById(auctionId);
     days.value = getNextAvailableDays(auctionDetail.value.data.choice_at, auctionDetail.value.data.takson_end_at);
-    console.log('Auction Detail:', auctionDetail.value);  // Log auctionDetail to console
+    console.log('Auction Detail:', auctionDetail.value);  
   } catch (error) {
     console.error('Error fetching auction details:', error);
   }

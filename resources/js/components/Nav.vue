@@ -1,7 +1,7 @@
 <template>
 <div id="UsersNav">
     <div class="overlay" style="display: none;"></div>
-    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, 'p-2' , 'px-4']">
+    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, 'p-2' , 'px-2']">
       <div v-if="isAuctionDetailPage"></div>
       <div class="nav-font" :class="{ 'container': isContainer }">
         <button v-if="isDetailPage && isUser" @click="goBack" class="btn btn-back back-btn-icon"></button>

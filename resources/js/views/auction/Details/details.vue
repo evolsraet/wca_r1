@@ -509,7 +509,7 @@
             <div class="text-start mt-2">
               <p class="text-secondary opacity-50">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1">{{auctionDetail.data.final_price}}</span></p>
               <p class="text-secondary opacity-50">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1">({{auctionDetail.data.bank}}은행) {{auctionDetail.data.account}}</span></p>
-              <p class="text-secondary opacity-50">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red ms-1">2024년 6월 26일 오후 6:12</span></p>
+              <p class="text-secondary opacity-50">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :</p>
               <div v-if="isUser && auctionDetail.data.status == 'chosen'">
                 <button class="btn primary-btn w-100 my-2" @click="showModal2">
                   탁송일 입력하기

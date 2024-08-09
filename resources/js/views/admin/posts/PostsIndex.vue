@@ -38,7 +38,7 @@
           <table class="table">
             <thead>
               <tr>
-                <th v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-3 bg-gray-50 justify-content-center" style="width: 18%;">
+                <th v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-3 bg-gray-50 justify-content-center" style="width: 15%;">
                   <div class="flex flex-row items-center justify-content-center justify-between cursor-pointer" @click="updateOrdering('created_at')">
                     <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider" :class="{'font-bold text-blue-600': orderColumn === 'created_at'}">
                       등록일
@@ -85,7 +85,10 @@
               <tr v-if="filteredPosts.length === 0 && boardId === 'claim' && !isDealer">
                   <td colspan="5" class="text-center text-secondary opacity-50">클레임 없습니다</td>
               </tr>
-              <tr v-else-if="filteredPosts.length === 0 && boardId === 'notice' && !isDealer">
+              <tr v-else-if="filteredPosts.length === 0 && boardId === 'notice' && (isDealer||isUser)">
+                  <td colspan="4" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
+              </tr>
+              <tr v-else-if="filteredPosts.length === 0 && boardId === 'notice' && (!isDealer||!isUser)">
                   <td colspan="5" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
               </tr>
               <tr 
@@ -351,4 +354,22 @@ watch(route, (newRoute) => {
 .tbl_basic table tr td{
   padding: 20px 11px !important;
 }
+.status-selector {
+  display: flex;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.status-selector label {
+  white-space: nowrap;
+  margin-right: 10px;
+}
+@media (max-width: 767px) {
+  .status-selector {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
 </style>
