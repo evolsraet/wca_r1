@@ -102,9 +102,9 @@
                     <img src="../../../../img/bank-img/toss.png" alt="토스증권">
                     <span>토스증권</span>
                   </div>
-                  <div class="bank-item" data-bank="카카오페이증권" @click="selectBank('카카오페이증권')">
-                    <img src="../../../../img/bank-img/kakaopay.png" alt="카카오페이증권">
-                    <span>카카오페이<br>증권</span>
+                  <div class="bank-item" data-bank="카카오증권" @click="selectBank('카카오증권')">
+                    <img src="../../../../img/bank-img/kakaopay.png" alt="카카오증권">
+                    <span>카카오증권</span>
                   </div>
                   <div class="bank-item" data-bank="미래에셋" @click="selectBank('미래에셋')">
                     <img src="../../../../img/bank-img/miraeeset .png" alt="미래에셋증권">
@@ -288,6 +288,24 @@
   
   .menu-item.active {
     font-weight: bold;
-    border-bottom: 2px solid #000;
   }
+  .menu-item::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: darkgrey;
+  border-radius: 2px;
+  opacity: 0;
+  transform: scaleX(0);
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.menu-item.active::after,
+.menu-item:hover::after {
+  opacity: 1;
+  transform: scaleX(1);
+}
   </style>

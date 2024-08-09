@@ -16,15 +16,15 @@
               </div>
               <div class="form-group my-3">
                 <label for="addr_post">인수차량 도착지 주소</label>
-                <input type="text" v-model="contact.addr_post" class="input-dis form-control" readonly />
+                <input type="text" v-model="contact.addr_post" class="input-dis form-control" placeholder="우편번호" readonly />
                 <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
-                <div class="input-with-button">
-                  <input type="text" v-model="contact.addr1" class="input-dis form-control" readonly />
-                </div>
-                <input type="text" v-model="contact.addr2" class="form-control" />
                 <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                   <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
                 </div>
+                <div class="input-with-button">
+                  <input type="text" v-model="contact.addr1" class="input-dis form-control" placeholder="주소" readonly />
+                </div>
+                <input type="text" v-model="contact.addr2" placeholder="상세주소" class="form-control" />
               </div>
               <div class="my-4">
                 <button class="w-100 btn btn-primary" :disabled="isLoading">

@@ -1127,8 +1127,14 @@ video {
     background-size: contain;
 }
 .card-body input{
-    font-size: 20px;
+    font-size: 17px;
 }
+.tbl_basic table tr:hover td {
+    background-color: #f9fafb;
+    font-weight: 700;
+}
+
+
 @media (max-width: 340px) {
     .app-specific-size {
         display: block;
@@ -1700,10 +1706,8 @@ video {
         column-count: 1;
     }
 }
-
-
 .custom-border tr th, .custom-border tr td {
-    border-top: 1px solid #e5e7eb; 
+     
     border-bottom: 1px solid #e5e7eb; 
     padding-top: 15px;
     padding-bottom: 15px;

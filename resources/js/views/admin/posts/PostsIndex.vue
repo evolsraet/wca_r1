@@ -2,7 +2,12 @@
   <div :class="isDealer || isUser ? 'container' : ''">
     <div class="p-3 row justify-content-center my-2">
       <div class="col-md-12"></div>
-      <h4 v-if="!isDealer && !isUser">{{ boardText }}</h4>
+      <h4 v-if="!isDealer && !isUser">
+        {{ boardText }}
+        <p class="text-secondary opacity-75 fs-6 my-3">
+          {{ adminTextMessage }}
+        </p>
+      </h4>
       <div v-else>
         <h4 class="mt-4">{{ boardText }}</h4>
         <p class="text-secondary opacity-75 fs-6">
@@ -15,18 +20,6 @@
       <div class="search-type2 justify-content-end mb-2">
         <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
         <button type="button" class="search-btn" @click="fetchPosts">검색</button>
-      </div>
-      <div v-if="boardId === 'claim'" class="container">
-        <div class="d-flex justify-content-end">
-          <div class="text-start status-selector">
-            <input type="radio" name="status" value="all" id="all-claim" hidden v-model="filter">
-            <label :class="{ active: filter === 'all' }" for="all-claim" class="mx-2">전체</label>
-            <input type="radio" name="status" value="ing" id="ongoing-claim" hidden v-model="filter">
-            <label :class="{ active: filter === 'ing' }" for="ongoing-claim">진행중</label>
-            <input type="radio" name="status" value="done" id="completed-claim" hidden v-model="filter">
-            <label :class="{ active: filter === 'done' }" for="completed-claim" class="mx-2">완료</label>
-          </div>
-        </div>
       </div>
       <div v-if="boardId === 'notice'" class="container">
         <div class="d-flex justify-content-end">
@@ -45,7 +38,7 @@
           <table class="table">
             <thead>
               <tr>
-                <th v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-3 bg-gray-50 justify-content-center">
+                <th v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-3 bg-gray-50 justify-content-center" style="width: 18%;">
                   <div class="flex flex-row items-center justify-content-center justify-between cursor-pointer" @click="updateOrdering('created_at')">
                     <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider" :class="{'font-bold text-blue-600': orderColumn === 'created_at'}">
                       등록일
@@ -56,7 +49,8 @@
                     </div>
                   </div>
                 </th>
-                <th class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">
+                <th v-if="boardId === 'notice' && (isDealer || isUser)" style="width: 5%;">NO</th>
+                <th class="px-6 py-3 bg-gray-50 text-left" style="width: 8%;">
                   <span v-if="boardId === 'claim'" class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">상태</span>
                   <span v-else class="text-xs leading-4 font-medium text-gray-500 uppercase tracking-wider">카테고리</span>
                 </th>
@@ -71,29 +65,42 @@
                     </div>
                   </div>
                 </th>
-                <th  class="px-6 py-3 bg-gray-50 text-left" style="width: 45%;">
+                <th v-if="boardId !== 'notice' || (isUser && isDealer) || !isUser&&!isDealer" class="px-6 py-3 bg-gray-50 text-left" style="width: 30%;">
                   <div class="flex flex-row justify-content-center" @click="updateOrdering('content')">
                     <div class="font-medium text-uppercase" :class="{'font-bold text-blue-600': orderColumn === 'content'}">
                       내용
                     </div>
                   </div>
                 </th>
-                <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left">차량번호</th>
+                <th v-if="boardId === 'notice' && (isDealer || isUser)" class="px-6 py-3 bg-gray-50 text-left" style="width: 8%;">날짜</th>
+                <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left" style="width: 20%;">차량번호</th>
           
                 <th v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-3 bg-gray-50 text-left">수정/삭제</th>
               </tr>
             </thead>
             <tbody>
+              <tr v-if="filteredPosts.length === 0 && boardId === 'claim' && isDealer">
+                  <td colspan="5" class="text-center text-secondary opacity-50">클레임 없습니다</td>
+              </tr>
+              <tr v-if="filteredPosts.length === 0 && boardId === 'claim' && !isDealer">
+                  <td colspan="5" class="text-center text-secondary opacity-50">클레임 없습니다</td>
+              </tr>
+              <tr v-else-if="filteredPosts.length === 0 && boardId === 'notice' && !isDealer">
+                  <td colspan="5" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
+              </tr>
               <tr 
               v-for="post in filteredPosts" 
               :key="post.id"
               >
+                <td v-if="boardId === 'notice' && (isDealer || isUser)">{{ post.id }}</td>
                 <td v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-4 text-sm text-overflow">{{ post.created_at }}</td>
                 <td class="px-6 py-4 text-sm text-overflow">
-                  <div>{{ post.category }}</div>
+                  <div>[ {{ post.category }} ]</div>
                 </td>
-                <td class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)"><span v-if="boardId === 'claim'" class="my-2">[문의] </span>{{ post.title }}</td>
-                <td class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)">{{ stripHtmlTags(post.content) }}</td>
+                <td class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)"><span v-if="boardId === 'claim'" class="my-2"></span>
+                  <img v-if="post.is_secret == 1" src="../../../../img/scret.png" alt="Secret" class="mb-2" width="20px"  />
+                  {{ post.title }}</td>
+                <td v-if="boardId !== 'notice' || (isUser && isDealer) || !isUser&&!isDealer" class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)">{{ stripHtmlTags(post.content) }}</td>
                 <td v-if="boardId === 'claim'"><span class="blue-box mb-0 mx-0">{{ auctionDetails[post.extra1]?.data?.car_no || '' }}</span></td>
                 <td v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm text-overflow">
                   <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id }, query: { navigatedThroughHandleRowClick: false } }" class="badge">
@@ -103,6 +110,7 @@
                     <div @click.prevent="deletePost(boardId, post.id)" class="icon-trash-img"></div>
                   </a>
                 </td>
+                <td  v-if="boardId === 'notice' && (isDealer || isUser)">{{ post.created_at }}</td>
               </tr>
             </tbody>
           </table>
@@ -123,7 +131,7 @@
     </div>
     </div>
   </div>
-  <div v-if="isDealer && isUser">
+  <div v-if="isDealer || isUser">
   <Footer />
 </div>
 </template>
@@ -241,6 +249,11 @@ const boardText = computed(() => {
     default:
       return boardId.value;
   }
+});
+const adminTextMessage = computed(() => {
+  if(boardId.value){
+    return `${boardText.value} 관리 페이지 입니다.`
+  } 
 });
 
 const boardTextMessage = computed(() => {

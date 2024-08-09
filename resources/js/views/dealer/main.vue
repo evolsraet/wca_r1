@@ -43,9 +43,12 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="notice in latestNotices" :key="notice.id">
-                                <td class="col-4">{{ stripHtmlTags(notice.title) }}</td>
-                                <td class="text-with-marker">{{ stripHtmlTags(notice.content) }}</td>
+                            <tr v-if="latestNotices.length === 0">
+                                <td colspan="2" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
+                            </tr>
+                            <tr v-else v-for="notice in latestNotices" :key="notice.id" class="pointer">
+                                <td class="col-4 pointer-cursor" @click="goToDetail(notice.id)">{{ stripHtmlTags(notice.title) }}</td>
+                                <td class="text-with-marker pointer-cursor" @click="goToDetail(notice.id)">{{ stripHtmlTags(notice.content) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -139,6 +142,10 @@ const fetchAuctionDetails = async (bid) => {
 
 const filteredDoneBids = ref([]);
 
+const goToDetail = (postId) => {
+    router.push({ name: 'posts.edit', params: { boardId: 'notice', id: postId }, query: { navigatedThroughHandleRowClick: true } });
+};
+
 onMounted(async () => {
     await getAuctionsByDealer("all");
 
@@ -174,6 +181,7 @@ onMounted(async () => {
     }, 400);
 });
 </script>
+
 
 <style scoped>
 p {

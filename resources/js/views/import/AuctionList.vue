@@ -29,7 +29,7 @@
                           <div class="img_box">
                             <img src="../../../img/car_example.png" alt="차량 사진" class="mb-2">
                           </div>
-                          <h5 class="mb-0 fs-4">{{ auction.car_no }}</h5>
+                          <h5 class="text-nowrap mb-0 fs-4 font-size">{{ auction.car_no }}</h5>
                           <p :class="getStatusClass(auction.status)" class="ml-auto">
                             <span>{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
                           </p>
@@ -53,7 +53,8 @@
                           <div class="col-auto">
                             <p class="mb-0">우편번호 : {{ addrInfo.addr_post }}</p>
                             <!--<h5 class="mb-0 fs-4 tc-red">{{ auction.car_no }}</h5>-->
-                            <p class="mb-0">주 소 : {{ addrInfo.addr1+' , '+addrInfo.addr2 }}</p>
+                            <p class="address-line mb-0">주 소 : {{ addrInfo.addr1}}</p>
+                            <p class="mb-0">상 세 주 소 : {{ addrInfo.addr2}}</p>
                           </div>
                           <div class="col text-end">
                             <button @click.stop="dealerAddrConnect(auction.id)" class="btn btn-primary">주소지 등록</button>
@@ -209,14 +210,39 @@ const dealerAddrConnect = (auctionId) => {
 </script>
 
 <style scoped>
+@media (max-width:991px){
+  .address-line {
+    width: auto !important;
+  }
+}
+.address-line { 
+    width: 14vw;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.bid-bc .inspector_list > li{
+  min-width: min-content;
+}
 .none-content{
   padding: 0px !important;
+}
+button.btn{
+  width: 105px !important;
 }
 p {
     margin-top: 0;
     margin-bottom: 0rem !important;
 }
-
+@media (max-width: 396px){
+  .bid-bc .inspector_list > li .img_box {
+    width: 4.6rem !important;
+    height: 4.4rem !important;
+  }
+  .font-size{
+    font-size: calc(1.26rem + -1vw) !important;
+  }
+}
 @media (max-width: 650px){
     .layout-container02 {
         display: flex !important;
@@ -346,7 +372,6 @@ background: none;
     height: auto;
     overflow-y: hidden;
     padding: 30px 30px 30px 30px;
-    background-color: $sub-color02;
 }
 
 .styled-div .content {

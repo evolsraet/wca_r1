@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid" v-if="auctionDetail">
-    <div v-if="isDealer || !chosendlvr && !auctionChosn && !showReauctionView && (auctionDetail.data.status !== 'wait' && isUser) " class="container">
+    <div v-if="isDealer || !chosendlvr && !auctionChosn && !showReauctionView && (auctionDetail.data.status !== 'wait' && isUser)" class="container">
       <div class="web-content-style02">
         <div class="container p-1">
           <div>
@@ -507,10 +507,14 @@
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
             <div class="text-start mt-2">
-              <p class="text-secondary opacity-50">낙찰 딜러 :<span class="tc-red">&nbsp; 홍길동 딜러</span></p>
-              <p class="text-secondary opacity-50">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1">3500 만원</span></p>
-              <p class="text-secondary opacity-50">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1">(농협은행) 0000-0088-0024</span></p>
+              <p class="text-secondary opacity-50">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1">{{auctionDetail.data.final_price}}</span></p>
+              <p class="text-secondary opacity-50">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1">({{auctionDetail.data.bank}}은행) {{auctionDetail.data.account}}</span></p>
               <p class="text-secondary opacity-50">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red ms-1">2024년 6월 26일 오후 6:12</span></p>
+              <div v-if="isUser && auctionDetail.data.status == 'chosen'">
+                <button class="btn primary-btn w-100 my-2" @click="showModal2">
+                  탁송일 입력하기
+                </button>
+              </div>
             </div>
             <div>
               <button class="border-6 btn-fileupload my-4 shadow02 text-secondary opacity-50" @click="AttachedInform">딜러 첨부파일</button>
@@ -609,7 +613,7 @@
                     </div>
                     </div>
                   </BottomSheet02> 
-                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer && isMyBid">
+                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer">
                     <div>
                       <h4>낙찰 완료</h4>
                       <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요?</p>
@@ -710,7 +714,7 @@
                             </li>
                           </ul>
                           <!-- 취소 모달 -->
-                          <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />
+                       <!-- <auction-modal v-if="isModalVisible" :showModals="isModalVisible" :auctionId="selectedAuctionId" @close="closeModal" @confirm="handleConfirmDelete" />--> 
                         </div>
                          <!-- 딜러 선택시 모달 -->
                     
@@ -753,8 +757,10 @@
                       <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                       </div>
                     </div>
-                    <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo"  :fileSignData = "registerForm" @close="handleModalClose" @confirm="handleDealerConfirm" />
-</template>
+                    <div>
+                        <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo"  :fileSignData = "registerForm" @close="handleModalClose" @confirm="handleDealerConfirm" />
+                    </div>
+        </template>
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount , inject,reactive,nextTick} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -919,7 +925,6 @@ const highestBid = ref(0);
 const lowestBid = ref(0);
 const fileUserSignData = ref({});
 const currentPage = ref(1);
-const isMyBid = ref(false);
 
 const sortedTopBids = computed(() => {
   if (!auctionDetail.value?.data?.top_bids) {
@@ -1037,9 +1042,14 @@ const temporarySelectedAuction = ref(null);
 const showModal = ref(false); 
 const scrollableContent = ref(null); 
 
+const showModal2 = () => {
+    connectDealerModal.value = true;
+    chosendlvr.value=true;
+};
+
 const selectAuction = (id) => {
   temporarySelectedAuction.value = DOMauctionsData.value.find(auction => auction.id === id);
-  //console.log('선택된 항목:', temporarySelectedAuction.value); 
+  console.log('선택된 항목:', temporarySelectedAuction.value); 
 };
 
 const dealerAddrConnect = () => {
@@ -1055,6 +1065,7 @@ const dealerAddrConnect = () => {
     }
   });
 };
+const selectedAuctionId = ref(null);
 const closeAddr = () => {
   showModal.value = false; 
 }
@@ -1074,7 +1085,7 @@ const renderAuctionItems = async(page = 1) => {
     auctionItem.classList.add('auction-item');
     auctionItem.setAttribute('data-id', auction.id);
     auctionItem.innerHTML = `
-      <div class="complete-car">
+      <div class="complete-car my-3">
         <div class="my-auction">
           <div class="bid-bc p-2" style="max-height: 480px;">
             <ul class="px-0 inspector_list max_width_900">
@@ -1188,7 +1199,8 @@ const reauction = async () => {
 /* 사용자 경매 취소 눌렀을시의 모달 */ 
 const openModal = () => {
 //isModalVisible.value = true;
-  selectedAuctionId.value = auctionDetail.value?.data.id;
+  console.log("옥션 디테일 :",auctionDetail?.value?.data.id);
+  selectedAuctionId.value = auctionDetail?.value?.data.id;
   const text= `<div class="enroll_box" style="position: relative;">
                   <img src="${drift}" alt="자동차 이미지" width="160" height="160">
                   <p class="overlay_text02">경매를 취소하시겠습니까?</p>
@@ -1378,10 +1390,10 @@ const handleClick = (bid, event, index) => {
               <div class="img_box">
                 <img src="${getPhotoUrl(bid)}" alt="Profile Photo" class="profile-photo" />
               </div>
-              <div class="d-flex justify-content-center flex-column flex-nowrap align-center">
+              <div class="text-start d-flex justify-content-center flex-column flex-nowrap align-center">
                 <h4>${bid.dealerInfo.name}</h4>
                 <p>${bid.dealerInfo.company}</p>
-                <p class="mt-4 restar">(4.5점)</p>
+                <p class="mt-2 restar">(4.5점)</p>
               </div>
             </div>
           </div>
@@ -1416,7 +1428,8 @@ const handleClick = (bid, event, index) => {
     .addOption({ padding: 20 }) // swal 기타 옵션 추가
     .callback(async function (result) { // callback 함수를 async로 변경
       if (result.isOk) {
-        await ChosenConfirmSelection(); // reauction 함수 호출
+        await completeAuction(bid);
+        ChosenConfirmSelection();
       } 
     })
     .confirm(textOk);
@@ -1451,8 +1464,8 @@ const handleModalClose = () => {
 const handleDealerConfirm = ({ bid, userData, fileSignData }) => {
   selectedDealer.value = { ...bid, userData };
   connectDealerModal.value = false;
+  chosendlvr.value=false;
   fileUserSignData.value = fileSignData;
-  completeAuction();
 };
 
 const cancelSelection = () => {
@@ -1472,7 +1485,9 @@ const formatDateToString = (date) => {
 };
 
 const completeAuctionModal = ref(false); // 추가된 모달 상태
-const completeAuction = async () => {
+
+const completeAuction = async (bid) => {
+  chosendlvr.value='false'
   auctionDetail.value.data.status = 'chosen';
   const id = route.params.id;
   const currentDate = new Date();
@@ -1480,9 +1495,9 @@ const completeAuction = async () => {
 
   const data = {
     status: 'chosen',
-   // choice_at: formattedDate,
-    final_price: selectedDealer.value.price,
-    bid_id: selectedDealer.value.id,
+    choice_at: formattedDate,
+    final_price: bid.price,
+    bid_id: bid.id, 
   };
 
   try {
@@ -1493,14 +1508,14 @@ const completeAuction = async () => {
     auctionDetail.value.data.status = 'chosen';
     const textOk= `<div class="enroll_box" style="position: relative;">
                    <img src="${drift}" alt="자동차 이미지" width="160" height="160">
-                   <p class="overlay_text04">탁송이 신청되었습니다.</p>
+                   <p class="overlay_text04">선택이 완료 되었습니다.</p>
                    </div>`;
     wica.ntcn(swal)
       .useHtmlText() // HTML 태그 인 경우 활성화
       .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
       .addOption({ padding: 20}) // swal 기타 옵션 추가
       .callback(function (result) {
-                window.location.href = '/auction';
+           ChosenConfirmSelection(); 
         })
       .confirm(textOk);
     } catch (error) {
@@ -1725,18 +1740,6 @@ onMounted(async () => {
         addr2 : user.value.dealer.company_addr2,
         addr_post : user.value.dealer.company_post,
       }
-    }
-  }
-
-  if(auctionDetail.value?.data?.status == 'done' && isDealer.value){
-    const bidsList = auctionDetail.value.data.bids;
-    const bidId = auctionDetail.value.data.bid_id;
-    const foundBid = bidsList.find(bid => bid.id === bidId);
-
-    if (foundBid) {
-      isMyBid.value= true;
-    } else {
-      isMyBid.value= false;
     }
   }
 

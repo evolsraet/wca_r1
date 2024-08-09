@@ -1,7 +1,17 @@
 <template>
+  <div></div>
   <form @submit.prevent="submitForm">
     <div class="row my-5 mov-wide m-auto">
       <div class="card border-0 shadow-none">
+        <div class="d-flex justify-content-start my-3">
+          <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder fs-6">
+            <span class="icon-arrow-left me-2">←</span>목록으로
+          </button>
+        </div>
+        <h4 class="mt-2">{{ boardText }}</h4>
+        <p class="text-secondary opacity-75 fs-6 mb-4">
+          {{ boardTextMessage }}
+        </p>
         <div class="card-body">
           <div class="d-flex justify-content-end">
             <div>
@@ -17,7 +27,7 @@
           <!-- Category -->
           <div v-if="boardId === 'notice'" class="mb-3">
             <h6 class="mt-3">카테고리</h6>
-            <v-select v-model="post.category" :options="categoriesList" :reduce="category => category" label="category" class="form-control" placeholder="Select category"/>
+            <v-select v-model="post.category" :options="categoriesList" :reduce="category => category" label="category" class="form-control" placeholder=""/>
             <div class="text-danger mt-1">
               <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
             </div>
@@ -48,12 +58,21 @@
         <a :href=boardAttachUrl download>{{ post.board_attach_name }}</a>
         <span class="icon-close-img cursor-pointer" @click="triggerFileDelete()"></span>
       </div>
-    </div>
-  </form>
+   <!-- 비밀글 생성 <div class="p-0 my-3 d-flex gap-2">
+      <p class="text-secondary opacity-70">비밀글: </p>
+      <div class="d-flex align-items-center">
+        <p :class="{ 'fw-bolder': isBizChecked }">비밀글을 설정 하시겠습니까?</p>
+        <div class="check_box">
+          <input type="checkbox" id="ch2" v-model="isBizChecked" class="form-control" />
+          <label for="ch2"></label>
+        </div>
+      </div>
+    </div>-->
+  </div>
+</form>
 </template>
-
 <script setup>
-import { onMounted, reactive, ref, inject } from "vue";
+import { onMounted, reactive, ref, inject ,computed} from "vue";
 import TextEditorComponent from "@/components/TextEditorComponent.vue";
 import { useForm, useField, defineRule } from "vee-validate";
 import { required, min } from "@/validation/rules";
@@ -64,22 +83,41 @@ import vSelect from 'vue-select';
 
 defineRule("required", required);
 defineRule("min", min);
-
+const isBizChecked = ref(false);
 const schema = {
   title: "required|min:5",
   content: "required|min:50",
 };
-
+const boardText = computed(() => {
+  switch(boardId) {
+    case 'notice':
+      return '공지사항';
+    case 'claim':
+      return '클레임';
+    default:
+      return boardId;
+  }
+});
+const boardTextMessage = computed(() => {
+  if (boardId === 'notice') {
+    return `${boardText.value}을 작성해주세요.`;
+  } 
+    return '';
+  
+});
 const { validate } = useForm({ validationSchema: schema });
 const { value: title } = useField("title", null, { initialValue: "" });
 const { value: content } = useField("content", null, { initialValue: "" });
-
+function goBackToList() {
+  router.push({ name: 'posts.index', params: { boardId: boardId.value } });
+}
 const post = reactive({
   title,
   content,
   category: '',
   board_attach : '',
-  board_attach_name : ''
+  board_attach_name : '',
+  is_secret: 0 
 });
 
 const fileInputRef = ref(null);
@@ -92,7 +130,7 @@ const swal = inject('$swal');
 const router = useRouter();
 const route = useRoute();
 const boardId = route.params.boardId;
-const auctionId = route.params.auctionId; // Retrieve auctionId from route params
+const auctionId = route.params.auctionId; 
 const boardAttachUrl = ref('');
 
 const getBoardData = async () => {
@@ -129,8 +167,9 @@ const submitPost = async (postData) => {
   serializedPost.append('article[title]', postData.title);
   serializedPost.append('article[content]', postData.content);
   serializedPost.append('article[category]', postData.category);
+  serializedPost.append('article[is_secret]', isBizChecked.value ? 1 : 0); 
   if (boardId === 'claim') {
-    serializedPost.append('article[extra1]', auctionId); // Include auctionId as extra1 when boardId is 'claim'
+    serializedPost.append('article[extra1]', auctionId);
   }
   if(postData.board_attach){
     serializedPost.append('board_attach', postData.board_attach);
@@ -194,6 +233,28 @@ onMounted(() => {
   getBoardData();
 });
 </script>
+
+<style scoped>
+.primary-btn {
+  width: 90px;
+  border-radius: 30px;
+  height: 38px !important;
+}
+
+.image-icon-pen {
+  width: 18px;
+  height: 18px;
+  line-height: unset;
+}
+
+.btn-fileupload {
+  width: 25% !important;
+}
+.cursor-pointer{
+  cursor: pointer;
+}
+</style>
+
 
 <style scoped>
 .primary-btn {

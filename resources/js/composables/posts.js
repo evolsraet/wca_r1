@@ -9,7 +9,8 @@ export function initPostSystem() {
         title: '',
         content: '',
         category: '',
-        thumbnail: ''
+        thumbnail:'',
+        is_secret: 0 
     });
     const pagination = ref({});
     const router = useRouter();
@@ -40,7 +41,6 @@ export function initPostSystem() {
             .callback(function(result) {
                 posts.value = result.data;
                 pagination.value = result.rawData.data.meta;
-                console.log("페이지 네이션 : ",pagination.value)
                 return result.data;
             })
             .get();
@@ -51,10 +51,10 @@ export function initPostSystem() {
         try {
             return wicac.conn()
                 .url(`/api/board/${boardId}/articles/${id}`) 
-                .with(['comments']) 
+                .with(['comments',
+                        'media'
+                ]) 
                 .callback(function(result) {
-                    console.log('result==========================');
-                    console.log(result);
                     post.value = result.data;
                     return result.data;
                 })
@@ -76,6 +76,7 @@ export function initPostSystem() {
         const serializedPost = new FormData();
         serializedPost.append('article[title]', postData.title);
         serializedPost.append('article[content]', postData.content);
+        serializedPost.append('article[is_secret]', isBizChecked.value ? 1 : 0); 
         if (boardId === 'notice') {
             serializedPost.append('article[category]', postData.category);
         }
@@ -102,77 +103,84 @@ export function initPostSystem() {
             isLoading.value = false;
         }
     };
-
     const updatePost = async (boardId, postId, postData) => {
         if (isLoading.value) return;
-
+    
         isLoading.value = true;
         validationErrors.value = {};
-
+    
         const data = {
             article: {
                 title: postData.title,
                 content: postData.content,
             }
         };
-
+    
         if (boardId === 'notice') {
             data.article.category = postData.category;
         }
-
+    
         const serializedPost = new FormData();
         serializedPost.append('article', JSON.stringify(data.article));
-
-        if(postData.board_attach){
+    
+        if (postData.board_attach) {
             serializedPost.append('board_attach', postData.board_attach);
         }
-
-        let alimMsg = ''
-        if(boardId === 'notice'){
+    
+        let alimMsg = '';
+        if (boardId === 'notice') {
             alimMsg = '해당 공지사항을 수정 하시겠습니까?';
-        }else{
+        } else {
             alimMsg = '해당 클레임을 수정 하시겠습니까?';
         }
-
+    
         wica.ntcn(swal)
-        .icon('Q') //E:error , W:warning , I:info , Q:question , S:success
-        .useClose() // 닫기 버튼 활성화본
-        .callback(function(result3) {
-            if(result3.isOk){
-                wicac.conn()
-                .url(`/api/board/${boardId}/articles/${postId}`) 
-                .multipartUpdate() 
-                .param(serializedPost)
-                .callback(function(result) {
-                    if(result.isSuccess){
-                        let successMsg='';
-                        if(boardId === 'notice'){
-                            successMsg = '공지사항이 성공적으로 수정되었습니다.';
-                        }else{
-                            successMsg = '클레임이 성공적으로 수정되었습니다.';
-                        }
-                        wica.ntcn(swal)
-                        .icon('I')
-                        .callback(function(result2) {
-                            if(result2.isOk){
+            .title(alimMsg) // 알림 제목
+            .icon('Q') // E: error, W: warning, I: info, Q: question
+            .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명: wica-salert
+            .callback(function (result3) {
+                if (result3.isOk) {
+                    wicac.conn()
+                        .url(`/api/board/${boardId}/articles/${postId}`)
+                        .multipartUpdate()
+                        .param(serializedPost)
+                        .callback(function (result) {
+                            console.log("Result:", result);
+                            if (result.isSuccess) {
+                                if (postData.fileDeleteChk && postData.fileUUID) {
+                                    deleteBoardAttachFile(postData.fileUUID);
+                                }
+    
+                                let successMsg = '';
+                                if (boardId === 'notice') {
+                                    successMsg = '공지사항이 성공적으로 수정되었습니다.';
+                                } else {
+                                    successMsg = '클레임이 성공적으로 수정되었습니다.';
+                                }
+                                wica.ntcn(swal)
+                                    .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명: wica-salert
+                                    .icon('I') // E: error, W: warning, I: info, Q: question
+                                    .callback(function (result2) {
+                                        if (result2.isOk) {
+                                            isLoading.value = false;
+                                            router.push({ name: 'posts.index', params: { boardId } });
+                                        }
+                                    })
+                                    .alert(successMsg);
+    
+                            } else {
                                 isLoading.value = false;
-                                router.push({ name: 'posts.index', params: { boardId } }); 
-                                //return result.data;                           
+                                validationErrors.value = result.msg;
                             }
                         })
-                        .alert(successMsg);
-                        
-                    }else{
-                        isLoading.value = false;
-                        validationErrors.value = result.msg;
-                    }
-                })
-                .post();
-            }
-        })
-        .alert(alimMsg);
+                        .post();
+                } else {
+                    isLoading.value = false;
+                }
+            })
+            .confirm();
     };
-
+    
     const deletePost = async (boardId, id) => {
         try {
             wica.ntcn(swal)
@@ -318,6 +326,15 @@ export function initPostSystem() {
                 .alert('관리자에게 문의해주세요.');
         }
     };
+
+    const deleteBoardAttachFile = async (UUID) =>{
+        wicac.conn()
+        .url(`/api/media/${UUID}`)
+        .log()
+        .callback(async function(result) {
+        })
+        .delete();
+    }
     
       
     
