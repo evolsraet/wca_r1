@@ -734,6 +734,28 @@ const getDoneAuctions = async (bidsNumList,page) => {
         */
 };
 
+const setTacksong = async (id, data) => {
+    try {
+      const result2 = await wicac.conn()
+        .url(`/api/auctions/${id}`)
+        .param(data)
+        .put();
+  
+      if (result2.isSuccess) {
+        console.log('Auction request sent successfully:', result2);
+        location.reload(); // Reload the page on success
+      } else {
+        console.error('Auction request failed:', result2);
+        wica.ntcn(swal)
+          .title('오류가 발생하였습니다.')
+          .useHtmlText()
+          .icon('E') 
+          .alert('관리자에게 문의해주세요.');
+      }
+    } catch (error) {
+      console.error('Error during API request:', error);
+    }
+  };
 
 const setdestddress = async (id,addrInfo) => {
     const data = {
@@ -821,6 +843,7 @@ const setDeleteFileAuction = async(uuidList) => {
         getAuctionsByDealer,
         getDoneAuctions,
         setdestddress,
+        setTacksong,
     };
     
 }
