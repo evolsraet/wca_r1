@@ -1,132 +1,144 @@
 <template>
   <div class="container row my-2 mov-wide m-auto mb-5">
-  <form @submit.prevent="submitForm">
-    <div>
-      <div class="card border-0 shadow-none">
-        <!-- Form Header -->
-        <h4 class="mt-4">{{ boardText }}</h4>
-        <p class="text-secondary opacity-75 fs-6 mb-4">
-          {{ boardTextMessage }}
-        </p>
-        <div class="card-body my-2">
-          <div class="d-flex justify-content-end">
-            <div>
-              <button v-if="!navigatedThroughHandleRowClick" :disabled="isLoading" class="primary-btn">
-                <div v-show="isLoading" class=""></div>
-                <span v-if="isLoading">Processing...</span>
-                <p class="d-flex lh-base justify-content-center gap-2" v-else>
-                  <span class="image-icon-pen"></span>수정
-                </p>
+    <form @submit.prevent="submitForm">
+      <div>
+        <div class="card border-0 shadow-none">
+          <!-- Form Header -->
+          <h4 class="mt-4">{{ boardText }}</h4>
+          <p class="text-secondary opacity-75 fs-6 mb-4">
+            {{ boardTextMessage }}
+          </p>
+          <div class="card-body my-2">
+            <div class="d-flex justify-content-end" v-if="!navigatedThroughHandleRowClick || (!isUser && !isDealer)">
+              <div>
+                <button :disabled="isLoading" class="primary-btn">
+                  <div v-show="isLoading" class=""></div>
+                  <span v-if="isLoading">Processing...</span>
+                  <p class="d-flex lh-base justify-content-center gap-2" v-else>
+                    <span class="image-icon-pen"></span>수정
+                  </p>
+                </button>
+              </div>
+            </div>
+            <!-- Category -->
+            <div class="mb-3">
+              <label v-if="!navigatedThroughHandleRowClick" for="post-category" class="form-label">카테고리</label>
+              <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)">
+                <p>[ {{ post.category }} ]</p>
+              </div>
+              <v-select
+                v-else
+                v-model="post.category"
+                :options="categories"
+                :reduce="category => category"
+                class="form-control"
+                :disabled="navigatedThroughHandleRowClick"
+                placeholder=""
+              />
+              <div class="text-danger mt-1">
+                <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
+              </div>
+            </div>
+            <!-- Title -->
+            <div class="mb-3">
+              <label v-if="!navigatedThroughHandleRowClick" for="post-title" class="form-label">제목</label>
+              <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)">
+                <h4>{{ post.title }}</h4>
+                <hr>
+              </div>
+              <input v-else v-model="post.title" id="post-title" type="text" class="form-control" :disabled="navigatedThroughHandleRowClick">
+              <div class="text-danger mt-1">
+                <div v-if="validationErrors.title">{{ validationErrors.title }}</div>
+              </div>
+            </div>
+            <!-- Content -->
+            <div class="mb-3">
+              <label  v-if="!navigatedThroughHandleRowClick" for="post-content" class="form-label">컨텐츠 내용</label>
+              <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)" class="py-3">
+                <p>{{ plainTextContent }}</p>
+              </div>
+              <textarea v-else v-if="navigatedThroughHandleRowClick" v-model="plainTextContent" id="post-content" class="form-control" rows="10" disabled style="resize: none;"></textarea>
+              <TextEditorComponent v-else v-model="post.content"/>
+              <div class="text-danger mt-1">
+                <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
+              </div>
+            </div>
+            <div v-if="!navigatedThroughHandleRowClick || (!isUser && !isDealer)">
+              <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
+                파일 첨부
               </button>
+              <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
+              <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
+                <a :href="boardAttachUrl" download>{{ post.board_attach_name }}</a>
+                <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(post.fileUUID)"></span>
+              </div>
             </div>
-          </div>
-          <!-- Category -->
-          <div class="mb-3">
-            <label for="post-category" class="form-label">카테고리</label>
-            <v-select
-              v-model="post.category"
-              :options="categories"
-              :reduce="category => category"
-              class="form-control"
-              :disabled="navigatedThroughHandleRowClick"
-              placeholder=""
-            />
-            <div class="text-danger mt-1">
-              <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
-            </div>
-          </div>
-          <!-- Title -->
-          <div class="mb-3">
-            <label for="post-title" class="form-label">제목</label>
-            <input v-model="post.title" id="post-title" type="text" class="form-control" :disabled="navigatedThroughHandleRowClick">
-            <div class="text-danger mt-1">
-              <div v-if="validationErrors.title">{{ validationErrors.title }}</div>
-            </div>
-          </div>
-          <!-- Content -->
-          <div class="mb-3">
-            <label for="post-content" class="form-label">컨텐츠 내용</label>
-            <textarea v-if="navigatedThroughHandleRowClick" v-model="plainTextContent" id="post-content" class="form-control" rows="10" disabled style="resize: none;"></textarea>
-            <TextEditorComponent v-else v-model="post.content"/>
-            <div class="text-danger mt-1">
-              <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
-            </div>
-          </div>
-          <div v-if="!navigatedThroughHandleRowClick">
-            <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
-              파일 첨부
-            </button>
-            <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
+            <div v-if="navigatedThroughHandleRowClick">
             <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
               <a :href="boardAttachUrl" download>{{ post.board_attach_name }}</a>
               <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(post.fileUUID)"></span>
             </div>
           </div>
-          <div v-if="navigatedThroughHandleRowClick">
-            <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
-              <a :href="boardAttachUrl" download>{{ post.board_attach_name }}</a>
-              <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(post.fileUUID)"></span>
-            </div>
           </div>
         </div>
       </div>
-    </div>
-  </form>
-  <!-- Comments Section -->
-  <div v-if="boardId === 'claim' && navigatedThroughHandleRowClick" class="row my-5 mov-wide m-auto container">
-    <!-- Comments List -->
-    <label for="comments" class="form-label">코멘트</label>
-    <div class="comment-list">
-      <div v-if="post.comments && post.comments.length === 0" class="no-comments text-center tc-primary">
-        코멘트가 없습니다.
-      </div>
-      <div v-else>
-        <div v-for="(comment, index) in post.comments" :key="comment.id" class="comment-item" :class="{ 'new-comment-highlight': comment.isNew }">
-          <div class="d-flex align-items-start">
-            <div class="comment-body">
-              <div v-if="!editCommentIndex.includes(index)">
-                <div class="d-flex justify-content-between">
-                  <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
-                  <p class="comment-date">{{ comment.created_at }}</p>
+    </form>
+    <!-- Comments Section -->
+    <div v-if="boardId === 'claim' && navigatedThroughHandleRowClick" class="row my-5 mov-wide m-auto container">
+      <!-- Comments List -->
+      <label for="comments" class="form-label">코멘트</label>
+      <div class="comment-list">
+        <div v-if="post.comments && post.comments.length === 0" class="no-comments text-center tc-primary">
+          코멘트가 없습니다.
+        </div>
+        <div v-else>
+          <div v-for="(comment, index) in post.comments" :key="comment.id" class="comment-item" :class="{ 'new-comment-highlight': comment.isNew }">
+            <div class="d-flex align-items-start">
+              <div class="comment-body">
+                <div v-if="!editCommentIndex.includes(index)">
+                  <div class="d-flex justify-content-between">
+                    <p class="comment-author">{{ comment.user.name }}<span class="">({{ comment.user.email }})</span></p>
+                    <p class="comment-date">{{ comment.created_at }}</p>
+                  </div>
+                  <p class="comment-content">{{ comment.content }}</p>
                 </div>
-                <p class="comment-content">{{ comment.content }}</p>
-              </div>
-              <div v-else>
-                <textarea v-model="comment.content" class="form-control" rows="6"></textarea>
-                <button @click="saveComment(index, comment.id)" class="btn btn-primary mt-2">수정</button>
-              </div>
-              <div v-if="isCommentByCurrentUser(comment.user_id)" class="d-flex justify-content-end align-items-center">
-                <div class="badge" @click="toggleEditComment(index)">
-                  <div class="pointer icon-edit-img"></div>
+                <div v-else>
+                  <textarea v-model="comment.content" class="form-control" rows="6"></textarea>
+                  <button @click="saveComment(index, comment.id)" class="btn btn-primary mt-2">수정</button>
                 </div>
-                <div @click.stop class="ms-2 badge web_style">
-                  <div @click.prevent="handleDeleteComment(comment.id)" class="pointer icon-trash-img"></div>
+                <div v-if="isCommentByCurrentUser(comment.user_id)" class="d-flex justify-content-end align-items-center">
+                  <div class="badge" @click="toggleEditComment(index)">
+                    <div class="pointer icon-edit-img"></div>
+                  </div>
+                  <div @click.stop class="ms-2 badge web_style">
+                    <div @click.prevent="handleDeleteComment(comment.id)" class="pointer icon-trash-img"></div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- New Comment Form -->
-    <div class="new-comment">
-      <label for="new-comment-content" class="form-label">새 코멘트</label>
-      <textarea v-model="newComment.content" class="form-control" rows="3" placeholder="댓글을 입력하세요..."></textarea>
-      <div class="d-flex justify-content-end my-2">
-        <button @click="addComment" class="btn btn-primary mt-2">댓글 추가</button>
+      <!-- New Comment Form -->
+      <div class="new-comment">
+        <label for="new-comment-content" class="form-label">새 코멘트</label>
+        <textarea v-model="newComment.content" class="form-control" rows="3" placeholder="댓글을 입력하세요..."></textarea>
+        <div class="d-flex justify-content-end my-2">
+          <button @click="addComment" class="btn btn-primary mt-2">댓글 추가</button>
+        </div>
       </div>
     </div>
+    <div class="d-flex justify-content-start my-3">
+      <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder w-100 fs-6 btn btn-primary">
+        <span class="icon-arrow-left me-2">←</span>목록으로
+      </button>
+    </div>
   </div>
-  <div class="d-flex justify-content-start my-3">
-    <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder w-100 fs-6 btn btn-primary">
-      <span class="icon-arrow-left me-2">←</span>목록으로
-    </button>
-  </div>
-</div>
   <div v-if="isDealer || isUser">
     <Footer />
   </div>
 </template>
+
 
 <script setup>
 import Footer from "@/views/layout/footer.vue";
@@ -436,5 +448,9 @@ function goBackToList() {
 .form-control:disabled {
     background-color: #fbfbfb !important;
     opacity: 1;
+}
+.contents-view {
+    clear: both;
+    
 }
 </style>
