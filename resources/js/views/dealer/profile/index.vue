@@ -111,8 +111,16 @@
                                 <div class="card-img-top-placeholder grayscale_img"><img src="../../../../img/car_example.png"></div>
                                 <span v-if="bid.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                 <div class="card-body">
-                                    <h5 class="card-title"><span class="blue-box">무사고</span>{{bid.car_no}}</h5>
-                                    <p class="card-text text-secondary opacity-50">현대 쏘나타(DN8)</p>
+                                    <!--<h5 class="card-title"><span class="blue-box">무사고</span>{{bid.car_no}}</h5>-->
+                                    <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                                    <h5>[ {{bid.car_no}} ]</h5>
+                                    <p>2020년 | 2.4km | 무사고</p>
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
+                                        </div>
+                                        <!--<p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>-->
+                                    </div>
                                 </div>
                             </div>
                         </div>
