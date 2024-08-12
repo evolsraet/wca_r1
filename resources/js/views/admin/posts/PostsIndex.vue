@@ -21,7 +21,7 @@
         <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
         <button type="button" class="search-btn" @click="fetchPosts">검색</button>
       </div>
-      <div v-if="boardId === 'notice'" class="container">
+      <div class="container">
         <div class="d-flex justify-content-end">
           <div class="text-start status-selector">
             <input type="radio" name="status" value="all" id="all-notice" hidden v-model="filter">
@@ -44,8 +44,13 @@
                       등록일
                     </div>
                     <div class="select-none">
+                      <span v-if="orderingState.created_at.direction === 'asc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&uarr;</span>
+                      <span v-else-if="orderingState.created_at.direction === 'desc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&darr;</span>
+                      <span v-else-if="orderingState.created_at.direction === '' && orderingState.created_at.column === ''" class="text-blue-600">&uarr;&darr;</span>
+                      <!--
                       <span :class="{'text-blue-600': orderDirection === 'asc' && orderColumn === 'created_at', hidden: orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'created_at'}">&uarr;</span>
                       <span :class="{'text-blue-600': orderDirection === 'desc' && orderColumn === 'created_at', hidden: orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'created_at'}">&darr;</span>
+                      -->
                     </div>
                   </div>
                 </th>
@@ -60,8 +65,13 @@
                       제목
                     </div>
                     <div class="select-none">
+                      <span v-if="orderingState.title.direction === 'asc' && orderingState.title.column === 'title'" class="text-blue-600">&uarr;</span>
+                      <span v-else-if="orderingState.title.direction === 'desc' && orderingState.title.column === 'title'" class="text-blue-600">&darr;</span>
+                      <span v-else-if="orderingState.title.direction === '' && orderingState.title.column === ''" class="text-blue-600">&uarr;&darr;</span>
+                      <!--
                       <span :class="{'text-blue-600': orderDirection === 'asc' && orderColumn === 'title', hidden: orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'title'}">&uarr;</span>
                       <span :class="{'text-blue-600': orderDirection === 'desc' && orderColumn === 'title', hidden: orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'title'}">&darr;</span>
+                      -->
                     </div>
                   </div>
                 </th>
@@ -73,9 +83,9 @@
                   </div>
                 </th>
                 <th v-if="boardId === 'notice' && (isDealer || isUser)" class="px-6 py-3 bg-gray-50 text-left" style="width: 8%;">날짜</th>
-                <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left" style="width: 20%;">차량번호</th>
+                <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">차량번호</th>
           
-                <th v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-3 bg-gray-50 text-left" style="width: 8%;">수정/삭제</th>
+                <th v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">수정/삭제</th>
               </tr>
             </thead>
             <tbody>
@@ -93,19 +103,19 @@
               </tr>
               <tr 
               v-for="post in filteredPosts" 
-              :key="post.id"
+              :key="post.id" @click="handleRowClick(post.id)" class="pointer-cursor"
               >
                 <td v-if="boardId === 'notice' && (isDealer || isUser)">{{ post.id }}</td>
                 <td v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-4 text-sm text-overflow">{{ post.created_at }}</td>
-                <td class="px-6 py-4 text-sm text-overflow">
+                <td class="px-6 py-4 text-sm text-overflow"> 
                   <div>[ {{ post.category }} ]</div>
                 </td>
-                <td class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)"><span v-if="boardId === 'claim'" class="my-2"></span>
+                <td class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}"><span v-if="boardId === 'claim'" class="my-2"></span>
                   <img v-if="post.is_secret == 1" src="../../../../img/scret.png" alt="Secret" class="mb-2" width="20px"  />
                   {{ post.title }}</td>
-                <td v-if="boardId !== 'notice' || (isUser && isDealer) || !isUser&&!isDealer" class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)">{{ stripHtmlTags(post.content) }}</td>
+                <td v-if="boardId !== 'notice' || (isUser && isDealer) || !isUser&&!isDealer" class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}">{{ stripHtmlTags(post.content) }}</td>
                 <td v-if="boardId === 'claim'"><span class="blue-box mb-0 mx-0">{{ auctionDetails[post.extra1]?.data?.car_no || '' }}</span></td>
-                <td v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm text-overflow">
+                <td v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm" @click.stop>
                   <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id }, query: { navigatedThroughHandleRowClick: false } }" class="badge">
                     <div class="icon-edit-img"></div>
                   </router-link>
@@ -207,11 +217,8 @@ const fetchPosts = async (page = 1) => {
   await getPosts(
     boardId.value,  // 전달된 boardId 사용
     page,
-    '',
-    '',
     search_title.value,
     filter.value,  // 필터링 조건 전달
-    '',
     orderColumn.value,
     orderDirection.value
   );
@@ -222,13 +229,36 @@ const fetchPosts = async (page = 1) => {
   }
 };
 
+const orderingState = {
+    created_at: { direction: '', column: '', hit: 0 },
+    title: { direction: '', column: '', hit: 0 },
+};
+
 const updateOrdering = (column) => {
+  /*
   if (orderColumn.value === column) {
     orderDirection.value = orderDirection.value === "asc" ? "desc" : "asc";
   } else {
     orderColumn.value = column;
     orderDirection.value = "asc";
   }
+  */
+
+  let columnState = orderingState[column];
+
+  columnState.hit += 1;
+  
+  if (columnState.hit == 3) {
+      columnState.column = '';
+      columnState.direction = '';
+      columnState.hit = 0;
+  } else {
+      columnState.column = column;
+      columnState.direction = columnState.direction === 'asc' ? 'desc' : 'asc';
+  }
+  orderColumn.value = columnState.column;
+  orderDirection.value = columnState.direction;
+
   fetchPosts();
 };
 
@@ -276,7 +306,7 @@ const filteredPosts = computed(() => {
   }
   return posts.value.filter(post => {
     if (boardId.value === 'claim') {
-      return post.status === filter.value;
+      return post.category === filter.value;
     } else if (boardId.value === 'notice') {
       return post.category === filter.value;
     }
@@ -301,11 +331,18 @@ onMounted(async () => {
   await fetchPosts();
   getBoardData();
 });
-
-watch(route, (newRoute) => {
+watch(route, async (newRoute) => {
   if (newRoute.params.boardId !== boardId.value) {
     boardId.value = newRoute.params.boardId;
-    fetchPosts();
+    
+    // 필터 값을 초기화합니다.
+    filter.value = 'all';
+
+    // 새로운 boardId에 대한 카테고리 데이터를 다시 로드합니다.
+    await getBoardData();
+    
+    // 새로운 boardId에 해당하는 게시물 목록을 다시 로드합니다.
+    await fetchPosts();
   }
 });
 </script>

@@ -60,7 +60,7 @@
                     <span class="text-secondary menu-text opacity-50">매물 관리</span>
                 </router-link>
                 <router-link 
-                    :to="{ name: 'review.index' }" 
+                    :to="{ name: 'review.index'}" 
                     class="menu-item mt-2" 
                     :class="{ active: isActive('review.index') }"
                     @click="toggleNavbar"
@@ -69,20 +69,20 @@
                     <span class="text-secondary menu-text opacity-50">후기 관리</span>
                 </router-link>
                 <router-link 
-                    :to="{ name: 'review.index' }" 
+                    :to="{ name: 'posts.index', params: { boardId: 'notice' } }" 
                     class="menu-item mt-2" 
-                    :class="{ active: isActive('review.index') }"
+                    :class="{ active: isActivePostN('posts.index','/board/notice') }"
                     @click="toggleNavbar"
-                    id="adminNav-review"
+                    id="adminSidebar-notic"
                 >
                     <span class="text-secondary menu-text opacity-50">공지사항 관리</span>
                 </router-link>
                 <router-link 
-                    :to="{ name: 'review.index' }" 
-                    class="menu-item mt-2" 
-                    :class="{ active: isActive('review.index') }"
+                    :to="{ name: 'posts.index', params: { boardId: 'claim' }  }" 
+                    class="menu-item mt-2"
+                    :class="{ active: isActivePostC('posts.index','/board/claim') }" 
                     @click="toggleNavbar"
-                    id="adminNav-review"
+                    id="adminSidebar-claim"
                 >
                     <span class="text-secondary menu-text opacity-50">클레임 관리</span>
                 </router-link>
@@ -116,6 +116,8 @@ function toggleNavbar() {
 }
 
 const isActive = (name) => route.name === name;
+const isActivePostN = (name,path) => route.name === name && route.path.includes(path);
+const isActivePostC = (name,path) => route.name === name && route.path.includes(path);
 const isAdminPage = computed(() => route.path === '/admin');
 
 function toggledash() {
@@ -143,15 +145,24 @@ let user = document.getElementById('adminNav-user');
 let review = document.getElementById('adminNav-review');
 let deposit = document.getElementById('adminNav-deposit');
 let auction = document.getElementById('adminNav-auction');
+let board = document.getElementById('adminSidebar-notic');
+let boardClaim = document.getElementById('adminSidebar-claim');
 
 watch(() => route.name, (to, from) => {
-    console.log('라우터 이름:', to);
     pageName.value = to.split('.')[0];
     addSideBar(user,'users.edit',to);
     addSideBar(deposit,'deposit.approve',to);
     addSideBar(auction,'auction.approve',to);
     addSideBar(review,'review.approve',to);
+    if(route.path.includes('/board/notice/edit')){
+        addSideBar(board,'posts.edit',to);
+    }else if(route.path.includes('/board/claim/edit')){
+        addSideBar(boardClaim,'posts.edit',to);
+    } 
 
+    if(route.path.includes('/board/notice/create')){
+        addSideBar(board,'posts.create',to);
+    }
 }, { immediate: true });
 
 })

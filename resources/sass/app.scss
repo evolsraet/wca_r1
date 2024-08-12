@@ -21,7 +21,13 @@ body {
     background-color: #ffffff ;
     font-family: var(--main-font-family);
 }
-
+.dropdown-menu {
+--bs-dropdown-item-padding-y: 0.5rem;
+left: -48px !important;
+}
+.pagination .page-link:hover{
+  background-color: rgba(255, 255, 255, 0) !important;
+}
   /* 'demo' : 임의의 데이터 */
   .demo::before {
     content: "demo";  

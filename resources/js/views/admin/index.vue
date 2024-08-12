@@ -45,6 +45,9 @@
                 <h4><span data-v-ee657362="" class="admin-icon admin-icon-menu05"></span>공지사항</h4>
                 <router-link class="btn-apply" :to="{ name: 'posts.index', params: { boardId: 'notice' } }">자세히 보기</router-link>
             </div>
+            <p class="text-secondary opacity-50" style="margin-top: 10px;">
+                최근 공지사항 5개만 표시됩니다. 전체 목록을 보려면 ' 자세히 보기 '를 클릭하세요.
+            </p>
                 <div class="tab-nav my-4">
                     <ul>
                         <li class="col-2">
@@ -72,7 +75,7 @@
                                 <tr v-for="(notice, index) in limitedNotices" :key="notice.id">
                                     <td style="width: 10%;">{{ index + 1 }}</td>
                                     <td style="width: 15%;">[ {{ notice.category }} ]</td>
-                                    <td>{{ stripHtmlTags(notice.title) }}</td>
+                                    <td class="text-overflow">{{ stripHtmlTags(notice.title) }}</td>
                                     <td class="date">{{ formatDate(notice.created_at) }}</td>
                                 </tr>
                             </tbody>
@@ -89,7 +92,7 @@ import { ref, onMounted } from 'vue';
 import useUsers from '@/composables/users';
 import useAuctions from '@/composables/auctions';
 import { initReviewSystem } from '@/composables/review';
-import { initPostSystem } from '@/composables/posts'; // Assuming you have a similar setup for posts
+import { initPostSystem } from '@/composables/posts'; 
 
 const { getUserStatus } = useUsers();
 const { getStatusAuctionsCnt } = useAuctions();

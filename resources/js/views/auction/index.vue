@@ -1304,18 +1304,8 @@ const getScsBidsInfo = async (serach_content='') =>{
 
 const getMyBidsGetData = async(serach_content='') =>{
     const myAuctionBidsInfo = await getAuctionsWithBids(currentScsBidsPage.value,currentMyBidsStatus.value,user.value.id,serach_content);
-
-    if(currentMyBidsStatus.value == 'cnsgnmUnregist'){
-        mybidsData.value = myAuctionBidsInfo.data.filter(auction => 
-        (
-            (auction.dest_addr1 === '' || auction.dest_addr1 === null) &&
-            (auction.dest_addr2 === '' || auction.dest_addr2 === null) &&
-            (auction.dest_addr_post === '' || auction.dest_addr_post === null)
-        ));
-    }else{
-        mybidsData.value = myAuctionBidsInfo.data;
-    }
-
+   
+    mybidsData.value = myAuctionBidsInfo.data;
     mybidPagination.value = myAuctionBidsInfo.rawData.data.meta;
     filterLikeData(mybidsData.value);
 }
