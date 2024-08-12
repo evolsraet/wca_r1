@@ -95,8 +95,12 @@
                   <input v-model="auction.choice_at" id="choiceAt" class="form-control" type="datetime-local">
                 </div>
                 <div class="card-body">
+                  <p class="text-secondary opacity-50">탁송희망일</p>
+                  <input v-model="auction.taksong_wish_at" id="choiceAt" class="form-control" type="datetime-local">
+                </div>
+                <div class="card-body">
                   <p class="text-secondary opacity-50">완료일</p>
-                  <input v-model="auction.done_at" id="doneAt" class="form-control" type="datetime-local">
+                  <input v-model="auction.done_at" id="taksongWishAt" class="form-control" type="datetime-local">
                 </div>
                 <div class="card-body">
                   <p class="text-secondary opacity-50">성공수수료</p>
@@ -418,6 +422,7 @@ const auction = reactive({
   addr1: '',
   addr2: '',
   choice_at: '',
+  taksong_wish_at:'',
   done_at: '',
   success_fee: '',
   diag_fee: '',
@@ -703,6 +708,10 @@ onMounted(async () => {
     if(data.done_at){
       const formattedValue = data.done_at.replace(" ", "T").substring(0, 16);  // 형식 변환
       auction.done_at = formattedValue;
+    }
+    if(data.taksong_wish_at){
+      const formattedValue = data.taksong_wish_at.replace(" ", "T").substring(0, 16);  // 형식 변환
+      auction.taksong_wish_at = formattedValue;
     }
     auction.success_fee = data.success_fee;
     auction.diag_fee = data.diag_fee;

@@ -460,6 +460,10 @@ const updateAuction = async (id,auction) => {
         auctionForm.auction.done_at = auction.done_at;
     }
 
+    if(auction.taksong_wish_at){
+        auctionForm.auction.taksong_wish_at = auction.taksong_wish_at;
+    }
+
     const formData = new FormData();
 
     if(auction.status == 'diag'){
