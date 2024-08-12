@@ -40,10 +40,14 @@ export function initPostSystem() {
     };
     
 
-    const getPosts = async (boardId, page = 1) => {
+    const getPosts = async (boardId, page = 1,search_title = '',filter='',column='',direction='') => {
         return wicac.conn()
             .url(`/api/board/${boardId}/articles`)
             .page(`${page}`)
+            .order([
+                [`${column}`,`${direction}`]
+            ])
+            .search(search_title)
             .callback(function(result) {
                 posts.value = result.data;
                 pagination.value = result.rawData.data.meta;

@@ -44,8 +44,13 @@
                       등록일
                     </div>
                     <div class="select-none">
+                      <span v-if="orderingState.created_at.direction === 'asc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&uarr;</span>
+                      <span v-else-if="orderingState.created_at.direction === 'desc' && orderingState.created_at.column === 'created_at'" class="text-blue-600">&darr;</span>
+                      <span v-else-if="orderingState.created_at.direction === '' && orderingState.created_at.column === ''" class="text-blue-600">&uarr;&darr;</span>
+                      <!--
                       <span :class="{'text-blue-600': orderDirection === 'asc' && orderColumn === 'created_at', hidden: orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'created_at'}">&uarr;</span>
                       <span :class="{'text-blue-600': orderDirection === 'desc' && orderColumn === 'created_at', hidden: orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'created_at'}">&darr;</span>
+                      -->
                     </div>
                   </div>
                 </th>
@@ -60,8 +65,13 @@
                       제목
                     </div>
                     <div class="select-none">
+                      <span v-if="orderingState.title.direction === 'asc' && orderingState.title.column === 'title'" class="text-blue-600">&uarr;</span>
+                      <span v-else-if="orderingState.title.direction === 'desc' && orderingState.title.column === 'title'" class="text-blue-600">&darr;</span>
+                      <span v-else-if="orderingState.title.direction === '' && orderingState.title.column === ''" class="text-blue-600">&uarr;&darr;</span>
+                      <!--
                       <span :class="{'text-blue-600': orderDirection === 'asc' && orderColumn === 'title', hidden: orderDirection !== '' && orderDirection !== 'asc' && orderColumn === 'title'}">&uarr;</span>
                       <span :class="{'text-blue-600': orderDirection === 'desc' && orderColumn === 'title', hidden: orderDirection !== '' && orderDirection !== 'desc' && orderColumn === 'title'}">&darr;</span>
+                      -->
                     </div>
                   </div>
                 </th>
@@ -207,11 +217,8 @@ const fetchPosts = async (page = 1) => {
   await getPosts(
     boardId.value,  // 전달된 boardId 사용
     page,
-    '',
-    '',
     search_title.value,
     filter.value,  // 필터링 조건 전달
-    '',
     orderColumn.value,
     orderDirection.value
   );
@@ -222,13 +229,36 @@ const fetchPosts = async (page = 1) => {
   }
 };
 
+const orderingState = {
+    created_at: { direction: '', column: '', hit: 0 },
+    title: { direction: '', column: '', hit: 0 },
+};
+
 const updateOrdering = (column) => {
+  /*
   if (orderColumn.value === column) {
     orderDirection.value = orderDirection.value === "asc" ? "desc" : "asc";
   } else {
     orderColumn.value = column;
     orderDirection.value = "asc";
   }
+  */
+
+  let columnState = orderingState[column];
+
+  columnState.hit += 1;
+  
+  if (columnState.hit == 3) {
+      columnState.column = '';
+      columnState.direction = '';
+      columnState.hit = 0;
+  } else {
+      columnState.column = column;
+      columnState.direction = columnState.direction === 'asc' ? 'desc' : 'asc';
+  }
+  orderColumn.value = columnState.column;
+  orderDirection.value = columnState.direction;
+
   fetchPosts();
 };
 
