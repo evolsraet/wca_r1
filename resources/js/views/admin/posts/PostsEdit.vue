@@ -21,7 +21,7 @@
             </div>
           </div>
           <!-- Category -->
-          <div class="mb-3" v-if="boardId === 'notice'">
+          <div class="mb-3">
             <label for="post-category" class="form-label">카테고리</label>
             <v-select
               v-model="post.category"
@@ -242,7 +242,7 @@ function fileExstCheck(info){
 onMounted(async () => {
   navigatedThroughHandleRowClick.value = route.query.navigatedThroughHandleRowClick == 'true';
 
-  await getBoardCategories();
+  await getBoardCategories(boardId.value);
   await getPost(boardId.value, postId);
   if (postData.value) {
     fileExstCheck(postData.value);
@@ -261,6 +261,7 @@ watchEffect(() => {
     post.category = postData.value.category || '';
     post.comments = postData.value.comments || [];
     plainTextContent.value = stripHtml(postData.value.content);
+    getBoardCategories(boardId.value);
   }
 });
 
@@ -271,13 +272,15 @@ async function submitForm() {
     const updateData = {
       title: post.title,
       content: post.content,
+      category: post.category, 
       comments: post.comments,
       board_attach: post.board_attach,
       fileUUID: post.fileUUID,
       fileDeleteChk: post.fileDeleteChk
     };
 
-    if (boardId.value === 'notice') {
+
+    if (boardId.value === 'notice' || boardId.value === 'claim') {
       updateData.category = post.category;
     }
 
@@ -286,6 +289,7 @@ async function submitForm() {
     Object.assign(validationErrors, form.errors);
   }
 }
+
 
 async function handleDeleteComment(commentId) {
   await deleteComment(commentId);

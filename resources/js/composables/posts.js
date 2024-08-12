@@ -20,19 +20,25 @@ export function initPostSystem() {
     const categories = ref([]);
     const { wicac, wica } = cmmn();
 
-    const getBoardCategories = async () => {
+    const getBoardCategories = async (boardId) => {
         try {
             const response = await axios.get('/api/board');
             if (Array.isArray(response.data.data)) {
-                const noticeBoard = response.data.data.find(board => board.id === 'notice');
-                if (noticeBoard) {
-                    categories.value = JSON.parse(noticeBoard.categories);
+                const selectedBoard = response.data.data.find(board => board.id === boardId);
+                if (selectedBoard) {
+                    categories.value = JSON.parse(selectedBoard.categories);
+                } else {
+                    categories.value = []; 
                 }
+            } else {
+                categories.value = []; 
             }
         } catch (error) {
             console.error('Error fetching board data:', error);
+            categories.value = []; 
         }
     };
+    
 
     const getPosts = async (boardId, page = 1) => {
         return wicac.conn()
@@ -77,7 +83,7 @@ export function initPostSystem() {
         serializedPost.append('article[title]', postData.title);
         serializedPost.append('article[content]', postData.content);
         serializedPost.append('article[is_secret]', isBizChecked.value ? 1 : 0); 
-        if (boardId === 'notice') {
+        if (boardId === 'notice' || boardId === 'claim') {
             serializedPost.append('article[category]', postData.category);
         }
         if (postData.thumbnail) {
@@ -115,11 +121,7 @@ export function initPostSystem() {
                 content: postData.content,
             }
         };
-    
-        if (boardId === 'notice') {
-            data.article.category = postData.category;
-        }
-    
+        data.article.category = postData.category;
         const serializedPost = new FormData();
         serializedPost.append('article', JSON.stringify(data.article));
     
