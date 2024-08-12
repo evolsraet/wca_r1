@@ -85,8 +85,8 @@ defineRule("required", required);
 defineRule("min", min);
 const isBizChecked = ref(false);
 const schema = {
-  title: "required|min:5",
-  content: "required|min:50",
+  title: "required",
+  content: "required",
 };
 const boardText = computed(() => {
   switch(boardId) {
@@ -146,16 +146,57 @@ const getBoardData = async () => {
     console.error('Error fetching board data:', error);
   }
 };
-
 function submitForm() {
+  // 이전 오류 메시지를 초기화
+  validationErrors.category = '';
+  validationErrors.title = '';
+  validationErrors.content = '';
+
   validate().then((form) => {
-    if (form.valid) {
+    // 초기화
+    let errorMessage = '';
+
+    // 카테고리 선택 여부 확인
+    if (boardId === 'notice' && !post.category) {
+      validationErrors.category = '카테고리를 선택해주세요.';
+    }
+
+    // Validation errors 처리
+    if (form.valid && !validationErrors.category) {
       submitPost(post);
     } else {
       Object.assign(validationErrors, form.errors);
+
+      // 각 필드에 대한 오류 메시지 추가
+      if (validationErrors.category && boardId === 'notice') {
+        errorMessage += '카테고리\n';
+      }
+      if (validationErrors.title) {
+        errorMessage += '제목\n';
+      }
+      if (validationErrors.content) {
+        errorMessage += '내용\n';
+      }
+
+      // 에러 메시지가 있을 경우 경고 표시
+      if (errorMessage) {
+        swal({
+          title: '입력 필요',
+          text: `${errorMessage.trim()}이(가) 비어있습니다.`,
+          icon: 'warning',
+          buttons: {
+            confirm: {
+              text: '확인',
+              className: 'btn btn-primary',
+            },
+          },
+        });
+      }
     }
   });
 }
+
+
 
 const submitPost = async (postData) => {
   if (isLoading.value) return;
@@ -198,7 +239,6 @@ const submitPost = async (postData) => {
         .useHtmlText()
         .icon('E') //E:error , W:warning , I:info , Q:question
         .alert('관리자에게 문의해주세요.');
-        //Object.assign(validationErrors, result.msg);
         isLoading.value = false;
       }
   })
