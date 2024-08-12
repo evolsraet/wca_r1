@@ -854,7 +854,6 @@ const getAuctionsWithBids = async (page = 1 , status = "all", userId = '', searc
 
     let request = wicac.conn()
     .url('/api/auctions')
-    .log()
     .with(['bids,likes'])
     .search(search_text)
     .page(`${page}`)
@@ -864,6 +863,8 @@ const getAuctionsWithBids = async (page = 1 , status = "all", userId = '', searc
             request.whereOr('auctions.status','ing,wait');
         } else if(status == 'cnsgnmUnregist'){
             request.addWhere('auctions.status','chosen');
+            request.sprtrAnd();
+            request.addWhere('auctions.dest_addr_post','_null');
         } else{
             request.whereOr('auctions.status',`${status}`);
         }
