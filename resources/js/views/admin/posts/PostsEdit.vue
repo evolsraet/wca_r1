@@ -73,12 +73,6 @@
                 <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(post.fileUUID)"></span>
               </div>
             </div>
-            <div v-if="navigatedThroughHandleRowClick">
-            <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
-              <a :href="boardAttachUrl" download>{{ post.board_attach_name }}</a>
-              <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(post.fileUUID)"></span>
-            </div>
-          </div>
           </div>
         </div>
       </div>
