@@ -22,7 +22,8 @@
             </div>
             <!-- Category -->
             <div class="mb-3">
-              <label v-if="!navigatedThroughHandleRowClick" for="post-category" class="form-label">카테고리</label>
+              <label v-if="!navigatedThroughHandleRowClick && boardId == 'notice'" for="post-category" class="form-label">카테고리</label>
+              <label v-if="!navigatedThroughHandleRowClick && boardId == 'claim'" for="post-category" class="form-label">상태</label>
               <div v-if="isAdmin">
                 <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)">
                 <p>[ {{ post.category }} ]</p>
