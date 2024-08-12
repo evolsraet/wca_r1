@@ -38,17 +38,17 @@
                     <table class="table custom-border mt-5">
                         <thead>
                             <tr class="px-6 py-3 bg-gray-50 justify-content-center">
-                                <th class="col-4">제목</th>
-                                <th>내용</th>
+                                <th class="col-4">카테고리</th>
+                                <th>제목</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-if="latestNotices.length === 0">
                                 <td colspan="2" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
                             </tr>
-                            <tr v-else v-for="notice in latestNotices" :key="notice.id" class="pointer">
-                                <td class="col-4 pointer-cursor text-overflow" @click="goToDetail(notice.id)">{{ stripHtmlTags(notice.title) }}</td>
-                                <td class="text-with-marker pointer-cursor" @click="goToDetail(notice.id)">{{ stripHtmlTags(notice.content) }}</td>
+                            <tr v-else v-for="notice in latestNotices" :key="notice.id" class="pointer"  @click="goToDetail(notice.id)">
+                                <td class="col-4 pointer-cursor text-overflow">[{{notice.category}}]</td>
+                                <td class="text-with-marker pointer-cursor">{{ stripHtmlTags(notice.title) }}</td>
                             </tr>
                         </tbody>
                     </table>
