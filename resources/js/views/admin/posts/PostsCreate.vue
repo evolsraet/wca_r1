@@ -131,6 +131,11 @@ const route = useRoute();
 const boardId = route.params.boardId;
 const auctionId = route.params.auctionId; 
 const boardAttachUrl = ref('');
+function stripHtml(html) {
+  let tmp = document.createElement("DIV");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
+}
 
 const getBoardData = async () => {
   try {
@@ -195,6 +200,7 @@ function submitForm() {
     }
   });
 }
+
 
 
 

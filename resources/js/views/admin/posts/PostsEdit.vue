@@ -25,29 +25,28 @@
               <label v-if="!navigatedThroughHandleRowClick && boardId == 'notice'" for="post-category" class="form-label">카테고리</label>
               <label v-if="!navigatedThroughHandleRowClick && boardId == 'claim'" for="post-category" class="form-label">상태</label>
               <div v-if="isAdmin">
-                <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)">
-                <p>[ {{ post.category }} ]</p>
-                </div>
+            
+                <label>카테고리</label>
+            
                 <v-select
-                  v-else
-                  v-model="post.category"
+                v-model="post.category"
                   :options="categories"
                   :reduce="category => category"
                   class="form-control"
                   :disabled="navigatedThroughHandleRowClick"
                   placeholder=""
-                />
-                <div class="text-danger mt-1">
-                  <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
+                  />
+                  <div class="text-danger mt-1">
+                    <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
+                  </div>
                 </div>
-              </div>
-              <div v-else>
-                <input type="text" class="form-control" v-model="post.category" disabled/>
+                <div v-else>
+                <h5>[{{ post.category }}]</h5>
               </div>
             </div>
             <!-- Title -->
             <div class="mb-3">
-              <label v-if="!navigatedThroughHandleRowClick" for="post-title" class="form-label">제목</label>
+              <label v-if="!navigatedThroughHandleRowClick || isAdmin" for="post-title" class="form-label">제목</label>
               <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)">
                 <h4>{{ post.title }}</h4>
                 <hr>
@@ -59,7 +58,7 @@
             </div>
             <!-- Content -->
             <div class="mb-3">
-              <label v-if="!navigatedThroughHandleRowClick" for="post-content" class="form-label">컨텐츠 내용</label>
+              <label v-if="!navigatedThroughHandleRowClick || isAdmin" for="post-content" class="form-label">컨텐츠 내용</label>
               <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)" class="py-3">
                 <div v-html="sanitizedContent"></div>
               </div>
