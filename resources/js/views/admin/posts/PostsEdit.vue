@@ -4,7 +4,7 @@
     <div>
       <div class="card border-0 shadow-none">
         <!-- Form Header -->
-        <h4 class="mt-2">{{ boardText }}</h4>
+        <h4 class="mt-4">{{ boardText }}</h4>
         <p class="text-secondary opacity-75 fs-6 mb-4">
           {{ boardTextMessage }}
         </p>

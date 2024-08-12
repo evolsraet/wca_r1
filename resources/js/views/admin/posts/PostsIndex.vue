@@ -75,7 +75,7 @@
                 <th v-if="boardId === 'notice' && (isDealer || isUser)" class="px-6 py-3 bg-gray-50 text-left" style="width: 8%;">날짜</th>
                 <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left" style="width: 20%;">차량번호</th>
           
-                <th v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-3 bg-gray-50 text-left">수정/삭제</th>
+                <th v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-3 bg-gray-50 text-left" style="width: 8%;">수정/삭제</th>
               </tr>
             </thead>
             <tbody>
