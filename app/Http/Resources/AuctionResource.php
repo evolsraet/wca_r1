@@ -69,7 +69,7 @@ class AuctionResource extends JsonResource
 
         $this->withFiles($parentArray, $addArray);
 
-        // 날짜 필드를 Y-m-d 포맷으로 변환
+        // 날짜 필드를 Y-m-d 포맷으로 변환 (맨 마지막)
         foreach ($parentArray as $key => $value) {
             if (str_ends_with($key, '_at') && $value !== null) {
                 $parentArray[$key] = $this->$key->toDatetimeString();

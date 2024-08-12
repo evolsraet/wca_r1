@@ -12,12 +12,13 @@ class AuctionFactory extends Factory
     public function definition(): array
     {
         $user = \App\Models\User::role('user')->inRandomOrder()->first();
+        $status = $this->faker->randomElement(array_keys((new Auction)->enums['status']));
 
-        return [
+        $result = [
             'user_id' => $user->id,
             'owner_name' => $this->faker->name,
             'car_no' => $this->faker->bothify('??###'),
-            'status' => $this->faker->randomElement(array_keys((new Auction)->enums['status'])),
+            'status' => $status,
             'region' => $this->faker->word,
             'addr_post' => $this->faker->postcode,
             'addr1' => $this->faker->address,
@@ -28,5 +29,11 @@ class AuctionFactory extends Factory
             'verified' => $this->faker->boolean,
             'hit' => $this->faker->randomDigit,
         ];
+
+        if ($status === 'chosen') {
+            $result['choice_at'] = $this->faker->dateTimeBetween('-1 month', '+1 month');
+        }
+
+        return $result;
     }
 }

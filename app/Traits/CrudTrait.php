@@ -264,6 +264,9 @@ trait CrudTrait
             $fieldWithTable = $row[0];
             $operator = isset($row[2]) ? $row[1] : null;
             $value = $row[2] ?? $row[1];
+            if ($value == '_null') {
+                $value = null;
+            }
 
             // where 와 기타 구분
             $whereFunction = 'where';
@@ -293,6 +296,8 @@ trait CrudTrait
                 default:
                     break;
             }
+
+
 
             // 조건처리
             switch ($fieldWithTable) {
