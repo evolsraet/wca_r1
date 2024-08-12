@@ -64,7 +64,7 @@
                     </div>
                     <div class="d-flex">
                       <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                      <h5 v-if="auctionDetail.data.is_reauction !== 0"><span class="gray-box">재경매</span></h5>
+                      <h5 v-if="auctionDetail.data.is_reauction !== 0"><span class="gray-box border-6">재경매</span></h5>
                     </div>
                    <div v-if="auctionDetail.data.status ==='chosen' || auctionDetail.data.status ==='dlvr'">
                      <!-- <hr>

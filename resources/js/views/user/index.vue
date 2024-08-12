@@ -39,7 +39,7 @@
                                                   <p>2020년 | 2.4km | 무사고</p>
                                                   <div class="d-flex justify-content-between align-items-baseline">
                                                     <div>
-                                                        <span class="blue-box">보험 3건</span><span class="gray-box">재경매</span>
+                                                        <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
                                                         <h5 class="tc-red fs-5">{{ amtComma(auction.win_bid.price) }}</h5>
                                                     </div>
                                                 </div>

@@ -537,8 +537,8 @@ TODO:
                                                         <p class="tc-gray mt-0"> 2020 년 |<span class="mx-1">2.4km</span>| 무사고</p>
                                                         <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
                                                         <div class="d-flex">
-                                                            <h5 class="card-title"><span class="blue-box fw-bold">무사고</span></h5>
-                                                            <h5 v-if="auction.is_reauction !== 0"><span class="gray-box">재경매</span></h5>
+                                                            <h5 class="card-title"><span class="blue-box fw-bold border-6">무사고</span></h5>
+                                                            <h5 v-if="auction.is_reauction !== 0"><span class="gray-box border-6">재경매</span></h5>
                                                             <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
                                                             <!--<p class="tc-gray">{{ auction.car_no }}</p>-->
                                                         </div>
@@ -626,8 +626,8 @@ TODO:
                                                 <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
                                                 <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
-                                                    <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                                    <h5 v-if="auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                                                    <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                                                    <h5 v-if="auction.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
                                                     <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
                                                    <!-- <p class="tc-gray">{{ auction.car_no }}</p>-->
                                                 </div>
@@ -685,8 +685,8 @@ TODO:
                                             <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
                                             <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
                                             <div class="d-flex">
-                                                <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                                <h5 v-if="auction.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                                                <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                                                <h5 v-if="auction.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
                                             </div>
                                         </div>
                                     </div>
@@ -748,11 +748,11 @@ TODO:
                                             </div>
                                             <div class="card-body">
                                                 <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                <p class="tc-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                                <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
                                                 <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
-                                                    <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                                    <h5 v-if="bid.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                                                    <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                                                    <h5 v-if="bid.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
                                                     <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
                                                    <!--<p class="tc-gray">{{ bid.auction.car_no }}</p>--> 
                                                 </div>
@@ -823,11 +823,11 @@ TODO:
                                                 </div>
                                                 <div class="card-body">
                                                     <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                    <p class="tc-gray mt-0"> 2020 년 / 2.4km / 무사고</p>
+                                                    <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
                                                     <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
                                                     <div class="d-flex">
-                                                        <h5 class="card-title"><span class="blue-box">무사고</span></h5>
-                                                        <h5 v-if="scsBid.hope_price !== null"><span class="gray-box">재경매</span></h5>
+                                                        <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                                                        <h5 v-if="scsBid.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
                                                         <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
                                                       <!--<p class="tc-gray">{{ scsBid.auction.car_no }}</p>-->  
                                                     </div>

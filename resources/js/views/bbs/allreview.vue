@@ -313,7 +313,7 @@ animation: scroll 20s linear infinite;
   background-color: #fff;
   width: 250px;
   height: 100%;
-  box-shadow: 0 0 6px 0 rgba(27, 50, 142, 0.2);
+  box-shadow: 0 0 2px 0 rgba(27, 50, 142, 0.2);
   overflow: hidden;
   text-align: center;
   display: flex;
