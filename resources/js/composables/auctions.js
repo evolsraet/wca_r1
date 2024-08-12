@@ -206,7 +206,6 @@ const getAuctionById = async (id) => {
         auction.value = result.data;
         auction.value.dealer_name = null;
         if (auction.value.win_bid) {
-            console.log(auction.value.win_bid.user_id);
             const data = await getUser(auction.value.win_bid.user_id);
 
             const name = data.dealer.name;
@@ -343,7 +342,6 @@ const AuctionCarInfo = async (carInfoForm) => {
     const formData = new FormData();
     formData.append('auction', JSON.stringify(payload.auction));
     if(auctionData.auction.file_auction_proxy){
-        console.log('들어옴');
         formData.append('file_auction_proxy', auctionData.auction.file_auction_proxy);
     }
     
@@ -431,7 +429,6 @@ const AuctionReauction = async (id, data) => {
 };
 //수정
 const updateAuction = async (id,auction) => {
-    console.log('111111');
     const auctionForm = {
         auction : {
             bank : auction.bank,
@@ -446,16 +443,28 @@ const updateAuction = async (id,auction) => {
             status : auction.status,
             addr1: auction.addr1,
             addr2: auction.addr2,
-            //final_at: auction.final_at,
-            choice_at: auction.choice_at,
-            done_at: auction.done_at,
             success_fee: auction.success_fee,
             diag_fee: auction.diag_fee,
             total_fee: auction.total_fee,
             hope_price: auction.hope_price,
             final_price: auction.final_price,
             is_biz: auction.isBizChecked,
+            dest_addr_post: auction.dest_addr_post,
+            dest_addr1: auction.dest_addr1,
+            dest_addr2: auction.dest_addr2,
         }
+    }
+
+    if(auction.choice_at){
+        auctionForm.auction.choice_at = auction.choice_at;
+    }
+
+    if(auction.done_at){
+        auctionForm.auction.done_at = auction.done_at;
+    }
+
+    if(auction.taksong_wish_at){
+        auctionForm.auction.taksong_wish_at = auction.taksong_wish_at;
     }
 
     const formData = new FormData();
@@ -467,8 +476,6 @@ const updateAuction = async (id,auction) => {
         formData.append('mode', auctionForm.mode);
     }
     
-
-    console.log(JSON.stringify(auctionForm));
 
     formData.append('auction', JSON.stringify(auctionForm.auction));
     if(auction.file_auction_proxy){
@@ -491,7 +498,6 @@ const updateAuction = async (id,auction) => {
             .param(formData)
             .multipartUpdate()
             .callback(function(result) {
-                console.log('wicac.conn callback ' , result);
                 if(result.isSuccess){
                     wica.ntcn(swal)
                     .useHtmlText()

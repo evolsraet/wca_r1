@@ -7,8 +7,8 @@
           <img :src="photoUrl(userData)" alt="Profile Photo" class="profile-photo" />
           <div class="deal-info">
             <p class="text-secondary opacity-50">낙찰액</p>
-            <h4>{{ amtComma(selectedBid?.price ?? 0) }}</h4>
-            <p><span class="fw-medium">{{ userData?.dealer.name }}</span>&nbsp;딜러</p>
+            <h4>{{ amtComma(selectedBid?.price ?? auctionDetail?.data?.final_price ??0) }}</h4>
+            <p><span class="fw-medium">{{ userData?.dealer?.name ?? auctionDetail?.data?.dealer_name }}</span>&nbsp;딜러</p>
             <p class="restar">4.5점</p>
           </div>
         </div>
@@ -70,11 +70,11 @@
       <div class="summary-box d-flex flex-column p-3 mt-3">
         <div class="d-flex justify-content-start gap-5 mb-2">
           <p class="mb-0">낙찰액</p>
-          <p class="mb-0">{{ amtComma(selectedBid?.price ?? 0) }}</p>
+          <p class="mb-0">{{ amtComma(selectedBid?.price ?? auctionDetail?.data?.final_price ??0) }}</p>
         </div>
         <div class="d-flex justify-content-start gap-5">
           <p class="mb-0"><span class="me-3">딜</span>러</p>
-          <p class="mb-0">{{ userData?.dealer.name }}</p>
+          <p class="mb-0">{{ userData?.dealer?.name ?? auctionDetail?.data?.dealer_name }}</p>
         </div>
         <div class="d-flex justify-content-start gap-5 mt-2">
           <p class="mb-0">탁송일</p>
@@ -188,15 +188,14 @@ const confirmSelection = async () => {
 
 
 
-
 const fetchAuctionDetail = async () => {
   try {
     const auctionId = route.params.id;  
-    auctionDetail.value = await getAuctionById(auctionId);
-    days.value = getNextAvailableDays(auctionDetail.value.data.choice_at, auctionDetail.value.data.takson_end_at);
-    console.log('Auction Detail:', auctionDetail.value);  
+    auctionDetail.value = await getAuctionById(auctionId);  
+    days.value = getNextAvailableDays(auctionDetail.value.data.choice_at, auctionDetail.value.data.takson_end_at);  
+    console.log('Auction Detail:', auctionDetail.value); 
   } catch (error) {
-    console.error('Error fetching auction details:', error);
+    console.error('Error fetching auction details:', error); 
   }
 };
 
@@ -205,10 +204,12 @@ onMounted(async () => {
   script.src = "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
   script.onload = () => console.log('Daum Postcode script loaded');
   document.head.appendChild(script);
-  await getAuctions();
-  await fetchAuctionDetail();
+
+  await getAuctions();  // 모든 경매 데이터를 가져옴
+  await fetchAuctionDetail();  // 현재 경매 상세 정보를 가져옴
   document.body.style.overflowX = 'hidden';
 });
+
 
 const navigateToCompletionSuccess = async () => {
   await selectDealer(selectedBid.value, selectedBid.value.index);
@@ -258,25 +259,36 @@ function getNextAvailableDays(choiceAt, taksonEndAt) {
 }
 
 const toggleView = () => {
+  if (selectedDay.value === null || selectedTime.value === null) {
+    swal.fire({
+      title: '탁송일을 선택해 주세요',
+      text: '원하는 탁송일과 시간을 선택해 주세요.',
+      icon: 'warning',
+      confirmButtonText: '확인'
+    });
+    return;
+  }
+
+  if (!selectedBank.value || !account.value) {
+    swal.fire({
+      title: '은행 정보 입력 필요',
+      text: '은행과 계좌번호를 입력해 주세요.',
+      icon: 'warning',
+      confirmButtonText: '확인'
+    });
+    return;
+  }
   const textOk = `
     <h4 class="mt-4">마지막으로 꼼꼼히 확인해 주세요!</h4>
     <h5 class="tc-red fs-6">&#8251; 매도용 인감증명서를 준비해주세요</h5>
     <div class="summary-box d-flex flex-column p-3 mt-3">
-      <div class="d-flex justify-content-start gap-5 mb-2">
-        <p class="mb-0">낙찰액</p>
-        <p class="mb-0">${amtComma(selectedBid.value?.price ?? 0)}</p>
-      </div>
-      <div class="d-flex justify-content-start gap-5">
-        <p class="mb-0"><span class="me-3">딜</span>러</p>
-        <p class="mb-0">${userInfo.value?.dealer?.name}</p>
-      </div>
       <div class="d-flex justify-content-start gap-5 mt-2">
         <p class="mb-0">탁송일</p>
         <p class="mb-0"><span>${yearLabel.value} </span>&nbsp;${monthLabel.value} ${selectedDateLabel.value} ${selectedTime.value}</p>
       </div>
       <div class="d-flex justify-content-start gap-5 mt-2">
         <p class="mb-0"><span class="me-3">은</span>행</p>
-        <p class="mb-0"><span class="me-2">${selectedBank.value}</span>|<span class="ms-2">${account.value}</span></p>
+        <p class="mb-0"><span class="me-2">${selectedBank.value ?? '선택 안됨'}</span>|<span class="ms-2">${account.value ?? '계좌번호 없음'}</span></p>
       </div>
     </div>
     <p class="text-secondary opacity-75 text-center mt-3">취소와 변경이 어려우니 유의해 주세요.</p>

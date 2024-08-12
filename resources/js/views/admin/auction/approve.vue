@@ -72,12 +72,12 @@
                 <div class="card-body">
                   <p class="text-secondary opacity-50">우편주소</p>
                   <input v-model="auction.addr_post" placeholder="우편번호" class="input-dis form-control" readonly>
+                  <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                   <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                     <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
                   </div>
                   <div>
                     <input v-model="auction.addr1" class="input-dis form-control" readonly>
-                    <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
                   </div>
                 </div>
                 <div class="card-body">
@@ -95,8 +95,12 @@
                   <input v-model="auction.choice_at" id="choiceAt" class="form-control" type="datetime-local">
                 </div>
                 <div class="card-body">
+                  <p class="text-secondary opacity-50">탁송희망일</p>
+                  <input v-model="auction.taksong_wish_at" id="choiceAt" class="form-control" type="datetime-local">
+                </div>
+                <div class="card-body">
                   <p class="text-secondary opacity-50">완료일</p>
-                  <input v-model="auction.done_at" id="doneAt" class="form-control" type="datetime-local">
+                  <input v-model="auction.done_at" id="taksongWishAt" class="form-control" type="datetime-local">
                 </div>
                 <div class="card-body">
                   <p class="text-secondary opacity-50">성공수수료</p>
@@ -122,6 +126,18 @@
                   <p class="text-secondary opacity-50">낙찰가</p>
                   <input v-model="auction.final_price" id="finalPrice" class="form-control" @input="updateKoreanAmount('finalPrice')">
                   <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ finalPriceFeeKorean }}</p>
+                </div>
+                <div class="form-group my-3">
+                  <label for="dealer">인수차량 도착지 주소</label>
+                  <input type="text" v-model="auction.dest_addr_post" class="input-dis form-control" readonly />
+                  <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
+                  <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
+                  </div>
+                  <div class="input-with-button">
+                    <input type="text" v-model="auction.dest_addr1" class="input-dis form-control" readonly />
+                  </div>
+                  <input type="text" v-model="auction.dest_addr2" class="form-control" />
                 </div>
                 <div></div>
                 <div class="mb-3">
@@ -417,8 +433,8 @@ const auction = reactive({
   status: '',
   addr1: '',
   addr2: '',
- // final_at: '',
   choice_at: '',
+  taksong_wish_at:'',
   done_at: '',
   success_fee: '',
   diag_fee: '',
@@ -431,6 +447,9 @@ const auction = reactive({
   file_auction_owner_name: '',
   deletFileList:'',
   isBizChecked:false,
+  dest_addr_post:'',
+  dest_addr1:'',
+  dest_addr2:'',
 });
 
 const route = useRoute();
@@ -680,8 +699,6 @@ onMounted(async () => {
   await fetchAuctionDetails();
   const data = auctionDetails.value.data;
   document.getElementById("status").value = data.status;
-  console.log('data=============================');
-console.log(data);
   watchEffect(() => {
     updated_at = data.updated_at;
     created_at = data.created_at;
@@ -698,8 +715,19 @@ console.log(data);
     auction.addr1 = data.addr1;
     auction.addr2 = data.addr2;
     //auction.final_at = data.final_at;
-    auction.choice_at = data.choice_at;
-    auction.done_at = data.done_at;
+
+    if(data.choice_at){
+      const formattedValue = data.choice_at.replace(" ", "T").substring(0, 16);  // 형식 변환
+      auction.choice_at = formattedValue;
+    }
+    if(data.done_at){
+      const formattedValue = data.done_at.replace(" ", "T").substring(0, 16);  // 형식 변환
+      auction.done_at = formattedValue;
+    }
+    if(data.taksong_wish_at){
+      const formattedValue = data.taksong_wish_at.replace(" ", "T").substring(0, 16);  // 형식 변환
+      auction.taksong_wish_at = formattedValue;
+    }
     auction.success_fee = data.success_fee;
     auction.diag_fee = data.diag_fee;
     auction.total_fee = data.total_fee;
@@ -707,6 +735,9 @@ console.log(data);
     auction.final_price = data.final_price;
     auction.bank = data.bank;
     auction.account = data.account;
+    auction.dest_addr_post = data.dest_addr_post;
+    auction.dest_addr1 = data.dest_addr1;
+    auction.dest_addr2 = data.dest_addr2;
     if(data.is_biz == 1){
       auction.isBizChecked = true;
     }
@@ -727,10 +758,15 @@ console.log(data);
       finalPriceFeeKorean.value = amtComma(data.final_price);
     }
   });
-
-  console.log('auctionData===============');
-  console.log(auction);
 });
+
+function editPostCodeReceive(elementName) {
+  openPostcode(elementName)
+    .then(({ zonecode, address }) => {
+      auction.dest_addr_post = zonecode;
+      auction.dest_addr1 = address;
+    });
+}
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', checkScreenWidth);
@@ -774,11 +810,12 @@ onBeforeUnmount(() => {
 .card-body:last-child {
   margin-bottom: 0; 
 }
-.search-btn {
-  transform: translateY(-241%) !important; 
-}
+
 
 .cursor-pointer{
   cursor: pointer;
+}
+.search-btn {
+  transform: translateY(-119%) !important;
 }
 </style>

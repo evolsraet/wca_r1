@@ -668,17 +668,21 @@ watch(() => route.params.id, () => {
   
   function toggleOverlay(show) {
     const overlay = document.querySelector('.overlay');
-    if (show) {
-      overlay.style.display = 'block';
-      setTimeout(() => {
-        overlay.style.opacity = '1';
-      }, 10);
-    } else {
-      overlay.style.opacity = '0';
-      setTimeout(() => {
-        overlay.style.display = 'none';
-      }, 300);
+    
+    if(overlay){
+      if (show) {
+        overlay.style.display = 'block';
+        setTimeout(() => {
+          overlay.style.opacity = '1';
+        }, 10);
+      } else {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+          overlay.style.display = 'none';
+        }, 300);
+      }
     }
+    
   }
   onUnmounted(() => {
   window.removeEventListener('resize', checkWidth);

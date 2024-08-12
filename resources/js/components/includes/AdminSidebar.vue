@@ -58,7 +58,7 @@
                     </router-link>
                 </li>
                 <li class="nav-item mb-4">
-                    <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="nav-link side-navbar-link" id="adminSidebar-review">
+                    <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="nav-link side-navbar-link" id="adminSidebar-notic">
                         <div class="d-flex align-items-center">
                             <div class="admin-icon admin-icon-pen admin-icon-small mx-2"></div>
                             <span class="d-none d-sm-inline ps-2" >공지 관리</span>
@@ -67,7 +67,7 @@
                     </router-link>
                 </li>
                 <li class="nav-item mb-4">
-                    <router-link :to="{ name: 'posts.index', params: { boardId: 'claim' } }" class="nav-link side-navbar-link" id="adminSidebar-review">
+                    <router-link :to="{ name: 'posts.index', params: { boardId: 'claim' } }" class="nav-link side-navbar-link" id="adminSidebar-claim">
                         <div class="d-flex align-items-center">
                             <div class="admin-icon admin-icon-review admin-icon-small mx-2"></div>
                             <span class="d-none d-sm-inline ps-2" >클레임 관리</span>
@@ -101,7 +101,6 @@ const {
 } = useUsers();
 
 function addSideBar(element, routeName, to){
-    
     //console.log(element);
     
     if(to === routeName){
@@ -128,7 +127,8 @@ onMounted(async () => {
     let review = document.getElementById('adminSidebar-review');
     let deposit = document.getElementById('adminSidebar-deposit');
     let auction = document.getElementById('adminSidebar-auction');
-
+    let board = document.getElementById('adminSidebar-notic');
+    let boardClaim = document.getElementById('adminSidebar-claim');
     watch(() => route.name, (to, from) => {
         //console.log('라우터 이름:', to);
         pageName.value = to.split('.')[0];
@@ -136,6 +136,15 @@ onMounted(async () => {
         addSideBar(deposit,'deposit.approve',to);
         addSideBar(auction,'auction.approve',to);
         addSideBar(review,'review.approve',to);
+        addSideBar(auction,'auctions.index',to);
+        if(route.path.includes('/board/notice/edit')){
+            addSideBar(board,'posts.edit',to);
+        }else if(route.path.includes('/board/claim/edit')){
+            addSideBar(boardClaim,'posts.edit',to);
+        } 
+        if(route.path.includes('/board/notice/create')){
+            addSideBar(board,'posts.create',to);
+        }
 
     }, { immediate: true });
 
