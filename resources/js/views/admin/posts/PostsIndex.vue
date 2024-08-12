@@ -331,11 +331,18 @@ onMounted(async () => {
   await fetchPosts();
   getBoardData();
 });
-
-watch(route, (newRoute) => {
+watch(route, async (newRoute) => {
   if (newRoute.params.boardId !== boardId.value) {
     boardId.value = newRoute.params.boardId;
-    fetchPosts();
+    
+    // 필터 값을 초기화합니다.
+    filter.value = 'all';
+
+    // 새로운 boardId에 대한 카테고리 데이터를 다시 로드합니다.
+    await getBoardData();
+    
+    // 새로운 boardId에 해당하는 게시물 목록을 다시 로드합니다.
+    await fetchPosts();
   }
 });
 </script>
