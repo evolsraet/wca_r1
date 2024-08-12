@@ -127,6 +127,18 @@
                   <input v-model="auction.final_price" id="finalPrice" class="form-control" @input="updateKoreanAmount('finalPrice')">
                   <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ finalPriceFeeKorean }}</p>
                 </div>
+                <div class="form-group my-3">
+                  <label for="dealer">인수차량 도착지 주소</label>
+                  <input type="text" v-model="auction.dest_addr_post" class="input-dis form-control" readonly />
+                  <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
+                  <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
+                  </div>
+                  <div class="input-with-button">
+                    <input type="text" v-model="auction.dest_addr1" class="input-dis form-control" readonly />
+                  </div>
+                  <input type="text" v-model="auction.dest_addr2" class="form-control" />
+                </div>
                 <div></div>
                 <div class="mb-3">
                   <label for="user-title" class="form-label">위임장 or 소유자 인감 증명서</label>
@@ -435,6 +447,9 @@ const auction = reactive({
   file_auction_owner_name: '',
   deletFileList:'',
   isBizChecked:false,
+  dest_addr_post:'',
+  dest_addr1:'',
+  dest_addr2:'',
 });
 
 const route = useRoute();
@@ -720,6 +735,9 @@ onMounted(async () => {
     auction.final_price = data.final_price;
     auction.bank = data.bank;
     auction.account = data.account;
+    auction.dest_addr_post = data.dest_addr_post;
+    auction.dest_addr1 = data.dest_addr1;
+    auction.dest_addr2 = data.dest_addr2;
     if(data.is_biz == 1){
       auction.isBizChecked = true;
     }
@@ -741,6 +759,14 @@ onMounted(async () => {
     }
   });
 });
+
+function editPostCodeReceive(elementName) {
+  openPostcode(elementName)
+    .then(({ zonecode, address }) => {
+      auction.dest_addr_post = zonecode;
+      auction.dest_addr1 = address;
+    });
+}
 
 onBeforeUnmount(() => {
   window.removeEventListener('resize', checkScreenWidth);

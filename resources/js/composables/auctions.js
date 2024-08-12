@@ -449,6 +449,9 @@ const updateAuction = async (id,auction) => {
             hope_price: auction.hope_price,
             final_price: auction.final_price,
             is_biz: auction.isBizChecked,
+            dest_addr_post: auction.dest_addr_post,
+            dest_addr1: auction.dest_addr1,
+            dest_addr2: auction.dest_addr2,
         }
     }
 
