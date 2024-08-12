@@ -10,7 +10,7 @@
           </p>
           <div class="card-body my-2">
             <div class="d-flex justify-content-end" v-if="!navigatedThroughHandleRowClick || (!isUser && !isDealer)">
-              <div>
+              <div v-if="!navigatedThroughHandleRowClick">
                 <button :disabled="isLoading" class="primary-btn mb-3">
                   <div v-show="isLoading" class=""></div>
                   <span v-if="isLoading">Processing...</span>
@@ -55,7 +55,7 @@
             <div class="mb-3">
               <label  v-if="!navigatedThroughHandleRowClick" for="post-content" class="form-label">컨텐츠 내용</label>
               <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)" class="py-3">
-                <p>{{ plainTextContent }}</p>
+                <div v-html="post.content"></div>
               </div>
               <textarea v-else v-if="navigatedThroughHandleRowClick" v-model="plainTextContent" id="post-content" class="form-control" rows="10" disabled style="resize: none;"></textarea>
               <TextEditorComponent v-else v-model="post.content"/>
@@ -446,5 +446,8 @@ function goBackToList() {
 .contents-view {
     clear: both;
     
+}
+ol, ul {
+  list-style: revert !important;
 }
 </style>
