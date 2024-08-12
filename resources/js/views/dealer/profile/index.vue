@@ -24,7 +24,7 @@
                         <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
                         <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
                         </router-link>
-                        <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo' }}" class="item">
+                        <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
                         <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
                         <p class="bid-icon text-secondary opacity-50 normal-16-font mb-0">입찰</p>
                         </router-link>
