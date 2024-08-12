@@ -675,23 +675,28 @@ TODO:
                             </nav>
                         </div>
                         <div class="container my-4" v-if="currentTab === 'auctionDone'">
-                            <div class="row">
-                                <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="auction in filteredDone" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
-                                    <div class="card my-auction">
-                                        <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
-                                        <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
-                                        <div class="card-body">
-                                            <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                            <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
-                                            <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
-                                            <div class="d-flex">
-                                                <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
-                                                <h5 v-if="auction.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
+                            <div v-if="filteredDone.length > 0">
+                                <div class="row">
+                                
+                                    <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="auction in filteredDone" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
+                                        <div class="card my-auction">
+                                            <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
+                                            <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
+                                            <div class="card-body">
+                                                <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
+                                                <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
+                                                <div class="d-flex">
+                                                    <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                                                    <h5 v-if="auction.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div v-if="!filteredDone" class="complete-car my-3">
+                            </div>
+                            <div v-else>
+                                <div class="complete-car my-3">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
                                             <span class="tc-gray">판매 매물이 없습니다.</span>
@@ -1184,8 +1189,6 @@ function setCurrentTab(tab) {
             currentScsBidsStatus.value = 'all';
             getScsBidsInfo();
             break;
-        default:
-            console.error('Unknown page type');
     }
 
 }
@@ -1240,8 +1243,7 @@ function loadPage( page, type, pagination) {
         case 'scsbid':
             currentScsBidsPage.value = page;
             getScsBidsInfo();
-        default:
-            console.error('Unknown page type');
+            break;
     }
 }
 
@@ -1328,8 +1330,6 @@ const searchBtn = async() =>{
         case 'scsbidInfo':
             getScsBidsInfo(search_title.value);
             break;
-        default:
-            console.error('Unknown page type');
         }
     }
     
