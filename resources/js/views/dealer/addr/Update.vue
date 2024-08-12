@@ -27,11 +27,16 @@
                 <input type="text" v-model="contact.addr2" class="form-control" />
               </div>
               <div class="my-4" v-if="!navigatedThroughHandleRowClick">
-                <button class="w-100 btn btn-primary">
+                <button class="w-100 btn btn-outline-primary">
                   <span>등록</span>
                 </button>
               </div>
             </form>
+            <div class="d-flex justify-content-start my-3">
+              <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder w-100 fs-6 btn btn-primary">
+                <span class="icon-arrow-left me-2">←</span>목록으로
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -100,7 +105,9 @@ const submitForm = async () => {
     }
   }
 };
-
+function goBackToList() {
+  router.push({ name: 'dealer.address' });
+}
 onMounted(async () => {
   if (user.value && user.value.id) {
     contact.value.user_id = user.value.id;

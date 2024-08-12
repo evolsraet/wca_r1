@@ -27,12 +27,17 @@
                 <input type="text" v-model="contact.addr2" placeholder="상세주소" class="form-control" />
               </div>
               <div class="my-4">
-                <button class="w-100 btn btn-primary" :disabled="isLoading">
+                <button class="w-100 btn btn-outline-primary" :disabled="isLoading">
                   <span v-if="!isLoading">등록</span>
                   <span v-else>저장 중...</span>
                 </button>
               </div>
             </form>
+            <div class="d-flex justify-content-start my-3">
+              <button type="button" @click="goBackToList" class="back-to-list-button fw-bolder w-100 fs-6 btn btn-primary">
+                <span class="icon-arrow-left me-2">←</span>목록으로
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -62,6 +67,10 @@ const {
 } = initAddressBookSystem();
 
 const user = computed(() => store.getters['auth/user']);
+
+function goBackToList() {
+  router.push({ name: 'dealer.address' });
+}
 
 onMounted(() => {
   if (user.value && user.value.id) {
