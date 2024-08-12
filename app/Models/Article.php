@@ -25,6 +25,8 @@ class Article extends Model implements HasMedia
     // 한개만 저장되고 새로 업로드시 삭제될 파일들
     public $files_one = [];
 
+    public $searchable = ['title', 'content', 'extra1', 'extra2'];
+
     public function board()
     {
         return $this->belongsTo(Board::class, 'board_id');
