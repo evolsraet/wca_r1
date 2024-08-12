@@ -72,7 +72,7 @@
                                 <tr v-for="(notice, index) in limitedNotices" :key="notice.id">
                                     <td style="width: 10%;">{{ index + 1 }}</td>
                                     <td style="width: 15%;">[ {{ notice.category }} ]</td>
-                                    <td>{{ stripHtmlTags(notice.title) }}</td>
+                                    <td class="text-overflow">{{ stripHtmlTags(notice.title) }}</td>
                                     <td class="date">{{ formatDate(notice.created_at) }}</td>
                                 </tr>
                             </tbody>
