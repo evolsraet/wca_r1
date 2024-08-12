@@ -1,6 +1,7 @@
 <template>
     <div class="container pt-4">
-        <div class="col-lg-8 mx-auto py-md-5">
+      <div class="col-lg-8 mx-auto py-md-5">
+          <div class="demo"></div>
       <p class="fw-bold mb-3">낙찰 이력</p>
       <main>
       <BarChart :chartData="chartData" :options="chartOptions" class="my-4"/>
