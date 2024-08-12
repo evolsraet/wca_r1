@@ -103,19 +103,19 @@
               </tr>
               <tr 
               v-for="post in filteredPosts" 
-              :key="post.id"
+              :key="post.id" @click="handleRowClick(post.id)" class="pointer-cursor"
               >
                 <td v-if="boardId === 'notice' && (isDealer || isUser)">{{ post.id }}</td>
                 <td v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-4 text-sm text-overflow">{{ post.created_at }}</td>
-                <td class="px-6 py-4 text-sm text-overflow">
+                <td class="px-6 py-4 text-sm text-overflow"> 
                   <div>[ {{ post.category }} ]</div>
                 </td>
-                <td class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)"><span v-if="boardId === 'claim'" class="my-2"></span>
+                <td class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}"><span v-if="boardId === 'claim'" class="my-2"></span>
                   <img v-if="post.is_secret == 1" src="../../../../img/scret.png" alt="Secret" class="mb-2" width="20px"  />
                   {{ post.title }}</td>
-                <td v-if="boardId !== 'notice' || (isUser && isDealer) || !isUser&&!isDealer" class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}" @click="handleRowClick(post.id)">{{ stripHtmlTags(post.content) }}</td>
+                <td v-if="boardId !== 'notice' || (isUser && isDealer) || !isUser&&!isDealer" class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}">{{ stripHtmlTags(post.content) }}</td>
                 <td v-if="boardId === 'claim'"><span class="blue-box mb-0 mx-0">{{ auctionDetails[post.extra1]?.data?.car_no || '' }}</span></td>
-                <td v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm text-overflow">
+                <td v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm text-overflow" @click.stop>
                   <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id }, query: { navigatedThroughHandleRowClick: false } }" class="badge">
                     <div class="icon-edit-img"></div>
                   </router-link>
