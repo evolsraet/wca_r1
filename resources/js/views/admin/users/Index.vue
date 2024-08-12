@@ -1,7 +1,7 @@
 <template>
     <div class="row justify-content-center my-2 p-3">
         <div class="col-md-12">
-            <h4>회원 관리<p data-v-2fb32169="" class="text-secondary opacity-75 fs-6 my-3">회원을 수정, 삭제, 관리 할수있습니다</p></h4>
+            <h4>회원 관리<p class="text-secondary opacity-75 fs-6 my-3">회원을 수정, 삭제, 관리 할수있습니다</p></h4>
 
                   <!-- <router-link
                         v-if="can('role.admin')"

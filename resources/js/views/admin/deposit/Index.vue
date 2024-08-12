@@ -1,6 +1,7 @@
 <template>
     <div class="row justify-content-center my-2 p-3">
         <div class="col-md-12">
+            <h4>입금 관리<p class="text-secondary opacity-75 fs-6 my-3">입금 내역 관리 페이지 입니다.</p></h4>
             </div>
                 <div class="container mb-2">
                     <div class="d-flex justify-content-end responsive-flex-end gap-2">

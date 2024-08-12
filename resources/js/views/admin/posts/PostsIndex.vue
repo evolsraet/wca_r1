@@ -83,9 +83,9 @@
                   </div>
                 </th>
                 <th v-if="boardId === 'notice' && (isDealer || isUser)" class="px-6 py-3 bg-gray-50 text-left" style="width: 8%;">날짜</th>
-                <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left" style="width: 20%;">차량번호</th>
+                <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">차량번호</th>
           
-                <th v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-3 bg-gray-50 text-left" style="width: 8%;">수정/삭제</th>
+                <th v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">수정/삭제</th>
               </tr>
             </thead>
             <tbody>
@@ -115,7 +115,7 @@
                   {{ post.title }}</td>
                 <td v-if="boardId !== 'notice' || (isUser && isDealer) || !isUser&&!isDealer" class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}">{{ stripHtmlTags(post.content) }}</td>
                 <td v-if="boardId === 'claim'"><span class="blue-box mb-0 mx-0">{{ auctionDetails[post.extra1]?.data?.car_no || '' }}</span></td>
-                <td v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm text-overflow" @click.stop>
+                <td v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm" @click.stop>
                   <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id }, query: { navigatedThroughHandleRowClick: false } }" class="badge">
                     <div class="icon-edit-img"></div>
                   </router-link>

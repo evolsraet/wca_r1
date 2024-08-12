@@ -1,6 +1,7 @@
 <template>
     <div class="row justify-content-center my-2 p-3">
         <div class="col-md-12">
+            <h4>매물 관리<p class="text-secondary opacity-75 fs-6 my-3">매물의 상세 관리, 상태 수정이 가능합니다.</p></h4>
             </div>
                 <div class="container mb-3">
                     <div class="d-flex justify-content-end responsive-flex-end gap-2">
