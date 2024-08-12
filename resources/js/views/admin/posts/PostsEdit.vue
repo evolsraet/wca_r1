@@ -63,7 +63,7 @@
                 <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
               </div>
             </div>
-            <div v-if="!navigatedThroughHandleRowClick || (!isUser && !isDealer)">
+            <div v-if="!navigatedThroughHandleRowClick || (!isUser && !isDealer && !isAdmin)">
               <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
                 파일 첨부
               </button>
@@ -209,7 +209,7 @@ async function saveComment(index, commentId) {
   }
 }
 const isUser = computed(() => user.value?.roles?.includes('user'));
-const isAdmin = ref(false); 
+const isAdmin = computed(() => user.value?.roles?.includes('admin'));
 const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 
 const boardText = computed(() => {
