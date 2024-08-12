@@ -11,7 +11,7 @@
           <div class="card-body my-2">
             <div class="d-flex justify-content-end" v-if="!navigatedThroughHandleRowClick || (!isUser && !isDealer)">
               <div>
-                <button :disabled="isLoading" class="primary-btn">
+                <button :disabled="isLoading" class="primary-btn mb-3">
                   <div v-show="isLoading" class=""></div>
                   <span v-if="isLoading">Processing...</span>
                   <p class="d-flex lh-base justify-content-center gap-2" v-else>
