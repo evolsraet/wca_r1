@@ -47,7 +47,7 @@
                                 <td colspan="2" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
                             </tr>
                             <tr v-else v-for="notice in latestNotices" :key="notice.id" class="pointer">
-                                <td class="col-4 pointer-cursor" @click="goToDetail(notice.id)">{{ stripHtmlTags(notice.title) }}</td>
+                                <td class="col-4 pointer-cursor text-overflow" @click="goToDetail(notice.id)">{{ stripHtmlTags(notice.title) }}</td>
                                 <td class="text-with-marker pointer-cursor" @click="goToDetail(notice.id)">{{ stripHtmlTags(notice.content) }}</td>
                             </tr>
                         </tbody>

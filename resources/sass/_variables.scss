@@ -498,3 +498,9 @@ ul {
     list-style-type: none;
     padding-left: 0;
 }
+.text-overflow{
+    max-width: 130px; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+  }
