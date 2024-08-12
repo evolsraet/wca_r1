@@ -335,6 +335,7 @@ watch(route, async (newRoute) => {
   if (newRoute.params.boardId !== boardId.value) {
     boardId.value = newRoute.params.boardId;
     
+    search_title.value = '';
     // 필터 값을 초기화합니다.
     filter.value = 'all';
 
