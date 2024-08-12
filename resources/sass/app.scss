@@ -21,7 +21,9 @@ body {
     background-color: #ffffff ;
     font-family: var(--main-font-family);
 }
-
+.dropdown-menu {
+--bs-dropdown-item-padding-y: 0.5rem;
+}
   /* 'demo' : 임의의 데이터 */
   .demo::before {
     content: "demo";  
