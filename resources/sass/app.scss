@@ -24,6 +24,9 @@ body {
 .dropdown-menu {
 --bs-dropdown-item-padding-y: 0.5rem;
 }
+.pagination .page-link:hover{
+  background-color: rgba(255, 255, 255, 0) !important;
+}
   /* 'demo' : 임의의 데이터 */
   .demo::before {
     content: "demo";  
