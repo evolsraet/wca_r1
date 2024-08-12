@@ -23,20 +23,25 @@
             <!-- Category -->
             <div class="mb-3">
               <label v-if="!navigatedThroughHandleRowClick" for="post-category" class="form-label">카테고리</label>
-              <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)">
+              <div v-if="isAdmin">
+                <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)">
                 <p>[ {{ post.category }} ]</p>
+                </div>
+                <v-select
+                  v-else
+                  v-model="post.category"
+                  :options="categories"
+                  :reduce="category => category"
+                  class="form-control"
+                  :disabled="navigatedThroughHandleRowClick"
+                  placeholder=""
+                />
+                <div class="text-danger mt-1">
+                  <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
+                </div>
               </div>
-              <v-select
-                v-else
-                v-model="post.category"
-                :options="categories"
-                :reduce="category => category"
-                class="form-control"
-                :disabled="navigatedThroughHandleRowClick"
-                placeholder=""
-              />
-              <div class="text-danger mt-1">
-                <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
+              <div v-else>
+                <input type="text" class="form-control" v-model="post.category" disabled/>
               </div>
             </div>
             <!-- Title -->
