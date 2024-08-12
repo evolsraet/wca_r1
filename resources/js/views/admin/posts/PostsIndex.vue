@@ -21,7 +21,7 @@
         <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
         <button type="button" class="search-btn" @click="fetchPosts">검색</button>
       </div>
-      <div v-if="boardId === 'notice'" class="container">
+      <div class="container">
         <div class="d-flex justify-content-end">
           <div class="text-start status-selector">
             <input type="radio" name="status" value="all" id="all-notice" hidden v-model="filter">
@@ -306,7 +306,7 @@ const filteredPosts = computed(() => {
   }
   return posts.value.filter(post => {
     if (boardId.value === 'claim') {
-      return post.status === filter.value;
+      return post.category === filter.value;
     } else if (boardId.value === 'notice') {
       return post.category === filter.value;
     }
