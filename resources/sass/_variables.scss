@@ -486,3 +486,11 @@ background-color: $sub-color !important;
 .border-6{
     border-radius: 6px !important;
 }
+blockquote {
+    border-left: 5px solid #ccc !important;
+    margin-left: 0;
+    margin-right: 0;
+    overflow: hidden;
+    padding-left: 1.5em!important;
+    padding-right: 1.5em!important;
+}

@@ -53,9 +53,9 @@
             </div>
             <!-- Content -->
             <div class="mb-3">
-              <label  v-if="!navigatedThroughHandleRowClick" for="post-content" class="form-label">컨텐츠 내용</label>
+              <label v-if="!navigatedThroughHandleRowClick" for="post-content" class="form-label">컨텐츠 내용</label>
               <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)" class="py-3">
-                <div v-html="post.content"></div>
+                <div v-html="sanitizedContent"></div>
               </div>
               <textarea v-else v-if="navigatedThroughHandleRowClick" v-model="plainTextContent" id="post-content" class="form-control" rows="10" disabled style="resize: none;"></textarea>
               <TextEditorComponent v-else v-model="post.content"/>
@@ -132,7 +132,6 @@
     <Footer />
   </div>
 </template>
-
 
 <script setup>
 import Footer from "@/views/layout/footer.vue";
@@ -238,6 +237,29 @@ function stripHtml(html) {
   tempDiv.innerHTML = html;
   return tempDiv.textContent || tempDiv.innerText || '';
 }
+
+// XSS 방지를 위한 HTML 정화 함수 (정적 방식)
+function sanitizeHtml(html) {
+  const tempDiv = document.createElement('div');
+  tempDiv.innerHTML = html;
+
+  // 스크립트 및 스타일 태그 제거
+  const scripts = tempDiv.getElementsByTagName('script');
+  const styles = tempDiv.getElementsByTagName('style');
+  for (let i = scripts.length - 1; i >= 0; i--) {
+    scripts[i].parentNode.removeChild(scripts[i]);
+  }
+  for (let i = styles.length - 1; i >= 0; i--) {
+    styles[i].parentNode.removeChild(styles[i]);
+  }
+
+  return tempDiv.innerHTML;
+}
+
+// XSS 방지된 콘텐츠 생성
+const sanitizedContent = computed(() => {
+  return sanitizeHtml(post.content);
+});
 
 function fileExstCheck(info){
   if(info.hasOwnProperty('files')){

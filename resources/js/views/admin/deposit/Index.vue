@@ -2,7 +2,7 @@
     <div class="row justify-content-center my-2 p-3">
         <div class="col-md-12">
             </div>
-                <div class="container mb-3">
+                <div class="container mb-2">
                     <div class="d-flex justify-content-end responsive-flex-end gap-2">
                         <div class="text-end select-option">
                             <select class="form-select select-rank" aria-label="상태" @change="event => setFilter(event.target.value)">

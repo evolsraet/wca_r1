@@ -1,6 +1,8 @@
 <template>
     <div class="row justify-content-center my-2 p-3">
         <div class="col-md-12">
+            <h4>회원 관리<p data-v-2fb32169="" class="text-secondary opacity-75 fs-6 my-3">회원을 수정, 삭제, 관리 할수있습니다</p></h4>
+
                   <!-- <router-link
                         v-if="can('role.admin')"
                         :to="{ name: 'users.create' }"
@@ -153,10 +155,10 @@
                             <tbody>
                                 <template v-if="users.length>0">
                                     <tr v-for="post in users" :key="post.id">
-                                        <td class="px-6 py-4 text-sm">
+                                        <td class="px-6 py-4 pb-3 text-sm">
                                             {{ post.created_at }}
                                         </td>
-                                        <td class="px-6 py-4 text-sm">
+                                        <td class="px-6 py-4 pb-3 text-sm">
                                             {{ post.name }}
                                         
                                         <div :class="{'blue-box ms-2': post.status === 'ok', 'blue-box02 ms-2': post.status === 'ask', 'red-box ms-2': post.status === 'reject'}">
@@ -165,13 +167,13 @@
                                         
                                         
                                         </td>
-                                        <td class="px-6 py-4 text-sm">
+                                        <td class="px-6 py-4 pb-3 text-sm">
                                             {{ post.email }}
                                         </td>
-                                        <td class="px-6 py-4 text-sm">
+                                        <td class="px-6 py-4 pb-3 text-sm">
                                             {{ (post.roles || []).includes('dealer') ? '딜러' : '일반' }}
                                         </td>
-                                        <td class="px-6 py-4 text-sm">
+                                        <td class="px-6 py-4 pb-3 text-sm">
                                             <router-link
                                                 :to="{
                                                     name: 'users.edit',
