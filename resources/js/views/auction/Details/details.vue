@@ -1389,7 +1389,7 @@ const handleClick = (bid, event, index) => {
     <div class="mb-5 text-start d-flex">
       <h5 class="custom-highlight">선택딜러 상세 정보</h5>
       </div>
-        <div class="facturer">
+        <div>
           <div class="profile ps-2 pt-0 pb-2 ms-0">
             <div class="dealer-info">
               <div class="img_box">
@@ -1422,6 +1422,7 @@ const handleClick = (bid, event, index) => {
             <p class="text-secondary opacity-50">입찰 금액</p>
             <h4>${amtComma(bid.price)}</h4>
         </div>
+        <p class=" mt-3 tc-gray">선택 완료시, 선택한 딜러에게 문자가 발송됩니다.</p>
     </div>`;
 
   wica.ntcn(swal)
