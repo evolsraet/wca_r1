@@ -1015,7 +1015,7 @@ const swal = inject('$swal');
 const { wicas , wica , updateAuctionTimes , calculateTimeLeft } = cmmn();
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
-const {getBids, bidsData , getscsBids } = usebid();
+const {getBids, bidsData , getscsBids, getMyBidsAll } = usebid();
 const { getLikes, likesData, isAuctionFavorited , like , setLikes , deleteLike , getAllLikes} = useLikes();
 const router = useRouter();
 const route = useRoute();
@@ -1296,8 +1296,17 @@ const filterLikeData = (auctions, likes="none") => {
 }
 
 const getScsBidsInfo = async (serach_content='') =>{
+    //bids 가져오기
+    const myBidsList = await getMyBidsAll();
+    const bidsIdList = [];
+    for (let i = 0; i < myBidsList.data.length; i++) {
+        bidsIdList.push(myBidsList.data[i].id);
+    }
 
-    const scsBidsInfo = await getscsBids(currentScsBidsPage.value,true,false,currentScsBidsStatus.value,serach_content);
+    const idString = bidsIdList.join(',');
+
+    //bids낙찰 차량 가져오기
+    const scsBidsInfo = await getscsBids(currentScsBidsPage.value,currentScsBidsStatus.value,serach_content,idString);
    
     scsbidsData.value = scsBidsInfo.data;
     scsbidPagination.value = scsBidsInfo.rawData.data.meta;
