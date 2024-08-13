@@ -614,14 +614,15 @@
                       <h4>낙찰 완료</h4>
                       <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요?</p>
                       <div>
-                        <router-link 
+                        <router-link v-if="!isClaimed"
                           :to="{ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId } }" 
                           class="my-2 btn btn-primary w-100"
-                          :class="{ 'disabled': isClaimed }"
+                          :disabled="disableClaimButton" 
                           @click.prevent="!isClaimed && navigateToClaim"
                         >
                           클레임 신청
                         </router-link>
+                        <p v-else-if="isClaimed" class="btn primary-disable">클레임 신청 완료</p>
                       </div>
                     </div>
                   </BottomSheet02>
@@ -784,6 +785,7 @@ import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
 import useLikes from '@/composables/useLikes';
 import { isEqual } from 'date-fns';
+
 const { getContacts, contacts, pagination } = initAddressBookSystem();
 const { posts, getPosts, deletePost, isLoading, getBoardCategories } = initPostSystem();
 const { getUserReview , deleteReviewApi , reviewsData , formattedAmount } = initReviewSystem(); 
@@ -942,7 +944,7 @@ const sortedTopBids = computed(() => {
 });
 const isClaimed = ref(false);
 const fetchPosts = async () => {
-  if(auctionDetail.status === 'done'){
+  if(auctionDetail.value?.data?.status === 'done'&& isDealer.value){
   await getPosts(
     'claim',
     1,
@@ -955,13 +957,19 @@ const fetchPosts = async () => {
     'desc'
   );
 
+ 
+  console.log('Fetched posts:', posts.value);
 
-  // posts에서 extra1이 auctionId와 같은지 확인합니다.
-  isClaimed.value = posts.value.some(post => post.extra1 === auctionId.value);
-}
+  
+  isClaimed.value = posts.value.some(post => post.extra1 === route.params.id);
+  console.log('Is claimed:', isClaimed.value); 
+  }
 };
+
 const navigateToClaim = () => {
-  router.push({ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId.value } });
+  if (!disableClaimButton.value) {
+    router.push({ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId.value } });
+  }
 };
 const heightPrice = ref(0);
 // 숫자 애니메이션 함수
@@ -1627,6 +1635,7 @@ const fetchAuctionDetail = async () => {
   const auctionId = parseInt(route.params.id);
   try {
     auctionDetail.value = await getAuctionById(auctionId);
+    fetchPosts();
     /*
     const userInfoData = await getUser(auctionDetail.value.data.user_id);
     fileExstCheck(userInfoData);
@@ -1704,7 +1713,7 @@ const startPolling = () => {
 let timer;
 const currentTime = ref(new Date());
 onMounted(async () => {
-  fetchPosts();
+  await fetchAuctionDetail();
   timer = setInterval(() => {
     currentTime.value = new Date();
   }, 1000);
@@ -1716,7 +1725,6 @@ onMounted(async () => {
   };
 
   await getAuctions();
-  await fetchAuctionDetail();
 
   if(auctionDetail.value?.data?.status === 'ing' && isUser.value){
     startPolling();
@@ -1757,6 +1765,7 @@ onMounted(async () => {
     }, 7000);
   }*/
 });
+const disableClaimButton = computed(() => isClaimed.value);
 
 onUnmounted(() => {
   clearInterval(timer);
