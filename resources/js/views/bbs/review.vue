@@ -87,7 +87,7 @@
                                         <!-- <p>{{ review.auction.car_no }}</p>
                                             <p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>-->
 
-                                        <div class="rating">
+                                        <div class="rating mt-0">
                                             <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
                                                 <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
                                                 <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
@@ -326,5 +326,8 @@ onMounted(async () => {
     align-content: center;
     gap: 20px;
 }
+}
+.over-text{
+    width: auto !important;   
 }
 </style>
