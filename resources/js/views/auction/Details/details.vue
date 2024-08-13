@@ -2151,7 +2151,5 @@ opacity: 0;
     max-width: 800px;
   }
 }
-.review-custom-container .review-custom-popup #swal2-html-container {
-    padding: 0px !important;
-}
+
 </style>
