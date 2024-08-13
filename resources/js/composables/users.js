@@ -251,6 +251,10 @@ export default function useUsers() {
                         //console.log('wicac.conn callback ' , result);
                         if(result.isError) {
                             validationErrors.value = result.msg;
+                            wica.ntcn(swal)
+                            .title('등록 실패')
+                            .icon('E') //E:error , W:warning , I:info , Q:question
+                            .alert('회원정보 등록에 실패하였습니다.');
                         } else {
                             wica.ntcn(swal).icon('S').title('정상 처리 되었습니다.').fire();
                             //console.log(response);

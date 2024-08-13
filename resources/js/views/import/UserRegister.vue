@@ -22,7 +22,7 @@
           <input type="text" v-model="user.updated_at" id="updated_at" class="input-dis form-control" readonly/>
         </div>
         <div class="form-group">
-          <label for="name">이름</label>
+          <label for="name"><span class="text-danger">*</span>이름</label>
           <input type="text" v-model="profile.name" id="name" class="form-control" placeholder="이름"/>
           <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.name">
@@ -31,11 +31,11 @@
           </div>
         </div>
         <div v-if="userEditURL || adminEditURL" class="form-group">
-          <label for="name">전화번호</label>
+          <label for="name"><span class="text-danger">*</span>전화번호</label>
           <input type="text" id="phone" v-model="profile.phone" class="input-dis form-control" readonly/>
         </div>
         <div v-if="registerURL || adminCreateURL" class="form-group">
-          <label for="name">전화번호</label>
+          <label for="name"><span class="text-danger">*</span>전화번호</label>
           <input type="text" id="phone" v-model="profile.phone" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
           <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
             <div v-for="message in validationErrors?.phone">
@@ -57,7 +57,7 @@
           <input type="text" v-model="profile.email" id="email" class="input-dis form-control" readonly/>
         </div>
         <div v-if="registerURL || adminCreateURL" class="form-group">
-          <label for="email">비밀번호</label>
+          <label for="email"><span class="text-danger">*</span>비밀번호</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password" id="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합"/>
           <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.password">
@@ -75,7 +75,7 @@
           </div>
         </div>
         <div v-if="userEditURL || registerURL || adminCreateURL" class="form-group">
-          <label for="email">비밀번호 확인</label>
+          <label for="email"><span class="text-danger" v-if="adminCreateURL || registerURL">*</span>비밀번호 확인</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password_confirmation" id="password_confirmation" class="form-control" placeholder="비밀번호를 다시 입력해주세요"/>
           <div v-if="registerURL || adminCreateURL || userEditURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.password_confirmation">
@@ -141,16 +141,22 @@
                 </div>
           </div>
           <div class="form-group">
-            <label for="dealerName">딜러 이름</label>
+            <label for="dealerName"><span class="text-danger">*</span>딜러 이름</label>
             <input type="text" v-model="profile.dealer_name" id="dealerName" class="form-control" placeholder="이름"/>
+            <div v-for="message in validationErrors?.dealerName" class="text-danger mt-1">
+                  {{ message }}
+            </div>
           </div>
           <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
             <label for="name">연락처</label>
             <input type="text" id="phone" v-model="profile.dealerContact" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
           </div>
           <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
-              <label for="dealerBirthDate">생년월일</label>
+              <label for="dealerBirthDate"><span class="text-danger">*</span>생년월일</label>
               <input type="date" id="dealerBirthDate" v-model="profile.dealerBirthDate" placeholder="1990-12-30">
+              <div v-for="message in validationErrors?.dealerBirthDate" class="text-danger mt-1">
+                  {{ message }}
+            </div>
           </div>
           <div class="form-group">
             <label for="dealer">소속상사</label>
@@ -328,7 +334,7 @@
   const userId = ref(null);
   const isDealer = ref(false);
   const { openPostcode , closePostcode , wica , wicac, wicas } = cmmn();
-  
+  const isValidCheck = ref(true);
   let statusLabel;
   
   const triggerFileInput = () => {
@@ -348,6 +354,7 @@
   app.mount(container);
   
   const text = container.innerHTML;
+ 
 
   wica.ntcn(swal)
     .useHtmlText() // HTML 태그 인 경우 활성화
@@ -481,14 +488,41 @@
   });
 
   function handleSubmitBtn(){
-    if(route.path == '/edit-profile'){
-      updateProfile(profile,userId.value);
-    }else if(route.path == '/register'){
-      setRegisterUser(profile.value);
-    }else if(route.path.includes('/admin/users/edit/')){
-      updateUser(profile.value,userId.value);
-    }else if(route.path.includes('/admin/users/create')){
-      adminStoreUser(profile.value);
+    if(profile.value.role == 'dealer' || profile.value.isDealer){
+      let dealer_name = profile.value.dealer_name.replace(/\s/g, '');
+      let dealer_birthDate = profile.value.dealerBirthDate.replace(/\s/g, '');
+      isValidCheck.value = true;
+
+      if(dealer_name){
+        validationErrors.value.dealerName = [];
+      }else{
+        validationErrors.value.dealerName = ['이름 필드는 필수입니다.'];
+        isValidCheck.value = false;
+      }
+
+      if(dealer_birthDate){
+        validationErrors.value.dealerBirthDate = [];
+      }else{
+        validationErrors.value.dealerBirthDate = ['생년월일 필드는 필수입니다.'];
+        isValidCheck.value = false;
+      }
+    }
+
+    if(isValidCheck.value){
+      if(route.path == '/edit-profile'){
+        updateProfile(profile,userId.value);
+      }else if(route.path == '/register'){
+        setRegisterUser(profile.value);
+      }else if(route.path.includes('/admin/users/edit/')){
+        updateUser(profile.value,userId.value);
+      }else if(route.path.includes('/admin/users/create')){
+        adminStoreUser(profile.value);
+      }
+    }else{
+      wica.ntcn(swal)
+      .title('등록 실패')
+      .icon('E') //E:error , W:warning , I:info , Q:question
+      .alert('회원정보 등록에 실패하였습니다.');
     }
   }
 
