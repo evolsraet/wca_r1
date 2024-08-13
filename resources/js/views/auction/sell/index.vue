@@ -1,9 +1,10 @@
 <template>
-    <div class="container mov-wide web-content-style02">
-        <div class="container mt-5 p-2">
+    <div class="container web-content-style02 pt-5 p-3">
+        <div class="container mt-4 p-2">
             <SkeletonLoader v-if="isLoading" />
             <template v-else>
-                <h5>차량 정보 조회 되었어요</h5>
+                <h4>차량 정보 조회 되었어요</h4>
+                <hr>
                 <ul class="machine-inform-title">
                     <li class="text-secondary opacity-50">차량번호</li>
                     <li class="info-num">{{ carDetails.no }}</li>
@@ -70,7 +71,7 @@
                 </ul>
             </template>
         </div>
-         <BottomSheet02 class="mt-5">
+         <BottomSheet02 class="side-sheet-style">
                 <div>
                     <div class="top-content-style wd-100">
                         <p class="text-secondary opacity-50 bold-18-font">현재 시세 <span class="normal-14-font">(무사고 기준)</span></p>
@@ -543,5 +544,8 @@ const applyAuction = () => {
 .sheet.half{
   max-height: none !important;
   height: fit-content !important;
+}
+.side-sheet-style{
+    margin-top: 70px;
 }
 </style>

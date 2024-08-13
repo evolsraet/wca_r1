@@ -168,7 +168,7 @@
          
         </div>
     
-        <div v-if="isMobileView" class="card login-card login-any border-0" ref="loginCardRef">
+        <div v-if="isMobileView" class="card login-card login-any border-0 my-3" ref="loginCardRef">
           <div class="card-body">
             <!-- 로그인 폼 -->
             <form @submit.prevent="submitLogin">
@@ -179,7 +179,7 @@
                 <!-- 이메일 입력 -->
                 <div class="mb-3">
                   <label for="email" class="form-label">phone/email</label>
-                  <input v-model="loginForm.email" id="email" type="text" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="휴대폰번호 또는 이메일을 입력해주세요.">
+                  <input v-model="loginForm.email" id="email" type="text" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="전화번호 또는 이메일을 입력해주세요.">
                   <div v-for="message in validationErrors?.email">
                       {{ message }}
                   </div>
@@ -398,6 +398,9 @@ onBeforeUnmount(() => {
 
 
 <style scoped>
+.form-control{
+  padding-right: 0px !important;
+}
 .rating__label .star-icon {
   width: 30px;
   height: 30px;

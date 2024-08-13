@@ -120,7 +120,7 @@
               </div>
           </div>
           <p class="text-secondary opacity-50">딜러라면 추가 정보 입력이 필요해요</p>
-          <a href="your-link.html" class="icon-link mt-5 mb-3">
+          <a @click="openModal('privacy')" class="icon-link mt-5 mb-3">
               <img src="../../../img/Icon-file.png" class="ms-2" alt="회원약관 및 개인정보 처리방침">위카모빌리티 회원약관 및 개인정보처리 방침
           </a>
         </div>
@@ -254,20 +254,26 @@
           </button>
         </div>
       </form>
+      <transition name="fade" mode="out-in">
+        <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
+      </transition>
   </template>
   
  
   <script setup>
-  import { ref, onMounted ,computed , inject } from 'vue';
+  import { ref, onMounted ,computed , inject,createApp ,h } from 'vue';
   import { useStore } from 'vuex';
   import { useRoute } from 'vue-router';
   import profileDom from '/resources/img/profile_dom.png'; 
   import { cmmn } from '@/hooks/cmmn';
   import useUsers from "@/composables/users";
-  
+  import LawGid from '@/views/modal/LawGid.vue';
+  const closeModal = () => {
+    isModalOpen.value = false;
+  };
   const { getUser , user, setRegisterUser, updateProfile, updateUser,adminStoreUser, validationErrors } = useUsers();
   const route = useRoute();
-  
+  const isModalOpen = ref(false);
   const photoUrl = ref(profileDom);
   const fileSignUrl = ref('');
   const fileCertUrl = ref('');
@@ -330,7 +336,31 @@
   };
   
   const fileInput = ref(null);
+  const openModal = (type) => {
+  const container = document.createElement('div');
+
+  const app = createApp({
+    render() {
+      return h(LawGid, { content: type });
+    }
+  });
   
+  app.mount(container);
+  
+  const text = container.innerHTML;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .addClassNm('intro-modal')
+    .useClose()
+    .callback(function (result) {
+      // 추가적인 콜백 함수 내용이 필요하다면 여기에 작성
+    })
+    .confirm(text);
+
+  app.unmount(); // Unmount the app after getting the HTML content
+};
   const onFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
