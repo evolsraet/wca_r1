@@ -286,10 +286,12 @@ TODO:
                         <div class=" mt-4">
                             <h5>주행거리</h5>
                             <div class="range-slider">
-                                <input type="range" min="0" max="200000" value="0" id="min-range" class="range-min">
-                                <input type="range" min="0" max="200000" value="200000" id="max-range" class="range-max">
+                                <!-- 최소값 슬라이더 -->
+                                <input type="range" min="0" max="200000" v-model="minRange" id="min-range" class="range-min" @input="updateProgressBar">
+                                <!-- 최대값 슬라이더 -->
+                                <input type="range" min="0" max="200000" v-model="maxRange" id="max-range" class="range-max" @input="updateProgressBar">
                                 <div class="slider-value">
-                                    <span id="range-min-value">0km</span> ~ <span id="range-max-value">200,000km 이상</span>
+                                    <span id="range-min-value">{{ formatNumber(minRange) }}km</span> ~ <span id="range-max-value">{{ formatNumber(maxRange) }}km{{ maxRange >= 200000 ? ' 이상' : '' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -960,7 +962,9 @@ export default {
       scrollY: 0, // 스크롤 위치 저장
       scrollTimeout: null, // 스크롤 타임아웃 저장
       selectedYear: new Date().getFullYear(), // 선택된 연도 (현재 연도)
-      years: [] // 연도 목록 저장
+      years: [], // 연도 목록 저장
+      minRange: 0, // 최소값 초기화
+      maxRange: 200000, // 최대값 초기화
     };
   },
 
@@ -979,6 +983,9 @@ export default {
     toggleMenuHeight() { // 하단 메뉴 높이 토글
       this.isExpanded = !this.isExpanded;
     },
+    formatNumber(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
     submitReview() { // 리뷰 제출 시 메뉴 높이 토글
       this.toggleMenuHeight();
     },
@@ -990,7 +997,14 @@ export default {
       return years;
     }
   },
+  updateProgressBar() {
+      const rangeSlider = document.querySelector('.range-slider');
+      const minPercent = (this.minRange / 200000) * 100;
+      const maxPercent = (this.maxRange / 200000) * 100;
 
+      // 슬라이더 배경 업데이트
+      rangeSlider.style.background = `linear-gradient(to right, #d3d3d3 0%, #d3d3d3 ${minPercent}%, #f24200 ${minPercent}%, #f24200 ${maxPercent}%, #d3d3d3 ${maxPercent}%, #d3d3d3 100%)`;
+    },
   beforeDestroy() { // 컴포넌트 제거 시 스크롤 이벤트 리스너 제거
     window.removeEventListener('scroll', this.handleScroll);
     clearTimeout(this.scrollTimeout);

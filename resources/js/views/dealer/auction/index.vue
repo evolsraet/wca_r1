@@ -700,4 +700,26 @@ onMounted(async () => {
   }
   await getAuctions(currentPage.value);
 });
+const rangeMin = document.getElementById('min-range');
+const rangeMax = document.getElementById('max-range');
+const rangeProgress = document.createElement('div');
+rangeProgress.classList.add('range-progress');
+document.querySelector('.range-slider').appendChild(rangeProgress);
+
+function updateProgressBar() {
+    const minValue = parseInt(rangeMin.value);
+    const maxValue = parseInt(rangeMax.value);
+
+    const minPercent = (minValue / 200000) * 100;
+    const maxPercent = (maxValue / 200000) * 100;
+
+    rangeProgress.style.left = `${minPercent}%`;
+    rangeProgress.style.width = `${maxPercent - minPercent}%`;
+}
+
+rangeMax.addEventListener('input', updateProgressBar);
+
+// 초기화 시 프로그레스 바 업데이트
+updateProgressBar();
+
 </script>
