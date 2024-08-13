@@ -57,7 +57,7 @@
                                 
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
-                                    <div class="rating my-3">
+                                    <div class="rating my-1">
                                         <label class="rating__label rating__label--full" for="star1">
                                             <input type="radio" id="star1" class="rating__input" name="rating" value="1" v-model="rv.star">
                                             <span class="star-icon ms-2"></span>

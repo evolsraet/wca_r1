@@ -52,11 +52,11 @@
                 <div>
                     <bottom-sheet initial="half" :dismissable="true">
                         <div class="sheet-content p-0">
-                            <div class="mt-3" @click.stop="">
+                            <div class="mt-3 mb-4" @click.stop="">
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
                                     <input type="hidden" :v-model="rv.star">
-                                    <div class="rating my-3">
+                                    <div class="rating my-1">
                                         <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
                                             <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
                                             <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>

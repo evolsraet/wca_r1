@@ -212,21 +212,17 @@ onMounted(async () => {
 
 
 <style scoped>
-.rating__label .star-icon {
-    width: 30px;
-    height: 30px;
-}
 @media (max-width: 360px) {
     .flex{
     display: block !important;
     }
 }
-</style>
-<style>
 .rating__label .star-icon {
     width: 20px !important;
     height: 20px !important;
 }
+</style>
+<style>
 .popup-menu {
     position: absolute;
     text-align: center;
