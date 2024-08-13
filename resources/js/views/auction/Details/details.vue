@@ -1429,7 +1429,7 @@ const handleClick = (bid, event, index) => {
     .labelOk('딜러 선택') // 확인 버튼 라벨 변경
     .labelCancel('취소') // 취소 버튼 라벨 변경
     .addClassNm('review-custom') // 클래스명 변경, 기본 클래스명: wica-salert
-    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .addOption() // swal 기타 옵션 추가
     .callback(async function (result) { // callback 함수를 async로 변경
       if (result.isOk) {
         await completeAuction(bid);
@@ -2151,5 +2151,7 @@ opacity: 0;
     max-width: 800px;
   }
 }
-
+.review-custom-container .review-custom-popup #swal2-html-container {
+    padding: 0px !important;
+}
 </style>

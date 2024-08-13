@@ -4230,6 +4230,9 @@ input[type="checkbox"] {
 .review-custom-popup{
     padding: 20px;
 }
+.review-custom-container .review-custom-popup #swal2-html-container {
+    padding: 0px !important;
+}
 .cmm-review-custom-confirmButton {
     background-color: $sub-color01 !important;
     width: 100% !important;
