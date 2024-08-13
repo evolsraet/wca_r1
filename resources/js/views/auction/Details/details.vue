@@ -502,7 +502,7 @@
               </div>
             </BottomSheet02>
           </div>
-          <BottomSheet02 v-if="auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen' && scsbid">
+          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid">
              <div class="d-flex justify-content-between align-items-baseline">
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
