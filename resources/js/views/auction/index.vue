@@ -1055,6 +1055,7 @@ const search_title = ref('');
 
 const mybidsData = ref([]);
 const mybidPagination = ref({});
+const bidsIdString = ref('');
 
 /**
 const initializeFavorites = () => {
@@ -1296,17 +1297,8 @@ const filterLikeData = (auctions, likes="none") => {
 }
 
 const getScsBidsInfo = async (serach_content='') =>{
-    //bids 가져오기
-    const myBidsList = await getMyBidsAll();
-    const bidsIdList = [];
-    for (let i = 0; i < myBidsList.data.length; i++) {
-        bidsIdList.push(myBidsList.data[i].id);
-    }
-
-    const idString = bidsIdList.join(',');
-
     //bids낙찰 차량 가져오기
-    const scsBidsInfo = await getscsBids(currentScsBidsPage.value,currentScsBidsStatus.value,serach_content,idString);
+    const scsBidsInfo = await getscsBids(currentScsBidsPage.value,currentScsBidsStatus.value,serach_content,bidsIdString.value);
    
     scsbidsData.value = scsBidsInfo.data;
     scsbidPagination.value = scsBidsInfo.rawData.data.meta;
@@ -1314,7 +1306,7 @@ const getScsBidsInfo = async (serach_content='') =>{
 }
 
 const getMyBidsGetData = async(serach_content='') =>{
-    const myAuctionBidsInfo = await getAuctionsWithBids(currentScsBidsPage.value,currentMyBidsStatus.value,user.value.id,serach_content);
+    const myAuctionBidsInfo = await getAuctionsWithBids(currentScsBidsPage.value,currentMyBidsStatus.value,user.value.id,serach_content,bidsIdString.value);
    
     mybidsData.value = myAuctionBidsInfo.data;
     mybidPagination.value = myAuctionBidsInfo.rawData.data.meta;
@@ -1355,6 +1347,17 @@ onMounted(async () => {
         currentMyBidsStatus.value = history.state.status;
     }
 
+    //bids id List가져오기
+    if(isDealer.value){
+        const myBidsList = await getMyBidsAll();
+        const bidsIdList = [];
+        for (let i = 0; i < myBidsList.data.length; i++) {
+            bidsIdList.push(myBidsList.data[i].id);
+        }
+
+        bidsIdString.value = bidsIdList.join(',');
+    }
+    
     await getAuctionsData();
 
     statusLabel = wicas.enum(store).addFirst('all', '전체').excl('cancel', '취소').ascVal().auctions();
@@ -1373,7 +1376,6 @@ onMounted(async () => {
         response.value = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , 'all');
         favoriteAuctionsPagination.value = response.value.rawData.data.meta;
     }
-    
 
     timer = setInterval(() => {
         if(isUser.value){
@@ -1385,8 +1387,6 @@ onMounted(async () => {
         }
         isLoading.value = true;
     }, 1000);
-    
-    
 });
 
 
