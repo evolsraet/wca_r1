@@ -332,8 +332,8 @@ function toggleDetailContent() {
 }
 const UserapplyAuction = () =>{
     const text = `
-    <h5 class="text-start">이런 단계를 거쳐요</h5>
-             <div class="sellInfo my-3 p-2">
+    <h4 class="text-start">이런 단계를 거쳐요</h4>
+             <div class="sellInfo my-3 p-4">
                 <img src="${imgInfo}"alt="Auction Detail" class="auction-detail-img">
           </div>`;
     wica.ntcn(swal)
