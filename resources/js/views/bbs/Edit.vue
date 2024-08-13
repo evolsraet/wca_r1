@@ -5,7 +5,7 @@
     --> 
     <div class="container">
         <form @submit.prevent="submitForm" v-for="review in reviewData" :key="review">
-            <div class="container">
+            <div class="container mov-wide">
                     <div class="container-img">
                         <h5 class="my-3">후기 작성</h5>
                         <div class="left-img">
@@ -49,7 +49,7 @@
                    <div class="container card-style p-0 mt-5">
                     </div>
                 </div>
-                <div>
+                <div class="right-container">
                     <bottom-sheet initial="half" :dismissable="true">
                         <div class="sheet-content p-0">
                             <div class="mt-3 mb-4" @click.stop="">
@@ -87,7 +87,7 @@ export default {
 </script>
 
 <script setup>
-import { ref, onMounted, nextTick, reactive , watchEffect } from 'vue';
+import { ref, onMounted, nextTick, reactive , watchEffect,onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { initReviewSystem } from '@/composables/review'; // 별점 js
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
@@ -105,7 +105,7 @@ let reviewData = ref();
 const alarmModal = ref(null);
 const carInfo = ref();
 const { formatDateAndTime } = cmmn();
-
+const isMobileView = ref(window.innerWidth <= 640);
 const openAlarmModal = () => {
 console.log("openAlarmModal called");
 if (alarmModal.value) {
@@ -134,8 +134,14 @@ function toggleSheet() {
     }
     showBottomSheet.value = !showBottomSheet.value;
 }
-
+const checkScreenWidth = () => {
+    if (typeof window !== 'undefined') {
+      isMobileView.value = window.innerWidth <= 640;
+    }
+  };
 onMounted(async () => {
+    window.addEventListener('resize', checkScreenWidth);
+    checkScreenWidth();
     const response = await getUserReviewInfo(reviewId);
     console.log(response);
     reviewData.value = [response];
@@ -154,6 +160,9 @@ onMounted(async () => {
     })
 
 });
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScreenWidth);
+}); 
 </script>
 
 <style scoped>
