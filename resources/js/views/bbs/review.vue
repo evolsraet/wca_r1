@@ -83,10 +83,10 @@
                                         </div>
                                         <!--<p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>-->
                                     </div>
-                                    <div class="mb-2 justify-content-between flex align-items-center bold-18-font">
+
                                         <!-- <p>{{ review.auction.car_no }}</p>
                                             <p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>-->
-                                        </div>
+
                                         <div class="rating">
                                             <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
                                                 <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
@@ -223,6 +223,10 @@ onMounted(async () => {
 }
 </style>
 <style>
+.rating__label .star-icon {
+    width: 20px !important;
+    height: 20px !important;
+}
 .popup-menu {
     position: absolute;
     text-align: center;
