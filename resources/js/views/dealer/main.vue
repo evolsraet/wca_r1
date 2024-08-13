@@ -13,7 +13,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="slide-up-ani activity-info bold-18-font process mb-0">
+                    <div class="container slide-up-ani activity-info bold-18-font process mb-0">
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
                             <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
                             <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
@@ -191,6 +191,7 @@ p {
 .layout-container02{
     grid-template-columns: 1fr 1fr !important;
     align-items: baseline;
+    gap: 30px !important;
 }
 @media (max-width: 640px){
     .layout-container02 {
