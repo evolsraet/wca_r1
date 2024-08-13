@@ -350,3 +350,10 @@ input[type="password"] {
   }
 </style>
 -->
+<style scoped lang="scss">
+@media (max-width: 991px){
+.p-5{
+  padding: 2rem 0.5rem 1rem 0.5rem !important;
+}
+}
+</style>

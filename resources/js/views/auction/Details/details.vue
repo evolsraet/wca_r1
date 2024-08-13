@@ -426,9 +426,9 @@
                       <div class="img_box">
                         <img :src="getPhotoUrl(bid)" alt="Profile Photo" class="profile-photo" />
                       </div>
-                      <div class="txt_box me-auto">
+                      <div class="txt_box me-auto d-flex flex-column align-items-start">
                         <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
-                        <p class="txt">{{bid.price}} 만원</p>
+                        <h4 class="txt tc-red">{{amtComma(bid.price)}}</h4>
                         <p class="restar normal-16-font me-auto average-score">4.5점</p>
                       </div>
                       <p class="restar normal-16-font me-auto average-score-web">4.5점</p>
