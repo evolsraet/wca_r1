@@ -66,7 +66,7 @@
                       <h5 class="card-title"><span class="blue-box">무사고</span></h5>
                       <h5 v-if="auctionDetail.data.is_reauction !== 0"><span class="gray-box border-6">재경매</span></h5>
                     </div>
-                   <div v-if="auctionDetail.data.status ==='chosen' || auctionDetail.data.status ==='dlvr'">
+                   <div v-if="auctionDetail.data.status ==='chosen' || auctionDetail.data.status ==='dlvr' && scsbid">
                      <!-- <hr>
                       <h4>탁송 신청 정보</h4>
                       <div class="fw-medium ">
@@ -502,7 +502,7 @@
               </div>
             </BottomSheet02>
           </div>
-          <BottomSheet02 v-if="auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen'">
+          <BottomSheet02 v-if="auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen' && scsbid">
              <div class="d-flex justify-content-between align-items-baseline">
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
@@ -561,7 +561,7 @@
               </p>
             </button>-->
             </div>
-              <div v-if ="auctionDetail.data.status ==='chosen' && isDealer">
+              <div v-if ="auctionDetail.data.status ==='chosen' && isDealer && scsbid">
                 <hr>
               <h4 class="mt-2">탁송 주소지</h4>
               <p class="text-start text-secondary opacity-50">※ 현 주소지로 탁송이 진행 됩니다. </p>
@@ -609,7 +609,7 @@
                     </div>
                     </div>
                   </BottomSheet02> 
-                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer">
+                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer && scsbid">
                     <div>
                       <h4>낙찰 완료</h4>
                       <p class="text-secondary opacity-50 mb-3">※ 차량에 문제가 있으신가요?</p>
@@ -1630,6 +1630,7 @@ const confirmBid = async () => {
 };
 
 const errorMessage = ref('');
+const scsbid = ref({});
 
 const fetchAuctionDetail = async () => {
   const auctionId = parseInt(route.params.id);
@@ -1641,6 +1642,8 @@ const fetchAuctionDetail = async () => {
     fileExstCheck(userInfoData);
     */
 
+    // 현재 딜러가 낙찰되었는지 판단
+    scsbid.value = auctionDetail.value.data.bids.find(bid => bid.id == auctionDetail.value.data.bid_id);
 
     const userLike = auctionDetail.value.data.likes.find(like => like.user_id === user.value.id);
 
