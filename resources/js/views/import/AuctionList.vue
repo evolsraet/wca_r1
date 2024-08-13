@@ -165,24 +165,32 @@ function getStatusClass(status) {
 }
 
 const filteredAuctionsData = computed(() => {
+  const userId = user.value.id; 
+
   if (isDealer.value) {
-    return auctionsData.value.filter(auction => 
-      auction.status === 'chosen' && (
-        (auction.dest_addr1 === '' || auction.dest_addr1 === null) &&
-        (auction.dest_addr2 === '' || auction.dest_addr2 === null) &&
-        (auction.dest_addr_post === '' || auction.dest_addr_post === null)
-      )
-    );
+    console.log(">>:", auctionsData.value);
+    
+    return auctionsData.value.filter(auction => {
+     
+      const hasMatchingWinBid = auction.win_bid && auction.win_bid.user_id === userId;
+      console.log(">>>>:", hasMatchingWinBid);
+      
+      return hasMatchingWinBid && auction.status === 'chosen' && (
+        (!auction.dest_addr1 || !auction.dest_addr2 || !auction.dest_addr_post)
+      );
+    });
   }
+
   return auctionsData.value;
 });
+
 
 
 onMounted(async () => {
   await getAuctions();
   const user = store.getters['auth/user'];
   const userId = user.id;
-  console.log(userId);
+  console.log("내 아이디:",userId);
   await getUserReview(userId);
   console.log(reviewsData.value);
   setRandomPlaceholder();
