@@ -3,14 +3,14 @@
     <!-- 공통 UI 구조 -->
     <div class="border-0" @click="toggleCard">
       <div class="card-body">
-        <div class="enter-view">
-          <h5 v-if="isUser">내 매물관리</h5>
-          <div v-if="isDealer">
-          <h5>탁송지 미등록 매물</h5>
-          <p class="text-sendary opacity-50">낙찰된 매물중 탁송지 미등록 매물입니다</p>
-           </div>
-           <router-link :to="{ name: 'auction.index',state: { currentTab: 'myBidInfo',status: 'cnsgnmUnregist' } }" class="btn-apply">전체보기</router-link>
+        <div v-if="isUser" class="enter-view">
+          <h5>내 매물관리</h5>
+          <router-link :to="{ name: 'auction.index',state: { currentTab: 'myBidInfo',status: 'cnsgnmUnregist' } }" class="btn-apply">전체보기</router-link>
         </div>
+        <div v-else-if="isDealer">
+        <h5>탁송지 미등록 매물</h5>
+        <p class="text-sendary opacity-50">낙찰된 매물중 탁송지 미등록 매물입니다</p>
+         </div>
 
         <!-- 차량이 존재할 경우 -->
         <div v-if="filteredAuctionsData.length > 0" class="scrollable-content mt-4 mb-4">
@@ -88,7 +88,7 @@
                 <div class="text-secondary opacity-50 d-flex align-items-center flex-column gap-5">
                   <h4 v-if="isUser">등록된 차가 없어요</h4>
                   <h5 v-if="isUser">차량 등록 후, 경매를 시작해보세요.</h5>
-                  <h4 v-if="isDealer" class="mt-4 text-center">탁송지를 등록해야 할 매물이 없습니다.</h4>
+                  <h5 v-if="isDealer" class="mt-4 text-center">탁송지를 등록해야 할 매물이 없습니다.</h5>
                   <div v-if="isUser" class="px-2">
                   <router-link :to="{ name:'home' }" class="w-100 btn primary-btn btn-apply-ty02 justify-content-between p-4 w-100">
                     <span>차량 등록하기</span>
