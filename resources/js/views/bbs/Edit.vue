@@ -3,7 +3,7 @@
         * mov-text : 모바일 일때 보이는 뷰
         * web-text: : 웹 화면에서 보이는뷰
     --> 
-    <div class="container">
+    <div>
         <form @submit.prevent="submitForm" v-for="review in reviewData" :key="review">
             <div class="container mov-wide">
                     <div class="container-img">
