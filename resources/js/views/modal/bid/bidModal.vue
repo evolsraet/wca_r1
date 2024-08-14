@@ -11,7 +11,7 @@
               <hr>
               <div class="enroll_box p-4">
                 <h5 class="">해당 금액으로 입찰하시겠습니까?</h5> 
-                <p class="">걱정마세요! 입찰 한 뒤에도<br>취소 후 재 입찰이 가능합니다.(1회 한정)</p>
+                <p class="">걱정마세요! 입찰 한 뒤에도<br>취소 후 재 입찰이 가능합니다.</p>
               </div>
               <div class="btn-group">
                 <button class="btn btn_ok btn-primary shadow w-50" @click="confirmBid">입찰하기</button>
