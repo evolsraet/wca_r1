@@ -28,21 +28,18 @@ export default function useLikes() {
         .post(); 
     }
 
-    //pagination 안한 전체 데이터 - 사용자별
-    const getAllLikes = async(likeableType = 'Auction', userId = null) => {
-        return wicac.conn()
-        //.log()
-        .url(`/api/likes`)
-        .where([`likes.user_id:${userId}`])
-        .pageLimit(10000)
-        .callback(function(result) {
-            
-            likesData.value = result.data;
-            return result;
-        })
-        .get();
-        
+    //내 관심 count가져오기
+    const getMyLikesCount = async(userId = '') => {
+            return wicac.conn()
+            .url(`/api/auctions`)
+            .param({mode:'count'})
+            .where([`likes.user_id:${userId}`])
+            .with(['likes'])
+            .callback(function(result) {
+                return result;
+            }).get();
     }
+
     const getLikes = async (likeableType = 'Auction', userId = null) => {
         console.log(userId);
         const apiList = [`likes.likeable_type:like:${likeableType}`];
@@ -100,7 +97,6 @@ export default function useLikes() {
 
     }) 
     return {
-        getAllLikes,
         like,
         setLikes,
         getLikes,
@@ -109,5 +105,6 @@ export default function useLikes() {
         pagination,
         validationErrors,
         isAuctionFavorited,
+        getMyLikesCount,
     };
 }

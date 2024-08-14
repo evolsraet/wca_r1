@@ -21,7 +21,7 @@
                     </div>
                     <div class="activity-info bold-18-font mt-5">
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                        <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
+                        <p><span class="tc-red slide-up mb-0" ref="item1">{{ myLikeCount }}</span> 건</p>
                         <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
                         </router-link>
                         <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
@@ -169,10 +169,11 @@ const photoUrl = ref(profileDom);
 const currentTab = ref('dealerInfo');
 const store = useStore();
 const { getDoneAuctions, pagination } = useAuctions(); // 경매 관련 함수를 사용
-const { likesData, getAllLikes } = useLikes();
+const { getMyLikesCount } = useLikes();
 const { bidsData, bidsCountByUser, getHomeBids, getBidsByUserId } = useBid();
 const { getUser } = useUsers();
 const myBidCount = ref(0);
+const myLikeCount=ref(0);
 const filteredDoneBids = ref([]);
 const auctionsDoneData = ref([]);
 const currentPage = ref(1); 
@@ -215,7 +216,9 @@ onMounted(async () => {
 
     });
 
-    await getAllLikes('Auction',user.value.id);
+    const myLikeCountData = await getMyLikesCount(user.value.id);
+    myLikeCount.value = myLikeCountData.rawData.data.data_count;
+
     let bidsList = await getBidsByUserId(user.value.id);
     bidsNumList = '';
     if(bidsList){

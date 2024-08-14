@@ -15,7 +15,7 @@
                     </div>
                     <div class="container slide-up-ani activity-info bold-18-font process mb-0">
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                            <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
+                            <p><span class="tc-red slide-up mb-0" ref="item1">{{ myLikeCount }}</span> 건</p>
                             <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
                         </router-link>
                         <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
@@ -74,7 +74,7 @@ import { initPostSystem } from "@/composables/posts";
 
 const { posts, getPosts } = initPostSystem();
 
-const { getAllLikes, likesData } = useLikes();
+const { getMyLikesCount } = useLikes();
 const item1 = ref(null);
 const item2 = ref(null);
 const item3 = ref(null);
@@ -90,7 +90,7 @@ const { getAuctionsByDealer, auctionsData, getAuctionById } = useAuctions();
 const { bidsData, getHomeBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
 const myBidCount = ref(0);
-
+const myLikeCount=ref(0);
 const latestNotices = computed(() => {
     return posts.value.slice(0, 3);
 });
@@ -148,7 +148,9 @@ const goToDetail = (postId) => {
 
 onMounted(async () => {
     await getAuctionsByDealer("all");
-
+    const myLikeCountData = await getMyLikesCount(user.value.id);
+    myLikeCount.value = myLikeCountData.rawData.data.data_count;
+    
     await getHomeBids();
     bidsData.value.forEach(bid => {
         if (
@@ -163,8 +165,7 @@ onMounted(async () => {
             myBidCount.value += 1;
         }
     }); 
-
-    await getAllLikes('Auction', user.value.id);
+    
     await fetchPosts();
 
     setTimeout(() => {
