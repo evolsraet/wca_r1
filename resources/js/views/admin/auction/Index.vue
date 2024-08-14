@@ -1,8 +1,16 @@
 <template>
     <div class="row justify-content-center my-2 p-3">
+        
         <div class="col-md-12">
             <h4>매물 관리<p class="text-secondary opacity-75 fs-6 my-3">매물의 상세 관리, 상태 수정이 가능합니다.</p></h4>
             </div>
+            <div class="search-type2 mb-2" style="display: flex; align-items: center;">
+                    <div class="border-xsl" style="margin-right: 10px;">
+                        <div class="image-icon-excel pointer" @click="downloadUsersExcel">
+            
+                        </div>
+                    </div>
+                </div>
                 <div class="container mb-3">
                     <div class="d-flex justify-content-end responsive-flex-end gap-2">
                         <div class="text-end select-option">
@@ -126,6 +134,11 @@
     import { useAbility } from '@casl/vue';
     import { useStore } from 'vuex';
     import { cmmn } from '@/hooks/cmmn';
+    import { downloadExcel } from '@/composables/excel';
+
+    const downloadUsersExcel = () => {
+        downloadExcel('/excelDown/auctions', 'created_at', 'asc', 'auctions_data.xlsx');
+    };
 
     const { wicas } = cmmn();
     const store = useStore();

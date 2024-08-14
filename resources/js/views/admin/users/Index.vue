@@ -12,17 +12,16 @@
                     </router-link>
 --> 
                 </div>
-                <!--
-                    <div class="search-type2 mb-2" style="display: flex; align-items: center;">
-                        <div class="border-xsl" style="margin-right: 10px;">
-                            <div class="image-icon-excel">
-                                
-                            </div>
+                
+                <div class="search-type2 mb-2" style="display: flex; align-items: center;">
+                    <div class="border-xsl" style="margin-right: 10px;">
+                        <div class="image-icon-excel pointer" @click="downloadUsersExcel">
+            
                         </div>
-                        <input type="text" placeholder="회원 검색" id="searchUserName" style="width: auto !important; margin-right: 10px;"/>
-                        <button type="button" class="search-btn" @click="setUserName">검색</button>
-                    </div>-->
-                    
+                    </div>
+                </div>
+
+            
                     <div class="container mb-3">
                     <div class="d-flex justify-content-end responsive-flex-end gap-3">
                         
@@ -225,6 +224,12 @@ import { useAbility } from "@casl/vue";
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
 import { cmmn } from '@/hooks/cmmn';
+import { downloadExcel } from '@/composables/excel';
+
+const downloadUsersExcel = () => {
+    downloadExcel('/excelDown/users', 'created_at', 'asc', 'users_data.xlsx');
+};
+
 
 const { wicas } = cmmn();
 const store = useStore();
@@ -305,6 +310,7 @@ function fetchUsers() {
 const searchBtn = async() =>{
     fetchUsers();
 }
+
 
 /** 
 watch(search_id, (current, previous) => {

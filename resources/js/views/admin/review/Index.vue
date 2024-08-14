@@ -3,6 +3,13 @@
         <div class="col-md-12">
             <h4>후기 관리<p class="text-secondary opacity-75 fs-6 my-3">후기 관리 페이지 입니다.</p></h4>
             </div>
+            <div class="search-type2 mb-2" style="display: flex; align-items: center;">
+                    <div class="border-xsl" style="margin-right: 10px;">
+                        <div class="image-icon-excel pointer" @click="downloadUsersExcel">
+            
+                        </div>
+                    </div>
+                </div>
                 <div class="container mb-3">
                     <div class="d-flex justify-content-end responsive-flex-end gap-2">
                         <div class="text-end select-option">
@@ -228,6 +235,11 @@ import { ref, onMounted, watch } from "vue";
 import useCategories from "@/composables/categories";
 import { useAbility } from "@casl/vue";
 import { initReviewSystem } from '@/composables/review';
+import { downloadExcel } from '@/composables/excel';
+
+const downloadUsersExcel = () => {
+    downloadExcel('/excelDown/reviews', 'created_at', 'asc', 'reviews_data.xlsx');
+};
 
 const orderColumn = ref("created_at");
 const orderDirection = ref("desc");
