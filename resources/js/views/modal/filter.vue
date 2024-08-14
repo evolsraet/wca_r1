@@ -3,12 +3,13 @@
     <div class="modal-dialog">
       <div class="modal-content shadow">
         <div class="modal-body">
-          <div class="content">
+          <div class="demo"></div>
+          <div class="content mt-0">
             <div class="nav-header">
               <button type="button" class="btn-close" @click="handleCloseClick"></button>
             </div>
             <h5>필터</h5>
-            <div v-for="(items, category) in categories" :key="category" class="facturer mt-3">
+            <div v-for="(items, category) in categories" :key="category" class="facturer">
               <h5 class="text-secondary opacity-50">{{ category }}</h5>
               <div class="manufacturer-model my-3">
                 <div
@@ -48,7 +49,7 @@
             </div>
             <div class="btn-group">
               <button class="btn btn-secondary shadow" @click="resetSelection">초기화</button>
-              <button class="btn btn-primary w-50 modal_close shadow" @click="applyFilters">필터 적용</button>
+              <button class="btn btn-primary w-50 modal_close shadow" @click="handleCloseClick">필터 적용</button>
             </div>
           </div>
         </div>
