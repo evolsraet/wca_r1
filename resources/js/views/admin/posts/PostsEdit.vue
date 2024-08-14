@@ -24,9 +24,8 @@
             <div class="mb-3">
               <label v-if="!navigatedThroughHandleRowClick && boardId == 'notice'" for="post-category" class="form-label">카테고리</label>
               <label v-if="!navigatedThroughHandleRowClick && boardId == 'claim'" for="post-category" class="form-label">상태</label>
-              <div v-if="isAdmin">
+              <div v-if="isAdmin && !navigatedThroughHandleRowClick">
             
-                <label>카테고리</label>
             
                 <v-select
                 v-model="post.category"
@@ -46,8 +45,8 @@
             </div>
             <!-- Title -->
             <div class="mb-3">
-              <label v-if="!navigatedThroughHandleRowClick || isAdmin" for="post-title" class="form-label">제목</label>
-              <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)">
+              <label v-if="!navigatedThroughHandleRowClick && isAdmin" for="post-title" class="form-label">제목</label>
+              <div v-if="navigatedThroughHandleRowClick">
                 <h4>{{ post.title }}</h4>
                 <hr>
               </div>
@@ -58,8 +57,8 @@
             </div>
             <!-- Content -->
             <div class="mb-3">
-              <label v-if="!navigatedThroughHandleRowClick || isAdmin" for="post-content" class="form-label">컨텐츠 내용</label>
-              <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer || isAdmin)" class="py-3">
+              <label v-if="!navigatedThroughHandleRowClick && isAdmin" for="post-content" class="form-label">컨텐츠 내용</label>
+              <div v-if="navigatedThroughHandleRowClick" class="py-3">
                 <div v-html="sanitizedContent"></div>
               </div>
               <textarea v-else v-if="navigatedThroughHandleRowClick" v-model="plainTextContent" id="post-content" class="form-control" rows="10" disabled style="resize: none;"></textarea>
@@ -68,7 +67,7 @@
                 <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
               </div>
             </div>
-            <div v-if="!navigatedThroughHandleRowClick || (!isUser && !isDealer && !isAdmin)">
+            <div v-if="!navigatedThroughHandleRowClick">
               <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
                 파일 첨부
               </button>
