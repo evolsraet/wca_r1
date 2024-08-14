@@ -59,7 +59,7 @@
             <!-- Content -->
             <div class="mb-3">
               <label v-if="!navigatedThroughHandleRowClick || isAdmin" for="post-content" class="form-label">컨텐츠 내용</label>
-              <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)" class="py-3">
+              <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer || isAdmin)" class="py-3">
                 <div v-html="sanitizedContent"></div>
               </div>
               <textarea v-else v-if="navigatedThroughHandleRowClick" v-model="plainTextContent" id="post-content" class="form-control" rows="10" disabled style="resize: none;"></textarea>
