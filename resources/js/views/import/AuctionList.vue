@@ -72,7 +72,7 @@
           <router-link v-if="isUser" :to="{ name: 'home' }" class="bid-bc p-3">
             <ul class="px-0 inspector_list max_width_900">
               <li class="m-auto">
-                <div>
+                <div class="hovercolo">
                   <p class="text-secondary opacity-50 d-flex justify-content-center">새 차량 등록하기<span class="ms-2 icon-auction-plus"></span></p>
                 </div>
               </li>

@@ -3965,7 +3965,9 @@ input[type="checkbox"] {
             transition: color 0.5s ease;
           }
         }
-
+        .hovercolo p{
+            color: $sub-color01 !important; 
+        }
         .btn-apply-ty03::after {
           background-image: url('../img/Icon-right-blue.png');
           width: 45px;
