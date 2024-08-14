@@ -848,31 +848,42 @@ const getBidsAuction = async (page = 1 , status = "all") => {
     
 };
 
-const getAuctionsWithBids = async (page = 1 , status = "all", userId = '', search_text='') => {
+const getAuctionsWithBids = async (page = 1 , status = "all", userId = '', search_text='',bidsIdString = '') => {
     const apiList = [];
     apiList.push(`bids.user_id:`+userId);
 
-    let request = wicac.conn()
-    .url('/api/auctions')
-    .with(['bids,likes'])
-    .search(search_text)
-    .page(`${page}`)
-    .where(apiList)
-    if(status != 'all'){
-        if(status == 'bid'){
-            request.whereOr('auctions.status','ing,wait');
-        } else if(status == 'cnsgnmUnregist'){
-            request.addWhere('auctions.status','chosen');
-            request.sprtrAnd();
-            request.addWhere('auctions.dest_addr_post','_null');
-        } else{
-            request.whereOr('auctions.status',`${status}`);
+    if(status == 'cnsgnmUnregist'){
+        let request = wicac.conn()
+        .url(`api/auctions?where=bids.user_id:${userId}&where=auctions.bid_id:whereIn:${bidsIdString}
+            _and_auctions.status:chosen_and_auctions.dest_addr_post:_null&with=bids,likes
+            &search_text=${search_text}&page=${page}`)
+        
+        return request.callback(function(result) {
+            return result;
+        }).get();
+    }else{
+        let request = wicac.conn()
+        .url('api/auctions')
+        .with(['bids,likes'])
+        .search(search_text)
+        .page(`${page}`)
+        .where(apiList)
+        if(status != 'all'){
+            if(status == 'bid'){
+                request.whereOr('auctions.status','ing,wait');
+            } else if(status == 'cnsgnmUnregist'){
+            } else{
+                request.whereOr('auctions.status',`${status}`);
+            }
         }
+        
+        return request.callback(function(result) {
+            return result;
+        }).get();
     }
-    
-    return request.callback(function(result) {
-        return result;
-    }).get();
+
+
+   
     
 };
 

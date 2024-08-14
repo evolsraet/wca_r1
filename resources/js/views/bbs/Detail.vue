@@ -31,7 +31,7 @@
                             <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                             </div>
                             <div class="mx-2 text-secondary opacity-50 my-4">
-                            <p>년 / 2.4km / 무사고</p>
+                            <p>년 | 2.4km | 무사고</p>
                             <p>현대 쏘나타 (DN8)</p>
                             <br>
                             <p>매물번호 / 564514</p>

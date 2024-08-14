@@ -21,10 +21,10 @@
                     </div>
                     <div class="activity-info bold-18-font mt-5">
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                        <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
+                        <p><span class="tc-red slide-up mb-0" ref="item1">{{ myLikeCount }}</span> 건</p>
                         <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
                         </router-link>
-                        <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo' }}" class="item">
+                        <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
                         <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
                         <p class="bid-icon text-secondary opacity-50 normal-16-font mb-0">입찰</p>
                         </router-link>
@@ -111,8 +111,16 @@
                                 <div class="card-img-top-placeholder grayscale_img"><img src="../../../../img/car_example.png"></div>
                                 <span v-if="bid.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                 <div class="card-body">
-                                    <h5 class="card-title"><span class="blue-box">무사고</span>{{bid.car_no}}</h5>
-                                    <p class="card-text text-secondary opacity-50">현대 쏘나타(DN8)</p>
+                                    <!--<h5 class="card-title"><span class="blue-box">무사고</span>{{bid.car_no}}</h5>-->
+                                    <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                                    <h5>[ {{bid.car_no}} ]</h5>
+                                    <p>2020년 | 2.4km | 무사고</p>
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
+                                        </div>
+                                        <!--<p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>-->
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -161,10 +169,11 @@ const photoUrl = ref(profileDom);
 const currentTab = ref('dealerInfo');
 const store = useStore();
 const { getDoneAuctions, pagination } = useAuctions(); // 경매 관련 함수를 사용
-const { likesData, getAllLikes } = useLikes();
+const { getMyLikesCount } = useLikes();
 const { bidsData, bidsCountByUser, getHomeBids, getBidsByUserId } = useBid();
 const { getUser } = useUsers();
 const myBidCount = ref(0);
+const myLikeCount=ref(0);
 const filteredDoneBids = ref([]);
 const auctionsDoneData = ref([]);
 const currentPage = ref(1); 
@@ -207,7 +216,9 @@ onMounted(async () => {
 
     });
 
-    await getAllLikes('Auction',user.value.id);
+    const myLikeCountData = await getMyLikesCount(user.value.id);
+    myLikeCount.value = myLikeCountData.rawData.data.data_count;
+
     let bidsList = await getBidsByUserId(user.value.id);
     bidsNumList = '';
     if(bidsList){

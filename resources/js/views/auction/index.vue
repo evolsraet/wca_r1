@@ -286,10 +286,12 @@ TODO:
                         <div class=" mt-4">
                             <h5>주행거리</h5>
                             <div class="range-slider">
-                                <input type="range" min="0" max="200000" value="0" id="min-range" class="range-min">
-                                <input type="range" min="0" max="200000" value="200000" id="max-range" class="range-max">
+                                <!-- 최소값 슬라이더 -->
+                                <input type="range" min="0" max="200000" v-model="minRange" id="min-range" class="range-min" @input="updateProgressBar">
+                                <!-- 최대값 슬라이더 -->
+                                <input type="range" min="0" max="200000" v-model="maxRange" id="max-range" class="range-max" @input="updateProgressBar">
                                 <div class="slider-value">
-                                    <span id="range-min-value">0km</span> ~ <span id="range-max-value">200,000km 이상</span>
+                                    <span id="range-min-value">{{ formatNumber(minRange) }}km</span> ~ <span id="range-max-value">{{ formatNumber(maxRange) }}km{{ maxRange >= 200000 ? ' 이상' : '' }}</span>
                                 </div>
                             </div>
                         </div>
@@ -675,23 +677,28 @@ TODO:
                             </nav>
                         </div>
                         <div class="container my-4" v-if="currentTab === 'auctionDone'">
-                            <div class="row">
-                                <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="auction in filteredDone" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
-                                    <div class="card my-auction">
-                                        <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
-                                        <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
-                                        <div class="card-body">
-                                            <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                            <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
-                                            <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
-                                            <div class="d-flex">
-                                                <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
-                                                <h5 v-if="auction.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
+                            <div v-if="filteredDone.length > 0">
+                                <div class="row">
+                                
+                                    <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="auction in filteredDone" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
+                                        <div class="card my-auction">
+                                            <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
+                                            <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
+                                            <div class="card-body">
+                                                <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
+                                                <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
+                                                <div class="d-flex">
+                                                    <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                                                    <h5 v-if="auction.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div v-if="!filteredDone" class="complete-car my-3">
+                            </div>
+                            <div v-else>
+                                <div class="complete-car my-3">
                                     <div class="card my-auction mt-3">
                                         <div class="none-complete">
                                             <span class="tc-gray">판매 매물이 없습니다.</span>
@@ -955,7 +962,9 @@ export default {
       scrollY: 0, // 스크롤 위치 저장
       scrollTimeout: null, // 스크롤 타임아웃 저장
       selectedYear: new Date().getFullYear(), // 선택된 연도 (현재 연도)
-      years: [] // 연도 목록 저장
+      years: [], // 연도 목록 저장
+      minRange: 0, // 최소값 초기화
+      maxRange: 200000, // 최대값 초기화
     };
   },
 
@@ -974,6 +983,9 @@ export default {
     toggleMenuHeight() { // 하단 메뉴 높이 토글
       this.isExpanded = !this.isExpanded;
     },
+    formatNumber(value) {
+      return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    },
     submitReview() { // 리뷰 제출 시 메뉴 높이 토글
       this.toggleMenuHeight();
     },
@@ -985,7 +997,14 @@ export default {
       return years;
     }
   },
+  updateProgressBar() {
+      const rangeSlider = document.querySelector('.range-slider');
+      const minPercent = (this.minRange / 200000) * 100;
+      const maxPercent = (this.maxRange / 200000) * 100;
 
+      // 슬라이더 배경 업데이트
+      rangeSlider.style.background = `linear-gradient(to right, #d3d3d3 0%, #d3d3d3 ${minPercent}%, #f24200 ${minPercent}%, #f24200 ${maxPercent}%, #d3d3d3 ${maxPercent}%, #d3d3d3 100%)`;
+    },
   beforeDestroy() { // 컴포넌트 제거 시 스크롤 이벤트 리스너 제거
     window.removeEventListener('scroll', this.handleScroll);
     clearTimeout(this.scrollTimeout);
@@ -1010,8 +1029,8 @@ const swal = inject('$swal');
 const { wicas , wica , updateAuctionTimes , calculateTimeLeft } = cmmn();
 const selectedStartYear = ref(new Date().getFullYear() - 1);
 const selectedEndYear = ref(new Date().getFullYear());
-const {getBids, bidsData , getscsBids } = usebid();
-const { getLikes, likesData, isAuctionFavorited , like , setLikes , deleteLike , getAllLikes} = useLikes();
+const {getBids, bidsData , getscsBids, getMyBidsAll } = usebid();
+const { getLikes, likesData, isAuctionFavorited , like , setLikes , deleteLike } = useLikes();
 const router = useRouter();
 const route = useRoute();
 const currentStatus = ref('all');
@@ -1050,6 +1069,7 @@ const search_title = ref('');
 
 const mybidsData = ref([]);
 const mybidPagination = ref({});
+const bidsIdString = ref('');
 
 /**
 const initializeFavorites = () => {
@@ -1184,8 +1204,6 @@ function setCurrentTab(tab) {
             currentScsBidsStatus.value = 'all';
             getScsBidsInfo();
             break;
-        default:
-            console.error('Unknown page type');
     }
 
 }
@@ -1240,8 +1258,7 @@ function loadPage( page, type, pagination) {
         case 'scsbid':
             currentScsBidsPage.value = page;
             getScsBidsInfo();
-        default:
-            console.error('Unknown page type');
+            break;
     }
 }
 
@@ -1294,8 +1311,8 @@ const filterLikeData = (auctions, likes="none") => {
 }
 
 const getScsBidsInfo = async (serach_content='') =>{
-
-    const scsBidsInfo = await getscsBids(currentScsBidsPage.value,true,false,currentScsBidsStatus.value,serach_content);
+    //bids낙찰 차량 가져오기
+    const scsBidsInfo = await getscsBids(currentScsBidsPage.value,currentScsBidsStatus.value,serach_content,bidsIdString.value);
    
     scsbidsData.value = scsBidsInfo.data;
     scsbidPagination.value = scsBidsInfo.rawData.data.meta;
@@ -1303,7 +1320,7 @@ const getScsBidsInfo = async (serach_content='') =>{
 }
 
 const getMyBidsGetData = async(serach_content='') =>{
-    const myAuctionBidsInfo = await getAuctionsWithBids(currentScsBidsPage.value,currentMyBidsStatus.value,user.value.id,serach_content);
+    const myAuctionBidsInfo = await getAuctionsWithBids(currentScsBidsPage.value,currentMyBidsStatus.value,user.value.id,serach_content,bidsIdString.value);
    
     mybidsData.value = myAuctionBidsInfo.data;
     mybidPagination.value = myAuctionBidsInfo.rawData.data.meta;
@@ -1328,8 +1345,6 @@ const searchBtn = async() =>{
         case 'scsbidInfo':
             getScsBidsInfo(search_title.value);
             break;
-        default:
-            console.error('Unknown page type');
         }
     }
     
@@ -1346,6 +1361,17 @@ onMounted(async () => {
         currentMyBidsStatus.value = history.state.status;
     }
 
+    //bids id List가져오기
+    if(isDealer.value){
+        const myBidsList = await getMyBidsAll();
+        const bidsIdList = [];
+        for (let i = 0; i < myBidsList.data.length; i++) {
+            bidsIdList.push(myBidsList.data[i].id);
+        }
+
+        bidsIdString.value = bidsIdList.join(',');
+    }
+    
     await getAuctionsData();
 
     statusLabel = wicas.enum(store).addFirst('all', '전체').excl('cancel', '취소').ascVal().auctions();
@@ -1364,7 +1390,6 @@ onMounted(async () => {
         response.value = await getAuctionsByDealerLike(currentFavoritePage.value , user.value.id , 'all');
         favoriteAuctionsPagination.value = response.value.rawData.data.meta;
     }
-    
 
     timer = setInterval(() => {
         if(isUser.value){
@@ -1376,8 +1401,6 @@ onMounted(async () => {
         }
         isLoading.value = true;
     }, 1000);
-    
-    
 });
 
 

@@ -29,12 +29,12 @@
                         <source src="../../../img/video/register_vi.mp4" type="video/mp4">
                     </video>
                 </div>
-                <div class="card-section">
-                    <div class="card">
+                <div class="card-section my-3">
+                    <div class="card p-3">
                         <div class="card-body">
                             <div class="registration-container">
                                 <div class="text-left">
-                                    <p class="mb-4 fw-bold">회원 정보를 입력해주세요</p>
+                                    <h4 class="mb-4">회원 정보를 입력해주세요</h4>
                                 </div>
                               
                                     <UserRegisterForm/>
@@ -517,7 +517,7 @@ body {
 }
 
 .search-btn{
-    right:15px !important;
+    right:16px !important;
 }
 /*******************************
    regist form
@@ -746,7 +746,7 @@ div.main i {
 @keyframes moveImage {
     0% {
         top: 0;
-        left: 50%;
+        left: 55%;
         transform: translateX(-50%);
     }
 

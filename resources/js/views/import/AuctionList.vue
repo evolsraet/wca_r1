@@ -3,14 +3,14 @@
     <!-- 공통 UI 구조 -->
     <div class="border-0" @click="toggleCard">
       <div class="card-body">
-        <div class="enter-view">
-          <h5 v-if="isUser">내 매물관리</h5>
-          <div v-if="isDealer">
-          <h5>탁송지 미등록 매물</h5>
-          <p class="text-sendary opacity-50">낙찰된 매물중 탁송지 미등록 매물입니다</p>
-           </div>
-           <router-link :to="{ name: 'auction.index',state: { currentTab: 'myBidInfo',status: 'cnsgnmUnregist' } }" class="btn-apply">전체보기</router-link>
+        <div v-if="isUser" class="enter-view">
+          <h5>내 매물관리</h5>
+          <router-link :to="{ name: 'auction.index',state: { currentTab: 'myBidInfo',status: 'cnsgnmUnregist' } }" class="btn-apply">전체보기</router-link>
         </div>
+        <div v-else-if="isDealer">
+        <h5>탁송지 미등록 매물</h5>
+        <p class="text-sendary opacity-50">낙찰된 매물중 탁송지 미등록 매물입니다</p>
+         </div>
 
         <!-- 차량이 존재할 경우 -->
         <div v-if="filteredAuctionsData.length > 0" class="scrollable-content mt-4 mb-4">
@@ -72,7 +72,7 @@
           <router-link v-if="isUser" :to="{ name: 'home' }" class="bid-bc p-3">
             <ul class="px-0 inspector_list max_width_900">
               <li class="m-auto">
-                <div>
+                <div class="hovercolo">
                   <p class="text-secondary opacity-50 d-flex justify-content-center">새 차량 등록하기<span class="ms-2 icon-auction-plus"></span></p>
                 </div>
               </li>
@@ -88,7 +88,7 @@
                 <div class="text-secondary opacity-50 d-flex align-items-center flex-column gap-5">
                   <h4 v-if="isUser">등록된 차가 없어요</h4>
                   <h5 v-if="isUser">차량 등록 후, 경매를 시작해보세요.</h5>
-                  <h4 v-if="isDealer" class="mt-4 text-center">탁송지를 등록해야 할 매물이 없습니다.</h4>
+                  <h5 v-if="isDealer" class="mt-4 text-center">탁송지를 등록해야 할 매물이 없습니다.</h5>
                   <div v-if="isUser" class="px-2">
                   <router-link :to="{ name:'home' }" class="w-100 btn primary-btn btn-apply-ty02 justify-content-between p-4 w-100">
                     <span>차량 등록하기</span>
@@ -165,24 +165,32 @@ function getStatusClass(status) {
 }
 
 const filteredAuctionsData = computed(() => {
+  const userId = user.value.id; 
+
   if (isDealer.value) {
-    return auctionsData.value.filter(auction => 
-      auction.status === 'chosen' && (
-        (auction.dest_addr1 === '' || auction.dest_addr1 === null) &&
-        (auction.dest_addr2 === '' || auction.dest_addr2 === null) &&
-        (auction.dest_addr_post === '' || auction.dest_addr_post === null)
-      )
-    );
+    console.log(">>:", auctionsData.value);
+    
+    return auctionsData.value.filter(auction => {
+     
+      const hasMatchingWinBid = auction.win_bid && auction.win_bid.user_id === userId;
+      console.log(">>>>:", hasMatchingWinBid);
+      
+      return hasMatchingWinBid && auction.status === 'chosen' && (
+        (!auction.dest_addr1 || !auction.dest_addr2 || !auction.dest_addr_post)
+      );
+    });
   }
+
   return auctionsData.value;
 });
+
 
 
 onMounted(async () => {
   await getAuctions();
   const user = store.getters['auth/user'];
   const userId = user.id;
-  console.log(userId);
+  console.log("내 아이디:",userId);
   await getUserReview(userId);
   console.log(reviewsData.value);
   setRandomPlaceholder();

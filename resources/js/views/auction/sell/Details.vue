@@ -37,7 +37,7 @@
     
       const text = `<div class="content p-2 mt-0"> 
             <h3 class="mb-2">필요 서류</h3>
-            <h5 class="text-secondary opacity-50 fw-normal mb-4">미리 준비하면 더 빠르게 진행돼요!</h5>
+            <h5 class="tc-gray fw-normal mb-4">미리 준비하면 더 빠르게 진행돼요!</h5>
             <div class="text-start my-3 process"> 
               <h4 class="mb-3">개인</h4>
               <div class="d-flex justify-content-between">
@@ -95,4 +95,6 @@
     width: 422px;
   }
   </style>
-  
+  <style scoped>
+
+</style>

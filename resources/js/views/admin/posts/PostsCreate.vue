@@ -85,8 +85,8 @@ defineRule("required", required);
 defineRule("min", min);
 const isBizChecked = ref(false);
 const schema = {
-  title: "required|min:5",
-  content: "required|min:50",
+  title: "required",
+  content: "required",
 };
 const boardText = computed(() => {
   switch(boardId) {
@@ -122,7 +122,6 @@ const post = reactive({
 
 const fileInputRef = ref(null);
 const fileName = ref("");
-const validationErrors = reactive({});
 const isLoading = ref(false);
 const categoriesList = ref([]);
 const { wicac, wica } = cmmn();
@@ -132,6 +131,11 @@ const route = useRoute();
 const boardId = route.params.boardId;
 const auctionId = route.params.auctionId; 
 const boardAttachUrl = ref('');
+function stripHtml(html) {
+  let tmp = document.createElement("DIV");
+  tmp.innerHTML = html;
+  return tmp.textContent || tmp.innerText || "";
+}
 
 const getBoardData = async () => {
   try {
@@ -146,16 +150,59 @@ const getBoardData = async () => {
     console.error('Error fetching board data:', error);
   }
 };
+const validationErrors = reactive({
+  category: '',
+  title: '',
+  content: ''
+});
 
 function submitForm() {
+  // 이전 오류 메시지를 초기화
+  validationErrors.category = '';
+  validationErrors.title = '';
+  validationErrors.content = '';
+
   validate().then((form) => {
-    if (form.valid) {
+    // 초기화
+    let errorMessage = '';
+
+    // 카테고리 선택 여부 확인
+    if (boardId === 'notice' && !post.category) {
+      validationErrors.category = '카테고리를 선택해주세요.';
+      errorMessage += '카테고리\n';
+    }
+
+    // 제목과 내용 확인
+    if (!post.title) {
+      validationErrors.title = '제목을 입력해주세요.';
+      errorMessage += '제목\n';
+    }
+    if (!post.content || stripHtml(post.content).trim() === '') {
+      validationErrors.content = '내용을 입력해주세요.';
+      errorMessage += '내용\n';
+    }
+
+    // 에러 메시지가 있을 경우 경고 표시
+    if (errorMessage) {
+      swal({
+        title: '입력 필요',
+        text: `${errorMessage.trim()}이(가) 비어있습니다.`,
+        icon: 'warning',
+        buttons: {
+          confirm: {
+            text: '확인',
+            className: 'btn btn-primary',
+          },
+        },
+      });
+    } else if (form.valid) {
       submitPost(post);
-    } else {
-      Object.assign(validationErrors, form.errors);
     }
   });
 }
+
+
+
 
 const submitPost = async (postData) => {
   if (isLoading.value) return;
@@ -198,7 +245,6 @@ const submitPost = async (postData) => {
         .useHtmlText()
         .icon('E') //E:error , W:warning , I:info , Q:question
         .alert('관리자에게 문의해주세요.');
-        //Object.assign(validationErrors, result.msg);
         isLoading.value = false;
       }
   })

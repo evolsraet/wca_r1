@@ -13,9 +13,9 @@
                             </div>
                         </div>
                     </div>
-                    <div class="slide-up-ani activity-info bold-18-font process mb-0">
+                    <div class="container slide-up-ani activity-info bold-18-font process mb-0">
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                            <p><span class="tc-red slide-up mb-0" ref="item1">{{ likesData.length }}</span> 건</p>
+                            <p><span class="tc-red slide-up mb-0" ref="item1">{{ myLikeCount }}</span> 건</p>
                             <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
                         </router-link>
                         <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
@@ -38,17 +38,17 @@
                     <table class="table custom-border mt-5">
                         <thead>
                             <tr class="px-6 py-3 bg-gray-50 justify-content-center">
-                                <th class="col-4">제목</th>
-                                <th>내용</th>
+                                <th class="col-4">카테고리</th>
+                                <th>제목</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr v-if="latestNotices.length === 0">
                                 <td colspan="2" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
                             </tr>
-                            <tr v-else v-for="notice in latestNotices" :key="notice.id" class="pointer">
-                                <td class="col-4 pointer-cursor text-overflow" @click="goToDetail(notice.id)">{{ stripHtmlTags(notice.title) }}</td>
-                                <td class="text-with-marker pointer-cursor" @click="goToDetail(notice.id)">{{ stripHtmlTags(notice.content) }}</td>
+                            <tr v-else v-for="notice in latestNotices" :key="notice.id" class="pointer"  @click="goToDetail(notice.id)">
+                                <td class="col-4 pointer-cursor text-overflow">[{{notice.category}}]</td>
+                                <td class="text-with-marker pointer-cursor">{{ stripHtmlTags(notice.title) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -74,7 +74,7 @@ import { initPostSystem } from "@/composables/posts";
 
 const { posts, getPosts } = initPostSystem();
 
-const { getAllLikes, likesData } = useLikes();
+const { getMyLikesCount } = useLikes();
 const item1 = ref(null);
 const item2 = ref(null);
 const item3 = ref(null);
@@ -90,7 +90,7 @@ const { getAuctionsByDealer, auctionsData, getAuctionById } = useAuctions();
 const { bidsData, getHomeBids, viewBids, bidsCountByUser } = useBid();
 const user = computed(() => store.state.auth.user);
 const myBidCount = ref(0);
-
+const myLikeCount=ref(0);
 const latestNotices = computed(() => {
     return posts.value.slice(0, 3);
 });
@@ -148,7 +148,9 @@ const goToDetail = (postId) => {
 
 onMounted(async () => {
     await getAuctionsByDealer("all");
-
+    const myLikeCountData = await getMyLikesCount(user.value.id);
+    myLikeCount.value = myLikeCountData.rawData.data.data_count;
+    
     await getHomeBids();
     bidsData.value.forEach(bid => {
         if (
@@ -163,8 +165,7 @@ onMounted(async () => {
             myBidCount.value += 1;
         }
     }); 
-
-    await getAllLikes('Auction', user.value.id);
+    
     await fetchPosts();
 
     setTimeout(() => {
@@ -191,6 +192,7 @@ p {
 .layout-container02{
     grid-template-columns: 1fr 1fr !important;
     align-items: baseline;
+    gap: 30px !important;
 }
 @media (max-width: 640px){
     .layout-container02 {

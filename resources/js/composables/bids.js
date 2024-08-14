@@ -112,21 +112,26 @@ export default function useBid() {
         
     };
 
-    const getscsBids = async (page = 1, isSelect = false, isMyBid = false , status = "all", search_title = '') => {
+    const getMyBidsAll = async() => {
+        let request = wicac.conn()
+        .url('/api/bids')
+        return request.callback(function(result) {
+            return result;
+        }).get();
+    }
+
+    const getscsBids = async (page = 1, status = "all", search_title = '',bidIdStringList='') => {
+        const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
+        
         let request = wicac.conn()
         //.log()
         .url('/api/auctions')
         .search(search_title)
         .with(['bids'])
         .page(`${page}`)
-        if (isSelect) {
-            const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
-            request = request.whereOr('auctions.status',`${statusFilter}`)           
-        }
-    
-        if (isMyBid) {
-            request = request.whereOr('auctions.status','ing,wait')
-        }
+        .whereOr('auctions.bid_id',`${bidIdStringList}`)
+        .whereOr('auctions.status',`${statusFilter}`)           
+        
         return request.callback(function(result) {
             return result;
         }).get();
@@ -280,5 +285,6 @@ export default function useBid() {
         getBidsByUserId,
         getscsBids,
         getMyBids,
+        getMyBidsAll,
     };
 }

@@ -34,7 +34,7 @@
           </div>
         </div>
         <!-- 주소 입력 -->
-        <div class="form-group mb-5 input-wrapper">
+        <div class="form-group mb-2 input-wrapper">
           <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly>
           <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
           <div class="text-danger mt-1">

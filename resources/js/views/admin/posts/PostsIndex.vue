@@ -102,10 +102,12 @@
                   <td colspan="5" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
               </tr>
               <tr 
-              v-for="post in filteredPosts" 
-              :key="post.id" @click="handleRowClick(post.id)" class="pointer-cursor"
-              >
-                <td v-if="boardId === 'notice' && (isDealer || isUser)">{{ post.id }}</td>
+                  v-for="(post, index) in filteredPosts" 
+                  :key="post.id" 
+                  @click="handleRowClick(post.id)" 
+                  class="pointer-cursor"
+                >
+              <td v-if="boardId === 'notice' && (isDealer || isUser)">{{ index + 1 }}</td>
                 <td v-if="!isDealer && !isUser && boardId !== 'claim'" class="px-6 py-4 text-sm text-overflow">{{ post.created_at }}</td>
                 <td class="px-6 py-4 text-sm text-overflow"> 
                   <div>[ {{ post.category }} ]</div>
@@ -335,6 +337,7 @@ watch(route, async (newRoute) => {
   if (newRoute.params.boardId !== boardId.value) {
     boardId.value = newRoute.params.boardId;
     
+    search_title.value = '';
     // 필터 값을 초기화합니다.
     filter.value = 'all';
 

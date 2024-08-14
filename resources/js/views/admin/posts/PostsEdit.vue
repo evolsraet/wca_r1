@@ -22,26 +22,31 @@
             </div>
             <!-- Category -->
             <div class="mb-3">
-              <label v-if="!navigatedThroughHandleRowClick" for="post-category" class="form-label">카테고리</label>
-              <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)">
-                <p>[ {{ post.category }} ]</p>
-              </div>
-              <v-select
-                v-else
+              <label v-if="!navigatedThroughHandleRowClick && boardId == 'notice'" for="post-category" class="form-label">카테고리</label>
+              <label v-if="!navigatedThroughHandleRowClick && boardId == 'claim'" for="post-category" class="form-label">상태</label>
+              <div v-if="isAdmin">
+            
+                <label>카테고리</label>
+            
+                <v-select
                 v-model="post.category"
-                :options="categories"
-                :reduce="category => category"
-                class="form-control"
-                :disabled="navigatedThroughHandleRowClick"
-                placeholder=""
-              />
-              <div class="text-danger mt-1">
-                <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
+                  :options="categories"
+                  :reduce="category => category"
+                  class="form-control"
+                  :disabled="navigatedThroughHandleRowClick"
+                  placeholder=""
+                  />
+                  <div class="text-danger mt-1">
+                    <div v-if="validationErrors.category">{{ validationErrors.category }}</div>
+                  </div>
+                </div>
+                <div v-else>
+                <h5>[{{ post.category }}]</h5>
               </div>
             </div>
             <!-- Title -->
             <div class="mb-3">
-              <label v-if="!navigatedThroughHandleRowClick" for="post-title" class="form-label">제목</label>
+              <label v-if="!navigatedThroughHandleRowClick || isAdmin" for="post-title" class="form-label">제목</label>
               <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)">
                 <h4>{{ post.title }}</h4>
                 <hr>
@@ -53,7 +58,7 @@
             </div>
             <!-- Content -->
             <div class="mb-3">
-              <label v-if="!navigatedThroughHandleRowClick" for="post-content" class="form-label">컨텐츠 내용</label>
+              <label v-if="!navigatedThroughHandleRowClick || isAdmin" for="post-content" class="form-label">컨텐츠 내용</label>
               <div v-if="navigatedThroughHandleRowClick && (isUser || isDealer)" class="py-3">
                 <div v-html="sanitizedContent"></div>
               </div>
@@ -301,8 +306,44 @@ watchEffect(() => {
 
 /* 글 수정시 */ 
 async function submitForm() {
+  // 초기화: 이전 오류 메시지를 제거
+  Object.keys(validationErrors).forEach(key => validationErrors[key] = '');
+
+  // 유효성 검사
   const form = await validate();
-  if (form.valid) {
+
+  // 오류 메시지 초기화
+  let errorMessage = '';
+
+  // 카테고리, 제목, 컨텐츠 내용이 비어 있는지 확인
+  if ((boardId.value === 'notice' || boardId.value === 'claim') && !post.category) {
+    validationErrors.category = '카테고리를 선택해주세요.';
+    errorMessage += '카테고리\n';
+  }
+  if (!post.title) {
+    validationErrors.title = '제목을 입력해주세요.';
+    errorMessage += '제목\n';
+  }
+  if (!post.content || stripHtml(post.content).trim() === '') {
+    validationErrors.content = '컨텐츠 내용을 입력해주세요.';
+    errorMessage += '내용\n';
+  }
+
+  if (errorMessage) {
+    // 비어있는 필드에 대해 경고 메시지 표시
+    swal({
+      title: '입력 필요',
+      text: `${errorMessage.trim()}이(가) 비어있습니다.`,
+      icon: 'warning',
+      buttons: {
+        confirm: {
+          text: '확인',
+          className: 'btn btn-primary',
+        },
+      },
+    });
+  } else if (form.valid) {
+    // 유효성 검사를 통과한 경우 업데이트 수행
     const updateData = {
       title: post.title,
       content: post.content,
@@ -313,16 +354,14 @@ async function submitForm() {
       fileDeleteChk: post.fileDeleteChk
     };
 
-
     if (boardId.value === 'notice' || boardId.value === 'claim') {
       updateData.category = post.category;
     }
 
     await updatePost(boardId.value, postId, updateData);
-  } else {
-    Object.assign(validationErrors, form.errors);
   }
 }
+
 
 
 async function handleDeleteComment(commentId) {

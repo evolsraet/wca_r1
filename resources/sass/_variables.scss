@@ -8,6 +8,7 @@ $line-height-base: 1.6;
 
 // Bootstrap 5
 /* 전역적 컬러 스타일*/
+/* background-color: rgba($primary, 0.03); -> #fff9f9*/
 $primary: #da3138;
 
 $primary-sub: #fae8e8;
@@ -74,7 +75,7 @@ background-color: $sub-color !important;
 }
 /* 딜러 메인 컬러*/
 .primary-background{
-    background-color: rgba($primary, 0.020);
+    background-color: rgba($primary, 0.03);
 }
 /* 버튼 스타일 */
 .primary-btn {

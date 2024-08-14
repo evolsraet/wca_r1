@@ -3,9 +3,9 @@
         * mov-text : 모바일 일때 보이는 뷰
         * web-text: : 웹 화면에서 보이는뷰
     --> 
-    <div class="container">
+    <div>
         <form @submit.prevent="submitForm" v-for="review in reviewData" :key="review">
-            <div class="container">
+            <div class="container mov-wide">
                     <div class="container-img">
                         <h5 class="my-3">후기 작성</h5>
                         <div class="left-img">
@@ -38,7 +38,7 @@
                         <p class="card-text text-secondary opacity-50 fs-5 web-text">12 삼 4567</p>
                     </div>--> 
                     <div class="mx-2 text-secondary opacity-50 my-4">
-                        <p> 년 / 2.4km / 무사고</p>
+                        <p> 년 | 2.4km | 무사고</p>
                         <p>현대 쏘나타 (DN8)</p>
                         <br>
                         <p>매물번호 / 564514</p>
@@ -49,14 +49,14 @@
                    <div class="container card-style p-0 mt-5">
                     </div>
                 </div>
-                <div>
+                <div class="right-container">
                     <bottom-sheet initial="half" :dismissable="true">
                         <div class="sheet-content p-0">
-                            <div class="mt-3" @click.stop="">
+                            <div class="mt-3 mb-4" @click.stop="">
                                 <h5 calss="text-center">거래는 어떠셨나요?</h5>
                                 <div class="wrap">
                                     <input type="hidden" :v-model="rv.star">
-                                    <div class="rating my-3">
+                                    <div class="rating my-1">
                                         <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">
                                             <input type="radio" :id="'star' + index" class="rating__input" name="rating" :value="index">
                                             <span :class="['star-icon', index <= review.star ? 'filled' : '']"></span>
@@ -87,7 +87,7 @@ export default {
 </script>
 
 <script setup>
-import { ref, onMounted, nextTick, reactive , watchEffect } from 'vue';
+import { ref, onMounted, nextTick, reactive , watchEffect,onBeforeUnmount } from 'vue';
 import { useRoute } from 'vue-router';
 import { initReviewSystem } from '@/composables/review'; // 별점 js
 import BottomSheet from '@/views/bottomsheet/BottomSheet.vue';
@@ -105,7 +105,7 @@ let reviewData = ref();
 const alarmModal = ref(null);
 const carInfo = ref();
 const { formatDateAndTime } = cmmn();
-
+const isMobileView = ref(window.innerWidth <= 640);
 const openAlarmModal = () => {
 console.log("openAlarmModal called");
 if (alarmModal.value) {
@@ -134,8 +134,14 @@ function toggleSheet() {
     }
     showBottomSheet.value = !showBottomSheet.value;
 }
-
+const checkScreenWidth = () => {
+    if (typeof window !== 'undefined') {
+      isMobileView.value = window.innerWidth <= 640;
+    }
+  };
 onMounted(async () => {
+    window.addEventListener('resize', checkScreenWidth);
+    checkScreenWidth();
     const response = await getUserReviewInfo(reviewId);
     console.log(response);
     reviewData.value = [response];
@@ -154,6 +160,9 @@ onMounted(async () => {
     })
 
 });
+onBeforeUnmount(() => {
+  window.removeEventListener('resize', checkScreenWidth);
+}); 
 </script>
 
 <style scoped>

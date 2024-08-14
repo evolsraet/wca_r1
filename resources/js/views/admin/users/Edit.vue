@@ -28,6 +28,7 @@ h4 {
 }
 .search-btn {
     transform: translateY(-108%) !important;
+    right: 5px !important;
 }
 h4::after {
     content: "";

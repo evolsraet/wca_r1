@@ -90,7 +90,6 @@
   const isMobileView = ref(window.innerWidth <= 640);
 
   function navigateToDetail(auctionId) {
-      console.log("디테일 :", auction.id);
       router.push({ name: 'user.create-review', params: { id: auctionId } });
   }
   

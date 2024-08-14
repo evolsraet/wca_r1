@@ -46,7 +46,7 @@
                 </div>-->
                 <div>
                 <p class="text-start card-text">{{ card.text }}</p>
-               <!-- <p class="auction-deadline text-secondary opacity-50">판매가<span>12000만원</span></p>-->
+               <!-- 판매가 없애달라하심 <p class="auction-deadline text-secondary opacity-50">판매가<span>12000만원</span></p>-->
                 </div>
                 
               </div>

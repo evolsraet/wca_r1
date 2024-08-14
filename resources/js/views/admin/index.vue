@@ -72,7 +72,7 @@
                                 <tr v-if="limitedNotices.length === 0">
                                     <td class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
                                 </tr>
-                                <tr v-for="(notice, index) in limitedNotices" :key="notice.id">
+                                <tr v-for="(notice, index) in limitedNotices" :key="notice.id" class="pointer" @click="goToDetail(notice.id)">
                                     <td style="width: 10%;">{{ index + 1 }}</td>
                                     <td style="width: 15%;">[ {{ notice.category }} ]</td>
                                     <td class="text-overflow">{{ stripHtmlTags(notice.title) }}</td>
@@ -93,11 +93,13 @@ import useUsers from '@/composables/users';
 import useAuctions from '@/composables/auctions';
 import { initReviewSystem } from '@/composables/review';
 import { initPostSystem } from '@/composables/posts'; 
+import { useRouter } from 'vue-router';
 
 const { getUserStatus } = useUsers();
 const { getStatusAuctionsCnt } = useAuctions();
 const { getWriteReviewCnt } = initReviewSystem();
 const { posts, getPosts } = initPostSystem(); // Fetching notices
+const router = useRouter();
 
 const activeTab = ref('available');
 const notices = ref([]);
@@ -214,7 +216,12 @@ onMounted(async () => {
 
   // Fetch notices
   await fetchNotices();
+
 });
+
+const goToDetail = (postId) => {
+  router.push({ name: 'posts.edit', params: { boardId: 'notice', id: postId }, query: { navigatedThroughHandleRowClick: true } });
+};
 </script>
 
 <style scoped>

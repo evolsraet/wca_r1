@@ -9,9 +9,10 @@
           </div>
             <div v-if="photoUrl !== profileDom" class="icon-trash-img" @click="deletePhotoImg"></div>
           </div>
+          <!--<p class="text-secondary opacity-50">사진은 140 X 140 를 권장합니다.</p>-->
         </div>
-        <div v-if="userEditURL">
-          <h5 class="text-secondary opacity-50 fs-5 mb-4">&#8251<span class="mx-2">정보 수정 시 심사를 받으실 수 있습니다.</span></h5>
+        <div v-if="userEditURL" class="my-4">
+          <h5 class="text-secondary opacity-50">&#8251<span class="mx-2">정보 수정 시 심사를 받으실 수 있습니다.</span></h5>
         </div>
         <div v-if="userEditURL || adminEditURL" class="form-group">
           <label for="name">가입일자</label>
@@ -22,7 +23,7 @@
           <input type="text" v-model="user.updated_at" id="updated_at" class="input-dis form-control" readonly/>
         </div>
         <div class="form-group">
-          <label for="name">이름</label>
+          <label for="name"><span class="text-danger">*</span>이름</label>
           <input type="text" v-model="profile.name" id="name" class="form-control" placeholder="이름"/>
           <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.name">
@@ -31,11 +32,11 @@
           </div>
         </div>
         <div v-if="userEditURL || adminEditURL" class="form-group">
-          <label for="name">전화번호</label>
+          <label for="name"><span class="text-danger">*</span>전화번호</label>
           <input type="text" id="phone" v-model="profile.phone" class="input-dis form-control" readonly/>
         </div>
         <div v-if="registerURL || adminCreateURL" class="form-group">
-          <label for="name">전화번호</label>
+          <label for="name"><span class="text-danger">*</span>전화번호</label>
           <input type="text" id="phone" v-model="profile.phone" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
           <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
             <div v-for="message in validationErrors?.phone">
@@ -57,7 +58,7 @@
           <input type="text" v-model="profile.email" id="email" class="input-dis form-control" readonly/>
         </div>
         <div v-if="registerURL || adminCreateURL" class="form-group">
-          <label for="email">비밀번호</label>
+          <label for="email"><span class="text-danger">*</span>비밀번호</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password" id="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합"/>
           <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.password">
@@ -75,7 +76,7 @@
           </div>
         </div>
         <div v-if="userEditURL || registerURL || adminCreateURL" class="form-group">
-          <label for="email">비밀번호 확인</label>
+          <label for="email"><span class="text-danger" v-if="adminCreateURL || registerURL">*</span>비밀번호 확인</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password_confirmation" id="password_confirmation" class="form-control" placeholder="비밀번호를 다시 입력해주세요"/>
           <div v-if="registerURL || adminCreateURL || userEditURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.password_confirmation">
@@ -120,7 +121,7 @@
               </div>
           </div>
           <p class="text-secondary opacity-50">딜러라면 추가 정보 입력이 필요해요</p>
-          <a href="your-link.html" class="icon-link mt-5 mb-3">
+          <a @click="openModal('privacy')" class="icon-link mt-5 mb-3">
               <img src="../../../img/Icon-file.png" class="ms-2" alt="회원약관 및 개인정보 처리방침">위카모빌리티 회원약관 및 개인정보처리 방침
           </a>
         </div>
@@ -141,16 +142,22 @@
                 </div>
           </div>
           <div class="form-group">
-            <label for="dealerName">딜러 이름</label>
+            <label for="dealerName"><span class="text-danger">*</span>딜러 이름</label>
             <input type="text" v-model="profile.dealer_name" id="dealerName" class="form-control" placeholder="이름"/>
+            <div v-for="message in validationErrors?.dealerName" class="text-danger mt-1">
+                  {{ message }}
+            </div>
           </div>
           <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
             <label for="name">연락처</label>
             <input type="text" id="phone" v-model="profile.dealerContact" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
           </div>
           <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
-              <label for="dealerBirthDate">생년월일</label>
+              <label for="dealerBirthDate"><span class="text-danger">*</span>생년월일</label>
               <input type="date" id="dealerBirthDate" v-model="profile.dealerBirthDate" placeholder="1990-12-30">
+              <div v-for="message in validationErrors?.dealerBirthDate" class="text-danger mt-1">
+                  {{ message }}
+            </div>
           </div>
           <div class="form-group">
             <label for="dealer">소속상사</label>
@@ -254,20 +261,26 @@
           </button>
         </div>
       </form>
+      <transition name="fade" mode="out-in">
+        <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
+      </transition>
   </template>
   
  
   <script setup>
-  import { ref, onMounted ,computed , inject } from 'vue';
+  import { ref, onMounted ,computed , inject,createApp ,h } from 'vue';
   import { useStore } from 'vuex';
   import { useRoute } from 'vue-router';
   import profileDom from '/resources/img/profile_dom.png'; 
   import { cmmn } from '@/hooks/cmmn';
   import useUsers from "@/composables/users";
-  
+  import LawGid from '@/views/modal/LawGid.vue';
+  const closeModal = () => {
+    isModalOpen.value = false;
+  };
   const { getUser , user, setRegisterUser, updateProfile, updateUser,adminStoreUser, validationErrors } = useUsers();
   const route = useRoute();
-  
+  const isModalOpen = ref(false);
   const photoUrl = ref(profileDom);
   const fileSignUrl = ref('');
   const fileCertUrl = ref('');
@@ -322,7 +335,7 @@
   const userId = ref(null);
   const isDealer = ref(false);
   const { openPostcode , closePostcode , wica , wicac, wicas } = cmmn();
-  
+  const isValidCheck = ref(true);
   let statusLabel;
   
   const triggerFileInput = () => {
@@ -330,7 +343,32 @@
   };
   
   const fileInput = ref(null);
+  const openModal = (type) => {
+  const container = document.createElement('div');
+
+  const app = createApp({
+    render() {
+      return h(LawGid, { content: type });
+    }
+  });
   
+  app.mount(container);
+  
+  const text = container.innerHTML;
+ 
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 인 경우 활성화
+    .addOption({ padding: 20 }) // swal 기타 옵션 추가
+    .addClassNm('intro-modal')
+    .useClose()
+    .callback(function (result) {
+      // 추가적인 콜백 함수 내용이 필요하다면 여기에 작성
+    })
+    .confirm(text);
+
+  app.unmount(); // Unmount the app after getting the HTML content
+};
   const onFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -451,14 +489,41 @@
   });
 
   function handleSubmitBtn(){
-    if(route.path == '/edit-profile'){
-      updateProfile(profile,userId.value);
-    }else if(route.path == '/register'){
-      setRegisterUser(profile.value);
-    }else if(route.path.includes('/admin/users/edit/')){
-      updateUser(profile.value,userId.value);
-    }else if(route.path.includes('/admin/users/create')){
-      adminStoreUser(profile.value);
+    if(profile.value.role == 'dealer' || profile.value.isDealer){
+      let dealer_name = profile.value.dealer_name.replace(/\s/g, '');
+      let dealer_birthDate = profile.value.dealerBirthDate.replace(/\s/g, '');
+      isValidCheck.value = true;
+
+      if(dealer_name){
+        validationErrors.value.dealerName = [];
+      }else{
+        validationErrors.value.dealerName = ['이름 필드는 필수입니다.'];
+        isValidCheck.value = false;
+      }
+
+      if(dealer_birthDate){
+        validationErrors.value.dealerBirthDate = [];
+      }else{
+        validationErrors.value.dealerBirthDate = ['생년월일 필드는 필수입니다.'];
+        isValidCheck.value = false;
+      }
+    }
+
+    if(isValidCheck.value){
+      if(route.path == '/edit-profile'){
+        updateProfile(profile,userId.value);
+      }else if(route.path == '/register'){
+        setRegisterUser(profile.value);
+      }else if(route.path.includes('/admin/users/edit/')){
+        updateUser(profile.value,userId.value);
+      }else if(route.path.includes('/admin/users/create')){
+        adminStoreUser(profile.value);
+      }
+    }else{
+      wica.ntcn(swal)
+      .title('등록 실패')
+      .icon('E') //E:error , W:warning , I:info , Q:question
+      .alert('회원정보 등록에 실패하였습니다.');
     }
   }
 
