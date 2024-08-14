@@ -334,7 +334,7 @@
 
             <h5 class="mt-5">판매자 메모</h5>
             <div class="form-group">
-              <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo }}</textarea>
+              <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo || "판매자 메모사항이 없습니다."}}</textarea>
             </div>
             <h5 class="mt-5">평가자 의견</h5>
             <div class="form-group">
