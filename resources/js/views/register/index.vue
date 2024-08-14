@@ -517,7 +517,7 @@ body {
 }
 
 .search-btn{
-    right:15px !important;
+    right:16px !important;
 }
 /*******************************
    regist form
