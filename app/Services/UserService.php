@@ -30,8 +30,11 @@ class UserService
     protected function beforeProcess($method, $request, $id = null)
     {
         $this->addRequest('with', 'media');
-    }
 
+        if (request()->input('mode') === 'excelDown' && !auth()->check()) {
+            throw new \Exception('로그인이 필요합니다.');
+        }
+    }
 
     public function store(Request $request)
     {
@@ -86,6 +89,23 @@ class UserService
             if ($data['role'] == 'dealer') {
                 $dealerData = $dealerData;
                 $dealerData['user_id'] = $item->id;
+
+                $validator = Validator::make($dealerData, [
+                    'name' => 'required',
+                    'phone' => 'required',
+                    'birthday' => 'required',
+                    'company' => 'required',
+                    'company_duty' => 'required',
+                    'company_post' => 'required',
+                    'company_addr1' => 'required',
+                    'company_addr2' => 'required',
+                    'introduce' => 'required',
+                ]);
+                // 유효성 검사 실패 시
+                if ($validator->fails()) {
+                    return response()->api(null, '필수값이 누락되었습니다.', 'fail', 422, ['errors' => $validator->errors()]);
+                }
+
                 $item->dealer()->create($dealerData);
             }
 
@@ -187,23 +207,6 @@ class UserService
             $model = new User;
 
             if ($item->hasRole('dealer') && $data['dealer']) {
-
-                // $validator = Validator::make($data['dealer'], [
-                //     'name' => 'required',
-                //     'phone' => 'required',
-                //     'birthday' => 'required',
-                //     'company' => 'required',
-                //     'company_duty' => 'required',
-                //     'company_post' => 'required',
-                //     'company_addr1' => 'required',
-                //     'company_addr2' => 'required',
-                //     'introduce' => 'required',
-                // ]);
-                // // 유효성 검사 실패 시
-                // if ($validator->fails()) {
-                //     return response()->api(null, '필수값이 누락되었습니다.', 'fail', 422, ['errors' => $validator->errors()]);
-                // }
-
                 // $item->dealer()->updateOrCreate 는 제대로 기능안함. create 만 하려고함
 
                 if ($item->dealer()->exists()) {
@@ -218,14 +221,21 @@ class UserService
                     $item->dealer()->update($data['dealer']);
                     // TODO: 변경불가 사항 업데이트 시 상태변경 (누구에게 알림?)
                 } else {
-                    // print_r(
-                    //     [
-                    //         '생성',
-                    //         '데이터' => $data['dealer'],
-                    //     ]
-                    // );
-                    // die();
-                    // 새 Dealer 생성
+                    $validator = Validator::make($data['dealer'], [
+                        'name' => 'required',
+                        'phone' => 'required',
+                        'birthday' => 'required',
+                        'company' => 'required',
+                        'company_duty' => 'required',
+                        'company_post' => 'required',
+                        'company_addr1' => 'required',
+                        'company_addr2' => 'required',
+                        'introduce' => 'required',
+                    ]);
+                    // 유효성 검사 실패 시
+                    if ($validator->fails()) {
+                        return response()->api(null, '필수값이 누락되었습니다.', 'fail', 422, ['errors' => $validator->errors()]);
+                    }
                     $item->dealer()->create($data['dealer']);
                     // TODO: 알림 : 누구에게?
 

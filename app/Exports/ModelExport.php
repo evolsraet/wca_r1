@@ -23,6 +23,6 @@ class ModelExport implements FromArray, WithHeadings
 
     public function headings(): array
     {
-        return array_keys($this->columns);
+        return array_values($this->columns);
     }
 }

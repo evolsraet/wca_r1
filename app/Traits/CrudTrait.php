@@ -173,7 +173,11 @@ trait CrudTrait
             // columns가 JsonResponse 객체인 경우 배열로 변환
             if ($columns instanceof \Illuminate\Http\JsonResponse) {
                 $columns = $columns->getData(true);
+                $columns = $columns['data'];
             }
+
+            // print_r($columns['data']);
+            // die();
 
             $data = [];
             $result->chunk(1000, function ($records) use (&$data) {
@@ -199,7 +203,8 @@ trait CrudTrait
                 throw new \Exception('Columns must be an array');
             }
 
-            return Excel::download(new ModelExport($data, $columns), $this->tableName . '.xlsx');
+            $now = now()->format('YmdHis');
+            return Excel::download(new ModelExport($data, $columns), "{$this->tableName}-{$now}.xlsx");
         } else {
             $result = $result->paginate($paginate);
             return response()->api($this->resourceClass::collection($result));
