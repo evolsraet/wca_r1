@@ -6,7 +6,7 @@
           <div class="modal-body fade-in-transition">
             <div class="content p-0 mt-0">
               <div class="enroll_box_top p-4">
-                <h5 class="auction-deadline text-secondary opacity-75 mb-3">나의 입찰 금액 <span class="fw-bolder fs-4 text-primary">{{ formattedAmount }}</span></h5>
+                <h5 class="auction-deadline text-secondary opacity-75 mb-3">나의 입찰 금액 <span class="fw-bolder fs-4 text-primary">{{ amtComma(formattedAmount) }}</span></h5>
               </div>
               <hr>
               <div class="enroll_box p-4">
@@ -46,7 +46,9 @@
   
   <script setup>
   import { defineProps, defineEmits, computed, ref } from 'vue';
-  
+  import { cmmn } from '@/hooks/cmmn';
+
+  const { amtComma , wicas } = cmmn();
   const props = defineProps({
     amount: String,
     highestBid: Number,

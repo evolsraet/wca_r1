@@ -22,12 +22,13 @@ export function cmmn() {
       
     }
 
-    //만원 단위
+    // 큰 금액을 억, 조 단위로 처리
     const amtComma = (amt) => {
-        return amt.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")+" 만원";
+        const converted = numberToKoreanUnit(amt.toString());
+        return converted + '원';
     }
     
-    //원 단위
+    // 원 단위
     function formatCurrency(amount) {
         return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + '원';
     }
