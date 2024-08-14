@@ -9,9 +9,10 @@
           </div>
             <div v-if="photoUrl !== profileDom" class="icon-trash-img" @click="deletePhotoImg"></div>
           </div>
+          <!--<p class="text-secondary opacity-50">사진은 140 X 140 를 권장합니다.</p>-->
         </div>
-        <div v-if="userEditURL">
-          <h5 class="text-secondary opacity-50 fs-5 mb-4">&#8251<span class="mx-2">정보 수정 시 심사를 받으실 수 있습니다.</span></h5>
+        <div v-if="userEditURL" class="my-4">
+          <h5 class="text-secondary opacity-50">&#8251<span class="mx-2">정보 수정 시 심사를 받으실 수 있습니다.</span></h5>
         </div>
         <div v-if="userEditURL || adminEditURL" class="form-group">
           <label for="name">가입일자</label>
