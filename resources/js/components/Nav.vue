@@ -268,7 +268,7 @@
         </a>
       </div>
       <div class="collapse navbar-collapse">
-        <ul class="mx-3 mov-navbar navbar-nav mt-2 mt-lg-0 w-100 d-flex align-items-center">
+        <ul class="mx-3 mov-navbar navbar-nav mt-2 mt-lg-0 w-100 d-flex align-items-center" style="z-index: 0;">
           <template v-if="isUser">
             <div class="d-flex">
               <li class="nav-item">
