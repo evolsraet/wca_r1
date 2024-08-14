@@ -25,7 +25,7 @@
         <div class="form-group">
           <label for="name"><span class="text-danger">*</span>이름</label>
           <input type="text" v-model="profile.name" id="name" class="form-control" placeholder="이름"/>
-          <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
+          <div v-if="registerURL || adminCreateURL || adminEditURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.name">
                   {{ message }}
               </div>
@@ -38,7 +38,7 @@
         <div v-if="registerURL || adminCreateURL" class="form-group">
           <label for="name"><span class="text-danger">*</span>전화번호</label>
           <input type="text" id="phone" v-model="profile.phone" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
-          <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
+          <div v-if="registerURL || adminCreateURL || adminEditURL" class="text-danger mt-1">
             <div v-for="message in validationErrors?.phone">
                 {{ message }}
             </div>
@@ -144,31 +144,40 @@
           <div class="form-group">
             <label for="dealerName"><span class="text-danger">*</span>딜러 이름</label>
             <input type="text" v-model="profile.dealer_name" id="dealerName" class="form-control" placeholder="이름"/>
-            <div v-for="message in validationErrors?.dealerName" class="text-danger mt-1">
+            <div v-for="message in validationErrors?.name" class="text-danger mt-1">
                   {{ message }}
             </div>
           </div>
           <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
-            <label for="name">연락처</label>
+            <label for="name"><span class="text-danger">*</span>연락처</label>
             <input type="text" id="phone" v-model="profile.dealerContact" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
+            <div v-for="message in validationErrors?.phone" class="text-danger mt-1">
+                  {{ message }}
+            </div>
           </div>
           <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
               <label for="dealerBirthDate"><span class="text-danger">*</span>생년월일</label>
               <input type="date" id="dealerBirthDate" v-model="profile.dealerBirthDate" placeholder="1990-12-30">
-              <div v-for="message in validationErrors?.dealerBirthDate" class="text-danger mt-1">
+              <div v-for="message in validationErrors?.birthday" class="text-danger mt-1">
                   {{ message }}
             </div>
           </div>
           <div class="form-group">
-            <label for="dealer">소속상사</label>
+            <label for="dealer"><span class="text-danger">*</span>소속상사</label>
             <input type="text" v-model="profile.company" class="form-control" placeholder="상사명(상사 정식 명칭)"/>
+            <div v-for="message in validationErrors?.company" class="text-danger mt-1">
+                  {{ message }}
+            </div>
           </div>
           <div class="form-group">
-            <label for="dealer">소속상사 직책</label>
+            <label for="dealer"><span class="text-danger">*</span>소속상사 직책</label>
             <input type="text" v-model="profile.dealerCompanyDuty" class="form-control" placeholder="사원"/>
+            <div v-for="message in validationErrors?.company_duty" class="text-danger mt-1">
+                  {{ message }}
+            </div>
           </div>
           <div class="form-group">
-            <label for="dealer">소속상사 주소 </label>
+            <label for="dealer"><span class="text-danger">*</span>소속상사 주소 </label>
             <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_post" class="input-dis form-control" placeholder="우편번호" readonly/>
             <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
             <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
@@ -176,8 +185,18 @@
             </div>
           <div class="input-with-button">
             <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_addr1" class="input-dis form-control" placeholder="주소" readonly/>
+            
           </div>
             <input type="text" v-model="profile.company_addr2" class="form-control" placeholder="상세주소"/>
+            <div v-for="message in validationErrors?.company_post" class="text-danger mt-1">
+                  {{ message }}
+            </div>
+            <div v-for="message in validationErrors?.company_addr1" class="text-danger mt-1">
+                  {{ message }}
+            </div>
+            <div v-for="message in validationErrors?.company_addr2" class="text-danger mt-1">
+                  {{ message }}
+            </div>
           </div>
           <div class="form-group">
             <label for="dealer">인수차량 도착지 주소</label>
@@ -192,8 +211,11 @@
             <input type="text" v-model="profile.receive_addr2" class="form-control" placeholder="상세주소"/>
           </div>
           <div class="form-group">
-            <label for="dealer">소개</label>
+            <label for="dealer"><span class="text-danger">*</span>소개</label>
             <textarea type="text" v-model="profile.introduce" class="custom-textarea mt-2" placeholder="소개를 입력해주세요."></textarea>
+            <div v-for="message in validationErrors?.introduce" class="text-danger mt-1">
+                  {{ message }}
+            </div>
           </div>
 
           <div class="form-group">
@@ -335,7 +357,6 @@
   const userId = ref(null);
   const isDealer = ref(false);
   const { openPostcode , closePostcode , wica , wicac, wicas } = cmmn();
-  const isValidCheck = ref(true);
   let statusLabel;
   
   const triggerFileInput = () => {
@@ -489,41 +510,14 @@
   });
 
   function handleSubmitBtn(){
-    if(profile.value.role == 'dealer' || profile.value.isDealer){
-      let dealer_name = profile.value.dealer_name.replace(/\s/g, '');
-      let dealer_birthDate = profile.value.dealerBirthDate.replace(/\s/g, '');
-      isValidCheck.value = true;
-
-      if(dealer_name){
-        validationErrors.value.dealerName = [];
-      }else{
-        validationErrors.value.dealerName = ['이름 필드는 필수입니다.'];
-        isValidCheck.value = false;
-      }
-
-      if(dealer_birthDate){
-        validationErrors.value.dealerBirthDate = [];
-      }else{
-        validationErrors.value.dealerBirthDate = ['생년월일 필드는 필수입니다.'];
-        isValidCheck.value = false;
-      }
-    }
-
-    if(isValidCheck.value){
-      if(route.path == '/edit-profile'){
-        updateProfile(profile,userId.value);
-      }else if(route.path == '/register'){
-        setRegisterUser(profile.value);
-      }else if(route.path.includes('/admin/users/edit/')){
-        updateUser(profile.value,userId.value);
-      }else if(route.path.includes('/admin/users/create')){
-        adminStoreUser(profile.value);
-      }
-    }else{
-      wica.ntcn(swal)
-      .title('등록 실패')
-      .icon('E') //E:error , W:warning , I:info , Q:question
-      .alert('회원정보 등록에 실패하였습니다.');
+    if(route.path == '/edit-profile'){
+      updateProfile(profile,userId.value);
+    }else if(route.path == '/register'){
+      setRegisterUser(profile.value);
+    }else if(route.path.includes('/admin/users/edit/')){
+      updateUser(profile.value,userId.value);
+    }else if(route.path.includes('/admin/users/create')){
+      adminStoreUser(profile.value);
     }
   }
 
