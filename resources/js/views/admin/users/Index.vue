@@ -227,7 +227,7 @@ import { cmmn } from '@/hooks/cmmn';
 import { downloadExcel } from '@/composables/excel';
 
 const downloadUsersExcel = () => {
-    downloadExcel('/excelDown/users', 'created_at', 'asc', 'users_data.xlsx');
+    downloadExcel('users', orderColumn.value, orderDirection.value, 'users_data.xlsx',currentStatus.value,currentRoleStatus.value,search_title.value);
 };
 
 

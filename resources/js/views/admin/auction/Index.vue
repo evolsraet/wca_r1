@@ -137,7 +137,7 @@
     import { downloadExcel } from '@/composables/excel';
 
     const downloadUsersExcel = () => {
-        downloadExcel('/excelDown/auctions', 'created_at', 'asc', 'auctions_data.xlsx');
+        downloadExcel('auctions', orderColumn.value, orderDirection.value, 'auctions_data.xlsx',currentStatus.value,'',search_title.value);
     };
 
     const { wicas } = cmmn();

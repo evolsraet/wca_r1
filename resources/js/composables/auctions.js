@@ -85,7 +85,6 @@ export default function useAuctions() {
 
     const getAuctionsByDealerLike = async (page = 1 , userId = null , status = "all" ,search_title = '') => {
         let request = wicac.conn()
-            .log()
             .url(`/api/auctions`)
             .search(search_title)
             .with(['likes'])

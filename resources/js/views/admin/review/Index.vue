@@ -238,7 +238,7 @@ import { initReviewSystem } from '@/composables/review';
 import { downloadExcel } from '@/composables/excel';
 
 const downloadUsersExcel = () => {
-    downloadExcel('/excelDown/reviews', 'created_at', 'asc', 'reviews_data.xlsx');
+    downloadExcel('reviews', orderColumn.value, orderDirection.value, 'reviews_data.xlsx',currentStar.value,'',search_title.value);
 };
 
 const orderColumn = ref("created_at");
