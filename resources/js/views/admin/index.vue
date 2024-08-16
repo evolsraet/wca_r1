@@ -171,7 +171,7 @@ function stripHtmlTags(html) {
 }
 
 async function fetchNotices() {
-  await getPosts('notice', 1, '', '', '', '', 5, 'created_at', 'desc');
+  await getPosts('notice', 1, '', 'all', '', '', 5, 'created_at', 'desc');
   notices.value = posts.value;
   limitedNotices.value = notices.value.slice(0, 5); // Limit to the latest 5 notices
 }

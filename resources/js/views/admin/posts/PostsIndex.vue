@@ -24,11 +24,19 @@
       <div class="container">
         <div class="d-flex justify-content-end">
           <div class="text-start status-selector">
-            <input type="radio" name="status" value="all" id="all-notice" hidden v-model="filter">
+            <input type="radio" name="status" value="all" id="all-notice" hidden checked @change="setBoardFilter('all')">
             <label :class="{ active: filter === 'all' }" for="all-notice" class="mx-2">전체</label>
+            <!--
+            <input type="radio" name="status" value="all" id="all-notice" hidden @change="setBoardFilter(category)">
+            <label for="all-notice">전체</label>
+            -->
             <template v-for="(category, index) in categoriesList" :key="index">
-              <input type="radio" name="status" :value="category" :id="`category-${index}`" hidden v-model="filter">
-              <label :class="{ active: filter === category }" :for="`category-${index}`" class="mx-2">{{ category }}</label>
+              <input type="radio" name="status" :value="category" :id="`category-${index}`" hidden @change="setBoardFilter(category)">
+              <label :for="`category-${index}`">{{category}}</label>
+              <!--
+                <input type="radio" name="status" :value="category" :id="`category-${index}`" hidden v-model="filter">
+                <label :class="{ active: filter === category }" :for="`category-${index}`" class="mx-2">{{ category }}</label>
+              -->
             </template>
           </div>
         </div>
@@ -89,20 +97,20 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-if="filteredPosts.length === 0 && boardId === 'claim' && isDealer">
+              <tr v-if="posts.length === 0 && boardId === 'claim' && isDealer">
                   <td colspan="5" class="text-center text-secondary opacity-50">클레임 없습니다</td>
               </tr>
-              <tr v-if="filteredPosts.length === 0 && boardId === 'claim' && !isDealer">
+              <tr v-if="posts.length === 0 && boardId === 'claim' && !isDealer">
                   <td colspan="5" class="text-center text-secondary opacity-50">클레임 없습니다</td>
               </tr>
-              <tr v-else-if="filteredPosts.length === 0 && boardId === 'notice' && (isDealer||isUser)">
+              <tr v-else-if="posts.length === 0 && boardId === 'notice' && (isDealer||isUser)">
                   <td colspan="4" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
               </tr>
-              <tr v-else-if="filteredPosts.length === 0 && boardId === 'notice' && (!isDealer||!isUser)">
+              <tr v-else-if="posts.length === 0 && boardId === 'notice' && (!isDealer||!isUser)">
                   <td colspan="5" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
               </tr>
               <tr 
-                  v-for="(post, index) in filteredPosts" 
+                  v-for="(post, index) in posts" 
                   :key="post.id" 
                   @click="handleRowClick(post.id)" 
                   class="pointer-cursor"
@@ -301,19 +309,10 @@ const boardTextMessage = computed(() => {
   }
 });
 
-// computed property to filter posts based on the selected filter
-const filteredPosts = computed(() => {
-  if (filter.value === 'all') {
-    return posts.value;
-  }
-  return posts.value.filter(post => {
-    if (boardId.value === 'claim') {
-      return post.category === filter.value;
-    } else if (boardId.value === 'notice') {
-      return post.category === filter.value;
-    }
-  });
-});
+const setBoardFilter = (selectedFilter) =>{
+  filter.value = selectedFilter;
+  fetchPosts();
+}
 
 const fetchAllAuctionDetails = async () => {
   try {

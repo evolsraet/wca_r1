@@ -41,9 +41,14 @@ export function initPostSystem() {
     
 
     const getPosts = async (boardId, page = 1,search_title = '',filter='',column='',direction='') => {
+        const apiList = [];
+        if(filter!='all'){
+            apiList.push(`articles.category:${filter}`);
+        }
         return wicac.conn()
             .url(`/api/board/${boardId}/articles`)
             .page(`${page}`)
+            .where(apiList)
             .order([
                 [`${column}`,`${direction}`]
             ])
