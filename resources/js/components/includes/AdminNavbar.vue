@@ -30,7 +30,7 @@
       <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
     </div>
     <div :class="['menu-container', { show: isMenuOpen || !isAdminPage }]" id="navbarSupportedContent">
-        <ul class="d-flex mb-0 ps-3 ms-auto mb-lg-0 overflow-x-auto">
+        <ul class="d-flex mb-0 ps-3 ms-auto mb-lg-0 overflow-x-auto overflow-y-hidden">
             <div class="navbar-nav flex-row justify-content-center gap-5 bold-18-font"> 
                 <router-link 
                     :to="{ name: 'users.index' }" 
