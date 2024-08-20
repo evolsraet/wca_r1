@@ -80,7 +80,7 @@
                                 </td>
                             </tr>
                             <tr v-else>
-                                <td colspan="4" class="px-6 py-4 text-sm text-center">등록 된 입금 데이터가 없습니다.</td>
+                                <td colspan="4" class="px-6 py-4 text-sm text-center text-secondary opacity-50">등록 된 입금 데이터가 없습니다.</td>
                             </tr>
                         </tbody>
                     </table>

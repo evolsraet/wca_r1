@@ -206,9 +206,11 @@
                                     </tr>
                                 </template>
                                 <template v-else>
-                                    <td class="px-6 py-4 text-sm" style="text-align: center;" colspan="6">
-                                        작성된 이용 후기가 없습니다.
-                                    </td>
+                                    <tr>
+                                        <td class="px-6 py-4 text-sm text-secondary opacity-50" style="text-align: center;" colspan="6">
+                                            작성된 이용 후기가 없습니다.
+                                        </td>
+                                    </tr>
                                 </template>
                             </tbody>
                         </table>
