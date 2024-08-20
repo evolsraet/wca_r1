@@ -65,7 +65,7 @@
             <div v-if="currentTab === 'dealerInfo'">
                 <div class="dealinfo-content ">
                     <div class="my-info">
-                        <div class="info-item">
+                        <div class="info-item mt-3">
                             <p class="building"></p>
                             <p>{{ user.dealer.company }}</p>
                         </div>
