@@ -209,7 +209,7 @@ onUnmounted(() => {
 }
 @media (max-width: 640px) {
   .review-title {
-    margin-left: 0px !important;
+    margin-left: 5px !important;
   }
 }
 @media (max-width: 640px) {
@@ -237,7 +237,7 @@ onUnmounted(() => {
     flex-wrap: nowrap;
     padding: 0px;
     gap: 20px;
-    margin-left: 10px;
+    margin-left: 5px;
   }
   .my-5 {
     margin-top: 1rem !important;
