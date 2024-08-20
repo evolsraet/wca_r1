@@ -122,6 +122,9 @@ video {
     flex-direction: column;
     flex-wrap: nowrap;
 }
+video{
+    max-width: none !important;
+}
 }
 
 .activity-info {
