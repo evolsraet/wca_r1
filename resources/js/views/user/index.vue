@@ -256,15 +256,15 @@ align-items: center;
 
 .layout-container02 {
 display: grid;
-grid-template-columns: repeat(2, 1fr); /* 2열 설정 */
-gap: 20px; /* 행과 열 사이의 간격 */
+grid-template-columns: repeat(2, 1fr);
+gap: 20px; 
 }
 
 .styled-div .top-content {
 display: flex;
-justify-content: space-between; /* 양쪽으로 나눔 */
+justify-content: space-between; 
 align-items: center;
-margin-bottom: 10px; /* 아래 공간 확보 */
+margin-bottom: 10px; 
 }
 
 .styled-div .right-content input {

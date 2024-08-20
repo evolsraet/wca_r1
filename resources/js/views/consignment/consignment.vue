@@ -19,7 +19,7 @@
         <div class="d-flex justify-content-between">
           <h5>{{ monthLabel }}</h5>
         </div>
-        <p class="text-secondary opacity-50">&#8251;탁송일은 익일 9시 이후부터 5일 이내로 탁송이 가능해요.</p>
+        <p class="text-secondary opacity-50">&#8251;탁송일은 익일 9시 이후부터 3일 이내로 탁송이 가능해요.</p>
         <div class="date-time-picker overflow-x-auto">
           <div class="date-picker">
             <div v-for="(day, index) in days" :key="index" class="date-container">
