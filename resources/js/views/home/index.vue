@@ -123,7 +123,7 @@
             </div>
           </div>-->
      
-          <div v-if="isMobileView" class="review-content mb-5" ref="reviewContentRef">
+         <!-- <div v-if="isMobileView" class="review-content mb-5" ref="reviewContentRef">
             <div class="apply-top text-start">
               <h3 class="review-title">다른 사람들의 이용후기에요</h3>
               <router-link :to="{ name: 'index.allreview' }" class="btn-apply">전체보기</router-link>
@@ -149,7 +149,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div>-->
           
           <div v-if="isMobileView">
             <bottom-sheet initial="half" :dismissable="true">
