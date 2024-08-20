@@ -88,7 +88,9 @@
                 </div>
                 <div class="intro mt-3">
                     <h5 class="text-secondary opacity-50 mb-3">소개</h5>
-                    <p>{{ user.dealer.introduce }}</p>
+                    <div style="height: 200px; overflow-y: auto;">
+                        <p>{{ user.dealer.introduce }}</p>
+                    </div>
                 </div>
             </div>
             <!-- 지난 낙찰건 -->
