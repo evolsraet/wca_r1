@@ -1413,7 +1413,7 @@ const handleClick = (bid, event, index) => {
               <div class="location"></div>
               <p><span>${bid.dealerInfo.company_addr1}, ${bid.dealerInfo.company_addr2}</span></p>
             </div>
-            <div style="height: 300px; overflow-y: auto;">
+            <div style="max-height: 300px; overflow-y: auto;">
               <p class="text-start process">${bid.dealerInfo.introduce}</p>
             </div>
           </div>

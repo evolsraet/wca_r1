@@ -296,7 +296,9 @@ const toggleView = () => {
 
   wica.ntcn(swal)
     .useHtmlText() // HTML 태그 인 경우 활성화
-    .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+    .labelCancel('취소') // 취소 버튼 라벨 변경
+    .btnBatch('R')
+    .addClassNm('review-custom') // 클래스명 변경, 기본 클래스명: wica-salert
     .addOption({ padding: 20}) // swal 기타 옵션 추가
     .callback(function (result) {
       if (result.isOk) {
