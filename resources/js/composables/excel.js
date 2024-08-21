@@ -1,38 +1,57 @@
-export const downloadExcel = (endpoint, orderColumn = 'created_at', orderDirection = 'asc', stat = '', role = '', search_text) => {
-    let url = `/excelDown/${endpoint}`;
+//URL 인코딩 : iframe 요청 오류 , 권한: 세션쿠키
+export const downloadExcel = async (endpoint, orderColumn = 'created_at', orderDirection = 'asc', fileName = 'data.xlsx', stat = '', role = '', search_text = '') => {
+    try {
+        let url = `/excelDown/${endpoint}`;
 
-    if (stat == 'all') {
-        stat = '';
-    }
-    if (role == 'all') {
-        role = '';
-    }
-
-    if (endpoint === 'users') {
-        let whenLabel = '';
-
-        if (stat !== '' && role !== '') {
-            whenLabel = `where=users.status:${stat}|users.roles:${role}&`;
-        } else if (stat) {
-            whenLabel = `where=users.status:${stat}&`;
-        } else if (role) {
-            whenLabel = `where=users.roles:${role}&`;
+        if (stat === 'all') {
+            stat = '';
+        }
+        if (role === 'all') {
+            role = '';
         }
 
-        url += `?${whenLabel}search_text=${search_text}&order_column=${orderColumn}&order_direction=${orderDirection}`;
-    } else if (endpoint === 'auctions') {
-        let whenLabel = '';
-        if (stat !== '') {
-            whenLabel = `where=auctions.status:${stat}&`;
-        }
-        url += `?${whenLabel}search_text=${search_text}&order_column=${orderColumn}&order_direction=${orderDirection}`;
-    } else if (endpoint === 'reviews') {
-        let whenLabel = '';
-        if (stat !== '') {
-            whenLabel = `where=reviews.star:${stat}&`;
-        }
-        url += `?${whenLabel}search_text=${search_text}&with=dealer,auction,user&order_column=${orderColumn}&order_direction=${orderDirection}`;
-    }
+        let queryParameters = [];
 
-    window.open(url, '_blank');
+        if (endpoint === 'users') {
+            if (stat) {
+                queryParameters.push(`where=users.status:${encodeURIComponent(stat)}`);
+            }
+            if (role) {
+                queryParameters.push(`where=users.roles:${encodeURIComponent(role)}`);
+            }
+        } else if (endpoint === 'auctions' && stat) {
+            queryParameters.push(`where=auctions.status:${encodeURIComponent(stat)}`);
+        } else if (endpoint === 'reviews' && stat) {
+            queryParameters.push(`where=reviews.star:${encodeURIComponent(stat)}`);
+        }
+
+        if (search_text) {
+            queryParameters.push(`search_text=${encodeURIComponent(search_text)}`);
+        }
+
+        queryParameters.push(`order_column=${encodeURIComponent(orderColumn)}`);
+        queryParameters.push(`order_direction=${encodeURIComponent(orderDirection)}`);
+
+        if (endpoint === 'reviews') {
+            queryParameters.push(`with=dealer,auction,user`);
+        }
+
+        if (queryParameters.length > 0) {
+            url += `?${queryParameters.join('&')}`;
+        }
+
+        // iframe생성
+        const downloadFrame = document.createElement('iframe');
+        downloadFrame.style.display = 'none';
+        downloadFrame.src = url;
+        document.body.appendChild(downloadFrame);
+
+        //iframe 제거
+        setTimeout(() => {
+            document.body.removeChild(downloadFrame);
+        }, 1000);
+
+    } catch (error) {
+        console.error("엑셀 파일 다운로드 실패:", error);
+    }
 };
