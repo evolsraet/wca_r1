@@ -699,7 +699,7 @@
                                 </div>
                                 <div class="txt_box me-auto">
                                   <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
-                                  <p class="txt">{{bid.price}} 만원</p>
+                                  <p class="txt fw-bold">{{amtComma(bid.price)}}</p>
                                 </div>
                                 <p class="restar normal-16-font me-auto">4.5점</p>
                                 <p class="btn-apply-ty03"></p>
