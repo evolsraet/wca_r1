@@ -591,7 +591,7 @@
                           <p>원하시는 탁송지를 선택해주세요.</p>
                           <a href="/addr" class="fs-6 tc-gray link-hov">다른 주소지로 변경, 추가를 원하시나요?</a>
                         </div>
-                        <div class="scrollable-content mt-4" ref="scrollableContent"></div>
+                        <div class="p-0 scrollable-content mt-4" ref="scrollableContent"></div>
                         <div class="card-footer">
                             <ul class="pagination justify-content-center">
                                 <li class="page-item" :class="{ disabled: currentPage === 1 }">
