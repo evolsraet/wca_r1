@@ -59,11 +59,11 @@ class KoreanHolidays
             Log::info('KoreanHolidays API 연결 : API Response:', $data);  // 전체 응답을 dump로 출력
 
             // 응답 구조 확인 및 안전한 접근
-            $items = $data['response']['body']['items']['item'];
             $totalCount = $data['response']['body']['totalCount'];
-
-            if ($totalCount == 1) {
-                $items = [$items];
+            if ($totalCount == 0) {
+                $items = null;
+            } else {
+                $items = $data['response']['body']['items']['item'];
             }
 
             // dd('Items:', $items);  // items 내용을 dump로 출력
