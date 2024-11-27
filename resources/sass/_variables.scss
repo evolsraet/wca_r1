@@ -59,7 +59,9 @@ h5{
 .cursor-dis{
     cursor: default !important;
 }
-
+.sider-content .side-content label{
+    color: $sub-color03;
+}
 /* 이미지 흑백 처리 필터 */
 .grayscale_img {
     filter: grayscale(70%);
@@ -505,3 +507,26 @@ ul {
     text-overflow: ellipsis;
     white-space: nowrap; 
   }
+/* Font */
+.size_14 {font-size: 0.875rem;}
+.size_15 {font-size: 0.937rem;}
+.size_16 {font-size: 1rem;}
+.size_18 {font-size: 1.125rem;}
+.size_20 {font-size: 1.25rem;}
+.size_22 {font-size: 1.375rem;}
+.size_24 {font-size: 1.5rem;}
+.size_26 {font-size: 1.625rem;}
+.size_28 {font-size: 1.75rem;}
+.size_30 {font-size: 1.875rem;}
+.size_32 {font-size: 2rem;}
+.size_36 {font-size: 2.25rem;}
+.size_38 {font-size: 2.375rem;}
+.size_40 {font-size: 2.5rem;}
+
+/* 기본 글꼴 굵기 설정 */
+.normal {font-weight: normal;}
+.bold {font-weight: bold; }
+.bolder {font-weight: bolder;}
+.lighter {font-weight: lighter;}
+.inherit {font-weight: inherit;}
+.initial {font-weight: initial;}

@@ -1559,7 +1559,7 @@ video{
 .side-content {
     border: solid 1px #e5e7eb;
     border-radius: 6px;
-    padding: 23px 0px 24px 24px;
+    padding: 24px;
 }
 
 .nav-container {
@@ -1622,7 +1622,10 @@ video{
     margin-bottom: 0;
     cursor: pointer;
 }
-
+.side-content .form-check-label{
+    display: flex ;
+    justify-content: space-between;
+}
 .sidebar .form-check-input {
     position: absolute;
     margin-top: 4px;
