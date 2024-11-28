@@ -38,71 +38,101 @@ TODO:
      
        <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded" @click.stop="">후기 남기기</div>
     </div>-->
-    <div class="container my-3 auction-content ">
-        <div class="content-main mt-5" :class="{'row': isDealer}">
-            <!-- 사이드바 -->
-            <div v-if="isDealer" class="sider-content col-md-3 mov-info02 ">
-                <div class="side-content">
-                    <h5 class="tc-red">제조사 모델</h5>
-                    <div class="mt-4">
+    <div class="container my-3 auction-content">
+    <div class="content-main mt-5" :class="{ row: isDealer }">
+        <!-- 사이드바 -->
+        <div v-if="isDealer" class="sider-content col-md-3 mov-info02">
+            <div class="sub-side">
+            <!-- 국산차 드롭다운 -->
+            <div>
+                <div class="dropdown-section slide-gray my-1" @click="toggleDropdown('domestic')">
+                    <h5 class="tc-red line-heigh-0">국산차</h5>
+                    <span class="dropdown-icon">{{ dropdownStates.domestic ? '▲' : '▼' }}</span>
+                </div>
+                <div
+                    class="dropdown-content bd-gray"
+                    :class="{ show: dropdownStates.domestic }"
+                >
+                    <div class="form-check" v-for="item in domesticCars" :key="item.id">
+                    <input
+                        class="form-check-input"
+                        type="radio"
+                        name="manufacturer-domestic"
+                        :id="item.id"
+                        :value="item.value"
+                    />
+                    <label class="form-check-label d-flex justify-content-between" :for="item.id">
+                        {{ item.label }}
+                        <span class="text-secondary mx-2">{{ item.count }}</span>
+                    </label>
+                    </div>
+                </div>
+            </div>
+            <!-- 수입차 드롭다운 -->
+            <div>
+                <div class="dropdown-section slide-gray mt-3" @click="toggleDropdown('imported')">
+                    <h5 class="tc-red line-heigh-0">수입차</h5>
+                    <span class="dropdown-icon">{{ dropdownStates.imported ? '▲' : '▼' }}</span>
+                </div>
+                <div
+                    class="dropdown-content bd-gray"
+                    :class="{ show: dropdownStates.imported }"
+                >
+                    <div class="form-check" v-for="item in importedCars" :key="item.id">
+                    <input
+                        class="form-check-input"
+                        type="radio"
+                        name="manufacturer-imported"
+                        :id="item.id"
+                        :value="item.value"
+                    />
+                    <label class="form-check-label d-flex justify-content-between" :for="item.id">
+                        {{ item.label }}
+                        <span class="text-secondary mx-2">{{ item.count }}</span>
+                    </label>
+                    </div>
+                </div>
+            </div>
+            <div>
+            <div class="dropdown-section slide-gray mt-3" @click="toggleDropdown('cargoSpecial')">
+                <h5 class="tc-red line-heigh-0">화물 특장 기타</h5>
+                <span class="dropdown-icon">{{ dropdownStates.cargoSpecial ? '▲' : '▼' }}</span>
+            </div>
+                <div
+                    class="dropdown-content bd-gray"
+                    :class="{ show: dropdownStates.cargoSpecial }"
+                >
+                    <div class="form-check" v-for="item in cargoSpecialCars" :key="item.id">
+                        <input
+                            class="form-check-input"
+                            type="radio"
+                            name="manufacturer-cargoSpecial"
+                            :id="item.id"
+                            :value="item.value"
+                        />
+                        <label class="form-check-label d-flex justify-content-between" :for="item.id">
+                            {{ item.label }}
+                            <span class="text-secondary mx-2">{{ item.count }}</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+                    <h5 class="tc-red mt-4">분류</h5>
+                    <div class="mt-4 pb-3 bd-gray">
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="hyundai" value="hyundai" checked>
-                            <label class="form-check-label" for="hyundai">현대 <span class="text-secondary mx-2">1,356</span></label>
+                            <input class="form-check-input" type="radio" name="manufacturer" id="domestic" value="domestic" checked>
+                            <label class="form-check-label d-flex justify-content-between" for="domestic">국산차 <span class="text-secondary mx-2">1,356</span></label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                            <label class="form-check-label" for="kia">기아 <span class="text-secondary mx-2">1,356</span></label>
+                            <input class="form-check-input" type="radio" name="manufacturer" id="imported" value="imported">
+                            <label class="form-check-label d-flex justify-content-between" for="imported">수입차 <span class="text-secondary mx-2">1,356</span></label>
                         </div>
                         <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="genesis" value="genesis">
-                            <label class="form-check-label" for="genesis">제네시스 <span class="text-secondary mx-2">1,356</span></label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="chevrolet" value="chevrolet">
-                            <label class="form-check-label" for="chevrolet">쉐보레(GM대우) <span class="text-secondary mx-2">1,356</span></label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="renault" value="renault">
-                            <label class="form-check-label" for="renault">르노코리아(삼성) <span class="text-secondary mx-2">1,356</span></label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="kg_mobility" value="kg_mobility">
-                            <label class="form-check-label" for="kg_mobility">KG모빌리티(쌍용) <span class="text-secondary mx-2">1,356</span></label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="bmw" value="bmw">
-                            <label class="form-check-label" for="bmw">BMW <span class="text-secondary mx-2">1,356</span></label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="other_trucks" value="other_trucks">
-                            <label class="form-check-label" for="other_trucks">화물 특징 기타 <span class="text-secondary mx-2">1,356</span></label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="mercedes" value="mercedes">
-                            <label class="form-check-label" for="mercedes">벤츠 <span class="text-secondary mx-2">1,356</span></label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="radio" name="manufacturer" id="audi" value="audi">
-                            <label class="form-check-label" for="audi">아우디 <span class="text-secondary mx-2">1,356</span></label>
+                            <input class="form-check-input" type="radio" name="manufacturer" id="special_trucks" value="special_trucks">
+                            <label class="form-check-label d-flex justify-content-between" for="special_trucks">화물 특장 기타 <span class="text-secondary mx-2">1,356</span></label>
                         </div>
                     </div>
-                </div>    
-                        <div class="sub-side mt-2">
-                            <h5 class="tc-red">분류</h5>
-                            <div class="mt-4 pb-3 bd-gray">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="manufacturer" id="domestic" value="domestic" checked>
-                                    <label class="form-check-label" for="domestic">국산차 <span class="text-secondary mx-2">(1,356)</span></label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="manufacturer" id="imported" value="imported">
-                                    <label class="form-check-label" for="imported">수입차 <span class="text-secondary mx-2">(1,356)</span></label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="manufacturer" id="special_trucks" value="special_trucks">
-                                    <label class="form-check-label" for="special_trucks">화물 특장 기타 <span class="text-secondary mx-2">(1,356)</span></label>
-                                </div>
-                            </div>
 
 
                     <!-- 지역 섹션 -->
@@ -253,19 +283,15 @@ TODO:
                             </div>
                         </div>
                         <div class=" mt-4">
-                            <h5>사고</h5>
+                            <h5 class="tc-red">사고</h5>
                             <div class="mt-4 pb-3 bd-gray">
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="manufacturer" id="hyundai" value="hyundai" checked>
-                                    <label class="form-check-label" for="hyundai">완전 무사고</label>
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="no-accident" value="no-accident" checked>
+                                    <label class="form-check-label" for="no-accident">무사고</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                    <label class="form-check-label" for="kia">단순교환 무사고</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                    <label class="form-check-label" for="kia">유사고</label>
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="with-accident" value="with-accident">
+                                    <label class="form-check-label" for="with-accident">유사고</label>
                                 </div>
                             </div>
                         </div>
@@ -298,41 +324,37 @@ TODO:
                             <h5 class="tc-red">연료</h5>
                             <div class="mt-4">
                                 <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="hyundai" value="hyundai" checked>
-                                        <label class="form-check-label d-flex justify-content-between" for="gasol">가솔린 <span class="text-secondary mx-2">356</span></label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                        <label class="form-check-label d-flex justify-content-between" for="kia">디젤<span class="text-secondary mx-2">356</span></label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                        <label class="form-check-label d-flex justify-content-between" for="kia">LPG<span class="text-secondary mx-2">356</span></label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                        <label class="form-check-label d-flex justify-content-between" for="kia">하이브리드<span class="text-secondary mx-2">356</span></label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                        <label class="form-check-label d-flex justify-content-between" for="kia">바이퓨얼<span class="text-secondary mx-2">356</span></label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                        <label class="form-check-label d-flex justify-content-between" for="kia">전기<span class="text-secondary mx-2">356</span></label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                        <label class="form-check-label d-flex justify-content-between" for="kia">수소<span class="text-secondary mx-2">356</span></label>
-                                    </div>
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                        <label class="form-check-label d-flex justify-content-between" for="kia">PHEV<span class="text-secondary mx-2">356</span></label>
-                                    </div>
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="gasoline" value="gasoline" checked>
+                                    <label class="form-check-label d-flex justify-content-between" for="gasoline">가솔린 <span class="text-secondary mx-2">356</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="diesel" value="diesel">
+                                    <label class="form-check-label d-flex justify-content-between" for="diesel">디젤<span class="text-secondary mx-2">356</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="lpg" value="lpg">
+                                    <label class="form-check-label d-flex justify-content-between" for="lpg">LPG(일반인 구입)<span class="text-secondary mx-2">356</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="gasoline-electric" value="gasoline-electric">
+                                    <label class="form-check-label d-flex justify-content-between" for="gasoline-electric">가솔린+전기<span class="text-secondary mx-2">356</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="gasoline-lpg" value="gasoline-lpg">
+                                    <label class="form-check-label d-flex justify-content-between" for="gasoline-lpg">가솔린+LPG<span class="text-secondary mx-2">356</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="electric" value="electric">
+                                    <label class="form-check-label d-flex justify-content-between" for="electric">전기<span class="text-secondary mx-2">356</span></label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="other" value="other">
+                                    <label class="form-check-label d-flex justify-content-between" for="other">기타<span class="text-secondary mx-2">356</span></label>
+                                </div>
                             </div>
                         </div>
                         <div class=" mt-4">
-                            <h5>경매 이력</h5>
+                            <h5 class="tc-red">경매 이력</h5>
                             <div class="mt-4 pb-3 bd-gray">
                                 <div class="form-check">
                                     <input class="form-check-input" type="radio" name="manufacturer" id="hyundai" value="hyundai" checked>
@@ -344,38 +366,20 @@ TODO:
                                 </div>
                             </div>
                         </div>
-                        <div class=" mt-4">
+                        <div class="mt-4">
                             <h5 class="tc-red">리스렌트</h5>
-                            <div class="row mt-4 pb-3 bd-gray">
-                                <div class="col-5">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="hyundai" value="hyundai" checked>
-                                        <label class="form-check-label" for="hyundai">휘발류</label>
-                                    </div>
+                            <div class="mt-4 pb-3 bd-gray">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="general" value="general" checked>
+                                    <label class="form-check-label d-flex justify-content-between" for="general">일반 <span class="text-secondary mx-2">356</span></label>
                                 </div>
-                                <div class="col-5">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                        <label class="form-check-label" for="kia">현금 할부</label>
-                                    </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="rental" value="rental">
+                                    <label class="form-check-label d-flex justify-content-between" for="rental">렌트<span class="text-secondary mx-2">356</span></label>
                                 </div>
-                                <div class="col-5">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                        <label class="form-check-label" for="kia">금융라스</label>
-                                    </div>
-                                </div>
-                                <div class="col-5">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                        <label class="form-check-label" for="kia">운용리스</label>
-                                    </div>
-                                </div>
-                                <div class="col-5">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                        <label class="form-check-label" for="kia">렌트</label>
-                                    </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" name="manufacturer" id="lease" value="lease">
+                                    <label class="form-check-label d-flex justify-content-between" for="lease">리스<span class="text-secondary mx-2">356</span></label>
                                 </div>
                             </div>
                         </div>
@@ -948,8 +952,44 @@ export default {
       years: [], // 연도 목록 저장
       minRange: 0, // 최소값 초기화
       maxRange: 200000, // 최대값 초기화
+      expandedDropdown: null,
+      dropdownStates: {
+        domestic: true,
+        imported: true,
+        cargoSpecial:true,
+      },
+        domesticCars: [
+        { id: 'hyundai', label: '현대', value: 'hyundai', count: '1,356' },
+        { id: 'kia', label: '기아', value: 'kia', count: '1,356' },
+        { id: 'genesis', label: '제네시스', value: 'genesis', count: '1,356' },
+        { id: 'chevrolet', label: '쉐보레(GM대우)', value: 'chevrolet', count: '1,356' },
+        { id: 'renault', label: '르노코리아(삼성)', value: 'renault', count: '1,356' },
+        { id: 'kg_mobility', label: 'KG모빌리티(쌍용)', value: 'kg_mobility', count: '1,356' },
+      ],
+      importedCars: [
+        { id: 'mercedes', label: '벤츠', value: 'mercedes', count: '1,356' },
+        { id: 'bmw', label: 'BMW', value: 'bmw', count: '1,356' },
+        { id: 'audi', label: '아우디', value: 'audi', count: '1,356' },
+        { id: 'porsche', label: '포르쉐', value: 'porsche', count: '1,356' },
+        { id: 'mini', label: '미니', value: 'mini', count: '1,356' },
+        { id: 'landrover', label: '랜드로버', value: 'landrover', count: '1,356' },
+        { id: 'volkswagen', label: '폭스바겐', value: 'volkswagen', count: '1,356' },
+      ],
+      cargoSpecialCars: [
+        { id: 'box_truck', label: '탑차', value: 'box_truck', count: '1,356' },
+        { id: 'refrigerated_truck', label: '냉동/냉장차', value: 'refrigerated_truck', count: '1,356' },
+        { id: 'wing_body', label: '윙바디', value: 'wing_body', count: '1,356' },
+        { id: 'tank_lorry', label: '탱크로리', value: 'tank_lorry', count: '1,356' },
+        { id: 'cargo_crane', label: '카고크레인', value: 'cargo_crane', count: '1,356' },
+        { id: 'trailer', label: '트레일러', value: 'trailer', count: '1,356' },
+        { id: 'flatbed_truck', label: '평판 트럭', value: 'flatbed_truck', count: '1,356' },
+        { id: 'container_truck', label: '컨테이너 트럭', value: 'container_truck', count: '1,356' },
+        { id: 'livestock_truck', label: '축산 차량', value: 'livestock_truck', count: '1,356' },
+        { id: 'garbage_truck', label: '쓰레기 수거차', value: 'garbage_truck', count: '1,356' },
+        { id: 'logging_truck', label: '목재 운반차', value: 'logging_truck', count: '1,356' }
+        ],
     };
-  },
+},
 
   computed: {
     menuHeight() { // 하단 메뉴 높이 계산
@@ -960,9 +1000,44 @@ export default {
   created() {
     window.addEventListener('scroll', this.handleScroll); // 스크롤 이벤트 리스너 추가
     this.years = this.generateYearRange(1990, new Date().getFullYear()); // 연도 목록 생성
+    this.fetchCarData();
   },
 
   methods: {
+    toggleDropdown(type) {
+      // 상태 토글
+      this.dropdownStates[type] = !this.dropdownStates[type];
+    },
+
+    async fetchCarData() {
+      try {
+        // API 호출로 데이터를 가져옴 (예: axios 사용)
+        const domesticResponse = await fetch('/api/cars/domestic'); // 국산차 데이터 요청
+        const importedResponse = await fetch('/api/cars/imported'); // 수입차 데이터 요청
+
+        // 응답 데이터를 JSON으로 변환
+        const domesticData = await domesticResponse.json();
+        const importedData = await importedResponse.json();
+
+        // Vue 상태에 데이터 반영
+        this.domesticCars = domesticData.map(car => ({
+          id: car.id,
+          label: car.name,
+          value: car.value,
+          count: car.count.toLocaleString(), // 숫자 포맷
+        }));
+
+        this.importedCars = importedData.map(car => ({
+          id: car.id,
+          label: car.name,
+          value: car.value,
+          count: car.count.toLocaleString(),
+        }));
+      } catch (error) {
+        console.error('데이터를 가져오는 중 오류 발생:', error);
+      }
+    },
+
     toggleMenuHeight() { // 하단 메뉴 높이 토글
       this.isExpanded = !this.isExpanded;
     },
@@ -972,29 +1047,38 @@ export default {
     submitReview() { // 리뷰 제출 시 메뉴 높이 토글
       this.toggleMenuHeight();
     },
-    generateYearRange(start, end) { // 연도 범위 생성
+  
+    generateYearRange(start, end) {
       const years = [];
       for (let year = start; year <= end; year++) {
         years.push(year);
       }
       return years;
-    }
+    },
+
+    handleScroll() {
+      clearTimeout(this.scrollTimeout);
+      this.scrollTimeout = setTimeout(() => {
+        this.scrollY = window.scrollY;
+      }, 200);
+    },
   },
-  updateProgressBar() {
+
+  beforeDestroy() {
+    window.removeEventListener('scroll', this.handleScroll);
+    clearTimeout(this.scrollTimeout);
+  },
+    updateProgressBar() {
       const rangeSlider = document.querySelector('.range-slider');
       const minPercent = (this.minRange / 200000) * 100;
       const maxPercent = (this.maxRange / 200000) * 100;
 
       // 슬라이더 배경 업데이트
       rangeSlider.style.background = `linear-gradient(to right, #d3d3d3 0%, #d3d3d3 ${minPercent}%, #f24200 ${minPercent}%, #f24200 ${maxPercent}%, #d3d3d3 ${maxPercent}%, #d3d3d3 100%)`;
-    },
-  beforeDestroy() { // 컴포넌트 제거 시 스크롤 이벤트 리스너 제거
-    window.removeEventListener('scroll', this.handleScroll);
-    clearTimeout(this.scrollTimeout);
-  }
+    }
 };
-
 </script>
+
 <script setup>
 import { ref, computed, onMounted, reactive, onUnmounted , inject } from 'vue';
 import { useStore } from "vuex";

@@ -32,25 +32,42 @@
             <div class="container layout-container02">
                 <div class="tbl_basic container content p-4">
                     <div class="container enter-view text-start mb-2">
-                        <h3 class="review-title">공지사항</h3>
-                        <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="btn-apply mt-0">전체보기</router-link>
+                    <h3 class="review-title">공지사항</h3>
+                    <router-link
+                        :to="{ name: 'posts.index', params: { boardId: 'notice' } }"
+                        class="btn-apply mt-0"
+                    >
+                        전체보기
+                    </router-link>
                     </div>
                     <table class="table custom-border mt-5">
-                        <thead>
-                            <tr class="px-6 py-3 bg-gray-50 justify-content-center">
-                                <th class="col-4">카테고리</th>
-                                <th>제목</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr v-if="latestNotices.length === 0">
-                                <td colspan="2" class="text-center text-secondary opacity-50">공지사항이 없습니다</td>
-                            </tr>
-                            <tr v-else v-for="notice in latestNotices" :key="notice.id" class="pointer"  @click="goToDetail(notice.id)">
-                                <td class="col-4 pointer-cursor text-overflow">[{{notice.category}}]</td>
-                                <td class="text-with-marker pointer-cursor">{{ stripHtmlTags(notice.title) }}</td>
-                            </tr>
-                        </tbody>
+                    <thead>
+                        <tr class="px-6 py-3 bg-gray-50 justify-content-center">
+                        <th class="col-4">카테고리</th>
+                        <th>제목</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- 데이터가 없는 경우 -->
+                        <tr v-if="posts.length === 0">
+                        <td colspan="2" class="text-center text-secondary opacity-50">
+                            공지사항이 없습니다
+                        </td>
+                        </tr>
+                        <!-- 공지사항 데이터 출력 -->
+                        <tr
+                        v-else
+                        v-for="post in posts"
+                        :key="post.id"
+                        class="pointer"
+                        @click="goToDetail(post.id)"
+                        >
+                        <td class="col-4 text-overflow">
+                            [{{ post.category || '카테고리 없음' }}]
+                        </td>
+                        <td class="text-with-marker">{{ stripHtmlTags(post.title) }}</td>
+                        </tr>
+                    </tbody>
                     </table>
                 </div>
                 <AuctionList/>
@@ -61,18 +78,18 @@
 </template>
 
 <script setup>
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, watch } from 'vue';
 import useBid from "@/composables/bids";
 import Footer from "@/views/layout/footer.vue";
 import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
+import { useRouter ,useRoute } from 'vue-router';
 import AlarmModal from '@/views/modal/AlarmModal.vue';
 import useAuctions from '@/composables/auctions';
 import useLikes from '@/composables/useLikes';
 import AuctionList from "@/views/import/AuctionList.vue";
 import { initPostSystem } from "@/composables/posts";
-
-const { posts, getPosts } = initPostSystem();
+const route = useRoute();
+const { posts, getPosts,getBoardCategories } = initPostSystem();
 
 const { getMyLikesCount } = useLikes();
 const item1 = ref(null);
@@ -85,6 +102,7 @@ const isExpanded = ref(false);
 const toggleCard = () => {
     isExpanded.value = !isExpanded.value;
 };
+const boardId = ref(route.params.boardId);
 const alarmModal = ref(null);
 const { getAuctionsByDealer, auctionsData, getAuctionById } = useAuctions();
 const { bidsData, getHomeBids, viewBids, bidsCountByUser } = useBid();
@@ -92,17 +110,47 @@ const user = computed(() => store.state.auth.user);
 const myBidCount = ref(0);
 const myLikeCount=ref(0);
 const latestNotices = computed(() => {
-    return posts.value.slice(0, 3);
+  if (!posts.value || posts.value.length === 0) {
+    console.warn("공지사항 데이터가 비어 있습니다.");
+    return [];
+  }
+  return posts.value.slice(0, 3);
 });
 
-const stripHtmlTags = (html) => {
-    const div = document.createElement('div');
-    div.innerHTML = html;
-    return div.textContent || div.innerText || '';
+const getBoardData = async () => {
+  try {
+    const response = await axios.get('/api/board');
+    if (Array.isArray(response.data.data)) {
+      const board = response.data.data.find(board => board.id === boardId.value);
+      if (board) {
+        categoriesList.value = JSON.parse(board.categories);
+      }
+    }
+  } catch (error) {
+    console.error('Error fetching board data:', error);
+  }
 };
-
+// HTML 태그 제거 함수
+const stripHtmlTags = (html) => {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  return div.textContent || div.innerText || "";
+};
 const fetchPosts = async () => {
-    await getPosts('notice', 1, '', '', '', '', '', 'created_at', 'desc');
+  try {
+    const response = await getPosts("notice", 1, "", "", "created_at", "desc");
+    console.log("Fetched Posts Response:", response);
+
+    if (response && response.length > 0) {
+      posts.value = response;
+    } else {
+      posts.value = [];
+      console.warn("공지사항 데이터가 비어 있습니다.");
+    }
+  } catch (error) {
+    console.error("Error fetching posts:", error);
+    posts.value = [];
+  }
 };
 
 const openAlarmModal = () => {
@@ -143,10 +191,33 @@ const fetchAuctionDetails = async (bid) => {
 const filteredDoneBids = ref([]);
 
 const goToDetail = (postId) => {
-    router.push({ name: 'posts.edit', params: { boardId: 'notice', id: postId }, query: { navigatedThroughHandleRowClick: true } });
+  router.push({ name: "posts.edit", params: { boardId: "notice", id: postId } });
 };
-
+onMounted(() => {
+  fetchPosts();
+});
 onMounted(async () => {
+    console.log("Mounted: Fetching board categories and posts");
+    await getBoardCategories();
+    console.log("Mounted: Fetching posts for boardId 'notice'");
+    await fetchPosts(); // 공지사항 데이터를 가져오는 함수 호출
+    getBoardData();
+    });
+    watch(route, async (newRoute) => {
+    if (newRoute.params.boardId !== boardId.value) {
+        boardId.value = newRoute.params.boardId;
+        
+        search_title.value = '';
+        // 필터 값을 초기화합니다.
+        filter.value = 'all';
+
+        // 새로운 boardId에 대한 카테고리 데이터를 다시 로드합니다.
+        await getBoardData();
+        
+        // 새로운 boardId에 해당하는 게시물 목록을 다시 로드합니다.
+        await fetchPosts();
+    }
+    await fetchPosts();
     await getAuctionsByDealer("all");
     const myLikeCountData = await getMyLikesCount(user.value.id);
     myLikeCount.value = myLikeCountData.rawData.data.data_count;
@@ -165,8 +236,6 @@ onMounted(async () => {
             myBidCount.value += 1;
         }
     }); 
-    
-    await fetchPosts();
 
     setTimeout(() => {
         if (item1 != null && item1.value != null && item1.value.classList != null) 

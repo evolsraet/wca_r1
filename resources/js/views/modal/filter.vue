@@ -3,7 +3,6 @@
     <div class="modal-dialog">
       <div class="modal-content shadow">
         <div class="modal-body">
-          <div class="demo"></div>
           <div class="content mt-0">
             <div class="nav-header">
               <button type="button" class="btn-close" @click="handleCloseClick"></button>
@@ -64,20 +63,35 @@ export default {
     return {
       showModal: true,
       categories: {
-        '제조사·모델': [
+        '국산차': [
           { name: '현대', selected: false },
           { name: '기아', selected: false },
           { name: '제네시스', selected: false },
           { name: '쉐보레 (GM대우)', selected: false },
           { name: '르노코리아 (삼성)', selected: false },
-          { name: 'BMW', selected: false },
-          { name: '벤츠', selected: false },
-          { name: '아우디', selected: false }
+          { name: 'KG모빌리티(쌍용)', selected: false },
         ],
-        '분류': [
-          { name: '국산차', selected: false },
-          { name: '수입차', selected: false },
-          { name: '화물·특장·기타', selected: false }
+        '수입차': [
+          { name: '벤츠', selected: false },
+          { name: 'BMW', selected: false },
+          { name: '아우디', selected: false },
+          { name: '포르쉐', selected: false },
+          { name: '미니', selected: false },
+          { name: '랜드로버', selected: false },
+          { name: '폭스바겐', selected: false }
+        ],
+        '화물 특장 기타': [
+        { name: '탑차', selected: false },
+        { name: '냉동/냉장차', selected: false },
+        { name: '윙바디', selected: false },
+        { name: '탱크로리', selected: false },
+        { name: '카고크레인', selected: false },
+        { name: '트레일러', selected: false },
+        { name: '평판 트럭', selected: false },
+        { name: '컨테이너 트럭', selected: false },
+        { name: '축산 차량', selected: false },
+        { name: '쓰레기 수거차', selected: false },
+        { name: '목재 운반차', selected: false }
         ],
         '지역': [
           { name: '서울', selected: false },
@@ -100,8 +114,7 @@ export default {
           { name: '부산', selected: false }
         ],
         '사고': [
-          { name: '완전 무사고', selected: false },
-          { name: '단순교환 무사고', selected: false },
+          { name: '무사고', selected: false },
           { name: '유사고', selected: false }
         ],
         '미션': [
@@ -109,24 +122,22 @@ export default {
           { name: '수동(M/T)', selected: false }
         ],
         '연료': [
-          { name: '휘발류', selected: false },
+          { name: '가솔린', selected: false },
           { name: '디젤', selected: false },
-          { name: 'LPG', selected: false },
-          { name: '하이브리드', selected: false },
-          { name: '바이퓨얼', selected: false },
+          { name: 'LPG(일반인 구입)', selected: false },
+          { name: '가솔린+전기', selected: false },
+          { name: '가솔린+LPG', selected: false },
           { name: '전기', selected: false },
-          { name: '수소', selected: false },
-          { name: 'PHEV', selected: false }
+          { name: '기타', selected: false }
         ],
         '경매 이력': [
           { name: '재경매차', selected: false },
           { name: '내 입찰 차', selected: false }
         ],
-        '리스렌트': [
-          { name: '현금 할부', selected: false },
-          { name: '금융 라스', selected: false },
-          { name: '운용리스', selected: false },
+        '판매방식': [
+          { name: '일반', selected: false },
           { name: '렌트', selected: false },
+          { name: '리스', selected: false },
         ],
         '리스 렌트': [
           { name: '2WD', selected: false },

@@ -1553,7 +1553,7 @@ video{
     border-radius: 6px;
     border: solid 1px #e5e7eb;
     border-radius: 6px;
-    padding: 23px 24px 24px 24px;
+    padding: 23px 12px 24px 24px;
 }
 
 .side-content {
@@ -1571,6 +1571,43 @@ video{
 .navbar-light {
     --bs-navbar-padding-x: none;
 }
+.dropdown-section {
+    cursor: pointer;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+.line-heigh-0{
+    line-height: 0px;
+}
+  .dropdown-icon {
+    font-size: 14px;
+    margin-right: 8px;
+    color: #555;
+    margin-bottom: 7px;
+  }
+  
+  .dropdown-content {
+    max-height: 0; /* 기본적으로 숨김 */
+    overflow: hidden; /* 내용이 잘리지 않도록 설정 */
+    margin-top: 7px; /* 여백 없애기 */
+    padding-bottom: 0;
+    transition: max-height 0.3s ease-in-out, opacity 0.3s ease-in-out, margin-top 0.5s ease-in-out, padding-bottom 0.5s ease-in-out;
+  }
+  .form-check .form-check-label{
+    color: $sub-color03 !important;
+  }
+  .dropdown-content.show {
+    padding-bottom: 1rem;
+    margin-top: 1.5rem ;
+    max-height: 500px; /* 충분한 높이 설정 */
+    opacity: 1; /* 내용 표시 */
+    margin-top: 10px; /* 여백 추가 */
+  }
+  .dropdown-content.show + .dropdown-content {
+    opacity: 1;
+  }
 
 .sub-nav {
     background-color: rgba($primary, 0.03);
