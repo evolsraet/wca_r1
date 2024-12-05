@@ -23,7 +23,7 @@
                                     <div class="popup-menu" v-show="isMenuVisible">
                                         <ul>
                                             <li><button @click="editReview" class="tc-blue">수정</button></li>
-                                            <li><button @click="deleteReviewApi" class="tc-red">삭제</button></li>
+                                            <li><button @click="deleteReviewApi" class="tc-primary">삭제</button></li>
                                         </ul>
                                     </div>
                                     <!--<h3 class="review-title">{{ auction.car_no }}</h3>-->
@@ -33,7 +33,7 @@
                                             <div>
                                                 <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
                                             </div>
-                                                <h5 class="tc-red fs-5">{{ amtComma(auction.win_bid.price) }}</h5>
+                                                <h5 class="tc-primary fs-5">{{ amtComma(auction.win_bid.price) }}</h5>
                                             </div>
                                        <!-- <a class="btn-review" @click="navigateToDetail(auction.id)">후기작성</a>-->
                                     </div>
@@ -72,7 +72,7 @@
                                     <div class="popup-menu" :id="'toggleMenu' + review.id" style="display : none">
                                         <ul>
                                             <li><button @click="editReview(review.id,'user')" class="tc-blue">수정</button></li>
-                                            <li><button @click="userDeleteReview(review.id, userId)" class="tc-red">삭제</button></li>
+                                            <li><button @click="userDeleteReview(review.id, userId)" class="tc-primary">삭제</button></li>
                                         </ul>
                                     </div>
                                     <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
@@ -81,11 +81,11 @@
                                         <div>
                                             <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
                                         </div>
-                                        <!--<p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>-->
+                                        <!--<p class="tc-primary">{{ amtComma(review.auction.win_bid.price) }}</p>-->
                                     </div>
 
                                         <!-- <p>{{ review.auction.car_no }}</p>
-                                            <p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>-->
+                                            <p class="tc-primary">{{ amtComma(review.auction.win_bid.price) }}</p>-->
 
                                         <div class="rating mt-0">
                                             <label v-for="index in 5" :key="index" :for="'star' + index" class="rating__label rating__label--full">

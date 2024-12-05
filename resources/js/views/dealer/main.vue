@@ -61,15 +61,15 @@
                     <!-- Activity Info -->
                     <div class="web container activity-info bold-18-font process mb-0">
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                            <p class="size_22 tc-black"><span class="tc-red slide-up mb-0 size_22" ref="item1">{{ myLikeCount }}</span> 건</p>
+                            <p class="size_22 tc-black"><span class="tc-primary slide-up mb-0 size_22" ref="item1">{{ myLikeCount }}</span> 건</p>
                             <p class="interest-icon text-secondary opacity-50 size_16 mb-0">관심</p>
                         </router-link>
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
-                            <p class="size_22 tc-black"><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
+                            <p class="size_22 tc-black"><span class="tc-primary mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
                             <p class="bid-icon text-secondary opacity-50 size_16 mb-0">입찰</p>
                         </router-link>
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'scsbidInfo' }}" class="item">
-                            <p class="size_22 tc-black"><span class="tc-red mb-0 size_22" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
+                            <p class="size_22 tc-black"><span class="tc-primary mb-0 size_22" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
                             <p class="suc-bid-icon text-secondary opacity-50 size_16 mb-0">낙찰</p>
                         </router-link>
                     </div>
@@ -79,15 +79,15 @@
             <div class="mov">
                 <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
                     <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
-                    <p class="text-center"><span class="tc-red slide-up mb-0" ref="item1">{{ myLikeCount }}</span> 건</p>
+                    <p class="text-center"><span class="tc-primary slide-up mb-0" ref="item1">{{ myLikeCount }}</span> 건</p>
                 </router-link>
                 <router-link :to="{ name: 'auction.index', state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
                     <p class="bid-icon text-secondary opacity-50 normal-16-font mb-0">입찰</p>
-                    <p class="text-center"><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
+                    <p class="text-center"><span class="tc-primary mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
                 </router-link>
                 <router-link :to="{ name: 'auction.index', state: { currentTab: 'scsbidInfo' }}" class="item">
                     <p class="suc-bid-icon text-secondary opacity-50 normal-16-font mb-0">낙찰</p>
-                    <p class="text-center"><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
+                    <p class="text-center"><span class="tc-primary mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
                 </router-link>
             </div>
             <UseGuide />

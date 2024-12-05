@@ -193,7 +193,7 @@
                     <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">내 차 조회</button>
                   </div>
                   <div class="d-flex justify-content-end my-2 flex-column" v-if="!user?.name">
-                    <router-link :to="{ path: '/login' }" class="btn btn-outline-primary tc-red">로그인</router-link>
+                    <router-link :to="{ path: '/login' }" class="btn btn-outline-primary tc-primary">로그인</router-link>
                   </div>
                 </div>
                 <div class="text-secondary opacity-50 mt-5 text-center">
@@ -257,7 +257,7 @@
                   <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">내 차 조회</button>
                 </div>
                 <div class="d-flex justify-content-end my-2" v-if="!user?.name">
-                  <router-link :to="{ path: '/login' }" class="btn btn-outline-primary tc-red">로그인</router-link>
+                  <router-link :to="{ path: '/login' }" class="btn btn-outline-primary tc-primary">로그인</router-link>
                 </div>
                 <div class="text-secondary opacity-50 mt-5 text-center">
                   <p class="fs-6">

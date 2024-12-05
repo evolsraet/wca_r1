@@ -192,7 +192,7 @@
                 <li class="info-num">전손 0 침수 0 도난 0</li>
               </ul>
             </div>
-            <h5 class="mt-5">내차피해 (<span class="tc-red">1</span>건)</h5>
+            <h5 class="mt-5">내차피해 (<span class="tc-primary">1</span>건)</h5>
             <div class="o_table_mobile">
               <div class="tbl_basic">
                 <table>
@@ -215,7 +215,7 @@
                 </table>
               </div>
             </div>
-            <h5 class="mt-5">타차피해 (<span class="tc-red">1</span>건)</h5>
+            <h5 class="mt-5">타차피해 (<span class="tc-primary">1</span>건)</h5>
             <div class="o_table_mobile">
               <div class="tbl_basic">
                 <table>

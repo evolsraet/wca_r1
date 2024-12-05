@@ -3,7 +3,7 @@
         <div class="regiest-content">
             <!-- 딜러 프로필 요약 정보 -->
             <div class="banner-top mt-3">
-                <div class="top-info gap-1 align-items-center">현재 진행중인 경매<p class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }} </p> 건</div>
+                <div class="top-info gap-1 align-items-center">현재 진행중인 경매<p class="tc-primary">{{ bidsCountByUser[user.dealer.user_id] || 0 }} </p> 건</div>
                 <div class="d-flex justify-content-end">
                     <a href="/addr" class="btn btn-outline-primary mb-3 me-3">주소지 관리</a>
                     <a href="/edit-profile" class="btn btn-outline-primary mb-3">내 정보수정</a>
@@ -21,35 +21,17 @@
                     </div>
                     <div class="activity-info bold-18-font mt-5">
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                        <p><span class="tc-red slide-up mb-0" ref="item1">{{ myLikeCount }}</span> 건</p>
+                        <p><span class="tc-primary slide-up mb-0" ref="item1">{{ myLikeCount }}</span> 건</p>
                         <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
                         </router-link>
                         <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
-                        <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
+                        <p><span class="tc-primary mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
                         <p class="bid-icon text-secondary opacity-50 normal-16-font mb-0">입찰</p>
                         </router-link>
                         <router-link :to="{  name: 'auction.index' , state: { currentTab: 'scsbidInfo' }}" class="item">
-                        <p><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
+                        <p><span class="tc-primary mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
                         <p class="suc-bid-icon text-secondary opacity-50 normal-16-font mb-0">낙찰</p>
                         </router-link>
-                        <!--
-                        <div class="item">
-                            <p><span class="tc-red">0</span> 건</p>
-                            <p class="interest-icon text-secondary opacity-50 normal-16-font">관심</p>
-                        </div>
-                        <div class="item">
-                            <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
-                            <p class="bid-icon text-secondary opacity-50 normal-16-font">입찰</p>
-                        </div>
-                        <div class="item">
-                            <p><span class="tc-red">{{ filteredViewBids.length }}</span> 건</p>
-                            <p class="suc-bid-icon text-secondary opacity-50 normal-16-font">낙찰</p>
-                        </div>
-                        -->
-                     <!--   <div class="item">
-                            <p><span class="tc-red">{{ bidsCountByUser[user.dealer.user_id] || 0 }}</span> 건</p>
-                            <p class="purchase-icon text-secondary opacity-50 normal-16-font">매입</p>
-                        </div>-->
                     </div>
                 </div>
             </div>
@@ -101,7 +83,7 @@
                 <span class="text-secondary opacity-50">딜러가 낙찰받은 매물들이에요.</span>
                 <!--
                 <div v-if="filteredViewBids.length == 0">
-                    <p class="tc-red bold-18-font my-2">낙찰 받은 매물이 없습니다.</p>
+                    <p class="tc-primary bold-18-font my-2">낙찰 받은 매물이 없습니다.</p>
                 </div>
                 -->
                 <div class="container my-4">
@@ -121,7 +103,7 @@
                                         <div>
                                             <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
                                         </div>
-                                        <!--<p class="tc-red">{{ amtComma(review.auction.win_bid.price) }}</p>-->
+                                        <!--<p class="tc-primary">{{ amtComma(review.auction.win_bid.price) }}</p>-->
                                     </div>
                                 </div>
                             </div>

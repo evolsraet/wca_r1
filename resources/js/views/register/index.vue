@@ -16,7 +16,7 @@
                             <div class="font-title">
                                 <h5 class="text-secondary opacity-50 font-title">내 차 판매에</h5>
                                 <h5 class="font-title text-secondary opacity-50">
-                                    <span class="tc-red fw-semibold">28% </span>정도
+                                    <span class="tc-primary fw-semibold">28% </span>정도
                                     <span class="break-line"></span>  
                                     <span class="ellipsis-animation">가까워지는 중</span>
                                 </h5>

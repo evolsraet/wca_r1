@@ -75,11 +75,11 @@
                 <div>
                     <div class="top-content-style wd-100">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(소매가)</span></p>
-                        <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
+                        <span class="tc-primary bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
                     <div class="top-content-style wd-100 mt-4">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(도매가)</span></p>
-                        <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
+                        <span class="tc-primary bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
                     <p class="mt-3 text-secondary">※ 소매 시세는 나이스디엔알에서 제공하며, 도매시세는 오토허브셀카에서 제공합니다.</p>
                     <div v-if="user?.name">
@@ -87,7 +87,7 @@
                             <p>차량 정보가 다르신가요?
                                 <span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span>
                             </p>
-                            <div class="tc-red link refresh-style d-flex justify-content-between" @click="openModalIfNeeded">
+                            <div class="tc-primary link refresh-style d-flex justify-content-between" @click="openModalIfNeeded">
                                 <transition name="fade">
                                     <div class="image-container">
                                         <img v-if="!isRefreshDisabled" src="../../../../img/Icon-refresh-red.png" :class="{'fa-sync-alt': isRefreshing, 'transition-image': true ,'mx-2':true,'mb-1':true }" alt="Refresh" width="15px"/>
@@ -116,7 +116,7 @@
                     <div v-if="!user?.name">
                         <div class="d-flex justify-content-between mt-5 mb-3 align-items-center">
                             <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="로그인을 하면 자세한 정보를 볼수있어요." tabindex="0"></span></p>
-                            <div class="tc-red link refresh-style d-flex justify-content-between" @click="loginerror">
+                            <div class="tc-primary link refresh-style d-flex justify-content-between" @click="loginerror">
                                 <span class="bolder">{{ refreshText }}</span>
                                 <transition name="fade">
                                     <div class="image-container">
