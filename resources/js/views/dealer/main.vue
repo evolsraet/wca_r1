@@ -1,71 +1,133 @@
 <template>
     <div>
-        <div class="regiest-content">
-            <div class="banner-top primary-background">
+        <div>
+            <div class="banner-top">
                 <div>
-                    <div class="profile dealer-mp">
-                        <div>
-                            <p class="bold-20-font">현재 진행중인 경매가<br><span class="tc-red me-2">{{ auctionsData.length }}</span>건 있습니다</p>
-                        </div>
-                        <div>
-                            <div style="display: flex; align-items: flex-end;">
-                                <div class="car-image"></div>
+                    <div class="styled-div mt-0">
+                        <h1 class="centered-text fade-in" :class="{ 'fade-in-active': isVisible }">
+                            현재 진행중인 경매가
+                            <span class="ms-2 underline">{{ auctionsData.length }} 건</span> 있어요.
+                        </h1>
+                        <img src="../../../img/venture.png" class="venture" width="80">
+                    <swiper
+                        :modules="[Navigation, Pagination, Autoplay]"
+                        :slides-per-view="1"
+                        :loop="true"
+                        :pagination="{
+                            clickable: true,
+                            el: '.swiper-pagination',
+                            type: 'custom',
+                            renderCustom: renderCustomPagination
+                        }"
+                        :autoplay="{ delay: 5000 }"
+                        :speed="1000"
+                        @slideChangeTransitionStart="resetProgressBar"
+                        class="swiper-container"
+                    >
+                    <!-- Slide 1 -->
+                    <swiper-slide>
+                             <div class="slide-content">
+                                <img src="../../../img/main_banner02.png" class="styled-img" alt="배너 이미지" />
+                                <div class="content d-flex">
+                                    <div>
+                                    </div>
+                                </div>
+                            </div>
+                        </swiper-slide>
+                        <!-- Slide 2 -->
+                        <swiper-slide>
+                            <div class="slide-content">
+                                <img src="../../../img/main_p2.png" class="styled-img" alt="배너 이미지 2" />
+                                <div class="content02 d-flex text-center">
+                                </div>
+                            </div>
+                        </swiper-slide>
+                        <!-- Slide 3 -->
+                        <swiper-slide>
+                            <div class="slide-content">
+                                <img src="../../../img/main_p3.png" class="styled-img" alt="배너 이미지 3" />
+                                <div class="content d-flex">
+                                </div>
+                            </div>
+                        </swiper-slide>
+
+                        <!-- 페이지 네이션 -->
+                        <div class="swiper-pagination mb-3">
+                            <div class="progress-bar">
+                                <div class="progress"></div>
                             </div>
                         </div>
-                    </div>
-                    <div class="container slide-up-ani activity-info bold-18-font process mb-0">
+                    </swiper>
+                    <!-- Activity Info -->
+                    <div class="web container activity-info bold-18-font process mb-0">
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                            <p><span class="tc-red slide-up mb-0" ref="item1">{{ myLikeCount }}</span> 건</p>
-                            <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
+                            <p class="size_22 tc-black"><span class="tc-red slide-up mb-0 size_22" ref="item1">{{ myLikeCount }}</span> 건</p>
+                            <p class="interest-icon text-secondary opacity-50 size_16 mb-0">관심</p>
                         </router-link>
-                        <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
-                            <p><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
-                            <p class="bid-icon text-secondary opacity-50 normal-16-font mb-0">입찰</p>
+                        <router-link :to="{ name: 'auction.index', state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
+                            <p class="size_22 tc-black"><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
+                            <p class="bid-icon text-secondary opacity-50 size_16 mb-0">입찰</p>
                         </router-link>
-                        <router-link :to="{  name: 'auction.index', state: { currentTab: 'scsbidInfo' }}" class="item">
-                            <p><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
-                            <p class="suc-bid-icon text-secondary opacity-50 normal-16-font mb-0">낙찰</p>
+                        <router-link :to="{ name: 'auction.index', state: { currentTab: 'scsbidInfo' }}" class="item">
+                            <p class="size_22 tc-black"><span class="tc-red mb-0 size_22" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
+                            <p class="suc-bid-icon text-secondary opacity-50 size_16 mb-0">낙찰</p>
                         </router-link>
                     </div>
+            
                 </div>
             </div>
+            <div class="mov">
+                <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
+                    <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
+                    <p class="text-center"><span class="tc-red slide-up mb-0" ref="item1">{{ myLikeCount }}</span> 건</p>
+                </router-link>
+                <router-link :to="{ name: 'auction.index', state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
+                    <p class="bid-icon text-secondary opacity-50 normal-16-font mb-0">입찰</p>
+                    <p class="text-center"><span class="tc-red mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
+                </router-link>
+                <router-link :to="{ name: 'auction.index', state: { currentTab: 'scsbidInfo' }}" class="item">
+                    <p class="suc-bid-icon text-secondary opacity-50 normal-16-font mb-0">낙찰</p>
+                    <p class="text-center"><span class="tc-red mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
+                </router-link>
+            </div>
+            <UseGuide />
+            </div>
             <div class="container layout-container02">
-                <div class="tbl_basic container content p-4">
-                    <div class="container enter-view text-start mb-2">
-                    <h3 class="review-title">공지사항</h3>
+    
+            
+                <div class="tbl_basic container p-4">
+                    <div class="d-flex align-items-start justify-content-between">
+                    <h3 class="review-title mb-5">공지사항</h3>
                     <router-link
-                        :to="{ name: 'posts.index', params: { boardId: 'notice' } }"
-                        class="btn-apply mt-0"
-                    >
-                        전체보기
-                    </router-link>
-                    </div>
-                    <table class="table custom-border mt-5">
-                    <thead>
-                        <tr class="px-6 py-3 bg-gray-50 justify-content-center">
-                        <th class="col-4">카테고리</th>
+                    :to="{name:'posts.index' , params: {boardId: 'notice'}}"
+                    class="btn-apply mt-0 p-0">전체보기</router-link>
+                </div>
+                    <table class="table">
+                    <thead class="d-none">
+                        <tr>
+                        <th>NO</th>
+                        <th>작성일</th>
                         <th>제목</th>
                         </tr>
                     </thead>
                     <tbody>
                         <!-- 데이터가 없는 경우 -->
                         <tr v-if="posts.length === 0">
-                        <td colspan="2" class="text-center text-secondary opacity-50">
-                            공지사항이 없습니다
+                        <td colspan="4" class="text-center text-secondary opacity-50">
+                            게시물이 없습니다.
                         </td>
                         </tr>
-                        <!-- 공지사항 데이터 출력 -->
-                        <tr
-                        v-else
-                        v-for="post in posts"
-                        :key="post.id"
-                        class="pointer"
-                        @click="goToDetail(post.id)"
+
+                        <!-- 데이터가 있는 경우 -->
+                        <tr 
+                            v-for="(post, index) in posts" 
+                            :key="post.id"
+                            @click="handleRowClick(post.id)" 
+                            class="pointer-cursor"
                         >
-                        <td class="col-4 text-overflow">
-                            [{{ post.category || '카테고리 없음' }}]
-                        </td>
-                        <td class="text-with-marker">{{ stripHtmlTags(post.title) }}</td>
+                            <td style="width: 5%;" class="tc-bold">{{ index + 1 }}</td>
+                            <td style="width: 30%;" class="tc-gray">{{ post.created_at }}</td>
+                            <td style="width: 65%;">{{ post.title }}</td>
                         </tr>
                     </tbody>
                     </table>
@@ -76,6 +138,44 @@
     </div>
     <Footer />
 </template>
+<script>
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/swiper-bundle.css";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+
+export default {
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
+  methods: {
+    // 커스텀 페이지 네이션 렌더링
+    renderCustomPagination(swiper, current, total) {
+      return `
+        <span class="pagination-number">${current}</span>
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <span class="pagination-number">${total}</span>
+      `;
+    },
+    // 진행 바 리셋
+    resetProgressBar() {
+      const progress = document.querySelector('.progress');
+      if (progress) {
+        progress.style.width = '0%';
+        setTimeout(() => {
+          progress.style.transition = 'width 5s linear';
+          progress.style.width = '100%';
+        }, 50);
+      }
+    },
+  },
+  mounted() {
+    this.resetProgressBar();
+  },
+};
+</script>
 
 <script setup>
 import { ref, onMounted, computed, watch } from 'vue';
@@ -88,6 +188,14 @@ import useAuctions from '@/composables/auctions';
 import useLikes from '@/composables/useLikes';
 import AuctionList from "@/views/import/AuctionList.vue";
 import { initPostSystem } from "@/composables/posts";
+import UseGuide from "@/views/import/UseGuide.vue";
+const isVisible = ref(false);
+
+onMounted(() => {
+  setTimeout(() => {
+    isVisible.value = true;
+  }, 200); // 0.5초 후에 애니메이션 시작
+});
 const route = useRoute();
 const { posts, getPosts,getBoardCategories } = initPostSystem();
 
@@ -102,7 +210,18 @@ const isExpanded = ref(false);
 const toggleCard = () => {
     isExpanded.value = !isExpanded.value;
 };
-const boardId = ref(route.params.boardId);
+const boardId = ref('notice');
+const fetchPosts = async () => {
+  try {
+    // 최신 5개 게시물만 가져오기
+    await getPosts(boardId.value, 1, '', 'all', 'created_at', 'desc');
+    // 최신 5개로 제한
+    posts.value = posts.value.slice(0, 5);
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+  }
+};
+
 const alarmModal = ref(null);
 const { getAuctionsByDealer, auctionsData, getAuctionById } = useAuctions();
 const { bidsData, getHomeBids, viewBids, bidsCountByUser } = useBid();
@@ -136,22 +255,14 @@ const stripHtmlTags = (html) => {
   div.innerHTML = html;
   return div.textContent || div.innerText || "";
 };
-const fetchPosts = async () => {
-  try {
-    const response = await getPosts("notice", 1, "", "", "created_at", "desc");
-    console.log("Fetched Posts Response:", response);
-
-    if (response && response.length > 0) {
-      posts.value = response;
-    } else {
-      posts.value = [];
-      console.warn("공지사항 데이터가 비어 있습니다.");
-    }
-  } catch (error) {
-    console.error("Error fetching posts:", error);
-    posts.value = [];
-  }
+const navigatedThroughHandleRowClick = ref(false);
+const hideButton = ref(false);
+const handleRowClick = (postId) => {
+    hideButton.value = true;
+    navigatedThroughHandleRowClick.value = true; 
+    router.push({ name: 'posts.edit', params: { boardId: boardId.value, id: postId }, query: { navigatedThroughHandleRowClick: true } });
 };
+
 
 const openAlarmModal = () => {
     if (alarmModal.value) {
@@ -193,14 +304,11 @@ const filteredDoneBids = ref([]);
 const goToDetail = (postId) => {
   router.push({ name: "posts.edit", params: { boardId: "notice", id: postId } });
 };
-onMounted(() => {
-  fetchPosts();
-});
+
+
 onMounted(async () => {
-    console.log("Mounted: Fetching board categories and posts");
-    await getBoardCategories();
-    console.log("Mounted: Fetching posts for boardId 'notice'");
-    await fetchPosts(); // 공지사항 데이터를 가져오는 함수 호출
+    await getBoardCategories(); // 카테고리 로드
+    await fetchPosts(); // 게시물 로드
     getBoardData();
     });
     watch(route, async (newRoute) => {
@@ -296,9 +404,131 @@ p {
     text-overflow: ellipsis;
 }
 .tbl_basic table tr td {
-    padding: 13px 5px !important;
+    padding:20px 5px !important;
 }
 .tbl_basic table tr th {
     padding: 10px 5px !important;
+}
+.styled-div {
+    position: relative;
+}
+
+.activity-info {
+    position: absolute;
+    bottom: 0px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255);
+    padding: 65px 20px;
+    border-radius: 10px;
+    text-align: center;
+    z-index: 10;
+    width: 75%;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 991px) { /* 태블릿 */
+    .activity-info {
+        bottom: -95px;
+    }
+    .styled-div {
+        height: auto !important;
+    }
+    .mov{
+        display: flex !important;
+        justify-content: space-around;
+        margin-top: 27px;
+    }
+    .web{
+        display:none !important;
+    }
+    .centered-text{
+        font-size: 1.6rem !important;
+        line-height: 35px !important;
+    }
+    .swiper-slide .styled-img {
+        width: auto; 
+        height: 400px;
+        object-fit: cover; /* 비율 유지하며 잘리는 부분 처리 */
+    }
+
+    .swiper-container {
+        height: 400px; /* 전체 슬라이드 높이를 조정 */
+    }
+}
+
+@media (max-width: 480px) { /* 모바일 */
+    .activity-info {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    .centered-text{
+        top: 50% !important;
+    }
+}
+.mov{
+    display:none;
+}
+.web{
+    display:flex;
+}
+.styled-div .content02 {
+position: absolute;
+top: 0;
+left: 0px;
+width: 100%;
+height: 100%;
+display: flex;
+flex-direction: row;
+justify-content: center;
+padding: 50px;
+color: white;
+align-items: center;
+} 
+.fade-in {
+  opacity: 0;
+  transition: opacity 1s ease-out;
+}
+
+.fade-in.fade-in-active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.styled-div .content {
+position: absolute;
+top: 0;
+left: -150px;
+width: 100%;
+height: 100%;
+display: flex;
+flex-direction: row;
+justify-content: center;
+padding: 50px;
+color: white;
+align-items: center;
+}
+.centered-text {
+    position: absolute;
+    top: 40%; /* 수직 중앙 정렬 */
+    left: 15%; /* 수평 중앙 정렬 */
+    transform: translate(-10%, -50%); /* 중앙 정렬 보정 */
+    z-index: 10; /* 슬라이더 위로 배치 */
+    text-align: start;
+    font-size: 2rem;
+    line-height: 50px;
+    font-weight: bold;
+    color: #ffffff;
+}
+.venture{
+    position: absolute;
+    top: 47%;
+    right: 12%; /* 수평 중앙 정렬 */
+    transform: translate(-10%, -50%); /* 중앙 정렬 보정 */
+    z-index: 10; /* 슬라이더 위로 배치 */
+    text-align: start;
+    font-size: 2rem;
+    line-height: 50px;
+    font-weight: bold;
+    color: #ffffff; 
 }
 </style>

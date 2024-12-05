@@ -1,6 +1,6 @@
 <template>
     <div class="container web-content-style02 pt-5 p-3">
-        <div class="container mt-4 p-2">
+        <div class="container mt-4 p-2 width-container">
             <SkeletonLoader v-if="isLoading" />
             <template v-else>
                 <h4>차량 정보 조회 되었어요</h4>
@@ -71,25 +71,30 @@
                 </ul>
             </template>
         </div>
-         <BottomSheet02 class="side-sheet-style">
+         <BottomSheet02 class="p-3 side-sheet-style">
                 <div>
                     <div class="top-content-style wd-100">
-                        <p class="text-secondary opacity-50 bold-18-font">현재 시세 <span class="normal-14-font">(무사고 기준)</span></p>
+                        <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(소매가)</span></p>
                         <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
+                    <div class="top-content-style wd-100 mt-4">
+                        <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(도매가)</span></p>
+                        <span class="tc-red bold-18-font">{{ carDetails.priceNow }} 만원</span>
+                    </div>
+                    <p class="mt-3 text-secondary">※ 소매 시세는 나이스디엔알에서 제공하며, 도매시세는 오토허브셀카에서 제공합니다.</p>
                     <div v-if="user?.name">
                         <div class="d-flex justify-content-between mt-4 mb-3 align-items-center pointer">
                             <p>차량 정보가 다르신가요?
                                 <span class="tooltip-toggle nomal-14-font" aria-label="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다" tabindex="0"></span>
                             </p>
                             <div class="tc-red link refresh-style d-flex justify-content-between" @click="openModalIfNeeded">
-                                <span>{{ refreshText }}</span>
                                 <transition name="fade">
                                     <div class="image-container">
-                                        <img v-if="!isRefreshDisabled" src="../../../../img/Icon-refresh.png" :class="{'fa-sync-alt': isRefreshing, 'transition-image': true ,'mx-2':true,'mb-1':true }" alt="Refresh" width="15px"/>
+                                        <img v-if="!isRefreshDisabled" src="../../../../img/Icon-refresh-red.png" :class="{'fa-sync-alt': isRefreshing, 'transition-image': true ,'mx-2':true,'mb-1':true }" alt="Refresh" width="15px"/>
                                         <img v-else src="../../../../img/checkbox.png" :class="{'transition-image': true,'mx-2':true,'mb-1':true}" alt="Complete" width="15px"/>
                                     </div>
                                 </transition>
+                                <span>{{ refreshText }}</span>
                             </div> 
                         </div>
                         <div class="none-info">
@@ -103,15 +108,16 @@
                         </div>
                             <InfoModal v-if="showModal" @close="closeModal" @refresh="startLoading"/>
                     
-                        <div class="flex items-center justify-end mt-3 mb-2">
-                            <button class="btn primary-btn w-100"  @click="UserapplyAuction">경매 신청하기</button>
+                        <div class="mov-col flex items-center justify-end mt-3 mb-2 gap-2">
+                            <button class="btn btn-outline-primary w-100">예상 가격 확인</button>
+                            <button class="btn primary-btn w-100 bolder"  @click="UserapplyAuction">경매 신청하기</button>
                         </div>
                     </div>
                     <div v-if="!user?.name">
                         <div class="d-flex justify-content-between mt-5 mb-3 align-items-center">
                             <p>차량 정보가 다르신가요?<span class="tooltip-toggle nomal-14-font" aria-label="로그인을 하면 자세한 정보를 볼수있어요." tabindex="0"></span></p>
                             <div class="tc-red link refresh-style d-flex justify-content-between" @click="loginerror">
-                                <span>{{ refreshText }}</span>
+                                <span class="bolder">{{ refreshText }}</span>
                                 <transition name="fade">
                                     <div class="image-container">
                                         <img src="../../../../img/Icon-refresh.png" :class="{'fa-sync-alt': isRefreshing, 'transition-image': true ,'mx-2':true,'mb-1':true }" alt="Refresh" width="15px"/>
@@ -129,7 +135,7 @@
                             </div>
                         </div>
                         <div class="flex items-center justify-end mb-2 mt-3">
-                            <button class="btn btn-primary w-100" @click="applyAuction">경매 신청하기</button>
+                            <button class="btn btn-primary w-100 bolder" @click="applyAuction">경매 신청하기</button>
                         </div>
                     </div>
                 </div>
@@ -146,7 +152,7 @@ import { useRouter } from 'vue-router';
 import { ref, onMounted, computed ,inject } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from "vuex";
-import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
+import BottomSheet02 from '@/views/bottomsheet/BottomSheet.vue';
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import drift from '../../../../../resources/img/drift.png';
@@ -327,29 +333,100 @@ const checkRefreshAvailability = () => {
         }
     }
 };
-function toggleDetailContent() {
-    isActive.value = !isActive.value;
-}
-const UserapplyAuction = () =>{
+
+const UserapplyAuction = () => {
     const text = `
-    <h4 class="text-start">이런 단계를 거쳐요</h4>
-             <div class="sellInfo my-3 p-4">
-                <img src="${imgInfo}"alt="Auction Detail" class="auction-detail-img">
-          </div>`;
+    <h5 class="text-start mb-3">경매 진행 순서 안내</h5>
+    <div class="sellInfo my-3 p-4" style="position: relative;">
+        <img src="${imgInfo}" alt="Auction Detail" class="auction-detail-img">
+        <div id="tooltip-area" class="tooltip-area" style="cursor: pointer; position: absolute; width: 50px; height: 50px;"></div>
+        <div id="tooltip" class="p-4 tooltip2" style="display: none; position: absolute; background: white; color: black; padding: 10px; border-radius: 5px; border:1px solid #aaaebe;">
+            <div class="text-center">
+                <h5>※ 탁송 및 대금</h5>
+                <div class="text-start mt-3">
+                    <p>판매딜러가 선택되면 고객의 탁송 희망날짜에 <br>탁송이 진행됩니다.</p>
+                    <p class="tc-gray">(탁송정보 낙찰확정 후 48시간 이내에 입력)</p>
+                    <p class="mt-2">탁송진행전 2시간전까지 나이스 에스크로 <br>계좌로 판매대금이 입금됩니다.</p>
+                    <p class="mt-2">입금이 완료되면 나이​스에서 입급 완료<br>증명서가 고객에게 송부됩니다.</p>
+                </div>
+            </div>
+            <button id="close-tooltip" style="position: absolute; top: 5px; right: 5px; border: none; background: transparent; cursor: pointer;">X</button>
+        </div>
+    </div>`;
+
     wica.ntcn(swal)
-        .useHtmlText() // HTML 태그 인 경우 활성화
+        .useHtmlText()
         .labelCancel()
         .useClose()
-        .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
-        .addOption({ padding: 20 }) // swal 기타 옵션 추가
+        .addClassNm('primary-check')
+        .addOption({ padding: 20 })
         .callback(function (result) {
-        if (result.isOk) {
-            console.log(result);
-            secondModal();
-        }
-    })
-    .confirm(text);
-}
+            if (result.isOk) {
+                console.log(result);
+                secondModal();
+            }
+        })
+        .confirm(text);
+
+    setTimeout(() => {
+        const tooltipArea = document.getElementById('tooltip-area');
+        const tooltip = document.getElementById('tooltip');
+        const closeTooltipButton = document.getElementById('close-tooltip');
+
+        const showTooltip = () => {
+            tooltip.style.display = 'block';
+        };
+
+        const hideTooltip = () => {
+            tooltip.style.display = 'none';
+        };
+
+        // Tooltip 영역 클릭 이벤트
+        tooltipArea.addEventListener('click', (event) => {
+            event.stopPropagation(); // 클릭 이벤트가 전파되지 않도록 방지
+            if (tooltip.style.display === 'block') {
+                hideTooltip();
+            } else {
+                showTooltip();
+            }
+        });
+
+        // Tooltip 닫기 버튼 클릭 이벤트
+        closeTooltipButton.addEventListener('click', (event) => {
+            event.stopPropagation();
+            hideTooltip();
+        });
+
+        // 다른 곳 클릭 시 Tooltip 닫기
+        document.addEventListener('click', () => {
+            hideTooltip();
+        });
+
+        // 모바일 터치 이벤트
+        tooltipArea.addEventListener('touchstart', (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            if (tooltip.style.display === 'block') {
+                hideTooltip();
+            } else {
+                showTooltip();
+            }
+        });
+
+        closeTooltipButton.addEventListener('touchstart', (event) => {
+            event.stopPropagation();
+            event.preventDefault();
+            hideTooltip();
+        });
+
+        document.addEventListener('touchstart', (event) => {
+            if (!tooltip.contains(event.target)) {
+                hideTooltip();
+            }
+        });
+    }, 100);
+};
+
 
 const secondModal = () => {
     
@@ -500,8 +577,6 @@ const applyAuction = () => {
   animation: spin 1s linear infinite; 
 }
 .refresh-style {
-    background-color: #ebedf1;
-    border-radius: 20px;
     padding-left: 10px;
 }
 
@@ -548,4 +623,5 @@ const applyAuction = () => {
 .side-sheet-style{
     margin-top: 70px;
 }
+
 </style>

@@ -7,7 +7,7 @@
       <form @submit.prevent="auctionEntry">
         <!-- 소유자 입력 -->
         <div class="form-group">
-          <label for="owner-name">소유자</label>
+          <label for="owner-name"><span class="text-danger me-2">*</span>소유자</label>
           <div class="owner-certificat" @click="confirmEditIfDisabled">
             <input type="text" id="owner-name" v-model="ownerName" placeholder="홍길동" :disabled="isVerified">
             <button class="btn certification" @click.stop="verifyOwner" :disabled="isVerified">본인인증</button>
@@ -15,12 +15,12 @@
         </div>
         <!-- 차량 번호 입력 -->
         <div class="form-group">
-          <label for="carNumber">차량 번호</label>
+          <label for="carNumber"><span class="text-danger me-2">*</span>차량 번호</label>
           <input type="text" id="carNumber" v-model="carNumber" placeholder="12 삼 4567" :disabled="true">
         </div>
         <!-- 지역 선택 -->
         <div class="form-group">
-          <label for="sido1"><span class="text-danger">*</span> 지역</label>
+          <label for="sido1"><span class="text-danger me-2">*</span> 지역</label>
           <div class="region">
             <select class="w-100" v-model="selectedRegion" @change="onRegionChange">
               <option value="">시/도 선택</option>
@@ -62,15 +62,21 @@
         </div>
         <!-- 은행 선택 -->
         <div class="form-group mt-4">
-          <label for="carNumber">은행</label>
+          <label for="carNumber"><span class="text-danger me-2">*</span>은행</label>
           <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly>
           <input type="text" v-model="account" placeholder="계좌번호" :class="{'block': accountDetails}" class="account-num">
         </div>
         <!-- 주요 사항 입력 -->
-        <div class="form-group mb-5">
-          <label for="memo">주요사항</label>
+        <div class="form-group mt-5">
+          <label for="memo"><span class="text-danger me-2">*</span>주요사항</label>
           <textarea type="text" id="memo" v-model="memo" placeholder="침수 및 화재 이력 등 차량관련 주요사항이 있으면 적어주세요." rows="2"></textarea>
         </div>
+        <div class="form-group mb-5">
+        <label for="datetime">
+          <span class="text-danger me-2">*</span>진단희망 날짜 및 시간
+        </label>
+        <input type="datetime-local" id="datetime" name="datetime" class="form-control" required>
+      </div>
         <h5><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
         <input type="file" @change="handleFileUploadOwner" ref="fileInputRefOwner" style="display:none">
         <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
@@ -93,6 +99,35 @@
     </div>
   </div>
 </template>
+<script>
+  // 현재 날짜와 시간을 가져와 `min` 속성에 설정
+  const datetimeInput = document.getElementById("datetime");
+  
+  // 현재 날짜 및 시간 포맷팅 (YYYY-MM-DDTHH:MM)
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
+  const date = String(now.getDate()).padStart(2, '0');
+  const hours = now.getHours();
+  const minutes = now.getMinutes();
+  
+  // 오늘 날짜와 오전 9시를 기본 최소값으로 설정
+  datetimeInput.min = `${year}-${month}-${date}T09:00`;
+
+  // 오늘 날짜와 오후 6시를 최대값으로 설정
+  datetimeInput.max = `${year}-${month}-${date}T18:00`;
+
+  // 시간 제한: 오전 9시 ~ 오후 6시
+  datetimeInput.addEventListener("change", (event) => {
+    const selectedDateTime = new Date(event.target.value);
+
+    const selectedHours = selectedDateTime.getHours();
+    if (selectedHours < 9 || selectedHours > 18) {
+      alert("시간은 오전 9시부터 오후 6시까지만 선택 가능합니다.");
+      event.target.value = ''; // 잘못된 값은 초기화
+    }
+  });
+</script>
 
 <script setup>
 import { ref, onMounted, nextTick, inject, createApp,computed  } from 'vue';
@@ -332,4 +367,31 @@ onMounted(() => {
     background-size: 20px 20px;
     font-size: 0;
 }
+.flatpickr-calendar {
+  font-family: "Arial", sans-serif;
+}
+
+.flatpickr-time .flatpickr-time-separator {
+  color: #7a3535;
+}
+
+.flatpickr-day.flatpickr-disabled {
+  cursor: not-allowed;
+  color: rgba(57, 57, 57, 0.3);
+  background: transparent;
+  border-color: transparent;
+}
+/* 비활성화된 날짜 */
+.flatpickr-day.flatpickr-disabled {
+  cursor: not-allowed;
+  color: #d3d3d3;
+  background-color: #f9f9f9;
+}
+
+/* 활성화된 날짜 */
+.flatpickr-day {
+  cursor: pointer;
+  color: #333333;
+}
+
 </style>

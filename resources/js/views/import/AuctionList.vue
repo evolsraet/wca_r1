@@ -82,18 +82,17 @@
 
         <div v-else>
           <div class="complete-car my-4">
-            <div class="my-auction none-content">
-              <div class="none-complete-img"></div>
-              <div class="d-flex align-items-center flex-column gap-3">
-                <div class="text-secondary opacity-50 d-flex align-items-center flex-column gap-5">
+            <div>
+              <div class="none-content p-3 d-flex align-items-center flex-column gap-3">
+                <div class="text-secondary opacity-50 d-flex align-items-center flex-column gap-3">
                   <h4 v-if="isUser">등록된 차가 없어요</h4>
                   <h5 v-if="isUser">차량 등록 후, 경매를 시작해보세요.</h5>
-                  <h5 v-if="isDealer" class="mt-4 text-center">탁송지를 등록해야 할 매물이 없습니다.</h5>
-                  <div v-if="isUser" class="px-2">
-                  <router-link :to="{ name:'home' }" class="w-100 btn primary-btn btn-apply-ty02 justify-content-between p-4 w-100">
-                    <span>차량 등록하기</span>
-                  </router-link>
-                    </div>
+                  <div v-if="isDealer" class="px-2">
+                    <router-link :to="{ name: 'auction.index' }" class="px-5 btn btn-outline-secondary btn-lg bc-wh">
+                      입찰하러 가기
+                    </router-link>
+                  </div>
+                  <h5 v-if="isDealer" class="text-center">탁송지 미등록 매물이 없습니다</h5>
                 </div>
               </div>
             </div>
@@ -233,7 +232,7 @@ const dealerAddrConnect = (auctionId) => {
   min-width: min-content;
 }
 .none-content{
-  padding: 0px !important;
+background-color: #F7F8FB;
 }
 button.btn{
   width: 105px !important;
@@ -312,7 +311,6 @@ p {
 }
 .styled-div {
     width: 100%;
-    height: 40vh;
     margin-top: 57px;
     border-radius: 0px;
     background-color: #f5f5f6;

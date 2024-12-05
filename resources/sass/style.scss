@@ -95,10 +95,16 @@ video {
 .btn-lg {
     font-size: 1rem !important;
 }
-
+@media (max-width:1399px) {
+    .guide-card{
+    padding: 25px 20px !important;
+    width: 415px;
+}
+}
 /*--------------------------
     딜러 메인(홈)
 ----------------------------*/
+
 @media (max-width: 991px){
 .layout-container02 {
     grid-template-columns: none !important;
@@ -107,7 +113,22 @@ video {
     flex-direction: column;
     flex-wrap: nowrap;
 }
-
+.mov-col{
+    flex-direction: column !important;
+}
+.guide-card-content{
+    --bs-gutter-x: 0rem !important;
+    max-width: none !important;
+}
+.guide-card{
+    flex-direction: column-reverse !important; 
+}
+.guide-title{
+    text-align: center;
+}
+.guide-description{
+    display: none;
+}
 .mov-hidden{
     display: none !important;
 }
@@ -116,6 +137,11 @@ video {
 }
 }
 @media (max-width: 640px){
+    .venture{
+        top: 23% !important;
+        left: 16%;
+        right:0px;  
+    }
 .layout-container02 {
     display: flex !important;
     gap: 4rem !important;
@@ -124,6 +150,9 @@ video {
 }
 video{
     max-width: none !important;
+}
+.review-any{
+    display: none;
 }
 }
 
@@ -138,6 +167,7 @@ video{
     border-bottom-right-radius: 0px !important;
     border-bottom-left-radius: 0px !important;
     background-color: #ffffff;
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .activity-info .item {
@@ -161,7 +191,6 @@ video{
 
 .styled-div {
     width: 100%;
-    height: 320px;
     margin-top: 57px;
     border-radius: 6px;
     background-color: #f5f5f6;
@@ -362,7 +391,7 @@ video{
     align-items: center;
     justify-content: center;
     position: relative;
-    height: 210px;
+    height: 390px;
     background-color: #f5f5f6;
 }
 
@@ -456,7 +485,9 @@ video{
 .content{
     display: grid;
 }
-
+.web-stlye{
+    display: none;
+}
 .border-rad {
     border-radius: 6px;
 }
@@ -535,7 +566,7 @@ video{
         }
         .styled-div {
             width: 100%;
-            height: 287px;
+            height: 410px;
             margin-top: 0px;
             border-radius: 6px;
             background-color: #f5f5f6;
@@ -890,6 +921,9 @@ video{
 @media all and (max-width:640px){
     .video_type01 {
         display: none;
+    }
+    .web-stlye{
+        display:block !important;
     }
     a.text-secondary .spacing {
         margin: 0px;
@@ -3558,6 +3592,7 @@ input[type="checkbox"] {
     background-size: cover;
     background-position: center; 
     background-repeat: no-repeat; 
+    margin-top:2px;
 }
 .icon-search-img{
     position: absolute;
@@ -3832,11 +3867,25 @@ input[type="checkbox"] {
 .red-box-type02.pass-red:hover {
     box-shadow: 0 2px 7px rgba(0, 0, 0, 0.2);
 }
+.width-container{
+    width: auto;
+    max-width: 700px;
+    min-width: 411px;
+}
 
 @media screen and (max-width: 481px){
     .o_table_mobile .tbl_basic table {
         width: 100%;
         min-width: 600px !important;
+    }
+    .tooltip-toggle::before{
+        left: -59px !important;
+    }
+    .web-style-overlay02{
+     transform: translateX(-5%) !important;
+    }
+    .width-container{
+        min-width: none; 
     }
 }
 
@@ -4020,15 +4069,25 @@ input[type="checkbox"] {
           transition: transform 1s ease-out;
         }
 
-        border: 1px solid $sub-color01;
+        outline: 1px solid $sub-color01;
         box-shadow: 0px 8px 10px 0px rgba(174, 170, 187, 0.247);
-        transition: border 0.5s ease, box-shadow 0.5s ease;
+        transition: outline 0.8s ease-in-out, box-shadow 0.5s ease;
+        animation: outlineFadeIn 0.8s forwards;
         color: $sub-color01;
       }
     }
   }
 }
-
+@keyframes outlineFadeIn {
+    from {
+      outline-color: transparent;
+      outline-width: 0;
+    }
+    to {
+      outline-color: $sub-color01;
+      outline-width: 1px;
+    }
+  }
 .layover-style {
   border-radius: 0px !important;
   border: 1px solid #e1e1e1 !important;
@@ -4063,7 +4122,7 @@ input[type="checkbox"] {
 }
 
 .overlay-style {
-  height: 100vh;
+  height: 95vh;
   
   @media (max-height: 810px) {
     height: auto;
@@ -4211,14 +4270,14 @@ input[type="checkbox"] {
     vertical-align: middle;
     user-select: none;
     background-color: transparent;
-    border: 1px solid #afafaf !important; 
+    border: 1px solid #d7d7d7 !important;
     padding: 0.5rem 1rem;
     font-size: 1rem;
-    background-color: #f5f5f5 !important;
+    background-color: #ffffff !important;
     line-height: 1.5;
     border-radius: 0.25rem;
     transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
-    box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); 
+    box-shadow: 0 0.2rem 1rem rgba(0, 0, 0, 0.15);
     width: 50%;
 }
 .cmm-remove-confirmButton{
@@ -4313,9 +4372,11 @@ input[type="checkbox"] {
     }
 }
 .sheet{
-    z-index: 1;
+    z-index: 3;
 }
-
+.bc-wh{
+    background-color: white ;
+}
 /* 애니메이션 커스텀 */
 .fade-enter-active, .fade-leave-active {
     transition: opacity 0.5s;
@@ -4451,3 +4512,255 @@ input[type="checkbox"] {
 .primary-check-closeButton{
     margin-top: -16px;
 }
+
+.bidding-section {
+    padding-top: 10px;
+  }
+  
+  .section-title {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  .step-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+  }
+  
+  .step-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    position: relative;
+    font-size: 1.2em;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .step-circle {
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    width: 32px;
+    height: 32px;
+    font-size: 1em;
+    font-weight: bold;
+    color: white;
+    background-color: #d9534f;
+    border-radius: 16%;
+    flex-shrink: 0;
+  }
+  .step-connector02{
+    position: absolute;
+    top: 22px;
+    left: 15px;
+    width: 2px;
+    height: 112px;
+    background: repeating-linear-gradient(180deg, #d9534f, #d9534f 4px, transparent 4px, transparent 8px);
+    z-index: -1;
+  }
+  .step-connector {
+    position: absolute;
+    top: 32px;
+    left: 15px;
+    width: 2px;
+    height: 60px;
+    background: repeating-linear-gradient(
+      180deg,
+      #d9534f,
+      #d9534f 4px,
+      transparent 4px,
+      transparent 8px
+    );
+    z-index: -1;
+  }
+  
+  .step-text {
+    margin-left: 15px;
+    font-size: 18px;
+  }
+  .intromodal .swal2-html-container {
+    max-height: 50vh;
+    overflow-y: auto;
+    padding: 10px;
+  }
+.intromodal-actions{
+    display: none !important;
+}
+.intromodal-popup .swal2-html-container{
+    padding: 1.5em 0.1em 1.5em !important;
+}
+.intromodal-popup {
+    width: 58em !important;  
+    max-height: 70vh;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+/* 모바일 화면 (최대 너비 768px) */
+@media (max-width: 768px) {
+    .intromodal-popup {
+        max-height: 60vh; /* 뷰포트 높이의 70% */
+    }
+    .circle {
+        width: 80px;
+        height: 80px;
+    }
+}
+@media (max-width:991px) {
+    .circle {
+        width: 100px;
+        height: 100px;
+    }
+}
+/* 태블릿 화면 (768px ~ 1024px) */
+@media (min-width: 768px) and (max-width: 1024px) {
+    .intromodal-popup {
+        max-height: 70vh; /* 뷰포트 높이의 80% */
+    }
+}
+
+/* 데스크탑 화면 (1024px 이상) */
+@media (min-width: 1024px) {
+    .intromodal-popup {
+        max-height: 70vh; /* 기본 설정 */
+    }
+}
+.list-block{
+    list-style-type: disc !important;
+}
+
+.fee-section {
+    display: flex;
+    align-items: center;
+  }
+  
+  .fee-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    margin: 0 15px;
+  }
+  
+  .circle {
+    width: 120px;
+    height: 120px;
+    border: 2px solid #ddd;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+  
+  .circle img {
+    width: 56px;
+    height: auto;
+  }
+  
+  .arrow {
+    font-size: 24px;
+    color: #666;
+    margin: 0px 10px 33px 10px;
+  }
+  
+  .fee-step p {
+    font-size: 14px;
+    color: #333;
+    font-weight: bold;
+  }
+/* 페이지 네이션 스타일 */
+.swiper-pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+  }
+  
+  .pagination-number {
+    font-size: 16px;
+    color: #fff;
+  }
+  
+  /* 진행 바 스타일 */
+  .progress-bar {
+    width: 45px;
+    height: 2px;
+    border-radius: 20px;
+    background: #ccc;
+    position: relative;
+  }
+  
+  .progress {
+    height: 100%;
+    width: 0;
+    background: #fff;
+    transition: width 5s linear;
+  }
+  .underline {
+    text-decoration: underline !important;
+    text-underline-offset: 7px; 
+    text-decoration-thickness: 1px;
+  }
+  a.btn{
+    height: 45px;
+    line-height: 30px;
+  }
+  .guide-card {
+    display: flex;
+    align-items: center;
+    padding: 25px 48px;
+    width: 400px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    gap: 20px;
+    justify-content: space-between;
+  }
+  
+  .guide-icon {
+    width: 56px;
+    height: 56px;
+  }
+  
+  .guide-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .guide-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin: 0 0 8px;
+    color: #333;
+  }
+  
+  .guide-description {
+    font-size: 14px;
+    color: #666;
+    margin: 0;
+  }
+  .btn-sell-car {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 20px;
+    border: 1px solid #ccc;
+    border-radius: 30px;
+    color: #fff;
+    width: 280px;
+    font-size: 16px;
+    text-decoration: none;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    }
+    
+    .btn-sell-car:hover {
+    background-color: #000000;
+    color: #fff;
+    }
+      

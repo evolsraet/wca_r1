@@ -1,73 +1,295 @@
 <template>
     <div>
-      <div v-if="!isMobileView" class="banner-top">
-          <div class="styled-div mt-0">
-              <img src="../../../img/main_banner.png" class="styled-img" alt="배너 이미지">
-              <div class="content d-flex">
-                  <div>
-                      <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">내 차 판매는 <br>위카에서 !</h1>
-                  </div>
-                  <div>
-                      <p>&nbsp;</p>
-                  </div>
-              </div>
-          </div>
-      </div>
-      <div>
-          <div class="regiest-content">
-              <div class="container my-4">
-                  <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 pb-0 mt-4 mb-0">
-                      <h2 class="fw-bolder lh-base animated-text">내 차 판매는 <br>위카에서 !</h2>
-                      <router-link :to="{ name: 'auction.index' }" href="" class="btn-apply p-0 m-0 animated-button">더 알아보기</router-link>
-                  </div>
-                  <div class="layout-container02 mt-5">
-                      <div class="p-2">
-                          <div class="apply-top text-start mb-0">
-                              <h3 class="review-title">이용후기</h3>
-                              <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
-                          </div>
-                          <div  v-if="auctionsData.length > 0" class="container">
-                              <div class="row">
-                                  <div class="col-md-6 p-2 hover-ac pointer" v-for="auction in auctionsData.slice(0,2)" :key="auction.id" @click="navigateToDetail(auction.id)">
-                                      <div class="card my-auction mt-3">
-                                          <div>
-                                            <div class="card-img-top-placeholder">
-                                                <img src="../../../img/car_example.png">
-                                            </div> 
-                                              <div class="card-body">
-                                                  <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
-                                                  <p>2020년 | 2.4km | 무사고</p>
-                                                  <div class="d-flex justify-content-between align-items-baseline">
-                                                    <div>
-                                                        <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
-                                                        <h5 class="tc-red fs-5">{{ amtComma(auction.win_bid.price) }}</h5>
-                                                    </div>
-                                                </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                          <div class="row row-cols-1 row-cols-md-1" v-else>
-                              <div class="card my-auction mt-3">
-                                  <div class="card-body">
-                                      <div class="none-complete">
-                                          <span class="text-secondary opacity-50">아직 작성가능한 이용후기가 없습니다.</span>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                      <AuctionList />
-                  </div>
-              </div>
-          </div>
-      </div>
-      <Footer />
+        <div class="banner-top">
+            <div class="styled-div mt-0">
+                <swiper :modules="[Navigation, Pagination, Autoplay]" :slides-per-view="1" :loop="true" :pagination="{
+            clickable: true,
+            el: '.swiper-pagination',
+            type: 'custom',
+            renderCustom: renderCustomPagination
+            }" :autoplay="{ delay: 5000 }" :speed="1000" @slideChangeTransitionStart="resetProgressBar">
+                    <!-- Slide 1 -->
+                    <swiper-slide>
+                        <div class="slide-content">
+                            <img src="../../../img/main_banner02.png" class="styled-img" alt="배너 이미지" />
+                            <div class="content d-flex">
+                                <div>
+                                    <h3>TRANSFORMING USED CAR!</h3>
+                                    <h3 class="bold">WECARMOBILITY</h3>
+                                    <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">
+                                        자동차 진단& 탁송 벤처기업
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </swiper-slide>
+
+                    <!-- Slide 2 -->
+                    <swiper-slide>
+                        <div class="slide-content">
+                            <img src="../../../img/main_p2.png" class="styled-img" alt="배너 이미지 2" />
+                            <div class="content d-flex text-start">
+                                <div>
+                                    <img src="../../../img/venture.png" width="60" class="mb-3">
+                                    <h3>TRANSFORMING USED CAR!</h3>
+                                    <h3 class="bold">WECARMOBILITY</h3>
+                                    <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">
+                                        내 차 판매는, 위카에서
+                                    </h1>
+                                    <router-link class="btn-sell-car primary-back border-line-none" :to="{ name: 'posts.index', params: { boardId: 'notice' } }">
+                                        <div>
+                                            <span class="icon-car">🚗</span>
+                                            내 차 판매하기
+                                        </div>
+                                        <span class="arrow-icon">➔</span>
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+                    </swiper-slide>
+
+                    <!-- Slide 3 -->
+                    <swiper-slide>
+                        <div class="slide-content">
+                            <img src="../../../img/main_p3.png" class="styled-img" alt="배너 이미지 3" />
+                            <div class="content d-flex">
+                                <div>
+                                    <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">
+                                        믿을 수 있는 <br />자동차 플랫폼!
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </swiper-slide>
+
+                    <!-- 페이지 네이션 -->
+                    <div class="swiper-pagination mb-3">
+                        <div class="progress-bar">
+                            <div class="progress"></div>
+                        </div>
+                    </div>
+                </swiper>
+            </div>
+        </div>
+        <div>
+            <div class="regiest-content">
+                <div class="container my-4">
+                    <div v-if="isMobileView" class="d-flex justify-content-between align-items-sm-end p-3 pb-0 mt-4 mb-0">
+                        <h3 class="review-title"> 내 매물 관리</h3>
+                        <router-link :to="{ name: 'auction.index' }" href="" class="btn-apply p-0 m-0 animated-button">더 알아보기</router-link>
+                    </div>
+                    <div class="layout-container02 mt-5">
+                        <div class="p-2">
+                            <div class="tbl_basic container p-4">
+                                <div class="d-flex align-items-start justify-content-between">
+                                    <h3 class="review-title mb-5">공지사항</h3>
+                                    <router-link :to="{name:'posts.index' , params: {boardId: 'notice'}}" class="btn-apply mt-0 p-0">전체보기</router-link>
+                                </div>
+                                <table class="table">
+                                    <thead class="d-none">
+                                        <tr>
+                                            <th>NO</th>
+                                            <th>작성일</th>
+                                            <th>제목</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- 데이터가 없는 경우 -->
+                                        <tr v-if="posts.length === 0">
+                                            <td colspan="4" class="text-center text-secondary opacity-50">
+                                                게시물이 없습니다.
+                                            </td>
+                                        </tr>
+
+                                        <!-- 데이터가 있는 경우 -->
+                                        <tr v-for="(post, index) in posts" :key="post.id" @click="handleRowClick(post.id)" class="pointer-cursor">
+                                            <td style="width: 5%;" class="tc-bold">{{ index + 1 }}</td>
+                                            <td style="width: 30%;" class="tc-gray">{{ post.created_at }}</td>
+                                            <td style="width: 65%;">{{ post.title }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <AuctionList />
+                    </div>
+                    <div class="intro-container container text-start  py-4" v-if="!isMobileView">
+                        <div class="mt-5">
+                            <h2 class="text-center mb-4 bolder">내 차 판매, 이렇게 진행돼요.</h2>
+                        </div>
+                        <div class=" align-items-start fee-section line-height-10 mt-5 justify-content-center">
+                        <div class="fee-step">
+                            <div class="circle">
+                                <img src="../../../img/contract.png" width="40px">
+                            </div>
+                            <p class="bc-gray tc-gray px-3 py-1 border-6 mt-3">STEP 01</p>
+                            <p class="bolder mt-3">경매신청</p>
+                            <p class="normal mt-2">차량정보 입력 후 <br>경매 신청</p>
+                        </div>
+                        <div class="arrow ">
+                            <img src="../../../img/dash-black.png" width="50px">
+                        </div>
+                        <div class="fee-step">
+                            <div class="circle">
+                                <img src="../../../img/car-insurance.png" width="41px">
+                            </div>
+                            <p class="bc-gray tc-gray px-3 py-1 border-6 mt-3">STEP 02</p>
+                            <p class="bolder mt-3">차량진단</p>
+                            <p class="normal mt-2">차량 진단 및<br>경매 등록</p>
+                        </div>
+                        <div class="arrow">
+                            <img src="../../../img/dash-black.png" width="50px">
+                        </div>
+                        <div class="fee-step">
+                            <div class="circle">
+                                <img src="../../../img/bid.png" width="43px">
+                            </div>
+                            <p class="bc-gray tc-gray px-3 py-1 border-6 mt-3">STEP 03</p>
+                            <p class="bolder mt-3">경매</p>
+                            <p class="normal mt-2">딜러 입찰 후<br>낙찰자 선정</p>
+                        </div>
+                        <div class="arrow">
+                            <img src="../../../img/dash-black.png" width="50px">
+                        </div>
+                        <div class="fee-step">
+                            <div class="circle">
+                                <img src="../../../img/car-wash.png" width="43px">
+                            </div>
+                            <p class="bc-gray tc-gray px-3 py-1 border-6 mt-3">STEP 04</p>
+                            <p class="bolder mt-3">탁송</p>
+                            <p class="normal mt-2">경매대금 입금 및<br>서류 전달, 탁송</p>
+                        </div>
+                        <div class="arrow">
+                            <img src="../../../img/dash-black.png" width="50px">
+                        </div>
+                        <div class="fee-step">
+                            <div class="circle">
+                                <img src="../../../img/Iconcare.png" width="43px">
+                            </div>
+                            <p class="bc-gray tc-gray px-3 py-1 border-6 mt-3">STEP 05</p>
+                            <p class="bolder mt-3">사후처리</p>
+                            <p class="normal mt-2">클레임 처리 및<br>이전</p>
+                        </div>
+                       </div>
+                    </div>
+
+                </div>
+            </div>
+            <div class="container mt-5">
+                <div v-if="isMobileView" class="px-4 pb-5">
+                    <h3 class="text-center mb-4 bolder">내 차 판매, 이렇게 진행돼요.</h3>
+                    <div class="d-flex mt-4 gap-3 justify-content-between">
+                        <div class="text-center">
+                            <img src="../../../img/contract.png" width="40px">
+                            <p>경매신청</p>
+                        </div>
+                        <div class="text-center">
+                            <img src="../../../img/car-insurance.png" width="41px">
+                            <p>차량진단</p>
+                        </div>
+                        <div class="text-center">
+                            <img src="../../../img/bid.png" width="43px">
+                            <p>경매</p>
+                        </div>
+                        <div class="text-center">
+                            <img src="../../../img/car-wash.png" width="43px">
+                            <p>탁송</p>
+                        </div>
+                        <div class="text-center">
+                            <img src="../../../img/care.png" width="43px">
+                            <p>사후처리</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="apply-top text-start mb-0">
+                    <h3 class="review-title">이용후기</h3>
+                    <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
+                </div>
+                <div v-if="auctionsData.length > 0" class="container">
+                    <div class="row">
+                        <div class="col-md-6 p-2 hover-ac pointer" v-for="auction in auctionsData.slice(0,2)" :key="auction.id" @click="navigateToDetail(auction.id)">
+                            <div class="card my-auction mt-3">
+                                <div>
+                                    <div class="card-img-top-placeholder">
+                                        <img src="../../../img/car_example.png">
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                                        <p>2020년 | 2.4km | 무사고</p>
+                                        <div class="d-flex justify-content-between align-items-baseline">
+                                            <div>
+                                                <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
+                                                <h5 class="tc-red fs-5">{{ amtComma(auction.win_bid.price) }}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row row-cols-1 row-cols-md-1 mb-4" v-else>
+                    <div class="card my-auction mt-3">
+                        <div class="card-body">
+                            <div class="none-complete flex-column">
+                                <div class="text-secondary opacity-50 d-flex align-items-center gap-3 my-3">
+                                    <router-link to="/"  class="px-5 btn btn-outline-secondary btn-lg bc-wh">
+                                        내 차 판매하러 가기
+                                    </router-link>
+                                </div>
+                                <span class="text-secondary opacity-50">내 차 판매 후, 이용후기를 작성해보세요.</span>
+                            </div>
+                        </div>
+                    </div>
+                    <router-link v-if="isMobileView" to="/alllist-do" class="anymation mt-5 btn shadow-sm border w-100 hp-50 d-flex align-items-center justify-content-center gap-2">다른 이용자들의 후기 둘러보기<span class="black-right-icon"></span></router-link>
+                </div>
+            </div>
+        </div>
+        <Footer />
     </div>
-  </template>
-  
+</template>
+<script>
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/swiper-bundle.css";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+
+export default {
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
+  methods: {
+    // 커스텀 페이지 네이션 렌더링
+    renderCustomPagination(swiper, current, total) {
+      return `
+        <span class="pagination-number">${current}</span>
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <span class="pagination-number">${total}</span>
+      `;
+    },
+    // 진행 바 리셋
+    resetProgressBar() {
+      const progress = document.querySelector('.progress');
+      if (progress) {
+        progress.style.width = '0%';
+        setTimeout(() => {
+          progress.style.transition = 'width 5s linear';
+          progress.style.width = '100%';
+        }, 50);
+      }
+    },
+  },
+  mounted() {
+    this.resetProgressBar();
+  },
+};
+</script>
+
+
   <script setup>
   import Footer from "@/views/layout/footer.vue";
   import AuctionList from "@/views/import/AuctionList.vue";
@@ -78,7 +300,19 @@
   import { cmmn } from '@/hooks/cmmn';
   import { useStore } from 'vuex';
   import useAuctions from "@/composables/auctions";
-
+  import { initPostSystem } from "@/composables/posts";
+  const { posts, getPosts,getBoardCategories } = initPostSystem();
+  const boardId = ref('notice');
+const fetchPosts = async () => {
+  try {
+    // 최신 5개 게시물만 가져오기
+    await getPosts(boardId.value, 1, '', 'all', 'created_at', 'desc');
+    // 최신 5개로 제한
+    posts.value = posts.value.slice(0, 5);
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+  }
+};
 
   const store = useStore();
   const user = computed(() => store.getters['auth/user']);
@@ -87,7 +321,7 @@
   const { auctionsData, getAuctions , pagination } = useAuctions();
   const { amtComma , splitDate , getDayOfWeek} = cmmn();
   const router = useRouter();
-  const isMobileView = ref(window.innerWidth <= 640);
+  const isMobileView = ref(window.innerWidth <= 991);
 
   function navigateToDetail(auctionId) {
       router.push({ name: 'user.create-review', params: { id: auctionId } });
@@ -95,11 +329,13 @@
   
   const checkScreenWidth = () => {
       if (typeof window !== 'undefined') {
-          isMobileView.value = window.innerWidth <= 640;
+          isMobileView.value = window.innerWidth <= 991;
       }
   };
   
   onMounted(async() => {
+    await getBoardCategories(); // 카테고리 로드
+    await fetchPosts(); // 게시물 로드
       await getAuctions(1,true);
       setRandomPlaceholder();
       window.addEventListener('resize', checkScreenWidth);
@@ -117,8 +353,10 @@ p {
     margin-top: 0;
     margin-bottom: 0rem !important;
 }
-
-@media (max-width: 650px){
+@media (max-width: 575px) {
+    .styled-div .content{ left:0% !important }
+}
+@media (max-width: 991px){
     .layout-container02 {
         display: flex !important;
         gap: 2rem !important;
@@ -169,14 +407,17 @@ p {
         padding: 0px;
     }
 }
-@media (max-width: 650px){
+@media (max-width: 991px){
 .layout-container02{
     flex-direction: column-reverse;
+}
+.styled-div .content{
+    left: -115px ;
+    top:-15px ;
 }
 }
 .styled-div {
     width: 100%;
-    height: 40vh;
     margin-top: 57px;
     border-radius: 0px;
     background-color: #f5f5f6;
@@ -188,7 +429,7 @@ p {
 }
 .styled-div .styled-img {
     width: 100%;
-    height: 100%;
+    height: 470px;
     object-fit: cover; 
     object-position: center; 
 }
@@ -239,11 +480,26 @@ border-radius: 10px;
 .bid-bc {
 background: none;
 }
-
-.styled-div .content {
+.styled-div .content02 {
 position: absolute;
 top: 0;
-left: 0;
+left: 0px;
+width: 100%;
+height: 100%;
+display: flex;
+flex-direction: row;
+justify-content: center;
+padding: 50px;
+color: white;
+align-items: center;
+} 
+.tbl_basic table tr td {
+    padding:20px 5px !important;
+}
+.styled-div .content {
+position: absolute;
+top: -3px;
+left: -15%;
 width: 100%;
 height: 100%;
 display: flex;

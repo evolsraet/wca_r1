@@ -326,6 +326,9 @@
             <li class="nav-item">
               <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="nav-link tc-wh mx-3" exact-active-class="active-link">공지사항</router-link>
             </li>
+            <li class="nav-item">
+              <router-link :to="{ name: 'dealer.searchbid'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">시세 조회</router-link>
+            </li>
             <li class="nav-item my-member-dealer ms-auto dropdown dropdown-arrow">
               <a class="tc-wh p-1 pb-0 me-3 dropdown-toggle" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               <img :src="photoUrl" alt="Profile Photo" class="nav-profile" />{{ user.name }}

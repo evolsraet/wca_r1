@@ -21,6 +21,9 @@ $sub-color01: #4263EA;
 $sub-color02: #f7f8fb;
 $sub-color03: #aaaebe;
 $sub-color04: #EBEFFD;
+.bc-primary-sb02{
+    background-color: $primary-sub02;
+}
 .btn-outline-primary:hover{
     color: white !important;
 }
@@ -78,6 +81,42 @@ background-color: $sub-color !important;
 /* 딜러 메인 컬러*/
 .primary-background{
     background-color: rgba($primary, 0.03);
+}
+.tooltip-area {
+    cursor: pointer;
+}
+.tooltip-area{
+    right: 13px;
+    bottom: 285px;
+}
+#tooltip {
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+}
+.tooltip2 {
+    position: absolute; /* 또는 fixed */
+    top: 50%;
+    right: 0px;
+    left: 0px;
+    transform: translate(0px, -50%);
+    background: white; /* 배경 색상 */
+    padding: 10px; /* 패딩 */
+    border-radius: 5px; /* 테두리 둥글기 */
+    border: 1px solid #aaaebe; /* 테두리 색상 */
+}
+@media (max-width:512px) {
+ .tooltip-area{
+    right: 4% !important;
+    bottom: 37% !important;
+ }
+
+}
+.primary-back{
+    background-color: $primary !important;
+}
+.border-line-none{
+    border: none !important;
 }
 /* 버튼 스타일 */
 .primary-btn {
@@ -299,7 +338,7 @@ background-color: $sub-color !important;
     height: 25px;
     margin-right: 10px;
     border-radius: 16px;
-    background: #e5e7eb !important;
+    background: rgba($sub-color03 , 0.1) !important;
     color: $sub-color03 !important;
     font-size: 14px;
     line-height: 25px;
@@ -367,7 +406,7 @@ background-color: $sub-color !important;
     width: auto;
     height: 25px;
     border-radius: 6px;
-    background:#aaaebe44 !important;
+    background:$sub-color03 !important;
     color: #000000 !important;
     font-size: 14px;
     line-height: 25px;
@@ -497,6 +536,12 @@ blockquote {
     padding-left: 1.5em!important;
     padding-right: 1.5em!important;
 }
+.line-height-10{
+    line-height: 124px !important;
+}
+.border-16{
+    border-radius: 16px;
+}
 ul {
     list-style-type: none;
     padding-left: 0;
@@ -522,11 +567,82 @@ ul {
 .size_36 {font-size: 2.25rem;}
 .size_38 {font-size: 2.375rem;}
 .size_40 {font-size: 2.5rem;}
-
+.size_42 {font-size: 2.75rem;}
 /* 기본 글꼴 굵기 설정 */
-.normal {font-weight: normal;}
+.normal {font-weight: normal !important;}
 .bold {font-weight: bold; }
 .bolder {font-weight: bolder;}
 .lighter {font-weight: lighter;}
 .inherit {font-weight: inherit;}
 .initial {font-weight: initial;}
+.tc-black{
+    color: #000;
+}
+.bc-gray{
+    background-color: $sub-color02 !important;
+}
+.custom-select-box {
+    display: inline-block;
+    position: relative;
+    border: 1px solid #d1d5db; /* 테두리 색상 */
+    border-radius: 4px; /* 둥근 테두리 */
+    padding: 5px 10px; /* 내부 패딩 */
+    background-color: #fff; /* 배경색 */
+    font-size: 14px; /* 글꼴 크기 */
+    color: #000; /* 글자 색상 */
+    width: 150px; /* 너비 설정 */
+  }
+  
+  .custom-select-box select {
+    width: 100%;
+    border: none;
+    background: none;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 5px 0;
+    font-size: 14px;
+    color: #000;
+  }
+  /* 자동 완성된 입력 필드 스타일 재정의 */
+input:-webkit-autofill {
+    background-color: white !important; /* 원하는 배경색 */
+    color: black !important; /* 텍스트 색상 */
+    border: 1px solid #ccc; /* 테두리 색상 */
+    box-shadow: 0 0 0px 1000px white inset !important; /* 배경색 덮어쓰기 */
+    
+  }
+  
+  .custom-select-box::after {
+    content: '';
+    position: absolute;
+    top: 55%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 12px; /* 아이콘 크기 */
+    height: 12px; /* 아이콘 크기 */
+    background-image: url('../img/icon-down-arrow-black.png'); /* 아이콘 이미지 경로 */
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
+  
+  .noUi-target{
+    height: 5px !important;
+}
+.noUi-handle:before, .noUi-handle:after{
+    display: none !important;
+}
+.noUi-horizontal .noUi-handle {
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 70% !important;
+    top: -9px !important;
+}
+.noUi-connect{
+    background: $primary !important;
+}
+.noUi-target{
+    margin-right: 12px;
+}

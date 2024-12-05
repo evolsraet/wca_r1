@@ -247,6 +247,12 @@ export default [
                 beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
             },
             {
+                path: '/searchbid',
+                name: 'dealer.searchbid',
+                component: () => import('../views/dealer/history/searchbid.vue'),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.dealer']),
+            },
+            {
                 path: '/notices',
                 name: 'index.notices',
                 component: () => import('../views/notices/Notices.vue'),
