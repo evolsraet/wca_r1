@@ -55,7 +55,7 @@
               <span class="arrow-icon">➔</span>
             </router-link>
             <div class="web-style-overlay02">
-              <h5 class="size_18 tc-wh">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></h5>
+              <h5 class="size_18 tc-wh ">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></h5>
             </div>
           </div>
           <div class=" web-stlye">
@@ -92,9 +92,9 @@
           </swiper>
         </div>
           <div class="my-5 app-specific-size">
-            <div class="video-container d-sm-flex mb-3">
+            <div class="video-container d-sm-flex mb-5">
               <video autoplay loop muted >
-                <source src="../../../img/video/mainvideo.mp4" type="video/mp4"  width="80">
+                <source src="../../../img/video/mainvideo02.mp4" type="video/mp4"  width="80">
               </video>
             </div>
           </div>
@@ -152,7 +152,7 @@
         <!--<p class="text-secondary opacity-50 font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>-->
         <img src="../../../img/venture.png" class="venture mt-5" width="90">
       </div>
-      <div class="tc-wh">
+      <div class="tc-wh mobile-css">
         <p class="size_18">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></p>
       </div>
       </div>
@@ -162,9 +162,9 @@
               <!-- 로그인 폼 -->
               <form @submit.prevent="submitLogin">
                 <div class="">
-                  <div class="video-container d-sm-flex mb-3">
+                  <div class="video-container d-sm-flex mb-5">
                         <video autoplay loop muted>
-                          <source src="../../../img/video/mainvideo.mp4" type="video/mp4">
+                          <source src="../../../img/video/mainvideo02.mp4" type="video/mp4">
                         </video>
                       </div>
                   <div class="my- text-left">
@@ -217,69 +217,71 @@
          
             <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
          
-        </div>
-    
-        <div v-if="isMobileView" class="card login-card login-any border-0 my-3" ref="loginCardRef">
-          <div class="card-body">
-            <!-- 로그인 폼 -->
-            <form @submit.prevent="submitLogin">
-              <div class="">
-                <div class="my-3 text-left">
-                  <router-link :to="{ path: '/' }" class="register-link text-secondary opacity-50 ms-2">이미 위카 회원이신가요?</router-link>
-                </div>
-                <!-- 이메일 입력 -->
-                <div class="mb-3">
-                  <label for="email" class="form-label">phone/email</label>
-                  <input v-model="loginForm.email" id="email" type="text" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="전화번호 또는 이메일을 입력해주세요.">
-                  <div v-for="message in validationErrors?.email">
-                      {{ message }}
-                  </div>
-                </div>
-                <!-- 비밀번호 입력 -->
-                <div class="mb-4">
-                  <label for="password" class="form-label">
-                    {{ $t("password") }}
-                  </label>
-                  <input v-model="loginForm.password" id="password" type="password" class="form-control border-0 border-bottom" required autocomplete="current-password" placeholder="비밀번호를 입력해주세요.">
-                  <div v-for="message in validationErrors?.password">
-                      {{ message }}
-                  </div>
-                </div>
-                <!-- 백엔드 오류 메시지 -->
-
-                <!-- 소셜 로그인 섹션 -->
-                <div class="login-v2 my-5">
-                  <h3 class="mb-4 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
-                  <ul class="login-v2-area">
-                    <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal">Google</a></li>
-                    <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal">Naver</a></li>
-                    <li><a href="#" class="kakao" title="kakao" @click.prevent="openAlarmModal">Kakao</a></li>
-                  </ul>
-                </div>
-                <!-- 로그인 버튼 -->
-                <div class="flex items-center justify-end my-4">
-                  <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">
-                    로그인
-                  </button>
-                </div>
-              </div>
-              <router-link :to="{name: 'auth.forgot-password'}">비밀번호 찾기</router-link>
-              <div class="register-link mt-5 text-center">
-                <router-link :to="{ path: '/register' }" class="register-link">회원가입하기</router-link>
-              </div>
-              <div class="text-secondary opacity-50 mt-5 text-center">
-                <p class="fs-6">
-                  <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
-                  <span @click="openModal('terms')" class="link-style">이용약관</span>
-                </p>
-                <p class="my-3 text-secondary opacity-50">ⓒ Watosys all rights reserved.</p>
-                </div>
-            </form>
           </div>
-        </div>
+          <div v-if="isMobileView">
+            <bottom-sheet initial="half" :dismissable="true">
+          
+              <!-- 로그인 폼 -->
+              <form @submit.prevent="submitLogin">
+                <div class="">
+                  <div class="my-3 text-left">
+                    <router-link :to="{ path: '/' }" class="register-link text-secondary opacity-50 ms-2">이미 위카 회원이신가요?</router-link>
+                  </div>
+                  <!-- 이메일 입력 -->
+                  <div class="mb-3">
+                    <label for="email" class="form-label">phone/email</label>
+                    <input v-model="loginForm.email" id="email" type="text" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="전화번호 또는 이메일을 입력해주세요.">
+                    <div v-for="message in validationErrors?.email">
+                        {{ message }}
+                    </div>
+                  </div>
+                  <!-- 비밀번호 입력 -->
+                  <div class="mb-4">
+                    <label for="password" class="form-label">
+                      {{ $t("password") }}
+                    </label>
+                    <input v-model="loginForm.password" id="password" type="password" class="form-control border-0 border-bottom" required autocomplete="current-password" placeholder="비밀번호를 입력해주세요.">
+                    <div v-for="message in validationErrors?.password">
+                        {{ message }}
+                    </div>
+                  </div>
+                  <!-- 백엔드 오류 메시지 -->
+  
+                  <!-- 소셜 로그인 섹션 -->
+                  <div class="login-v2 my-5">
+                    <h3 class="mb-4 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
+                    <ul class="login-v2-area">
+                      <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal">Google</a></li>
+                      <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal">Naver</a></li>
+                      <li><a href="#" class="kakao" title="kakao" @click.prevent="openAlarmModal">Kakao</a></li>
+                    </ul>
+                  </div>
+                  <!-- 로그인 버튼 -->
+                  <div class="flex items-center justify-end my-4">
+                    <button class="btn btn-primary w-100" :class="{ 'opacity-25': processing }" :disabled="processing">
+                      로그인
+                    </button>
+                  </div>
+                </div>
+                <router-link :to="{name: 'auth.forgot-password'}" class="text-center">비밀번호 찾기</router-link>
+                <div class="register-link mt-3 text-center">
+                  <router-link :to="{ path: '/register' }" class="register-link">회원가입하기</router-link>
+                </div>
+                <div class="text-secondary opacity-50 mt-3 text-center">
+                  <p class="fs-6">
+                    <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
+                    <span @click="openModal('terms')" class="link-style">이용약관</span>
+                  </p>
+                  <p class="mt-3 mb-4 text-secondary opacity-50">ⓒ Watosys all rights reserved.</p>
+                  </div>
+              </form>
+          
+          </bottom-sheet >
+          </div>
+    
+        
         <AlarmModal ref="alarmModal" />
           <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
-
       </div>
     </div>
   
@@ -311,7 +313,7 @@ import AlarmModal from '@/views/modal/AlarmModal.vue';
 import { setRandomPlaceholder } from '@/hooks/randomPlaceholder';
 import { cmmn } from '@/hooks/cmmn';
 import carInfo from '../../../../resources/img/electric-car.png';
-
+import BottomSheet from '@/views/bottomsheet/Bottomsheet-type04.vue';
 const swal = inject('$swal');
 const { wica , wicaLabel } = cmmn();
 const carName = ref('');
@@ -556,10 +558,18 @@ onBeforeUnmount(() => {
   opacity: 0;
   transform: translateY(20px);
 }
+@media (max-width: 991px){
+    .css-ifyyt1{
+        padding: 23vh 17px 5vh !important;
+    }
+}
 @media (max-width: 768px) {
-      .css-ifyyt1 {
-          display: none;
-      }
+  .mobile-css{
+      display:none;
+    }
+    .register-content{
+        justify-content: center;
+    }
   }
 
 @media (max-width: 991px) {
@@ -678,10 +688,10 @@ margin-left: 10px;
 }
 .web-style-overlay02{
   position: relative;
-    bottom: -70px;
-    transform: translateX(20%);
-    text-align: center;
-    z-index: 2;
+  bottom: -70px;
+  transform: translateX(20%);
+  text-align: center;
+  z-index: 2;
 }
 .slide-image {
   width: 100%;

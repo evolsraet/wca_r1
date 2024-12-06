@@ -3888,7 +3888,11 @@ input[type="checkbox"] {
         min-width: none; 
     }
 }
-
+@media (max-width: 387px) {
+    .web-style-overlay02{
+        bottom: -34px;
+    }
+}
 .shadow-hover:hover { 
     box-shadow: 0px 0px 10px 0px rgba(78, 120, 97, 0.3);
     transform: translateY(-0.25rem);
@@ -4416,6 +4420,9 @@ input[type="checkbox"] {
     .average-score{
         display: block;
     }
+    .web-style-overlay02{
+        bottom: -33px !important;
+    }
   }
 @media (max-width: 420px) {
     .side-img{
@@ -4558,9 +4565,19 @@ input[type="checkbox"] {
     top: 22px;
     left: 15px;
     width: 2px;
-    height: 112px;
+    height: 120px;
     background: repeating-linear-gradient(180deg, #d9534f, #d9534f 4px, transparent 4px, transparent 8px);
     z-index: -1;
+  }
+  @media (max-width:593px) {
+    .step-connector02{
+        height: 165px; 
+    }
+  }
+  @media (max-width:445px) {
+    .step-connector02{
+        height: 190px; 
+    }
   }
   .step-connector {
     position: absolute;
@@ -4580,7 +4597,7 @@ input[type="checkbox"] {
   
   .step-text {
     margin-left: 15px;
-    font-size: 18px;
+    font-size: 15px;
   }
   .intromodal .swal2-html-container {
     max-height: 50vh;
@@ -4631,6 +4648,7 @@ input[type="checkbox"] {
 }
 .list-block{
     list-style-type: disc !important;
+    font-size: 14px;
 }
 
 .fee-section {

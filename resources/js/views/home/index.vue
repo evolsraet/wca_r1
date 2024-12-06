@@ -96,9 +96,9 @@
         </swiper>
       </div>
         <div class="my-5 app-specific-size">
-          <div class="video-container d-sm-flex mb-3">
+          <div class="video-container d-sm-flex mb-5">
             <video autoplay loop muted >
-              <source src="../../../img/video/mainvideo.mp4" type="video/mp4"  width="80">
+              <source src="../../../img/video/mainvideo02.mp4" type="video/mp4"  width="80">
             </video>
           </div>
         </div>
@@ -156,7 +156,7 @@
       <!--<p class="text-secondary opacity-50 font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>-->
       <img src="../../../img/venture.png" class="venture mt-5" width="90">
     </div>
-    <div class="tc-wh">
+    <div class="tc-wh mobile-css">
       <p class="size_18">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></p>
     </div>
     </div>
@@ -227,9 +227,9 @@
           <form @submit.prevent="submitCarInfoIsOk" class="d-flex flex-column justify-content-center">
             <div class="row mb-4 mt-4">
               <div class="col-12">
-                  <div class="video-container d-sm-flex">
+                  <div class="video-container d-sm-flex mb-5">
                     <video autoplay loop muted>
-                      <source src="../../../img/video/mainvideo.mp4" type="video/mp4">
+                      <source src="../../../img/video/mainvideo02.mp4" type="video/mp4">
                     </video>
                   </div>
                 <div>
@@ -504,7 +504,11 @@ transform: translateX(20px);
 opacity: 1;
 transform: translateY(0);
 }
-
+@media (max-width: 768px) {
+    .register-content{
+        justify-content: center !important;
+    }
+}
 .register-content {
 display: flex;
 justify-content: space-between;
@@ -605,8 +609,15 @@ transform: translateY(20px);
     .css-ifyyt1 {
         display: none;
     }
+    .mobile-css{
+      display:none;
+    }
 }
-
+@media (max-width: 991px){
+    .css-ifyyt1{
+        padding: 23vh 17px 5vh !important;
+    }
+}
 .swiper-container {
 width: 100vw; /* 전체 화면 너비 */
 height: 100vh; /* 전체 화면 높이 */
