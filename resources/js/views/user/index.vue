@@ -13,7 +13,7 @@
                             <img src="../../../img/main_p2.png" class="styled-img" alt="배너 이미지 2" />
                             <div class="content d-flex text-start">
                                 <div>
-                                    <img src="../../../img/venture.png" width="60" class="mb-3">
+                                    <img src="../../../img/logo.png" width="100" class="mb-3">
                                     <h3>TRANSFORMING USED CAR!</h3>
                                     <h3 class="bold">WECARMOBILITY</h3>
                                     <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">
@@ -38,7 +38,7 @@
                             <img src="../../../img/main_banner02.png" class="styled-img" alt="배너 이미지" />
                             <div class="content d-flex">
                                 <div>
-                                    <img src="../../../img/venture.png" width="60" class="mb-3">
+                                    <img src="../../../img/logo.png" width="100" class="mb-3">
                                     <h3>TRANSFORMING USED CAR!</h3>
                                     <h3 class="bold">WECARMOBILITY</h3>
                                     <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">

@@ -8,13 +8,14 @@
           <p>경기도 용인시 기흥구 중부대로 242 동 W117호</p>
           <p>대표전화번호:  1544-2165 이메일 WECAR@WECR-M.CO.KR</p>
         </p>
-        <img src="../../../img/footerlogo.png" width="67px" class="mt-2">
+        <img src="../../../img/footerlogo.png" width="100" class="mt-2">
       </div>
       <div class="right">
         <p class="mb-4 right">
           <span class="size_20 bolder">{{ wicaLabel.title() }}이 함께하면<br>내차판매 걱정없어요</span>
           <p class="mt-4"><span @click="openModal('privacy')" class="link-style pointer">개인정보 처리방침</span> | <span @click="openModal('terms')" class="link-style pointer">이용약관</span></p>
-          <p class="mb-3">Copyrights {{ wicaLabel.title() }} All Rights Reserved<br>Terms of Use / Priva;cy Policy</p>
+          <p class="mb-3">Copyrights {{ wicaLabel.title() }} All Rights Reserved<br>Terms of Use / Privacy Policy</p>
+          <img src="../../../img/venture.png" width="60" class="mb-3">
         </p>
       </div>
     </div>
