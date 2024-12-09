@@ -1,9 +1,10 @@
 <template>
-  <div class="container mov-wide">
+  <div class=" mov-wide">
+  <div class="container">
     <div class="main-contenter mt-4">
-      <h4 class="top-title">경매 할 차량을 등록해볼까요?</h4>
+      <h4 class="top-title mb-2">경매 할 차량을 등록해볼까요?</h4>
     </div>
-    <div class="form-body mt-5">
+    <div class="form-body mt-4">
       <form @submit.prevent="auctionEntry">
         <!-- 소유자 입력 -->
         <div class="form-group">
@@ -96,16 +97,122 @@
             <label for="ch2"></label>
           </div>
         </div>
-        <!-- 파일 첨부 -->
-        <div class="flex items-center justify-end mt-5">
-          <button type="submit" class="btn primary-btn normal-16-font w-100">경매 신청하기</button>
-        </div>
-        <Modal v-if="showAuctionModal" @close="handleAuctionClose" />
-      </form>
+        <div>
+        <P class="bold size_16">첨부해야하는 서류를 확인해 주세요</P>
+        <div>
+      </div>
+      </div>
+    </form>
     </div>
+    
+    <!-- 사업자 또는 법인 섹션 -->
   </div>
-</template>
+  <!-- 파일 첨부 -->
+  <!-- 일반 고객 섹션 -->
+    <div class="dropdown border-bottom">
+      <button
+        class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
+        @click="toggleDropdown('general')"
+      >
+        일반 고객
+        <img
+          :src="openSection === 'general' ? iconUp : iconDown"
+          alt="Dropdown Icon"
+          class="dropdown-icon"
+          width="14"
+        />
+      </button>
+      <transition name="slide">
+      <div v-show="openSection === 'general'" class="dropdown-content mt-0 p-4">
+        <p class="mb-1">1. 자동차등록증 원본</p>
+        <p class="mb-1">2. 자동차매도용인감증명서 또는 본인 서명 사실 확인서 (매수자 인적사항 기재 필수)</p>
+        <p class="ms-3 tc-gray mb-1">매수자 인적사항은 판매딜러가 결정되면 고객에게 인적사항이 통보됩니다.</p>
+        <p class="mb-1">· 공동명의인 경우 명의자 각자 서류 필요</p>
+        <p class="mb-1">· 수출 폐차딜러에게 판매된다면 인감증명서 대신 신분증 사진이 필요​합니다.</p>
+      </div>
+    </transition>
+    </div>
 
+      <div class="dropdown border-bottom">
+        <button
+          class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
+          @click="toggleDropdown('business')"
+        >
+          사업자 또는 법인
+          <img
+            :src="openSection === 'business' ? iconUp : iconDown"
+            alt="Dropdown Icon"
+            class="dropdown-icon"
+            width="14"
+          />
+        </button>
+        <transition name="slide">
+          <div v-show="openSection === 'business'" class="dropdown-content p-4">
+            <p class="bold mb-2">사업용으로 사용한 경우, 기본 필수 서류</p>
+            <div>
+            <p>1. 자동차등록증 원본</p>
+            <p>2. 자동차매도용 인감증명서 (매수자 인적사항 기재 필수)</p>
+            <p>3. 사업자동등록증</p>
+            <p class="bolder my-2">사업용으로 사용한 경우, 기본 필수 서류</p>
+            <p>복식부기</p>
+            <p>1. 자동차등록증 원본</p>
+            <p>2. 자동차매도용 인감증명서 (매수자 인적사항 기재 필수)</p>
+            <p>3. 일반 인감증명서 (사실확인 증빙용)</p>
+            <p>4. 사업자동등록증 사본</p>
+            <p>5. 비사업용 사실확인서 (세무사 명판 날인)</p>
+            <p class="mb-3">6. ‘차량운반구 감가상각비명세서’ 또는 ‘고정자산명세서’</p>
+            <p>간편등록부의 경우, 상기 1~5번 제출 서류들과 ‘총 수입금액 및 필요경비명세서’가 필요합니다.</p>
+            <div class="my-4">
+              <p class="bolder">간이과세자</p>
+              <p>1. 기본 필수 서류</p>
+            </div>
+            <div class="my-4">
+              <p class="bolder">간이과세자 (세금계산서 발급사업자)</p>
+              <p>1. 기본 필수 서류</p>
+              <p>2. 세금계산서 (부가세 포함)</p>
+            </div>
+            <div class="my-4">
+              <p class="bolder">면세사업자</p>
+              <p>1. 기본 필수 서류</p>
+              <p>2. 세금계산서 (부가세 면제)</p>
+            </div>
+            <div class="mt-4">
+              <p class="bolder">법인사업자</p>
+              <p>1. 기본 필수 서류</p>
+              <p>2. 세금계산서 (부가세 면제)</p>
+              <p>3. 법인등기부등본 (15일내에 발급, 말소사항 포함)</p>
+              <p>4. 양도계약서</p>
+            </div>
+          </div>
+        </div>
+      </transition>
+        </div>
+          <div class="px-2 mb-3 flex items-center justify-end mt-5">
+            <button type="submit" class="btn primary-btn normal-16-font w-100">경매 신청하기</button>
+          </div>
+          <Modal v-if="showAuctionModal" @close="handleAuctionClose" />
+      </div>
+</template>
+<script>
+import iconUp from "../../../../img/Icon-black-up.png";
+import iconDown from "../../../../img/Icon-black-down.png";
+
+export default {
+  data() {
+    return {
+      openSection: null, // 열려 있는 섹션 상태
+      iconUp,
+      iconDown,
+    };
+  },
+  methods: {
+    toggleDropdown(type) {
+      this.openSection = this.openSection === type ? null : type; // 현재 섹션 토글
+      console.log(`${type} 상태:`, this.openSection === type);
+    },
+  },
+};
+</script>
 
 <script setup>
 import { ref, onMounted, nextTick, inject, createApp,computed  } from 'vue';
@@ -164,7 +271,11 @@ const holidays = [
   "2024-10-03",
   "2024-12-25",
 ];
+const openSection = ref(null);
 
+const toggleDropdown = (section) => {
+  openSection.value = openSection.value === section ? null : section;
+};
 const datetimeInput = ref(null);
 
 const isWeekend = (dateString) => {
@@ -416,6 +527,41 @@ onMounted(() => {
 .flatpickr-day {
   cursor: pointer;
   color: #333333;
+}
+.dropdown {
+  margin-bottom: 10px;
+}
+
+.dropdown-btn {
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: block;
+  max-height:none;
+  padding: 10px;
+  border-top: none;
+  background-color: #F5F5F6;
+}
+/* Slide animation */
+.slide-enter-active,
+.slide-leave-active {
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
+}
+.slide-enter-from,
+.slide-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+.slide-enter-to,
+.slide-leave-from {
+  max-height: 500px; /* 적절한 최대 높이 값으로 조정 */
+  opacity: 1;
 }
 
 </style>

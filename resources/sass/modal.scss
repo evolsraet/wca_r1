@@ -411,6 +411,44 @@ button.btn {
   background-color: $primary-sub02;
   color: $primary;
 }
+.manufacturer-model .item.active {
+  border: solid 1px $primary;
+  background-color: $primary-sub02;
+  color: $primary;
+}
+
+
+
+
+.manufacturer-model02 {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
+  gap: 10px;
+}
+
+.manufacturer-model02 .item {
+  font-size: 15px;
+  text-align: center;
+  min-height: 50px; 
+  border-radius: 6px;
+  background-color: #f5f5f5;
+  color: gray;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.manufacturer-model02 .item.selected {
+  border: solid 1px $primary;
+  background-color: $primary-sub02;
+  color: $primary;
+}
+.manufacturer-model02 .item.active {
+  border: solid 1px $primary;
+  background-color: $primary-sub02;
+  color: $primary;
+}
 
 .facturer{
    border-bottom: 2px solid #f5f5f5;
@@ -684,6 +722,9 @@ position: absolute;
 .modal-dialog-ty04  {
   max-width: 320px;
   width: 320px;
+}
+.manufacturer-model02{
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
 }
 }
 

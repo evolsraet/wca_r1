@@ -71,8 +71,7 @@
                 </ul>
             </template>
         </div>
-         <BottomSheet02 initial="half" :dismissable="true" class="p-3 side-sheet-style">
-                <div>
+         <BottomSheet02 initial="half" :dismissable="true">
                     <div class="top-content-style wd-100">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(소매가)</span></p>
                         <span class="tc-primary bold-18-font">{{ carDetails.priceNow }} 만원</span>
@@ -98,8 +97,8 @@
                             </div> 
                         </div>
                         <div class="none-info">
-                            <div class="complete-car my-3">
-                                <div class="card my-auction mt-3">
+                            <div class="complete-car">
+                                <div class="card my-auction">
                                     <div class="none-complete-ty03">
                                         <span class="text-secondary opacity-50">차량 조회에 성공하였습니다.</span>
                                     </div>
@@ -126,8 +125,8 @@
                             </div> 
                         </div>
                         <div class="none-info">
-                            <div class="complete-car my-3">
-                                <div class="card my-auction mt-3">
+                            <div class="complete-car">
+                                <div class="card my-auction">
                                     <div class="none-complete-ty02">
                                         <span class="text-secondary opacity-50">로그인을 하면 경매 신청이 가능해요.</span>
                                     </div>
@@ -138,7 +137,7 @@
                             <button class="btn btn-primary w-100 bolder" @click="applyAuction">경매 신청하기</button>
                         </div>
                     </div>
-                </div>
+              
             </BottomSheet02>
         </div>
 </template>
@@ -203,6 +202,7 @@ const ExpectationPrice = () => {
                 <h5 class="bolder mt-3">내 차, 예상가격을 확인합니다</h5>
                 <p class="mb-3">보다 정확한 가격 산정을 위해 아래 사항을 확인해 주세요.</p>
             </div>
+            <div class="proceeding"></div>
             <div class="text-start tc-gray">
             <div class="form-group">
             <label>주행거리</label>
@@ -210,24 +210,24 @@ const ExpectationPrice = () => {
             </div>
             <div style="margin-bottom: 15px;">
             <label style="display: block; font-weight: bold; margin-bottom: 5px;">사고</label>
-             <div class="manufacturer-model my-3">
-                <label class="item">
-                <input type="radio" name="accident" value="완전 무사고">
-                완전 무사고
-                </label>
-                <label class="item">
-                <input type="radio" name="accident" value="교환, 판금 사고">
-                교환, 판금 사고
-                </label>
-                <label class="item">
-                <input type="radio" name="accident" value="전손이력">
-                전손이력
-                </label>
-                <label class="item">
-                <input type="radio" name="accident" value="침수">
-                침수
-                </label>
-            </div>
+            <div class="manufacturer-model02 my-3">
+                    <label class="item">
+                        <input type="radio" name="accident" value="완전 무사고" onclick="selectItem(this)">
+                        완전 무사고
+                    </label>
+                    <label class="item">
+                        <input type="radio" name="accident" value="교환, 판금 사고" onclick="selectItem(this)">
+                        교환, 판금 사고
+                    </label>
+                    <label class="item">
+                        <input type="radio" name="accident" value="전손이력" onclick="selectItem(this)">
+                        전손이력
+                    </label>
+                    <label class="item">
+                        <input type="radio" name="accident" value="침수" onclick="selectItem(this)">
+                        침수
+                    </label>
+                </div>
             <div class="form-group">
                 <label>사고 발생 건수</label>
                 <input type="text" placeholder="건">
@@ -255,13 +255,32 @@ const ExpectationPrice = () => {
             <label>외판 스크래치</label>
             <input type="text" placeholder="개">
             </div>
+            <div class="form-group">
+            <label>옵션</label>
+            <div class="manufacturer-model02 my-3">
+                
+                <label class="item">
+                    <input type="radio" name="accident" value="선루프" onclick="selectItem(this)">
+                    선루프
+                </label>
+                <label class="item">
+                    <input type="radio" name="accident" value="어라운드뷰" onclick="selectItem(this)">
+                    어라운드뷰
+                </label>
+                <label class="item">
+                    <input type="radio" name="accident" value="s-크루즈컨트롤" onclick="selectItem(this)">
+                    s-크루즈컨트롤
+                </label>
+            </div>
         </div>
     </div>
+</div>
     `;
     wica.ntcn(swal)
         .useHtmlText()
         .labelOk('평가사 진단 신청')
         .addClassNm('primary-check')
+        .useClose()
         .addOption({ padding: 20 })
         .callback(function (result) {
             if (result.isOk) {
@@ -269,7 +288,19 @@ const ExpectationPrice = () => {
             }
         })
         .confirm(text);
+
+    setTimeout(() => {
+        const selectItem = (input) => {
+            document.querySelectorAll('.manufacturer-model02 .item').forEach(item => {
+                item.classList.remove('selected', 'active');
+            });
+            input.closest('.item').classList.add('selected', 'active');
+        };
+
+        window.selectItem = selectItem; 
+    }, 0);
 };
+
 
 const { submitCarInfo, refreshCarInfo } = useAuctions();
 
@@ -603,7 +634,7 @@ const applyAuction = () => {
     height: 150px !important;
 }
 .none-complete-ty03{
-    height: 150px !important;
+ height: 130px !important;
 }
 }
 @media (min-width: 992px) {
