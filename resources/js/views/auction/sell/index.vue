@@ -71,7 +71,7 @@
                 </ul>
             </template>
         </div>
-         <BottomSheet02 class="p-3 side-sheet-style">
+         <BottomSheet02 initial="half" :dismissable="true" class="p-3 side-sheet-style">
                 <div>
                     <div class="top-content-style wd-100">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(소매가)</span></p>
@@ -109,7 +109,7 @@
                             <InfoModal v-if="showModal" @close="closeModal" @refresh="startLoading"/>
                     
                         <div class="mov-col flex items-center justify-end mt-3 mb-2 gap-2">
-                            <button class="btn btn-outline-primary w-100">예상 가격 확인</button>
+                            <button class="btn btn-outline-primary w-100" @click="ExpectationPrice">예상 가격 확인</button>
                             <button class="btn primary-btn w-100 bolder"  @click="UserapplyAuction">경매 신청하기</button>
                         </div>
                     </div>
@@ -152,7 +152,7 @@ import { useRouter } from 'vue-router';
 import { ref, onMounted, computed ,inject } from 'vue';
 import { useRoute } from 'vue-router';
 import { useStore } from "vuex";
-import BottomSheet02 from '@/views/bottomsheet/BottomSheet.vue';
+import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import drift from '../../../../../resources/img/drift.png';
@@ -195,6 +195,82 @@ const openModal = () => {
     })
     .confirm(text);
 };
+
+const ExpectationPrice = () => {
+    const text = `
+        <div>
+            <div class="text-start">
+                <h5 class="bolder mt-3">내 차, 예상가격을 확인합니다</h5>
+                <p class="mb-3">보다 정확한 가격 산정을 위해 아래 사항을 확인해 주세요.</p>
+            </div>
+            <div class="text-start tc-gray">
+            <div class="form-group">
+            <label>주행거리</label>
+            <input type="text" placeholder="km">
+            </div>
+            <div style="margin-bottom: 15px;">
+            <label style="display: block; font-weight: bold; margin-bottom: 5px;">사고</label>
+             <div class="manufacturer-model my-3">
+                <label class="item">
+                <input type="radio" name="accident" value="완전 무사고">
+                완전 무사고
+                </label>
+                <label class="item">
+                <input type="radio" name="accident" value="교환, 판금 사고">
+                교환, 판금 사고
+                </label>
+                <label class="item">
+                <input type="radio" name="accident" value="전손이력">
+                전손이력
+                </label>
+                <label class="item">
+                <input type="radio" name="accident" value="침수">
+                침수
+                </label>
+            </div>
+            <div class="form-group">
+                <label>사고 발생 건수</label>
+                <input type="text" placeholder="건">
+            </div>
+            <div class="form-group">
+            <label>키 갯수</label>
+            <input type="text" placeholder="개">
+            </div>
+            <div class="form-group">
+            <label>휠스크래치</label>
+            <input type="text" placeholder="개">
+            </div>
+            <div class="form-group">
+                <label class="mb-2">타이어 상태</label>
+                <div class="input-wrapper">
+                    <span class="size_14">정상</span>
+                    <input type="text" placeholder="개" class="text-right">
+                </div>
+                <div class="input-wrapper">
+                    <span class="size_14">교환</span>
+                    <input type="text" placeholder="개" class="text-right">
+                </div>
+            </div>
+            <div class="form-group">
+            <label>외판 스크래치</label>
+            <input type="text" placeholder="개">
+            </div>
+        </div>
+    </div>
+    `;
+    wica.ntcn(swal)
+        .useHtmlText()
+        .labelOk('평가사 진단 신청')
+        .addClassNm('primary-check')
+        .addOption({ padding: 20 })
+        .callback(function (result) {
+            if (result.isOk) {
+                startLoading();
+            }
+        })
+        .confirm(text);
+};
+
 const { submitCarInfo, refreshCarInfo } = useAuctions();
 
 

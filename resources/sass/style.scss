@@ -978,7 +978,12 @@ video{
         display: block;
     }
 }
-
+@media (max-width: 420px) {
+    .width-container {
+       max-width: auto !important;
+       min-width: auto !important;
+    }
+}
 
 @media (min-width: 341px) and (max-width: 640px) {
     .app-specific-size {
@@ -4782,4 +4787,37 @@ input[type="checkbox"] {
     .btn-sell-car:hover {
     color: #fff;
     }
-      
+    .text-right-placeholder input {
+        text-align: right;
+    }
+    .placeholder-wrapper {
+        position: relative;
+        width: 300px; /* 원하는 너비 */
+    }
+    
+    .dual-placeholder-input {
+        width: 100%;
+        padding: 8px;
+        font-size: 16px;
+        text-align: left; /* 사용자 입력은 왼쪽 정렬 */
+        background: 
+            linear-gradient(to right, transparent 50%, white 50%) no-repeat,
+            linear-gradient(to left, transparent 50%, white 50%) no-repeat;
+        background-size: 100% 100%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: white;
+    }
+    
+    .dual-placeholder-input::placeholder {
+        color: gray;
+        font-size: 14px;
+        text-align: left;
+        padding-right: 150px; /* 오른쪽 여백 */
+        position: absolute;
+    }
+    
+    .dual-placeholder-input:focus::placeholder {
+        color: transparent; /* 입력 시 placeholder 사라짐 */
+    }
+    

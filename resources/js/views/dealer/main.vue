@@ -8,7 +8,7 @@
                             현재 진행중인 경매가
                             <span class="ms-2 underline">{{ auctionsData.length }} 건</span> 있어요.
                         </h1>
-                        <img src="../../../img/logo.png" width="100" class="mb-3">
+                        
                     <swiper
                         :modules="[Navigation, Pagination, Autoplay]"
                         :slides-per-view="1"
