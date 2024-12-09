@@ -45,7 +45,7 @@
         <div class="web-style-overlay web-stlye">
           <div class="gap-5 tc-wh mb-4">
             <h1>쉽고 빠른 <span class="bolder">내차팔기,</span></h1>
-            <h1 class="font-title"><span class="bolder">{{ wicaLabel.title() }}</span>에서 <span class="bolder">높은 가격</span>으로,</h1>
+            <h1 class="font-title"><span class="bolder">{{ wicaLabel.title() }}</span>에서 <span class="bolder">높은 가격</span>으로!</h1>
             <h5 class="mt-3 normal">자동차 진단 전문가 <span class="bolder">위카모빌리티</span>가 함께합니다.</h5>
           </div>
           <router-link
@@ -139,7 +139,7 @@
         <div class="css-ifyyt1 gap-5 tc-wh">
           <div>
           <h1>쉽고 빠른 <span class="bolder">내차팔기,</span></h1>
-          <h1 class="font-title"><span class="bolder">{{ wicaLabel.title() }}</span>에서 <span class="bolder">높은 가격</span>으로,</h1>
+          <h1 class="font-title"><span class="bolder">{{ wicaLabel.title() }}</span>에서 <span class="bolder">높은 가격</span>으로!</h1>
           <h4 class="mt-3 normal">자동차 진단 전문가 <span class="bolder">위카모빌리티</span>가 함께합니다.</h4>
         </div>
         <router-link
