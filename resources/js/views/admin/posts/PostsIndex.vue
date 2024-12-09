@@ -15,7 +15,7 @@
         </p>
       </div>
       <div v-if="boardId === 'notice'">
-      <UseGuide />
+        <UseGuide class="mt-4"/>
       </div>
       <IntroModal :show="showModal" @close="closeModal"  @click="openModal"/>
       <router-link v-if="(!isDealer && !isUser) && boardId === 'notice'" :to="{ name: 'posts.create', params: { boardId } }" class="border-red-write">
@@ -309,7 +309,7 @@ const openAlarmModal = () => {
         <h5>이용안내 페이지</h5>
         <h4 class="bold">위카옥션, 이렇게 이용하세요</h4>
         <div class="bidding-section">
-            <h3 class="size_42 bolder mx-2">1<span class="size_26 ms-2">입찰하기</span></h3>
+            <h3 class="size_32 bolder mx-2">1<span class="size_24 ms-2">입찰하기</span></h3>
             <ol class="mt-3 step-list">
                 <li class="step-item">
                     <span class="step-connector"></span>
@@ -333,7 +333,7 @@ const openAlarmModal = () => {
                 <li>리스차량은 "승계후 완납 조건"으로 입찰해야 합니다.</li>
             </ul>
             <div class="bidding-section">
-            <h3 class="size_42 bolder">2<span class="size_26 ms-2">견적 취소</span></h3>
+            <h3 class="size_32 bolder">2<span class="size_24 ms-2">견적 취소</span></h3>
             <ol class="mt-3 step-list">
                 <li class="step-item">
                     <span class="step-connector"></span>
@@ -356,7 +356,7 @@ const openAlarmModal = () => {
                 <li>3회 견적실수 패널티 계정 정지</li>
             </ul>
              <div class="bidding-section">
-            <h3 class="size_42 bolder">3<span class="size_26 ms-2">차량 인수</span></h3>
+            <h3 class="size_32 bolder">3<span class="size_24 ms-2">차량 인수</span></h3>
             <ol class="mt-3 step-list">
                 <li class="step-item align-items-start">
                     <span class="step-connector02"></span>

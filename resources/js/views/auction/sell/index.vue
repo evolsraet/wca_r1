@@ -94,7 +94,7 @@
                                         <img v-else src="../../../../img/checkbox.png" :class="{'transition-image': true,'mx-2':true,'mb-1':true}" alt="Complete" width="15px"/>
                                     </div>
                                 </transition>
-                                <span>{{ refreshText }}</span>
+                                <span class="pointer">{{ refreshText }}</span>
                             </div> 
                         </div>
                         <div class="none-info">

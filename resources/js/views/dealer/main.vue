@@ -90,7 +90,7 @@
                     <p class="text-center"><span class="tc-primary mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
                 </router-link>
             </div>
-            <UseGuide />
+            <UseGuide class="mt-4"/>
             </div>
             <div class="container layout-container02">
     

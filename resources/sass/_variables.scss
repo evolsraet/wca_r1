@@ -21,6 +21,9 @@ $sub-color01: #4263EA;
 $sub-color02: #f7f8fb;
 $sub-color03: #aaaebe;
 $sub-color04: #EBEFFD;
+.bc-primary{
+    background-color: $primary;  
+}
 .bc-primary-sb02{
     background-color: $primary-sub02;
 }
@@ -103,7 +106,7 @@ background-color: $sub-color !important;
     background: white; /* 배경 색상 */
     padding: 10px; /* 패딩 */
     border-radius: 5px; /* 테두리 둥글기 */
-    border: 1px solid #aaaebe; /* 테두리 색상 */
+    border: 1px solid $sub-color03; /* 테두리 색상 */
 }
 @media (max-width:512px) {
  .tooltip-area{

@@ -8,24 +8,7 @@
             type: 'custom',
             renderCustom: renderCustomPagination
             }" :autoplay="{ delay: 5000 }" :speed="1000" @slideChangeTransitionStart="resetProgressBar">
-                    <!-- Slide 1 -->
-                    <swiper-slide>
-                        <div class="slide-content">
-                            <img src="../../../img/main_banner02.png" class="styled-img" alt="배너 이미지" />
-                            <div class="content d-flex">
-                                <div>
-                                    <h3>TRANSFORMING USED CAR!</h3>
-                                    <h3 class="bold">WECARMOBILITY</h3>
-                                    <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">
-                                        자동차 진단& 탁송 벤처기업
-                                    </h1>
-                                </div>
-                            </div>
-                        </div>
-                    </swiper-slide>
-
-                    <!-- Slide 2 -->
-                    <swiper-slide>
+              <swiper-slide>
                         <div class="slide-content">
                             <img src="../../../img/main_p2.png" class="styled-img" alt="배너 이미지 2" />
                             <div class="content d-flex text-start">
@@ -36,33 +19,37 @@
                                     <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">
                                         내 차 판매는, 위카에서
                                     </h1>
-                                    <router-link class="btn-sell-car primary-back border-line-none" :to="{ name: 'posts.index', params: { boardId: 'notice' } }">
-                                        <div>
-                                            <span class="icon-car">🚗</span>
-                                            내 차 판매하기
-                                        </div>
-                                        <span class="arrow-icon">➔</span>
+                                    <router-link
+                                        class="btn-sell-car d-flex bc-primary border-none"
+                                        :to="{ path: '/' }"
+                                        >
+                                    <div>
+                                        <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20" class="mb-1"></span><span class="size_14">내 차 판매하기</span> 
+                                    </div>
+                                    <img src="../../../img/Icon-right-wh.png" width="10">
                                     </router-link>
                                 </div>
                             </div>
                         </div>
                     </swiper-slide>
-
-                    <!-- Slide 3 -->
+                    <!-- Slide 1 -->
                     <swiper-slide>
                         <div class="slide-content">
-                            <img src="../../../img/main_p3.png" class="styled-img" alt="배너 이미지 3" />
+                            <img src="../../../img/main_banner02.png" class="styled-img" alt="배너 이미지" />
                             <div class="content d-flex">
                                 <div>
+                                    <img src="../../../img/venture.png" width="60" class="mb-3">
+                                    <h3>TRANSFORMING USED CAR!</h3>
+                                    <h3 class="bold">WECARMOBILITY</h3>
                                     <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">
-                                        믿을 수 있는 <br />자동차 플랫폼!
+                                        자동차 진단& 탁송 벤처기업
                                     </h1>
                                 </div>
                             </div>
                         </div>
                     </swiper-slide>
 
-                    <!-- 페이지 네이션 -->
+                   
                     <div class="swiper-pagination mb-3">
                         <div class="progress-bar">
                             <div class="progress"></div>
@@ -203,7 +190,7 @@
                     </div>
                 </div>
                 <div class="apply-top text-start mb-0">
-                    <h3 class="review-title">이용후기</h3>
+                    <h3 class="review-title">나의 이용후기</h3>
                     <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
                 </div>
                 <div v-if="auctionsData.length > 0" class="container">

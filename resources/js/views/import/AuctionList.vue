@@ -92,7 +92,7 @@
                       입찰하러 가기
                     </router-link>
                   </div>
-                  <h5 v-if="isDealer" class="text-center">탁송지 미등록 매물이 없습니다</h5>
+                  <p v-if="isDealer" class="text-center">탁송지 미등록 매물이 없습니다</p>
                 </div>
               </div>
             </div>

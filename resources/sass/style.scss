@@ -125,6 +125,7 @@ video {
 }
 .guide-title{
     text-align: center;
+    font-size: 12px !important;
 }
 .guide-description{
     display: none;
@@ -4667,7 +4668,7 @@ input[type="checkbox"] {
   .circle {
     width: 120px;
     height: 120px;
-    border: 2px solid #ddd;
+    border: 1px solid $sub-color03;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -4752,7 +4753,7 @@ input[type="checkbox"] {
   }
   
   .guide-title {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: bold;
     margin: 0 0 8px;
     color: #333;
@@ -4773,12 +4774,12 @@ input[type="checkbox"] {
     color: #fff;
     width: 280px;
     font-size: 16px;
+    cursor: pointer;
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
     }
     
     .btn-sell-car:hover {
-    background-color: #000000;
     color: #fff;
     }
       

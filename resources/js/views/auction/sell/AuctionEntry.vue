@@ -75,7 +75,13 @@
         <label for="datetime">
           <span class="text-danger me-2">*</span>진단희망 날짜 및 시간
         </label>
-        <input type="datetime-local" id="datetime" name="datetime" class="form-control" required>
+        <input
+      type="datetime-local"
+      id="datetime"
+      ref="datetimeInput"
+      class="form-control"
+      required
+    />
       </div>
         <h5><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
         <input type="file" @change="handleFileUploadOwner" ref="fileInputRefOwner" style="display:none">
@@ -99,35 +105,7 @@
     </div>
   </div>
 </template>
-<script>
-  // 현재 날짜와 시간을 가져와 `min` 속성에 설정
-  const datetimeInput = document.getElementById("datetime");
-  
-  // 현재 날짜 및 시간 포맷팅 (YYYY-MM-DDTHH:MM)
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, '0'); // 월은 0부터 시작
-  const date = String(now.getDate()).padStart(2, '0');
-  const hours = now.getHours();
-  const minutes = now.getMinutes();
-  
-  // 오늘 날짜와 오전 9시를 기본 최소값으로 설정
-  datetimeInput.min = `${year}-${month}-${date}T09:00`;
 
-  // 오늘 날짜와 오후 6시를 최대값으로 설정
-  datetimeInput.max = `${year}-${month}-${date}T18:00`;
-
-  // 시간 제한: 오전 9시 ~ 오후 6시
-  datetimeInput.addEventListener("change", (event) => {
-    const selectedDateTime = new Date(event.target.value);
-
-    const selectedHours = selectedDateTime.getHours();
-    if (selectedHours < 9 || selectedHours > 18) {
-      alert("시간은 오전 9시부터 오후 6시까지만 선택 가능합니다.");
-      event.target.value = ''; // 잘못된 값은 초기화
-    }
-  });
-</script>
 
 <script setup>
 import { ref, onMounted, nextTick, inject, createApp,computed  } from 'vue';
@@ -178,6 +156,22 @@ const is_biz = computed({
     isBizChecked.value = value === 1;
   }
 });
+const holidays = [
+  "2024-01-01",
+  "2024-03-01",
+  "2024-05-05",
+  "2024-08-15",
+  "2024-10-03",
+  "2024-12-25",
+];
+
+const datetimeInput = ref(null);
+
+const isWeekend = (dateString) => {
+  const date = new Date(dateString);
+  const day = date.getDay(); // 0: 일요일, 6: 토요일
+  return day === 0 || day === 6;
+};
 
 const auctionEntry = async () => {
   // 필수 정보를 확인
@@ -322,6 +316,36 @@ function editPostCode(elementName) {
 }
 
 onMounted(() => {
+  if (datetimeInput.value) {
+    const now = new Date();
+    const year = now.getFullYear();
+    const month = String(now.getMonth() + 1).padStart(2, "0");
+    const date = String(now.getDate()).padStart(2, "0");
+
+    // 기본 최소값 설정 (오늘 날짜의 오전 9시)
+    datetimeInput.value.min = `${year}-${month}-${date}T09:00`;
+
+    // change 이벤트 리스너 추가
+    datetimeInput.value.addEventListener("change", (event) => {
+      const selectedDateTime = event.target.value;
+      const selectedDate = selectedDateTime.split("T")[0]; // YYYY-MM-DD
+      const selectedTime = new Date(selectedDateTime).getHours(); // 시간 (24시간 형식)
+
+      if (
+        new Date(selectedDate) < new Date(`${year}-${month}-${date}`) || // 오늘 이전 날짜 선택 제한
+        isWeekend(selectedDate) || // 주말 선택 제한
+        selectedTime < 9 || // 오전 9시 이전 선택 제한
+        selectedTime > 18 // 오후 6시 이후 선택 제한
+      ) {
+        alert(
+          "주말, 오늘 이전 날짜 또는 오전 9시~오후 6시를 벗어난 시간은 선택할 수 없습니다."
+        );
+        event.target.value = ""; // 잘못된 값 초기화
+      }
+    });
+  } else {
+    console.error("datetimeInput을 찾을 수 없습니다.");
+  }
   const carDetailsJSON = localStorage.getItem('carDetails');
   if (carDetailsJSON) {
     const carDetails = JSON.parse(carDetailsJSON);

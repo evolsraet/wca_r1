@@ -1,23 +1,23 @@
 <template>
-    <div class="d-flex container justify-content-between my-5 px-4 gap-4 guide-card-content">
+    <div class="d-flex container justify-content-between my-5 px-4 gap-4 guide-card-content pt-4">
       <!-- 이용가이드 카드 -->
-      <div class="guide-card" @click.prevent="openAlarmModal">
-        <div class="guide-content">
-            <h3 class="guide-title">이용가이드</h3>
+      <div class="guide-card pointer" @click.prevent="openAlarmModal" >
+        <div class="guide-content ">
+            <p class="guide-title">이용가이드</p>
             <p class="guide-description">위카옥션 이렇게 이용하세요!</p>
         </div>
         <img src="../../../img/use_icon1.png" alt="책 아이콘" class="guide-icon" />
         </div>
-        <div class="guide-card"@click.prevent="openAlarmModal02">
+        <div class="guide-card pointer"@click.prevent="openAlarmModal02">
         <div class="guide-content">
-            <h3 class="guide-title">수수료 안내</h3>
+            <p class="guide-title">수수료 안내</p>
             <p class="guide-description">소정의 정보제공 수수료가 있어요</p>
         </div>
         <img src="../../../img/use_icon2.png" alt="책 아이콘" class="guide-icon" />
         </div>
-        <div class="guide-card" @click.prevent="openAlarmModal03">
+        <div class="guide-card pointer" @click.prevent="openAlarmModal03">
         <div class="guide-content">
-            <h3 class="guide-title">진단오류 보상</h3>
+            <p class="guide-title">진단오류 보상</p>
             <p class="guide-description">진단오류시 보상기준표를 안내합니다</p>
         </div>
         <img src="../../../img/use_icon3.png" alt="책 아이콘" class="guide-icon" />
@@ -41,7 +41,7 @@ const { wica } = cmmn();
         <h5>이용안내 페이지</h5>
         <h4 class="bold">위카옥션, 이렇게 이용하세요</h4>
         <div class="bidding-section">
-            <h3 class="size_42 bolder mx-2">1<span class="size_26 ms-2">입찰하기</span></h3>
+            <h3 class="size_32 bolder mx-2">1<span class="size_24 ms-2">입찰하기</span></h3>
             <ol class="mt-3 step-list">
                 <li class="step-item">
                     <span class="step-connector"></span>
@@ -65,7 +65,7 @@ const { wica } = cmmn();
                 <li>리스차량은 "승계후 완납 조건"으로 입찰해야 합니다.</li>
             </ul>
             <div class="bidding-section">
-            <h3 class="size_42 bolder">2<span class="size_26 ms-2">견적 취소</span></h3>
+            <h3 class="size_32 bolder">2<span class="size_24 ms-2">견적 취소</span></h3>
             <ol class="mt-3 step-list">
                 <li class="step-item">
                     <span class="step-connector"></span>
@@ -88,7 +88,7 @@ const { wica } = cmmn();
                 <li>3회 견적실수 패널티 계정 정지</li>
             </ul>
              <div class="bidding-section">
-            <h3 class="size_42 bolder">3<span class="size_26 ms-2">차량 인수</span></h3>
+            <h3 class="size_32 bolder">3<span class="size_24 ms-2">차량 인수</span></h3>
             <ol class="mt-3 step-list">
                 <li class="step-item align-items-start">
                     <span class="step-connector02"></span>

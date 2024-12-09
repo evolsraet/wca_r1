@@ -45,17 +45,16 @@
               <h5 class="mt-3 normal">자동차 진단 전문가 <span class="bolder">위카모빌리티</span>가 함께합니다.</h5>
             </div>
             <router-link
-              class="btn-sell-car"
-              :to="{ name: 'posts.index', params: { boardId: 'notice' } }"
+              class="btn-sell-car d-flex"
+              :to="{ path: '/' }"
             >
-            <div>
-              <span class="icon-car">🚗</span>
-              내 차 판매하기
-              </div>
-              <span class="arrow-icon">➔</span>
-            </router-link>
+          <div>
+            <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20" class="mb-1"></span><span class="size_14">내 차 판매하기</span> 
+          </div>
+          <img src="../../../img/Icon-right-wh.png" width="10">
+          </router-link>
             <div class="web-style-overlay02">
-              <h5 class="size_18 tc-wh ">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></h5>
+              <h5 class="size_18 tc-wh ">저는 딜러에요! <router-link :to="{ path: '/register' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></h5>
             </div>
           </div>
           <div class=" web-stlye">
@@ -140,15 +139,14 @@
             <h4 class="mt-3 normal">자동차 진단 전문가 <span class="bolder">위카모빌리티</span>가 함께합니다.</h4>
           </div>
           <router-link
-          class="btn-sell-car"
-          :to="{ name: 'posts.index', params: { boardId: 'notice' } }"
-        >
-        <div>
-          <span class="icon-car">🚗</span>
-          내 차 판매하기
+              class="btn-sell-car d-flex"
+              :to="{ path: '/' }"
+            >
+          <div>
+            <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20" class="mb-1"></span><span class="size_14">내 차 판매하기</span> 
           </div>
-          <span class="arrow-icon">➔</span>
-        </router-link>
+          <img src="../../../img/Icon-right-wh.png" width="10">
+          </router-link>
         <!--<p class="text-secondary opacity-50 font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>-->
         <img src="../../../img/venture.png" class="venture mt-5" width="90">
       </div>
