@@ -206,7 +206,7 @@
                     <span @click="openModal('privacy')" class="link-style pointer">개인정보 처리방침</span> |
                     <span @click="openModal('terms')" class="link-style pointer">이용약관</span>
                   </p>
-                  <p class="my-3 text-secondary opacity-50">ⓒ Watosys all rights reserved.</p>
+                  <p class="my-3 text-secondary opacity-50">ⓒ Wecarmobility all rights reserved.</p>
                   </div>
               </form>
             </div>
@@ -270,7 +270,7 @@
                     <span @click="openModal('privacy')" class="link-style">개인정보 처리방침</span> |
                     <span @click="openModal('terms')" class="link-style">이용약관</span>
                   </p>
-                  <p class="mt-3 mb-4 text-secondary opacity-50">ⓒ Watosys all rights reserved.</p>
+                  <p class="mt-3 mb-4 text-secondary opacity-50">ⓒ Wecarmobility all rights reserved.</p>
                   </div>
               </form>
           
