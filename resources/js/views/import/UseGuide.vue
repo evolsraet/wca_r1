@@ -261,3 +261,14 @@ const openAlarmModal03 = () => {
     .confirm(text); // 모달 내용 설정
 };
 </script>
+<style scoped>
+@media (max-width: 480px) { /* 모바일 */
+  .guide-card-content{
+    gap:10px !important; 
+  }
+  .guide-title{
+    text-align: center;
+    font-size: 11px;
+}
+}
+</style>

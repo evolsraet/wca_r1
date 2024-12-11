@@ -6,7 +6,9 @@
           <div>
               <div class="dropdown-section slide-gray my-1" @click="toggleDropdown('domestic')">
                   <h5 class="tc-primary line-heigh-0">국산차</h5>
-                  <span class="dropdown-icon">{{ dropdownStates.domestic ? '▲' : '▼' }}</span>
+                  <span class="dropdown-icon">
+                  <img v-if="dropdownStates.domestic" src="../../../img/Icon-black-up.png" alt="Up Icon" width="13"/>
+                  <img v-else src="../../../img/Icon-black-down.png" alt="Down Icon" width="13"/></span>
               </div>
               <div
                   class="dropdown-content bd-gray"
@@ -31,7 +33,10 @@
           <div>
               <div class="dropdown-section slide-gray mt-3" @click="toggleDropdown('imported')">
                   <h5 class="tc-primary line-heigh-0">수입차</h5>
-                  <span class="dropdown-icon">{{ dropdownStates.imported ? '▲' : '▼' }}</span>
+                  <span class="dropdown-icon">
+                    <img v-if="dropdownStates.imported" src="../../../img/Icon-black-up.png" alt="Up Icon" width="13"/>
+                    <img v-else src="../../../img/Icon-black-down.png" alt="Down Icon" width="13"/>
+                </span>
               </div>
               <div
                   class="dropdown-content bd-gray"
@@ -55,7 +60,10 @@
           <div>
           <div class="dropdown-section slide-gray mt-3" @click="toggleDropdown('cargoSpecial')">
               <h5 class="tc-primary line-heigh-0">화물 특장 기타</h5>
-              <span class="dropdown-icon">{{ dropdownStates.cargoSpecial ? '▲' : '▼' }}</span>
+              <span class="dropdown-icon">
+                    <img v-if="dropdownStates.cargoSpecial" src="../../../img/Icon-black-up.png" alt="Up Icon" width="13"/>
+                    <img v-else src="../../../img/Icon-black-down.png" alt="Down Icon" width="13"/>
+                </span>
           </div>
               <div
                   class="dropdown-content bd-gray"

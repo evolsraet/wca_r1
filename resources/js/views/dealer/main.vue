@@ -127,7 +127,7 @@
                         >
                             <td style="width: 5%;" class="tc-bold">{{ index + 1 }}</td>
                             <td style="width: 30%;" class="tc-gray">{{ post.created_at }}</td>
-                            <td style="width: 65%;">{{ post.title }}</td>
+                            <td class="tb-title" style="width: 65%;">{{ post.title }}</td>
                         </tr>
                     </tbody>
                     </table>
@@ -463,7 +463,14 @@ p {
         font-size: 12px;
     }
     .centered-text{
-        top: 50% !important;
+        top: 40% !important;
+        left: 11%;
+    }
+}
+@media (max-width:423px) {
+    .guide-icon{
+    width: 46px;
+    height: 46px;
     }
 }
 .mov{

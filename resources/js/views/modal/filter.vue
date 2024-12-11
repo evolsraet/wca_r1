@@ -34,17 +34,13 @@
                 </select>
               </div>
             </div>
-            <div class="facturer mt-3">
-              <h5 class="text-secondary opacity-50">주행거리</h5>
-              <div class="range-slider">
-                <!-- 최소값 슬라이더 -->
-                <input type="range" min="0" max="200000" v-model="minRange" id="min-range" class="range-min" @input="updateProgressBar">
-                <!-- 최대값 슬라이더 -->
-                <input type="range" min="0" max="200000" v-model="maxRange" id="max-range" class="range-max" @input="updateProgressBar">
-                <div class="slider-value">
-                  <span id="range-min-value">{{ formatNumber(minRange) }}km</span> ~ <span id="range-max-value">{{ formatNumber(maxRange) }}km{{ maxRange >= 200000 ? ' 이상' : '' }}</span>
-                </div>
-              </div>
+            <div class="mt-4 mb-5">
+              <div>
+              <h5 class="tc-primary">주행거리</h5>
+              <div class="my-2">{{ minDistance.toLocaleString() }} km ~ {{ maxDistance.toLocaleString() }} km</div>
+              <div ref="slider" class="custom-slider"></div>
+          </div>
+
             </div>
             <div class="btn-group">
               <button class="btn btn-secondary shadow" @click="resetSelection">초기화</button>
@@ -61,7 +57,20 @@
 export default {
   data() {
     return {
+      isExpanded: false, // 하단 메뉴 확장 상태
+      scrollY: 0, // 스크롤 위치 저장
+      scrollTimeout: null, // 스크롤 타임아웃 저장
+      selectedYear: new Date().getFullYear(), // 선택된 연도 (현재 연도)
+      years: [], // 연도 목록 저장
+      minRange: 0, // 최소값 초기화
+      maxRange: 200000, // 최대값 초기화
+      expandedDropdown: null,
       showModal: true,
+      dropdownStates: {
+      domestic: true,
+      imported: true,
+      cargoSpecial:true,
+    },
       categories: {
         '국산차': [
           { name: '현대', selected: false },
@@ -183,14 +192,63 @@ export default {
     formatNumber(value) {
       return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
     },
+    beforeDestroy() {
+      window.removeEventListener('scroll', this.handleScroll);
+      clearTimeout(this.scrollTimeout);
+    },
     updateProgressBar() {
-      const rangeSlider = document.querySelector('.range-slider');
-      const minPercent = (this.minRange / 200000) * 100;
-      const maxPercent = (this.maxRange / 200000) * 100;
+    const rangeSlider = document.querySelector('.range-slider');
+    const minPercent = (this.minRange / 200000) * 100;
+    const maxPercent = (this.maxRange / 200000) * 100;
 
-      // 슬라이더 배경 업데이트
-      rangeSlider.style.background = `linear-gradient(to right, #d3d3d3 0%, #d3d3d3 ${minPercent}%, #f24200 ${minPercent}%, #f24200 ${maxPercent}%, #d3d3d3 ${maxPercent}%, #d3d3d3 100%)`;
-    }
+    // 슬라이더 배경 업데이트
+    rangeSlider.style.background = `linear-gradient(to right, #d3d3d3 0%, #d3d3d3 ${minPercent}%, #f24200 ${minPercent}%, #f24200 ${maxPercent}%, #d3d3d3 ${maxPercent}%, #d3d3d3 100%)`;
+  }
   }
 };
+</script>
+<script setup>
+import { ref, computed, onMounted, reactive, onUnmounted, inject } from 'vue';
+import { useStore } from "vuex";
+import useAuctions from "@/composables/auctions"; 
+import useRoles from '@/composables/roles'; 
+import FilterModal from '@/views/modal/filter.vue'; 
+import { useRoute, useRouter } from 'vue-router';
+import Footer from "@/views/layout/footer.vue";
+import useLikes from '@/composables/useLikes';
+import usebid from '@/composables/bids.js'; 
+import { cmmn } from '@/hooks/cmmn';
+import { isError } from 'lodash';
+import noUiSlider from "nouislider";
+import "nouislider/dist/nouislider.css";
+const swal = inject('$swal');
+const selectedStartYear = ref(new Date().getFullYear() - 1);
+const selectedEndYear = ref(new Date().getFullYear());
+const store = useStore();
+const user = computed(() => store.getters["auth/user"]); 
+const isDealer = computed(() => user.value?.roles?.includes('dealer'));
+const slider = ref(null);
+const minDistance = ref(20000);
+const maxDistance = ref(120000);
+
+onMounted(() => {
+  noUiSlider.create(slider.value, {
+    start: [minDistance.value, maxDistance.value],
+    connect: true,
+    range: {
+      min: 0,
+      max: 200000,
+    },
+    step: 1000,
+    format: {
+      to: value => Math.round(value).toLocaleString(),
+      from: value => Number(value.replace(/,/g, "")),
+    },
+  });
+
+  slider.value.noUiSlider.on("update", (values, handle) => {
+    if (handle === 0) minDistance.value = Number(values[0].replace(/,/g, ""));
+    if (handle === 1) maxDistance.value = Number(values[1].replace(/,/g, ""));
+  });
+});
 </script>

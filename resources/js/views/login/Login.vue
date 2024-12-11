@@ -148,8 +148,8 @@
           <img src="../../../img/Icon-right-wh.png" width="10">
           </router-link>
         <!--<p class="text-secondary opacity-50 font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>-->
-        <img src="../../../img/logo.png" width="60" class="mb-3">
       </div>
+      <img src="../../../img/logo.png" width="110" class="mb-3">
       <div class="tc-wh mobile-css">
         <p class="size_18">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></p>
       </div>

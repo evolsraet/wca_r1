@@ -76,13 +76,8 @@
         <label for="datetime">
           <span class="text-danger me-2">*</span>진단희망 날짜 및 시간
         </label>
-        <input
-      type="datetime-local"
-      id="datetime"
-      ref="datetimeInput"
-      class="form-control"
-      required
-    />
+        <input id="datetimeInput" type="datetime-local" style="width: 100%; padding: 10px;" />
+        <p class="tc-gray">※ 영업일 기준 오전9시부터 오후6시까지 선택 가능합니다.</p>
       </div>
         <h5><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
         <input type="file" @change="handleFileUploadOwner" ref="fileInputRefOwner" style="display:none">
@@ -196,23 +191,41 @@
 <script>
 import iconUp from "../../../../img/Icon-black-up.png";
 import iconDown from "../../../../img/Icon-black-down.png";
-
+import flatpickr from "flatpickr";
+import "flatpickr/dist/flatpickr.min.css";
 export default {
   data() {
     return {
-      openSection: null, // 열려 있는 섹션 상태
+      openSection: null,
       iconUp,
       iconDown,
     };
   },
   methods: {
     toggleDropdown(type) {
-      this.openSection = this.openSection === type ? null : type; // 현재 섹션 토글
+      this.openSection = this.openSection === type ? null : type;
       console.log(`${type} 상태:`, this.openSection === type);
     },
   },
+  mounted() {
+    flatpickr("#datetimeInput", {
+      enableTime: true,
+      dateFormat: "Y-m-d H:i",
+      minDate: "today",
+      disable: [
+        function (date) {
+          // 주말 비활성화
+          return date.getDay() === 0 || date.getDay() === 6;
+        },
+      ],
+      time_24hr: true,
+      minTime: "09:00",
+      maxTime: "18:00",
+    });
+  },
 };
 </script>
+
 
 <script setup>
 import { ref, onMounted, nextTick, inject, createApp,computed  } from 'vue';
@@ -427,37 +440,7 @@ function editPostCode(elementName) {
 }
 
 onMounted(() => {
-  if (datetimeInput.value) {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0");
-    const date = String(now.getDate()).padStart(2, "0");
-
-    // 기본 최소값 설정 (오늘 날짜의 오전 9시)
-    datetimeInput.value.min = `${year}-${month}-${date}T09:00`;
-
-    // change 이벤트 리스너 추가
-    datetimeInput.value.addEventListener("change", (event) => {
-      const selectedDateTime = event.target.value;
-      const selectedDate = selectedDateTime.split("T")[0]; // YYYY-MM-DD
-      const selectedTime = new Date(selectedDateTime).getHours(); // 시간 (24시간 형식)
-
-      if (
-        new Date(selectedDate) < new Date(`${year}-${month}-${date}`) || // 오늘 이전 날짜 선택 제한
-        isWeekend(selectedDate) || // 주말 선택 제한
-        selectedTime < 9 || // 오전 9시 이전 선택 제한
-        selectedTime > 18 // 오후 6시 이후 선택 제한
-      ) {
-        alert(
-          "주말, 오늘 이전 날짜 또는 오전 9시~오후 6시를 벗어난 시간은 선택할 수 없습니다."
-        );
-        event.target.value = ""; // 잘못된 값 초기화
-      }
-    });
-  } else {
-    console.error("datetimeInput을 찾을 수 없습니다.");
-  }
-  const carDetailsJSON = localStorage.getItem('carDetails');
+  const carDetailsJSON = localStorage.getItem("carDetails");
   if (carDetailsJSON) {
     const carDetails = JSON.parse(carDetailsJSON);
     if (carDetails.owner) {
@@ -468,6 +451,7 @@ onMounted(() => {
     }
   }
 });
+
 </script>
 
 <style scoped>
@@ -509,7 +493,9 @@ onMounted(() => {
 .flatpickr-time .flatpickr-time-separator {
   color: #7a3535;
 }
-
+input[type="datetime-local"]::-webkit-datetime-edit { 
+    color: #aaa; /* 비활성화된 입력에 회색 스타일 적용 */
+  }
 .flatpickr-day.flatpickr-disabled {
   cursor: not-allowed;
   color: rgba(57, 57, 57, 0.3);
@@ -562,6 +548,12 @@ onMounted(() => {
 .slide-leave-from {
   max-height: 500px; /* 적절한 최대 높이 값으로 조정 */
   opacity: 1;
+}
+input[type="datetime-local"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
 }
 
 </style>

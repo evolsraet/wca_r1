@@ -125,7 +125,7 @@ video {
 }
 .guide-title{
     text-align: center;
-    font-size: 12px !important;
+    font-size: 12px ;
 }
 .guide-description{
     display: none;
@@ -4739,7 +4739,6 @@ input[type="checkbox"] {
     align-items: center;
     padding: 25px 48px;
     width: 400px;
-    border: 1px solid #e0e0e0;
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -4792,14 +4791,14 @@ input[type="checkbox"] {
     }
     .placeholder-wrapper {
         position: relative;
-        width: 300px; /* 원하는 너비 */
+        width: 300px; 
     }
     
     .dual-placeholder-input {
         width: 100%;
         padding: 8px;
         font-size: 16px;
-        text-align: left; /* 사용자 입력은 왼쪽 정렬 */
+        text-align: left; 
         background: 
             linear-gradient(to right, transparent 50%, white 50%) no-repeat,
             linear-gradient(to left, transparent 50%, white 50%) no-repeat;
@@ -4813,11 +4812,16 @@ input[type="checkbox"] {
         color: gray;
         font-size: 14px;
         text-align: left;
-        padding-right: 150px; /* 오른쪽 여백 */
+        padding-right: 150px; 
         position: absolute;
     }
     
     .dual-placeholder-input:focus::placeholder {
-        color: transparent; /* 입력 시 placeholder 사라짐 */
+        color: transparent; 
+    }
+    .tb-title {
+        overflow: hidden;  
+        text-overflow: ellipsis;
+        white-space: nowrap;
     }
     

@@ -92,7 +92,7 @@
                                         <tr v-for="(post, index) in posts" :key="post.id" @click="handleRowClick(post.id)" class="pointer-cursor">
                                             <td style="width: 5%;" class="tc-bold">{{ index + 1 }}</td>
                                             <td style="width: 30%;" class="tc-gray">{{ post.created_at }}</td>
-                                            <td style="width: 65%;">{{ post.title }}</td>
+                                            <td class="tb-title" style="width: 65%;">{{ post.title }}</td>
                                         </tr>
                                     </tbody>
                                 </table>
