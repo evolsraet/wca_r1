@@ -1,5 +1,5 @@
 <template>
-  <div class=" mov-wide">
+  <div class="container mov-wide">
   <div class="container">
     <div class="main-contenter mt-4">
       <h4 class="top-title mb-2">경매 할 차량을 등록해볼까요?</h4>
