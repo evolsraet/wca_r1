@@ -42,7 +42,9 @@ TODO:
     <div class="content-main mt-5" :class="{ row: isDealer }">
         <Filter/>
             <!-- 메인 컨텐츠 -->
-            <div class="col-md-9 auction-main" :class="{'auction-wide': isUser}">
+            <div
+                class="auction-main"
+                :class="{'col-md-9': isDealer, 'auction-wide': isUser}">
                 <div class="d-flex gap-2">
                     <div class="apply-top text-start">
                         <div class="search-type">
@@ -494,14 +496,14 @@ TODO:
                     </div>
                     
                 </div>
-
+    
                 <div class="container my-4" v-if="currentTab === 'auctionDone'">
-
+    
                     <div>
                     </div>
                 </div>
                 <!-- Pagination -->
-            </div>
+                </div>
         </div>
     </div>
     <Footer />
@@ -565,7 +567,7 @@ export default {
   created() {
     window.addEventListener('scroll', this.handleScroll); // 스크롤 이벤트 리스너 추가
     this.years = this.generateYearRange(1990, new Date().getFullYear()); // 연도 목록 생성
-    this.fetchCarData();
+   
   },
 
   methods: {
@@ -574,34 +576,7 @@ export default {
       this.dropdownStates[type] = !this.dropdownStates[type];
     },
 
-    async fetchCarData() {
-      try {
-        // API 호출로 데이터를 가져옴 (예: axios 사용)
-        const domesticResponse = await fetch('/api/cars/domestic'); // 국산차 데이터 요청
-        const importedResponse = await fetch('/api/cars/imported'); // 수입차 데이터 요청
-
-        // 응답 데이터를 JSON으로 변환
-        const domesticData = await domesticResponse.json();
-        const importedData = await importedResponse.json();
-
-        // Vue 상태에 데이터 반영
-        this.domesticCars = domesticData.map(car => ({
-          id: car.id,
-          label: car.name,
-          value: car.value,
-          count: car.count.toLocaleString(), // 숫자 포맷
-        }));
-
-        this.importedCars = importedData.map(car => ({
-          id: car.id,
-          label: car.name,
-          value: car.value,
-          count: car.count.toLocaleString(),
-        }));
-      } catch (error) {
-        console.error('데이터를 가져오는 중 오류 발생:', error);
-      }
-    },
+    
 
     toggleMenuHeight() { // 하단 메뉴 높이 토글
       this.isExpanded = !this.isExpanded;
@@ -657,6 +632,7 @@ import usebid from '@/composables/bids.js';
 import { cmmn } from '@/hooks/cmmn';
 import { isError } from 'lodash';
 import Filter from "@/views/import/filter.vue";
+
 const swal = inject('$swal');
 const { wicas , wica , updateAuctionTimes , calculateTimeLeft } = cmmn();
 const selectedStartYear = ref(new Date().getFullYear() - 1);

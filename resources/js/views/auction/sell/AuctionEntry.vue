@@ -183,7 +183,7 @@
       </transition>
         </div>
           <div class="px-2 mb-3 flex items-center justify-end mt-5">
-            <button type="submit" class="btn primary-btn normal-16-font w-100">경매 신청하기</button>
+            <button type="submit" class="btn primary-btn normal-16-font w-100" @click="auctionEntry()" >경매 신청하기</button>
           </div>
           <Modal v-if="showAuctionModal" @close="handleAuctionClose" />
       </div>

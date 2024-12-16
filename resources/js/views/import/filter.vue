@@ -427,7 +427,6 @@ computed: {
 created() {
   window.addEventListener('scroll', this.handleScroll); // 스크롤 이벤트 리스너 추가
   this.years = this.generateYearRange(1990, new Date().getFullYear()); // 연도 목록 생성
-  this.fetchCarData();
 },
 
 methods: {
@@ -437,32 +436,7 @@ methods: {
   },
 
   async fetchCarData() {
-    try {
-      // API 호출로 데이터를 가져옴 (예: axios 사용)
-      const domesticResponse = await fetch('/api/cars/domestic'); // 국산차 데이터 요청
-      const importedResponse = await fetch('/api/cars/imported'); // 수입차 데이터 요청
 
-      // 응답 데이터를 JSON으로 변환
-      const domesticData = await domesticResponse.json();
-      const importedData = await importedResponse.json();
-
-      // Vue 상태에 데이터 반영
-      this.domesticCars = domesticData.map(car => ({
-        id: car.id,
-        label: car.name,
-        value: car.value,
-        count: car.count.toLocaleString(), // 숫자 포맷
-      }));
-
-      this.importedCars = importedData.map(car => ({
-        id: car.id,
-        label: car.name,
-        value: car.value,
-        count: car.count.toLocaleString(),
-      }));
-    } catch (error) {
-      console.error('데이터를 가져오는 중 오류 발생:', error);
-    }
   },
 
   toggleMenuHeight() { // 하단 메뉴 높이 토글
@@ -530,23 +504,30 @@ const minDistance = ref(20000);
 const maxDistance = ref(120000);
 
 onMounted(() => {
-  noUiSlider.create(slider.value, {
-    start: [minDistance.value, maxDistance.value],
-    connect: true,
-    range: {
-      min: 0,
-      max: 200000,
-    },
-    step: 1000,
-    format: {
-      to: value => Math.round(value).toLocaleString(),
-      from: value => Number(value.replace(/,/g, "")),
-    },
-  });
+  if (slider.value) {
+    // noUiSlider 초기화
+    noUiSlider.create(slider.value, {
+      start: [minDistance.value, maxDistance.value],
+      connect: true,
+      range: {
+        min: 0,
+        max: 200000,
+      },
+      step: 1000,
+      format: {
+        to: value => Math.round(value).toLocaleString(),
+        from: value => Number(value.replace(/,/g, "")),
+      },
+    });
 
-  slider.value.noUiSlider.on("update", (values, handle) => {
-    if (handle === 0) minDistance.value = Number(values[0].replace(/,/g, ""));
-    if (handle === 1) maxDistance.value = Number(values[1].replace(/,/g, ""));
-  });
+    // 슬라이더 업데이트 이벤트
+    slider.value.noUiSlider.on("update", (values, handle) => {
+      if (handle === 0) minDistance.value = Number(values[0].replace(/,/g, ""));
+      if (handle === 1) maxDistance.value = Number(values[1].replace(/,/g, ""));
+    });
+  } else {
+    console.error("Slider element is not found.");
+  }
 });
+
 </script>

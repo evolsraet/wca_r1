@@ -397,7 +397,7 @@
             <div class="col-md-9 auction-main">
                 <div class="apply-top text-start">
                     <div class="search-type">
-                        <input type="text" placeholder="모델명,차량번호,지역">
+                        <input type="text" >
                         <button type="button" class="search-btn">검색</button>
                     </div>
                 </div>
