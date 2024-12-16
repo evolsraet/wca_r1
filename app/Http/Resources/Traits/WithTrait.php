@@ -5,6 +5,21 @@ namespace App\Http\Resources\Traits;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 
+/**
+ * API 리소스 변환을 위한 트레이트
+ *
+ * 이 트레이트는 Laravel API 리소스에서 관계(relations)와 미디어 파일을 처리하는 기능을 제공합니다.
+ *
+ * 주요 기능:
+ * - 리소스 캐싱 및 로드된 관계 추적
+ * - URL 파라미터 'with'를 통한 동적 관계 로딩
+ * - 관계된 모델의 리소스 변환
+ * - 미디어 파일 처리 및 그룹화
+ *
+ * 사용 예시:
+ * - ?with=comments,user,media 와 같은 URL 파라미터를 통해 필요한 관계를 동적으로 로드
+ * - 미디어 파일은 collection_name으로 그룹화되어 반환
+ */
 trait WithTrait
 {
     protected $cachedResource;
