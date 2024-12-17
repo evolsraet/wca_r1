@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Events\UserRegistered;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -17,7 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Event;
-
+use App\Jobs\UserResetPasswordLinkJob;
 class UserController extends Controller
 {
     use CrudControllerTrait;
@@ -63,6 +62,8 @@ class UserController extends Controller
             ]
         );
 
+        // 비밀번호 변경 링크 이벤트 발송
+        UserResetPasswordLinkJob::dispatch($user, $encryptCode);
 
         // TODO: 폰번호로 링크 보내기
 

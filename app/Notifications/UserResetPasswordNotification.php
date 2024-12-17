@@ -11,16 +11,22 @@ class UserResetPasswordNotification extends ResetPasswordNotification
 {
     use Queueable;
 
+    private $data;
+    public function __construct($data)
+    {
+        $this->data = $data;
+    }
+
     /**
      * Get the mail representation of the notification.
      */
     public function toMail($notifiable): MailMessage
     {
-        $resetUrl = url(config('app.url') . '/reset-password/' . $this->token .'?email='. $notifiable->getEmailForPasswordReset());
+        $resetUrl = url(env('APP_URL') . '/resetPasswordLogin/' . $this->data);
         return (new MailMessage)
-            ->line('You are receiving this email because we received a password reset request for your account.')
-            ->action('Reset Password', $resetUrl)
-            ->line('If you did not request a password reset, no further action is required.');
+            ->line('귀하의 계정에 대한 비밀번호 재설정 요청이 접수되었기 때문에 이 이메일을 보내드립니다.')
+            ->action('비밀번호 재설정', $resetUrl)
+            ->line('만약 비밀번호 재설정을 요청하지 않았다면 이 이메일을 무시하세요.');
     }
 
     /**
