@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
+use App\Jobs\UserRegisteredJob;
 
 class UserService
 {
@@ -84,6 +85,9 @@ class UserService
 
             // dd([gettype($data), $data, $request->file()]);
             $item = User::create($data);
+
+            // 회원가입 알림 발송
+            UserRegisteredJob::dispatch($item);
 
             // 하위 모델
             if ($data['role'] == 'dealer') {
