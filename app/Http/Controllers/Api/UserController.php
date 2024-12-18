@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Event;
 use App\Jobs\UserResetPasswordLinkJob;
 use App\Helpers\SmsAligoHelper;
 use App\Notifications\AligoNotification;
+use App\Jobs\UserRegisteredJob;
+
 class UserController extends Controller
 {
     use CrudControllerTrait;
@@ -120,16 +122,18 @@ class UserController extends Controller
 
         // echo $smsAligoHelper->alimtalk_list();
 
-        $user = User::find(1); // 예: User 모델
-        $user->notify(new AligoNotification([
-            'message' => '안녕하세요. 올타이어입니다!\n관리자가 20102010 주문의 배송상태를 [배송완료] 으로 변경했습니다.',
-            'tpl_data' => [
-                'tpl_code' => 'TN_1093',
-                'receiver_1' => '010-2802-0327',
-                'subject_1' => '세상의 모든 타이어. 올타이어',
-                'message_1' => "안녕하세요. 올타이어입니다!\n관리자가 20102010 주문의 배송상태를 [배송완료] 으로 변경했습니다.",
-            ],
-        ]));
+        $user = User::find(36); // 예: User 모델
+        // $user->notify(new AligoNotification([
+        //     'message' => '안녕하세요. 올타이어입니다!\n관리자가 20102010 주문의 배송상태를 [배송완료] 으로 변경했습니다.',
+        //     'tpl_data' => [
+        //         'tpl_code' => 'TN_1093',
+        //         'receiver_1' => '010-2802-0327',
+        //         'subject_1' => '세상의 모든 타이어. 올타이어',
+        //         'message_1' => "안녕하세요. 올타이어입니다!\n관리자가 20102010 주문의 배송상태를 [배송완료] 으로 변경했습니다.",
+        //     ],
+        // ]));
+
+        UserRegisteredJob::dispatch($user);
 
         // $user = User::factory()->make();
         // $data['user'] = $user->makeVisible($user->getHidden())->toArray();

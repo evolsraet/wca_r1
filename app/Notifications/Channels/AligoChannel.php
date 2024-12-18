@@ -31,7 +31,7 @@ class AligoChannel
         // 예: HTTP 요청, API 연동 등
 
         $data = $notification->toAligo($notifiable);
-        $this->aligoService->send($data['phone'], $data['message'], $data['tpl_data']);
+        $this->aligoService->send($data['phone'], $data['tpl_data']);
     }
 }
 ?>

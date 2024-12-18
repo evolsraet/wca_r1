@@ -26,20 +26,8 @@ class AligoService
         $this->sms_sender = env('SMS_SENDER');
     }
 
-    public function send($phone, $message, $tpl_data = null)
+    public function send($phone, $tpl_data = null)
     {
-
-        // dd($phone, $message);
-        
-        // $response = Http::asForm()->post('https://apis.aligo.in/send/', [
-        //     'key' => $this->apiKey,
-        //     'user_id' => $this->userId,
-        //     'receiver' => $phone,
-        //     'msg' => $message,
-        // ]);
-
-        // return $response->json();
-
         $required_fields = array(
             'tpl_code',
             'receiver_1',

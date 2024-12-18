@@ -33,6 +33,13 @@ class UserRegisteredJob implements ShouldQueue
         $this->user->notify(new WelcomeNotification());
 
         // 알리고 알림톡 전송
-        // $this->user->notify(new AligoNotification($this->user));
+        $this->user->notify(new AligoNotification([
+            'tpl_data' => [
+                'tpl_code' => env('SMS_TPL_CODE'),
+                'receiver_1' => $this->user->phone,
+                'subject_1' => '회원가입을 축하합니다.',
+                'message_1' => "안녕하세요. 위카옥션에 회원가입을 축하드립니다.",
+            ],
+        ]));
     }
 }

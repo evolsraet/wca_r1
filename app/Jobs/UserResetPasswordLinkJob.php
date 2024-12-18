@@ -34,6 +34,13 @@ class UserResetPasswordLinkJob implements ShouldQueue
         $this->user->notify(new UserResetPasswordNotification($this->data));
 
         // 알리고 알림톡 전송
-        // $this->user->notify(new AligoNotification($this->data));
+        $this->user->notify(new AligoNotification([
+            'tpl_data' => [
+                'tpl_code' => env('SMS_TPL_CODE'),
+                'receiver_1' => $this->user->phone,
+                'subject_1' => '비밀번호 재설정 링크 발송',
+                'message_1' => "안녕하세요. 위카옥션에 비밀번호 재설정 링크를 발송합니다.",
+            ],
+        ]));
     }
 }
