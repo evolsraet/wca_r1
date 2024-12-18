@@ -10,7 +10,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Response;
 use App\Validators\FieldCommentValidator;
 use Illuminate\Validation\Factory as ValidationFactory;
-
+use App\Notifications\Channels\AligoChannel;
+use App\Services\AligoService;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -145,5 +146,13 @@ class AppServiceProvider extends ServiceProvider
 
             return $date;
         });
+
+
+        $this->app->when(AligoChannel::class)
+                  ->needs(AligoService::class)
+                  ->give(function () {
+                      // Aligo API 설정을 반환합니다.
+                      return new AligoService();
+                  });
     }
 }

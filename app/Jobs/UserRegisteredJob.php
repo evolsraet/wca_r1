@@ -8,6 +8,8 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Notifications\WelcomeNotification;
+use App\Notifications\AligoNotification;
+
 class UserRegisteredJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -27,7 +29,10 @@ class UserRegisteredJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        // 이메일 전송
         $this->user->notify(new WelcomeNotification());
+
+        // 알리고 알림톡 전송
+        // $this->user->notify(new AligoNotification($this->user));
     }
 }

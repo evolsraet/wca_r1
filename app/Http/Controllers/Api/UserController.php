@@ -17,6 +17,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Event;
 use App\Jobs\UserResetPasswordLinkJob;
+use App\Helpers\SmsAligoHelper;
+use App\Notifications\AligoNotification;
 class UserController extends Controller
 {
     use CrudControllerTrait;
@@ -104,21 +106,45 @@ class UserController extends Controller
 
     public function test(Request $request)
     {
+        // echo sayHello('worlds');
 
-        $user = User::factory()->make();
-        $data['user'] = $user->makeVisible($user->getHidden())->toArray();
-        $data['user']['role'] = 'user';
+        // $smsAligoHelper = new SmsAligoHelper();
+        // echo $smsAligoHelper->get_token();
 
-        $file = UploadedFile::fake()->create('testfile.pdf', 100); // 100KB 크기의 PDF 파일
-        $data['file_sign'] = $file; // 여기서는 $data 배열에 직접 추가하는 대신, 파일을 요청에 별도로 추가합니다.
+        // echo $smsAligoHelper->alimtalk_send([
+        //     'tpl_code' => 'TN_1093',
+        //     'receiver_1' => '010-2802-0327',
+        //     'subject_1' => '세상의 모든 타이어. 올타이어',
+        //     'message_1' => "안녕하세요. 올타이어입니다!\n관리자가 20102010 주문의 배송상태를 [배송완료] 으로 변경했습니다.",
+        // ]);
 
-        // 리퀘스트에 직접 값을 할당한다
-        $request->merge($data);
-        return response()->api([
-            $request->all(),
-            $request->file(),
-        ]);
-        return $this->service->store($request);
+        // echo $smsAligoHelper->alimtalk_list();
+
+        $user = User::find(1); // 예: User 모델
+        $user->notify(new AligoNotification([
+            'message' => '안녕하세요. 올타이어입니다!\n관리자가 20102010 주문의 배송상태를 [배송완료] 으로 변경했습니다.',
+            'tpl_data' => [
+                'tpl_code' => 'TN_1093',
+                'receiver_1' => '010-2802-0327',
+                'subject_1' => '세상의 모든 타이어. 올타이어',
+                'message_1' => "안녕하세요. 올타이어입니다!\n관리자가 20102010 주문의 배송상태를 [배송완료] 으로 변경했습니다.",
+            ],
+        ]));
+
+        // $user = User::factory()->make();
+        // $data['user'] = $user->makeVisible($user->getHidden())->toArray();
+        // $data['user']['role'] = 'user';
+
+        // $file = UploadedFile::fake()->create('testfile.pdf', 100); // 100KB 크기의 PDF 파일
+        // $data['file_sign'] = $file; // 여기서는 $data 배열에 직접 추가하는 대신, 파일을 요청에 별도로 추가합니다.
+
+        // // 리퀘스트에 직접 값을 할당한다
+        // $request->merge($data);
+        // return response()->api([
+        //     $request->all(),
+        //     $request->file(),
+        // ]);
+        // return $this->service->store($request);
     }
 
     public function defaultGuard()
