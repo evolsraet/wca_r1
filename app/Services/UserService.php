@@ -15,6 +15,7 @@ use App\Http\Resources\UserResource;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use App\Jobs\UserRegisteredJob;
+use App\Jobs\UaerDealerStatusJob;
 
 class UserService
 {
@@ -251,6 +252,20 @@ class UserService
 
 
             if ($data) {
+
+                // 승인여부 업데이트 
+                if($item->hasRole('dealer')){
+                    $user = User::find($item->id);
+                    if($data['status'] == 'ok'){
+                        Log::info('딜러 상태 업데이트', ['user_id' => $item->id, 'status' => 'ok']);
+                        UaerDealerStatusJob::dispatch($user, 'ok');
+                    }else if($data['status'] == 'reject'){
+                        Log::info('딜러 상태 업데이트', ['user_id' => $item->id, 'status' => 'reject']);
+                        UaerDealerStatusJob::dispatch($user, 'reject');
+                    }
+                }
+                
+
                 $item->update($data);
             }
 

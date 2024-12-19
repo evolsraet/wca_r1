@@ -7,6 +7,8 @@ use App\Traits\CrudTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\AuctionResource;
+use App\Jobs\AuctionBidStatusJob;
+use Illuminate\Support\Facades\Log;
 
 class BidService
 {
@@ -65,12 +67,22 @@ class BidService
             } else {
                 throw new \Exception('신청가능한 아이디가 아닙니다.');
             }
+
+            // 경매 입찰시 상태 업데이트
+            Log::info('경매 입찰 상태 업데이트', ['user_id' => $auction->user_id, 'status' => 'ask']);
+            AuctionBidStatusJob::dispatch($auction->user_id, 'ask');
+
         } elseif ($method == 'update') {
             $this->modifyOnlyMe($result);
             // 수정 시 사용자 아이디와 경매 아이디는 수정 불가
             unset($request->user_id);
             unset($request->auction_id);
         } elseif ($method == 'destroy') {
+
+            // 경매 입찰취소시 상태 업데이트
+            // Log::info('경매 입찰 상태 업데이트', ['user_id' => $result->user_id, 'status' => 'cancel']);
+            // AuctionBidStatusJob::dispatch($result->user_id, 'cancel');
+
             $this->modifyOnlyMe($result);
         }
     }

@@ -8,6 +8,8 @@ use App\Traits\CrudControllerTrait;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Cache;
 use App\Models\Auction;
+use App\Jobs\AuctionStartJob;
+use App\Models\User;
 
 class AuctionController extends Controller
 {
@@ -26,7 +28,12 @@ class AuctionController extends Controller
      */
     public function store(Request $request)
     {
-        return $this->service->store($request);
+        $super = User::find(2); // 운영사
+        $user = $request->user(); // 고객
+        $result = $this->service->store($request);
+        AuctionStartJob::dispatch($result, $user);
+        AuctionStartJob::dispatch($result, $super);
+        return $result;
     }
 
 
