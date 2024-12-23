@@ -55,7 +55,7 @@
           <div>
             <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20" class="mb-1"></span><span class="size_14">내 차 판매하기</span> 
           </div>
-          <img src="../../../img/Icon-right-wh.png" width="10">
+          <img src="../../../img/Icon-right-wh.png" class="dash-wh" width="10">
           </router-link>
           <div class="web-style-overlay02">
             <h5 class="size_18 tc-wh">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></h5>
@@ -149,13 +149,15 @@
           <div>
             <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20" class="mb-1"></span><span class="size_14">내 차 판매하기</span> 
           </div>
-          <img src="../../../img/Icon-right-wh.png" width="10">
+          <img src="../../../img/Icon-right-wh.png" class="dash-wh" width="10">
           </router-link>
       <!--<p class="text-secondary opacity-50 font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>-->
     </div>
-    <img src="../../../img/logo.png" width="110" class="mb-3 mobile-css">
-    <div class="tc-wh mobile-css">
-      <p class="size_18">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></p>
+      <div class="ps-3"> 
+      <img src="../../../img/logo.png" width="110" class="mb-3 mobile-css">
+      <div class="tc-wh mobile-css">
+        <p class="size_18 ps-2">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></p>
+      </div>
     </div>
     </div>
   </div>

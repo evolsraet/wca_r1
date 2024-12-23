@@ -41,7 +41,7 @@
                                     <div>
                                         <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20" class="mb-1"></span><span class="size_14">내 차 판매하기</span> 
                                     </div>
-                                    <img src="../../../img/Icon-right-wh.png" width="10">
+                                    <img src="../../../img/Icon-right-wh.png" class="dash-wh" width="10">
                                     </router-link>
                                 </div>
                             </div>
@@ -108,7 +108,7 @@
                         <div class=" align-items-start fee-section line-height-10 mt-5 justify-content-center">
                         <div class="fee-step">
                             <div class="circle">
-                                <img src="../../../img/contract.png" width="40px">
+                                <img class="ms-2" src="../../../img/contract.png" width="40px">
                             </div>
                             <p class="bc-gray tc-gray px-3 py-1 border-6 mt-3">STEP 01</p>
                             <p class="bolder mt-3">경매신청</p>
@@ -130,7 +130,7 @@
                         </div>
                         <div class="fee-step">
                             <div class="circle">
-                                <img src="../../../img/bid.png" width="43px">
+                                <img class="ms-1" src="../../../img/bid.png" width="43px">
                             </div>
                             <p class="bc-gray tc-gray px-3 py-1 border-6 mt-3">STEP 03</p>
                             <p class="bolder mt-3">경매</p>
@@ -141,7 +141,7 @@
                         </div>
                         <div class="fee-step">
                             <div class="circle">
-                                <img src="../../../img/car-wash.png" width="43px">
+                                <img class="mb-1" src="../../../img/car-wash.png" width="43px">
                             </div>
                             <p class="bc-gray tc-gray px-3 py-1 border-6 mt-3">STEP 04</p>
                             <p class="bolder mt-3">탁송</p>

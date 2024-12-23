@@ -1284,7 +1284,7 @@ video{
     width: 185px;
 }
 .nav-link.active {
-    border-bottom: 4px solid $primary;
+    border-bottom: 3px solid $primary;
     color: $primary !important;
 }
 .sub-nav .nav-container .navbar-expand{
@@ -2140,6 +2140,18 @@ video{
 @media (max-width: 767px){
 .auction-content .row {
     justify-content: left !important;
+}
+.blue-box{
+    font-size: 12px;
+}
+.red-box-type03{
+    font-size: 11px;
+}
+.gray-box{
+    font-size: 12px;
+}
+.card-title{
+    font-size: 0.9rem;
 }
 }
 
@@ -3592,14 +3604,20 @@ input[type="checkbox"] {
     display: inline-block; 
 }
 .icon-auction-plus{
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     background-image: url('../img/Icon-plus.png'); 
     background-size: cover;
     background-position: center; 
     background-repeat: no-repeat; 
-    margin-top:2px;
+    margin-top:4px;
 }
+.router-link-active:hover .icon-auction-plus {
+    transform: rotate(90deg);
+    transition: transform 0.5s ease;
+    background-image: url('../img/akar-plus-blue.png');
+}
+
 .icon-search-img{
     position: absolute;
     left: 12px;
@@ -4132,7 +4150,7 @@ input[type="checkbox"] {
 }
 
 .overlay-style {
-  height: 95vh;
+  height: 94.3vh;
   
   @media (max-height: 810px) {
     height: auto;
@@ -4377,9 +4395,7 @@ input[type="checkbox"] {
 
 
 @media (min-width: 991px){
-    .intro-modal-popup{
-        width: 60%;
-    }
+
 }
 .sheet{
     z-index: 3;
@@ -4781,8 +4797,15 @@ input[type="checkbox"] {
     cursor: pointer;
     text-decoration: none;
     transition: background-color 0.3s ease, color 0.3s ease;
+    transition: all 0.3s ease;
+    }
+    .btn-sell-car .dash-wh {
+        transition: transform 0.3s ease;
     }
     
+    .btn-sell-car:hover .dash-wh {
+        transform: translateX(5px);
+    }
     .btn-sell-car:hover {
     color: #fff;
     }

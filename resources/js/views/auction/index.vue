@@ -161,12 +161,13 @@ TODO:
                                                     <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
                                                 </div>-->
                                                     <div class="card-body">
-                                                        <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                        <p class="card-title fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
                                                         <p class="tc-gray mt-0"> 2020 년 |<span class="mx-1">2.4km</span>| 무사고</p>
                                                         <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
                                                         <div class="d-flex">
                                                             <h5 class="card-title"><span class="blue-box fw-bold border-6">무사고</span></h5>
                                                             <h5 v-if="auction.is_reauction !== 0"><span class="gray-box border-6">재경매</span></h5>
+                                                            <h5 v-if="auction.is_biz !== 0"><span class="red-box-type03 border-6">법인 / 사업자</span></h5>
                                                             <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
                                                             <!--<p class="tc-gray">{{ auction.car_no }}</p>-->
                                                         </div>
@@ -250,7 +251,7 @@ TODO:
                                                 <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
                                             </div>-->
                                             <div class="card-body">
-                                                <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                <p class="card-title fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
                                                 <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
                                                 <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
@@ -311,7 +312,7 @@ TODO:
                                             <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
                                             <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                             <div class="card-body">
-                                                <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                <p class="card-title fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
                                                 <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
                                                 <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
@@ -380,7 +381,7 @@ TODO:
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                <p class="card-title fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
                                                 <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
                                                 <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
                                                 <div class="d-flex">
@@ -455,7 +456,7 @@ TODO:
                                                     </div>
                                                 </div>
                                                 <div class="card-body">
-                                                    <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
+                                                    <p class="card-title fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
                                                     <p class="tc-gray mt-0"> 2020 년 | 2.4km | 무사고</p>
                                                     <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
                                                     <div class="d-flex">
@@ -1047,7 +1048,7 @@ onUnmounted(() => {
 @keyframes spin {
   100% { transform: rotate(1080deg); } 
 }
-@media (max-width: 449px){
+@media (max-width: 458px){
 .col-md-4 {
     flex: 0 0 auto;
     width: 100% !important;
