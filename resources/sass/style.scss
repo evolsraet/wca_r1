@@ -4760,8 +4760,11 @@ input[type="checkbox"] {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     gap: 20px;
     justify-content: space-between;
+    transition: box-shadow 0.3s ease;
   }
-  
+  .guide-card:hover{
+    box-shadow: 1px 4px 4px rgba(0, 0, 0, 0.15);
+  }
   .guide-icon {
     width: 56px;
     height: 56px;
