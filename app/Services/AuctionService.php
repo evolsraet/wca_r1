@@ -9,7 +9,14 @@ use App\Http\Resources\BidResource;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Redis;
 use App\HttpResources\AuctionResource;
-
+use App\Models\User;
+use App\Jobs\AuctionCancelJob;
+use App\Jobs\AuctionCohosenJob;
+use App\Models\Bid;
+use App\Jobs\AuctionIngJob;
+use App\Jobs\AuctionDoneJob;
+use App\Jobs\AuctionDlvrJob;
+use App\Jobs\AuctionDiagJob;
 class AuctionService
 {
     use CrudTrait;
@@ -32,6 +39,10 @@ class AuctionService
     // 요청 중간 처리: 결과 필터링 및 데이터 검증
     protected function middleProcess($method, $request, $auction, $id = null)
     {
+        // Log::info('경매 상태 업데이트 모드?', ['method' => $method]);
+
+        // $user = User::find($auction->user_id);
+
         switch ($method) {
             case 'index':
             case 'show':
@@ -42,6 +53,9 @@ class AuctionService
                 $this->validateAndSetAuctionData($request, $auction);
                 break;
             case 'update':
+
+                Log::info('경매 상태 업데이트 모드??', ['method' => $auction]);
+
                 // 상태변경
                 // request()->mode 가 있을 경우 그대로 두고, 없으면서 $acution->status 가 변경됬을 경우 그 request()->mode 에 $acution->status 대입
                 if (!request()->has('mode') && $auction->isDirty('status')) {
@@ -118,6 +132,62 @@ class AuctionService
                             }
                             break;
                     }
+                }
+
+
+                // 취소시 알림
+                if($auction->status == 'cancel'){
+
+                    Log::info('경매 상태 업데이트 취소 모드', ['method' => $auction]);
+                    AuctionCancelJob::dispatch($auction->user_id);
+
+                    $bids = Bid::where('id', $auction->bid_id)->get();
+                    foreach($bids as $bid){
+                        // Log::info('경매 취소 모드 입찰자 알림', ['method' => $bid->user_id]);
+                        AuctionCancelJob::dispatch($bid->user_id);
+                    }
+                }
+
+                // if($auction->status == 'ing'){
+                //     Log::info('경매 상태 업데이트 ing 모드', ['method' => $auction]);
+                    
+                //     AuctionIngJob::dispatch($auction->user_id);
+                    
+                //     // $bids = Bid::where('id', $auction->bid_id)->get();
+                //     // foreach($bids as $bid){
+                //     //     AuctionIngJob::dispatch($bid->user_id);
+                //     // }
+                // }   
+
+                // 입찰자에게 알림
+                if($auction->status == 'chosen'){
+                    Log::info('경매 상태 업데이트 입찰선택 모드', ['method' => $auction]);
+
+                    AuctionCohosenJob::dispatch($auction->user_id);
+                    AuctionCohosenJob::dispatch($auction->bids->first()->user_id);
+                }   
+
+                // 탁송중 알림
+                if($auction->status == 'dlvr'){
+                    Log::info('경매 상태 업데이트 탁송중 모드', ['method' => $auction]);
+
+                    AuctionDlvrJob::dispatch($auction->bids->first()->user_id);
+                }
+                
+                // 경매완료시 전체 입찰자에게 알림
+                if($auction->status == 'done'){
+                    Log::info('경매 상태 업데이트 경매완료 모드', ['method' => $auction]);
+
+                    AuctionDoneJob::dispatch($auction->user_id);
+                    AuctionDoneJob::dispatch($auction->bids->first()->user_id);
+
+                }
+
+                // 진단대기중 알림 
+                if($auction->status == 'diag'){
+                    Log::info('경매 상태 업데이트 진단대기중 모드', ['method' => $auction]);
+
+                    AuctionDiagJob::dispatch($auction->user_id);
                 }
 
                 break;

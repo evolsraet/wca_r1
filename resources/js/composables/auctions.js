@@ -627,8 +627,14 @@ const updateAuctionStatus = async (id, status) => {
             console.log(result.msg);
         }
         */
+       let isResult = false;
+       if(result.status === 'ok'){
         isLoading.value = false;
-        return result;
+        isResult = true;
+       }else{
+        console.log(result.msg);
+       }
+       return isResult;
     })
     .put();
     

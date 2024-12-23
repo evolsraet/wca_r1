@@ -188,6 +188,13 @@
                 <button class="btn btn-primary tc-wh"> 저장 </button>
               </div>
           </div>
+
+          <div class="mt-3">
+            <div class="btn-group mt-3">
+              <button type="button" class="btn btn-success" @click="diagAuction('diag')"> 진단대기 </button>
+            </div>
+          </div>
+
           <!--
           <div @click="toggleVisibility" class="d-flex justify-content-between align-items-center p-3 border-bottom">
             <h5>차량정보</h5>
@@ -407,6 +414,7 @@
 import { ref, onMounted, reactive, watchEffect, onBeforeUnmount, nextTick, inject, createApp, defineComponent, h } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 import file from "@/components/file.vue";
 import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
@@ -453,6 +461,7 @@ const auction = reactive({
 });
 
 const route = useRoute();
+const router = useRouter();
 const { getAuctionById, updateAuctionStatus, isLoading, updateAuction } = useAuctions();
 const auctionId = parseInt(route.params.id); 
 const auctionDetails = ref(null);
@@ -649,6 +658,20 @@ const registerAuction = async () => {
     alert('등록에 실패했습니다.');
   }
 };
+
+const diagAuction = async (status) => {
+
+  try {
+    const id = route.params.id;
+    await updateAuctionStatus(id, status);
+    router.push({ name: 'auctions.index' }); 
+    alert('진단대기로 상태가 변경되었습니다.');
+  } catch (error) {
+    console.error('Error updating auction status:', error);
+    alert('등록에 실패했습니다.');
+  }
+
+}
 
 function editPostCode(elementName) {
   openPostcode(elementName)
