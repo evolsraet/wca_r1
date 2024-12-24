@@ -71,7 +71,7 @@
                 </ul>
             </template>
         </div>
-         <BottomSheet02 initial="half" :dismissable="true">
+         <BottomSheet02 class="mt-5" initial="half" :dismissable="true">
                     <div class="top-content-style wd-100">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(소매가)</span></p>
                         <span class="tc-primary bold-18-font">{{ carDetails.priceNow }} 만원</span>
@@ -730,5 +730,9 @@ const applyAuction = () => {
 .side-sheet-style{
     margin-top: 70px;
 }
-
+@media (min-width: 1400px) {
+    .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
+        max-width: 1000px;
+    }
+}
 </style>
