@@ -15,9 +15,11 @@ class AuctionDiagNotification extends Notification
      * Create a new notification instance.
      */
     protected $user;
-    public function __construct($user)
+    protected $data;
+    public function __construct($user, $data)
     {
         $this->user = $user;
+        $this->data = $data;    
     }
 
     /**
@@ -35,8 +37,13 @@ class AuctionDiagNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+
+        $ownerName = $this->data->owner_name; // 소유자 이름
+        $car_no = $this->data->car_no;
+
         return (new MailMessage)
-                    ->line('진단대기중입니다.');
+                    ->subject($ownerName . '님의 ' . $car_no . ' 차량이 진단대기중입니다.')
+                    ->line($ownerName . '님의 ' . $car_no . ' 차량이 진단대기중입니다.');
     }
 
     /**

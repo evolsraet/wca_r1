@@ -43,6 +43,7 @@ class UaerDealerStatusNotification extends Notification
             $message = '딜러 승인이 거절되었습니다.';
         }
         return (new MailMessage)
+                    ->subject($message)
                     ->line($message)
                     ->line('감사합니다!');
     }

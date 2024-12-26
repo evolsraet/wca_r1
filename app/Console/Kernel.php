@@ -4,7 +4,7 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
+use App\Jobs\TaksongStatusJob;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -16,6 +16,14 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         // $schedule->command('inspire')->hourly();
+
+        $schedule->call(function() {
+            $response = '';
+            // app()->call('App\Http\Controllers\Api\AuctionController@auctionDlvrAdd', ['response' => $response]);
+            // Job 호출
+            TaksongStatusJob::dispatch($response);
+        })->everyMinute();
+
     }
 
     /**

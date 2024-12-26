@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 use App\Models\User;
+use App\Models\Auction;
 class AuctionCancelNotification extends Notification
 {
     use Queueable;
@@ -15,9 +16,11 @@ class AuctionCancelNotification extends Notification
      * Create a new notification instance.
      */
     protected $user;
-    public function __construct(User $user)
+    protected $auction;
+    public function __construct($user, $auction)
     {
         $this->user = $user;
+        $this->auction = $auction;
     }
 
     /**
@@ -35,8 +38,12 @@ class AuctionCancelNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+
+        $auction = Auction::find($this->auction);
+
         return (new MailMessage)
-                    ->line('경매가 취소되었습니다.');
+                    ->subject($auction->owner_name . '님의 ' . $auction->car_no . ' 차량이 경매 취소되었습니다.')
+                    ->line($auction->owner_name . '님의 ' . $auction->car_no . ' 차량이 경매 취소되었습니다.');
     }
 
     /**

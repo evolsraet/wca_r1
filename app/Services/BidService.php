@@ -69,9 +69,11 @@ class BidService
             }
 
             // 경매 입찰시 상태 업데이트
-            Log::info('경매 입찰 상태 업데이트', ['user_id' => $auction->user_id, 'status' => 'ask']);
-            AuctionBidStatusJob::dispatch($auction->user_id, 'ask');
-
+            if($auction->status == 'ing'){
+                Log::info('경매 입찰 상태 업데이트', ['user_id' => $auction->user_id, 'status' => 'ask', 'result' => $result->user_id]);
+                AuctionBidStatusJob::dispatch($auction->user_id, 'ask', $auction->id, $result->user_id);
+            }
+            
         } elseif ($method == 'update') {
             $this->modifyOnlyMe($result);
             // 수정 시 사용자 아이디와 경매 아이디는 수정 불가

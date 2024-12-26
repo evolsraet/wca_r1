@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\Auction;
 use App\Jobs\AuctionStartJob;
 use App\Models\User;
+use Illuminate\Support\Facades\Log;
 
 class AuctionController extends Controller
 {
@@ -31,8 +32,11 @@ class AuctionController extends Controller
         $super = User::find(2); // 운영사
         $user = $request->user(); // 고객
         $result = $this->service->store($request);
-        AuctionStartJob::dispatch($result, $user);
-        AuctionStartJob::dispatch($result, $super);
+
+        Log::info('경매 등록 결과', ['result' => $result]);
+
+        AuctionStartJob::dispatch($result, $user, $request->auction);
+        AuctionStartJob::dispatch($result, $super, $request->auction);
         return $result;
     }
 
@@ -97,5 +101,17 @@ class AuctionController extends Controller
 
 
         return response()->api($resource, $message);
+    }
+
+    // 탁송처리 API (보안상 안좋은 방법이라 Job으로 변경 필요)
+    public function auctionDlvrAdd(Request $request)
+    {
+        Log::info('탁송처리 API 호출', ['request' => $request->all()]);
+    }
+
+    // 탁송조회 API
+    public function auctionDlvrStatus(Request $request)
+    {
+
     }
 }

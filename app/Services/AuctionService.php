@@ -17,6 +17,7 @@ use App\Jobs\AuctionIngJob;
 use App\Jobs\AuctionDoneJob;
 use App\Jobs\AuctionDlvrJob;
 use App\Jobs\AuctionDiagJob;
+use App\Jobs\AuctionBidStatusJob;
 class AuctionService
 {
     use CrudTrait;
@@ -54,7 +55,7 @@ class AuctionService
                 break;
             case 'update':
 
-                Log::info('경매 상태 업데이트 모드??', ['method' => $auction]);
+                // Log::info('경매 상태 업데이트 모드??', ['method' => $auction]);
 
                 // 상태변경
                 // request()->mode 가 있을 경우 그대로 두고, 없으면서 $acution->status 가 변경됬을 경우 그 request()->mode 에 $acution->status 대입
@@ -90,6 +91,16 @@ class AuctionService
                                 $auction->status = 'ing';
                                 $auction->is_reauction = true;
                                 $auction->final_at = now()->addDays(env('REAUCTION_DAY'));
+
+                                Log::info('재경매 모드', ['method' => $auction]);
+
+                                $bids = Bid::where('auction_id', $auction->id)->get();
+                                foreach($bids as $bid){
+                                    Log::info('재경매 모드 입찰자 알림', ['mode' => 'reauction','method' => $bid->user_id]);
+                                    AuctionBidStatusJob::dispatch($bid->user_id, 'reauction', $auction->id, $bid->user_id);
+                                }
+
+
                             } else {
                                 throw new \Exception('재경매변경 가능상태가 아닙니다.');
                             }
@@ -100,6 +111,12 @@ class AuctionService
                             if (!$auction->is_reauction && $auction->status == 'ask') {
                                 $auction->status = 'diag';
                                 $auction->final_at = now()->addDays(env('AUCTION_DAY'));
+
+
+                                Log::info('경매 상태 업데이트 진단대기중 모드', ['method' => $auction]);
+
+                                AuctionDiagJob::dispatch($auction->user_id, $auction);
+
                             } else {
                                 throw new \Exception('진단변경 가능상태가 아닙니다.');
                             }
@@ -109,6 +126,11 @@ class AuctionService
                             // 배송으로 변경
                             if ($auction->status == 'chosen') {
                                 $auction->status = 'dlvr';
+
+                                Log::info('경매 상태 업데이트 탁송중 모드', ['method' => $auction]);
+
+                                AuctionDlvrJob::dispatch($auction->bids->first()->user_id);
+
                             } else {
                                 throw new \Exception('배송변경 가능상태가 아닙니다.');
                             }
@@ -118,6 +140,16 @@ class AuctionService
                             // 완료으로 변경
                             if (in_array($auction->status, ['dlvr', 'chosen'])) {
                                 $auction->status = 'done';
+
+
+                                Log::info('경매 상태 업데이트 경매완료 모드', ['method' => $auction]);
+
+                                $bids = Bid::find($auction->bid_id);
+
+                                AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
+                                AuctionDoneJob::dispatch($bids->user_id, $auction->id, 'dealer');
+
+
                             } else {
                                 throw new \Exception('배송변경 가능상태가 아닙니다.');
                             }
@@ -127,6 +159,17 @@ class AuctionService
                             // 취소으로 변경
                             if (!in_array($auction->status, ['done', 'dlvr'])) {
                                 $auction->status = 'cancel';
+
+
+                                Log::info('경매 상태 업데이트 취소 모드', ['method' => $auction]);
+                                AuctionCancelJob::dispatch($auction->user_id, $auction->id);
+
+                                $bids = Bid::where('id', $auction->id)->get();
+                                foreach($bids as $bid){
+                                    // Log::info('경매 취소 모드 입찰자 알림', ['method' => $bid->user_id]);
+                                    AuctionCancelJob::dispatch($bid->user_id, $auction->id);
+                                }
+
                             } else {
                                 throw new \Exception('취소변경 가능상태가 아닙니다.');
                             }
@@ -139,55 +182,53 @@ class AuctionService
                 if($auction->status == 'cancel'){
 
                     Log::info('경매 상태 업데이트 취소 모드', ['method' => $auction]);
-                    AuctionCancelJob::dispatch($auction->user_id);
+                    AuctionCancelJob::dispatch($auction->user_id, $auction->id);
 
-                    $bids = Bid::where('id', $auction->bid_id)->get();
+                    $bids = Bid::where('id', $auction->id)->get();
                     foreach($bids as $bid){
                         // Log::info('경매 취소 모드 입찰자 알림', ['method' => $bid->user_id]);
-                        AuctionCancelJob::dispatch($bid->user_id);
+                        AuctionCancelJob::dispatch($bid->user_id, $auction->id);
                     }
-                }
-
-                // if($auction->status == 'ing'){
-                //     Log::info('경매 상태 업데이트 ing 모드', ['method' => $auction]);
-                    
-                //     AuctionIngJob::dispatch($auction->user_id);
-                    
-                //     // $bids = Bid::where('id', $auction->bid_id)->get();
-                //     // foreach($bids as $bid){
-                //     //     AuctionIngJob::dispatch($bid->user_id);
-                //     // }
-                // }   
+                }   
 
                 // 입찰자에게 알림
                 if($auction->status == 'chosen'){
                     Log::info('경매 상태 업데이트 입찰선택 모드', ['method' => $auction]);
 
-                    AuctionCohosenJob::dispatch($auction->user_id);
-                    AuctionCohosenJob::dispatch($auction->bids->first()->user_id);
+                    AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
+                    AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
                 }   
+
+                // 입찰자에게 알림
+                if($auction->status == 'wait'){
+                    Log::info('경매 상태 업데이트 선택대기 모드', ['method' => $auction]);
+
+                    // AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id);
+                }
 
                 // 탁송중 알림
                 if($auction->status == 'dlvr'){
-                    Log::info('경매 상태 업데이트 탁송중 모드', ['method' => $auction]);
+                    // Log::info('경매 상태 업데이트 탁송중 모드', ['method' => $auction]);
 
                     AuctionDlvrJob::dispatch($auction->bids->first()->user_id);
                 }
                 
                 // 경매완료시 전체 입찰자에게 알림
                 if($auction->status == 'done'){
+                    
                     Log::info('경매 상태 업데이트 경매완료 모드', ['method' => $auction]);
 
-                    AuctionDoneJob::dispatch($auction->user_id);
-                    AuctionDoneJob::dispatch($auction->bids->first()->user_id);
+                    $bids = Bid::find($auction->bid_id);
 
+                    AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
+                    AuctionDoneJob::dispatch($bids->user_id, $auction->id, 'dealer');
                 }
 
                 // 진단대기중 알림 
                 if($auction->status == 'diag'){
                     Log::info('경매 상태 업데이트 진단대기중 모드', ['method' => $auction]);
 
-                    AuctionDiagJob::dispatch($auction->user_id);
+                    AuctionDiagJob::dispatch($auction->user_id, $auction);
                 }
 
                 break;
