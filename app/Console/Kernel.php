@@ -5,6 +5,8 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\TaksongStatusJob;
+use App\Models\TaksongStatusTemp;
+
 class Kernel extends ConsoleKernel
 {
     /**
@@ -15,13 +17,17 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')->hourly();
 
         $schedule->call(function() {
-            $response = '';
-            // app()->call('App\Http\Controllers\Api\AuctionController@auctionDlvrAdd', ['response' => $response]);
-            // Job 호출
-            TaksongStatusJob::dispatch($response);
+
+            // 탁송 상태 확인
+            $taksongStatusTemp = TaksongStatusTemp::where('chk_status', '!=', 'done')->get();
+            if($taksongStatusTemp){
+                foreach($taksongStatusTemp as $taksongStatus){
+                    TaksongStatusJob::dispatch($taksongStatus->chk_id);
+                }
+            }
+            
         })->everyMinute();
 
     }

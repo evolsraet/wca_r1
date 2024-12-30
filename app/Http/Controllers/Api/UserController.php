@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Models\TaksongStatusTemp;
 use App\Models\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -22,6 +23,7 @@ use App\Notifications\AligoNotification;
 use App\Jobs\UserRegisteredJob;
 use App\Jobs\AuctionDlvrJob;
 use App\Jobs\TaksongStatusJob;
+
 class UserController extends Controller
 {
     use CrudControllerTrait;
@@ -139,7 +141,15 @@ class UserController extends Controller
 
         // AuctionDlvrJob::dispatch(36);
 
-        TaksongStatusJob::dispatch(35);
+        $taksongStatusTemp = TaksongStatusTemp::where('chk_status', '!=', 'done')->get();
+        if($taksongStatusTemp){
+
+            foreach($taksongStatusTemp as $row){
+                TaksongStatusJob::dispatch($row->chk_id);
+            }
+        }
+
+        // TaksongStatusJob::dispatch(35);
 
 
         // $user = User::factory()->make();

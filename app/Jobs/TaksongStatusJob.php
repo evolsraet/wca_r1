@@ -8,7 +8,12 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-
+use App\Models\TaksongStatusTemp;
+use App\Models\Auction;
+use App\Jobs\AuctionDoneJob;
+use App\Jobs\AuctionCancelJob;
+use App\Models\Bid;
+use App\Models\User;
 class TaksongStatusJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -46,36 +51,57 @@ class TaksongStatusJob implements ShouldQueue
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => array('auth' => env('TAKSONG_AUTH'),'chk_id' => '10010962','api_key' => env('TAKSONG_API_KEY')),
+        CURLOPT_POSTFIELDS => array('auth' => env('TAKSONG_AUTH'),'chk_id' => $response,'api_key' => env('TAKSONG_API_KEY')),
         ));
 
         $result = curl_exec($curl);
 
-        curl_close($curl);
-        // echo $response;
-
-        // 
-//         <select id="chk_status" class="form-control" name="chk_status">
-//     <option selected="" value="">
-//         상태
-//     </option>
-//         <option value="ask">
-//             접수
-//         </option>
-//         <option value="start">
-//             배차
-//         </option>
-//         <option value="ing">
-//             배송중
-//         </option>
-//         <option value="done">
-//             배송완료
-//         </option>
-//         <option value="cancel">
-//             취소
-//         </option>
-// </select>
+        if($result){
+            $result = json_decode($result);
         
-        Log::info('탁송처리 API 호출', ['request' => $result]);
+            // 탁송 상태 업데이트
+            $status = $result->data[0]->chk_status;
+            TaksongStatusTemp::where('chk_id', $response)->update(['chk_status' => $status]);
+    
+            $auction = Auction::where('car_no', $result->data[0]->chk_car_no)->get();
+            $bid = Bid::where('id', $auction->implode('bid_id'))->get();
+            $auction_id = $auction->implode('id');
+            $user_id = $auction->implode('user_id'); // 차량등록자
+            $bid_user_id = $bid->implode('user_id'); // 입찰자
+
+            // 상태에 따른 알림
+            // status = start, ing, done, cancel
+            switch($status){
+                case 'done':
+                    // 배송중
+
+                    // 딜러가 입금하고 확인하는 과정 필요 일단 임시로 자동으로 경매완료 처리                     
+                    Auction::where('car_no', $result->data[0]->chk_car_no)->update(['status' => 'done']);
+
+                    // 완료 알림 발송
+                    AuctionDoneJob::dispatch($user_id, $auction_id, 'user');
+                    AuctionDoneJob::dispatch($bid_user_id, $auction_id, 'dealer');
+
+                    break;
+
+                case 'cancel':
+                    // 취소
+
+                    // 주문 상태 업데이트
+                    $auction = Auction::where('car_no', $result->data[0]->chk_car_no)->update(['status' => 'cancel']);
+
+                    // 취소 알림 발송
+                    AuctionCancelJob::dispatch($user_id, $auction_id);
+                    AuctionCancelJob::dispatch($bid_user_id, $auction_id);
+
+                    break;
+            }
+
+            
+            Log::info('탁송처리 API 호출', ['request' => $result]);
+        }
+        
+
+        curl_close($curl);
     }
 }
