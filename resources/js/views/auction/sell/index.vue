@@ -206,7 +206,7 @@ const ExpectationPrice = () => {
             <div class="text-start tc-gray">
             <div class="form-group">
             <label>주행거리</label>
-            <input type="text" placeholder="km">
+            <input type="text" placeholder="km" name="mileage" claas="mileage_input" value="">
             </div>
             <div style="margin-bottom: 15px;">
             <label style="display: block; font-weight: bold; margin-bottom: 5px;">사고</label>
@@ -230,45 +230,45 @@ const ExpectationPrice = () => {
                 </div>
             <div class="form-group">
                 <label>사고 발생 건수</label>
-                <input type="text" placeholder="건">
+                <input type="text" placeholder="건" name="accidentCount" value="">
             </div>
             <div class="form-group">
             <label>키 갯수</label>
-            <input type="text" placeholder="개">
+            <input type="text" placeholder="개" name="keyCount" value="">
             </div>
             <div class="form-group">
             <label>휠스크래치</label>
-            <input type="text" placeholder="개">
+            <input type="text" placeholder="개" name="wheelScratch" value="">
             </div>
             <div class="form-group">
                 <label class="mb-2">타이어 상태</label>
                 <div class="input-wrapper">
                     <span class="size_14">정상</span>
-                    <input type="text" placeholder="개" class="text-right">
+                    <input type="text" placeholder="개" name="tireStatusNormal" class="text-right" value="">
                 </div>
                 <div class="input-wrapper">
                     <span class="size_14">교환</span>
-                    <input type="text" placeholder="개" class="text-right">
+                    <input type="text" placeholder="개" name="tireStatusReplaced" class="text-right" value="">
                 </div>
             </div>
             <div class="form-group">
             <label>외판 스크래치</label>
-            <input type="text" placeholder="개">
+            <input type="text" placeholder="개" name="tireStatusScratch" value="">
             </div>
             <div class="form-group">
             <label>옵션</label>
             <div class="manufacturer-model02 my-3">
                 
                 <label class="item">
-                    <input type="radio" name="accident" value="선루프" onclick="selectItem(this)">
+                    <input type="radio" name="options" value="선루프" onclick="selectItem(this)">
                     선루프
                 </label>
                 <label class="item">
-                    <input type="radio" name="accident" value="어라운드뷰" onclick="selectItem(this)">
+                    <input type="radio" name="options" value="어라운드뷰" onclick="selectItem(this)">
                     어라운드뷰
                 </label>
                 <label class="item">
-                    <input type="radio" name="accident" value="s-크루즈컨트롤" onclick="selectItem(this)">
+                    <input type="radio" name="options" value="s-크루즈컨트롤" onclick="selectItem(this)">
                     s-크루즈컨트롤
                 </label>
             </div>
@@ -284,7 +284,8 @@ const ExpectationPrice = () => {
         .addOption({ padding: 20 })
         .callback(function (result) {
             if (result.isOk) {
-                startLoading();
+                // startLoading();
+                handleButtonClick();
             }
         })
         .confirm(text);
@@ -301,10 +302,39 @@ const ExpectationPrice = () => {
     }, 0);
 };
 
+const { submitCarInfo, refreshCarInfo, checkExpectedPrice } = useAuctions();
 
-const { submitCarInfo, refreshCarInfo } = useAuctions();
+const handleButtonClick = async () => {
+    
+    const mileage = document.querySelector('input[name="mileage"]').value;
+    const accident = document.querySelector('input[name="accident"]:checked')?.value || '';
+    const accidentCount = document.querySelector('input[name="accidentCount"]').value;
+    const keyCount = document.querySelector('input[name="keyCount"]').value;
+    const wheelScratch = document.querySelector('input[name="wheelScratch"]').value;
+    const tireStatusNormal = document.querySelector('input[name="tireStatusNormal"]').value;
+    const tireStatusReplaced = document.querySelector('input[name="tireStatusReplaced"]').value;
+    const tireStatusScratch = document.querySelector('input[name="tireStatusScratch"]').value;
+    const options = document.querySelector('input[name="options"]:checked')?.value || '';
 
+    isLoading.value = true;
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    await handleRefresh();
 
+    const data = {
+        "mileage": mileage,
+        "accident": accident,
+        "accidentCount": accidentCount,
+        "keyCount": keyCount,
+        "wheelScratch": wheelScratch,
+        "tireStatusNormal": tireStatusNormal,
+        "tireStatusReplaced": tireStatusReplaced,
+        "tireStatusScratch": tireStatusScratch,
+        "options" : options
+    }
+    
+    await checkExpectedPrice(data);
+    isLoading.value = false;
+};
 
 const startLoading = async () => {
     isLoading.value = true;

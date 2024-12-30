@@ -43,6 +43,7 @@ Route::apiResource('users', UserController::class)
 Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);
 Route::apiResource('auctions', AuctionController::class)
     ->middleware('auth:sanctum');
+Route::post('auctions/checkExpectedPrice', [AuctionController::class, 'CheckExpectedPrice']);
 
 // bid
 Route::apiResource('bids', BidController::class)

@@ -103,6 +103,44 @@ class AuctionController extends Controller
         return response()->api($resource, $message);
     }
 
-    
+    // 예상가 확인 API
+    public function CheckExpectedPrice(Request $request)
+    {
+        $request->validate([
+            'mileage' => 'required', // 주행거리
+            'accident' => 'required', // 사고여부
+            'accidentCount' => 'required', // 사고건수
+            'keyCount' => 'required', // 키건수
+            'wheelScratch' => 'required', // 바퀴 손상여부
+            'tireStatusNormal' => 'required', // 타이어 손상여부
+            'tireStatusReplaced' => 'required', // 타이어 교체여부
+            'tireStatusScratch' => 'required', // 타이어 손상여부
+            'options' => 'required', // 옵션
+        ]);
+
+        $mileage = $request->input('mileage');
+        $accident = $request->input('accident');
+        $accidentCount = $request->input('accidentCount');
+        $keyCount = $request->input('keyCount');
+        $wheelScratch = $request->input('wheelScratch');
+        $tireStatusNormal = $request->input('tireStatusNormal');
+        $tireStatusReplaced = $request->input('tireStatusReplaced');
+        $tireStatusScratch = $request->input('tireStatusScratch');
+        $options = $request->input('options');
+
+        $price = 0;
+
+        Log::info('예상가 확인 호출', ['request' => $request->all()]);
+
+        // 계산식 작성 start
+
+
+        // 계산식 작성 end
+
+        $result = '';
+
+        return response()->api($result);
+
+    }
 
 }
