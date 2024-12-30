@@ -47,15 +47,34 @@ class TaksongStatusJob implements ShouldQueue
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS => array('auth' => env('TAKSONG_AUTH'),'chk_id' => '10010962','api_key' => env('TAKSONG_API_KEY')),
-        // CURLOPT_HTTPHEADER => array(
-        //     'Cookie: ci_session=cn8uk20toe5p7tcrc42cej9ee4572oht'
-        // ),
         ));
 
         $response = curl_exec($curl);
 
         curl_close($curl);
         // echo $response;
+
+        // 
+//         <select id="chk_status" class="form-control" name="chk_status">
+//     <option selected="" value="">
+//         상태
+//     </option>
+//         <option value="ask">
+//             접수
+//         </option>
+//         <option value="start">
+//             배차
+//         </option>
+//         <option value="ing">
+//             배송중
+//         </option>
+//         <option value="done">
+//             배송완료
+//         </option>
+//         <option value="cancel">
+//             취소
+//         </option>
+// </select>
         
         Log::info('탁송처리 API 호출', ['request' => $response]);
     }

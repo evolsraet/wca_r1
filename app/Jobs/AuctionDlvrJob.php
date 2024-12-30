@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Notifications\AligoNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -18,9 +19,11 @@ class AuctionDlvrJob implements ShouldQueue
      * Create a new job instance.
      */
     protected $user;
-    public function __construct($user)
+    protected $data;
+    public function __construct($user, $data)
     {
         $this->user = $user;
+        $this->data = $data;
     }
 
     /**
@@ -28,7 +31,12 @@ class AuctionDlvrJob implements ShouldQueue
      */
     public function handle(): void
     {
+        // 이메일 전송
         $user = User::find($this->user);
-        $user->notify(new AuctionDlvrNotification($user));
+        $user->notify(new AuctionDlvrNotification($user, $this->data));
+
+        // 알리고 전송
+        // $aligo = new AligoNotification();
+        // $aligo->sendSms($this->data['mobile'], '탁송중입니다.');
     }
 }

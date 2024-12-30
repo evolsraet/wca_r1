@@ -18,6 +18,8 @@ use App\Jobs\AuctionDoneJob;
 use App\Jobs\AuctionDlvrJob;
 use App\Jobs\AuctionDiagJob;
 use App\Jobs\AuctionBidStatusJob;
+use App\Jobs\TaksongAddJob;
+
 class AuctionService
 {
     use CrudTrait;
@@ -84,6 +86,23 @@ class AuctionService
                                 }
                             }
 
+                            // Log::info('딜러정보 모드', ['method' => $auction]);
+                            $data = [];
+                            $data['carNo'] = $auction->car_no; // 차량번호  
+                            $data['carModel'] = '개발모델'; // 차량모델
+                            $data['mobile'] = User::find($auction->user_id)->phone; // 출발지 전화번호
+                            $data['destMobile'] = User::find($auction->bids[0]->user_id)->phone; // 출발지 전화번호
+                            $data['startAddr'] = $auction->addr1 . ' ' . $auction->addr2; // 주소
+                            $data['destAddr'] = $auction->dest_addr1 . ' ' . $auction->dest_addr2; // 주소
+                            $data['userId'] = $auction->user_id; // 사용자 아이디
+                            $data['bidUserId'] = $auction->bids[0]->user_id; // 입찰자 아이디
+                            $data['userEmail'] = User::find($auction->user_id)->email; // 사용자 이메일
+                            $data['bidUserEmail'] = User::find($auction->bids[0]->user_id)->email; // 입찰자 이메일
+                            $data['taksongWishAt'] = $auction->taksong_wish_at; // 탁송 날짜
+
+                            // 탁송 처리
+                            TaksongAddJob::dispatch($auction, $data);
+
                             break;
                         case 'reauction':
                             // 재경매 : 옥션변수가 오고, 재옥션 상태가 아니고, auction->status 가 wait 일 경우,  상태변경
@@ -126,11 +145,6 @@ class AuctionService
                             // 배송으로 변경
                             if ($auction->status == 'chosen') {
                                 $auction->status = 'dlvr';
-
-                                Log::info('경매 상태 업데이트 탁송중 모드', ['method' => $auction]);
-
-                                AuctionDlvrJob::dispatch($auction->bids->first()->user_id);
-
                             } else {
                                 throw new \Exception('배송변경 가능상태가 아닙니다.');
                             }
@@ -192,25 +206,18 @@ class AuctionService
                 }   
 
                 // 입찰자에게 알림
-                if($auction->status == 'chosen'){
-                    Log::info('경매 상태 업데이트 입찰선택 모드', ['method' => $auction]);
+                // if($auction->status == 'chosen'){
+                //     Log::info('경매 상태 업데이트 입찰선택 모드', ['method' => $auction]);
 
-                    AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
-                    AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
-                }   
+                //     AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
+                //     AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+                // }   
 
                 // 입찰자에게 알림
                 if($auction->status == 'wait'){
                     Log::info('경매 상태 업데이트 선택대기 모드', ['method' => $auction]);
 
                     // AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id);
-                }
-
-                // 탁송중 알림
-                if($auction->status == 'dlvr'){
-                    // Log::info('경매 상태 업데이트 탁송중 모드', ['method' => $auction]);
-
-                    AuctionDlvrJob::dispatch($auction->bids->first()->user_id);
                 }
                 
                 // 경매완료시 전체 입찰자에게 알림

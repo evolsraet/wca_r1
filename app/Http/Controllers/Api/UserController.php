@@ -20,7 +20,8 @@ use App\Jobs\UserResetPasswordLinkJob;
 use App\Helpers\SmsAligoHelper;
 use App\Notifications\AligoNotification;
 use App\Jobs\UserRegisteredJob;
-
+use App\Jobs\AuctionDlvrJob;
+use App\Jobs\TaksongStatusJob;
 class UserController extends Controller
 {
     use CrudControllerTrait;
@@ -122,7 +123,7 @@ class UserController extends Controller
 
         // echo $smsAligoHelper->alimtalk_list();
 
-        $user = User::find(36); // 예: User 모델
+        // $user = User::find(36); // 예: User 모델
         // $user->notify(new AligoNotification([
         //     'message' => '안녕하세요. 올타이어입니다!\n관리자가 20102010 주문의 배송상태를 [배송완료] 으로 변경했습니다.',
         //     'tpl_data' => [
@@ -133,7 +134,13 @@ class UserController extends Controller
         //     ],
         // ]));
 
-        UserRegisteredJob::dispatch($user);
+        // UserRegisteredJob::dispatch($user);
+
+
+        // AuctionDlvrJob::dispatch(36);
+
+        TaksongStatusJob::dispatch(35);
+
 
         // $user = User::factory()->make();
         // $data['user'] = $user->makeVisible($user->getHidden())->toArray();
