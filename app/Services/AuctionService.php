@@ -206,12 +206,12 @@ class AuctionService
                 }   
 
                 // 입찰자에게 알림
-                // if($auction->status == 'chosen'){
-                //     Log::info('경매 상태 업데이트 입찰선택 모드', ['method' => $auction]);
+                if($auction->status == 'chosen'){
+                    Log::info('경매 상태 업데이트 입찰선택 모드', ['method' => $auction]);
 
-                //     AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
-                //     AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
-                // }   
+                    AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
+                    AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+                }   
 
                 // 입찰자에게 알림
                 if($auction->status == 'wait'){
