@@ -898,7 +898,8 @@ const checkExpectedPrice = async (data) => {
     .url(`/api/auctions/checkExpectedPrice`)
     .param(data)
     .callback(function(result) {
-        console.log(result);
+        
+        return result;
     })
     .post();
 }   

@@ -285,7 +285,7 @@ const ExpectationPrice = () => {
         .callback(function (result) {
             if (result.isOk) {
                 // startLoading();
-                handleButtonClick();
+                checkExpectedPriceClick();
             }
         })
         .confirm(text);
@@ -304,7 +304,7 @@ const ExpectationPrice = () => {
 
 const { submitCarInfo, refreshCarInfo, checkExpectedPrice } = useAuctions();
 
-const handleButtonClick = async () => {
+const checkExpectedPriceClick = async () => {
     
     const mileage = document.querySelector('input[name="mileage"]').value;
     const accident = document.querySelector('input[name="accident"]:checked')?.value || '';
@@ -331,8 +331,9 @@ const handleButtonClick = async () => {
         "tireStatusScratch": tireStatusScratch,
         "options" : options
     }
-    
-    await checkExpectedPrice(data);
+
+    const result = await checkExpectedPrice(data);
+    console.log(result);
     isLoading.value = false;
 };
 
