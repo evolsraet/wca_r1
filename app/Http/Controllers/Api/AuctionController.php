@@ -103,15 +103,6 @@ class AuctionController extends Controller
         return response()->api($resource, $message);
     }
 
-    // 탁송처리 API (보안상 안좋은 방법이라 Job으로 변경 필요)
-    public function auctionDlvrAdd(Request $request)
-    {
-        Log::info('탁송처리 API 호출', ['request' => $request->all()]);
-    }
+    
 
-    // 탁송조회 API
-    public function auctionDlvrStatus(Request $request)
-    {
-
-    }
 }
