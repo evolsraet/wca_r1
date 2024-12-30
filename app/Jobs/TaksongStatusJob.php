@@ -49,7 +49,7 @@ class TaksongStatusJob implements ShouldQueue
         CURLOPT_POSTFIELDS => array('auth' => env('TAKSONG_AUTH'),'chk_id' => '10010962','api_key' => env('TAKSONG_API_KEY')),
         ));
 
-        $response = curl_exec($curl);
+        $result = curl_exec($curl);
 
         curl_close($curl);
         // echo $response;
@@ -76,6 +76,6 @@ class TaksongStatusJob implements ShouldQueue
 //         </option>
 // </select>
         
-        Log::info('탁송처리 API 호출', ['request' => $response]);
+        Log::info('탁송처리 API 호출', ['request' => $result]);
     }
 }

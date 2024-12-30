@@ -10,6 +10,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Jobs\AuctionDlvrJob;
+use App\Models\TaksongStatusTemp;
 
 class TaksongAddJob implements ShouldQueue
 {
@@ -38,7 +39,6 @@ class TaksongAddJob implements ShouldQueue
 
     protected function taksongAdd($response, $data)
     {
-        Log::info('탁송처리 API 호출', ['response' => $response]);
 
         $curl = curl_init();
 
@@ -70,9 +70,18 @@ class TaksongAddJob implements ShouldQueue
         ),
         ));
         
-        $response = curl_exec($curl);
+        $result = curl_exec($curl);
         
         curl_close($curl);
+
+        Log::info('탁송처리 API 호출..', ['result' => $result]);
+
+        // die();
+        $result = json_decode($result);
+        $taksongStatusTemp = new TaksongStatusTemp();
+        $taksongStatusTemp->chk_id = $result->data->chk_id;
+        $taksongStatusTemp->chk_status = $result->data->chk_status;
+        $taksongStatusTemp->save();
 
         // Log::info('탁송처리 API 호출', ['response' => $response]);
         AuctionDlvrJob::dispatch($data['userId'], $data); // 사용자 알림
