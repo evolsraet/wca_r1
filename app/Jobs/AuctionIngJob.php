@@ -9,6 +9,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 use App\Notifications\AuctionIngNotification;
+use App\Notifications\AligoService;
 
 class AuctionIngJob implements ShouldQueue
 {
@@ -18,9 +19,11 @@ class AuctionIngJob implements ShouldQueue
      * Create a new job instance.
      */
     protected $user;
-    public function __construct($user_id)
+    protected $auction;
+    public function __construct($user_id, $auction)
     {
         $this->user = $user_id;
+        $this->auction = $auction;
     }
 
     /**
@@ -28,8 +31,11 @@ class AuctionIngJob implements ShouldQueue
      */
     public function handle(): void
     {
-        //
+        // 이메일 알림 
         $user = User::find($this->user);
-        $user->notify(new AuctionIngNotification($user));
+        $user->notify(new AuctionIngNotification($user, $this->auction));
+
+        // 문자 알림
+        
     }
 }

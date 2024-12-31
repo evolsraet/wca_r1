@@ -242,6 +242,16 @@ class AuctionService
                     AuctionDiagJob::dispatch($auction->user_id, $auction);
                 }
 
+                // 경매진행중 알림
+                if($auction->status == 'ing'){
+                    if(!$auction->bid_id){
+                        Log::info('경매 상태 업데이트 경매진행중 모드', ['method' => $auction]);
+
+                        AuctionIngJob::dispatch($auction->user_id, $auction->id);
+
+                    }
+                }
+
                 break;
             case 'destroy':
                 $this->modifyOnlyMe($auction);
