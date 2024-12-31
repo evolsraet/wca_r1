@@ -38,6 +38,7 @@ class WelcomeNotification extends Notification
     {
         try {
             return (new MailMessage)
+                ->subject('위카옥션 회원가입을 환영합니다!')
                 ->line('위카옥션 회원가입을 환영합니다!')
                 ->action('위카옥션', url('/'));
         } catch (\Exception $e) {

@@ -57,7 +57,7 @@ class AuctionService
                 break;
             case 'update':
 
-                // Log::info('경매 상태 업데이트 모드??', ['method' => $auction]);
+                Log::info('경매 상태 업데이트 모드??', ['method' => $auction]);
 
                 // 상태변경
                 // request()->mode 가 있을 경우 그대로 두고, 없으면서 $acution->status 가 변경됬을 경우 그 request()->mode 에 $acution->status 대입
@@ -205,17 +205,17 @@ class AuctionService
                     }
                 }   
 
-                // 입찰자에게 알림
+                // 입찰자에게 알림 (수정필요)
                 if($auction->status == 'chosen'){
                     Log::info('경매 상태 업데이트 입찰선택 모드', ['method' => $auction]);
 
-                    AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
-                    AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+                    // AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
+                    // AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
                 }   
 
                 // 입찰자에게 알림
                 if($auction->status == 'wait'){
-                    Log::info('경매 상태 업데이트 선택대기 모드', ['method' => $auction]);
+                    Log::info('경매 상태 업데이트 선택대기 모드1', ['method' => $auction]);
 
                     // AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id);
                 }

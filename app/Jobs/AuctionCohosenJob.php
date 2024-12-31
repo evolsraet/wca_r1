@@ -43,7 +43,7 @@ class AuctionCohosenJob implements ShouldQueue
         Log::info('경매 선택 알림', ['user' => $user, 'auction' => $this->auction]);
 
         $auction = Auction::find($this->auction);
-        $owner_name = $auction->name;
+        $owner_name = $auction->owner_name;
         $car_no = $auction->car_no;
         $taksong_wish_at = Carbon::parse($auction->taksong_wish_at)->format('Y-m-d');
         $taksong_wish_at_time = Carbon::parse($auction->taksong_wish_at)->format('H:i');
