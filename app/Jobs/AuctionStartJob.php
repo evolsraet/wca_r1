@@ -38,14 +38,14 @@ class AuctionStartJob implements ShouldQueue
         $this->user->notify(new AuctionStartNotification($this->auction, $this->user, $this->data));
 
         // 알리고 알림톡 전송
-        $this->user->notify(new AligoNotification([
-            'tpl_data' => [
-                'tpl_code' => env('SMS_TPL_CODE'),
-                'receiver_1' => $this->user->phone,
-                'subject_1' => $this->user->name.'님의 차량이 등록신청 완료되었습니다.',
-                'message_1' => $this->user->name.'님의 차량이 등록신청 완료되었습니다.',
-            ],
-        ]));
+        // $this->user->notify(new AligoNotification([
+        //     'tpl_data' => [
+        //         'tpl_code' => env('SMS_TPL_CODE'),
+        //         'receiver_1' => $this->user->phone,
+        //         'subject_1' => $this->user->name.'님의 차량이 등록신청 완료되었습니다.',
+        //         'message_1' => $this->user->name.'님의 차량이 등록신청 완료되었습니다.',
+        //     ],
+        // ]));
 
     }
 }

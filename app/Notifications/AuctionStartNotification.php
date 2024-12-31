@@ -48,8 +48,8 @@ class AuctionStartNotification extends Notification
         $car_no = $data->car_no;
 
         return (new MailMessage)
-                    ->subject($ownerName . '님의 ' . $car_no . ' 차량이 등록신청 완료되었습니다.')
-                    ->line($ownerName . '님의 ' . $car_no . ' 차량이 등록신청 완료되었습니다.');
+                    ->subject($ownerName . '님의 ' . $car_no . ' 차량이 경매 등록신청 완료되었습니다.')
+                    ->line($ownerName . '님의 ' . $car_no . ' 차량이 경매 등록신청 완료되었습니다.');
                     // ->action('등록신청', url('/'))
                     // ->line('감사합니다!');
     }
