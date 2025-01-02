@@ -195,6 +195,12 @@
             </div>
           </div>
 
+          <div class="mt-3">
+            <div class="btn-group mt-3">
+              <button type="button" class="btn btn-secondary" @click="diagAuction('ing')"> 경매진행 </button>
+            </div>
+          </div>
+
           <!--
           <div @click="toggleVisibility" class="d-flex justify-content-between align-items-center p-3 border-bottom">
             <h5>차량정보</h5>
@@ -665,7 +671,7 @@ const diagAuction = async (status) => {
     const id = route.params.id;
     await updateAuctionStatus(id, status);
     router.push({ name: 'auctions.index' }); 
-    alert('진단대기로 상태가 변경되었습니다.');
+    status == 'ing' ? alert('경매진행으로 상태가 변경되었습니다.') : alert('진단대기로 상태가 변경되었습니다.');
   } catch (error) {
     console.error('Error updating auction status:', error);
     alert('등록에 실패했습니다.');
