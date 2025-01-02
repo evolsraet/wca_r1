@@ -24,6 +24,10 @@ $sub-color04: #EBEFFD;
 .bc-primary{
     background-color: $primary;  
 }
+.tc-primary{
+    color: $primary !important;
+}
+
 .bc-primary-sb02{
     background-color: $primary-sub02;
 }
@@ -464,9 +468,6 @@ background-color: $sub-color !important;
 }
 .wd-100{
     width: 100% !important;
-}
-.tc-primary{
-    color: $primary !important;
 }
 
 @keyframes social-button-beat {

@@ -416,16 +416,28 @@ button.btn {
   background-color: $primary-sub02;
   color: $primary;
 }
-
-
-
-
+.search-event-popup .swal2-html-container{
+  padding: 0px !important;
+}
+.search-event-actions{
+  display: none !important;
+}
 .manufacturer-model02 {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(175px, 1fr));
   gap: 10px;
 }
-
+.current-price-modal-actions{
+  width: 100% !important;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.current-price-modal-confirmButton{
+  width: 100% !important;
+}
+.current-price-modal-cancelButton{
+  width: 100% !important;
+}
 .manufacturer-model02 .item {
   font-size: 15px;
   text-align: center;

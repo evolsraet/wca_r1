@@ -895,14 +895,14 @@ const getAuctionsWithBids = async (page = 1 , status = "all", userId = '', searc
 // 예상가 계산 
 const checkExpectedPrice = async (data) => {
     return wicac.conn()
-    .url(`/api/auctions/checkExpectedPrice`)
-    .param(data)
-    .callback(function(result) {
-        
-        return result;
-    })
-    .post();
-}   
+        .url(`/api/auctions/checkExpectedPrice`)
+        .param(data)
+        .callback(function (result) {
+            return result; // 예상 가격 데이터 반환
+        })
+        .post();
+};
+
 
     return {
         getAuctionsByDealerLike,
