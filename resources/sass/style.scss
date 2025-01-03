@@ -983,6 +983,9 @@ video{
        max-width: auto !important;
        min-width: auto !important;
     }
+    .sub-board-style{
+        height: 60px;
+      }
 }
 
 @media (min-width: 341px) and (max-width: 640px) {
@@ -4150,13 +4153,24 @@ input[type="checkbox"] {
 }
 
 .overlay-style {
-  height: 94.3vh;
-  
-  @media (max-height: 810px) {
-    height: auto;
-  }
+    height: 100.4vh ;
 }
+@media screen and (max-width: 991px) {
+    .overlay-style {
+        height: 99vh;
+    }
+}
+@media screen and (max-height: 917px) {
+    .overlay-style {
+        overflow-y: scroll;
+    }
+    .login-card{
+        justify-content: space-between !important;
+    }
+}
+@media screen and (max-height: 899px) {
 
+}
 .custom-hr {
   border: none;
   border-top: 3px solid #d7d7d7;

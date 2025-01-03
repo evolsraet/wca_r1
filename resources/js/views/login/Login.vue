@@ -652,13 +652,13 @@ transform: translateY(20px);
 }
 
 .swiper-container {
-width: 100vw; /* 전체 화면 너비 */
-height: 100vh; /* 전체 화면 높이 */
-position: absolute; /* 화면 배경처럼 작동 */
-top: 0;
-left: 0;
-z-index: -1000; /* 다른 콘텐츠 아래로 */
-overflow: hidden; /* 이미지 잘림 방지 */
+  width: 100%; /* 전체 화면 너비 */
+  height: 100vh;
+  position: absolute; /* 화면 배경처럼 작동 */
+  top: 68px;
+  left: 0;
+  z-index: -1000; /* 다른 콘텐츠 아래로 */
+  overflow: hidden; /* 이미지 잘림 방지 */
 }
 
 .slide-content {

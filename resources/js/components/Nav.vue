@@ -46,7 +46,7 @@
                   </div>
                 </div>
               </div>
-              <div class="p-3 mt-auto mb-4">
+              <div class="p-3 mt-auto">
                 <div v-html="randomButton"></div>
               
             </div>
@@ -143,7 +143,7 @@
                   </div>
                 </div>
               </div>
-              <div class="p-3 mt-auto mb-4">
+              <div class="p-3 mt-auto">
                 <div v-html="randomButton"></div>
               
             </div>
@@ -212,7 +212,7 @@
                   </div>
                 </div>
               </div>
-              <div class="p-3 mt-auto mb-4">
+              <div class="p-3 mt-auto">
                 <div v-html="randomButton"></div>
               
             </div>
