@@ -1324,7 +1324,7 @@ video{
 .search-type input {
     background-color: #f5f5f5;
     margin-top: 0;
-    padding: 0 40px 0 40px;
+    padding: 0 40px 0 20px;
     height: 42px;
     line-height: 40px;
     border-radius: 26px;
@@ -4155,6 +4155,10 @@ input[type="checkbox"] {
 .overlay-style {
     height: 100.4vh ;
 }
+.none-complete{
+    font-size: 18px;
+    font-weight: 700;
+}
 @media screen and (max-width: 991px) {
     .overlay-style {
         height: 99vh;
@@ -4386,12 +4390,14 @@ input[type="checkbox"] {
     background-color: #f5f5f5 !important; 
     color: #363636 !important; 
 }
-
+.swal2-html-container{
+    font-size: 1em;
+}
 .intro-modal-actions{
     display: none !important;
 }
 .intro-modal-container .swal2-html-container{
-    padding: 2.5em 0.5em 0em !important;
+    padding: 2.5em 0.2em 0em !important;
 }
 
 .bank-modal-actions{

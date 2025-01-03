@@ -167,4 +167,7 @@ ol, ul {
   opacity: 1;
   transform: translateY(0);
 }
+.content ul li{
+  font-size: 14px;
+}
 </style>

@@ -56,7 +56,7 @@
             <div class="complete-car my-3">
                 <div class="card my-auction mt-3">
                     <div class="none-complete">
-                        <span class="text-secondary opacity-50">아직 작성된 이용후기가 없습니다.</span>
+                        <span class="text-secondary opacity-50 ">아직 작성된 이용후기가 없습니다.</span>
                     </div>
                 </div>
             </div>
