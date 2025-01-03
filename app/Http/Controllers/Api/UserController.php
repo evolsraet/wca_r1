@@ -23,7 +23,7 @@ use App\Notifications\AligoNotification;
 use App\Jobs\UserRegisteredJob;
 use App\Jobs\AuctionDlvrJob;
 use App\Jobs\TaksongStatusJob;
-
+use App\Services\AuctionService;
 class UserController extends Controller
 {
     use CrudControllerTrait;
@@ -141,13 +141,43 @@ class UserController extends Controller
 
         // AuctionDlvrJob::dispatch(36);
 
-        $taksongStatusTemp = TaksongStatusTemp::where('chk_status', '!=', 'done')->get();
-        if($taksongStatusTemp){
+        // $taksongStatusTemp = TaksongStatusTemp::where('chk_status', '!=', 'done')->get();
+        // if($taksongStatusTemp){
 
-            foreach($taksongStatusTemp as $row){
-                TaksongStatusJob::dispatch($row->chk_id);
-            }
-        }
+        //     foreach($taksongStatusTemp as $row){
+        //         TaksongStatusJob::dispatch($row->chk_id);
+        //     }
+        // }
+
+        // $this->getCarmersPrice();
+
+        // $auctionService = new AuctionService();
+        // $auctionService->getCarmersAuth();
+
+
+        // $auctionService = new AuctionService();
+        // $auth = $auctionService->getCarmersAuth(); // 인증 
+        // //$auth = json_decode(json: $auth);
+
+        // $refreshToken = $auth['refreshToken']; // 리프레시 토큰
+        // $accessToken = $auth['accessToken']; // 액세스 토큰 
+
+        // $priceResult = $auctionService->getCarmersPrice($accessToken); // 시세확인 
+
+        // $result = $priceResult['data'];
+
+        // echo "<pre>";
+        // print_r($result);
+        // echo "</pre>";
+        // die();
+
+        $auctionService = new AuctionService();
+        $result = $auctionService->getNiceDnr('안영찬', '299거8869');
+
+        echo "<pre>";
+        print_r($result);
+        echo "</pre>";
+        die();  
 
         // TaksongStatusJob::dispatch(35);
 

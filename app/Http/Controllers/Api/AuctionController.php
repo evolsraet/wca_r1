@@ -84,18 +84,23 @@ class AuctionController extends Controller
 
         // 캐시 없을 경우, 한달동안 저장
         $resource = Cache::remember($cacheKey, now()->addDays(30), function () use ($request) {
+
+            $auctionService = new AuctionService();
+            $niceDnrResult = $auctionService->getNiceDnr($request->input('owner'), $request->input('no'));
+
             // 임시 데이터 리턴
             return [
                 'owner' => $request->input('owner'),
                 'no' => $request->input('no'),
-                'model' => "임시데이터",
+                'model' => $niceDnrResult['carSize']['info']['modelNm'],
                 'modelSub' => "LX",
                 'grade' => "등급",
                 'gradeSub' => "세부등급",
                 'year' => "년식",
                 'mission' => "미션",
                 'fuel' => "연료",
-                'priceNow' => "시세",
+                'priceNow' => "시세", // 소매 시세가 (나이스DNR 시세확인 API
+                'priceNowWhole' => $this->getCarmerceResult(), // 도매 시세가 (카머스 시세확인 API)
             ];
         });
 
@@ -141,6 +146,27 @@ class AuctionController extends Controller
 
         return response()->api($result);
 
+    }
+
+    // 카머스 시세확인 API
+    public function getCarmerceResult()
+    {
+
+        $auctionService = new AuctionService();
+        $auth = $auctionService->getCarmerceAuth(); // 인증 
+
+        $refreshToken = $auth['refreshToken']; // 리프레시 토큰
+        $accessToken = $auth['accessToken']; // 액세스 토큰 
+
+        $priceResult = $auctionService->getCarmercePrice($accessToken); // 시세확인 
+
+        $result = $priceResult['data'];
+
+        // bidAmt 값의 평균 계산
+        $bidAmts = array_column($result, 'bidAmt');
+        $averageBidAmt = count($bidAmts) > 0 ? array_sum($bidAmts) / count($bidAmts) : 0;
+
+        return $averageBidAmt;
     }
 
 }

@@ -78,7 +78,7 @@
                     </div>
                     <div class="top-content-style wd-100 mt-4">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(도매가)</span></p>
-                        <span class="tc-primary bold-18-font">{{ carDetails.priceNow }} 만원</span>
+                        <span class="tc-primary bold-18-font">{{ carDetails.priceNowWhole }} 만원</span>
                     </div>
                     <p class="mt-3 text-secondary">※ 소매 시세는 나이스디엔알에서 제공하며, 도매시세는 오토허브셀카에서 제공합니다.</p>
                     <div v-if="user?.name">
