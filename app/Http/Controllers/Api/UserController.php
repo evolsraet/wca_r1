@@ -171,13 +171,22 @@ class UserController extends Controller
         // echo "</pre>";
         // die();
 
-        $auctionService = new AuctionService();
-        $result = $auctionService->getNiceDnr('안영찬', '299거8869');
+        // $auctionService = new AuctionService();
+        // $result = $auctionService->getNiceDnr('안영찬', '299거8869');
 
-        echo "<pre>";
-        print_r($result);
-        echo "</pre>";
-        die();  
+        // echo "<pre>";
+        // print_r($result);
+        // echo "</pre>";
+        // die(); 
+        
+        $clientKey = env('NICE_PAY_CLIENT_KEY');
+        $clientSecret = env('NICE_PAY_SECRET_KEY');
+
+        // $base64 = base64_encode($clientKey . ':' . $clientSecret);
+
+        $base64 = 'test';
+        echo $base64;
+        die();
 
         // TaksongStatusJob::dispatch(35);
 

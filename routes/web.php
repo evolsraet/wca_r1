@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuctionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+// use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,3 +50,7 @@ Route::get('excelDown/{resource}', function ($resource) {
 Route::view('/{any?}', 'main-view')
     ->name('dashboard')
     ->where('any', '.*');
+
+
+// Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
+// Route::post('/payment', [PaymentController::class, 'processPayment'])->name('payment.process');

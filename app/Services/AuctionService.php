@@ -446,11 +446,18 @@ class AuctionService
         $curl = curl_init();
         
         $chkSec = date('YmdHis'); // 예: chkSec 값
-        $businessNumber = env('NIDE_API_BUSINESS_NUMBER'); // 예: 사업자번호
+        $businessNumber = env('NICE_API_BUSINESS_NUMBER'); // 예: 사업자번호
         $chkKey = (($chkSec % $businessNumber) % 997);
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => env('NICE_API_URL').'?apiKey='.env('NICE_API_APIKEY').'&chkSec='.$chkSec.'&chkKey='.$chkKey.'&loginId='.env('NICE_API_LOGIN_ID').'&kindOf='.env('NICE_API_KIND_OF').'&ownerNm='.$ownerNm.'&vhrNo='.$vhrNo,
+            CURLOPT_URL => env('NICE_API_URL').'?
+            apiKey='.env('NICE_API_APIKEY').'&
+            chkSec='.$chkSec.'&
+            chkKey='.$chkKey.'&
+            loginId='.env('NICE_API_LOGIN_ID').'&
+            kindOf='.env('NICE_API_KIND_OF').'&
+            ownerNm='.$ownerNm.'&
+            vhrNo='.$vhrNo,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,

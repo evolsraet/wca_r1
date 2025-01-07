@@ -20,6 +20,7 @@ use App\Http\Controllers\Api\PermissionController;
 use App\Http\Controllers\Api\AddressbookController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Api\PaymentController;
 
 
 // Route::post('forgetPassword', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
@@ -100,3 +101,6 @@ Route::group(['middleware' => 'auth:sanctum'], function () {
 // Route::get('get-posts', [PostController::class, 'getPosts']);
 // Route::get('get-category-posts/{id}', [PostController::class, 'getCategoryByPosts']);
 // Route::get('get-post/{id}', [PostController::class, 'getPost']);
+
+Route::get('payment', [PaymentController::class, 'showPaymentForm']);
+Route::post('payment/result', [PaymentController::class, 'resultPayment']);

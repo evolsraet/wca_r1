@@ -69,6 +69,12 @@ class TaksongStatusJob implements ShouldQueue
             $user_id = $auction->implode('user_id'); // 차량등록자
             $bid_user_id = $bid->implode('user_id'); // 입찰자
 
+            // 탁송진행시 매물 상태 탁송중으로 변경
+            Auction::where('id', $auction_id)->update(['status' => 'dlvr']);
+
+            // 이 시점에 입금링크 정보 전달 
+            
+
             // 상태에 따른 알림
             // status = start, ing, done, cancel
             switch($status){

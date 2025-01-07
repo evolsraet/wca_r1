@@ -23,5 +23,9 @@ class VerifyCsrfToken extends Middleware
         if (app()->environment('local') && str_contains(request()->header('Referer'), '/api-docs')) {
             $this->except = ['api/*', 'login', 'logout', 'register'];
         }
+
+        if (str_contains(request()->header('Referer'), 'nicepay.co.kr') || request()->is('api/payment/result')) {
+            $this->except[] = 'api/payment/result';
+        }
     }
 }
