@@ -152,17 +152,17 @@ class UserController extends Controller
         // $this->getCarmersPrice();
 
         // $auctionService = new AuctionService();
-        // $auctionService->getCarmersAuth();
+        // $auctionService->getCarmerceAuth();
 
 
         // $auctionService = new AuctionService();
-        // $auth = $auctionService->getCarmersAuth(); // 인증 
-        // //$auth = json_decode(json: $auth);
+        // $auth = $auctionService->getCarmerceAuth(); // 인증 
+        // // $auth = json_decode(json: $auth);
 
         // $refreshToken = $auth['refreshToken']; // 리프레시 토큰
         // $accessToken = $auth['accessToken']; // 액세스 토큰 
 
-        // $priceResult = $auctionService->getCarmersPrice($accessToken); // 시세확인 
+        // $priceResult = $auctionService->getCarmercePrice($accessToken); // 시세확인 
 
         // $result = $priceResult['data'];
 
@@ -179,14 +179,14 @@ class UserController extends Controller
         // echo "</pre>";
         // die(); 
         
-        $clientKey = env('NICE_PAY_CLIENT_KEY');
-        $clientSecret = env('NICE_PAY_SECRET_KEY');
+        // $clientKey = env('NICE_PAY_CLIENT_KEY');
+        // $clientSecret = env('NICE_PAY_SECRET_KEY');
 
         // $base64 = base64_encode($clientKey . ':' . $clientSecret);
 
-        $base64 = 'test';
-        echo $base64;
-        die();
+        // $base64 = 'test';
+        // echo $base64;
+        // die();
 
         // TaksongStatusJob::dispatch(35);
 

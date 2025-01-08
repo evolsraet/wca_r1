@@ -345,20 +345,6 @@ class AuctionService
 
         $result = json_decode($result, true);
 
-        // 샘플 데이터
-        $result = array(
-            "refreshToken" => "9b549f45-a75f-4fa4-b86b-08aea40316c8",
-            "user" => array(
-                "userId" => "012601",
-                "companyName" => "(주)오토허브셀카",
-                "userName" => "김희용"
-            ),
-            "accessToken" => "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhY2Nlc3MiLCJpYXQiOjE3MjQ3MjgzNjMsImV4cCI6MTcyNDgxNDc2MywicGFyYW1zIjp7ImxvZ2luSWQiOiIwMTI2MDIiLCJpZCI6IjEwMCJ9fQ.d3KcSi38cVXFitIPamo4OanszIYybOQry-1mZZ2-llw",
-            "tokenType" => "Bearer"
-        );
-
-        // print_r($result);
-
         curl_close($curl);
 
         return $result;
@@ -386,11 +372,11 @@ class AuctionService
                 "startMakeYear" : " 2021",
                 "endMakeYear" : "2021",
                 "startDriveKm" : "20000",
-                "endDriveKm" : "100000"
+                "endDriveKm" : ""
             }',
             CURLOPT_HTTPHEADER => array(
                 'Content-Type: application/json',
-                'Authorization: '.$accessToken
+                'Authorization: Bearer '.$accessToken
             ),
         ));
 
@@ -398,44 +384,7 @@ class AuctionService
 
         $result = json_decode($result, true);
 
-        // Log::info('카머스 시세확인 API 결과', ['result' => $result]);
         
-        // 샘플 데이터
-        $result = array(
-            "code" => "0",
-            "message" => "성공",
-            "timestamp" => "2024-08-27 13:33:30.131",
-            "data" => array(
-                array(
-                    "receiveCd" => "RC202408140461",
-                    "startDt" => "2024-08-21 00:00:00",
-                    "carName" => "현대 더 뉴 그랜져 IG 가솔린2500cc 익스클루시브",
-                    "makeYear" => "2021",
-                    "gearTypeCode" => "001",
-                    "fuelTypeCode" => "01",
-                    "driveKm" => 44944,
-                    "bidAmt" => 2270,
-                    "regDate" => "2021-01-15",
-                    "inspGrade" => "DB",
-                    "domexType" => "내수"
-                ),
-                array(
-                    "receiveCd" => "RC202408140485",
-                    "startDt" => "2024-08-21 00:00:00",
-                    "carName" => "현대 더 뉴 그랜져 IG 가솔린3300cc 프리미엄 초이스",
-                    "makeYear" => "2021",
-                    "gearTypeCode" => "001",
-                    "fuelTypeCode" => "01",
-                    "driveKm" => 84745,
-                    "bidAmt" => 2130,
-                    "regDate" => "2021-04-21",
-                    "inspGrade" => "BB",
-                    "domexType" => "내수"
-                )
-            )
-        );
-
-
         curl_close($curl);
         return $result;
     }
