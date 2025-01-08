@@ -167,6 +167,9 @@ class AuctionController extends Controller
         $averageBidAmt = count($bidAmts) > 0 ? array_sum($bidAmts) / count($bidAmts) : 0;
         $roundedPrice = round($averageBidAmt);
 
+        // 차량 시세 계산 레인지 두기 (수정필요)
+        $minPrice = $roundedPrice - 1000000;
+        $maxPrice = $roundedPrice + 1000000;
 
         return $roundedPrice;
     }
