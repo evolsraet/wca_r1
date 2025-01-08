@@ -165,8 +165,10 @@ class AuctionController extends Controller
         // bidAmt 값의 평균 계산
         $bidAmts = array_column($result, 'bidAmt');
         $averageBidAmt = count($bidAmts) > 0 ? array_sum($bidAmts) / count($bidAmts) : 0;
+        $roundedPrice = round($averageBidAmt);
 
-        return $averageBidAmt;
+
+        return $roundedPrice;
     }
 
 }
