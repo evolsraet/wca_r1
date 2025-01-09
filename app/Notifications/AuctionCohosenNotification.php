@@ -50,6 +50,10 @@ class AuctionCohosenNotification extends Notification
         $bank_account = $this->auction->account;
         $final_price = $this->auction->final_price;
 
+        // bin2hex(random_bytes($length / 2));
+        $orderId = bin2hex(random_bytes(8));
+
+
         if($this->mode == 'user'){
             $subject = $this->user->name . '님이 ' . $owner_name . '님의 ' . $car_no . ' 차량을 선택하였습니다.';
             $message = $this->user->name . '님이 ' . $owner_name . '님의 ' . $car_no . ' 차량을 선택하였습니다.';

@@ -6,13 +6,34 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
+use App\Models\Bid;
+use App\Models\Auction;
+use App\Jobs\PaymentAlertJob;
+use App\Models\User;
 
 class PaymentController extends Controller
 {
 
-    public function showPaymentForm()
+    public function showPaymentForm(Request $request)
     {
-        return view('payment.form');
+        // orderId 는 앞에 문자열 8개, 중간에 bid 번호, 뒤에 문자열 3개 를 조함한 코드 (orderId 임시번호 부여)
+        $bid = substr($request->code, 8);
+        $bid = substr($bid, 0, -3);
+        $bidFind = Bid::find($bid);
+        $auction = Auction::find($bidFind->auction_id);
+
+        $auctionPrice = $bidFind->price; // 가격
+        $auctionName = $auction->owner_name.'님의 '.$auction->car_no.' 차량'; // 상품명
+        $auctionPrice = 1300; // 테스트 가격
+
+        $data = [
+            'orderId' => $request->code,
+            'bid' => $bid,
+            'auctionPrice' => $auctionPrice,
+            'auctionName' => $auctionName
+        ];
+
+        return view('payment.form', $data);
     }
 
     public function resultPayment()
@@ -62,9 +83,25 @@ class PaymentController extends Controller
 
         if($response['resultCode'] == '0000'){
             // 데이터 베이스에 저장
+            $bid = substr($response['orderId'], 8);
+
+            $bidFind = Bid::find($bid);
+            $auction = Auction::find($bidFind->auction_id);
+
+            $user = User::find($auction->user_id);
+            $bidUser = User::find($bidFind->user_id);
+
+            // 결제 데이터 저장 
+            
+
+            // auction 상태 변경 (탁송중)
+            $auction->status = 'dlvr';
+            $auction->save();
+
 
             // 결제 완료 알림
-            
+            PaymentAlertJob::dispatch($user); // 결제 완료 알림
+            PaymentAlertJob::dispatch($bidUser); // 낙찰자 알림
 
         }
 
