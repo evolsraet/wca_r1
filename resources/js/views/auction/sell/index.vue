@@ -235,31 +235,32 @@ const ExpectationPrice = () => {
                     <div class="error mileage-error" style="color: red;"></div>
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">사고</label>
+                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">과거 사고이력</label>
                     <div class="manufacturer-model02 my-3">
                         <label class="item">
                             <input type="radio" name="accident" value="완전 무사고" onclick="selectItem(this)">
                             완전 무사고
                         </label>
                         <label class="item">
-                            <input type="radio" name="accident" value="교환, 판금 사고" onclick="selectItem(this)">
-                            교환, 판금 사고
+                            <input type="radio" name="accident" value="교환" onclick="selectItem(this)">
+                            교환
+                        </label>
+                        <label class="item">
+                            <input type="radio" name="accident" value="판금 사고" onclick="selectItem(this)">
+                            판금 사고
                         </label>
                         <label class="item">
                             <input type="radio" name="accident" value="전손이력" onclick="selectItem(this)">
                             전손이력
                         </label>
-                        <label class="item">
-                            <input type="radio" name="accident" value="침수" onclick="selectItem(this)">
-                            침수
-                        </label>
                     </div>
                     <div class="error accident-error" style="color: red;"></div>
                 </div>
+                <div>
+                    <p class="mb-3">※ 이 감가 기준은 일반적인 감가 기준이며, 실제 평가 금액과는 차이가 있을 수 있습니다. </p>    
+                </div>
                 <div class="form-group">
-                    <label>사고 발생 건수</label>
-                    <input type="text" placeholder="건" name="accidentCount" value="">
-                    <div class="error accidentCount-error" style="color: red;"></div>
+                    <label class="mb-2">수리필요</label>
                 </div>
                 <div class="form-group">
                     <label>키 갯수</label>
@@ -283,29 +284,6 @@ const ExpectationPrice = () => {
                         <input type="text" placeholder="개" name="tireStatusReplaced" class="text-right" value="">
                     </div>
                     <div class="error tireStatusReplaced-error" style="color: red;"></div>
-                </div>
-                <div class="form-group">
-                    <label>외판 스크래치</label>
-                    <input type="text" placeholder="개" name="tireStatusScratch" value="">
-                    <div class="error tireStatusScratch-error" style="color: red;"></div>
-                </div>
-                <div class="form-group">
-                    <label>옵션</label>
-                    <div class="manufacturer-model02 my-3">
-                        <label class="item">
-                            <input type="radio" name="options" value="선루프" onclick="selectItem(this)">
-                            선루프
-                        </label>
-                        <label class="item">
-                            <input type="radio" name="options" value="어라운드뷰" onclick="selectItem(this)">
-                            어라운드뷰
-                        </label>
-                        <label class="item">
-                            <input type="radio" name="options" value="s-크루즈컨트롤" onclick="selectItem(this)">
-                            s-크루즈컨트롤
-                        </label>
-                    </div>
-                    <div class="error options-error" style="color: red;"></div>
                 </div>
 
                 <button id="customSubmitButton" class="btn btn-primary mt-3 w-100">평가사 진단 신청</button>
@@ -367,24 +345,24 @@ const { submitCarInfo, refreshCarInfo, checkExpectedPrice } = useAuctions();
 const checkExpectedPriceClick = async () => {
     const mileage = document.querySelector('input[name="mileage"]').value;
     const accident = document.querySelector('input[name="accident"]:checked')?.value || '';
-    const accidentCount = document.querySelector('input[name="accidentCount"]').value;
+    // const accidentCount = document.querySelector('input[name="accidentCount"]').value;
     const keyCount = document.querySelector('input[name="keyCount"]').value;
     const wheelScratch = document.querySelector('input[name="wheelScratch"]').value;
     const tireStatusNormal = document.querySelector('input[name="tireStatusNormal"]').value;
     const tireStatusReplaced = document.querySelector('input[name="tireStatusReplaced"]').value;
-    const tireStatusScratch = document.querySelector('input[name="tireStatusScratch"]').value;
-    const options = document.querySelector('input[name="options"]:checked')?.value || '';
+    // const tireStatusScratch = document.querySelector('input[name="tireStatusScratch"]').value;
+    // const options = document.querySelector('input[name="options"]:checked')?.value || '';
 
     const data = {
         mileage,
         accident,
-        accidentCount,
+        // accidentCount,
         keyCount,
         wheelScratch,
         tireStatusNormal,
         tireStatusReplaced,
-        tireStatusScratch,
-        options,
+        // tireStatusScratch,
+        // options,
     };
 
     try {
@@ -407,14 +385,14 @@ const checkExpectedPriceClick = async () => {
             }, 100);
 
             // 예상 가격 모달 즉시 표시
-            showCurrentPriceModal(result.data?.estimatedPrice);
+            showCurrentPriceModal(result.data.estimatedPrice);
 
             // "현재 예상 가격" 버튼 표시
             const currentPriceBtn = document.getElementById('currentPriceBtn');
             if (currentPriceBtn) {
                 currentPriceBtn.style.display = 'inline-block'; 
                 currentPriceBtn.addEventListener('click', () => {
-                    showCurrentPriceModal(result.data?.estimatedPrice); // 버튼 클릭 시 모달 다시 표시
+                    showCurrentPriceModal(result.data.estimatedPrice); // 버튼 클릭 시 모달 다시 표시
                 });
             }
             const estimatePriceBtn = document.querySelector('.expectedPrice');

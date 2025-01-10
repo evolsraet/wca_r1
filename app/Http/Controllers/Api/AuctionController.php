@@ -96,7 +96,7 @@ class AuctionController extends Controller
                 'modelSub' => "LX",
                 'grade' => "등급",
                 'gradeSub' => "세부등급",
-                'year' => "년식",
+                'year' => "2019",
                 'mission' => "미션",
                 'fuel' => "연료",
                 'priceNow' => "시세", // 소매 시세가 (나이스DNR 시세확인 API
@@ -114,24 +114,24 @@ class AuctionController extends Controller
         $request->validate([
             'mileage' => 'required', // 주행거리
             'accident' => 'required', // 사고여부
-            'accidentCount' => 'required', // 사고건수
+            // 'accidentCount' => 'required', // 사고건수
             'keyCount' => 'required', // 키건수
             'wheelScratch' => 'required', // 바퀴 손상여부
             'tireStatusNormal' => 'required', // 타이어 손상여부
             'tireStatusReplaced' => 'required', // 타이어 교체여부
-            'tireStatusScratch' => 'required', // 타이어 손상여부
-            'options' => 'required', // 옵션
+            // 'tireStatusScratch' => 'required', // 타이어 손상여부
+            // 'options' => 'required', // 옵션
         ]);
 
         $mileage = $request->input('mileage');
         $accident = $request->input('accident');
-        $accidentCount = $request->input('accidentCount');
+        // $accidentCount = $request->input('accidentCount');
         $keyCount = $request->input('keyCount');
         $wheelScratch = $request->input('wheelScratch');
         $tireStatusNormal = $request->input('tireStatusNormal');
         $tireStatusReplaced = $request->input('tireStatusReplaced');
-        $tireStatusScratch = $request->input('tireStatusScratch');
-        $options = $request->input('options');
+        // $tireStatusScratch = $request->input('tireStatusScratch');
+        // $options = $request->input('options');
 
         $price = 0;
 
@@ -175,9 +175,6 @@ class AuctionController extends Controller
 
         // 사고발생 건수 제외 
 
-        키갯수
-        
-
         #  이 감가 기준은 일반적인 감가 기준이며, 실제 평가 금액과는 차이가 있을 수 있습니다. 
 
 
@@ -198,7 +195,7 @@ class AuctionController extends Controller
 
         사고 발생 건수 부분 지우고, "수리 필요" 추가 
 
-        키갯수 30만원
+        키갯수 30만원 (두개 기준)
         휠스크래치 10만원
         
         타이어
@@ -215,12 +212,11 @@ class AuctionController extends Controller
 
         
 
-        감가 = 주행거리 * 잔가율    
-
+        
         **/
         // 계산식 작성 end
 
-        $result = '';
+        $result['estimatedPrice'] = 1000000;
 
         return response()->api($result);
 
