@@ -90,6 +90,16 @@
                   <input v-model="auction.final_at" id="finalAt" class="form-control" type="datetime-local">
                 </div>
                 -->
+
+                <div class="card-body">
+                  <p class="text-secondary opacity-50">진단희망일1</p>
+                  <input v-model="auction.diag_first_at" id="diagFirstAt" class="form-control" type="datetime-local">
+                </div>
+                <div class="card-body">
+                  <p class="text-secondary opacity-50">진단희망일2</p>
+                  <input v-model="auction.diag_second_at" id="diagSecondAt" class="form-control" type="datetime-local">
+                </div>
+                
                 <div class="card-body">
                   <p class="text-secondary opacity-50">선택일</p>
                   <input v-model="auction.choice_at" id="choiceAt" class="form-control" type="datetime-local">
@@ -464,6 +474,8 @@ const auction = reactive({
   dest_addr_post:'',
   dest_addr1:'',
   dest_addr2:'',
+  diag_first_at:'',
+  diag_second_at:'',
 });
 
 const route = useRoute();
@@ -743,6 +755,8 @@ onMounted(async () => {
     auction.addr_post = data.addr_post;
     auction.addr1 = data.addr1;
     auction.addr2 = data.addr2;
+    auction.diag_first_at = data.diag_first_at;
+    auction.diag_second_at = data.diag_second_at;
     //auction.final_at = data.final_at;
 
     if(data.choice_at){

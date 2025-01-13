@@ -40,6 +40,8 @@ class Auction extends Model implements HasMedia
         'taksong_wish_at' => 'datetime',
         'done_at' => 'datetime',
         'diag_check_at' => 'datetime',
+        'diag_first_at' => 'datetime',
+        'diag_second_at' => 'datetime',
     ];
 
     // 업로드 가능한 파일들

@@ -76,7 +76,8 @@
         <label for="datetime">
           <span class="text-danger me-2">*</span>진단희망 날짜 및 시간
         </label>
-        <input id="datetimeInput" type="datetime-local" style="width: 100%; padding: 10px;" />
+        <input id="datetimeInput" type="datetime-local" v-model="diagFirstAt" style="width: 100%; padding: 10px;" />
+        <input id="datetimeInput" type="datetime-local" v-model="diagSecondAt" style="width: 100%; padding: 10px;" />
         <p class="tc-gray">※ 영업일 기준 오전9시부터 오후6시까지 선택 가능합니다.</p>
       </div>
         <h5><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
@@ -268,6 +269,8 @@ const fileInputRefOwner = ref(null);
 const fileAuctionProxy = ref(null); // 추가: 파일 저장 변수
 const fileAuctionProxyName = ref(''); // 추가: 파일 이름 저장 변수
 const isBizChecked = ref(false); // 체크박스 상태를 저장하는 변수
+const diagFirstAt = ref('');
+const diagSecondAt = ref('');
 const is_biz = computed({
   get() {
     return isBizChecked.value ? 1 : 0;
@@ -311,7 +314,9 @@ const auctionEntry = async () => {
     addr_post: addrPost.value,
     file_auction_proxy: fileAuctionProxy.value, // 업로드된 파일 추가
     is_biz : is_biz.value,
-    status: "diag"
+    status: "diag",
+    diag_first_at: diagFirstAt.value,
+    diag_second_at: diagSecondAt.value,
   };
   console.log(auctionData);
   if(isVerified.value){

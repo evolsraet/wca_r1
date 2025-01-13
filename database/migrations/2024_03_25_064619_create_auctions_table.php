@@ -26,6 +26,8 @@ class CreateAuctionsTable extends Migration
             $table->text('memo_digician')->nullable()->comment('평가사 의견');
             $table->boolean('is_reauction')->default(0)->comment('재경매여부');
             $table->boolean('is_biz')->default(0)->comment('법인/사업자차량');
+            $table->timestamp('diag_first_at')->nullable()->comment('진단희망 날짜및시간1');
+            $table->timestamp('diag_second_at')->nullable()->comment('진단희망 날짜및시간2');
             $table->timestamp('final_at')->nullable()->comment('경매마감일');
             $table->timestamp('choice_at')->nullable()->comment('선택일');
             $table->timestamp('taksong_wish_at')->nullable()->comment('탁송희망일');
