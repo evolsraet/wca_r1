@@ -32,7 +32,7 @@
                 </ul>
                 <ul class="machine-inform-title">
                     <li class="text-secondary opacity-50">최초등록일</li>
-                    <li class="info-num"></li>
+                    <li class="info-num">{{ carDetails.firstRegDate }}</li>
                     <li class="car-aside-icon"></li>
                 </ul>
                 <ul class="machine-inform">
@@ -353,6 +353,10 @@ const checkExpectedPriceClick = async () => {
     // const tireStatusScratch = document.querySelector('input[name="tireStatusScratch"]').value;
     // const options = document.querySelector('input[name="options"]:checked')?.value || '';
 
+    // console.log(carDetails.value);
+
+    const firstRegDate = carDetails.value.firstRegDate;
+
     const data = {
         mileage,
         accident,
@@ -361,6 +365,7 @@ const checkExpectedPriceClick = async () => {
         wheelScratch,
         tireStatusNormal,
         tireStatusReplaced,
+        firstRegDate
         // tireStatusScratch,
         // options,
     };

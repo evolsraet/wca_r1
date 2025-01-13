@@ -11,7 +11,7 @@ use App\Models\Auction;
 use App\Jobs\AuctionStartJob;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
-
+use Carbon\Carbon;
 class AuctionController extends Controller
 {
     use CrudControllerTrait;
@@ -96,7 +96,8 @@ class AuctionController extends Controller
                 'modelSub' => "LX",
                 'grade' => "등급",
                 'gradeSub' => "세부등급",
-                'year' => "2019",
+                'year' => "2023",
+                'firstRegDate' => "2022-11-01",
                 'mission' => "미션",
                 'fuel' => "연료",
                 'priceNow' => "시세", // 소매 시세가 (나이스DNR 시세확인 API
@@ -114,31 +115,69 @@ class AuctionController extends Controller
         $request->validate([
             'mileage' => 'required', // 주행거리
             'accident' => 'required', // 사고여부
-            // 'accidentCount' => 'required', // 사고건수
             'keyCount' => 'required', // 키건수
             'wheelScratch' => 'required', // 바퀴 손상여부
             'tireStatusNormal' => 'required', // 타이어 손상여부
-            'tireStatusReplaced' => 'required', // 타이어 교체여부
-            // 'tireStatusScratch' => 'required', // 타이어 손상여부
-            // 'options' => 'required', // 옵션
+            'tireStatusReplaced' => 'required' // 타이어 교체여부
         ]);
 
         $mileage = $request->input('mileage');
         $accident = $request->input('accident');
-        // $accidentCount = $request->input('accidentCount');
         $keyCount = $request->input('keyCount');
         $wheelScratch = $request->input('wheelScratch');
         $tireStatusNormal = $request->input('tireStatusNormal');
         $tireStatusReplaced = $request->input('tireStatusReplaced');
-        // $tireStatusScratch = $request->input('tireStatusScratch');
-        // $options = $request->input('options');
-
-        $price = 0;
-
-        Log::info('예상가 확인 호출', ['request' => $request->all()]);
-
+        $firstRegDate = $request->input('firstRegDate');
+        
         // 계산식 작성 start
 
+        // Log::info('예상가 확인 호출', ['request' => $request->all()]);
+
+        $nowYear = Carbon::now()->format('Y'); // 현재년도
+        $nowMonth = Carbon::now()->format('m'); // 현재 월
+        $firstRegDate = Carbon::parse($firstRegDate);
+        $firstRegYear = $firstRegDate->format('Y'); // 최초등록년도
+        $firstRegMonth = $firstRegDate->format('m'); // 최초등록월
+
+        $initialPrice = 30000000; // 차량 초기 가격 3천만 원
+
+        $result = $this->calculateCarPrice($nowYear, $nowMonth, $firstRegYear, $firstRegMonth, $mileage, $initialPrice);
+
+        $resultPrice = $result['estimatedPrice'];
+
+        // 사고이력 
+        switch($accident){
+            case '교환':
+                $resultPrice -= 500000;
+                break;
+            case '판금 사고':
+                $resultPrice -= 150000;
+                break;
+            case '전손이력':
+                $resultPrice *= 0.9;
+                break;
+        }
+
+        // 키갯수
+        if($keyCount > 2){
+            $resultPrice -= 300000;
+        }
+
+        // 휠스크래치   
+        if($wheelScratch > 0){
+            $resultPrice -= 100000;
+        }
+
+        // 타이어 
+        if($tireStatusNormal > 0){
+            $resultPrice -= 150000;
+        }
+
+        // 타이어 교체 
+        if($tireStatusReplaced > 0){
+            $resultPrice -= 150000;
+        }
+        
         /***
         # 표준주행거리 계산 ( 25(현재년도) - 이차량의 최초등록일 연도  ) 
         - 차량 등록일 연도 - 현재월 
@@ -170,25 +209,20 @@ class AuctionController extends Controller
         수리이력 / 교환 (50만원)
         수리이력 / 판금 (15만원)
 
-
         // 선루프, 어라운드 뷰, 크루즈 컨트롤 (30만원)
-
         // 사고발생 건수 제외 
 
         #  이 감가 기준은 일반적인 감가 기준이며, 실제 평가 금액과는 차이가 있을 수 있습니다. 
-
 
         사고 - > 과거 사고이력 
         교환 -> 외판손상 (15)
 
         옵션부분 제거 
 
-        
         // 주행거리 계산 
         // 사고 -> 과거 사고이력
         수리이력 / 교환 (50만원)
         수리이력 / 판금 (15만원)
-
 
         전손이력 -> 감가 20% 
         - 침수 제거 
@@ -203,23 +237,81 @@ class AuctionController extends Controller
         교환 > 15만원
 
         외판 스크레치 제거 
-
-
-        // 다시 정리 
-
-        년도((현재년도) - 이차량의 최초등록일 연도) * 12 + (차량 등록일 연도 - 현재월 ) * 1.25 * 1000 // 표준주행거리 
-        주행거리 = 표준주행거리 - 현재주행거리 
-
-        
-
         
         **/
+        
+
+        // $resultc['사용 월수'] = $result['monthsUsed'] . "개월\n";
+        // $resultc['표준 주행거리'] = number_format($result['standardMileage']) . "km\n";
+        // $resultc['주행거리 차이'] = number_format($result['mileageDifference']) . "km\n";
+        // $resultc['잔가율'] = $result['residualRate'] * 100 . "%\n";
+        // $resultc['기본 감가 가격 (원 단위)'] = number_format($result['basePrice']) . "원\n";
+        // $resultc['주행거리 감가 금액 (원 단위)'] = number_format($result['mileageDepreciation']) . "원\n";
+        // $resultc['최종 예상 가격 (원 단위)'] = number_format($result['estimatedPrice']) . "원\n";
+        // $resultc['최종 예상 가격 (만원 단위)'] = number_format($result['estimatedPriceInTenThousandWon']) . "만원\n";
+
+
+        // Log::info('예상가 확인 결과', ['result' => $resultc]);
+
         // 계산식 작성 end
 
-        $result['estimatedPrice'] = 1000000;
+        $result['estimatedPrice'] = $resultPrice / 10000;
 
         return response()->api($result);
 
+    }
+
+    private function calculateCarPrice($currentYear, $currentMonth, $regYear, $regMonth, $currentMileage, $initialPrice, $mileageStandard = 1250) {
+        // 1. 사용 월수 계산
+        $monthsUsed = ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth);
+    
+        // 2. 표준 주행거리 계산 (월별 주행거리 기준)
+        $standardMileage = $monthsUsed * $mileageStandard;
+    
+        // 3. 주행거리 차이 계산
+        $mileageDifference = $standardMileage - $currentMileage;
+    
+        // 주행거리 차이가 음수일 경우 감가를 초과로 처리
+        $mileageDifferenceEffect = $mileageDifference > 0 ? 1 : -1;
+    
+        // 4. 잔가율 결정
+        $yearsUsed = floor($monthsUsed / 12);
+        $residualRate = 0;
+        if ($yearsUsed <= 1) {
+            $residualRate = 0.518;
+        } elseif ($yearsUsed <= 4) {
+            $residualRate = 0.417;
+        } elseif ($yearsUsed == 5) {
+            $residualRate = 0.368;
+        } elseif ($yearsUsed == 6) {
+            $residualRate = 0.311;
+        } elseif ($yearsUsed >= 7) {
+            $residualRate = 0.262;
+        }
+    
+        // 5. 기본 감가 가격 계산
+        $basePrice = $initialPrice * $residualRate;
+    
+        // 6. 주행 거리 감가 계산 (1km당 200원 가정)
+        $depreciationPerKm = 200;
+        $mileageDepreciation = abs($mileageDifference) * $depreciationPerKm * $mileageDifferenceEffect;
+    
+        // 7. 최종 예상 가격 계산
+        $estimatedPrice = $basePrice + $mileageDepreciation;
+
+        $estimatedPriceInTenThousandWon = $estimatedPrice / 10000;
+    
+        // 결과 반환
+        return [
+            'monthsUsed' => $monthsUsed,
+            'standardMileage' => $standardMileage,
+            'mileageDifference' => $mileageDifference,
+            'residualRate' => $residualRate,
+            'basePrice' => $basePrice,
+            'mileageDepreciation' => $mileageDepreciation,
+            'estimatedPrice' => $estimatedPrice,
+            'estimatedPriceInTenThousandWon' => $estimatedPriceInTenThousandWon
+        ];
     }
 
     // 카머스 시세확인 API
