@@ -66,7 +66,7 @@
                     </div>
                   </div>
                   <div class="card-body p-3 pt-0 ">
-                    <p class="card-title fs-5 fw-bolder">{{ auctionDetail.data.car_model ? auctionDetail.data.car_model +' '+ auctionDetail.data.car_model_sub +' '+ auctionDetail.data.car_fuel : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                    <p class="card-title fs-5 fw-bolder">{{ auctionDetail.data.car_model ? auctionDetail.data.car_model +' '+ auctionDetail.data.car_model_sub +' '+ auctionDetail.data.car_fuel + ' ('+ auctionDetail.data.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
                     <p>{{ auctionDetail.data.car_year ? auctionDetail.data.car_year : '2020' }} 년 | {{ auctionDetail.data.car_km ? auctionDetail.data.car_km : '2.4' }}km | 무사고</p>
                     <p class="text-secondary opacity-50">{{ auctionDetail.data.car_maker ? auctionDetail.data.car_maker +' '+ auctionDetail.data.car_model : '현대 소나타' }} ({{ auctionDetail.data.car_grade ? auctionDetail.data.car_grade : 'DN8' }})</p>
                     <div class="enter-view">

@@ -166,7 +166,7 @@ TODO:
                                                     <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
                                                 </div>-->
                                                     <div class="card-body">
-                                                        <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                                                        <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
                                                         <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span>| 무사고</p>
                                                         <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                         <div class="d-flex">
@@ -261,7 +261,7 @@ TODO:
                                                 <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
                                             </div>-->
                                             <div class="card-body">
-                                                <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                                                <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
                                                 <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span>| 무사고</p>
                                                 <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                 <div class="d-flex">
@@ -322,7 +322,7 @@ TODO:
                                             <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
                                             <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                             <div class="card-body">
-                                                <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                                                <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
                                                 <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span>| 무사고</p>
                                                 <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                 <div class="d-flex">
@@ -396,7 +396,7 @@ TODO:
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                                                <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
                                                 <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span>| 무사고</p>
                                                 <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                 <div class="d-flex">
@@ -476,7 +476,7 @@ TODO:
                                                     </div>
                                                 </div>
                                                 <div class="card-body">
-                                                    <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                                                    <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
                                                     <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span>| 무사고</p>
                                                     <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                     <div class="d-flex">
