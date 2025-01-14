@@ -31,16 +31,26 @@
                       </div>
                       <div class="gap-1" :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
                       <div v-if="!isMobileView" class="d-flex flex-row gap-1">
-                        <div class="w-50">
-                          <div class="card-img-top-ty02"></div>
+                        <div v-if="auctionDetail.data.car_thumbnail">
+                          <img :src="auctionDetail.data.car_thumbnail" alt="Car Image">
                         </div>
-                        <div class="w-50 d-flex flex-column gap-1">
-                          <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
-                          <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+                        <div v-else>
+                          <div class="w-50">
+                            <div class="card-img-top-ty02"></div>
+                          </div>
+                          <div class="w-50 d-flex flex-column gap-1">
+                            <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
+                            <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+                          </div>
                         </div>
                       </div>
                       <div v-if="isMobileView">
-                        <div class="card-img-top-ty02"></div>
+                        <div v-if="auctionDetail.data.car_thumbnail">
+                          <img :src="auctionDetail.data.car_thumbnail" alt="Car Image">
+                        </div>
+                        <div v-else>
+                          <div class="card-img-top-ty02"></div>
+                        </div>
                       </div>
                     </div>
 
@@ -56,9 +66,9 @@
                     </div>
                   </div>
                   <div class="card-body p-3 pt-0 ">
-                    <p class="card-title fs-5 fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                    <p>{{ carDetails.year }} 년 | 2.4km | 무사고</p>
-                    <p class="text-secondary opacity-50">현대 소나타 (DN8)</p>
+                    <p class="card-title fs-5 fw-bolder">{{ auctionDetail.data.car_model ? auctionDetail.data.car_model +' '+ auctionDetail.data.car_model_sub +' '+ auctionDetail.data.car_fuel : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                    <p>{{ auctionDetail.data.car_year ? auctionDetail.data.car_year : '2020' }} 년 | 2.4km | 무사고</p>
+                    <p class="text-secondary opacity-50">{{ auctionDetail.data.car_maker ? auctionDetail.data.car_maker +' '+ auctionDetail.data.car_model : '현대 소나타' }} ({{ auctionDetail.data.car_grade ? auctionDetail.data.car_grade : 'DN8' }})</p>
                     <div class="enter-view">
                       <AlarmModal ref="alarmModal" />
                     </div>

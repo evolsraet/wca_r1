@@ -127,7 +127,12 @@ TODO:
                                                         </div>
                                                     </div>
                                                     <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
-                                                        <img src="../../../img/car_example.png">
+                                                        <div v-if="auction.car_thumbnail">
+                                                            <img :src="auction.car_thumbnail" alt="Car Image">
+                                                        </div>
+                                                        <div v-else>
+                                                            <img src="../../../img/car_example.png">
+                                                        </div>
                                                     </div>
                                                     <span v-if="auction.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span>
                                                     <div>
@@ -161,9 +166,9 @@ TODO:
                                                     <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
                                                 </div>-->
                                                     <div class="card-body">
-                                                        <p class="card-title fw-bolder">더 뉴 그랜저 IG 2.5 가솔린 르블랑</p>
-                                                        <p class="tc-gray mt-0"> 2020 년 |<span class="mx-1">2.4km</span>| 무사고</p>
-                                                        <p class="tc-gray mt-0">현대 소나타 (DN8)</p>
+                                                        <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                                                        <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">2.4km</span>| 무사고</p>
+                                                        <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                         <div class="d-flex">
                                                             <h5 class="card-title"><span class="blue-box fw-bold border-6">무사고</span></h5>
                                                             <h5 v-if="auction.is_reauction !== 0"><span class="gray-box border-6">재경매</span></h5>

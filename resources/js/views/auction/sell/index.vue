@@ -12,7 +12,7 @@
                 </ul>
                 <ul class="machine-inform">
                     <li class="text-secondary opacity-50">제조사</li>
-                    <li class="sub-title"></li>
+                    <li class="sub-title">{{ carDetails.maker }}</li>
                 </ul>
                 <ul class="machine-inform">
                     <li class="text-secondary opacity-50">모델</li>
@@ -345,29 +345,27 @@ const { submitCarInfo, refreshCarInfo, checkExpectedPrice } = useAuctions();
 const checkExpectedPriceClick = async () => {
     const mileage = document.querySelector('input[name="mileage"]').value;
     const accident = document.querySelector('input[name="accident"]:checked')?.value || '';
-    // const accidentCount = document.querySelector('input[name="accidentCount"]').value;
     const keyCount = document.querySelector('input[name="keyCount"]').value;
     const wheelScratch = document.querySelector('input[name="wheelScratch"]').value;
     const tireStatusNormal = document.querySelector('input[name="tireStatusNormal"]').value;
     const tireStatusReplaced = document.querySelector('input[name="tireStatusReplaced"]').value;
-    // const tireStatusScratch = document.querySelector('input[name="tireStatusScratch"]').value;
-    // const options = document.querySelector('input[name="options"]:checked')?.value || '';
-
     // console.log(carDetails.value);
 
     const firstRegDate = carDetails.value.firstRegDate;
+    const currentPrice = carDetails.value.priceNow;
+    const maker = carDetails.value.maker;
+    // console.log(currentPrice);
 
     const data = {
         mileage,
         accident,
-        // accidentCount,
         keyCount,
         wheelScratch,
         tireStatusNormal,
         tireStatusReplaced,
-        firstRegDate
-        // tireStatusScratch,
-        // options,
+        firstRegDate,
+        currentPrice,
+        maker
     };
 
     try {

@@ -90,18 +90,32 @@ class AuctionController extends Controller
 
             // 임시 데이터 리턴
             return [
+                // 'owner' => $request->input('owner'),
+                // 'no' => $request->input('no'),
+                // 'model' => $niceDnrResult['carSize']['info']['modelNm'],
+                // 'modelSub' => "LX",
+                // 'grade' => "등급",
+                // 'gradeSub' => "세부등급",
+                // 'year' => "2019",
+                // 'firstRegDate' => "2018-11-01",
+                // 'mission' => "미션",
+                // 'fuel' => "연료",
+                // 'priceNow' => "시세", // 소매 시세가 (나이스DNR 시세확인 API
+                // 'priceNowWhole' => $this->getCarmerceResult(), // 도매 시세가 (카머스 시세확인 API)
                 'owner' => $request->input('owner'),
                 'no' => $request->input('no'),
+                'maker' => $niceDnrResult['carSize']['info']['makerNm'],
                 'model' => $niceDnrResult['carSize']['info']['modelNm'],
-                'modelSub' => "LX",
-                'grade' => "등급",
-                'gradeSub' => "세부등급",
-                'year' => "2023",
-                'firstRegDate' => "2022-11-01",
-                'mission' => "미션",
-                'fuel' => "연료",
-                'priceNow' => "시세", // 소매 시세가 (나이스DNR 시세확인 API
-                'priceNowWhole' => $this->getCarmerceResult(), // 도매 시세가 (카머스 시세확인 API)
+                'modelSub' => $niceDnrResult['carSize']['info']['subGrade'],
+                'grade' => $niceDnrResult['carSize']['info']['grade'],
+                'gradeSub' => $niceDnrResult['carSize']['info']['subGrade'],
+                'year' => $niceDnrResult['carSize']['info']['year'],
+                'firstRegDate' => $niceDnrResult['carSize']['info']['firstRegistrationDate'],
+                'mission' => $niceDnrResult['carSize']['info']['transmission'],
+                'fuel' => $niceDnrResult['carSize']['info']['fuelType'],
+                'priceNow' => $niceDnrResult['carSize']['info']['currentPrice'], // 소매 시세가 (나이스DNR 시세확인 API
+                'priceNowWhole' => $this->getCarmerceResult($niceDnrResult['carSize']['info']), // 도매 시세가 (카머스 시세확인 API)
+                'thumbnail' => $niceDnrResult['carSize']['info']['thumbnail'],
             ];
         });
 
@@ -112,13 +126,16 @@ class AuctionController extends Controller
     // 예상가 확인 API
     public function CheckExpectedPrice(Request $request)
     {
+        $auctionService = new AuctionService();
+
         $request->validate([
             'mileage' => 'required', // 주행거리
             'accident' => 'required', // 사고여부
             'keyCount' => 'required', // 키건수
             'wheelScratch' => 'required', // 바퀴 손상여부
             'tireStatusNormal' => 'required', // 타이어 손상여부
-            'tireStatusReplaced' => 'required' // 타이어 교체여부
+            'tireStatusReplaced' => 'required', // 타이어 교체여부
+            'currentPrice' => 'required' // 소매 시세가
         ]);
 
         $mileage = $request->input('mileage');
@@ -128,7 +145,7 @@ class AuctionController extends Controller
         $tireStatusNormal = $request->input('tireStatusNormal');
         $tireStatusReplaced = $request->input('tireStatusReplaced');
         $firstRegDate = $request->input('firstRegDate');
-        
+        $currentPrice = $request->input('currentPrice');
         // 계산식 작성 start
 
         // Log::info('예상가 확인 호출', ['request' => $request->all()]);
@@ -139,10 +156,18 @@ class AuctionController extends Controller
         $firstRegYear = $firstRegDate->format('Y'); // 최초등록년도
         $firstRegMonth = $firstRegDate->format('m'); // 최초등록월
 
-        $initialPrice = 30000000; // 차량 초기 가격 3천만 원
+        // $nowYear = 2025;
+        // $nowMonth = 1;
+        // $firstRegYear = 2019;
+        // $firstRegMonth = 6;
+        // $mileage = 80000;
 
-        $result = $this->calculateCarPrice($nowYear, $nowMonth, $firstRegYear, $firstRegMonth, $mileage, $initialPrice);
+        Log::info('예상가 확인 호출', ['현재년도' => $nowYear, '현재 월' => $nowMonth, '최초등록년도' => $firstRegYear, '최초등록월' => $firstRegMonth, 'mileage' => $mileage]);
 
+        $initialPrice = $currentPrice; // 차량 초기 가격 3천만 원
+
+        $result = $auctionService->calculateCarPrice($nowYear, $nowMonth, $firstRegYear, $firstRegMonth, $mileage, $initialPrice);
+        
         $resultPrice = $result['estimatedPrice'];
 
         // 사고이력 
@@ -241,81 +266,27 @@ class AuctionController extends Controller
         **/
         
 
-        // $resultc['사용 월수'] = $result['monthsUsed'] . "개월\n";
-        // $resultc['표준 주행거리'] = number_format($result['standardMileage']) . "km\n";
-        // $resultc['주행거리 차이'] = number_format($result['mileageDifference']) . "km\n";
-        // $resultc['잔가율'] = $result['residualRate'] * 100 . "%\n";
-        // $resultc['기본 감가 가격 (원 단위)'] = number_format($result['basePrice']) . "원\n";
-        // $resultc['주행거리 감가 금액 (원 단위)'] = number_format($result['mileageDepreciation']) . "원\n";
-        // $resultc['최종 예상 가격 (원 단위)'] = number_format($result['estimatedPrice']) . "원\n";
-        // $resultc['최종 예상 가격 (만원 단위)'] = number_format($result['estimatedPriceInTenThousandWon']) . "만원\n";
+        $resultc['사용 월수'] = $result['monthsUsed'] . "개월\n";
+        $resultc['표준 주행거리'] = number_format($result['standardMileage']) . "km\n";
+        $resultc['주행거리 차이'] = number_format($result['mileageDifference']) . "km\n";
+        $resultc['잔가율'] = $result['residualRate'] * 100 . "%\n";
+        $resultc['기본 감가 가격 (원 단위)'] = number_format($result['basePrice']) . "원\n";
+        $resultc['주행거리 감가 금액 (원 단위)'] = number_format($result['mileageDepreciation']) . "원\n";
+        $resultc['최종 예상 가격 (원 단위)'] = number_format($result['estimatedPrice']) . "원\n";
+        $resultc['최종 예상 가격 (만원 단위)'] = number_format($result['estimatedPriceInTenThousandWon']) . "만원\n";
 
 
-        // Log::info('예상가 확인 결과', ['result' => $resultc]);
+        Log::info('예상가 확인 결과', ['result' => $resultc]);
 
         // 계산식 작성 end
-
-        $result['estimatedPrice'] = $resultPrice / 10000;
+        $result['estimatedPrice'] = round($resultPrice / 10000);
 
         return response()->api($result);
 
     }
 
-    private function calculateCarPrice($currentYear, $currentMonth, $regYear, $regMonth, $currentMileage, $initialPrice, $mileageStandard = 1250) {
-        // 1. 사용 월수 계산
-        $monthsUsed = ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth);
-    
-        // 2. 표준 주행거리 계산 (월별 주행거리 기준)
-        $standardMileage = $monthsUsed * $mileageStandard;
-    
-        // 3. 주행거리 차이 계산
-        $mileageDifference = $standardMileage - $currentMileage;
-    
-        // 주행거리 차이가 음수일 경우 감가를 초과로 처리
-        $mileageDifferenceEffect = $mileageDifference > 0 ? 1 : -1;
-    
-        // 4. 잔가율 결정
-        $yearsUsed = floor($monthsUsed / 12);
-        $residualRate = 0;
-        if ($yearsUsed <= 1) {
-            $residualRate = 0.518;
-        } elseif ($yearsUsed <= 4) {
-            $residualRate = 0.417;
-        } elseif ($yearsUsed == 5) {
-            $residualRate = 0.368;
-        } elseif ($yearsUsed == 6) {
-            $residualRate = 0.311;
-        } elseif ($yearsUsed >= 7) {
-            $residualRate = 0.262;
-        }
-    
-        // 5. 기본 감가 가격 계산
-        $basePrice = $initialPrice * $residualRate;
-    
-        // 6. 주행 거리 감가 계산 (1km당 200원 가정)
-        $depreciationPerKm = 200;
-        $mileageDepreciation = abs($mileageDifference) * $depreciationPerKm * $mileageDifferenceEffect;
-    
-        // 7. 최종 예상 가격 계산
-        $estimatedPrice = $basePrice + $mileageDepreciation;
-
-        $estimatedPriceInTenThousandWon = $estimatedPrice / 10000;
-    
-        // 결과 반환
-        return [
-            'monthsUsed' => $monthsUsed,
-            'standardMileage' => $standardMileage,
-            'mileageDifference' => $mileageDifference,
-            'residualRate' => $residualRate,
-            'basePrice' => $basePrice,
-            'mileageDepreciation' => $mileageDepreciation,
-            'estimatedPrice' => $estimatedPrice,
-            'estimatedPriceInTenThousandWon' => $estimatedPriceInTenThousandWon
-        ];
-    }
-
     // 카머스 시세확인 API
-    public function getCarmerceResult()
+    public function getCarmerceResult( $currentData )
     {
 
         $auctionService = new AuctionService();
@@ -324,7 +295,7 @@ class AuctionController extends Controller
         $refreshToken = $auth['refreshToken']; // 리프레시 토큰
         $accessToken = $auth['accessToken']; // 액세스 토큰 
 
-        $priceResult = $auctionService->getCarmercePrice($accessToken); // 시세확인 
+        $priceResult = $auctionService->getCarmercePrice($accessToken, $currentData); // 시세확인 
 
         $result = $priceResult['data'];
 

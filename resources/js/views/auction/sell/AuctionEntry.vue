@@ -271,6 +271,21 @@ const fileAuctionProxyName = ref(''); // 추가: 파일 이름 저장 변수
 const isBizChecked = ref(false); // 체크박스 상태를 저장하는 변수
 const diagFirstAt = ref('');
 const diagSecondAt = ref('');
+
+const carMaker = ref(''); // 자동차 제조사
+const carModel = ref(''); // 자동차 모델
+const carModelSub = ref(''); // 자동차 세부모델
+const carGrade = ref(''); // 자동차 등급
+const carGradeSub = ref(''); // 자동차 세부등급
+const carYear = ref(''); // 자동차 연식
+const carFirstRegDate = ref(''); // 자동차 최초등록일
+const carMission = ref(''); // 자동차 미션  
+const carFuel = ref(''); // 자동차 연료
+const carPriceNow = ref(''); // 자동차 소매 시세
+const carPriceNowWhole = ref(''); // 자동차 도매 시세
+const carKm = ref(''); // 자동차 주행거리
+const carThumbnail = ref(''); // 자동차 썸네일
+
 const is_biz = computed({
   get() {
     return isBizChecked.value ? 1 : 0;
@@ -317,6 +332,18 @@ const auctionEntry = async () => {
     status: "diag",
     diag_first_at: diagFirstAt.value,
     diag_second_at: diagSecondAt.value,
+    car_maker: carMaker.value,
+    car_model: carModel.value,
+    car_model_sub: carModelSub.value,
+    car_grade: carGrade.value,
+    car_grade_sub: carGradeSub.value,
+    car_year: carYear.value,
+    car_first_reg_date: carFirstRegDate.value,
+    car_mission: carMission.value,
+    car_fuel: carFuel.value,
+    car_price_now: carPriceNow.value,
+    car_price_now_whole: carPriceNowWhole.value,
+    car_thumbnail: carThumbnail.value,
   };
   console.log(auctionData);
   if(isVerified.value){
@@ -454,6 +481,21 @@ onMounted(() => {
     if (carDetails.no) {
       carNumber.value = carDetails.no;
     }
+
+    carMaker.value = carDetails.maker;
+    carModel.value = carDetails.model;
+    carModelSub.value = carDetails.modelSub;
+    carGrade.value = carDetails.grade;
+    carGradeSub.value = carDetails.gradeSub;
+    carYear.value = carDetails.year;
+    carFirstRegDate.value = carDetails.firstRegDate;
+    carMission.value = carDetails.mission;
+    carFuel.value = carDetails.fuel;
+    carPriceNow.value = carDetails.priceNow;
+    carPriceNowWhole.value = carDetails.priceNowWhole;
+    carThumbnail.value = carDetails.thumbnail;
+    // carKm.value = carDetails.km;
+
   }
 });
 

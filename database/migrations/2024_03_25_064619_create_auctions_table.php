@@ -28,6 +28,22 @@ class CreateAuctionsTable extends Migration
             $table->boolean('is_biz')->default(0)->comment('법인/사업자차량');
             $table->timestamp('diag_first_at')->nullable()->comment('진단희망 날짜및시간1');
             $table->timestamp('diag_second_at')->nullable()->comment('진단희망 날짜및시간2');
+
+            // 자동차 정보 추가 
+            $table->string('car_maker')->nullable()->comment('차량제조사');
+            $table->string('car_model')->nullable()->comment('차량모델');
+            $table->string('car_model_sub')->nullable()->comment('차량모델 서브');
+            $table->string('car_grade')->nullable()->comment('차량등급');
+            $table->string('car_grade_sub')->nullable()->comment('차량등급 서브');
+            $table->string('car_year')->nullable()->comment('차량연식');
+            $table->timestamp('car_first_reg_date')->nullable()->comment('최량최초등록일');
+            $table->string('car_mission')->nullable()->comment('차량미션');
+            $table->string('car_fuel')->nullable()->comment('차량연료');
+            $table->string('car_price_now')->nullable()->comment('소매 시세');
+            $table->string('car_price_now_whole')->nullable()->comment('도매 시세');
+            $table->string('car_km')->nullable()->comment('차량주행거리');
+            $table->string('car_thumbnail')->nullable()->comment('차량썸네일');
+
             $table->timestamp('final_at')->nullable()->comment('경매마감일');
             $table->timestamp('choice_at')->nullable()->comment('선택일');
             $table->timestamp('taksong_wish_at')->nullable()->comment('탁송희망일');

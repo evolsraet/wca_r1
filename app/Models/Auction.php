@@ -42,6 +42,18 @@ class Auction extends Model implements HasMedia
         'diag_check_at' => 'datetime',
         'diag_first_at' => 'datetime',
         'diag_second_at' => 'datetime',
+        'car_maker' => 'string',
+        'car_model' => 'string',
+        'car_model_sub' => 'string',
+        'car_grade' => 'string',
+        'car_grade_sub' => 'string',
+        'car_year' => 'string',
+        'car_first_reg_date' => 'datetime',
+        'car_mission' => 'string',
+        'car_fuel' => 'string',
+        'car_price_now' => 'string',
+        'car_price_now_whole' => 'string',
+        'car_km' => 'string'
     ];
 
     // 업로드 가능한 파일들

@@ -140,6 +140,9 @@ export default function useAuctions() {
             .where(apiList) 
             .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
             .callback(function(result) {
+
+                console.log('result',result);
+
                 auctionsData.value = result.data;
                 pagination.value = result.rawData.data.meta;
             })
@@ -336,6 +339,18 @@ const AuctionCarInfo = async (carInfoForm) => {
             is_biz:auctionData.auction.is_biz,
             diag_first_at: auctionData.auction.diag_first_at,
             diag_second_at: auctionData.auction.diag_second_at,
+            car_maker: auctionData.auction.car_maker,
+            car_model: auctionData.auction.car_model,
+            car_model_sub: auctionData.auction.car_model_sub,
+            car_grade: auctionData.auction.car_grade,
+            car_grade_sub: auctionData.auction.car_grade_sub,
+            car_year: auctionData.auction.car_year,
+            car_first_reg_date: auctionData.auction.car_first_reg_date,
+            car_mission: auctionData.auction.car_mission,
+            car_fuel: auctionData.auction.car_fuel,
+            car_price_now: auctionData.auction.car_price_now,
+            car_price_now_whole: auctionData.auction.car_price_now_whole,
+            car_thumbnail: auctionData.auction.car_thumbnail,
         }
     }
 
