@@ -344,6 +344,7 @@ const auctionEntry = async () => {
     car_price_now: carPriceNow.value,
     car_price_now_whole: carPriceNowWhole.value,
     car_thumbnail: carThumbnail.value,
+    car_km: carKm.value,
   };
   console.log(auctionData);
   if(isVerified.value){
@@ -494,7 +495,7 @@ onMounted(() => {
     carPriceNow.value = carDetails.priceNow;
     carPriceNowWhole.value = carDetails.priceNowWhole;
     carThumbnail.value = carDetails.thumbnail;
-    // carKm.value = carDetails.km;
+    carKm.value = carDetails.km;
 
   }
 });

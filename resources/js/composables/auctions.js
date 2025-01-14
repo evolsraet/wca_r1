@@ -351,6 +351,7 @@ const AuctionCarInfo = async (carInfoForm) => {
             car_price_now: auctionData.auction.car_price_now,
             car_price_now_whole: auctionData.auction.car_price_now_whole,
             car_thumbnail: auctionData.auction.car_thumbnail,
+            car_km: auctionData.auction.car_km,
         }
     }
 

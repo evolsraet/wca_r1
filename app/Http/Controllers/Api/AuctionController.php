@@ -116,6 +116,7 @@ class AuctionController extends Controller
                 'priceNow' => $niceDnrResult['carSize']['info']['currentPrice'], // 소매 시세가 (나이스DNR 시세확인 API
                 'priceNowWhole' => $this->getCarmerceResult($niceDnrResult['carSize']['info']), // 도매 시세가 (카머스 시세확인 API)
                 'thumbnail' => $niceDnrResult['carSize']['info']['thumbnail'],
+                'km' => $niceDnrResult['carSize']['info']['km'],
             ];
         });
 

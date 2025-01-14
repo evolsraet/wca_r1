@@ -167,7 +167,7 @@ TODO:
                                                 </div>-->
                                                     <div class="card-body">
                                                         <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
-                                                        <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">2.4km</span>| 무사고</p>
+                                                        <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span>| 무사고</p>
                                                         <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                         <div class="d-flex">
                                                             <h5 class="card-title"><span class="blue-box fw-bold border-6">무사고</span></h5>

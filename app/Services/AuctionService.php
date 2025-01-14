@@ -448,6 +448,7 @@ class AuctionService
                 "tuningHistory" => "0회",
                 "recallHistory" => "없음",
                 "currentPrice" => 1800, // 시세 숫자만 입력
+                "km" => "2.4",
                 "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2022%2F05%2Fhyundai-motor-company-sonata-discontinued-01.jpg?q=75&w=800&cbr=1&fit=max"
             ],
             [
@@ -470,6 +471,7 @@ class AuctionService
                 "tuningHistory" => "1회",
                 "recallHistory" => "없음",
                 "currentPrice" => 2000, // 시세 숫자만 입력,
+                "km" => "3.6",
                 "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2021%2F07%2FKia-release-new-sportage-suv-model-design-price-spec-info-twtw.jpg?w=960&cbr=1&q=90&fit=max"
             ],
             [
@@ -492,6 +494,7 @@ class AuctionService
                 "tuningHistory" => "0회",
                 "recallHistory" => "1회",
                 "currentPrice" => 1200, // 시세 숫자만 입력,
+                "km" => "1.5",
                 "thumbnail" => "https://file.carisyou.com/upload/2020/07/15/EDITOR_202007150443005100.jpg"
             ],
             [
@@ -514,6 +517,7 @@ class AuctionService
                 "tuningHistory" => "1회",
                 "recallHistory" => "없음",
                 "currentPrice" => 1000, // 시세 숫자만 입력,
+                "km" => "3.2",
                 "thumbnail" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqgDnOXZPCRL7PDb1Kln4-MPxmAfWa8zzSZA&s"
             ],
             [
@@ -536,6 +540,7 @@ class AuctionService
                 "tuningHistory" => "0회",
                 "recallHistory" => "없음",
                 "currentPrice" => 4500, // 시세 숫자만 입력,
+                "km" => "2.6",
                 "thumbnail" => "https://cdn.motorgraph.com/news/photo/202211/30950_97376_454.jpg"
             ]
         ];
