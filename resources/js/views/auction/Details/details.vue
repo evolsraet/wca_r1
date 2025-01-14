@@ -67,7 +67,7 @@
                   </div>
                   <div class="card-body p-3 pt-0 ">
                     <p class="card-title fs-5 fw-bolder">{{ auctionDetail.data.car_model ? auctionDetail.data.car_model +' '+ auctionDetail.data.car_model_sub +' '+ auctionDetail.data.car_fuel : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
-                    <p>{{ auctionDetail.data.car_year ? auctionDetail.data.car_year : '2020' }} 년 | 2.4km | 무사고</p>
+                    <p>{{ auctionDetail.data.car_year ? auctionDetail.data.car_year : '2020' }} 년 | {{ auctionDetail.data.car_km ? auctionDetail.data.car_km : '2.4' }}km | 무사고</p>
                     <p class="text-secondary opacity-50">{{ auctionDetail.data.car_maker ? auctionDetail.data.car_maker +' '+ auctionDetail.data.car_model : '현대 소나타' }} ({{ auctionDetail.data.car_grade ? auctionDetail.data.car_grade : 'DN8' }})</p>
                     <div class="enter-view">
                       <AlarmModal ref="alarmModal" />
@@ -138,7 +138,7 @@
             </ul>
             <ul class="machine-inform">
               <li class="text-secondary opacity-50">제조사</li>
-              <li class="sub-title"></li>
+              <li class="sub-title">{{ carDetails.maker }}</li>
             </ul>
             <ul class="machine-inform">
               <li class="text-secondary opacity-50">모델</li>
@@ -158,7 +158,7 @@
             </ul>
             <ul class="machine-inform-title">
               <li class="text-secondary opacity-50">최초등록일</li>
-              <li class="info-num"></li>
+              <li class="info-num">{{ carDetails.firstRegDate }}</li>
               <li class="car-aside-icon"></li>
             </ul>
             <ul class="machine-inform">
@@ -1684,6 +1684,8 @@ const fetchAuctionDetail = async () => {
     carDetails.value.year = carData.year;
     carDetails.value.fuel = carData.fuel;
     carDetails.value.mission = carData.mission;
+    carDetails.value.maker = carData.maker;
+    carDetails.value.firstRegDate = carData.firstRegDate;
     if (isUser.value && auctionDetail.value.data.status !== 'done') { 
       // top_bids를 통해 각 bid의 정보를 가져옵니다.
       if (auctionDetail.value.data.top_bids && auctionDetail.value.data.top_bids.length > 0) {
