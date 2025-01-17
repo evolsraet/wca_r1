@@ -3,12 +3,9 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use App\Models\Auction;
 use Illuminate\Support\Facades\Log;
-use App\Models\User;
 class AuctionBidStatusNotification extends Notification
 {
     use Queueable;
@@ -16,18 +13,12 @@ class AuctionBidStatusNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    protected $user;
-    protected $status;
-    protected $auction;
-    protected $result;
-    protected $bid_user;
-    public function __construct($user, $status, $auction, $result)
+    protected $data;
+    protected $case;
+    public function __construct($data, $case)
     {
-        $this->user = $user;
-        $this->status = $status;
-        $this->auction = $auction;
-        $this->result = $result;
-        $this->bid_user = User::find($this->result);
+        $this->data = $data;
+        $this->case = $case;
     }
 
     /**
@@ -45,23 +36,47 @@ class AuctionBidStatusNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        // 데이터 요소가 배열인지 확인하고 문자열로 변환
+        $title = is_array($this->data['title']) ? implode(' ', $this->data['title']) : $this->data['title'];
+        $message1 = is_array($this->data['message1']) ? implode(' ', $this->data['message1']) : $this->data['message1'];
+        $message2 = is_array($this->data['message2']) ? implode(' ', $this->data['message2']) : $this->data['message2'];
+        // 필요한 경우 다른 메시지도 동일하게 처리
 
-        Log::info('경매 입찰 상태 알림', ['user' => $this->user, 'status' => $this->status, 'auction' => $this->auction]);
+        switch ($this->case) {
+            case 'ask':
+                return (new MailMessage)
+                    ->subject($title)
+                    ->line($title)
+                    ->line($message1)
+                    ->line($message2)
+                    ->line($this->data['message3'])
+                    ->line($this->data['message4'])
+                    ->line($this->data['message5']);
 
-        $bid_user_name = $this->bid_user->name;
-        $ownerName = $this->auction->owner_name; // 소유자 이름
-        $car_no = $this->auction->car_no;
+            case 'bid':
+                return (new MailMessage)
+                    ->subject($title)
+                    ->line($title)
+                    ->line($message1)
+                    ->line($message2)
+                    ->line($this->data['message3'])
+                    ->line($this->data['message6'])
+                    ->line($this->data['message7'])
+                    ->action('바로가기', url($this->data['link']['url']));
 
-        if($this->status == 'ask'){
-            $message = $bid_user_name . '님이 ' . $ownerName . '님의 ' . $car_no . ' 차량에 입찰 신청하였습니다.';
-        }else if($this->status == 'reauction'){
-            $message = $ownerName . '님의 ' . $car_no . ' 차량이 재경매 신청하였습니다.';
-        }else{
-            $message = $bid_user_name . '님이 ' . $ownerName . '님의 ' . $car_no . ' 차량에 입찰 취소하였습니다.';
+            case 'wait':
+            case 'reauction':
+                return (new MailMessage)
+                    ->subject($title)
+                    ->line($title)
+                    ->line($message1)
+                    ->line($message2)
+                    ->line($this->data['message3'])
+                    ->line($this->data['message4'])
+                    ->action('바로가기', url($this->data['link']['url']));
+
+            // 다른 상태 케이스 추가 가능
         }
-        return (new MailMessage)
-                    ->subject($message)
-                    ->line($message);
     }
 
     /**

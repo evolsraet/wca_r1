@@ -15,12 +15,10 @@ class AuctionCancelNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    protected $user;
-    protected $auction;
-    public function __construct($user, $auction)
+    protected $data;
+    public function __construct($data)
     {
-        $this->user = $user;
-        $this->auction = $auction;
+        $this->data = $data;
     }
 
     /**
@@ -39,11 +37,16 @@ class AuctionCancelNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
 
-        $auction = Auction::find($this->auction);
+        // $auction = Auction::find($this->auction);
 
         return (new MailMessage)
-                    ->subject($auction->owner_name . '님의 ' . $auction->car_no . ' 차량이 경매 취소되었습니다.')
-                    ->line($auction->owner_name . '님의 ' . $auction->car_no . ' 차량이 경매 취소되었습니다.');
+                    ->subject($this->data['title'])
+                    ->line($this->data['title'])
+                    ->line($this->data['message1'])
+                    ->line($this->data['message2'])
+                    ->line($this->data['message3'])
+                    ->line($this->data['message4'])
+                    ->action('바로가기', $this->data['link']['url']);
     }
 
     /**

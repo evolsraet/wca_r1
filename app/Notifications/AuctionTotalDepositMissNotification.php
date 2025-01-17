@@ -6,20 +6,17 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use App\Models\User;
-
-class UaerDealerStatusNotification extends Notification
+use Illuminate\Support\Facades\Log;
+class AuctionTotalDepositMissNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    protected $user;
-    protected $sendMessage;
-    public function __construct($user, $sendMessage)
+    public $sendMessage;
+    public function __construct($sendMessage)
     {
-        $this->user = $user;
         $this->sendMessage = $sendMessage;
     }
 
@@ -38,12 +35,17 @@ class UaerDealerStatusNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        Log::info('AuctionTotalDepositMissNotification', $this->sendMessage);
         return (new MailMessage)
                     ->subject($this->sendMessage['title'])
+                    ->line($this->sendMessage['title'])
+                    ->line($this->sendMessage['message'])
                     ->line($this->sendMessage['message1'])
                     ->line($this->sendMessage['message2'])
                     ->line($this->sendMessage['message3'])
-                    ->action('위카옥션', $this->sendMessage['link']);
+                    ->line($this->sendMessage['message7'])
+                    ->line($this->sendMessage['message8'])
+                    ->line($this->sendMessage['message9']);
     }
 
     /**

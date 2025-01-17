@@ -10,6 +10,9 @@ use Illuminate\Queue\SerializesModels;
 use App\Models\User;
 use App\Notifications\AuctionIngNotification;
 use App\Notifications\AligoService;
+use App\Models\Auction;
+use App\Notifications\Templates\NotificationTemplate;
+use App\Notifications\AligoNotification;
 
 class AuctionIngJob implements ShouldQueue
 {
@@ -31,11 +34,31 @@ class AuctionIngJob implements ShouldQueue
      */
     public function handle(): void
     {
+
+        $baseUrl = config('app.url');
+
+        $data = [
+            'title' => '경매 상태가 변경되었습니다.',
+            'data' => Auction::find($this->auction),
+            'status' => '경매진행',
+            'status2' => '0000-00-00(일) 00시',
+            'link' => $baseUrl.'/auction/'.$this->auction
+        ];
+
+        $sendMessage = NotificationTemplate::basicTemplate($data);
+
         // 이메일 알림 
         $user = User::find($this->user);
-        $user->notify(new AuctionIngNotification($user, $this->auction));
+        $user->notify(new AuctionIngNotification($user, $sendMessage));
 
-        // 문자 알림
-        
+        // 알리고 알림톡 전송
+        // $user->notify(new AligoNotification([
+        //     'tpl_data' => [
+        //         'tpl_code' => env('SMS_TPL_CODE'),
+        //         'receiver_1' => $user->phone,
+        //         'subject_1' => $sendMessage['title'],
+        //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'].'<br>'.$sendMessage['message3'].'<br>'.$sendMessage['message4'].'<br>'.$sendMessage['message5'].'<br>바로가기'.$baseUrl.'/auction/'.$this->auction,
+        //     ]
+        // ]));
     }
 }

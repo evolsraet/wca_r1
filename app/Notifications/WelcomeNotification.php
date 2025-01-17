@@ -15,8 +15,12 @@ class WelcomeNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct()
+    protected $item;
+    protected $sendMessage;
+    public function __construct($item, $sendMessage)
     {
+        $this->item = $item;
+        $this->sendMessage = $sendMessage;
         //
         // Log::info('WelcomeNotification 생성되었습니다!....');
     }
@@ -36,11 +40,13 @@ class WelcomeNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $title = $this->sendMessage['title'];
+        $message1 = $this->sendMessage['message1'];
         try {
             return (new MailMessage)
-                ->subject('위카옥션 회원가입을 환영합니다!')
-                ->line('위카옥션 회원가입을 환영합니다!')
-                ->action('위카옥션', url('/'));
+                ->subject($title)
+                ->line($message1)
+                ->action('위카옥션', url(path: $this->sendMessage['link']));
         } catch (\Exception $e) {
             Log::channel('mail')->error('메일 전송 실패: ' . $e->getMessage(), [
                 'user' => $notifiable->email ?? 'unknown',

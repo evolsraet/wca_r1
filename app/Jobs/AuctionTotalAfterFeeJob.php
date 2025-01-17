@@ -7,24 +7,24 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
-use App\Notifications\UaerDealerStatusNotification;
-use Illuminate\Support\Facades\Log;
-use App\Notifications\AligoNotification;
+use App\Models\User;
+use App\Notifications\AuctionTotalAfterFeeNotification;
 use App\Notifications\Templates\NotificationTemplate;
 
-class UaerDealerStatusJob implements ShouldQueue
+class AuctionTotalAfterFeeJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     /**
      * Create a new job instance.
      */
-    protected $user;
-    protected $status;
-    public function __construct($user, $status)
+    public $user;
+    public $auction;
+
+    public function __construct($user, $auction)
     {
         $this->user = $user;
-        $this->status = $status;
+        $this->auction = $auction;
     }
 
     /**
@@ -33,25 +33,22 @@ class UaerDealerStatusJob implements ShouldQueue
     public function handle(): void
     {
         $data = [
-            'user' => $this->user,
-            'status' => $this->status,
+            'title' => '수수료 입금확인 되었습니다.',
+            'message' => "수수료 입금확인 되었습니다. 위카옥션을 이용해주셔서 감사합니다.",
+            'data' => $this->auction
         ];
 
-        $sendMessage = NotificationTemplate::userStatusTemplate($data);
+        $sendMessage = NotificationTemplate::basicTemplate($data);
 
-        // Log::info('딜러 승인 결과 알림', ['sendMessage' => $sendMessage]);
+        $user = User::find($this->user);
+        $user->notify(new AuctionTotalAfterFeeNotification($user, $sendMessage));
 
-        // 이메일 전송
-        $this->user->notify(new UaerDealerStatusNotification($this->user, $sendMessage));
-
-
-
-        // 알림톡 전송 ( tpl_code 부여하여 적용 필요 )
+        // 알리고 알림톡 알림
         // $this->user->notify(new AligoNotification([
         //     'tpl_data' => [
         //         'tpl_code' => env('SMS_TPL_CODE'),
         //         'receiver_1' => $this->user->phone,
-        //         'subject_1' => $sendMessage['title'],
+        //         'subject_1' =>  $sendMessage['title'],
         //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'].'<br>'.$sendMessage['message3'],
         //     ]
         // ]));

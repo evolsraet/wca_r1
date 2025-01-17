@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Log;
 use App\Notifications\AligoNotification;
 use App\Models\Auction;
 use Carbon\Carbon;
-
+use App\Notifications\Templates\NotificationTemplate;
 class AuctionCohosenJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -36,43 +36,87 @@ class AuctionCohosenJob implements ShouldQueue
      */
     public function handle(): void
     {
-        // 이메일 전송
-        $user = User::find($this->user);
-        $user->notify(new AuctionCohosenNotification($user, $this->auction, $this->mode));
 
-        Log::info('경매 선택 알림', ['user' => $user, 'auction' => $this->auction]);
-
+        $baseUrl = config('app.url');
         $auction = Auction::find($this->auction);
-        $owner_name = $auction->owner_name;
-        $car_no = $auction->car_no;
-        $taksong_wish_at = Carbon::parse($auction->taksong_wish_at)->format('Y-m-d');
-        $taksong_wish_at_time = Carbon::parse($auction->taksong_wish_at)->format('H:i');
-        $bank = $auction->bank;
-        $bank_account = $auction->account;
-        $final_price = $auction->final_price;
-        
 
-        Log::info($owner_name.'님의 '.$car_no.'가 선택되었습니다.', ['owner_name' => $owner_name, 'car_no' => $car_no]);
+        if($auction->bid_id){
+            $data = [
+                'title' => '딜러님의 입찰이 선택되었습니다.',
+                'message' => '금액을 다시 한번 확인하시고, 탁송정보를 입력해주세요! 미입력시 경매 절차가 진행되지않아요 😅',
+                'data' => $auction,
+                'status4' => $auction->final_price,
+                'link' => $baseUrl.'/auction/'.$this->auction
+            ];
+    
+            $sendMessage = NotificationTemplate::basicTemplate($data);
+    
+            Log::info('경매 선택 알림', ['status' => $auction, 'mode' => $this->mode, 'user' => $this->user]);
+            
+            // 이메일 전송
+            $user = User::find($this->user);
+            $user->notify(new AuctionCohosenNotification($user, $this->auction, $this->mode, $sendMessage));
+            
 
-        if($this->mode == 'user'){
-            $subject = $this->user->name . '님이 ' . $owner_name . '님의 ' . $car_no . ' 차량을 선택하였습니다.';
-            $message = $this->user->name . '님이 ' . $owner_name . '님의 ' . $car_no . ' 차량을 선택하였습니다.';
+            // 알리고 알림톡 알림
+            // $user->notify(new AligoNotification([
+            //     'tpl_data' => [
+            //         'tpl_code' => env('SMS_TPL_CODE'),
+            //         'receiver_1' => $this->user->phone,
+            //         'subject_1' =>  $sendMessage['title'],
+            //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'].'<br>'.$sendMessage['message3'].'<br>'.$sendMessage['message7'].'<br><br>바로가기'.$baseUrl.'/auction/'.$this->auction->id,
+            //     ]
+            // ]));
+
         }else{
-            $subject = $owner_name . '님의 ' . $car_no . ' 차량이 선택되었습니다.';
-            $message = $owner_name . '님의 ' . $car_no . ' 차량이 선택되었습니다. 추후 탁송 예정입니다.';
-            $message .= '탁송 예정일은 ' . $taksong_wish_at . ' ' . $taksong_wish_at_time . ' 입니다.';
-            $message .= '탁송 은행은 ' . $bank . ' 이며, 계좌는 ' . $bank_account . ' 입니다.';
-            $message .= '최종 경매 가격은 ' . $final_price . ' 원 입니다.'; 
+
+            $data = [
+                'title' => '딜러님의 입찰이 선택되었습니다.',
+                'data' => $auction,
+                'link' => $baseUrl.'/auction/'.$this->auction
+            ];
+    
+            $sendMessage = NotificationTemplate::basicTemplate($data);
+            
+            // 이메일 전송
+            $user = User::find($this->user);
+            $user->notify(new AuctionCohosenNotification($user, $this->auction, $this->mode, $sendMessage));
+
+
+            // 알리고 알림톡 알림
+            // $user->notify(new AligoNotification([
+            //     'tpl_data' => [
+            //         'tpl_code' => env('SMS_TPL_CODE'),
+            //         'receiver_1' => $this->user->phone,
+            //         'subject_1' =>  $sendMessage['title'],
+            //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'].'<br>'.$sendMessage['message3'].'<br>'.$sendMessage['message7'].'<br><br>바로가기'.$baseUrl.'/auction/'.$this->auction->id,
+            //     ]
+            // ]));
+
+            // 고객 알림 
+            $data1 = [
+                'title' => '고객님의 차량 경매가 완료되었습니다.',
+                'message' => '탁송정보를 입력해주세요! 미입력시 경매 절차가 진행되지않아요 😅',
+                'data' => $auction
+            ];
+
+            $sendMessage1 = NotificationTemplate::basicTemplate($data1);
+
+            $user = User::find($auction->user_id);
+            $user->notify(new AuctionCohosenNotification($user, $this->auction, $this->mode, $sendMessage1));
+
+
+            // 알리고 알림톡 알림
+            // $user->notify(new AligoNotification([
+            //     'tpl_data' => [
+            //         'tpl_code' => env('SMS_TPL_CODE'),
+            //         'receiver_1' => $this->user->phone,
+            //         'subject_1' =>  $sendMessage['title'],
+            //         'message_1' => $sendMessage1['message1'].'<br>'.$sendMessage1['message2'].'<br>'.$sendMessage1['message3'].'<br>'.$sendMessage1['message7'].'<br><br>바로가기'.$baseUrl.'/auction/'.$this->auction->id,
+            //     ]
+            // ]));
+
         }
 
-        // 알림톡 전송
-        // $user->notify(new AligoNotification([
-        //     'tpl_data' => [
-        //         'tpl_code' => env('SMS_TPL_CODE'),
-        //         'receiver_1' => $this->user->phone,
-        //         'subject_1' =>  $subject,
-        //         'message_1' => $message,
-        //     ]
-        // ]));
     }
 }

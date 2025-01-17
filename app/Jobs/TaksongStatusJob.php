@@ -78,6 +78,14 @@ class TaksongStatusJob implements ShouldQueue
             // 상태에 따른 알림
             // status = start, ing, done, cancel
             switch($status){
+
+                case 'asc':
+                    // 접수
+
+                    // 딜러에게 미입금 알림 메시지 
+
+                    break;
+
                 case 'done':
                     // 배송중
 

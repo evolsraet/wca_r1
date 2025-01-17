@@ -35,8 +35,8 @@ class AuctionController extends Controller
 
         Log::info('경매 등록 결과', ['result' => $result]);
 
-        AuctionStartJob::dispatch($result, $user, $request->auction);
-        AuctionStartJob::dispatch($result, $super, $request->auction);
+        AuctionStartJob::dispatch($result, $user, $request->auction, true); // 고객
+        AuctionStartJob::dispatch($result, $super, $request->auction); // 운영사
         return $result;
     }
 

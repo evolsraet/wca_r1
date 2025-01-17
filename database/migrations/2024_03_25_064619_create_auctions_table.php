@@ -20,11 +20,12 @@ class CreateAuctionsTable extends Migration
             $table->string('addr_post')->nullable()->comment('우편번호');
             $table->string('addr1')->nullable()->comment('주소');
             $table->string('addr2')->nullable()->comment('상세주소');
-            $table->string('bank')->nullable()->comment('은행');;
+            $table->string('bank')->nullable()->comment('은행');
             $table->string('account')->nullable()->comment('은행번호');
             $table->text('memo')->nullable()->comment('고객 메모');
             $table->text('memo_digician')->nullable()->comment('평가사 의견');
             $table->boolean('is_reauction')->default(0)->comment('재경매여부');
+            $table->string('is_deposit')->nullable()->comment('입금여부');
             $table->boolean('is_biz')->default(0)->comment('법인/사업자차량');
             $table->timestamp('diag_first_at')->nullable()->comment('진단희망 날짜및시간1');
             $table->timestamp('diag_second_at')->nullable()->comment('진단희망 날짜및시간2');

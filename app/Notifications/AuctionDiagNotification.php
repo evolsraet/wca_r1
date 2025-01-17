@@ -38,12 +38,14 @@ class AuctionDiagNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
 
-        $ownerName = $this->data->owner_name; // 소유자 이름
-        $car_no = $this->data->car_no;
-
         return (new MailMessage)
-                    ->subject($ownerName . '님의 ' . $car_no . ' 차량이 진단대기중입니다.')
-                    ->line($ownerName . '님의 ' . $car_no . ' 차량이 진단대기중입니다.');
+                    ->subject($this->data['title'])
+                    ->line($this->data['title'])
+                    ->line($this->data['message1'])
+                    ->line($this->data['message2'])
+                    ->line($this->data['message3'])
+                    ->line($this->data['message4'])
+                    ->line($this->data['footerMsg']);
     }
 
     /**

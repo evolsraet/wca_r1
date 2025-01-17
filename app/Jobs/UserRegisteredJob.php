@@ -9,7 +9,8 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Notifications\WelcomeNotification;
 use App\Notifications\AligoNotification;
-
+use Illuminate\Support\Facades\Log;
+use App\Notifications\Templates\NotificationTemplate;
 class UserRegisteredJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -17,11 +18,11 @@ class UserRegisteredJob implements ShouldQueue
     /**
      * Create a new job instance.
      */
-    protected $user;
+    protected $item;
 
-    public function __construct($user)
+    public function __construct($item)
     {
-        $this->user = $user;
+        $this->item = $item;
     }
 
     /**
@@ -29,17 +30,26 @@ class UserRegisteredJob implements ShouldQueue
      */
     public function handle(): void
     {
-        // 이메일 전송
-        $this->user->notify(new WelcomeNotification());
 
-        // 알리고 알림톡 전송
-        $this->user->notify(new AligoNotification([
-            'tpl_data' => [
-                'tpl_code' => env('SMS_TPL_CODE'),
-                'receiver_1' => $this->user->phone,
-                'subject_1' => '회원가입을 축하합니다.',
-                'message_1' => "안녕하세요. 위카옥션에 회원가입을 축하드립니다.",
-            ],
-        ]));
+        // Log::info('UserRegisteredJob 실행되었습니다!....', ['item' => $this->item]);
+        
+        $item = $this->item;
+        $name = $item->name;
+
+        // 회원가입 메시지 템플릿
+        $sendMessage = NotificationTemplate::welcomeTemplate($name);
+
+        // 이메일 전송
+        $this->item->notify(new WelcomeNotification($this->item, $sendMessage));
+
+        // 알리고 알림톡 전송 ( tpl_code 부여하여 적용 필요 )
+        // $this->item->notify(new AligoNotification([
+        //     'tpl_data' => [
+        //         'tpl_code' => env('SMS_TPL_CODE'),
+        //         'receiver_1' => $this->item->phone,
+        //         'subject_1' => $sendMessage['title'],
+        //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'],
+        //     ],
+        // ]));
     }
 }

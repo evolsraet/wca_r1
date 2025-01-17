@@ -6,25 +6,17 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use App\Models\Auction;
-use Illuminate\Support\Facades\Log;
 
-class AuctionDoneNotification extends Notification
+class AuctionAfterFeeDonNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    protected $user;
-    protected $auction;
-    protected $mode;
-    protected $sendMessage;
-    public function __construct($user, $auction, $mode, $sendMessage)
+    public $sendMessage;
+    public function __construct($sendMessage)
     {
-        $this->user = $user;
-        $this->auction = Auction::find($auction);
-        $this->mode = $mode;
         $this->sendMessage = $sendMessage;
     }
 
@@ -43,23 +35,6 @@ class AuctionDoneNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-
-        $auction = $this->auction;
-
-        // $owner_name = $auction->owner_name;
-        // $car_no = $auction->car_no;
-        // Log::info('경매 완료 알림', ['auction' => $auction]);
-
-        // // dd($this->mode);
-
-        // if($this->mode == 'user'){
-        //     $subject = $owner_name . '님의 ' . $car_no . ' 차량이 경매 완료되었습니다.';
-        //     $message = $owner_name . '님의 ' . $car_no . ' 차량이 경매가 완료되었습니다.';
-        // }else{
-        //     $subject = $owner_name . '님의 ' . $car_no . ' 차량이 경매 완료되었습니다.';
-        //     $message = $owner_name . '님의 ' . $car_no . ' 차량이 경매가 낙찰되어 결매완료되었습니다.';
-        // }
-
         return (new MailMessage)
                     ->subject($this->sendMessage['title'])
                     ->line($this->sendMessage['title'])

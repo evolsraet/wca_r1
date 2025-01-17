@@ -83,9 +83,10 @@ class TaksongAddJob implements ShouldQueue
         $taksongStatusTemp->chk_status = $result->data->chk_status;
         $taksongStatusTemp->save();
 
+        Log::info('탁송처리 API 호출?', ['result' => $data]);
         // Log::info('탁송처리 API 호출', ['response' => $response]);
-        AuctionDlvrJob::dispatch($data['userId'], $data); // 사용자 알림
-        AuctionDlvrJob::dispatch($data['bidUserId'], $data); // 입찰자 알림
+        // AuctionDlvrJob::dispatch($data['userId'], $data, $response); // 사용자 알림
+        AuctionDlvrJob::dispatch($data['bidUserId'], $data, $response); // 입찰자 알림
 
     }
 }

@@ -15,11 +15,11 @@ class AuctionIngNotification extends Notification
      * Create a new notification instance.
      */
     protected $user;
-    protected $auction;
-    public function __construct($user, $auction)
+    protected $data;
+    public function __construct($user, $data)
     {
         $this->user = $user;
-        $this->auction = $auction;
+        $this->data = $data;
     }
 
     /**
@@ -38,13 +38,19 @@ class AuctionIngNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
 
-        $auction = Auction::find($this->auction);
-        $owner = $auction->owner_name;
-        $car_no = $auction->car_no;
+        // $auction = Auction::find($this->auction);
+        // $owner = $auction->owner_name;
+        // $car_no = $auction->car_no;
 
         return (new MailMessage)
-                    ->subject($owner.'님의 '.$car_no.'차량이 경매가 시작되었습니다.')
-                    ->line($owner.'님의 '.$car_no.'차량이 경매가 시작되었습니다.');
+                    ->subject($this->data['title'])
+                    ->line($this->data['title'])
+                    ->line($this->data['message1'])
+                    ->line($this->data['message2'])
+                    ->line($this->data['message3'])
+                    ->line($this->data['message4'])
+                    ->line($this->data['message5'])
+                    ->action('바로가기', url($this->data['link']['url']));
     }
 
     /**

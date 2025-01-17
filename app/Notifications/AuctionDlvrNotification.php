@@ -37,22 +37,17 @@ class AuctionDlvrNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        $taksongWishAt = $this->data['taksongWishAt'];
-        $carNo = $this->data['carNo'];
-        $carModel = $this->data['carModel'];
-        $mobile = $this->data['mobile'];
-        $destMobile = $this->data['destMobile'];
-        $startAddr = $this->data['startAddr'];
-        $destAddr = $this->data['destAddr'];
-
+       
         return (new MailMessage)
-                    ->subject($carNo.'차량이 탁송신청 되었습니다.')
-                    ->line($carNo.'차량이 탁송신청 되었습니다.')
-                    ->line('탁송 날짜 : '.$taksongWishAt)
-                    ->line('출발지 전화번호 : '.$mobile)
-                    ->line('출발지 주소 : '.$startAddr)
-                    ->line('도착지 전화번호 : '.$destMobile)
-                    ->line('도착지 주소 : '.$destAddr);
+                    ->subject($this->data['title'])
+                    ->line($this->data['title'])
+                    ->line($this->data['message'])
+                    ->line($this->data['message1'])
+                    ->line($this->data['message2'])
+                    ->line($this->data['message3'])
+                    ->line($this->data['message7'])
+                    ->line($this->data['message8'])
+                    ->line($this->data['message9']);
     }
 
     /**

@@ -18,12 +18,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Event;
 use App\Jobs\UserResetPasswordLinkJob;
-use App\Helpers\SmsAligoHelper;
-use App\Notifications\AligoNotification;
-use App\Jobs\UserRegisteredJob;
-use App\Jobs\AuctionDlvrJob;
-use App\Jobs\TaksongStatusJob;
 use App\Services\AuctionService;
+
 class UserController extends Controller
 {
     use CrudControllerTrait;
@@ -111,100 +107,13 @@ class UserController extends Controller
 
     public function test(Request $request)
     {
-        // echo sayHello('worlds');
 
-        // $smsAligoHelper = new SmsAligoHelper();
-        // echo $smsAligoHelper->get_token();
+        $auctionService = new AuctionService();
+        // $auctionService->auctionAfterFeeDone();
 
-        // echo $smsAligoHelper->alimtalk_send([
-        //     'tpl_code' => 'TN_1093',
-        //     'receiver_1' => '010-2802-0327',
-        //     'subject_1' => '세상의 모든 타이어. 올타이어',
-        //     'message_1' => "안녕하세요. 올타이어입니다!\n관리자가 20102010 주문의 배송상태를 [배송완료] 으로 변경했습니다.",
-        // ]);
+        $auctionService->auctionTotalDepositMiss();
 
-        // echo $smsAligoHelper->alimtalk_list();
-
-        // $user = User::find(36); // 예: User 모델
-        // $user->notify(new AligoNotification([
-        //     'message' => '안녕하세요. 올타이어입니다!\n관리자가 20102010 주문의 배송상태를 [배송완료] 으로 변경했습니다.',
-        //     'tpl_data' => [
-        //         'tpl_code' => 'TN_1093',
-        //         'receiver_1' => '010-2802-0327',
-        //         'subject_1' => '세상의 모든 타이어. 올타이어',
-        //         'message_1' => "안녕하세요. 올타이어입니다!\n관리자가 20102010 주문의 배송상태를 [배송완료] 으로 변경했습니다.",
-        //     ],
-        // ]));
-
-        // UserRegisteredJob::dispatch($user);
-
-
-        // AuctionDlvrJob::dispatch(36);
-
-        // $taksongStatusTemp = TaksongStatusTemp::where('chk_status', '!=', 'done')->get();
-        // if($taksongStatusTemp){
-
-        //     foreach($taksongStatusTemp as $row){
-        //         TaksongStatusJob::dispatch($row->chk_id);
-        //     }
-        // }
-
-        // $this->getCarmersPrice();
-
-        // $auctionService = new AuctionService();
-        // $auctionService->getCarmerceAuth();
-
-
-        // $auctionService = new AuctionService();
-        // $auth = $auctionService->getCarmerceAuth(); // 인증 
-        // // $auth = json_decode(json: $auth);
-
-        // $refreshToken = $auth['refreshToken']; // 리프레시 토큰
-        // $accessToken = $auth['accessToken']; // 액세스 토큰 
-
-        // $priceResult = $auctionService->getCarmercePrice($accessToken); // 시세확인 
-
-        // $result = $priceResult['data'];
-
-        // echo "<pre>";
-        // print_r($result);
-        // echo "</pre>";
-        // die();
-
-        // $auctionService = new AuctionService();
-        // $result = $auctionService->getNiceDnr('안영찬', '299거8869');
-
-        // echo "<pre>";
-        // print_r($result);
-        // echo "</pre>";
-        // die(); 
-        
-        // $clientKey = env('NICE_PAY_CLIENT_KEY');
-        // $clientSecret = env('NICE_PAY_SECRET_KEY');
-
-        // $base64 = base64_encode($clientKey . ':' . $clientSecret);
-
-        // $base64 = 'test';
-        // echo $base64;
-        // die();
-
-        // TaksongStatusJob::dispatch(35);
-
-
-        // $user = User::factory()->make();
-        // $data['user'] = $user->makeVisible($user->getHidden())->toArray();
-        // $data['user']['role'] = 'user';
-
-        // $file = UploadedFile::fake()->create('testfile.pdf', 100); // 100KB 크기의 PDF 파일
-        // $data['file_sign'] = $file; // 여기서는 $data 배열에 직접 추가하는 대신, 파일을 요청에 별도로 추가합니다.
-
-        // // 리퀘스트에 직접 값을 할당한다
-        // $request->merge($data);
-        // return response()->api([
-        //     $request->all(),
-        //     $request->file(),
-        // ]);
-        // return $this->service->store($request);
+        // echo 'asd';
     }
 
     public function defaultGuard()

@@ -6,7 +6,7 @@ use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 use App\Jobs\TaksongStatusJob;
 use App\Models\TaksongStatusTemp;
-
+use App\Services\AuctionService;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -17,10 +17,8 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-
+        // 탁송 상태 확인
         $schedule->call(function() {
-
-            // 탁송 상태 확인
             $taksongStatusTemp = TaksongStatusTemp::where('chk_status', '!=', 'done')->get();
             if($taksongStatusTemp){
                 foreach($taksongStatusTemp as $taksongStatus){
@@ -29,6 +27,13 @@ class Kernel extends ConsoleKernel
             }
             
         })->everyMinute();
+
+
+        // 경매 완료 수수료 처리 확인 / 하루 한번
+        $schedule->call(function() {
+            $auctionService = new AuctionService();
+            $auctionService->auctionAfterFeeDone();
+        })->dailyAt('00:00');
 
     }
 

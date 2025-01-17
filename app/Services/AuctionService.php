@@ -15,11 +15,14 @@ use App\Jobs\AuctionCohosenJob;
 use App\Models\Bid;
 use App\Jobs\AuctionIngJob;
 use App\Jobs\AuctionDoneJob;
-use App\Jobs\AuctionDlvrJob;
 use App\Jobs\AuctionDiagJob;
 use App\Jobs\AuctionBidStatusJob;
 use App\Jobs\TaksongAddJob;
-
+use App\Jobs\AuctionTotalDepositJob;
+use App\Jobs\AuctionTotalAfterFeeJob;
+use App\Models\Auction;
+use App\Jobs\AuctionAfterFeeDonJob;
+use App\Jobs\AuctionTotalDepositMissJob;
 class AuctionService
 {
     use CrudTrait;
@@ -116,8 +119,10 @@ class AuctionService
                                 $bids = Bid::where('auction_id', $auction->id)->get();
                                 foreach($bids as $bid){
                                     Log::info('재경매 모드 입찰자 알림', ['mode' => 'reauction','method' => $bid->user_id]);
-                                    AuctionBidStatusJob::dispatch($bid->user_id, 'reauction', $auction->id, $bid->user_id);
+                                    AuctionBidStatusJob::dispatch($bid->user_id, 'reauction', $auction->id, $bid->user_id,'');
                                 }
+                                AuctionBidStatusJob::dispatch($auction->user_id, 'reauction', $auction->id, $bid->user_id,'');
+
 
 
                             } else {
@@ -187,10 +192,11 @@ class AuctionService
                             } else {
                                 throw new \Exception('취소변경 가능상태가 아닙니다.');
                             }
-                            break;
+                            break; 
                     }
                 }
 
+                $bids = Bid::find($auction->bid_id);
 
                 // 취소시 알림
                 if($auction->status == 'cancel'){
@@ -198,7 +204,7 @@ class AuctionService
                     Log::info('경매 상태 업데이트 취소 모드', ['method' => $auction]);
                     AuctionCancelJob::dispatch($auction->user_id, $auction->id);
 
-                    $bids = Bid::where('id', $auction->id)->get();
+                    $bids = Bid::where('auction_id', $auction->id)->get();
                     foreach($bids as $bid){
                         // Log::info('경매 취소 모드 입찰자 알림', ['method' => $bid->user_id]);
                         AuctionCancelJob::dispatch($bid->user_id, $auction->id);
@@ -207,32 +213,53 @@ class AuctionService
 
                 // 입찰자에게 알림
                 if($auction->status == 'chosen'){
-                    Log::info('경매 상태 업데이트 입찰선택 모드', ['method' => $auction]);
 
-                    if($auction->bids){
-                        Log::info('경매 상태 업데이트 입찰선택 모드 입찰자 알림' . $auction->bids->first()->user_id, ['method' => '']);
-                        AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+
+                    if($auction->is_deposit == 'totalDeposit'){
+                        Log::info('경매 상태 업데이트 입금완료 모드', ['method' => $auction]);
+                        // 고객 / 딜러 에게 알림 
+                        AuctionTotalDepositJob::dispatch($auction->user_id, $auction);
+                        AuctionTotalDepositJob::dispatch($bids->user_id, $auction);
+
+                    }else {
+                        Log::info('경매 상태 업데이트 입찰선택 모드', ['method' => $auction]);
+
+                        if($auction->bids){
+                            Log::info('경매 상태 업데이트 입찰선택 모드 입찰자 알림' . $auction->bids->first()->user_id, ['method' => '']);
+                            AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+                        }
+    
+                        // AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user'); s
                     }
 
-                    // AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user'); 
+                    
                 }   
 
                 // 입찰자에게 알림
                 if($auction->status == 'wait'){
                     Log::info('경매 상태 업데이트 선택대기 모드1', ['method' => $auction]);
 
-                    // AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id);
+                    AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '', '');
                 }
                 
                 // 경매완료시 전체 입찰자에게 알림
                 if($auction->status == 'done'){
                     
-                    Log::info('경매 상태 업데이트 경매완료 모드', ['method' => $auction]);
+                    if($auction->is_deposit == 'totalAfterFee'){
 
-                    $bids = Bid::find($auction->bid_id);
+                        Log::info('경매 상태 업데이트 수수료 입금완료 모드', ['method' => $auction]);
+                        // 딜러에게 알림 
+                        AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
 
-                    AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
-                    AuctionDoneJob::dispatch($bids->user_id, $auction->id, 'dealer');
+                    }else{
+                        Log::info('경매 상태 업데이트 경매완료 모드', ['method' => $auction]);
+
+                        $bids = Bid::find($auction->bid_id);
+    
+                        AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
+                        AuctionDoneJob::dispatch($bids->user_id, $auction->id, 'dealer');
+                    }
+
                 }
 
                 // 진단대기중 알림 
@@ -611,6 +638,34 @@ class AuctionService
             'estimatedPrice' => $estimatedPrice,
             'estimatedPriceInTenThousandWon' => $estimatedPriceInTenThousandWon
         ];
+    }
+
+    // 경매 완료 수수료 처리 확인 
+    public function auctionAfterFeeDone()
+    {
+        $auction = Auction::where('status', 'done')->where('is_deposit', 'totalDeposit')->get(); 
+        foreach($auction as $bid){
+            if(isset($bid->bid_id)){
+                $bids = Bid::find($bid->bid_id);
+                AuctionAfterFeeDonJob::dispatch($bids->user_id, $bid);
+            }
+        }
+    }
+
+    public function auctionTotalDepositMiss()
+    {
+        $user = User::find(35);
+        $auction = Auction::find(41);
+
+        AuctionTotalDepositMissJob::dispatch($user, $auction);
+
+        // $auction = Auction::where('status', 'chosen')->where('is_deposit', '')->get(); 
+        // foreach($auction as $bid){
+        //     if(isset($bid->bid_id)){
+        //         $bids = Bid::find($bid->bid_id);
+        //         AuctionTotalDepositMissJob::dispatch($bids->user_id, $bid);
+        //     }
+        // }
     }
 
 }

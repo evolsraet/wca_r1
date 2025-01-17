@@ -6,17 +6,17 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
-use App\Models\User;
 
-class UaerDealerStatusNotification extends Notification
+class AuctionTotalDepositNotification extends Notification
 {
     use Queueable;
 
     /**
      * Create a new notification instance.
      */
-    protected $user;
-    protected $sendMessage;
+    public $user;
+    public $sendMessage;
+
     public function __construct($user, $sendMessage)
     {
         $this->user = $user;
@@ -40,10 +40,12 @@ class UaerDealerStatusNotification extends Notification
     {
         return (new MailMessage)
                     ->subject($this->sendMessage['title'])
+                    ->line($this->sendMessage['message'])
                     ->line($this->sendMessage['message1'])
                     ->line($this->sendMessage['message2'])
                     ->line($this->sendMessage['message3'])
-                    ->action('위카옥션', $this->sendMessage['link']);
+                    ->line($this->sendMessage['message10'])
+                    ->line($this->sendMessage['message11']);
     }
 
     /**

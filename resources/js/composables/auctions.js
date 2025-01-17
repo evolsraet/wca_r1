@@ -229,7 +229,9 @@ const statusMap = {
     ing: "경매진행",
     diag: "진단대기",
     dlvr: "탁송진행",
-    ask: "신청완료"
+    ask: "신청완료",
+    totalDeposit : "입금완료",
+    totalAfterFee : "수수료 입금완료"
 };
 const getStatusLabel = (status) => {
     return statusMap[status] || status;
@@ -658,6 +660,42 @@ const updateAuctionStatus = async (id, status) => {
     
 };
 
+
+const updateAuctionIsDeposit = async (id, IsDeposit) => {
+    if (isLoading.value) return;
+    
+    isLoading.value = true;
+    validationErrors.value = {};
+
+    const data = {
+        auction: {
+            is_deposit: IsDeposit
+        }
+    };
+    return wicac.conn()
+    .url(`/api/auctions/${id}`)
+    .param(data) 
+    .callback(function(result) {
+        /*
+        if(result.isSuccess){
+            auction.value = result.data;
+        }else{
+            console.log(result.msg);
+        }
+        */
+       let isResult = false;
+       if(result.status === 'ok'){
+        isLoading.value = false;
+        isResult = true;
+       }else{
+        console.log(result.msg);
+       }
+       return isResult;
+    })
+    .put();
+    
+};
+
  const updateAuctionPrice = async (auctionId, amount) => {
     if (isLoading.value) return;
 
@@ -957,7 +995,8 @@ const checkExpectedPrice = async (data) => {
         bidsDataAuction,
         bidPaginationAuction,
         getAuctionsWithBids,
-        checkExpectedPrice
+        checkExpectedPrice,
+        updateAuctionIsDeposit
     };
     
 }

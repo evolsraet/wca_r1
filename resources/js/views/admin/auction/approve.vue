@@ -199,6 +199,8 @@
               </div>
           </div>
 
+          <hr/>
+
           <div class="mt-3">
             <div class="btn-group mt-3">
               <button type="button" class="btn btn-success" @click="diagAuction('diag')"> 진단대기 </button>
@@ -208,6 +210,20 @@
           <div class="mt-3">
             <div class="btn-group mt-3">
               <button type="button" class="btn btn-secondary" @click="diagAuction('ing')"> 경매진행 </button>
+            </div>
+          </div>
+
+          <hr/>
+
+          <div class="mt-3">
+            <div class="btn-group mt-3">
+              <button type="button" class="btn btn-secondary" @click="AuctionIsDeposit('totalDeposit')"> 입금완료 </button>
+            </div>
+          </div>
+
+          <div class="mt-3">
+            <div class="btn-group mt-3">
+              <button type="button" class="btn btn-secondary" @click="AuctionIsDeposit('totalAfterFee')"> 수수료 입금완료 </button>
             </div>
           </div>
 
@@ -480,7 +496,7 @@ const auction = reactive({
 
 const route = useRoute();
 const router = useRouter();
-const { getAuctionById, updateAuctionStatus, isLoading, updateAuction } = useAuctions();
+const { getAuctionById, updateAuctionStatus, isLoading, updateAuction, updateAuctionIsDeposit } = useAuctions();
 const auctionId = parseInt(route.params.id); 
 const auctionDetails = ref(null);
 const isVisible = ref(false);
@@ -689,6 +705,18 @@ const diagAuction = async (status) => {
     alert('등록에 실패했습니다.');
   }
 
+}
+
+const AuctionIsDeposit = async (IsDeposit) => {
+  try {
+    const id = route.params.id;
+    await updateAuctionIsDeposit(id, IsDeposit);
+    router.push({ name: 'auctions.index' }); 
+    alert('등록되었습니다.');
+  } catch (error) {
+    console.error('Error updating auction status:', error);
+    alert('등록에 실패했습니다.');
+  }
 }
 
 function editPostCode(elementName) {

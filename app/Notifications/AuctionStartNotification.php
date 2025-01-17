@@ -40,16 +40,15 @@ class AuctionStartNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
 
-        $data = json_decode($this->data);
-
-        // Log::info('AuctionStartNotification', ['data' => $this->data]);
-
-        $ownerName = $data->owner_name; // 소유자 이름
-        $car_no = $data->car_no;
+        $data = $this->data;
 
         return (new MailMessage)
-                    ->subject($ownerName . '님의 ' . $car_no . ' 차량이 경매 등록신청 완료되었습니다.')
-                    ->line($ownerName . '님의 ' . $car_no . ' 차량이 경매 등록신청 완료되었습니다.');
+                    ->subject($data['title'])
+                    ->line($data['title'])
+                    ->line($data['message1'])
+                    ->line($data['message2'])
+                    ->line($data['message3'])
+                    ->line($data['footerMsg']);
                     // ->action('등록신청', url('/'))
                     // ->line('감사합니다!');
     }
