@@ -23,6 +23,8 @@ use App\Jobs\AuctionTotalAfterFeeJob;
 use App\Models\Auction;
 use App\Jobs\AuctionAfterFeeDonJob;
 use App\Jobs\AuctionTotalDepositMissJob;
+use App\Models\TaksongStatusTemp;
+use Carbon\Carbon;
 class AuctionService
 {
     use CrudTrait;
@@ -91,6 +93,7 @@ class AuctionService
 
                             // Log::info('딜러정보 모드', ['method' => $auction]);
                             $data = [];
+                            $data['id'] = $auction->id;
                             $data['carNo'] = $auction->car_no; // 차량번호  
                             $data['carModel'] = '개발모델'; // 차량모델
                             $data['mobile'] = User::find($auction->user_id)->phone; // 출발지 전화번호
@@ -654,18 +657,31 @@ class AuctionService
 
     public function auctionTotalDepositMiss()
     {
-        $user = User::find(35);
-        $auction = Auction::find(41);
+        // 탁송 상태 확인
+        $taksongStatusTemp = TaksongStatusTemp::where('chk_status', 'ask')->get();
+        if($taksongStatusTemp){
 
-        AuctionTotalDepositMissJob::dispatch($user, $auction);
+            foreach($taksongStatusTemp as $bid){
+                if(isset($bid->auction_id)){
 
-        // $auction = Auction::where('status', 'chosen')->where('is_deposit', '')->get(); 
-        // foreach($auction as $bid){
-        //     if(isset($bid->bid_id)){
-        //         $bids = Bid::find($bid->bid_id);
-        //         AuctionTotalDepositMissJob::dispatch($bids->user_id, $bid);
-        //     }
-        // }
+                    $nowTime = Carbon::now()->format('Y-m-d H:i:s');
+
+                    $auction = Auction::find($bid->auction_id);
+                    $bids = Bid::find($auction->bid_id);
+                    $user = User::find($bids->user_id);
+
+                    // 2시간전에 알림 발송
+                    $twoHoursBefore = Carbon::parse($auction->taksong_wish_at)->subHours(2);
+
+                    if($nowTime > $twoHoursBefore){
+                        AuctionTotalDepositMissJob::dispatch($user, $auction);
+                    }
+
+                }
+            }
+
+        }
+
     }
 
 }

@@ -26,6 +26,10 @@ class Kernel extends ConsoleKernel
                 }
             }
             
+            // 차량대금 입금 확인 
+            $auctionService = new AuctionService();
+            $auctionService->auctionTotalDepositMiss();
+
         })->everyMinute();
 
 
