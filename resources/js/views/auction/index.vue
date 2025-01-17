@@ -371,8 +371,8 @@ TODO:
                                                 </div>
                                             </div>
                                             <div v-else="bid.status !== 'ask' || bid.status !== 'diag'" :class="{ 'grayscale_img': bid.status === 'done' || bid.status === 'cancel' ||(isDealer && bid.status === 'chosen') }" class="card-img-top-placeholder">
-                                                <div v-if="auction.car_thumbnail">
-                                                    <img :src="auction.car_thumbnail" alt="Car Image">
+                                                <div v-if="bid.car_thumbnail">
+                                                    <img :src="bid.car_thumbnail" alt="Car Image">
                                                 </div>
                                                 <div v-else>
                                                     <img src="../../../img/car_example.png">
@@ -396,9 +396,9 @@ TODO:
                                                 </div>
                                             </div>
                                             <div class="card-body">
-                                                <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
-                                                <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span>| 무사고</p>
-                                                <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
+                                                <p class="card-title fw-bolder">{{ bid.car_model ? bid.car_model +' '+ bid.car_model_sub +' '+ bid.car_fuel + '('+ bid.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                                                <p class="tc-gray mt-0"> {{ bid.car_year ? bid.car_year : '2020' }} 년 |<span class="mx-1">{{ bid.car_km ? bid.car_km : '2.4' }}km</span>| 무사고</p>
+                                                <p class="tc-gray mt-0">{{ bid.car_maker ? bid.car_maker + bid.car_model : '현대 소나타' }} ({{ bid.car_grade ? bid.car_grade : 'DN8' }})</p>
                                                 <div class="d-flex">
                                                     <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
                                                     <h5 v-if="bid.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
@@ -455,8 +455,8 @@ TODO:
                                                     </div>
                                                 </div>
                                                 <div v-else="scsBid.status !== 'ask' || scsBid.status !== 'diag'" :class="{ 'grayscale_img': scsBid.status === 'done' || scsBid.status === 'cancel' ||(isDealer && scsBid.status === 'chosen') }" class="card-img-top-placeholder">
-                                                    <div v-if="auction.car_thumbnail">
-                                                        <img :src="auction.car_thumbnail" alt="Car Image">
+                                                    <div v-if="scsBid.car_thumbnail">
+                                                        <img :src="scsBid.car_thumbnail" alt="Car Image">
                                                     </div>
                                                     <div v-else>
                                                         <img src="../../../img/car_example.png">
@@ -476,9 +476,9 @@ TODO:
                                                     </div>
                                                 </div>
                                                 <div class="card-body">
-                                                    <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
-                                                    <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span>| 무사고</p>
-                                                    <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
+                                                    <p class="card-title fw-bolder">{{ scsBid.car_model ? scsBid.car_model +' '+ scsBid.car_model_sub +' '+ scsBid.car_fuel + '('+ scsBid.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                                                    <p class="tc-gray mt-0"> {{ scsBid.car_year ? scsBid.car_year : '2020' }} 년 |<span class="mx-1">{{ scsBid.car_km ? scsBid.car_km : '2.4' }}km</span>| 무사고</p>
+                                                    <p class="tc-gray mt-0">{{ scsBid.car_maker ? scsBid.car_maker + scsBid.car_model : '현대 소나타' }} ({{ scsBid.car_grade ? scsBid.car_grade : 'DN8' }})</p>
                                                     <div class="d-flex">
                                                         <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
                                                         <h5 v-if="scsBid.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>

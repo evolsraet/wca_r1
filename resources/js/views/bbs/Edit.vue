@@ -10,13 +10,21 @@
                         <h5 class="my-3">후기 작성</h5>
                         <div class="left-img">
                             <div v-if ="!isMobileView" class="d-flex flex-row">
-                                    <div class="w-50">
-                                        <div class="card-img-top-ty02 review-img"></div>
-                                    </div>  
-                                    <div class="w-50 d-flex flex-column">
-                                        <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
-                                        <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+
+                                    <div v-if="review.auction.car_thumbnail">
+                                      <img :src="review.auction.car_thumbnail" alt="Car Image">
                                     </div>
+                                    <div v-else>
+                                        <div class="w-50">
+                                          <div class="card-img-top-ty02 review-img"></div>
+                                        </div>
+                                        <div class="w-50 d-flex flex-column">
+                                            <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
+                                            <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    
                                 </div>
                                 <div v-if = "isMobileView">
                                     <div class="card-img-top-ty02"></div>
@@ -30,7 +38,7 @@
                         <input type="hidden" id="auction_id" :v-model="rv.auction_id">
                         <input type="hidden" id="dealer_id" :v-model="rv.dealer_id">
                       <!-- <p class="card-title fs-5"><span class="blue-box">무사고</span>{{review.auction.car_no}}</p>-->
-                      <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                      <h5>{{ review.auction.car_model ? review.auction.car_model +' '+ review.auction.car_model_sub +' '+ review.auction.car_fuel + '('+ review.auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</h5>
                     </div>
                   <!-- <p class="mt-2 card-text text-secondary opacity-50 fs-5 mov-text">매물번호 <span class="process ms-2">(자동지정)</span></p>
                     <div class="enter-view mt-2">
@@ -38,10 +46,10 @@
                         <p class="card-text text-secondary opacity-50 fs-5 web-text">12 삼 4567</p>
                     </div>--> 
                     <div class="mx-2 text-secondary opacity-50 my-4">
-                        <p> 년 | 2.4km | 무사고</p>
-                        <p>현대 쏘나타 (DN8)</p>
+                        <p>{{ review.auction.car_year ? review.auction.car_year : '2020' }}년 | {{ review.auction.car_km ? review.auction.car_km : '2.4' }}km | 무사고</p>
+                        <p>{{ review.auction.car_maker ? review.auction.car_maker + review.auction.car_model : '현대 쏘나타' }} ({{ review.auction.car_grade ? review.auction.car_grade : 'DN8' }})</p>
                         <br>
-                        <p>매물번호 / 564514</p>
+                        <p>매물번호 / {{ review.auction.id }}</p>
                         <p>딜 러 명 / {{review.dealer.name}}</p>
                         </div>
                   <!-- <p class="mt-5 auction-deadline justify-content-sm-center">경매 마감일<span>{{ formatDateAndTime(review.auction.final_at )}}</span></p>-->

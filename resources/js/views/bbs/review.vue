@@ -16,7 +16,13 @@
                         <div class="col-md-3 p-2 mb-2 hover-ac pointer" v-if="auctionsData.length > 0" v-for="auction in auctionsData" :key="auction.id" @click="navigateToDetail(auction.id)">
                             <div class="p-2 card my-auction"> 
                                     <div class="card-img-top-placeholder">
-                                        <img src="../../../img/car_example.png">
+                                        <div v-if="auction.car_thumbnail">
+                                            <img :src="auction.car_thumbnail" alt="Car Image">
+                                        </div>
+                                        <div v-else>
+                                            <img src="../../../img/car_example.png">
+                                        </div>
+                                        <!-- <img src="../../../img/car_example.png"> -->
                                     </div> 
                                     <p class="review-date">{{ splitDate(auction.updated_at) }} ({{ getDayOfWeek(auction.updated_at) }})</p>
                                 <div class="card-body">
@@ -27,8 +33,9 @@
                                         </ul>
                                     </div>
                                     <!--<h3 class="review-title">{{ auction.car_no }}</h3>-->
-                                    <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
-                                        <p>2020년 | 2.4km | 무사고</p>
+
+                                    <h5 class="card-title">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</h5>
+                                        <p>{{ auction.car_year ? auction.car_year : '2020' }}년 | {{ auction.car_km ? auction.car_km : '2.4' }}km | 무사고</p>
                                         <div class="d-flex justify-content-between align-items-baseline">
                                             <div>
                                                 <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
@@ -64,7 +71,12 @@
                                 <div class="review-image02">
                                     <p class="review-date">{{ splitDate(review.updated_at) }} ({{ getDayOfWeek(review.updated_at) }})</p>
                                     <div class="card-img-top-placeholder mt-2">
-                                        <img src="../../../img/car_example.png">
+                                        <div v-if="review.auction.car_thumbnail">
+                                            <img :src="review.auction.car_thumbnail" alt="Car Image">
+                                        </div>
+                                        <div v-else>
+                                            <img src="../../../img/car_example.png">
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="card-body">
@@ -75,8 +87,8 @@
                                             <li><button @click="userDeleteReview(review.id, userId)" class="tc-primary">삭제</button></li>
                                         </ul>
                                     </div>
-                                    <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
-                                    <p>2020년 | 2.4km | 무사고</p>
+                                    <h5 class="card-title">{{ review.auction.car_model ? review.auction.car_model +' '+ review.auction.car_model_sub +' '+ review.auction.car_fuel + '('+ review.auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</h5>
+                                    <p>{{ review.auction.car_year ? review.auction.car_year : '2020' }}년 | {{ review.auction.car_km ? review.auction.car_km : '2.4' }}km | 무사고</p>
                                     <div class="d-flex justify-content-between">
                                         <div>
                                             <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>

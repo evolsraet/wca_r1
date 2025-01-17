@@ -11,13 +11,20 @@
                             <h5 class="my-3">후기 작성</h5>
                             <div class="left-img">
                                 <div v-if ="!isMobileView" class="d-flex flex-row">
-                                    <div class="w-50">
-                                        <div class="card-img-top-ty02 review-img"></div>
+                                    
+                                    <div v-if="auction.car_thumbnail">
+                                      <img :src="auction.car_thumbnail" alt="Car Image">
                                     </div>
-                                    <div class="w-50 d-flex flex-column">
-                                        <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
-                                        <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+                                    <div v-else>
+                                        <div class="w-50">
+                                          <div class="card-img-top-ty02 review-img"></div>
+                                        </div>
+                                        <div class="w-50 d-flex flex-column">
+                                            <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
+                                            <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+                                        </div>
                                     </div>
+
                                 </div>
                                 <div v-if = "isMobileView">
                                     <div class="card-img-top-ty02"></div>
@@ -32,13 +39,14 @@
                             <input type="hidden" id="user_id" :v-model="rv.user_id">
                             <input type="hidden" id="auction_id" :v-model="rv.auction_id">
                             <input type="hidden" id="dealer_id" :v-model="rv.dealer_id">
-                            <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                            <h5>{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</h5>
                         </div>
                         <div class="mx-2 text-secondary opacity-50 my-4">
-                        <p> {{ carInfo.year }}년 | 2.4km | 무사고</p>
-                        <p>현대 쏘나타 (DN8)</p>
+                        <p> {{ carInfo.year }}년 | {{ auction.car_km ? auction.car_km : '2.4' }}km | 무사고</p>
+                        <p>{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 쏘나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
+
                         <br>
-                        <p>매물번호 | 564514</p>
+                        <p>매물번호 | {{ auction.id }}</p>
                         <p>딜 러 명 | {{ auction.dealer_name }}</p>
                         </div>
                       <!--  <p class="card-title fs-5"><span class="blue-box">무사고</span>{{auction.car_no}}</p>-->
