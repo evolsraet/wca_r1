@@ -30,8 +30,8 @@
                         <label class="heart-toggle" :for="'favorite-' + auctionDetail.data.id" @click.stop></label>
                       </div>
                       <div class="gap-1" :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
-                      <div v-if="!isMobileView" class="d-flex flex-row gap-1">
-                        <div v-if="auctionDetail.data.car_thumbnail">
+                      <div v-if="!isMobileView" class="d-flex flex-row gap-1 img-container">
+                        <div v-if="auctionDetail.data.car_thumbnail" class="img-wrapper">
                           <img :src="auctionDetail.data.car_thumbnail" alt="Car Image">
                         </div>
                         <div v-else>
@@ -2075,6 +2075,28 @@ opacity: 0;
 .container {
     --bs-gutter-x: 0rem;
 }
+}
+.img-container {
+  width: 100%; 
+  height: 400px;
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; 
+}
+
+.img-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 이미지 스타일 */
+.img-wrapper img {
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
 }
 .card-img-top-ty02{
   border-top-left-radius: 6px;

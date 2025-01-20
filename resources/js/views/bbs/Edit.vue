@@ -22,16 +22,14 @@
                                             <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
                                             <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
                                         </div>
-                                    </div>
-                                    
-                                    
+                                    </div>  
                                 </div>
                                 <div v-if = "isMobileView">
                                     <div class="card-img-top-ty02"></div>
                                 </div>
                             </div>
                     <div class="mx-2 enter-view align-items-baseline mt-3 bold-18-font">
-                        <!--                        <input type="hidden" id="user_id" :value="review.auction.user_id">
+                        <!-- <input type="hidden" id="user_id" :value="review.auction.user_id">
                         <input type="hidden" id="auction_id" :value="review.auction.id">
                         <input type="hidden" id="dealer_id" :value="review.auction.win_bid.user_id">-->
                         <input type="hidden" id="user_id" :v-model="rv.user_id">
