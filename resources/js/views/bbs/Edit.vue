@@ -11,7 +11,7 @@
                         <div class="left-img">
                             <div v-if ="!isMobileView" class="d-flex flex-row">
 
-                                    <div v-if="review.auction.car_thumbnail">
+                                    <div v-if="review.auction.car_thumbnail" class="image-container">
                                       <img :src="review.auction.car_thumbnail" alt="Car Image">
                                     </div>
                                     <div v-else>
@@ -281,5 +281,16 @@ onBeforeUnmount(() => {
     gap: 5px;
     border-radius: 6px;
     padding: 35px;
+}
+.image-container {
+  width: 100%;
+  height: 360px; 
+  overflow: hidden; 
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>

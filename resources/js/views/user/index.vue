@@ -103,7 +103,7 @@
                     </div>
                     <div class="intro-container container text-start  py-4" v-if="!isMobileView">
                         <div class="mt-5">
-                            <h2 class="text-center mb-4 bolder">내 차 판매, 이렇게 진행돼요.</h2>
+                            <h2 class="text-center mb-4 bolder ">내 차 판매, 이렇게 진행돼요.</h2>
                         </div>
                         <div class=" align-items-start fee-section line-height-10 mt-5 justify-content-center">
                         <div class="fee-step">
@@ -189,12 +189,13 @@
                         </div>
                     </div>
                 </div>
+            <div class="p-1">
                 <div class="apply-top text-start mb-0">
                     <h3 class="review-title">나의 이용후기</h3>
                     <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
                 </div>
                 <div v-if="auctionsData.length > 0" class="container">
-                    <div class="row">
+                    <div class="row p-3">
                         <div class="col-md-6 p-2 hover-ac pointer" v-for="auction in auctionsData.slice(0,2)" :key="auction.id" @click="navigateToDetail(auction.id)">
                             <div class="card my-auction mt-3">
                                 <div>
@@ -234,6 +235,7 @@
                 </div>
             </div>
         </div>
+    </div>
         <Footer />
     </div>
 </template>
@@ -622,6 +624,9 @@ border-radius: 6px !important;
 }
 .tbl_basic table tr td{
     text-align: left;
+}
+.line-none{
+    line-height:0 !important;
 }
 .scrollable-content .complete-car:nth-child(1) .animated-auction { animation-delay: 1.2s; }
 .scrollable-content .complete-car:nth-child(2) .animated-auction { animation-delay: 1.4s; }

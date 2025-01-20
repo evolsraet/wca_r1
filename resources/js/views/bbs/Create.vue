@@ -10,9 +10,8 @@
                         <div class="container-img">
                             <h5 class="my-3">후기 작성</h5>
                             <div class="left-img">
-                                <div v-if ="!isMobileView" class="d-flex flex-row">
-                                    
-                                    <div v-if="auction.car_thumbnail">
+                                <div v-if ="!isMobileView" >
+                                    <div v-if="auction.car_thumbnail" class="image-container">
                                       <img :src="auction.car_thumbnail" alt="Car Image">
                                     </div>
                                     <div v-else>
@@ -27,7 +26,9 @@
 
                                 </div>
                                 <div v-if = "isMobileView">
-                                    <div class="card-img-top-ty02"></div>
+                                    <div class="img_box">
+                                        <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2">
+                                    </div>
                                 </div>
                             </div>
                             <div class="web-text">
@@ -318,5 +319,16 @@ onBeforeUnmount(() => {
     gap: 5px;
     border-radius: 6px;
     padding: 35px;
+}
+.image-container {
+  width: 100%;
+  height: 360px; 
+  overflow: hidden; 
+}
+
+.image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 </style>
