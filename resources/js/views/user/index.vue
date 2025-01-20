@@ -620,7 +620,9 @@ border-radius: 6px !important;
         transform: scale(1);
     }
 }
-
+.tbl_basic table tr td{
+    text-align: left;
+}
 .scrollable-content .complete-car:nth-child(1) .animated-auction { animation-delay: 1.2s; }
 .scrollable-content .complete-car:nth-child(2) .animated-auction { animation-delay: 1.4s; }
 .scrollable-content .complete-car:nth-child(3) .animated-auction { animation-delay: 1.6s; }
