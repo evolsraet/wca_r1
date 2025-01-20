@@ -7,7 +7,7 @@
         <form @submit.prevent="submitForm" v-for="review in reviewData" :key="review">
             <div class="container mov-wide">
                     <div class="container-img">
-                        <h5 class="my-3">후기 작성</h5>
+                        <h4 class="mt-4 mb-4">후기 수정</h4>
                         <div class="left-img">
                             <div v-if ="!isMobileView" class="d-flex flex-row">
 
