@@ -315,6 +315,8 @@ export default function useAuth() {
         })
         .post();
 
+        localStorage.setItem('currentTab', 'allInfo');
+
     };
 
     const getAbilities = async () => {

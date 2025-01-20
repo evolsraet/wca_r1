@@ -6,7 +6,7 @@
                     <div class="styled-div mt-0">
                         <h1 class="centered-text fade-in" :class="{ 'fade-in-active': isVisible }">
                             현재 진행중인 경매가
-                            <span class="ms-2 underline">{{ auctionsData.length }} 건</span> 있어요.
+                            <span class="ms-2 underline">{{ ingCount }} 건</span> 있어요.
                         </h1>
                         
                     <swiper
@@ -69,7 +69,7 @@
                             <p class="bid-icon text-secondary opacity-50 size_16 mb-0">입찰</p>
                         </router-link>
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'scsbidInfo' }}" class="item">
-                            <p class="size_22 tc-black"><span class="tc-primary mb-0 size_22" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
+                            <p class="size_22 tc-black"><span class="tc-primary mb-0 size_22" ref="item3">{{ myScsBidCount }}</span> 건</p>
                             <p class="suc-bid-icon text-secondary opacity-50 size_16 mb-0">낙찰</p>
                         </router-link>
                     </div>
@@ -87,7 +87,7 @@
                 </router-link>
                 <router-link :to="{ name: 'auction.index', state: { currentTab: 'scsbidInfo' }}" class="item">
                     <p class="suc-bid-icon text-secondary opacity-50 normal-16-font mb-0">낙찰</p>
-                    <p class="text-center"><span class="tc-primary mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
+                    <p class="text-center"><span class="tc-primary mb-0" ref="item3">{{ myScsBidCount }}</span> 건</p>
                 </router-link>
             </div>
             <UseGuide class="mt-4"/>
@@ -188,7 +188,11 @@ import useAuctions from '@/composables/auctions';
 import useLikes from '@/composables/useLikes';
 import AuctionList from "@/views/import/AuctionList.vue";
 import { initPostSystem } from "@/composables/posts";
+import { cmmn } from '@/hooks/cmmn';
 import UseGuide from "@/views/import/UseGuide.vue";
+
+const { wicas , wica , updateAuctionTimes , calculateTimeLeft } = cmmn();
+
 const isVisible = ref(false);
 
 onMounted(() => {
@@ -223,11 +227,15 @@ const fetchPosts = async () => {
 };
 
 const alarmModal = ref(null);
-const { getAuctionsByDealer, auctionsData, getAuctionById } = useAuctions();
-const { bidsData, getHomeBids, viewBids, bidsCountByUser } = useBid();
+const { getAuctionsByDealer, auctionsData, getAuctionById, getAuctions, getAuctionsWithBids, getAuctionsByDealerLike } = useAuctions();
+const { bidsData, getHomeBids, viewBids, bidsCountByUser, getscsBids, getMyBidsAll } = useBid();
 const user = computed(() => store.state.auth.user);
 const myBidCount = ref(0);
 const myLikeCount=ref(0);
+const myScsBidCount=ref(0);
+const categoriesList=ref(0);
+const bidsIdString = ref('');
+
 const latestNotices = computed(() => {
   if (!posts.value || posts.value.length === 0) {
     console.warn("공지사항 데이터가 비어 있습니다.");
@@ -306,10 +314,50 @@ const goToDetail = (postId) => {
 };
 
 
+const getIngData = async() => {
+    const auctionDatas = await getAuctions('1',false,'all','');
+    console.log('getIngData', auctionDatas);
+}
+
+// 입찰 데이터 가져오기
+const getMyBidsGetData = async() => {
+    const myAuctionBidsInfo = await getAuctionsWithBids('1','all',user.value.id,'',bidsIdString.value);
+    myBidCount.value = myAuctionBidsInfo.data.filter(auction => auction.status === 'ing').length;
+    console.log('getMyBidsGetData', myAuctionBidsInfo);
+    console.log('getMyBidsGetDataLength', myAuctionBidsInfo.data.filter(auction => auction.status === 'ing').length);
+}
+
+// 관심 데이터 가져오기
+const getMyLikeGetData = async() => {
+    const myAuctionBidsInfo = await getAuctionsByDealerLike('1',user.value.id,'all');
+    myLikeCount.value = myAuctionBidsInfo.rawData.data.data_count;
+    console.log('getMyLikeGetData', myAuctionBidsInfo.rawData);
+}
+
+// 낙찰 데이터 가져오기
+const getScsBidsGetData = async() => {
+    const myAuctionBidsInfo = await getscsBids('1','all','',bidsIdString.value);
+    myScsBidCount.value = myAuctionBidsInfo.rawData.data.data_count;
+    console.log('getScsBidsGetData', myAuctionBidsInfo.rawData);
+}
+
 onMounted(async () => {
+
+    const myBidsList = await getMyBidsAll();
+    const bidsIdList = [];
+    for (let i = 0; i < myBidsList.data.length; i++) {
+        bidsIdList.push(myBidsList.data[i].id);
+    }
+
+    bidsIdString.value = bidsIdList.join(',');
+
     await getBoardCategories(); // 카테고리 로드
     await fetchPosts(); // 게시물 로드
     getBoardData();
+    getIngData();
+    getMyBidsGetData();
+    getMyLikeGetData();
+    getScsBidsGetData();
     });
     watch(route, async (newRoute) => {
     if (newRoute.params.boardId !== boardId.value) {
@@ -329,7 +377,7 @@ onMounted(async () => {
     await getAuctionsByDealer("all");
     const myLikeCountData = await getMyLikesCount(user.value.id);
     myLikeCount.value = myLikeCountData.rawData.data.data_count;
-    
+ 
     await getHomeBids();
     bidsData.value.forEach(bid => {
         if (

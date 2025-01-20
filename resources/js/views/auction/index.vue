@@ -668,7 +668,8 @@ const currentScsBidsStatus = ref('all');
 const currentMyBidsStatus = ref('all');
 
 const { role, getRole } = useRoles();
-const currentTab = ref('allInfo'); 
+// const currentTab = ref('allInfo'); 
+const currentTab = localStorage.getItem('currentTab') ? ref(localStorage.getItem('currentTab')) : ref('allInfo');
 const { auctionsData, pagination, getAuctions, getAuctionsByDealer, getAuctionsByDealerLike, getAuctionsWithBids } = useAuctions();
 
 const currentPage = ref(1); 
@@ -821,18 +822,25 @@ function setCurrentTab(tab) {
     switch (tab) {
         case 'allInfo':
             getAuctionsData();
+            localStorage.setItem('currentTab', 'allInfo');
             break;
         case 'interInfo':
             currentStatus.value = 'all';
             favoriteAuctionsGetData();
+            localStorage.setItem('currentTab', 'interInfo');
             break;
         case 'myBidInfo':
             currentMyBidsStatus.value='all';
             getMyBidsGetData();
+            localStorage.setItem('currentTab', 'myBidInfo');
             break;
         case 'scsbidInfo':
             currentScsBidsStatus.value = 'all';
             getScsBidsInfo();
+            localStorage.setItem('currentTab', 'scsbidInfo');
+            break;
+        case 'auctionDone':
+            localStorage.setItem('currentTab', 'auctionDone');
             break;
     }
 
