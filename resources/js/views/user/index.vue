@@ -199,7 +199,7 @@
                             <div class="card my-auction mt-3">
                                 <div>
                                     <div class="card-img-top-placeholder">
-                                        <img src="../../../img/car_example.png">
+                                        <img :src="auction.car_thumbnail">
                                     </div>
                                     <div class="card-body">
                                         <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>

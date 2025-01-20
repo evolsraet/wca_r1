@@ -319,7 +319,7 @@ TODO:
                                 
                                     <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="auction in filteredDone" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
                                         <div class="card my-auction">
-                                            <div class="card-img-top-placeholder grayscale_img"><img src="../../../img/car_example.png"></div>
+                                            <div class="card-img-top-placeholder grayscale_img"><img :src="auction.car_thumbnail"></div>
                                             <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                             <div class="card-body">
                                                 <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
@@ -327,6 +327,7 @@ TODO:
                                                 <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                 <div class="d-flex">
                                                     <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                                                    <h5 v-if="auction.is_biz !== 0"><span class="red-box-type03 border-6">법인 / 사업자</span></h5>
                                                     <h5 v-if="auction.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
                                                 </div>
                                             </div>
