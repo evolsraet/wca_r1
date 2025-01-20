@@ -246,15 +246,7 @@
                       <span class="text-secondary opacity-50 font-1">위카 란?</span>
                     </div>
                   </router-link>
-                  <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="menu-item mt-0 process mb-4" @click="toggleNavbar">
-                    <div class="sd-menu">
-                      <div class="icon icon-dash"></div>
-                    </div>
-                    <div class="d-flex flex-column">
-                      <span class="menu-text">공지사항</span>
-                      <span class="text-secondary opacity-50 font-1">새소식</span>
-                    </div>
-                  </router-link>
+
                 </div>
               </div>
               <div class="logo-content">

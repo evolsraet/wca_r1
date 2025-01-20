@@ -57,7 +57,7 @@
                                 <p class="card-text text-secondary opacity-50 fs-5 web-text">12 삼 4567</p>
                                 <a href="#"><span class="red-box-type02 pass-red" @click.prevent="openAlarmModal">상세보기</span></a>
                             </div>-->
-                            <p class="mt-4 auction-deadline justify-content-sm-center text-secondary opacity-50">판매가<span class="fw-bolder fs-5 tc-primary">{{ amtComma(auction.win_bid.price) }}</span></p>
+                            <p class="mt-4 auction-deadline justify-content-sm-center text-secondary">판매가<span class="fw-bolder fs-5 tc-primary">{{ amtComma(auction.win_bid.price) }}</span></p>
                             </div>
                             <div class="right-container">
                             <bottom-sheet initial="half" :dismissable="true">
