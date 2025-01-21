@@ -45,8 +45,10 @@
                         </div>
                       </div>
                       <div v-if="isMobileView">
-                        <div v-if="auctionDetail.data.car_thumbnail">
+                        <div v-if="auctionDetail.data.car_thumbnail" class="d-flex flex-row gap-1 img-container">
+                          <div v-if="auctionDetail.data.car_thumbnail" class="img-wrapper">
                           <img :src="auctionDetail.data.car_thumbnail" alt="Car Image">
+                        </div>
                         </div>
                         <div v-else>
                           <div class="card-img-top-ty02"></div>
