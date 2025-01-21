@@ -53,14 +53,19 @@ const startDrag = (event) => {
   isDragging.value = true;
   startY.value = event.touches ? event.touches[0].clientY : event.clientY;
   document.body.style.overflow = 'hidden';
+  document.body.style.touchAction = 'none'; 
   document.addEventListener('mousemove', onDrag);
   document.addEventListener('mouseup', endDrag);
-  document.addEventListener('touchmove', onDrag);
+  document.addEventListener('touchmove', onDrag, { passive: false }); // 기본 동작 방지
   document.addEventListener('touchend', endDrag);
 };
 
 const onDrag = (event) => {
   if (!isDragging.value) return;
+
+  // 기본 동작 방지
+  event.preventDefault();
+
   currentY.value = event.touches ? event.touches[0].clientY : event.clientY;
   deltaY.value = startY.value - currentY.value;
 
@@ -80,8 +85,13 @@ const onDrag = (event) => {
 
 const endDrag = (event) => {
   if (!isDragging.value) return;
+
   isDragging.value = false;
+
+  // 스크롤 다시 활성화
   document.body.style.overflow = '';
+  document.body.style.touchAction = '';
+
   document.removeEventListener('mousemove', onDrag);
   document.removeEventListener('mouseup', endDrag);
   document.removeEventListener('touchmove', onDrag);
@@ -114,6 +124,7 @@ const endDrag = (event) => {
 
   deltaY.value = 0;
 };
+
 
 const expandSheet = () => {
   showBottomSheet.value = true;
