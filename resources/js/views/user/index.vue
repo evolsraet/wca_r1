@@ -105,7 +105,7 @@
                         <div class="mt-5">
                             <h2 class="text-center mb-4 bolder ">내 차 판매, 이렇게 진행돼요.</h2>
                         </div>
-                        <div class=" align-items-start fee-section line-height-10 mt-5 justify-content-center">
+                        <div class=" align-items-start fee-section line-height-10 mt-5 justify-content-between">
                         <div class="fee-step">
                             <div class="circle">
                                 <img class="ms-2" src="../../../img/contract.png" width="40px">
@@ -190,7 +190,7 @@
                     </div>
                 </div>
             <div class="p-1">
-                <div class="apply-top text-start mb-0">
+                <div class="apply-top text-start mb-0 px-3">
                     <h3 class="review-title">나의 이용후기</h3>
                     <router-link :to="{ name: 'user.review' }" href="" class="btn-apply">전체보기</router-link>
                 </div>

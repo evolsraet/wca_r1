@@ -243,7 +243,7 @@ p {
 }
 @media (max-width: 396px){
   .bid-bc .inspector_list > li .img_box {
-    width: 5.5rem !important;
+    width: 5rem !important;
     height: 4.4rem !important;
   }
   .font-size{
@@ -468,7 +468,7 @@ width: auto !important;
 border-radius: 6px !important;
 }
 .box {
-padding: 0 15px !important;
+padding: 0 10px ;
 width: auto !important;
 border-radius: 6px !important;
 }

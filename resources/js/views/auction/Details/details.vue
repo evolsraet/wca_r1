@@ -1918,7 +1918,12 @@ async function loadPage(page) {
        max-width:none !important;
     }
 }
-
+@media (max-width:406px){
+  .img-container{
+    height: auto !important;
+    max-width: 400px;
+  }
+}
 
 
 
@@ -2094,7 +2099,6 @@ opacity: 0;
   overflow: hidden;
 }
 
-/* 이미지 스타일 */
 .img-wrapper img {
   width: 100%; 
   height: 100%; 
