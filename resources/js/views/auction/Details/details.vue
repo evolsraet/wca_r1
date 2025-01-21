@@ -414,7 +414,7 @@
               <div class="d-flex justify-content-between align-items-baseline">
               <h4 class="text-start my-2 custom-highlight">경매 진행중</h4>
               </div>
-              <P class="text-start text-secondary opacity-50">※ 입찰한 딜러가 있으면 즉시 선택이 가능합니다.</P>
+              <p class="text-start text-secondary opacity-50">※ 입찰한 딜러가 있으면 즉시 선택이 가능합니다.</p>
               <button  class="btn-primary bold-18-font modal-bid d-flex mt-3 p-3 justify-content-center blinking">
                   <p class="text-center">경매 진행중 입니다.</p>
               </button>
