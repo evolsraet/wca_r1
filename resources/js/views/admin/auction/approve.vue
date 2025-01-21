@@ -8,17 +8,15 @@
           <div>
             <div class="mb-4">
               <div class="card my-auction">
-                <div v-if="!isMobileView" class="d-flex flex-row">
-                    <div class="w-50">
-                        <div class="card-img-top-ty02 review-img"></div>
-                    </div>
-                    <div class="w-50 d-flex flex-column">
-                        <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
-                        <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
-                    </div>
+                <div v-if="!isMobileView" class="img-container">
+                  <div class="img-wrapper">
+                    <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2">
+                  </div>
                 </div>
-                <div v-if="isMobileView">
-                    <div class="card-img-top-ty02"></div>
+                <div v-if="isMobileView" class="img-container">
+                  <div class="img-wrapper">
+                    <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2">
+                  </div>
                 </div>
                 <!--
                 <div class="card-body">
@@ -492,6 +490,7 @@ const auction = reactive({
   dest_addr2:'',
   diag_first_at:'',
   diag_second_at:'',
+  car_thumbnail:'',
 });
 
 const route = useRoute();
@@ -785,6 +784,7 @@ onMounted(async () => {
     auction.addr2 = data.addr2;
     auction.diag_first_at = data.diag_first_at;
     auction.diag_second_at = data.diag_second_at;
+    auction.car_thumbnail = data.car_thumbnail;
     //auction.final_at = data.final_at;
 
     if(data.choice_at){
@@ -846,6 +846,27 @@ onBeforeUnmount(() => {
 
 
 <style scoped>
+/* 이미지 스타일 */
+.img-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.img-container {
+  width: 100%; 
+  height: 500px;
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; 
+}
+.img-wrapper img {
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+}
+
 .text-red{
   color: red;
 }
@@ -881,12 +902,27 @@ onBeforeUnmount(() => {
 .card-body:last-child {
   margin-bottom: 0; 
 }
-
+.img_box img{
+  object-fit: cover;
+  height: inherit;
+}
 
 .cursor-pointer{
   cursor: pointer;
 }
 .search-btn {
   transform: translateY(-119%) !important;
+}
+@media screen and (max-width: 767px) {
+    .left-container{
+        padding: 0px;
+    }
+    .container{
+        --bs-gutter-x: 0rem !important;
+        max-width: none;
+    }
+    .img-container{
+        height: auto !important;
+    }
 }
 </style>

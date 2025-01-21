@@ -398,4 +398,24 @@ watch(
     top: 47px !important;  
     right: 4px !important;
 }
+/* 이미지 스타일 */
+.img-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.img-container {
+  width: 100%; 
+  height: 500px;
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; 
+}
+.img-wrapper img {
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+}
 </style>

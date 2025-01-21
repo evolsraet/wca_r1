@@ -9,19 +9,17 @@
         <form @submit.prevent="submitForm" v-for="review in reviewData" :key="review">
             <div class="create-review">
                 <div class="left-container">
-                    <div class="container-img mov-info02">
+                    <div class="container-img">
                         <div class="left-img">
-                            <div v-if="!isMobileView" class="d-flex flex-row">
-                                <div class="w-50">
-                                    <div class="card-img-top-ty02 review-img"></div>
+                            <div v-if="!isMobileView" class="img-container">
+                                <div class="img-wrapper">
+                                    <img :src="car_thumbnail" alt="차량 사진" class="mb-2">
                                 </div>
-                                <div class="w-50 d-flex flex-column">
-                                    <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
-                                    <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
                                 </div>
                             </div>
-                            <div v-if="isMobileView">
-                                <div class="card-img-top-ty02"></div>
+                            <div v-if="isMobileView" class="img-container">
+                                <div class="img-wrapper">
+                                <img :src="car_thumbnail" alt="차량 사진" class="mb-2">
                             </div>
                         </div>
                         <div class="web-text">
@@ -106,7 +104,7 @@ const checkScreenWidth = () => {
 const car_no = ref("");
 const dealer_name = ref("");
 const price = ref("");
-
+const car_thumbnail = ref("");
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {
     const bottomSheet = document.querySelector('.bottom-sheet');   
@@ -154,6 +152,7 @@ onMounted(async () => {
         rv.star = response.star;
         rv.user_id = response.user_id;
         rv.content = response.content;
+        car_thumbnail.value = response.auction.car_thumbnail;
     })
 
 });
@@ -162,6 +161,18 @@ onBeforeUnmount(() => {
 }); 
 </script>
 <style scoped>
+@media screen and (max-width: 767px) {
+    .left-container{
+        padding: 0px;
+    }
+    .container{
+        --bs-gutter-x: 0rem !important;
+        max-width: none;
+    }
+    .img-container{
+        height: auto !important;
+    }
+}
 .bottom-sheet::before {
     content: "";
     position: absolute;
@@ -172,5 +183,24 @@ onBeforeUnmount(() => {
     height: 3px;
     background-color: #dbdbdb;
 }
-
+/* 이미지 스타일 */
+.img-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+}
+.img-container {
+  width: 100%; 
+  height: 330px;
+  display: flex; 
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; 
+}
+.img-wrapper img {
+  width: 100%; 
+  height: 100%; 
+  object-fit: cover; 
+}
 </style>
