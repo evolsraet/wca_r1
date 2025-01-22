@@ -959,6 +959,17 @@ const checkExpectedPrice = async (data) => {
         .post();
 };
 
+// 현재 진행중인 경매 갯수 
+const allIngCount = async () => {
+    return wicac.conn()
+        .url(`/api/auctions/allIngCount`)
+        .callback(function (result) {
+            const allIngCount = result.data;
+            return allIngCount;
+        })
+        .post();
+};
+
 
     return {
         getAuctionsByDealerLike,
@@ -996,7 +1007,8 @@ const checkExpectedPrice = async (data) => {
         bidPaginationAuction,
         getAuctionsWithBids,
         checkExpectedPrice,
-        updateAuctionIsDeposit
+        updateAuctionIsDeposit,
+        allIngCount
     };
     
 }

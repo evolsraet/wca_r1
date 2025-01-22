@@ -312,4 +312,12 @@ class AuctionController extends Controller
         return $roundedPrice;
     }
 
+    public function AllIngCount(Request $request)
+    {
+
+        $result = Auction::where('status', 'ing')->count();
+
+        return response()->api($result);
+    }
+
 }

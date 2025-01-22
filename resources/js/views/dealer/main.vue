@@ -227,7 +227,7 @@ const fetchPosts = async () => {
 };
 
 const alarmModal = ref(null);
-const { getAuctionsByDealer, auctionsData, getAuctionById, getAuctions, getAuctionsWithBids, getAuctionsByDealerLike } = useAuctions();
+const { getAuctionsByDealer, auctionsData, getAuctionById, getAuctions, getAuctionsWithBids, getAuctionsByDealerLike, allIngCount } = useAuctions();
 const { bidsData, getHomeBids, viewBids, bidsCountByUser, getscsBids, getMyBidsAll } = useBid();
 const user = computed(() => store.state.auth.user);
 const myBidCount = ref(0);
@@ -278,9 +278,13 @@ const openAlarmModal = () => {
     }
 };
 
-const ingCount = computed(() => {
-    return auctionsData.value.filter(auction => auction.status === 'ing').length;
-});
+const ingCount = ref(0);
+
+const ingCountFetch = async() => {
+    // return auctionsData.value.filter(auction => auction.status === 'ing').length;
+    const allIngCnt =  await allIngCount();
+    ingCount.value = allIngCnt;
+};
 
 const alertNoVehicle = (event) => {
     event.preventDefault();
@@ -353,6 +357,7 @@ onMounted(async () => {
 
     await getBoardCategories(); // 카테고리 로드
     await fetchPosts(); // 게시물 로드
+    ingCountFetch();
     getBoardData();
     getIngData();
     getMyBidsGetData();

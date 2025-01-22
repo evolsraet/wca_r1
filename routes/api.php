@@ -45,6 +45,7 @@ Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);
 Route::apiResource('auctions', AuctionController::class)
     ->middleware('auth:sanctum');
 Route::post('auctions/checkExpectedPrice', [AuctionController::class, 'CheckExpectedPrice']);
+Route::post('auctions/allIngCount', [AuctionController::class, 'AllIngCount']);
 
 // bid
 Route::apiResource('bids', BidController::class)
