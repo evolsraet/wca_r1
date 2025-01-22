@@ -34,7 +34,7 @@ class AuctionDoneJob implements ShouldQueue
      */
     public function handle(): void
     {
-
+        $baseUrl = config('app.url');
         $auction = Auction::find($this->auction);
 
         switch($this->mode){
@@ -45,7 +45,8 @@ class AuctionDoneJob implements ShouldQueue
                     'message' => '위카옥션을 이용해주셔서 감사합니다. 후기를 남겨주세요!',
                     'data' => $auction,
                     'status9' => $auction->final_price,
-                    'link' => '/view-do/' . $auction->id,
+                    'link' => $baseUrl.'/view-do/' . $auction->id,
+                    'linkTitle' => '후기 남기기'
                 ];
                 
                 $sendMessage = NotificationTemplate::basicTemplate($data);
@@ -68,18 +69,23 @@ class AuctionDoneJob implements ShouldQueue
 
             case 'dealer':
 
+                // 나이스페이먼츠 API 가상계좌 번호 발급 
+
+                // 알림 전송 데이터
                 $data = [
                     'title' => '경매가 완료되었습니다.',
                     'message' => '수수료를 입금해 주세요!',
                     'data' => $auction,
-                    'status10' => $auction->final_price,
-                    'status11' => $auction->final_price,
-                    'status12' => $auction->final_price,
-                    'status13' => $auction->final_price,
-                    'status14' => '123-1234-1234',
-                    'status15' => '예금주',
-                    'status16' => '2025-01-16(수) 00시',
-                    'footerMsg' => '* 수수료 미입금시 클레임이 불가합니다.'
+                    'status10' => $auction->final_price, // 최종 경매가
+                    'status11' => $auction->total_fee ? $auction->total_fee : '20000', // 총 입금액 (수수료. 진단비를 자동으로 계산 하는 부분 만들어서 연동 )
+                    'status12' => $auction->success_fee ? $auction->success_fee : '20000', // 수수료 
+                    'status13' => $auction->diag_fee ? $auction->diag_fee : '20000', // 진단비
+                    'status14' => '123-1234-1234', // 계좌번호 (가상계좌번호 발급)
+                    'status15' => '예금주', // 예금주
+                    'status16' => '2025-01-16(수) 00시', // 입금기한
+                    'footerMsg' => '* 수수료 미입금시 클레임이 불가합니다.',
+                    //'link' => $baseUrl, // 결제 페이지 링크를 전송? 
+                    //'linkTitle' => '수수료결제'
                 ];
         
                 $sendMessage = NotificationTemplate::basicTemplate($data);
@@ -94,7 +100,7 @@ class AuctionDoneJob implements ShouldQueue
                 //         'tpl_code' => env('SMS_TPL_CODE'),
                 //         'receiver_1' => $this->user->phone,
                 //         'subject_1' =>  $sendMessage['title'],
-                //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'].'<br>'.$sendMessage['message3'].'<br>'.$sendMessage['message13'].'<br>'.$sendMessage['message14'].'<br>'.$sendMessage['message15'].'<br>'.$sendMessage['message16'].'<br>'.$sendMessage['message17'].'<br>'.$sendMessage['message18'].'<br>'.$sendMessage['message19'].'<br><br>바로가기'.$sendMessage['footerMsg'],
+                //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'].'<br>'.$sendMessage['message3'].'<br>'.$sendMessage['message13'].'<br>'.$sendMessage['message14'].'<br>'.$sendMessage['message15'].'<br>'.$sendMessage['message16'].'<br>'.$sendMessage['message17'].'<br>'.$sendMessage['message18'].'<br>'.$sendMessage['message19'].'<br>'.$sendMessage['footerMsg'],
                 //     ]
                 // ]));
 

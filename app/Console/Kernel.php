@@ -25,13 +25,20 @@ class Kernel extends ConsoleKernel
                     TaksongStatusJob::dispatch($taksongStatus->chk_id);
                 }
             }
-            
+
             // 차량대금 입금 확인 
             $auctionService = new AuctionService();
             $auctionService->auctionTotalDepositMiss();
 
+            
         })->everyMinute();
 
+
+        $schedule->call(function() {
+
+            
+
+        })->hourly();
 
         // 경매 완료 수수료 처리 확인 / 하루 한번
         $schedule->call(function() {

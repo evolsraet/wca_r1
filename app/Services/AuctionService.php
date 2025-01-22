@@ -664,16 +664,21 @@ class AuctionService
             foreach($taksongStatusTemp as $bid){
                 if(isset($bid->auction_id)){
 
-                    $nowTime = Carbon::now()->format('Y-m-d H:i:s');
-
                     $auction = Auction::find($bid->auction_id);
                     $bids = Bid::find($auction->bid_id);
                     $user = User::find($bids->user_id);
+                    
+                    // 고정된 이벤트 시간
+                    $eventTime = Carbon::parse($auction->taksong_wish_at);
 
-                    // 2시간전에 알림 발송
-                    $twoHoursBefore = Carbon::parse($auction->taksong_wish_at)->subHours(2);
+                    // 이벤트 시간 2시간 전 계산
+                    $twoHoursBefore = $eventTime->copy()->subHours(2);
 
-                    if($nowTime > $twoHoursBefore){
+                    // 현재 시간
+                    $now = Carbon::now();
+
+                    // 조건: 현재 시간이 2시간 전과 정확히 일치할 경우 알림 실행
+                    if ($now->format('Y-m-d H:i') === $twoHoursBefore->format('Y-m-d H:i')) {
                         AuctionTotalDepositMissJob::dispatch($user, $auction);
                     }
 

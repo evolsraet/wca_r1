@@ -71,6 +71,7 @@ class NotificationTemplate
         
         // 전송링크 
         isset($data['link']) ? $link = $data['link'] : $link = '/';
+        isset($data['linkTitle']) ? $linkTitle = $data['linkTitle'] : $linkTitle = '바로가기';
 
         isset($data['message']) ? $message = $data['message'] : $message = '';
 
@@ -126,7 +127,7 @@ class NotificationTemplate
             'message18'  => $message18,
             'message19'  => $message19,
             'footerMsg' => $footerMsg,
-            'link' => ['url' => url(path: $link), 'text' => '바로가기'],
+            'link' => ['url' => url(path: $link), 'text' => $linkTitle],
         ];
 
         return $sendMessage;

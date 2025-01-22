@@ -92,7 +92,7 @@ class AuctionDoneNotification extends Notification
                         return $mailMessage->line($this->sendMessage['message19']);
                     })
                     ->when(!empty($this->sendMessage['link']['url']), function ($mailMessage) {
-                        return $mailMessage->action('후기 남기기', $this->sendMessage['link']['url']);
+                        return $mailMessage->action($this->sendMessage['link']['text'], $this->sendMessage['link']['url']);
                     })
                     ->when(!empty($this->sendMessage['footerMsg']), function ($mailMessage) {
                         return $mailMessage->line($this->sendMessage['footerMsg']);

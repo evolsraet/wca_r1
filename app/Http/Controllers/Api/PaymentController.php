@@ -33,7 +33,7 @@ class PaymentController extends Controller
             'auctionName' => $auctionName
         ];
 
-        return view('payment.form', $data);
+        return view('payment.form2', $data);
     }
 
     public function resultPayment()
@@ -107,4 +107,28 @@ class PaymentController extends Controller
 
         die();
     }
+
+    public function resultPayment2()
+    {
+        // 데이터 받기
+        $data = $_REQUEST;
+
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+    }
+
+    public function requestPayment()
+    {
+        echo 'requestPayment';
+        die();
+
+        // 데이터 받기
+        $data = $_REQUEST;
+
+        echo '<pre>';
+        print_r($data);
+        echo '</pre>';
+    }
+
 }
