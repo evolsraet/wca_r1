@@ -33,6 +33,7 @@ class AuctionTotalDepositJob implements ShouldQueue
      */
     public function handle(): void
     {
+        $baseUrl = config('app.url');
 
         $formattedDate = Carbon::parse($this->auction['taksong_wish_at'])->format('Y-m-d(D) H시');
 

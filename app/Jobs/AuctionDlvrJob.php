@@ -37,11 +37,15 @@ class AuctionDlvrJob implements ShouldQueue
     public function handle(): void
     {
 
-        // $baseUrl = config('app.url');
+        $baseUrl = config('app.url');
 
         Log::info('탁송 신청이 완료되었습니다.', ['thisData' => $this->thisData, 'data' => $this->data]);
 
         $formattedDate = Carbon::parse($this->thisData['taksong_wish_at'])->format('Y-m-d(D) H시');
+
+        $randomPrefix = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8);
+        $randomSuffix = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 3);
+        $bidCode = $randomPrefix.$this->thisData['bid_id'].$randomSuffix;
 
         $data = [
             'title' => '모든 탁송정보가 입력되었습니다.',
@@ -50,6 +54,7 @@ class AuctionDlvrJob implements ShouldQueue
             'status4' => $this->thisData['final_price'],
             'status5' => $this->thisData['bank'].' '.$this->thisData['account'],
             'status6' => $formattedDate,
+            'link' => $baseUrl.'/api/payment?code='.$bidCode
         ];
 
         $sendMessage = NotificationTemplate::basicTemplate($data);

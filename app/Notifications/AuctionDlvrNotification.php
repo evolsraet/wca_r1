@@ -47,7 +47,8 @@ class AuctionDlvrNotification extends Notification
                     ->line($this->data['message3'])
                     ->line($this->data['message7'])
                     ->line($this->data['message8'])
-                    ->line($this->data['message9']);
+                    ->line($this->data['message9'])
+                    ->action('결제하기', $this->data['link']['url']);
     }
 
     /**

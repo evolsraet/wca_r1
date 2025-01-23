@@ -40,6 +40,7 @@ class AuctionTotalDepositNotification extends Notification
     {
         return (new MailMessage)
                     ->subject($this->sendMessage['title'])
+                    ->line($this->sendMessage['title'])
                     ->line($this->sendMessage['message'])
                     ->line($this->sendMessage['message1'])
                     ->line($this->sendMessage['message2'])
