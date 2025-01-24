@@ -114,10 +114,6 @@ class UserController extends Controller
         // $auctionService->auctionTotalDepositMiss();
 
         // vXzPR5E0WLeGpbwkrpNo3XsEJ0D0uTPjgVJVQug88E+sNNzAyQzxAZCVxdoJVFnS3KWY9z4FxKMxdcAwCGATww==
-        $clientKey = 'S2_79fcbc23607844709d32fdd2314f606c';
-        $secretKey = '245a4340a5484ed6814fb59476b940f4';
-        $test = base64_encode($clientKey . ':' . $secretKey);
-        echo $test;
 
         // echo 'asd';
     }

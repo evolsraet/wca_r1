@@ -320,4 +320,97 @@ class PaymentController extends Controller
         }
     }
 
+    // 나이스페이먼츠 과오납 체크 API
+    public function checkOverPayment(Request $request){
+        $data = $request->all();
+
+        $Moid = $data['Moid'];
+        $Amt = $data['Amt'];
+        $VbankNum = $data['VbankNum'];
+        $VbankAccountName = $data['VbankAccountName'];
+        $VbankBankCode = $data['VbankBankCode'];
+        $EdiDate = date('YmdHis');
+
+        // 임시 테스트용 데이터 변형
+        $tid = $this->generateTID(env('NICE_PAY_VIRTUAL_ACCOUNT_CLIENT_ID'));
+        $mid = env('NICE_PAY_VIRTUAL_ACCOUNT_CLIENT_ID'); // 상점 ID
+        $amt = "1000"; // 상품 가격
+        $ediDate = date("YmdHis"); // 전문 생성 일시
+        $moid = "uniqueOrderId123"; // 가맹점 주문 번호 (유니크해야 함)
+        $merchantKey = env('NICE_PAY_VIRTUAL_ACCOUNT_CLIENT_KEY'); // 상점 키
+        $vbankBankCode = "004"; // 가상계좌 은행 코드 (예: 기업은행)
+        $vbankNum = "37539073372020"; // 입금 계좌번호
+        $vbankAccountName = "홍길동"; // 입금 예금주명
+        $vbankExpDate = "20250126"; // 입금 마감일자 (YYYYMMDD 형식)
+        $vbankExpTime = "100000"; // 입금 마감시간 (HHMISS 형식)
+        $receiptType = "0"; // 현금영수증 발급 여부 (0: 미발행)
+        $charset = "utf-8"; // 인코딩 방식
+        $ediType = "JSON"; // 응답 유형
+
+        $signData = $this->generateSignData($mid, $amt, $ediDate, $moid, $merchantKey);
+
+        // 요청 데이터 구성
+        $data = [
+            "TID" => $tid,
+            "MID" => $mid,
+            "Amt" => $amt,
+            "EdiDate" => $ediDate,
+            "Moid" => $moid,
+            "SignData" => $signData,
+            "VbankBankCode" => $vbankBankCode,
+            "VbankNum" => $vbankNum,
+            "VbankAccountName" => $vbankAccountName,
+            "VbankExpDate" => $vbankExpDate,
+            "VbankExpTime" => $vbankExpTime,
+            "ReceiptType" => $receiptType,
+            "CharSet" => $charset,
+            "EdiType" => $ediType,
+        ];
+
+
+        // CURL 요청
+        $url = "https://webapi.nicepay.co.kr/webapi/bulk_vacct_regist.jsp";
+        $ch = curl_init($url);
+
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            "Content-Type: application/x-www-form-urlencoded; charset=$charset"
+        ]);
+
+        $response = curl_exec($ch);
+
+        if (curl_errno($ch)) {
+            echo "CURL Error: " . curl_error($ch);
+        } else {
+            // 응답 처리
+            $responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if ($responseCode == 200) {
+                echo "Response: " . $response;
+            } else {
+                echo "HTTP Error: " . $responseCode;
+            }
+        }
+
+        curl_close($ch);
+
+        Log::info('checkOverPayment: ', ['data' => $response]);
+    }
+
+    public function generateSignData($mid, $amt, $ediDate, $moid, $merchantKey) {
+        // Plain-text 연결
+        $plainText = $mid . $amt . $ediDate . $moid . $merchantKey;    
+        // SHA-256 해싱
+        return hash('sha256', $plainText);
+    }
+
+    public function generateTID($mid) {
+        $paymentMethod = "03"; // 가상계좌 지불수단 구분 (03)
+        $mediaType = "01"; // 매체 구분 (01: 일반)
+        $timeInfo = date("ymdHis"); // YYMMDDHHMMSS 형식
+        $random = str_pad(rand(0, 9999), 4, "0", STR_PAD_LEFT); // 4자리 랜덤 숫자
+        return $mid . $paymentMethod . $mediaType . $timeInfo . $random;
+    }
+
 }
