@@ -174,6 +174,28 @@ class UserService
             $data = $request->input('user');
             $data = $this->checkJson($data);
 
+            Log::info('data', ['data' => $data]);
+
+            if ($data) {
+
+                Log::info('data2', ['data' => $data]);
+
+                // 승인여부 업데이트 
+                if($item->hasRole('dealer')){
+                    $user = User::find($item->id);
+                    if($data['status'] == 'ok'){
+                        Log::info('딜러 상태 업데이트', ['user_id' => $item->id, 'status' => 'ok']);
+                        UaerDealerStatusJob::dispatch($user, 'ok');
+                    }else if($data['status'] == 'reject'){
+                        Log::info('딜러 상태 업데이트', ['user_id' => $item->id, 'status' => 'reject']);
+                        UaerDealerStatusJob::dispatch($user, 'reject');
+                    }
+                }
+                
+
+                $item->update($data);
+            }
+
             $validatedData = validator($data, [
                 'name' => 'sometimes|required|max:255',
                 'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users'],
@@ -250,24 +272,6 @@ class UserService
             }
             unset($data['dealer']);
 
-
-            if ($data) {
-
-                // 승인여부 업데이트 
-                if($item->hasRole('dealer')){
-                    $user = User::find($item->id);
-                    if($data['status'] == 'ok'){
-                        Log::info('딜러 상태 업데이트', ['user_id' => $item->id, 'status' => 'ok']);
-                        UaerDealerStatusJob::dispatch($user, 'ok');
-                    }else if($data['status'] == 'reject'){
-                        Log::info('딜러 상태 업데이트', ['user_id' => $item->id, 'status' => 'reject']);
-                        UaerDealerStatusJob::dispatch($user, 'reject');
-                    }
-                }
-                
-
-                $item->update($data);
-            }
 
             $file_result = [];
             $logs = [];

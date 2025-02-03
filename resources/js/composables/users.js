@@ -451,6 +451,7 @@ export default function useUsers() {
         let payload = {
             user : {
               name : profile.value.name,    
+              status : profile.value.status,
             },
             dealer: {
                 name: profile.value.dealer_name,
