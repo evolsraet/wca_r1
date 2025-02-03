@@ -137,7 +137,7 @@ class AuctionFactory extends Factory
         $result = [
             'user_id' => $user->id,
             'owner_name' => $this->faker->name,
-            'car_no' => $this->faker->bothify('??###'),
+            'car_no' => $this->faker->bothify('##??####'),
             'status' => $status,
             'region' => $this->faker->word,
             'addr_post' => $this->faker->postcode,
@@ -174,7 +174,7 @@ class AuctionFactory extends Factory
             $result['final_at'] = now()->addDays(env('REAUCTION_DAY'));
         }
 
-        if($status === 'done') {
+        if($status === 'done' || $status === 'dlvr') {
             $result['final_price'] = $this->faker->randomNumber(5, true);
         }
 
