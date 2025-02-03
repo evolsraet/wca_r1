@@ -22,7 +22,7 @@
         <div class="image-icon-pen"></div>
       </router-link>
       <div class="search-type2 justify-content-end mb-2">
-        <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
+        <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;" @keyup.enter="fetchPosts">
         <button type="button" class="search-btn" @click="fetchPosts">검색</button>
       </div>
       <div class="container">
