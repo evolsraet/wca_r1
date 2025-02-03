@@ -702,6 +702,11 @@ const mybidsData = ref([]);
 const mybidPagination = ref({});
 const bidsIdString = ref('');
 
+const currentPageValue = localStorage.getItem('currentPage') ? ref(localStorage.getItem('currentPage')) : ref(1);
+const currentFavoritePageValue = localStorage.getItem('currentFavoritePage') ? ref(localStorage.getItem('currentFavoritePage')) : ref(1);
+const currentMyBidPageValue = localStorage.getItem('currentMyBidPage') ? ref(localStorage.getItem('currentMyBidPage')) : ref(1);
+const currentScsBidsPageValue = localStorage.getItem('currentScsBidsPage') ? ref(localStorage.getItem('currentScsBidsPage')) : ref(1);
+
 /**
 const initializeFavorites = () => {
 
@@ -882,19 +887,27 @@ function loadPage( page, type, pagination) {
     
     switch (type) {
         case 'all':
-            currentPage.value = page;
+            // currentPage.value = page;
+            currentPageValue.value = page;
+            localStorage.setItem('currentPage', page);
             getAuctionsData();
             break;
         case 'favorite':
-            currentFavoritePage.value = page;
+            // currentFavoritePage.value = page;
+            currentFavoritePageValue.value = page;
+            localStorage.setItem('currentFavoritePage', page);
             favoriteAuctionsGetData();
             break;
         case 'bid':
-            currentMyBidPage.value = page;
+            // currentMyBidPage.value = page;
+            currentMyBidPageValue.value = page;
+            localStorage.setItem('currentMyBidPage', page);
             getMyBidsGetData();
             break;
         case 'scsbid':
-            currentScsBidsPage.value = page;
+            // currentScsBidsPage.value = page;
+            currentScsBidsPageValue.value = page;
+            localStorage.setItem('currentScsBidsPage', page);
             getScsBidsInfo();
             break;
     }
@@ -916,9 +929,9 @@ function isDealerParticipating(auctionId) {
 
 const getAuctionsData = async () => {
     if(isUser.value){
-        await getAuctions(currentPage.value , false , currentStatus.value, search_title.value);
+        await getAuctions(currentPageValue.value , false , currentStatus.value, search_title.value);
     } else if(isDealer.value){
-        await getAuctionsByDealer(currentPage.value , currentStatus.value, search_title.value);
+        await getAuctionsByDealer(currentPageValue.value , currentStatus.value, search_title.value);
         await filterLikeData(auctionsData.value);
         await favoriteAuctionsGetData();
         await getMyBidsGetData();

@@ -316,6 +316,11 @@ export default function useAuth() {
         .post();
 
         localStorage.setItem('currentTab', 'allInfo');
+        localStorage.setItem('currentPage', 1);
+        localStorage.setItem('currentFavoritePage', 1);
+        localStorage.setItem('currentMyBidPage', 1);
+        localStorage.setItem('currentScsBidsPage', 1);
+
 
     };
 
