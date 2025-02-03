@@ -196,6 +196,11 @@ class AuctionService
                                 throw new \Exception('취소변경 가능상태가 아닙니다.');
                             }
                             break; 
+
+                        // case 'ing':
+                        //     $auction->final_at = now()->addDays(env('AUCTION_DAY'));
+                            
+                        //     break;
                     }
                 }
 
@@ -274,6 +279,7 @@ class AuctionService
 
                 // 경매진행중 알림
                 if($auction->status == 'ing'){
+                    $auction->final_at = now()->addDays(env('AUCTION_DAY'));
                     if(!$auction->bid_id){
                         Log::info('경매 상태 업데이트 경매진행중 모드', ['method' => $auction]);
 
@@ -428,6 +434,8 @@ class AuctionService
     public function getNiceDnr($ownerNm, $vhrNo)
     {
         $curl = curl_init();
+
+        Log::info('나이스DNR 차량정보/시세확인 API 호출 시작', ['ownerNm' => $ownerNm, 'vhrNo' => $vhrNo]);
         
         $chkSec = date('YmdHis'); // 예: chkSec 값
         $businessNumber = env('NICE_API_BUSINESS_NUMBER'); // 예: 사업자번호
