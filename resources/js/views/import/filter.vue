@@ -1,6 +1,9 @@
 <template>
  <!-- 사이드바 -->
  <div v-if="isDealer" class="sider-content col-md-3 mov-info02">
+
+    <div class="proceeding"></div>
+    
           <div class="sub-side">
           <!-- 국산차 드롭다운 -->
           <div>
