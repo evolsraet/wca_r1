@@ -827,9 +827,9 @@ const succesbid = ref(false);
 const succesbidhope = ref(false);
 const amount = ref('');
 const koreanAmount = ref('원');
-const { numberToKoreanUnit , amtComma , wica , wicaLabel, wicas } = cmmn();
+const { amtComma , wica , wicaLabel, wicas } = cmmn(); // numberToKoreanUnit 제거
 const chosendlvr = ref(false);
-const reviewIsOk = ref(true);
+const reviewIsOk = ref(true);``
 let likeMessage;
 
 const fileOwnerUrl = ref('');
