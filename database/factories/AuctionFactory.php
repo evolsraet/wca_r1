@@ -173,6 +173,10 @@ class AuctionFactory extends Factory
             $result['final_at'] = now()->addDays(env('REAUCTION_DAY'));
         }
 
+        if($status === 'done') {
+            $result['final_price'] = $this->faker->randomNumber(5, true);
+        }
+
         return $result;
     }
 }

@@ -3,7 +3,7 @@ import { ref, computed, onMounted, reactive, onUnmounted , inject } from 'vue';
 export function cmmn() {
     const numberToKoreanUnit = (input) =>  {
         const units = ["", "만", "억", "조", "경"];
-        // input = parseInt(input.replace(/[^0-9]/g, ""));
+        input = parseInt(input.replace(/[^0-9]/g, ""));
         if (isNaN(input)) return "";
         
         let result = '';
@@ -24,8 +24,7 @@ export function cmmn() {
 
     // 큰 금액을 억, 조 단위로 처리
     const amtComma = (amt) => {
-        // const converted = numberToKoreanUnit(amt.toString());
-        const converted = numberToKoreanUnit(amt);
+        const converted = numberToKoreanUnit(amt.toString());
         return converted + '원';
     }
     
