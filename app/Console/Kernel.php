@@ -30,6 +30,9 @@ class Kernel extends ConsoleKernel
             $auctionService = new AuctionService();
             $auctionService->auctionTotalDepositMiss();
 
+            // 경매 종료 시간 만료시 선택대기로 변경     
+            $auctionService->auctionFinalAtUpdate();
+
             
         })->everyMinute();
 

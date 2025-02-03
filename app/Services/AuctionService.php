@@ -697,4 +697,20 @@ class AuctionService
 
     }
 
+    // 경재시간 만료시 선택대기로 변경
+    public function auctionFinalAtUpdate()
+    {
+        $auction = Auction::where('status', 'ing')->get();
+        foreach($auction as $auction){
+            // 현재시간 final_at 시간 비교해서 현재 시간이 더 클 경우 상태 변경 
+            if($auction->final_at){
+                if(Carbon::now() > $auction->final_at){
+                    $auction->status = 'wait';
+                    $auction->save();
+                }
+            }
+
+        }
+    }
+
 }
