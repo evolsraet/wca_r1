@@ -167,6 +167,7 @@ class AuctionFactory extends Factory
 
         if ($status === 'chosen') {
             $result['choice_at'] = $this->faker->dateTimeBetween('-1 month', '+1 month');
+            $result['final_price'] = $this->faker->randomNumber(5, true);
         }
 
         if($status === 'ing') {
