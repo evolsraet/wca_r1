@@ -48,7 +48,7 @@ TODO:
                 <div class="d-flex gap-2">
                     <div class="apply-top text-start">
                         <div class="search-type">
-                            <input type="text" class="border-6" v-model="search_title" placeholder="모델명,차량번호,지역">
+                            <input type="text" class="border-6" v-model="search_title" placeholder="모델명,차량번호,지역" @keyup.enter="searchBtn">
                             <button type="button" class="search-btn start-0" @click="searchBtn">검색</button>
                         </div>
                     </div>
