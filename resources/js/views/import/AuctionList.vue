@@ -241,6 +241,13 @@ p {
     margin-top: 0;
     margin-bottom: 0rem !important;
 }
+
+.scrollable-content {
+    height: 350px;
+    overflow-y: scroll;
+    padding: 30px 30px 30px 30px;
+}
+
 @media (max-width: 396px){
   .bid-bc .inspector_list > li .img_box {
     width: 5rem !important;
@@ -264,6 +271,8 @@ p {
         padding: 10px 40px 35.5px !important;
     }
     .scrollable-content{
+        height: auto;
+        overflow-y: hidden;
         padding: 5px 5px 5px !important;
     }
     .blue-box02{
@@ -372,12 +381,6 @@ border-radius: 10px;
 }
 .bid-bc {
 background: none;
-}
-
-.scrollable-content {
-    height: auto;
-    overflow-y: hidden;
-    padding: 30px 30px 30px 30px;
 }
 
 .styled-div .content {
