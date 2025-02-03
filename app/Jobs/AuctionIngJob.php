@@ -13,7 +13,7 @@ use App\Notifications\AligoService;
 use App\Models\Auction;
 use App\Notifications\Templates\NotificationTemplate;
 use App\Notifications\AligoNotification;
-
+use Illuminate\Support\Facades\Log;
 class AuctionIngJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -23,10 +23,12 @@ class AuctionIngJob implements ShouldQueue
      */
     protected $user;
     protected $auction;
-    public function __construct($user_id, $auction)
+    protected $finalAt;
+    public function __construct($user_id, $auction, $finalAt)
     {
         $this->user = $user_id;
         $this->auction = $auction;
+        $this->finalAt = $finalAt;
     }
 
     /**
@@ -37,11 +39,20 @@ class AuctionIngJob implements ShouldQueue
 
         $baseUrl = config('app.url');
 
+        // 0000-00-00(일) 00시
+        $auction = Auction::find($this->auction);
+
+        // Log::info('경매 상태 변경 알림 시간 확인', ['finalAt' => $this->finalAt]);
+
+        $weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+        $weekday = $weekdays[date('w', strtotime($this->finalAt))];
+        $finalAtTrans = date('Y-m-d', strtotime($this->finalAt)) . "($weekday) " . date('H시', strtotime($this->finalAt));
+
         $data = [
             'title' => '경매 상태가 변경되었습니다.',
             'data' => Auction::find($this->auction),
             'status' => '경매진행',
-            'status2' => '0000-00-00(일) 00시',
+            'status2' => $finalAtTrans,
             'link' => $baseUrl.'/auction/'.$this->auction
         ];
 

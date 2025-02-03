@@ -283,7 +283,7 @@ class AuctionService
                     if(!$auction->bid_id){
                         Log::info('경매 상태 업데이트 경매진행중 모드', ['method' => $auction]);
 
-                        AuctionIngJob::dispatch($auction->user_id, $auction->id);
+                        AuctionIngJob::dispatch($auction->user_id, $auction->id, $auction->final_at);
 
                     }
                 }
