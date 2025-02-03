@@ -152,7 +152,7 @@ class AuctionFactory extends Factory
             'diag_second_at' => $this->faker->dateTimeBetween('-1 month', '+1 month'),
             'car_maker' => $car['makerNm'],
             'car_model' => $car['modelNm'],
-            'car_model_sub' => $car['detailedModel'],
+            'car_model_sub' => $car['subGrade'],
             'car_grade' => $car['grade'],
             'car_grade_sub' => $car['subGrade'],
             'car_year' => $car['year'],
