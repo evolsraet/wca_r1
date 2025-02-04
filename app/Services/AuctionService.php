@@ -220,7 +220,7 @@ class AuctionService
                 }   
 
                 // 입찰자에게 알림
-                if($auction->status == 'chosen'){
+                if($auction->status == 'dlvr'){
 
 
                     if($auction->is_deposit == 'totalDeposit'){
