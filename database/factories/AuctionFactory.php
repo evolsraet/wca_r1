@@ -178,6 +178,10 @@ class AuctionFactory extends Factory
             $result['final_price'] = $this->faker->randomNumber(5, true);
         }
 
+        if($status !== 'ask') {
+            $result['is_accident'] = 1;
+        }
+
         return $result;
     }
 }
