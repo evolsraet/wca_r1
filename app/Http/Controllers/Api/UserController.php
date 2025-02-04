@@ -145,21 +145,21 @@ class UserController extends Controller
         // dd($account1);
 
 
-        $auctionService = new AuctionService();
-        // $auctionService->auctionFinalAtUpdate();
+        // $auctionService = new AuctionService();
+        // // $auctionService->auctionFinalAtUpdate();
 
-        $result = $auctionService->getCarmerceAuth();
+        // $result = $auctionService->getCarmerceAuth();
 
-        $currentData = [
-            'firstRegistrationDate' => '20240101',
-            'classModelNm' => '현대',
-            'year' => '2024',
-        ];
+        // $currentData = [
+        //     'firstRegistrationDate' => '20240101',
+        //     'classModelNm' => '현대',
+        //     'year' => '2024',
+        // ];
 
 
-        $result2 = $auctionService->getCarmercePrice($result['accessToken'], $currentData);
+        // $result2 = $auctionService->getCarmercePrice($result['accessToken'], $currentData);
 
-        dd($result2);
+        // dd($result2);
 
 
         // $ec = (new PaymentController())->getRandomAccount();
