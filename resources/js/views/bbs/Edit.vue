@@ -44,7 +44,7 @@
                         <p class="card-text text-secondary opacity-50 fs-5 web-text">12 삼 4567</p>
                     </div>--> 
                     <div class="mx-2 text-secondary opacity-50 my-4">
-                        <p>{{ review.auction.car_year ? review.auction.car_year : '2020' }}년 | {{ review.auction.car_km ? review.auction.car_km : '2.4' }}km | 무사고</p>
+                        <p>{{ review.auction.car_year ? review.auction.car_year : '2020' }}년 | {{ review.auction.car_km ? review.auction.car_km : '2.4' }}km | {{ isAccident(review.auction.is_accident) }}</p>
                         <p>{{ review.auction.car_maker ? review.auction.car_maker + review.auction.car_model : '현대 쏘나타' }} ({{ review.auction.car_grade ? review.auction.car_grade : 'DN8' }})</p>
                         <br>
                         <p>매물번호 / {{ review.auction.id }}</p>
@@ -112,6 +112,7 @@ const alarmModal = ref(null);
 const carInfo = ref();
 const { formatDateAndTime } = cmmn();
 const isMobileView = ref(window.innerWidth <= 640);
+const { isAccident } = useAuctions();
 const openAlarmModal = () => {
 console.log("openAlarmModal called");
 if (alarmModal.value) {

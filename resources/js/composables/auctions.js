@@ -970,6 +970,29 @@ const allIngCount = async () => {
         .post();
 };
 
+// 사고여부 데이터 표시
+const isAccident = (id) => {
+    let isValue = '';
+    switch(id){
+      case 0:
+        isValue = '사고여부 미진단';
+        break;
+      case 1:
+        isValue = '무사고';
+        break;
+      case 2:
+        isValue = '사고차량';
+        break;
+      case 3:
+        isValue = '무사고 (미래예측 사고차량)';
+        break;
+      default:
+        isValue = '사고여부 미진단';
+        break;
+    }
+    return isValue;
+  };
+
 
     return {
         getAuctionsByDealerLike,
@@ -1008,7 +1031,8 @@ const allIngCount = async () => {
         getAuctionsWithBids,
         checkExpectedPrice,
         updateAuctionIsDeposit,
-        allIngCount
+        allIngCount,
+        isAccident
     };
     
 }

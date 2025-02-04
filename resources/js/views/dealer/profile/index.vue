@@ -98,7 +98,7 @@
                                     <!--<h5 class="card-title"><span class="blue-box">무사고</span>{{bid.car_no}}</h5>-->
                                     <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
                                     <h5>[ {{bid.car_no}} ]</h5>
-                                    <p>2020년 | 2.4km | 무사고</p>
+                                    <p>2020년 | 2.4km | {{ isAccident(bid.is_accident) }}</p>
                                     <div class="d-flex justify-content-between">
                                         <div>
                                             <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
@@ -152,7 +152,7 @@ const router = useRouter();
 const photoUrl = ref(profileDom);
 const currentTab = ref('dealerInfo');
 const store = useStore();
-const { getDoneAuctions, pagination } = useAuctions(); // 경매 관련 함수를 사용
+const { getDoneAuctions, pagination, isAccident } = useAuctions(); // 경매 관련 함수를 사용
 const { getMyLikesCount } = useLikes();
 const { bidsData, bidsCountByUser, getHomeBids, getBidsByUserId } = useBid();
 const { getUser } = useUsers();

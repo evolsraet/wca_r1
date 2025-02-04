@@ -27,6 +27,7 @@ class CreateAuctionsTable extends Migration
             $table->boolean('is_reauction')->default(0)->comment('재경매여부');
             $table->string('is_deposit')->nullable()->comment('입금여부');
             $table->boolean('is_biz')->default(0)->comment('법인/사업자차량');
+            $table->boolean('is_accident')->default(0)->comment('사고차량');
             $table->timestamp('diag_first_at')->nullable()->comment('진단희망 날짜및시간1');
             $table->timestamp('diag_second_at')->nullable()->comment('진단희망 날짜및시간2');
 

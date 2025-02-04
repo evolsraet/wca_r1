@@ -167,10 +167,10 @@ TODO:
                                                 </div>-->
                                                     <div class="card-body">
                                                         <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
-                                                        <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span>| 무사고</p>
+                                                        <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span></p>
                                                         <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                         <div class="d-flex">
-                                                            <h5 class="card-title"><span class="blue-box fw-bold border-6">무사고</span></h5>
+                                                            <h5 class="card-title"><span class="blue-box fw-bold border-6">{{ isAccident(auction.is_accident) }}</span></h5>
                                                             <h5 v-if="auction.is_reauction !== 0"><span class="gray-box border-6">재경매</span></h5>
                                                             <h5 v-if="auction.is_biz !== 0"><span class="red-box-type03 border-6">법인 / 사업자</span></h5>
                                                             <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
@@ -262,10 +262,10 @@ TODO:
                                             </div>-->
                                             <div class="card-body">
                                                 <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
-                                                <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span>| 무사고</p>
+                                                <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span></p>
                                                 <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                 <div class="d-flex">
-                                                    <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                                                    <h5 class="card-title"><span class="blue-box border-6">{{ isAccident(auction.is_accident) }}</span></h5>
                                                     <h5 v-if="auction.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
                                                     <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
                                                    <!-- <p class="tc-gray">{{ auction.car_no }}</p>-->
@@ -323,10 +323,10 @@ TODO:
                                             <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                             <div class="card-body">
                                                 <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
-                                                <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span>| 무사고</p>
+                                                <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span></p>
                                                 <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                 <div class="d-flex">
-                                                    <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                                                    <h5 class="card-title"><span class="blue-box border-6">{{ isAccident(auction.is_accident) }}</span></h5>
                                                     <h5 v-if="auction.is_biz !== 0"><span class="red-box-type03 border-6">법인 / 사업자</span></h5>
                                                     <h5 v-if="auction.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
                                                 </div>
@@ -398,10 +398,10 @@ TODO:
                                             </div>
                                             <div class="card-body">
                                                 <p class="card-title fw-bolder">{{ bid.car_model ? bid.car_model +' '+ bid.car_model_sub +' '+ bid.car_fuel + '('+ bid.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
-                                                <p class="tc-gray mt-0"> {{ bid.car_year ? bid.car_year : '2020' }} 년 |<span class="mx-1">{{ bid.car_km ? bid.car_km : '2.4' }}km</span>| 무사고</p>
+                                                <p class="tc-gray mt-0"> {{ bid.car_year ? bid.car_year : '2020' }} 년 |<span class="mx-1">{{ bid.car_km ? bid.car_km : '2.4' }}km</span></p>
                                                 <p class="tc-gray mt-0">{{ bid.car_maker ? bid.car_maker + bid.car_model : '현대 소나타' }} ({{ bid.car_grade ? bid.car_grade : 'DN8' }})</p>
                                                 <div class="d-flex">
-                                                    <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                                                    <h5 class="card-title"><span class="blue-box border-6">{{ isAccident(bid.is_accident) }}</span></h5>
                                                     <h5 v-if="bid.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
                                                     <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
                                                    <!--<p class="tc-gray">{{ bid.auction.car_no }}</p>--> 
@@ -478,10 +478,10 @@ TODO:
                                                 </div>
                                                 <div class="card-body">
                                                     <p class="card-title fw-bolder">{{ scsBid.car_model ? scsBid.car_model +' '+ scsBid.car_model_sub +' '+ scsBid.car_fuel + '('+ scsBid.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
-                                                    <p class="tc-gray mt-0"> {{ scsBid.car_year ? scsBid.car_year : '2020' }} 년 |<span class="mx-1">{{ scsBid.car_km ? scsBid.car_km : '2.4' }}km</span>| 무사고</p>
+                                                    <p class="tc-gray mt-0"> {{ scsBid.car_year ? scsBid.car_year : '2020' }} 년 |<span class="mx-1">{{ scsBid.car_km ? scsBid.car_km : '2.4' }}km</span></p>
                                                     <p class="tc-gray mt-0">{{ scsBid.car_maker ? scsBid.car_maker + scsBid.car_model : '현대 소나타' }} ({{ scsBid.car_grade ? scsBid.car_grade : 'DN8' }})</p>
                                                     <div class="d-flex">
-                                                        <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                                                        <h5 class="card-title"><span class="blue-box border-6">{{ isAccident(scsBid.is_accident) }}</span></h5>
                                                         <h5 v-if="scsBid.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
                                                         <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
                                                       <!--<p class="tc-gray">{{ scsBid.auction.car_no }}</p>-->  
@@ -670,7 +670,7 @@ const currentMyBidsStatus = ref('all');
 const { role, getRole } = useRoles();
 // const currentTab = ref('allInfo'); 
 const currentTab = localStorage.getItem('currentTab') ? ref(localStorage.getItem('currentTab')) : ref('allInfo');
-const { auctionsData, pagination, getAuctions, getAuctionsByDealer, getAuctionsByDealerLike, getAuctionsWithBids } = useAuctions();
+const { auctionsData, pagination, getAuctions, getAuctionsByDealer, getAuctionsByDealerLike, getAuctionsWithBids, isAccident } = useAuctions();
 
 const currentPage = ref(1); 
 const currentFavoritePage = ref(1); 

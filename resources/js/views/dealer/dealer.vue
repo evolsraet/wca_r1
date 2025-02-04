@@ -42,7 +42,7 @@
                                     </div>
                                     <div class="card-body">  
                                         <h5 class="card-title">더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
-                                        <p>2020년 / 2.4km / 무사고</p>
+                                        <p>2020년 / 2.4km / {{ isAccident(bid.auction.is_accident) }}</p>
                                         <div class="d-flex justify-content-between">
                                             <div>
                                                 <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
@@ -90,7 +90,7 @@ import { cmmn } from '@/hooks/cmmn';
 const currentPage = ref(1); 
 const router = useRouter();
 const store = useStore();
-const { getAuctions, getAuctionById } = useAuctions();
+const { getAuctions, getAuctionById, isAccident } = useAuctions();
 const { bidsData, getBids , bidPagination } = useBid();
 const user = computed(() => store.getters['auth/user']);
 const { amtComma , wicas } = cmmn();

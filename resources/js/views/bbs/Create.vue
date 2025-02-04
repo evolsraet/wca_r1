@@ -43,7 +43,7 @@
                             <h5>{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</h5>
                         </div>
                         <div class="mx-2 text-secondary opacity-50 my-4">
-                        <p> {{ carInfo.year }}년 | {{ auction.car_km ? auction.car_km : '2.4' }}km | 무사고</p>
+                        <p> {{ carInfo.year }}년 | {{ auction.car_km ? auction.car_km : '2.4' }}km | {{ isAccident(auction.is_accident) }}</p>
                         <p>{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 쏘나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
 
                         <br>
@@ -131,7 +131,7 @@ const isMobileView = ref(window.innerWidth <= 640);
 const route = useRoute();
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); //바텀 시트 스타일
-const { getAuctionById } = useAuctions();
+const { getAuctionById, isAccident } = useAuctions();
 const auctionId = parseInt(route.params.id); 
 let auctionsData = ref();
 const carInfo = ref();

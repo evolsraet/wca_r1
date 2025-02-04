@@ -69,13 +69,13 @@
                   </div>
                   <div class="card-body p-3 pt-0 ">
                     <p class="card-title fs-5 fw-bolder">{{ auctionDetail.data.car_model ? auctionDetail.data.car_model +' '+ auctionDetail.data.car_model_sub +' '+ auctionDetail.data.car_fuel + ' ('+ auctionDetail.data.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
-                    <p>{{ auctionDetail.data.car_year ? auctionDetail.data.car_year : '2020' }} 년 | {{ auctionDetail.data.car_km ? auctionDetail.data.car_km : '2.4' }}km | 무사고</p>
+                    <p>{{ auctionDetail.data.car_year ? auctionDetail.data.car_year : '2020' }} 년 | {{ auctionDetail.data.car_km ? auctionDetail.data.car_km : '2.4' }}km</p>
                     <p class="text-secondary opacity-50">{{ auctionDetail.data.car_maker ? auctionDetail.data.car_maker +' '+ auctionDetail.data.car_model : '현대 소나타' }} ({{ auctionDetail.data.car_grade ? auctionDetail.data.car_grade : 'DN8' }})</p>
                     <div class="enter-view">
                       <AlarmModal ref="alarmModal" />
                     </div>
                     <div class="d-flex">
-                      <h5 class="card-title"><span class="blue-box border-6">무사고</span></h5>
+                      <h5 class="card-title"><span class="blue-box border-6">{{ isAccident(auctionDetail.data.is_accident) }}</span></h5>
                       <h5 v-if="auctionDetail.data.is_reauction !== 0"><span class="gray-box border-6">재경매</span></h5>
                       <h5 v-if="auctionDetail.data.is_biz !== 0"><span class="red-box-type03 border-6">법인 / 사업자</span></h5>
                     </div>
@@ -930,7 +930,7 @@ const scrollButtonStyle = ref({ display: 'none' });
 const showReauctionView = ref(false);
 
 const auctionDetail = ref(null);
-const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress } = useAuctions();
+const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress, isAccident } = useAuctions();
 const { submitBid, cancelBid,getBidById } = useBids();
 const carDetails = ref({});
 const highestBid = ref(0);
