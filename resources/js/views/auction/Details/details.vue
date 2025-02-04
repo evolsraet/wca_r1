@@ -442,9 +442,9 @@
                       <div class="txt_box me-auto d-flex flex-column align-items-start">
                         <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
                         <h4 class="txt tc-red">{{amtComma(bid.price)}}</h4>
-                        <p class="restar normal-16-font me-auto average-score">4.5점</p>
+                        <p class="restar normal-16-font me-auto average-score">{{ bid.points }}점</p>
                       </div>
-                      <p class="restar normal-16-font me-auto average-score-web">4.5점</p>
+                      <p class="restar normal-16-font me-auto average-score-web">{{ bid.points }}점</p>
                       <p class="btn-apply-ty03"></p>
                     </div>
                   </li>
@@ -714,7 +714,7 @@
                                   <h5 class="name mb-1">{{ bid.dealerInfo ? bid.dealerInfo.name : 'Loading...'}}</h5>
                                   <p class="txt fw-bold">{{amtComma(bid.price)}}</p>
                                 </div>
-                                <p class="restar normal-16-font me-auto">4.5점</p>
+                                <p class="restar normal-16-font me-auto">{{ bid.points }}점</p>
                                 <p class="btn-apply-ty03"></p>
                               </div>
                             </li>
@@ -939,6 +939,7 @@ const fileUserSignData = ref({});
 const currentPage = ref(1);
 
 const sortedTopBids = computed(() => {
+  console.log('sortedTopBids??', auctionDetail.value);
   if (!auctionDetail.value?.data?.top_bids) {
     return [];
   }
@@ -1411,7 +1412,7 @@ const handleClick = (bid, event, index) => {
               <div class="text-start d-flex justify-content-center flex-column flex-nowrap align-center">
                 <h4>${bid.dealerInfo.name}</h4>
                 <p>${bid.dealerInfo.company}</p>
-                <p class="mt-2 restar">(4.5점)</p>
+                <p class="mt-2 restar">(${bid.points}점)</p>
               </div>
             </div>
           </div>

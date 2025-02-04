@@ -53,6 +53,10 @@ class BidResource extends JsonResource
             unset($parentArray['price'], $parentArray['user_id']);
         }
 
+        // 리뷰 갯수 확인하여 사용자 점수 표시 
+        $averageStar = \App\Models\Review::where('dealer_id', $parentArray['user_id'])->avg('star');
+        $parentArray['points'] = $averageStar ? $averageStar : 0;
+
         return array_merge($parentArray, $addArray);
     }
 
