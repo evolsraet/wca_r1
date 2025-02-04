@@ -697,7 +697,7 @@ class AuctionService
 
     }
 
-    // 경재시간 만료시 선택대기로 변경
+    // 경매시간 만료시 선택대기로 변경
     public function auctionFinalAtUpdate()
     {
         $auction = Auction::where('status', 'ing')->get();
@@ -707,10 +707,14 @@ class AuctionService
                 if(Carbon::now() > $auction->final_at){
                     $auction->status = 'wait';
                     $auction->save();
+                    // 알림 보내기
+                    AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '','');
                 }
             }
 
         }
     }
+
+    
 
 }
