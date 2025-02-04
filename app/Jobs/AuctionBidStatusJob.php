@@ -97,6 +97,30 @@ class AuctionBidStatusJob implements ShouldQueue
             //         'message_1' => $sendMessage3['message1'].'<br>'.$sendMessage3['message2'].'<br>'.$sendMessage3['message3'].'<br>'.$sendMessage3['message4'].'<br><br>바로가기'.$baseUrl.'/auction/'.$this->auction->id,
             //     ]
             // ]));
+        } else if($this->status == 'cancel'){
+
+            $data3 = [
+                'title' => '경매 상태가 취소상태로 변경되었습니다.',
+                'data' => $this->auction,
+                'status' => '취소',
+                'link' => $baseUrl.'/auction/'.$this->auction->id
+            ];
+
+            $sendMessage3 = NotificationTemplate::basicTemplate($data3);
+
+            // Log::info('경매 입찰 상태 내용 wait', $sendMessage3);
+
+            $this->user->notify(new AuctionBidStatusNotification($sendMessage3, 'wait'));
+        
+            // 알리고 알림톡 전송
+            // $this->user->notify(new AligoNotification([
+            //     'tpl_data' => [
+            //         'tpl_code' => env('SMS_TPL_CODE'),
+            //         'receiver_1' => $this->user->phone,
+            //         'subject_1' => $sendMessage3['title'],
+            //         'message_1' => $sendMessage3['message1'].'<br>'.$sendMessage3['message2'].'<br>'.$sendMessage3['message3'].'<br>'.$sendMessage3['message4'].'<br><br>바로가기'.$baseUrl.'/auction/'.$this->auction->id,
+            //     ]
+            // ]));
         } else if($this->status == 'reauction'){
 
             $data4 = [

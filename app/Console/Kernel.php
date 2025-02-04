@@ -33,6 +33,9 @@ class Kernel extends ConsoleKernel
             // 경매 종료 시간 만료시 선택대기로 변경     
             $auctionService->auctionFinalAtUpdate();
 
+            // 경매 종료 시간 만료시 선택대기 2일동안 아무 내용 없으면 자동으로 취소 처리 
+            $auctionService->auctionCancel();
+
             
         })->everyMinute();
 

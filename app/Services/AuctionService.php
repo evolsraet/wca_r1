@@ -706,6 +706,7 @@ class AuctionService
             if($auction->final_at){
                 if(Carbon::now() > $auction->final_at){
                     $auction->status = 'wait';
+                    $auction->final_at = Carbon::now()->addDays(env('CHOICE_DAY'));
                     $auction->save();
                     // 알림 보내기
                     AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '','');
@@ -715,6 +716,22 @@ class AuctionService
         }
     }
 
-    
+
+    // 경매만료시 선택대기 2일동안 아무 내용 없으면 자동으로 취소 처리 
+    public function auctionCancel()
+    {
+        $auction = Auction::where('status', 'wait')->whereNull('bid_id')->get();
+        foreach($auction as $auction){
+            if($auction->final_at){
+                if(Carbon::now() > $auction->final_at){
+                    $auction->status = 'cancel';
+                    $auction->save();   
+
+                    // 알림 보내기
+                    AuctionBidStatusJob::dispatch($auction->user_id, 'cancel', $auction->id, '','');
+                }
+            }
+        }
+    }
 
 }
