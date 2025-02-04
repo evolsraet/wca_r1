@@ -55,6 +55,7 @@ class BidResource extends JsonResource
 
         // 리뷰 갯수 확인하여 사용자 점수 표시 
         $averageStar = \App\Models\Review::where('dealer_id', $parentArray['user_id'])->avg('star');
+        $averageStar = min($averageStar, 5);
         $parentArray['points'] = $averageStar ? $averageStar : 0;
 
         return array_merge($parentArray, $addArray);
