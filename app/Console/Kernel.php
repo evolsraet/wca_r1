@@ -17,8 +17,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // 탁송 상태 확인
+
         $schedule->call(function() {
+
+            // 탁송 상태 확인
             $taksongStatusTemp = TaksongStatusTemp::where('chk_status', '!=', 'done')->get();
             if($taksongStatusTemp){
                 foreach($taksongStatusTemp as $taksongStatus){

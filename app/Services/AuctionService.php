@@ -706,7 +706,7 @@ class AuctionService
             if($auction->final_at){
                 if(Carbon::now() > $auction->final_at){
                     $auction->status = 'wait';
-                    $auction->final_at = Carbon::now()->addDays(env('CHOICE_DAY'));
+                    $auction->choice_at = Carbon::now()->addDays(env('CHOICE_DAY'));
                     $auction->save();
                     // 알림 보내기
                     AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '','');
@@ -722,8 +722,8 @@ class AuctionService
     {
         $auction = Auction::where('status', 'wait')->whereNull('bid_id')->get();
         foreach($auction as $auction){
-            if($auction->final_at){
-                if(Carbon::now() > $auction->final_at){
+            if($auction->choice_at){
+                if(Carbon::now() > $auction->choice_at){
                     $auction->status = 'cancel';
                     $auction->save();   
 
