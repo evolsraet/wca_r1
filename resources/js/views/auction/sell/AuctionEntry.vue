@@ -11,7 +11,7 @@
           <label for="owner-name"><span class="text-danger me-2">*</span>소유자</label>
           <div class="owner-certificat" @click="confirmEditIfDisabled">
             <input type="text" id="owner-name" v-model="ownerName" placeholder="홍길동" :disabled="isVerified">
-            <button class="btn certification" @click.stop="verifyOwner" :disabled="isVerified">본인인증</button>
+            <button class="btn border certification" @click.stop="verifyOwner" :disabled="isVerified">본인인증</button>
           </div>
         </div>
         <!-- 차량 번호 입력 -->

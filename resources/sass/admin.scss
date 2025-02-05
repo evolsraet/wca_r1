@@ -1,4 +1,4 @@
-
+@use "../sass/variables" as *;
 .admin-icon {
     display: inline-block;
     width: 20px; 
@@ -102,9 +102,6 @@
 .admin-icon-dashboard {
   transition: box-shadow 0.3s ease;
 
-  &:hover {
-    @extend .shadow-lg;
-  }
 }
 
 .side-navbar-link {

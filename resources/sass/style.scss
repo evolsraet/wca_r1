@@ -1,3 +1,5 @@
+@use "../sass/variables" as *;
+
 /*----------------------------
     공통 - 메인 , 로그인
 -----------------------------*/
@@ -1750,10 +1752,10 @@ video{
 
 .nav-link:hover,
 .nav-link:focus {
-    color: $primary;
+    color: $primary !important;
 }
 .active-link{
-    color: $primary;
+    color: $primary !important;
 }
 /*---------------------
     딜러 -선택 항목페이지
@@ -4155,7 +4157,7 @@ input[type="checkbox"] {
 }
 
 .overlay-style {
-    height: 100.4vh ;
+    height: 100.4vh !important;
 }
 .none-complete{
     font-size: 18px;
@@ -4163,12 +4165,12 @@ input[type="checkbox"] {
 }
 @media screen and (max-width: 991px) {
     .overlay-style {
-        height: 99vh;
+        height: 99vh !important;
     }
 }
 @media screen and (max-height: 917px) {
     .overlay-style {
-        overflow-y: scroll;
+        overflow-y: scroll !important;
     }
     .login-card{
         justify-content: space-between !important;

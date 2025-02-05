@@ -9,7 +9,7 @@
             <label for="owner-name">소유자</label>
             <div class="owner-certificat">
               <input type="text" id="owner-name" v-model="ownerName" placeholder="홍길동">
-              <button class="btn certification">본인인증</button>
+              <button class="btn border certification">본인인증</button>
             </div>
           </div>
           <div class="form-group">

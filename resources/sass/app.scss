@@ -1,20 +1,22 @@
-  // Fonts
-  @import url("https://fonts.bunny.net/css?family=Nunito");
+@use "variables" as *;
+@use "layout" as *;
+@use "defalut" as *;
+@use "admin" as *;
+@use "style" as *;
+@use "Nav" as *;
+@use "modal" as *;
 
-  // Variables
-  @import "_variables";
-  @import "layout";
-  @import "defalut";
-  @import "admin";
-  // Bootstrap
-  @import "bootstrap/scss/bootstrap";
-  @import "style";
-  @import "Nav";
-  @import "modal";
 
-  :root {
-    --bs-body-bg: #ffffff;
-    --main-font-family: 'Nunito', sans-serif !important;
+@use "bootstrap/scss/bootstrap";
+
+
+@import url("https://fonts.bunny.net/css?family=Nunito");
+
+
+:root {
+  --bs-body-bg: #ffffff;
+  --bs-primary: #da3138;
+  --main-font-family: 'Nunito', sans-serif !important;
 }
 
 body {

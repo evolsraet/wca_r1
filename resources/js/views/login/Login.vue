@@ -199,7 +199,7 @@
                     </button>
                   </div>
                 </div>
-                <router-link :to="{name: 'auth.forgot-password'}">비밀번호 찾기</router-link>
+                <router-link :to="{name: 'auth.forgot-password'}" class="tc-primary">비밀번호 찾기</router-link>
                 <div class="register-link text-center">
                   <router-link :to="{ path: '/register' }" class="register-link">회원가입하기</router-link>
                 </div>
@@ -263,7 +263,7 @@
                     </button>
                   </div>
                 </div>
-                <router-link :to="{name: 'auth.forgot-password'}" class="text-center">비밀번호 찾기</router-link>
+                <router-link :to="{name: 'auth.forgot-password'}" class="text-center tc-primary">비밀번호 찾기</router-link>
                 <div class="register-link mt-3 text-center">
                   <router-link :to="{ path: '/register' }" class="register-link">회원가입하기</router-link>
                 </div>

@@ -10,7 +10,6 @@ export default defineConfig({
                 'resources/sass/app.scss',
                 'resources/js/app.js',
             ],
-            // reactivityTransform: true,
             refresh: true,
         }),
         vue({
@@ -22,9 +21,13 @@ export default defineConfig({
             },
         }),
     ],
-    // build: {
-    //     chunkSizeWarningLimit: 1600,
-    // },
+    css: {
+        preprocessorOptions: {
+            scss: {
+                additionalData: `@use "resources/sass/variables" as *;`
+            }
+        }
+    },
     resolve: {
         alias: {
             vue: 'vue/dist/vue.esm-bundler.js',
@@ -37,7 +40,7 @@ export default defineConfig({
         host: '0.0.0.0', // 모든 네트워크 인터페이스에서 접속 가능
         port: 5173,      // Vite 서버의 포트 (필요에 따라 변경 가능)
         hmr: {
-            host: '192.168.10.185', // 여기에 외부에서 접속할 IP 주소 입력
+            host: '192.168.10.185', // 외부 접속용 IP
         },
     },
 });
