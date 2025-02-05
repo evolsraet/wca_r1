@@ -27,7 +27,7 @@ services:
             - redis
             - mailpit
     mariadb:
-        image: "mariadb:10"
+        image: "mariadb:10.11"
         command: --general-log=1 --general-log-file=/var/log/mysql/general.log
         ports:
             - "${FORWARD_DB_PORT:-3306}:3306"
