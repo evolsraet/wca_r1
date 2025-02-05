@@ -446,12 +446,12 @@ class PaymentController extends Controller
     public static function initializeAccounts(): void
     {
         if (!Cache::has('virtual_accounts')) {
-            if (!file_exists(base_path('storage/app/data/virtual_accounts.data'))) {
+            if (!file_exists(base_path('storage/virtual_accounts.txt'))) {
                 throw new \Exception('Account data file not found.');
             }
 
             // 파일에서 데이터를 읽어서 Redis에 저장
-            $content = file_get_contents(base_path('storage/app/data/virtual_accounts.data'));
+            $content = file_get_contents(base_path('storage/virtual_accounts.txt'));
             $accounts = array_filter(explode("\n", $content));
             Cache::put('virtual_accounts', $accounts, 3600); // 1시간 캐싱
         }
