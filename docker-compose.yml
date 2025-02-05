@@ -26,8 +26,22 @@ services:
             - mariadb
             - redis
             - mailpit
+    worker:
+        image: sail-8.3/app
+        restart: unless-stopped
+        environment:
+            WWWUSER: '${WWWUSER}'
+            LARAVEL_SAIL: 1
+            TZ: '${APP_TIMEZONE}'
+        volumes:
+            - ".:/var/www/html"
+        networks:
+            - sail
+        depends_on:
+            - laravel.test
+        command: bash -c "php /var/www/html/artisan schedule:work & php /var/www/html/artisan queue:work --tries=3 --timeout=90"
     mariadb:
-        image: "mariadb:10"
+        image: "mariadb:10.11"
         command: --general-log=1 --general-log-file=/var/log/mysql/general.log
         ports:
             - "${FORWARD_DB_PORT:-3306}:3306"
