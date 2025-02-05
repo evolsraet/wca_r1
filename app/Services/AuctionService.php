@@ -197,6 +197,13 @@ class AuctionService
                             }
                             break; 
 
+                        case 'chosen':
+                            // $auction->status = 'chosen';
+
+                            Log::info('유저가 경매를 선택 했을때1 ', ['method' => $auction]);
+
+                            break;
+
                         // case 'ing':
                         //     $auction->final_at = now()->addDays(env('AUCTION_DAY'));
                             
@@ -287,6 +294,15 @@ class AuctionService
 
                     }
                 }
+
+
+                if($auction->status == 'chosen'){
+                    Log::info('유저가 경매를 선택 했을때2', ['method' => $auction]);
+
+                    // AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');    
+                    AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+                }
+
 
                 break;
             case 'destroy':
