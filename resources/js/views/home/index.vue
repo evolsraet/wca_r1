@@ -53,7 +53,7 @@
               :to="{ path: '/' }"
             >
           <div>
-            <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20" class="mb-1"></span><span class="size_14">내 차 판매하기</span> 
+            <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20" class="mt-1"></span><span class="size_14">내 차 판매하기</span> 
           </div>
           <img src="../../../img/Icon-right-wh.png" class="dash-wh" width="10">
           </router-link>
@@ -147,7 +147,7 @@
               :to="{ path: '/' }"
             >
           <div>
-            <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20" class="mb-1"></span><span class="size_14">내 차 판매하기</span> 
+            <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20" class="mt-1"></span><span class="size_14">내 차 판매하기</span> 
           </div>
           <img src="../../../img/Icon-right-wh.png" class="dash-wh" width="10">
           </router-link>

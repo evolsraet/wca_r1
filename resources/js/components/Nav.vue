@@ -322,8 +322,11 @@
               <router-link :to="{ name: 'dealer.searchbid'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">시세 조회</router-link>
             </li>
             <li class="nav-item my-member-dealer ms-auto dropdown dropdown-arrow">
-              <a class="tc-wh p-1 pb-0 me-3 dropdown-toggle" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              <img :src="photoUrl" alt="Profile Photo" class="nav-profile" />{{ user.name }}
+              <a class="tc-wh me-3" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <div class="dropdown-toggle d-flex align-items-center">
+                  <img :src="photoUrl" alt="Profile Photo" class="nav-profile" />
+                  {{ user.name }}
+                </div>
               </a>
               <ul class="dropdown-menu p-2" aria-labelledby="dealerDropdown">
                 <li class="my-2"><router-link to="/profile" class="dropdown-item">내 정보</router-link></li>

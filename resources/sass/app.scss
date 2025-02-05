@@ -1,13 +1,11 @@
-@use "variables" as *;
-@use "layout" as *;
-@use "defalut" as *;
-@use "admin" as *;
-@use "style" as *;
-@use "Nav" as *;
-@use "modal" as *;
-
-
 @use "bootstrap/scss/bootstrap";
+@use "variables" as *;
+@use "admin" as *;
+@use "Nav" as *;
+@use "layout" as *;
+@use "style" as *;
+@use "modal" as *;
+@use "defalut" as *;
 
 
 @import url("https://fonts.bunny.net/css?family=Nunito");
@@ -117,3 +115,6 @@ left: -48px !important;
     rotate(45deg);
 }
 
+.bg-primary{
+  background-color: $primary !important;   
+}
