@@ -5,70 +5,24 @@
             <template v-else>
                 <h4>차량 정보 조회 되었어요</h4>
                 <hr>
-                <ul class="machine-inform-title">
-                    <li class="text-secondary opacity-50">차량번호</li>
-                    <li class="info-num">{{ carDetails.no }}</li>
-                    <li class="car-icon"></li>
-                </ul>
-                <ul class="machine-inform">
-                    <li class="text-secondary opacity-50">제조사</li>
-                    <li class="sub-title">{{ carDetails.maker }}</li>
-                </ul>
-                <ul class="machine-inform">
-                    <li class="text-secondary opacity-50">모델</li>
-                    <li class="sub-title">{{ carDetails.model }}</li>
-                </ul>
-                <ul class="machine-inform">
-                    <li class="text-secondary opacity-50">세부모델</li>
-                    <li class="sub-title">{{ carDetails.modelSub }}</li>
-                </ul>
-                <ul class="machine-inform">
-                    <li class="text-secondary opacity-50">등급</li>
-                    <li class="sub-title">{{ carDetails.grade }}</li>
-                </ul>
-                <ul class="machine-inform">
-                    <li class="text-secondary opacity-50">세부등급</li>
-                    <li class="sub-title">{{ carDetails.gradeSub }}</li>
-                </ul>
-                <ul class="machine-inform-title">
-                    <li class="text-secondary opacity-50">최초등록일</li>
-                    <li class="info-num">{{ carDetails.firstRegDate }}</li>
-                    <li class="car-aside-icon"></li>
-                </ul>
-                <ul class="machine-inform">
-                    <li class="text-secondary opacity-50">년식</li>
-                    <li class="sub-title">{{ carDetails.year }}</li>
-                </ul>
-                <ul class="machine-inform">
-                    <li class="text-secondary opacity-50">차량유형</li>
-                    <li class="sub-title">종합 승용차</li>
-                </ul>
-                <ul class="machine-inform-title">
-                    <li class="text-secondary opacity-50">배기량</li>
-                    <li class="info-num">2000cc</li>
-                    <li class="gasoline-icon"></li>
-                </ul>
-                <ul class="machine-inform">
-                    <li class="text-secondary opacity-50">연료</li>
-                    <li class="sub-title">{{ carDetails.fuel }}</li>
-                </ul>
-                <ul class="machine-inform">
-                    <li class="text-secondary opacity-50">미션</li>
-                    <li class="sub-title">{{ carDetails.mission }}</li>
-                </ul>
-                <ul class="machine-inform-title">
-                    <li class="text-secondary opacity-50">용도변경이력</li>
-                    <li class="info-num">-</li>
-                    <li class="clean-icon"></li>
-                </ul>
-                <ul class="machine-inform">
-                    <li class="text-secondary opacity-50">튜닝이력</li>
-                    <li class="sub-title">1회</li>
-                </ul>
-                <ul class="machine-inform">
-                    <li class="text-secondary opacity-50">리콜이력</li>
-                    <li class="sub-title">-</li>
-                </ul>
+                <CarInfoItem label="차량번호" :value="carDetails.no" icon="car-icon" :isTitle="true" />
+                <CarInfoItem label="제조사" :value="carDetails.maker" />
+                <CarInfoItem label="모델" :value="carDetails.model" />
+                <CarInfoItem label="세부모델" :value="carDetails.modelSub" />
+                <CarInfoItem label="등급" :value="carDetails.grade" />
+                <CarInfoItem label="세부등급" :value="carDetails.gradeSub" />
+
+                <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" icon="car-aside-icon" :isTitle="true" />
+                <CarInfoItem label="년식" :value="carDetails.year" />
+                <CarInfoItem label="차량유형" value="종합 승용차" />
+
+                <CarInfoItem label="배기량" value="2000cc" icon="gasoline-icon" :isTitle="true" />
+                <CarInfoItem label="연료" :value="carDetails.fuel" />
+                <CarInfoItem label="미션" :value="carDetails.mission" />
+
+                <CarInfoItem label="용도변경이력" value="-" icon="clean-icon" :isTitle="true" />
+                <CarInfoItem label="튜닝이력" value="1회" />
+                <CarInfoItem label="리콜이력" value="-" />
             </template>
         </div>
          <BottomSheet02 class="mt-5" initial="half" :dismissable="true">
@@ -152,6 +106,7 @@
 <script setup>
 import InfoModal from '@/views/modal/infoModal.vue';
 import SkeletonLoader from '@/views/loader/SkeletonLoader.vue';
+import CarInfoItem from '../../import/CarInfoItem.vue';
 import useAuth from "@/composables/auth";
 import { useRouter } from 'vue-router';
 import { ref, onMounted, computed ,inject } from 'vue';
