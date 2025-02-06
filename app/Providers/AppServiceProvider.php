@@ -12,6 +12,7 @@ use App\Validators\FieldCommentValidator;
 use Illuminate\Validation\Factory as ValidationFactory;
 use App\Notifications\Channels\AligoChannel;
 use App\Services\AligoService;
+use Illuminate\Support\Facades\URL;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -35,6 +36,12 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(ValidationFactory $validationFactory)
     {
+
+        // APP_URL의 스킴이 https인 경우 HTTPS를 강제
+        if (parse_url(config('app.url'), PHP_URL_SCHEME) === 'https') {
+            URL::forceScheme('https');
+        }
+
         // 발리데이터 - 필드명으로 가져오는 클래스 로드
         $validationFactory->resolver(function ($translator, $data, $rules, $messages, $customAttributes) {
             Log::info("Setting up custom validator.");
