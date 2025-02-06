@@ -16,7 +16,7 @@ class AuctionSeeder extends Seeder
     {
         $user = User::where('email', 'user@demo.com')->first();
 
-        Auction::factory(50)->create();
+        Auction::factory(90)->create();
         if ($user) {
             Auction::factory(10)->create([
                 'user_id' => $user->id
