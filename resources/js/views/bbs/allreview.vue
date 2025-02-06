@@ -20,15 +20,15 @@
         <div class="apply-top text-start">
           <h3 class="review-title">다른 사람들의 이용후기에요</h3>
           <div class="search-type m-0">
-            <input type="text" v-model="search_title" placeholder="모델명,차량번호,지역">
+            <input type="text" v-model="search_title" placeholder="모델명,차량번호,지역" @keyup.enter="searchBtn">
             <button type="button" class="search-btn" @click="searchBtn">검색</button>
           </div>
         </div>
         <div class="row">
           <div class="col-md-4 mb-4 pointer" v-if="reviewsData.length > 0" v-for="(card, index) in cards" :key="index">
             <div class="cardtype02" @click="navigateToDetail(card.id)">
-              <h5 class="text-start process">현대 쏘나타 (DN8)</h5>
-                <img src="../../../img/car_example.png" alt="Car">
+              <h5 class="text-start process">{{ card.title }}</h5>
+                <img :src="card.thumbnail" alt="Car">
               <div class="content p-0">
                 <div class="mov-sort d-flex flex-lg-row-reverse align-items-start justify-content-between">
                 <span class="date text-secondary opacity-50">{{ splitDate(card.date) }}</span>
@@ -117,7 +117,8 @@ const toggleSheet = () => {
 
 const inputCardsValue = () => {
   cards.value = reviewsData.value.map(review => ({
-    title: review.id,
+    title: review.auction.car_maker + ' ' + review.auction.car_model + ' ' + review.auction.car_model_sub + ' (' + review.auction.car_no + ')',
+    thumbnail: review.auction.car_thumbnail,
     id: review.id,
     rating: review.star,
     date: review.created_at,

@@ -10,16 +10,21 @@
                         <div class="container-img">
                             <div class="left-img">
                                 <div v-if ="!isMobileView" class="d-flex flex-row">
-                                    <div class="w-50">
+                                    <!-- <div class="w-50">
                                         <div class="card-img-top-ty02 review-img"></div>
                                     </div>
                                     <div class="w-50 d-flex flex-column">
                                         <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
                                         <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
+                                    </div> -->
+                                    <div class="card-img-top-ty02">
+                                        <img :src="review.auction.car_thumbnail" alt="Car">
                                     </div>
                                 </div>
                                 <div v-if = "isMobileView">
-                                    <div class="card-img-top-ty02"></div>
+                                    <div class="card-img-top-ty02">
+                                        <img :src="review.auction.car_thumbnail" alt="Car">
+                                    </div>
                                 </div>
                             </div>
                             <div class="web-text">
@@ -28,13 +33,13 @@
                             </div>
                         </div>
                         <div class="mx-2 enter-view align-items-baseline mt-3 bold-18-font">  
-                            <h5>더 뉴 그랜저 IG 2.5 가솔린 르블랑</h5>
+                            <h5>{{ review.auction.car_maker +' '+ review.auction.car_model +' '+ review.auction.car_model_sub }} ({{ review.auction.car_no }})</h5>
                             </div>
                             <div class="mx-2 text-secondary opacity-50 my-4">
-                            <p>년 | 2.4km | 무사고</p>
-                            <p>현대 쏘나타 (DN8)</p>
+                            <p>{{ review.auction.car_year }} | {{ review.auction.car_km }}km | {{ isAccident(review.auction.is_accident) }}</p>
+                            <p>{{ review.auction.car_maker }} {{ review.auction.car_model }} ({{ review.auction.car_no }})</p>
                             <br>
-                            <p>매물번호 / 564514</p>
+                            <p>매물번호 / {{ review.auction.id }}</p>
                             <p>딜 러 명 / {{review.dealer.name}}</p>
                         </div>
                         <!--<p class="mt-4 auction-deadline justify-content-sm-center text-secondary opacity-50">판매가<span>{{ amtComma(review.auction.win_bid.price) }}</span></p>-->
@@ -78,6 +83,7 @@ import BottomSheet from '@/views/bottomsheet/BottomSheet.vue'
 import AlarmModal from '@/views/modal/AlarmModal.vue';
 import Footer from "@/views/layout/footer.vue"
 import { cmmn } from '@/hooks/cmmn';
+import useAuctions from "@/composables/auctions"; 
 const { amtComma } = cmmn();
 const isMobileView = ref(window.innerWidth <= 640);
 const route = useRoute();
@@ -85,6 +91,7 @@ const reviewId = parseInt(route.params.id);
 const showBottomSheet = ref(true); //바텀 시트
 const bottomSheetStyle = ref({ position: 'fixed', bottom: '0px' }); //바텀 시트 스타일
 const { getUserReviewInfo , getCarInfo , setInitialStarRating} = initReviewSystem(); 
+const { isAccident } = useAuctions();
 let reviewsData = ref();
 const carInfo = ref();
 const alarmModal = ref(null);

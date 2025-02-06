@@ -22,6 +22,7 @@ class ReviewResource extends JsonResource
         $addArray = [
             // 'roles' => $this->roles->pluck('name'),
             // 'dealer_info' => $this->dealer, // dealer 정보
+            'auction' => $this->auction,
         ];
 
         // 관계 리소스로 리턴
