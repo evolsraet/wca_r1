@@ -21,15 +21,15 @@
                     </div>
                     <div class="activity-info bold-18-font mt-5">
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                        <p><span class="tc-primary slide-up mb-0" ref="item1">{{ myLikeCount }}</span> 건</p>
+                        <p><span class="tc-primary slide-up mb-0" ref="item1">{{ myLikeCount }}</span> <span>건</span></p>
                         <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
                         </router-link>
                         <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
-                        <p><span class="tc-primary mb-0" ref="item2">{{ myBidCount }}</span> 건</p>
+                        <p><span class="tc-primary mb-0" ref="item2">{{ myBidCount }}</span> <span>건</span></p>
                         <p class="bid-icon text-secondary opacity-50 normal-16-font mb-0">입찰</p>
                         </router-link>
                         <router-link :to="{  name: 'auction.index' , state: { currentTab: 'scsbidInfo' }}" class="item">
-                        <p><span class="tc-primary mb-0" ref="item3">{{ filteredDoneBids.length }}</span> 건</p>
+                        <p><span class="tc-primary mb-0" ref="item3">{{ filteredDoneBids.length }}</span> <span>건</span></p>
                         <p class="suc-bid-icon text-secondary opacity-50 normal-16-font mb-0">낙찰</p>
                         </router-link>
                     </div>

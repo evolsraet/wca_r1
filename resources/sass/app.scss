@@ -1,21 +1,26 @@
-@use "bootstrap/scss/bootstrap";
 @use "variables" as *;
-@use "admin" as *;
-@use "Nav" as *;
 @use "layout" as *;
-@use "style" as *;
-@use "modal" as *;
 @use "defalut" as *;
+@use "admin" as *;
+@use "style" as *;
+@use "Nav" as *;
+@use "modal" as *;
 
+$primary: #da3138;
+$btn-primary-bg: $primary;
+$btn-primary-border-color: $primary;
+
+@use "bootstrap/scss/bootstrap";
 
 @import url("https://fonts.bunny.net/css?family=Nunito");
 
 
 :root {
   --bs-body-bg: #ffffff;
-  --bs-primary: #da3138;
+  --bs-primary: $primary !important;
   --main-font-family: 'Nunito', sans-serif !important;
 }
+
 
 body {
     background-color: #ffffff ;
