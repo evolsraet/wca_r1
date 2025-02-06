@@ -10,7 +10,7 @@ $primary: #da3138;
 $btn-primary-bg: $primary;
 $btn-primary-border-color: $primary;
 
-@use "bootstrap/scss/bootstrap";
+@import "bootstrap/scss/bootstrap";
 
 @import url("https://fonts.bunny.net/css?family=Nunito");
 
