@@ -52,6 +52,7 @@ Route::apiResource('bids', BidController::class)
     ->middleware('auth:sanctum');
 
 // review
+Route::get('/reviews', [ReviewController::class, 'index']);
 Route::apiResource('reviews', ReviewController::class)
     ->middleware('auth:sanctum')
     ->withoutMiddleware('auth:sanctum', ['index', 'show']);
