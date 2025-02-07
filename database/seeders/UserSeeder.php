@@ -22,5 +22,85 @@ class UserSeeder extends Seeder
             $randomRole = collect(['user', 'dealer'])->random();
             $user->assignRole($randomRole);
         });
+
+        // 추가 유저 생성
+        $users = [
+            [
+                'name' => '데모유저1',
+                'email' => 'user1@demo.com',
+                'password' => '123123123',
+                'status' => 'ok',
+                'phone' => '010-4444-4441',
+                'role' => 'user',
+            ],
+            [
+                'name' => '데모유저2',
+                'email' => 'user2@demo.com',
+                'password' => '123123123',
+                'status' => 'ok',
+                'phone' => '010-4444-4442',
+                'role' => 'user',
+            ],
+            [
+                'name' => '데모유저3',
+                'email' => 'user3@demo.com',
+                'password' => '123123123',
+                'status' => 'ok',
+                'phone' => '010-4444-4443',
+                'role' => 'user',
+            ],
+            [
+                'name' => '데모유저4',
+                'email' => 'user4@demo.com',
+                'password' => '123123123',
+                'status' => 'ok',
+                'phone' => '010-4444-4444',
+                'role' => 'user',
+            ],
+            [
+                'name' => '데모딜러1',
+                'email' => 'dealer1@demo.com',
+                'password' => '123123123',
+                'status' => 'ok',
+                'phone' => '010-5555-5551',
+                'role' => 'dealer',
+            ],
+            [
+                'name' => '데모딜러2',
+                'email' => 'dealer2@demo.com',
+                'password' => '123123123',
+                'status' => 'ok',
+                'phone' => '010-5555-5552',
+                'role' => 'dealer',
+            ],
+            [
+                'name' => '데모딜러3',
+                'email' => 'dealer3@demo.com',
+                'password' => '123123123',
+                'status' => 'ok',
+                'phone' => '010-5555-5553',
+                'role' => 'dealer',
+            ],
+            [
+                'name' => '데모딜러4',
+                'email' => 'dealer4@demo.com',
+                'password' => '123123123',
+                'status' => 'ok',
+                'phone' => '010-5555-5554',
+                'role' => 'dealer',
+            ],
+        ];
+
+        foreach ($users as $userData) {
+            $user = User::create([
+                'name' => $userData['name'],
+                'email' => $userData['email'],
+                'password' => $userData['password'],
+                'status' => $userData['status'],
+                'phone' => $userData['phone'],
+            ]);
+
+            $user->assignRole($userData['role']);
+        }
     }
 }
