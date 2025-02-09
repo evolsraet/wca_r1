@@ -1,7 +1,7 @@
 <template>
 <div id="UsersNav">
     <div class="overlay" style="display: none;"></div>
-    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, 'p-2' , 'px-2']">
+    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, 'p-2' , 'px-2', isDealer ? 'dealer-nav' : 'user-nav']">
       <div v-if="isAuctionDetailPage"></div>
       <div class="nav-font" :class="{ 'container': isContainer }">
         <button v-if="isDetailPage && isUser" @click="goBack" class="btn btn-back back-btn-icon"></button>
@@ -900,6 +900,16 @@ watch(() => route.params.id, () => {
       .navbar-expand-md .navbar-collapse {
         display: block !important;
     }
+}
+.user-nav .nav-link:hover, .nav-link:focus {
+    color: #da3138 !important;
+}
+
+/* 딜러 전용 스타일 */
+.dealer-nav .nav-item:hover .nav-link {
+    font-weight: 800;
+    border-bottom: 2px solid currentColor !;
+    padding-bottom: 3px;
 }
   </style>
   
