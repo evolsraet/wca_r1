@@ -4,7 +4,7 @@
 <title>위카옥션 가상계좌 결제안내</title>
 <meta charset="utf-8">
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <style>
 	html,body {height: 100%;}
 </style>

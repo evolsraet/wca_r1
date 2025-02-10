@@ -229,7 +229,7 @@
                   </div>
                   <!-- 이메일 입력 -->
                   <div class="mb-3">
-                    <label for="email" class="form-label">phone/email</label>
+                    <label for="email" class="form-label">{{ $t("phone_or_email") }}</label>
                     <input v-model="loginForm.email" id="email" type="text" class="form-control border-0 border-bottom" required autofocus autocomplete="username" placeholder="전화번호 또는 이메일을 입력해주세요.">
                     <div v-for="message in validationErrors?.email">
                         {{ message }}

@@ -2077,7 +2077,8 @@ opacity: 0;
 }
 .sheet.half{
   max-height: none !important;
-  height: fit-content !important;
+  /* height: fit-content !important; */
+  height: calc(fit-content + env(safe-area-inset-bottom)) !important;
 }
 .sm-height{
   height: 34px !important;

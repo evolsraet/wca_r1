@@ -13,7 +13,7 @@
     "logout": "Logout",
     "email": "Email",
     "remember_me": "Remember Me",
-    "password": "Password",
+    "password": "패스워드",
     "forgot_password": "Forgot Your Password?",
     "confirm_password": "Confirm Password",
     "name": "Name",
@@ -36,5 +36,6 @@
     "send_verification_link": "Send Verification Link",
     "resend_verification_link": "Resend Verification Link ?",
     "failed_to_verify_email": "Failed to verify email.",
-    "verify_email_address": "We sent you an email with an the verification link."
+    "verify_email_address": "We sent you an email with an the verification link.",
+    "phone_or_email": "전화번호/이메일"
 }
