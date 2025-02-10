@@ -1892,6 +1892,19 @@ video{
     align-items: center;
     z-index: 1;
 }
+.custom-select-box::after {
+    content: '';
+    position: absolute;
+    top: 55%;
+    right: 10px;
+    transform: translateY(-50%);
+    width: 12px; /* 아이콘 크기 */
+    height: 12px; /* 아이콘 크기 */
+    background-image: url('../img/icon-down-arrow-black.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+  }
 .auction-done{
     position: absolute;
     display: flex;
