@@ -699,5 +699,8 @@
     border-radius: 4px;
     margin-top: 10px;
 }
+.search-btn{
+  right: 35px;
+}
   </style>
   
