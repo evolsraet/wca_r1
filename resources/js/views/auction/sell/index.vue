@@ -182,7 +182,6 @@ const ExpectationPrice = () => {
                 <h5 class="bolder mt-3">내 차, 예상가격을 확인합니다</h5>
                 <p class="mb-3">보다 정확한 가격 산정을 위해 아래 사항을 확인해 주세요.</p>
             </div>
-            <div class="proceeding"></div>
             <div class="text-start tc-gray">
                <div class="form-group">
                     <label>주행거리</label>
