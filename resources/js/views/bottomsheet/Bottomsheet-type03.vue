@@ -166,7 +166,7 @@ export default {
 
 .content {
   overflow-y: auto;
-  height: auto;
+  height: 100%;
   overflow-x: hidden;
   margin-top: 0px !important;
 }
@@ -194,10 +194,5 @@ export default {
 }
 .filter-content{
   display: block;
-}
-@media (max-width: 991px) {
-  .content {
-    height: 100%;
-  }
 }
 </style>
