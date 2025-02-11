@@ -316,6 +316,9 @@ class AuctionController extends Controller
     {
 
         $result = Auction::where('status', 'ing')->count();
+        if(!$result){
+            $result = 0;
+        }
 
         return response()->api($result);
     }
