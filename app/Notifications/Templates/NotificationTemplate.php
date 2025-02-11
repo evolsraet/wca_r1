@@ -1,6 +1,7 @@
 <?php 
 
 namespace App\Notifications\Templates;
+use App\Helpers\FormatHelper;
 
 class NotificationTemplate
 {
@@ -84,7 +85,7 @@ class NotificationTemplate
         isset($data['status2']) ? $message5 = 'ㅁ 경매마감일 : '.$data['status2'] : $message5 = ''; 
         
         isset($data['status3']) ? $message6 = 'ㅁ 딜러 : '.$data['status3'] : $message6 = ''; 
-        isset($data['status4']) ? $message7 = 'ㅁ 입찰가 : ' . number_format($data['status4']) . '원' : $message7 = ''; 
+        isset($data['status4']) ? $message7 = 'ㅁ 입찰가 : ' . FormatHelper::formatPriceToMan(number_format($data['status4'])) : $message7 = ''; 
         
         isset($data['status5']) ? $message8 = 'ㅁ 계좌번호 : '.$data['status5'] : $message8 = ''; 
         isset($data['status6']) ? $message9 = 'ㅁ 입금기일 : '.$data['status6'] : $message9 = ''; 
@@ -92,13 +93,13 @@ class NotificationTemplate
         isset($data['status7']) ? $message10 = 'ㅁ 탁송시작 예정일 : '.$data['status7'] : $message10 = '';
         isset($data['status8']) ? $message11 = 'ㅁ 탁송출발지 : '.$data['status8'] : $message11 = '';
 
-        isset($data['status9']) ? $message12 = 'ㅁ 낙찰가 : ' . number_format($data['status9']) . '만원' : $message12 = '';
+        isset($data['status9']) ? $message12 = 'ㅁ 낙찰가 : ' . FormatHelper::formatPriceToMan(number_format($data['status9'])) : $message12 = '';
         
         // 딜러 : (수수료 입금안내 / 미확인 시 1일 마다 발송)
-        isset($data['status10']) ? $message13 = 'ㅁ 입찰가 : ' . number_format($data['status10']) . '원' : $message13 = '';
-        isset($data['status11']) ? $message14 = 'ㅁ 총 입금액 : ' . number_format($data['status11']) . '원 (VAT 포함)' : $message14 = '';
-        isset($data['status12']) ? $message15 = ' - 수수료 : ' . number_format($data['status12']) . '원' : $message15 = '';
-        isset($data['status13']) ? $message16 = ' - 진단비 : ' . number_format($data['status13']) . '원' : $message16 = '';
+        isset($data['status10']) ? $message13 = 'ㅁ 입찰가 : ' . FormatHelper::formatPriceToMan(number_format($data['status10'])) : $message13 = '';
+        isset($data['status11']) ? $message14 = 'ㅁ 총 입금액 : ' . FormatHelper::formatPriceToMan(number_format($data['status11'])) . ' (VAT 포함)' : $message14 = '';
+        isset($data['status12']) ? $message15 = ' - 수수료 : ' . FormatHelper::formatPriceToMan(number_format($data['status12'])) : $message15 = '';
+        isset($data['status13']) ? $message16 = ' - 진단비 : ' . FormatHelper::formatPriceToMan(number_format($data['status13'])) : $message16 = '';
         isset($data['status14']) ? $message17 = ' ㅁ 계좌번호 : '.$data['status14'] : $message17 = '';
         isset($data['status15']) ? $message18 = ' ㅁ 예금주 : '.$data['status15'] : $message18 = '';
         isset($data['status16']) ? $message19 = ' ㅁ 클레임 마감일 : '.$data['status16'] : $message19 = '';

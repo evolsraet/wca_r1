@@ -13,6 +13,7 @@ use Illuminate\Validation\Factory as ValidationFactory;
 use App\Notifications\Channels\AligoChannel;
 use App\Services\AligoService;
 use Illuminate\Support\Facades\URL;
+use App\Helpers\FormatHelper;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -153,6 +154,14 @@ class AppServiceProvider extends ServiceProvider
 
             return $date;
         });
+
+
+        // Helper를 전역 함수로 등록
+        if (!function_exists('format_price_to_man')) {
+            function format_price_to_man($price, $showWon = true) {
+                return FormatHelper::formatPriceToMan($price, $showWon);
+            }
+        }
 
 
         $this->app->when(AligoChannel::class)
