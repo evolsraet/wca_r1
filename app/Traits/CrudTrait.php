@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use Maatwebsite\Excel\Facades\Excel;
 use App\Http\Controllers\Api\LibController;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\Review;
 
 trait CrudTrait
 {
@@ -119,6 +120,21 @@ trait CrudTrait
                     }
                 }
             });
+        }
+        
+        if($search_text && request('with') == 'dealer') {
+            
+            $query = Review::select('reviews.*')->join('auctions', 'reviews.auction_id', '=', 'auctions.id');
+            $query->where(function($q) use ($search_text) {
+                $q->where('reviews.content', 'like', '%' . $search_text . '%')
+                ->orWhere('auctions.car_model', 'like', '%' . $search_text . '%')
+                ->orWhere('auctions.car_no', 'like', '%' . $search_text . '%')
+                ->orWhere('auctions.addr1', 'like', '%' . $search_text . '%');
+            });
+
+            // 검색 결과 페이지네이션
+            $result = $query->with('dealer');
+
         }
 
         $result = $result->when(request('search_id'), function ($query) {
