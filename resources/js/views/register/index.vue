@@ -25,7 +25,7 @@
                     </div>
                 </div>
                 <div class="video-container">
-                    <video width="90%" class="video_type01" autoplay loop muted>
+                    <video width="90%" class="video_type01" playsinline muted autoplay loop>
                         <source src="../../../img/video/register_vi.mp4" type="video/mp4">
                     </video>
                 </div>
