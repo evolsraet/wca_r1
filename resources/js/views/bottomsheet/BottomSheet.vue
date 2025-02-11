@@ -172,7 +172,7 @@ export default {
 
 .content {
   overflow-y: auto;
-  height: 100%;
+  height: auto;
   overflow-x: hidden;
   margin-top: 0px !important;
 }
@@ -191,6 +191,11 @@ export default {
 }
   .handle-head {
     cursor: default;
+  }
+}
+@media (max-width: 991px) {
+  .content {
+    height: 100%;
   }
 }
 </style>

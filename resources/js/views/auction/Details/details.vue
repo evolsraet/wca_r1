@@ -2141,5 +2141,7 @@ opacity: 0;
     max-width: 800px;
   }
 }
-
+.sheet.half > .content{
+  height: auto !important;
+}
 </style>

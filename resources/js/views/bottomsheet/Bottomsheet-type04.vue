@@ -227,7 +227,7 @@
   
   .content {
     overflow-y: auto;
-    height: 100%;
+    height: auto;
     overflow-x: hidden;
     margin-top: 0px !important;
   }
@@ -252,6 +252,9 @@
   @media (max-width: 991px) {
     .sheet {
       box-shadow: 0 -2px 11px rgba(0, 0, 0, 0.1), 0 -2px 7px rgba(0, 0, 0, 0.08) !important;
+    }
+    .content {
+      height: 100%;
     }
   }
   </style>
