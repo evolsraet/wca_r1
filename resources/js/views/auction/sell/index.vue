@@ -832,7 +832,7 @@ const applyAuction = () => {
 }
 .sheet.half{
   max-height: none !important;
-  height: fit-content !important;
+  height: calc(fit-content + env(safe-area-inset-bottom)) !important;
 }
 .side-sheet-style{
     margin-top: 70px;
