@@ -89,9 +89,10 @@
                       </div>-->
                     </div>
                     <div v-if="auctionDetail.data.status !== 'diag' && auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'cancel'">
-                      <p v-if="!showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 숨기기</p>
-                      <p v-if="showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
-                      <div class="mt-5" v-if="!showPdf">
+                      <!-- <p v-if="!showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 숨기기</p> -->
+                      <!-- <p v-if="showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p> -->
+                      <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
+                      <!-- <div class="mt-5" v-if="!showPdf">
                       <h5>진단 평가</h5>
                       <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                           <iframe
@@ -101,7 +102,7 @@
                               
                           ></iframe>
                       </div>
-                      </div>
+                      </div> -->
                     </div>
                </div>
                   <!--   <template v-if="auctionDetail.data.hope_price !== null">
@@ -1121,10 +1122,34 @@ const confirmSelection = () => {
 
 
 
-const openAlarmModal = async () => {
-  showPdf.value = !showPdf.value;
-};
+// const openAlarmModal = async () => {
+//   showPdf.value = !showPdf.value;
+// };
 
+
+const openAlarmModal = () => {
+  const text = `
+    <h5>진단 평가</h5>
+    <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <iframe
+            src="https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf"
+            width="100%"
+            height="600px"
+            
+        ></iframe>
+    </div>
+  `;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20, height:700 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+}
 
 /*[사용자] 재경매 - 현재 날짜에서 D-3 일 후 라고 가정함.*/ 
 function getThreeDaysFromNow() {
