@@ -7,10 +7,10 @@
                 <hr>
                 <CarInfoItem label="차량번호" :value="carDetails.no" icon="car-icon" :isTitle="true" />
                 <CarInfoItem label="제조사" :value="carDetails.maker" />
-                <CarInfoItem label="모델" :value="carDetails.model" />
+                <CarInfoItem label="차명" :value="carDetails.model" />
                 <CarInfoItem label="세부모델" :value="carDetails.modelSub" />
                 <CarInfoItem label="등급" :value="carDetails.grade" />
-                <CarInfoItem label="세부등급" :value="carDetails.gradeSub" />
+                <!-- <CarInfoItem label="세부등급" :value="carDetails.gradeSub" /> -->
 
                 <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" icon="car-aside-icon" :isTitle="true" />
                 <CarInfoItem label="년식" :value="carDetails.year" />
@@ -667,7 +667,7 @@ const secondModal = () => {
           <hr class="custom-hr" />
           <div>
             <div class="text-start my-3 process"> 
-              <h4 class="mb-3">딜러</h4>
+              <h4 class="mb-3">법인</h4>
               <div class="d-flex justify-content-between align-items-end">
                 <div class="info-block">
                   <p class="text-start">경매 등록시</p>
