@@ -66,11 +66,12 @@
           <label for="carNumber"><span class="text-danger me-2">*</span>은행</label>
           <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly>
           <input type="text" v-model="account" placeholder="계좌번호" :class="{'block': accountDetails}" class="account-num">
+          <p class="tc-gray">주의 : 계좌는 차량 소유주의 계좌번호만 입력가능 합니다.</p>
         </div>
         <!-- 주요 사항 입력 -->
         <div class="form-group mt-5">
           <label for="memo"><span class="text-danger me-2">*</span>주요사항</label>
-          <textarea type="text" id="memo" v-model="memo" placeholder="침수 및 화재 이력 등 차량관련 주요사항이 있으면 적어주세요." rows="2"></textarea>
+          <textarea type="text" id="memo" v-model="memo" placeholder="ex)외관에 손상이 있어요, 시트에 구멍이 나있어요, 화재이력이 있어요, 뒤쪽 트렁크에 사고 있어요." rows="2"></textarea>
         </div>
         <div class="form-group mb-5">
         <label for="datetime">
@@ -78,7 +79,7 @@
         </label>
         <input id="datetimeInput" type="datetime-local" v-model="diagFirstAt" style="width: 100%; padding: 10px;" placeholder="진단희망일1" />
         <input id="datetimeInput" type="datetime-local" v-model="diagSecondAt" style="width: 100%; padding: 10px;" placeholder="진단희망일2" />
-        <p class="tc-gray">※ 영업일 기준 오전9시부터 오후6시까지 선택 가능합니다.</p>
+        <p class="tc-gray">※ 진단희망은 신청일로 부터 2일후 부터 입력가능합니다. (진단시간 오전9시 ~ 오후6시)</p>
       </div>
         <h5><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
         <input type="file" @change="handleFileUploadOwner" ref="fileInputRefOwner" style="display:none">
@@ -212,7 +213,8 @@ export default {
     flatpickr("#datetimeInput", {
       enableTime: true,
       dateFormat: "Y-m-d H:i",
-      minDate: "today",
+      // minDate: "today",
+      minDate: new Date().fp_incr(2),
       disable: [
         function (date) {
           // 주말 비활성화
