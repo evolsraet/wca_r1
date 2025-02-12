@@ -60,8 +60,8 @@
                     </div>
                 -->
             
-                <div class="btn-group mt-4">
-                  <button class="btn btn-primary tc-wh"> 저장 </button>
+                <div class="mt-4">
+                  <button class="btn btn-primary tc-wh w-100"> 저장 </button>
                 </div>
               </div>
             </div>

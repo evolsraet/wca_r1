@@ -901,15 +901,20 @@ watch(() => route.params.id, () => {
         display: block !important;
     }
 }
-.user-nav .nav-link:hover, .nav-link:focus {
+.user-nav .nav-link:hover {
     color: #da3138 !important;
 }
-
+.user-nav .nav-link:focus{
+    color: #da3138 !important;
+}
 /* 딜러 전용 스타일 */
 .dealer-nav .nav-item:hover .nav-link {
     font-weight: 800;
     border-bottom: 2px solid currentColor !;
     padding-bottom: 3px;
+}
+.dealer-nav .nav-link:focus{
+  color: white !important;
 }
   </style>
   

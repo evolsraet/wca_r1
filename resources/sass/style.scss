@@ -1752,10 +1752,10 @@ video{
 
 .nav-link:hover,
 .nav-link:focus {
-    color: $primary ;
+    color: $primary;
 }
 .active-link{
-    color: $primary ;
+    color: $primary;
 }
 /*---------------------
     딜러 -선택 항목페이지
@@ -2636,15 +2636,15 @@ video{
     display: flex;
 }
 .btn-fileupload {
-        display: block;
-        font-weight: bold;
-        width: 100%;
-        margin-top: 20px;
-        padding: 0.7rem 0.75rem;
-        font-size: 0.875rem;
-        color: #abadb6;
-        background-color: #F5F5F6;
-        border: 1px solid #F5F5F6;
+        display: block !important;
+        font-weight: bold !important;
+        width: 100% !important;
+        margin-top: 20px !important;
+        padding: 0.7rem 0.75rem !important;
+        font-size: 0.875rem !important;
+        color: #abadb6 !important;
+        background-color: #F5F5F6 !important;
+        border: 1px solid #F5F5F6 !important;
         border-radius: 0.3rem;
         transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
             border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
@@ -3547,12 +3547,12 @@ input[type="checkbox"] {
     position: fixed; 
     bottom: 62px;
     right: 20px;
-    width: 54px;     
+    width: 54px !important;     
     height: 54px;
     border-radius: 50%;   
-    background-color: $primary; 
+    background-color: $primary ; 
     padding: 15px;  
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4) !important;
     z-index: 1000;    
     transition: background-color 0.3s ease, box-shadow 0.3s ease; 
 }
@@ -3575,7 +3575,8 @@ input[type="checkbox"] {
     background-image: url('../img/Icon-pen.png'); 
     background-size: cover;
     background-position: center; 
-    background-repeat: no-repeat; 
+    background-repeat: no-repeat;
+    margin-left: 5px; 
 }
 .icon-right-wh {
     width: 10px;

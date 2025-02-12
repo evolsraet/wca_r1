@@ -192,36 +192,36 @@
             </div>
           </div>
           <div class="mt-3" @click.stop="">
-              <div class="btn-group mt-3">
-                <button class="btn btn-primary tc-wh"> 저장 </button>
+              <div class="mt-3">
+                <button class="btn btn-primary tc-wh w-100"> 저장 </button>
               </div>
           </div>
 
           <hr/>
 
           <div class="mt-3">
-            <div class="btn-group mt-3">
-              <button type="button" class="btn btn-success" @click="diagAuction('diag')"> 진단대기 </button>
+            <div class="mt-3">
+              <button type="button" class="btn btn-success w-100" @click="diagAuction('diag')"> 진단대기 </button>
             </div>
           </div>
 
           <div class="mt-3">
-            <div class="btn-group mt-3">
-              <button type="button" class="btn btn-secondary" @click="diagAuction('ing')"> 경매진행 </button>
+            <div class="mt-3">
+              <button type="button" class="btn btn-secondary w-100" @click="diagAuction('ing')"> 경매진행 </button>
             </div>
           </div>
 
           <hr/>
 
           <div class="mt-3">
-            <div class="btn-group mt-3">
-              <button type="button" class="btn btn-secondary" @click="AuctionIsDeposit('totalDeposit')"> 입금완료 </button>
+            <div class="mt-3">
+              <button type="button" class="btn btn-secondary w-100" @click="AuctionIsDeposit('totalDeposit')"> 입금완료 </button>
             </div>
           </div>
 
           <div class="mt-3">
-            <div class="btn-group mt-3">
-              <button type="button" class="btn btn-secondary" @click="AuctionIsDeposit('totalAfterFee')"> 수수료 입금완료 </button>
+            <div class="mt-3">
+              <button type="button" class="btn btn-secondary w-100" @click="AuctionIsDeposit('totalAfterFee')"> 수수료 입금완료 </button>
             </div>
           </div>
 

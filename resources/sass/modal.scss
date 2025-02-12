@@ -754,3 +754,17 @@ position: absolute;
   opacity: 1;
   transform: translateY(0);
 }
+.swal2-popup .intromodal-closeButton {
+  position: sticky;
+  top: 0;
+  right: 0;
+  z-index: 1050;
+  background: none;
+  border: none;
+  font-size: 34px;
+  cursor: pointer;
+  padding: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

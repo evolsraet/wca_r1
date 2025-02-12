@@ -1,7 +1,7 @@
 <template>
-    <nav class="bg-white sidebar" style="right:270px;">
+    <nav class="admin-nav bg-white sidebar" style="right:270px;">
         <div class="d-flex flex-column align-items-center ms-3 pt-0 mb-4">
-            <router-link to="/admin" class="navbar-brand col-md-3 col-lg-2 ms-1 px-3 fs-6 nuxt-link-active mini mb-2"></router-link>
+            <router-link to="/admin" class="navbar-brand col-md-3 col-lg-2 ms-1 px-3 fs-6 nuxt-link-active mini mb-2" style="width: 50%;"></router-link>
             <span class="admin-icon admin-icon-profile admin-icon-large"></span>
             <p class="profile-name">{{ userName }}</p>
             <p class="profile-name text-secondary opacity-50">{{ userEmail }}</p>
@@ -167,5 +167,14 @@ onMounted(async () => {
 }
 .ft-13{
     font-size: 13px !important;
+}
+.admin-nav .nav-link{
+  color:#cacaca
+}
+.admin-nav .nav-link:hover{
+  color: #da3138 !important;
+}
+.admin-nav .nav-link:focus{
+    color: #da3138 !important;
 }
 </style>

@@ -262,6 +262,7 @@ const openAlarmModal03 = () => {
 };
 </script>
 <style scoped>
+
 @media (max-width: 480px) { /* 모바일 */
   .guide-card-content{
     gap:10px !important; 
@@ -271,4 +272,5 @@ const openAlarmModal03 = () => {
     font-size: 11px;
 }
 }
+
 </style>
