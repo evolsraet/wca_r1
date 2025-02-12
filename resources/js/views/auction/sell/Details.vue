@@ -59,7 +59,7 @@
             <hr class="custom-hr" />
             <div>
               <div class="text-start my-3 process"> 
-                <h4 class="mb-3">딜러</h4>
+                <h4 class="mb-3">법인</h4>
                 <div class="d-flex justify-content-between align-items-end">
                   <div class="info-block">
                     <p class="text-start">경매 등록시</p>
