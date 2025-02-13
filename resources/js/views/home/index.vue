@@ -241,10 +241,13 @@
                     </div>
                 </div>
                 <div>
-                  <input type="text" class="form-control border-0 border-bottom" placeholder="차량 번호를 입력해주세요." v-model="carInfoForm.no">
+                  <input type="text" class="form-control border-0 border-bottom" placeholder="차량 번호를 입력해주세요." ref="carNoInput" v-model="carInfoForm.no" @input="removeSpace">
                   <div class="text-danger mt-1  mb-4">
                     <div v-for="message in validationErrors?.no">
                       {{ message }}
+                    </div>
+                    <div v-if="!isValid && carInfoForm.no">
+                        {{ validationMessage }}
                     </div>
                   </div>
                 </div>
@@ -297,7 +300,7 @@ export default {
   <script setup>
   // Other imports
   import { useStore } from "vuex";
-  import {createApp,h, computed, ref, onMounted, onBeforeUnmount, nextTick,inject  } from "vue";
+  import {createApp,h, computed, ref, onMounted, onBeforeUnmount, nextTick,inject, watch  } from "vue";
   import useAuth from '@/composables/auth';
   import useAuctions from '@/composables/auctions';
   import LawGid from '@/views/modal/LawGid.vue';
@@ -312,6 +315,7 @@ export default {
   const swal = inject('$swal');
   const { wica , wicaLabel } = cmmn();
   const carName = ref('');
+  const carNoInput = ref(null)
   const emoji = ref('');
   const updateCarName = () => {
     const result = setRandomPlaceholder();
@@ -400,6 +404,12 @@ const submitCarInfoIsOk = () => {
     */
   //TODO: 여기는 위에보단 아래 유형이 맞지 않나?
   submitCarInfo().then((response) => {
+
+    if(!isValid.value){
+      ntcn.icon('E').title('올바른 차량번호 형식으로 입력해주세요.').fire();
+      return false;
+    }
+
     if(response.isError) {
       wica.ntcn(swal).icon('E').title('필수 입력정보가 필요합니다.').fire();
     } else {
@@ -419,6 +429,46 @@ const submitCarInfoIsOk = () => {
   };
 
   const { getHomeReview, reviewsData, splitDate } = initReviewSystem();
+
+const isValid = ref(false)
+const validationMessage = ref('')
+
+// 공백 제거
+const removeSpace = () => {
+  carInfoForm.no = carInfoForm.no.replace(/\s/g, '')
+}
+
+// 차량번호 유효성 검사
+const validateCarNumber = (carNumber) => {
+  if (!carNumber) {
+    validationMessage.value = ''
+    isValid.value = false
+    return
+  }
+
+  const pattern1 = /^[0-9]{2}[가-힣]{1}[0-9]{4}$/  // 12가1234 형식
+  const pattern2 = /^[0-9]{3}[가-힣]{1}[0-9]{4}$/  // 123가1234 형식
+  
+  isValid.value = pattern1.test(carNumber) || pattern2.test(carNumber)
+  
+  
+  if (!isValid.value) {
+    validationMessage.value = '올바른 차량번호 형식이 아닙니다. (예시: 12가1234)'
+  } else {
+    validationMessage.value = '올바른 차량번호 형식입니다.'
+  }
+}
+
+// 차량번호 변경 감지
+watch(() => carInfoForm.no, (newValue) => {
+  validateCarNumber(newValue)
+}, { immediate: true })
+
+// submit 메소드를 외부에서 사용할 수 있도록 defineExpose
+// defineExpose({
+//   submit,
+//   carInfoForm
+// })
 
   onMounted(() => {
     updateCarName();
