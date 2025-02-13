@@ -30,7 +30,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th class="px-6 py-3 bg-gray-50 justify-content-center">
+                            <!-- <th class="px-6 py-3 bg-gray-50 justify-content-center">
                                 <div class="flex flex-row items-center justify-content-center justify-between cursor-pointer" @click="updateOrdering('created_at')">
                                     <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider" :class="{ 'font-bold text-blue-600': orderColumn === 'created_at' }">
                                         등록일
@@ -41,11 +41,15 @@
                                         <span v-else-if="orderingState.created_at.direction === '' && orderingState.created_at.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                     </div>
                                 </div>
+                            </th> -->
+
+                            <th class="px-6 py-3 bg-gray-50 justify-content-center">
+                                매물번호
                             </th>
                             <th class="px-6 py-3 bg-gray-50 text-left">
                                 <div class="flex flex-row items-center justify-content-center justify-between cursor-pointer" @click="updateOrdering('car_no')">
                                     <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider" :class="{ 'font-bold text-blue-600': orderColumn === 'car_no' }">
-                                        매물번호
+                                        차량번호
                                     </div>
                                     <div class="select-none">
                                         <span v-if="orderingState.car_no.direction === 'asc' && orderingState.car_no.column === 'car_no'" class="text-blue-600">&uarr;</span>
@@ -53,6 +57,14 @@
                                         <span v-else-if="orderingState.car_no.direction === '' && orderingState.car_no.column === ''" class="text-blue-600">&uarr;&darr;</span>
                                     </div>
                                 </div>
+                            </th>
+
+                            <th class="px-6 py-3 text-left">
+                                차종
+                            </th>
+
+                            <th class="px-6 py-3 text-left">
+                                등록년도
                             </th>
 
                             <th class="px-6 py-3 text-left">
@@ -65,13 +77,22 @@
                     </thead>
                     <tbody>
                         <tr v-if="auctionsData.length > 0" v-for="auction in auctionsData" :key="auction.id">
-                            <td class="px-6 py-4 text-sm">
+                            <!-- <td class="px-6 py-4 text-sm">
                                 {{ auction.created_at }}
+                            </td> -->
+                            <td class="px-6 py-4 text-sm">
+                                {{ auction.id }}
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <div class="blue-box">
                                     {{ auction.car_no }}
                                 </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                {{ auction.car_model }}
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                {{ auction.car_year }}
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <div>
