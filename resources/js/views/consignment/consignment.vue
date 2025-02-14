@@ -45,7 +45,7 @@
           </div>
         </div>
       </div>
-      <hr class="custom-hr" />
+      <!-- <hr class="custom-hr" />
       <div>
         <h4 class="mt-4">입금받을 계좌를 알려주세요</h4>
         <div class="form-group mt-4">
@@ -54,7 +54,7 @@
           <label for="bankNumber" class="mt-3">계좌번호</label>
           <input type="text" v-model="account" placeholder="계좌번호 직접입력" :class="{'block': accountDetails}" class="account-num">
         </div>
-      </div>
+      </div> -->
       <hr class="custom-hr" />
       <p class="text-center mb-2">매도용 인감증명서를 <br> 준비해 주세요.</p>
       <button type="button" class="btn btn-primary w-100" @click="toggleView">다음</button>
