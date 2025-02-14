@@ -104,6 +104,12 @@
                       </div>
                       </div> -->
                     </div>
+                    <div v-if="auctionDetail.data.status === 'chosen' && isDealer">
+                      <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
+                    </div>
+                    <div v-if="auctionDetail.data.status === 'chosen' && isUser">
+                      <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">구매자 사업자등록증</p>
+                    </div>
                </div>
                   <!--   <template v-if="auctionDetail.data.hope_price !== null">
                     <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
@@ -1179,6 +1185,61 @@ const openAlarmModal = () => {
     })
     .confirm(text); // 모달 내용 설정
 }
+
+const openCarLicenseModal = () => {
+  const fileId = auctionDetail.value.data.files.file_auction_car_license[0].id;
+  const fileName = auctionDetail.value.data.files.file_auction_car_license[0].file_name;
+  const carLicenseUrl = '../media/' + fileId +'/' + fileName;
+  const text = `
+    <h5>자동차등록증</h5>
+    <div id="car-license-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <iframe
+            src="${carLicenseUrl}" 
+            width="100%"
+            height="600px"
+            
+        ></iframe>
+    </div>
+  `;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20, height:700 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+}
+
+const openDealerLicenseModal = () => {
+  const fileId = auctionDetail.value.data.top_bids[0].dealerfile.files.file_user_biz[0].id;
+  const fileName = auctionDetail.value.data.top_bids[0].dealerfile.files.file_user_biz[0].file_name;
+  const dealerLicenseUrl = '../media/' + fileId +'/' + fileName;
+  const text = `
+    <h5>구매자 사업자등록증</h5>
+    <div id="dealer-license-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <iframe
+            src="${dealerLicenseUrl}" 
+            width="100%"
+            height="600px"
+            
+        ></iframe>
+    </div>
+  `;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20, height:700 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+}
+
 
 /*[사용자] 재경매 - 현재 날짜에서 D-3 일 후 라고 가정함.*/ 
 function getThreeDaysFromNow() {
