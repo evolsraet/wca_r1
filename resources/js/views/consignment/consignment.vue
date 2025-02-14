@@ -47,7 +47,7 @@
       </div>
       <hr class="custom-hr" />
       <div>
-        <h4 class="mt-4">탁송비를 입금받을 계좌를 알려주세요</h4>
+        <h4 class="mt-4">입금받을 계좌를 알려주세요</h4>
         <div class="form-group mt-4">
           <label for="bankNumber">은행</label>
           <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly>
