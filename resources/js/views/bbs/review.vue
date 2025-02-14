@@ -1,6 +1,6 @@
 <template>
     <!-- all view랑 reciew-->
-    <div class="container">
+    <div class="container pt-1">
         <div class="main-contenter">
             <div class="review">
                 <div class="review-content mov-review my-5" v-if="loading">

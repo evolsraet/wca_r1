@@ -3457,6 +3457,21 @@ input[type="checkbox"] {
     border-bottom: 2px solid currentColor !important;
     padding-bottom: 3px; 
 }
+// #app>div:nth-child(2){
+//     margin-top: 71px !important;
+// }
+#app > .user-nav-wrap + div{
+    margin-top: 71px !important;
+}
+#app > .dealer-nav-wrap + div{
+    margin-top: 57px !important;
+}
+@media screen and (max-width: 991px) {
+    #app>div:nth-child(2){
+        margin-top: calc(84px + env(safe-area-inset-top)) !important;
+    }
+}
+
 
 
 /*----------------------------------

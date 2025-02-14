@@ -325,7 +325,7 @@
         <!--
           사용자 바텀시트
         -->
-        <div v-if="(isUser && auctionDetail.data.status === 'ask') || (isUser && auctionDetail.data.status === 'diag')" class="sheet-content">
+        <div v-if="(isUser && auctionDetail.data.status === 'ask') || (isUser && auctionDetail.data.status === 'diag')" class="sheet-content sticky-top">
             <BottomSheet02 class="text-center">
               <div v-if="auctionDetail.data.status === 'ask'">
               <p class="auction-deadline align-items-center my-4 p-4 ">
@@ -341,7 +341,7 @@
               </div>
             </BottomSheet02>
           </div>
-        <div v-if="isUser && auctionDetail.data.status === 'done'" class="sheet-content">
+        <div v-if="isUser && auctionDetail.data.status === 'done'" class="sheet-content sticky-top">
             <BottomSheet02>
               <h5 class="text-center p-2">거래는 어떠셨나요?</h5>
               <div v-if="reviewIsOk">
@@ -356,7 +356,7 @@
               </div>
             </BottomSheet02>
           </div>
-          <div v-if="isUser && auctionDetail.data.status === 'cancel'" class="sheet-content">
+          <div v-if="isUser && auctionDetail.data.status === 'cancel'" class="sheet-content sticky-top">
             <BottomSheet02>
               <p class="auction-deadline align-items-center my-4 p-4 ">
                 <span class="text-center tc-gray fw-semibold">경매 취소</span>
@@ -365,7 +365,8 @@
             </BottomSheet02>
           </div>
           <div v-if="isUser && auctionDetail.data.status === 'ing'" class="sheet-content">
-            <BottomSheet02 v-if="auctionDetail.data.bids_count === 0">
+            <div v-if="auctionDetail.data.bids_count === 0" class="sheet-content-wrap sticky-top">
+            <BottomSheet02 >
               <div class="d-flex justify-content-between align-items-baseline">
               <h4 class="text-start my-2 custom-highlight">경매 진행중</h4>
               </div>
@@ -374,7 +375,9 @@
                   <p class="text-center">경매 진행중 입니다.</p>
               </button>
             </BottomSheet02>
-          <BottomSheet02 v-else>
+          </div>
+          <div v-else class="sheet-content-wrap">
+          <BottomSheet02>
               <div class="wd-100 bid-content p-4">
                   <div class="d-flex justify-content-between">
                     <p class="bold-20-font">현재 {{auctionDetail.data.bids_count}}명이 입찰했어요.</p>
@@ -407,13 +410,22 @@
                 </div>
           </BottomSheet02> 
         </div>
+        </div>
 
           <!--
             딜러 : 바텀 시트 
           -->
-          <div v-if="auctionDetail.data.status !== 'done' && auctionDetail.data.status !== 'dlvr' && auctionDetail.data.status !== 'chosen'  &&  isDealer" class="sheet-content">
+          <div v-if="auctionDetail.data.status !== 'done' && auctionDetail.data.status !== 'dlvr' && auctionDetail.data.status !== 'chosen'  &&  isDealer" class="sheet-content sticky-top">
             <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
                 <div  @click.stop="">
+                  <div>
+                    <div class="d-flex">
+                      <p class="tc-gray bold">도매가 <span class="tc-primary size_26 mx-2">820</span><span class="tc-primary">만원 </span>
+                        <span class="mx-2">|</span> 소매가<span class="tc-primary size_26 mx-2">820</span><span class="tc-primary">만원 </span>
+                      </p>
+                    </div>
+                  </div>
+                  <hr/>
                   <p class="text-center tc-red my-2">현재  {{ auctionDetail.data.bids_count }}명이 입찰했어요.</p>
                   <button type="button" class="btn btn-primary w-100 align-items-center d-flex justify-content-center gap-3" @click="showbidView">입찰하기<p class="icon-up-wh"></p></button>
                 </div>
@@ -471,7 +483,7 @@
               </div>
             </BottomSheet02>
           </div>
-          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid">
+          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid" class="sticky-top">
              <div class="d-flex justify-content-between align-items-baseline">
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
@@ -481,7 +493,7 @@
               <p class="text-secondary ">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.taksong_wish_at}}</span></p>
             </div>
             <div>
-              <button class="border-6 btn-fileupload my-4 shadow02 text-secondary opacity-50" @click="AttachedInform">딜러 첨부파일</button>
+              <!-- <button class="border-6 btn-fileupload my-4 shadow02 text-secondary opacity-50" @click="AttachedInform">딜러 첨부파일</button> -->
               <button v-if="auctionDetail.data.taksong_wish_at === null && isUser" @click="showModal2" class="btn btn-primary w-100">탁송일 입력하기</button>
               <!--<button class="border-6 btn-fileupload my-4 shadow02"><a :href=fileSignUrl download class="text-secondary opacity-50">매도용 인감증명서 다운로드</a></button>-->
             </div>
@@ -1872,6 +1884,8 @@ async function loadPage(page) {
     .sheet-content{
       width: 80% !important;
       padding: 0px !important;
+      /* padding-top: 30px !important */
+      /* margin-top: 60px !important; */
     }
     .sheet{
     position: relative !important;
@@ -2078,6 +2092,7 @@ opacity: 0;
   height: 100%;
   position: relative;
   overflow: hidden;
+  border-radius: 10px;
 }
 
 .img-wrapper img {
@@ -2166,7 +2181,17 @@ opacity: 0;
     max-width: 800px;
   }
 }
-.sheet.half > .content{
+/* .sheet.half > .content{
   height: auto !important;
+} */
+
+.sticky-top{
+  position: sticky;
+  top: 71px;
+  z-index: 1020;
+  height: 100px;
+}
+.sheet-content-wrap{
+  width: 100% !important;
 }
 </style>
