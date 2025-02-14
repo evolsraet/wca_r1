@@ -108,7 +108,9 @@
                       <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
                     </div>
                     <div v-if="auctionDetail.data.status === 'chosen' && isUser">
-                      <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">구매자 사업자등록증</p>
+                      <div v-if="auctionDetail.data.top_bids[0].dealerInfo.biz_check">
+                        <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">구매자 사업자등록증</p>
+                      </div>
                     </div>
                </div>
                   <!--   <template v-if="auctionDetail.data.hope_price !== null">

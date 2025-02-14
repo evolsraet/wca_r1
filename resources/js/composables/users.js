@@ -126,6 +126,7 @@ export default function useUsers() {
                 name: editForm.dealer_name,
                 phone: editForm.dealerContact,
                 birthday : editForm.dealerBirthDate,
+                biz_check: editForm.biz_check,
                 company: editForm.company,
                 company_duty: editForm.dealerCompanyDuty,
                 company_post: editForm.company_post,

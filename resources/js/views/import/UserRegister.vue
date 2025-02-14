@@ -1,4 +1,3 @@
-
 <template>
       <form @submit.prevent="handleSubmitBtn">
         <div v-if="userEditURL" class="form-group profile-content">
@@ -237,7 +236,15 @@
                     파일 첨부
                 </button>
                 <div class="text-start text-secondary opacity-50" v-if="profile.file_user_biz_name">
-                    사업자 등록증 파일 : <a :href=fileBizUrl download>{{ profile.file_user_biz_name }}</a>
+                    사업자 등록증 파일 : <a :href="fileBizUrl" download>{{ profile.file_user_biz_name }}</a>
+                </div>
+                <div class="form-check mt-2">
+                  <input type="checkbox" 
+                         class="form-check-input" 
+                         id="bizCheck" 
+                         :checked="profile.biz_check == 1"
+                         @change="profile.biz_check = $event.target.checked ? 1 : 0">
+                  <label class="form-check-label" for="bizCheck">사업자 정보 확인 완료</label>
                 </div>
             </div>
             <div class="mb-3">
@@ -350,6 +357,7 @@
     file_user_cert_name:"",
     status:'',
     role:'',
+    biz_check: false,
     //디비외
     photoImgChg : false,
     photoUUID : '',
@@ -443,8 +451,7 @@
       userId.value = route.params.id;
     }
     await getUser(userId.value);
-    //console.log(user);
-  
+
     profile.value.isDealer = user.value?.roles?.includes('dealer') || false;
     profile.value.role = user.value.roles;
 
@@ -457,6 +464,7 @@
         profile.value.dealer_name = user.value.dealer.name;
         profile.value.dealerContact = user.value.dealer.phone;
         profile.value.dealerBirthDate = user.value.dealer.birthday;
+        profile.value.biz_check = user.value.dealer.biz_check;
         profile.value.company = user.value.dealer.company;
         profile.value.company_post = user.value.dealer.company_post;
         profile.value.company_addr1 = user.value.dealer.company_addr1;

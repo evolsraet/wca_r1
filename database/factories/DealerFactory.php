@@ -23,6 +23,7 @@ class DealerFactory extends Factory
             'name' => $this->faker->name, // 이름
             'phone' => $this->faker->phoneNumber,
             'birthday' => $this->faker->dateTimeBetween('-30 years', '-20 years')->format('Y-m-d'), // 30~20년 전 랜덤 데이터
+            'biz_check' => $this->faker->boolean, // 사업자등록증 확인
             'company' => $this->faker->company, // 회사명 랜덤
             'company_duty' => $this->faker->jobTitle, // 직위 랜덤
             'company_post' => $this->faker->postcode, // 우편번호

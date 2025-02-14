@@ -55,6 +55,39 @@
           <input type="text" v-model="account" placeholder="계좌번호 직접입력" :class="{'block': accountDetails}" class="account-num">
         </div>
       </div> -->
+
+      <hr class="custom-hr" />
+      <div>
+        <h4 class="mt-4">탁송주소</h4>
+        <p class="text-secondary opacity-50">탁송 주소는 탁송 출발지 배송 주소로 사용됩니다.</p>
+        <div class="form-group mb-2 input-wrapper">
+          <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly>
+          <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
+          <div class="text-danger mt-1">
+            <div v-for="message in validationErrors?.addr_post">
+              {{ message }}
+            </div>
+          </div>
+          <div>
+            <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+              <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
+            </div>
+            <input type="text" v-model="addr" placeholder="주소" class="input-dis form-control" readonly>
+            <div class="text-danger mt-1">
+              <div v-for="message in validationErrors?.addr1">
+                {{ message }}
+              </div>
+            </div>
+          </div>
+          <input type="text" v-model="addrdt" placeholder="상세주소">
+          <div class="text-danger mt-1">
+            <div v-for="message in validationErrors?.addr2">
+              {{ message }}
+            </div>
+          </div>
+        </div>
+      </div>
+
       <hr class="custom-hr" />
       <p class="text-center mb-2">매도용 인감증명서를 <br> 준비해 주세요.</p>
       <button type="button" class="btn btn-primary w-100" @click="toggleView">다음</button>
@@ -98,7 +131,7 @@ import BankModal from '@/views/modal/bank/BankModal.vue';
 import profileDom from '/resources/img/profile_dom.png';
 import useAuctions from '@/composables/auctions';
 
-const {setTacksong,  getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress } = useAuctions();
+const {setTacksong,  getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress, validationErrors } = useAuctions();
 const selectedDay = ref(null);
 const selectedTime = ref(null);
 const morningTimes = ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30'];
@@ -116,11 +149,14 @@ const registerForm = ref({ file_user_sign: null, file_user_sign_name: '' });
 const imageSrc = ref('');
 const router = useRouter();
 const route = useRoute();
-const { amtComma, wica } = cmmn();
+const { amtComma, wica, openPostcode, closePostcode } = cmmn();
 const auctionDetail = ref(null);
 const selectedBid = ref(null);
 const userInfo = ref(null);
 const days = ref([]);
+const addrPost = ref('');
+const addr = ref(''); // 주소
+const addrdt = ref(''); // 상세 주소
 
 const props = defineProps({
   bid: Object,
@@ -164,6 +200,9 @@ const confirmSelection = async () => {
         // account: account.value,
         bank: auctionDetail.value?.data?.bank,
         account: auctionDetail.value?.data?.account,
+        addr_post: addrPost.value,
+        addr1: addr.value,
+        addr2: addrdt.value,
       }
     };
 
@@ -411,6 +450,14 @@ const photoUrl = (userData) => {
     ? userInfo.value.files.file_user_photo[0].original_url
     : profileDom;
 };
+
+function editPostCode(elementName) {
+  openPostcode(elementName)
+    .then(({ zonecode, address }) => {
+        addrPost.value = zonecode;
+        addr.value = address;
+    })
+}
 </script>
 
 <style scoped lang="scss">
