@@ -60,6 +60,7 @@ class Auction extends Model implements HasMedia
     public $files = [
         'file_auction_proxy'  => '위임장/소유자 인감증명서',
         'file_auction_owner'  => '매도자관련서류',
+        'file_auction_car_license'  => '자동차등록증',
     ];
     public $files_one = [];
 

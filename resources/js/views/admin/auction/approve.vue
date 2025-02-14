@@ -149,6 +149,22 @@
                 </div>
                 <div></div>
                 <div class="mb-3">
+                  <label for="user-title" class="form-label">자동차등록증</label>
+                  <input type="file" @change="handleFileUploadCarLicense" ref="fileAuctionCarLicense" style="display:none">
+                  <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCarLicense">
+                      파일 첨부
+                  </button>
+                  <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionCarLicenseFileList.length > 0 || fileCarLicenseUrl">
+                    자동차등록증 : 
+                    <li v-for="(file, index) in fileAuctionCarLicenseFileList" :key="index">
+                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
+                    </li>
+                    <li v-if="fileCarLicenseUrl">
+                      <a :href=fileCarLicenseUrl download>{{ auction.file_auction_car_license_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerCarLicenseFileDelete()"></span>
+                    </li>
+                  </div>
+                </div>
+                <div class="mb-3">
                   <label for="user-title" class="form-label">위임장 or 소유자 인감 증명서</label>
                   <input type="file" @change="handleFileUploadProxy" ref="fileAuctionProxy" style="display:none">
                   <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadProxy">
@@ -483,6 +499,8 @@ const auction = reactive({
   file_auction_proxy_name: '',
   file_auction_owner: '',
   file_auction_owner_name: '',
+  file_auction_car_license: '',
+  file_auction_car_license_name: '',
   deletFileList:'',
   isBizChecked:false,
   dest_addr_post:'',
@@ -517,7 +535,10 @@ const fileAuctionProxyList = ref([]);
 const fileAuctionProxyFileList = ref([]);
 const fileAuctionOwnerList = ref([]);
 const fileAuctionOwnerFileList = ref([]);
-
+const fileAuctionCarLicense = ref(null);
+const fileAuctionCarLicenseList = ref([]);
+const fileAuctionCarLicenseFileList = ref([]);
+const fileCarLicenseUrl = ref('');
 let created_at;
 let updated_at;
 
@@ -636,6 +657,20 @@ function fileExstCheck(info){
           */
       }
 
+      if(info.files.hasOwnProperty('file_auction_car_license')){
+        fileAuctionCarLicenseList.value = info.files.file_auction_car_license;
+        if(fileAuctionCarLicenseList.value.length>0){
+          for(let i=0; fileAuctionCarLicenseList.value.length>i; i++){
+            fileAuctionCarLicenseFileList.value.push({
+              original_url: fileAuctionCarLicenseList.value[i].original_url,  
+              file_name: fileAuctionCarLicenseList.value[i].file_name,
+              uuid: fileAuctionCarLicenseList.value[i].uuid
+            })
+          }
+        }
+      }
+      
+
       
     }
 }
@@ -644,6 +679,7 @@ function triggerFileDelete(fileUuid){
   auction.deletFileList +=fileUuid+',';
   fileAuctionProxyFileList.value = fileAuctionProxyFileList.value.filter(file => file.uuid !== fileUuid);
   fileAuctionOwnerFileList.value = fileAuctionOwnerFileList.value.filter(file => file.uuid !== fileUuid);
+  fileAuctionCarLicenseFileList.value = fileAuctionCarLicenseFileList.value.filter(file => file.uuid !== fileUuid);
 }
 
 function triggerOwnerFileDelete(){
@@ -656,6 +692,12 @@ function triggerProxyFileDelete(){
   auction.file_auction_proxy = '';
   auction.file_auction_proxy_name = '';
   fileProxyUrl.value = '';
+}
+
+function triggerCarLicenseFileDelete(){
+  auction.file_auction_car_license = '';
+  auction.file_auction_car_license_name = '';
+  fileCarLicenseUrl.value = '';
 }
 
 const fetchAuctionDetails = async () => {
@@ -759,6 +801,15 @@ function triggerFileUploadOwner() {
     console.error("위임장 또는 소유자 인감 증명서 파일을 찾을 수 없습니다.");
   }
 }
+
+function triggerFileUploadCarLicense() {
+  if (fileAuctionCarLicense.value) {
+    fileAuctionCarLicense.value.click();
+  } else {
+    console.error("자동차등록증 파일을 찾을 수 없습니다.");
+  }
+}
+
 
 onMounted(async () => {
   statusLabel = wicas.enum(store).auctions();

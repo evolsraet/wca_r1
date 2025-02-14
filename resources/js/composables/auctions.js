@@ -363,7 +363,10 @@ const AuctionCarInfo = async (carInfoForm) => {
     if(auctionData.auction.file_auction_proxy){
         formData.append('file_auction_proxy', auctionData.auction.file_auction_proxy);
     }
-    
+
+    if(auctionData.auction.file_auction_car_license){
+        formData.append('file_auction_car_license', auctionData.auction.file_auction_car_license);
+    }
     
     return wicac.conn()
     .url(`/api/auctions`)
@@ -502,6 +505,9 @@ const updateAuction = async (id,auction) => {
     }
     if(auction.file_auction_owner){
         formData.append('file_auction_owner', auction.file_auction_owner);
+    }
+    if(auction.file_auction_car_license){
+        formData.append('file_auction_car_license', auction.file_auction_car_license);
     }
 
     

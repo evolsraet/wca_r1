@@ -81,7 +81,17 @@
         <input id="datetimeInput" type="datetime-local" v-model="diagSecondAt" style="width: 100%; padding: 10px;" placeholder="진단희망일2" />
         <p class="tc-gray">※ 진단희망은 신청일로 부터 2일후 부터 입력가능합니다. (진단시간 오전9시 ~ 오후6시)</p>
       </div>
-        <h5><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
+
+      <div class="form-group mt-5">
+        <label for="memo"><span class="text-danger me-2">*</span>자동차등록증</label>
+        <input type="file" @change="handleFileUploadCarLicense" ref="fileInputRefCarLicense" style="display:none">
+        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCarLicense">
+          파일 첨부
+        </button>
+        <div class="text-start text-secondary opacity-50" v-if="fileAuctionCarLicenseName">자동차등록증: {{ fileAuctionCarLicenseName }}</div>
+      </div>
+
+        <h5 class="mt-5"><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
         <input type="file" @change="handleFileUploadOwner" ref="fileInputRefOwner" style="display:none">
         <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
           파일 첨부
@@ -271,6 +281,10 @@ const fileInputRefOwner = ref(null);
 const fileAuctionProxy = ref(null); // 추가: 파일 저장 변수
 const fileAuctionProxyName = ref(''); // 추가: 파일 이름 저장 변수
 const isBizChecked = ref(false); // 체크박스 상태를 저장하는 변수
+const fileInputRefCarLicense = ref(null);
+const fileAuctionCarLicense = ref(null); // 추가: 파일 저장 변수
+const fileAuctionCarLicenseName = ref(''); // 추가: 파일 이름 저장 변수
+
 const diagFirstAt = ref('');
 const diagSecondAt = ref('');
 
@@ -319,6 +333,17 @@ const isWeekend = (dateString) => {
 
 const auctionEntry = async () => {
   // 필수 정보를 확인
+  if (!fileAuctionCarLicense.value) {
+    wica.ntcn(swal)
+    .icon('W')
+    .addClassNm('cmm-review-custom')
+    .addOption({ padding: 20})
+    .callback(function(result) {
+    })
+    .alert('자동차등록증을 첨부해 주세요.');
+    return;
+  }
+
   const auctionData = {
     owner_name: ownerName.value,
     car_no: carNumber.value,
@@ -330,6 +355,7 @@ const auctionEntry = async () => {
     memo: memo.value,
     addr_post: addrPost.value,
     file_auction_proxy: fileAuctionProxy.value, // 업로드된 파일 추가
+    file_auction_car_license: fileAuctionCarLicense.value, // 업로드된 파일 추가
     is_biz : is_biz.value,
     status: "diag",
     diag_first_at: diagFirstAt.value,
@@ -437,6 +463,25 @@ const handleFileUploadOwner = event => {
     console.error('No file selected');
   }
 };
+
+const triggerFileUploadCarLicense = () => {
+  if (fileInputRefCarLicense.value) {
+    fileInputRefCarLicense.value.click();
+  } else {
+    console.error('파일을 찾을 수 없습니다.');
+  }
+};
+
+const handleFileUploadCarLicense = event => {
+  const file = event.target.files[0];
+  if (file) {
+    fileAuctionCarLicense.value = file; // 파일 저장
+    fileAuctionCarLicenseName.value = file.name; // 파일 이름 저장
+  } else {
+    console.error('No file selected');
+  }
+};
+
 
 const handleBankLabelClick = async () => {
   const module = await import('@/views/modal/bank/BankModal.vue');
