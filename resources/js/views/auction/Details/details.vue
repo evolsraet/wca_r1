@@ -483,7 +483,7 @@
               </div>
             </BottomSheet02>
           </div>
-          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid" class="sticky-top">
+          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid" class="">
              <div class="d-flex justify-content-between align-items-baseline">
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
@@ -492,6 +492,23 @@
               <p class="text-secondary ">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p>
               <p class="text-secondary ">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.taksong_wish_at}}</span></p>
             </div>
+
+            <div v-if="auctionDetail.data.is_taksong === 'ing'">
+
+              <div class="d-flex justify-content-between align-items-baseline pt-4">
+                <h4 class="custom-highlight">탁송 상태 정보</h4>
+              </div>
+              
+              <div class="text-start mt-2">
+              <p class="text-secondary ">상태 :<span class="tc-red ms-1 fw-bold">배송중</span></p>
+              <p class="text-secondary ">탁송 기사 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_courier_name}} / {{auctionDetail.data.taksong_courier_mobile}}</span></p>
+              <p class="text-secondary ">출발 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_departure_address}}</span></p>
+              <p class="text-secondary ">도착 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_dest_address}}</span></p>
+              <p class="text-secondary ">출발 시간 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_departure_at}}</span></p>
+              <!-- <p class="text-secondary ">탁송 도착 시간 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_dest_at}}</span></p> -->
+              </div>
+            </div>
+
             <div>
               <!-- <button class="border-6 btn-fileupload my-4 shadow02 text-secondary opacity-50" @click="AttachedInform">딜러 첨부파일</button> -->
               <button v-if="auctionDetail.data.taksong_wish_at === null && isUser" @click="showModal2" class="btn btn-primary w-100">탁송일 입력하기</button>
