@@ -68,6 +68,11 @@
               </div>
             </div>
             <div v-if="!navigatedThroughHandleRowClick">
+              <div v-if="boardId == 'claim'">
+                <p class="text-secondary opacity-75 fs-6 mb-2">
+                  성능상태점검기록부 또는 사진 파일을 첨부해주세요
+                </p>
+              </div>
               <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUpload">
                 파일 첨부
               </button>

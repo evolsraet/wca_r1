@@ -420,8 +420,8 @@
                 <div  @click.stop="">
                   <div>
                     <div class="d-flex">
-                      <p class="tc-gray bold">도매가 <span class="tc-primary size_26 mx-2">820</span><span class="tc-primary">만원 </span>
-                        <span class="mx-2">|</span> 소매가<span class="tc-primary size_26 mx-2">820</span><span class="tc-primary">만원 </span>
+                      <p class="tc-gray bold">도매가 <span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now_whole }}</span><span class="tc-primary">만원 </span>
+                        <span class="mx-2">|</span> 소매가<span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now }}</span><span class="tc-primary">만원 </span>
                       </p>
                     </div>
                   </div>
