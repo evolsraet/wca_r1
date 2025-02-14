@@ -160,8 +160,10 @@ const confirmSelection = async () => {
     const data = {
       auction: {
         taksong_wish_at: formattedDate,
-        bank: selectedBank.value,
-        account: account.value,
+        // bank: selectedBank.value,
+        // account: account.value,
+        bank: auctionDetail.value?.data?.bank,
+        account: auctionDetail.value?.data?.account,
       }
     };
 
@@ -269,15 +271,15 @@ const toggleView = () => {
     return;
   }
 
-  if (!selectedBank.value || !account.value) {
-    swal.fire({
-      title: '은행 정보 입력 필요',
-      text: '은행과 계좌번호를 입력해 주세요.',
-      icon: 'warning',
-      confirmButtonText: '확인'
-    });
-    return;
-  }
+  // if (!selectedBank.value || !account.value) {
+  //   swal.fire({
+  //     title: '은행 정보 입력 필요',
+  //     text: '은행과 계좌번호를 입력해 주세요.',
+  //     icon: 'warning',
+  //     confirmButtonText: '확인'
+  //   });
+  //   return;
+  // }
   const textOk = `
     <h4 class="mt-4">마지막으로 꼼꼼히 확인해 주세요!</h4>
     <h5 class="tc-red fs-6">&#8251; 매도용 인감증명서를 준비해주세요</h5>
@@ -288,7 +290,7 @@ const toggleView = () => {
       </div>
       <div class="d-flex justify-content-start gap-5 mt-2">
         <p class="mb-0"><span class="me-3">은</span>행</p>
-        <p class="mb-0"><span class="me-2">${selectedBank.value ?? '선택 안됨'}</span>|<span class="ms-2">${account.value ?? '계좌번호 없음'}</span></p>
+        <p class="mb-0"><span class="me-2">${auctionDetail.value?.data?.bank ?? '선택 안됨'}</span>|<span class="ms-2">${auctionDetail.value?.data?.account ?? '계좌번호 없음'}</span></p>
       </div>
     </div>
     <p class="text-secondary opacity-75 text-center mt-3">취소와 변경이 어려우니 유의해 주세요.</p>
