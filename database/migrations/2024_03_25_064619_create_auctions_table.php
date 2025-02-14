@@ -12,7 +12,7 @@ class CreateAuctionsTable extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('owner_name')->comment('소유자명');
-            $table->string('car_no')->comment('차량번호');
+            $table->string('car_no')->comment('차량번호')->index();
             $table->string('status')->default('ask')->comment('진행상태');
             $table->unsignedBigInteger('diag_id')->nullable()->comment('진단아이디');
             $table->timestamp('diag_check_at')->nullable()->comment('진단확인일');
@@ -26,6 +26,7 @@ class CreateAuctionsTable extends Migration
             $table->text('memo_digician')->nullable()->comment('평가사 의견');
             $table->boolean('is_reauction')->default(0)->comment('재경매여부');
             $table->string('is_deposit')->nullable()->comment('입금여부');
+            $table->string('is_taksong')->nullable()->comment('탁송상태');
             $table->boolean('is_biz')->default(0)->comment('법인/사업자차량');
             $table->boolean('is_accident')->default(0)->comment('사고차량');
             $table->timestamp('diag_first_at')->nullable()->comment('진단희망 날짜및시간1');
@@ -50,6 +51,18 @@ class CreateAuctionsTable extends Migration
             $table->timestamp('choice_at')->nullable()->comment('선택일');
             $table->timestamp('taksong_wish_at')->nullable()->comment('탁송희망일');
             $table->timestamp('done_at')->nullable()->comment('완료일');
+
+            // 탁송 정보 
+            $table->string('taksong_courier_fee')->nullable()->comment('탁송요금');
+            $table->string('taksong_courier_name')->nullable()->comment('기사명');
+            $table->string('taksong_courier_mobile')->nullable()->comment('기사전화번호');
+            $table->text('taksong_departure_address')->nullable()->comment('출발지');
+            $table->string('taksong_departure_mobile')->nullable()->comment('출발지 전화번호');
+            $table->text('taksong_dest_address')->nullable()->comment('도착지');
+            $table->string('taksong_dest_mobile')->nullable()->comment('도착지 전화번호');
+            $table->dateTime('taksong_departure_at')->nullable()->comment('출발시간');
+            $table->dateTime('taksong_dest_at')->nullable()->comment('도착시간');
+
             // $table->foreignId('bid_id')->nullable()->constrained()->onDelete('cascade')->onUpdate('cascade');
             // 순서 문제로 bids_table 생성에서 추가
             $table->unsignedInteger('success_fee')->nullable()->comment('성공수수료');

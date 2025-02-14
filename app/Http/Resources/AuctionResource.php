@@ -71,7 +71,7 @@ class AuctionResource extends JsonResource
 
         // 날짜 필드를 Y-m-d 포맷으로 변환 (맨 마지막)
         foreach ($parentArray as $key => $value) {
-            if (str_ends_with($key, '_at') && $value !== null) {
+            if (str_ends_with($key, '_at') && $value !== null && isset($this->$key) && $this->$key instanceof \Carbon\Carbon) {
                 $parentArray[$key] = $this->$key->toDatetimeString();
             }
         }
