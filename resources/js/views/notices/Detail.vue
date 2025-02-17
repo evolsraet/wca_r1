@@ -294,7 +294,7 @@
                 </select>-->
                 <h5 class="my-2">작성 내용</h5>
                 <textarea class="custom-textarea mt-2" rows="6" placeholder="불편사항이나 문제 작성" id="content"></textarea>
-                <div class="btn-group mt-3 mb-4">
+                <div class="btn-group mt-3 mb-4 w-100">
                     <button class="btn btn-primary mt-2"> 작성 완료 </button>
                 </div>
             </div>

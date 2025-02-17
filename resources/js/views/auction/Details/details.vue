@@ -419,7 +419,7 @@
           -->
           <div v-if="auctionDetail.data.status !== 'done' && auctionDetail.data.status !== 'dlvr' && auctionDetail.data.status !== 'chosen'  &&  isDealer" class="sheet-content sticky-top">
             <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
-                <div  @click.stop="">
+                <div @click.stop="">
                   <div>
                     <div class="d-flex">
                       <p class="tc-gray bold">도매가 <span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now_whole }}</span><span class="tc-primary">만원 </span>
@@ -485,7 +485,8 @@
               </div>
             </BottomSheet02>
           </div>
-          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid" class="">
+          <div v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid" class="sheet-content sticky-top">
+          <BottomSheet02 class="">
              <div class="d-flex justify-content-between align-items-baseline">
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
@@ -561,7 +562,7 @@
               </p>
             </button>-->
             </div>
-              <div v-if ="auctionDetail.data.status ==='chosen' && isDealer && scsbid">
+              <div v-if ="auctionDetail.data.status ==='chosen' && isDealer && scsbid" class="text-start">
                 <hr>
               <h4 class="mt-2">탁송 주소지</h4>
               <p class="text-start text-secondary opacity-50">※ 현 주소지로 탁송이 진행 됩니다. </p>
@@ -609,24 +610,27 @@
                     </div>
                     </div>
                   </BottomSheet02> 
-                  <BottomSheet02 v-if="auctionDetail.data.status === 'done' && isDealer && scsbid">
-                    <div>
-                      <h4>낙찰 완료</h4>
-                      <p class="tc-gray mb-3">※ 차량에 문제가 있으신가요?</p>
-                      <div>
-                        <router-link v-if="!isClaimed"
-                          :to="{ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId } }" 
-                          class="my-2 btn btn-primary w-100"
-                          :disabled="disableClaimButton" 
-                          @click.prevent="!isClaimed && navigateToClaim"
-                        >
-                          클레임 신청
-                        </router-link>
-                        <p v-else-if="isClaimed" class="btn primary-disable">클레임 신청 완료</p>
-                      </div>
-                    </div>
-                  </BottomSheet02>
                 </div>
+                    <div v-if="auctionDetail.data.status === 'done' && isDealer && scsbid" class="sheet-content sticky-top">
+                      <BottomSheet02>
+                        <div>
+                          <h4>낙찰 완료</h4>
+                          <p class="tc-gray mb-3">※ 차량에 문제가 있으신가요?</p>
+                          <div>
+                            <router-link v-if="!isClaimed"
+                              :to="{ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId } }" 
+                              class="my-2 btn btn-primary w-100"
+                              :disabled="disableClaimButton" 
+                              @click.prevent="!isClaimed && navigateToClaim"
+                            >
+                              클레임 신청
+                            </router-link>
+                            <p v-else-if="isClaimed" class="btn primary-disable">클레임 신청 완료</p>
+                          </div>
+                        </div>
+                      </BottomSheet02>
+                    </div>
+                  </div>
               </div>
           
                      <!--  바텀 시트 show or black-->
