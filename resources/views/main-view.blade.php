@@ -33,4 +33,17 @@
 <body class="font-sans antialiased" id="app">
     <router-view></router-view>
 </body>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const path = window.location.pathname;
+        const body = document.getElementById('app');
+        if (path.startsWith('/admin')) {
+            body.classList.add('adminPage');
+        } else {
+            body.classList.remove('adminPage');
+        }
+    });
+</script>
+
 </html>
