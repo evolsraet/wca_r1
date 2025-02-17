@@ -179,7 +179,7 @@
                   <div class="icon navigation-ac"></div>
                   <p>네비게이션</p>
                 </div>
-                <div class="option-icon"> c
+                <div class="option-icon">
                   <div class="icon rear-camera-ac"></div>
                   <p>후방카메라</p>
                 </div>
