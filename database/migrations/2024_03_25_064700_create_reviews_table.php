@@ -10,8 +10,9 @@ class CreateReviewsTable extends Migration
     {
         Schema::create('reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('auction_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
-            $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
+            $table->uuid('auction_id');
+            $table->foreign('auction_id')->references('id')->on('auctions')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade')->comment('사용자 아이디');
             $table->foreignId('dealer_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade');
             $table->double('star', 2, 1)->nullable();
             $table->text('content')->nullable();

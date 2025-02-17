@@ -135,6 +135,7 @@ class AuctionFactory extends Factory
         $car = $tmpCars[array_rand($tmpCars)];
 
         $result = [
+            'auction_type' => $this->faker->boolean,
             'user_id' => $user->id,
             'owner_name' => $this->faker->name,
             'car_no' => $this->faker->bothify('##??####'),

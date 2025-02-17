@@ -19,7 +19,7 @@
                             </select>
                         </div>
                         <div class="search-type2 p-0">
-                            <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
+                            <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;" @keyup.enter="searchBtn">
                             <button type="button" class="search-btn" @click="searchBtn">검색</button>
                         </div>
                     </div>
@@ -47,6 +47,9 @@
                                 매물번호
                             </th>
                             <th class="px-6 py-3 bg-gray-50 text-left">
+                                경매/공매
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left">
                                 <div class="flex flex-row items-center justify-content-center justify-between cursor-pointer" @click="updateOrdering('car_no')">
                                     <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider" :class="{ 'font-bold text-blue-600': orderColumn === 'car_no' }">
                                         차량번호
@@ -71,6 +74,12 @@
                                 상태
                             </th>
                             <th class="px-6 py-3 bg-gray-50 text-center">
+                                입찰 종료일
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-center">
+                                입찰 건수
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-center">
                                 비고
                             </th>
                         </tr>
@@ -82,6 +91,11 @@
                             </td> -->
                             <td class="px-6 py-4 text-sm">
                                 {{ auction.id }}
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                <div :class="auction.auction_type === '1' ? 'tc-red' : 'tc-blue'">
+                                    {{ auction.auction_type === '1' ? '공매' : '경매' }}
+                                </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <div class="blue-box">
@@ -105,6 +119,12 @@
                                     <p v-if="auction.status === 'done'" class="ml-auto"><span class="box bg-black">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
                                     <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
                                 </div>
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                {{ auction.final_at ? auction.final_at : '-' }}
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                {{ auction.bids_count ? auction.bids_count : '-' }}
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 <router-link

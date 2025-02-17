@@ -10,7 +10,8 @@ class CreateBidsTable extends Migration
     {
         Schema::create('bids', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('auction_id')->constrained()->onDelete('cascade')->onUpdate('cascade')->comment('경매아이디');
+            $table->uuid('auction_id');
+            $table->foreign('auction_id')->references('id')->on('auctions')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade')->onUpdate('cascade')->comment('딜러 아이디');
             $table->string('status')->nullable()->comment('상태');
             $table->unsignedInteger('price')->comment('입찰가격');
