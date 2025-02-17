@@ -3461,8 +3461,12 @@ input[type="checkbox"] {
 // #app>div:nth-child(2){
 //     margin-top: 71px !important;
 // }
+
 #app > .user-nav-wrap + div{
     margin-top: 71px !important;
+}
+#app.mainPage > .user-nav-wrap + div{
+    margin-top: 66px !important;
 }
 #app > .dealer-nav-wrap + div{
     margin-top: 57px !important;
@@ -3472,8 +3476,6 @@ input[type="checkbox"] {
         margin-top: calc(84px + env(safe-area-inset-top)) !important;
     }
 }
-
-
 
 /*----------------------------------
     공통 : 드롭다운 메뉴 

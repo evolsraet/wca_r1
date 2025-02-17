@@ -145,15 +145,15 @@
             <div class="car-info-grid">
 
               <CarInfoItem label="차량번호" :value="carDetails.no" />
-              <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" :isTitle="true" />
+              <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" />
               <CarInfoItem label="미션" :value="carDetails.mission" />
 
               <CarInfoItem label="제조사" :value="carDetails.maker" />
               <CarInfoItem label="년식" :value="carDetails.year" />
-              <CarInfoItem label="용도변경이력" value="-" :isTitle="true" />
+              <CarInfoItem label="용도변경이력" value="-" />
 
               <CarInfoItem label="모델" :value="carDetails.model" />
-              <CarInfoItem label="배기량" value="2000cc" :isTitle="true" />
+              <CarInfoItem label="배기량" value="2000cc" />
               <CarInfoItem label="튜닝이력" value="1회" />
 
               <CarInfoItem label="등급" :value="carDetails.grade" />
@@ -179,7 +179,7 @@
                   <div class="icon navigation-ac"></div>
                   <p>네비게이션</p>
                 </div>
-                <div class="option-icon"> c
+                <div class="option-icon">
                   <div class="icon rear-camera-ac"></div>
                   <p>후방카메라</p>
                 </div>
@@ -232,97 +232,112 @@
               <li class="info-num">-</li>
             </ul>
           </div>
-          <div class="contour-style"></div>
-          <div class="container px-4 py-5">
-            <h5>이력</h5>
-            <div class="p-4 rounded text-body-emphasis bg-body-secondary">
-              <ul class="mt-0 machine-inform-title">
-                <li class="text-secondary opacity-50">용도 변경이력</li>
-                <li class="info-num">-</li>
-              </ul>
-              <ul class="mt-0 machine-inform-title">
-                <li class="text-secondary opacity-50">소유자 변경</li>
-                <li class="info-num">1</li>
-              </ul>
-              <ul class="mt-0 machine-inform-title">
-                <li class="text-secondary opacity-50">압류/저당</li>
-                <li class="info-num">-</li>
-              </ul>
-              <ul class="mt-0 mb-0 machine-inform-title">
-                <li class="text-secondary opacity-50">특수사고 이력</li>
-                <li class="info-num">전손 0 침수 0 도난 0</li>
-              </ul>
-            </div>
-            <div class="flex-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
-              <div class="column" style="width: 48%; overflow-x: auto;">
-                <h5 class="mt-5">내차피해 (<span class="tc-red">1</span>건)</h5>
-                <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
-                  <div class="tbl_basic">
-                    <table style="min-width: 600px;">
-                      <tbody>
-                        <tr>
-                          <th>일시</th>
-                          <th>부품</th>
-                          <th>공임</th>
-                          <th>조회</th>
-                          <th>날짜</th>
-                        </tr>
-                        <tr>
-                          <td>2024-03-22</td>
-                          <td>12,000</td>
-                          <td>10,000</td>
-                          <td>7</td>
-                          <td>2022-05-01</td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="column" style="width: 48%; overflow-x: auto;">
-                <h5 class="mt-5">타차피해 (<span class="tc-red">1</span>건)</h5>
-                <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
-                  <div class="tbl_basic">
-                    <table style="min-width: 600px;">
-                      <tbody>
-                        <tr>
-                          <th>일시</th>
-                          <th>부품</th>
-                          <th>공임</th>
-                          <th>조회</th>
-                          <th>날짜</th>
-                        </tr>
-                        <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
-                        <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
-                        <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
-                      </tbody>
-                    </table>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <h5 class="mt-5">판매자 메모</h5>
-            <div class="form-group">
-              <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo || "판매자 메모사항이 없습니다."}}</textarea>
-            </div>
-            <h5 class="mt-5">평가자 의견</h5>
-            <div class="form-group">
-              <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo_digician || "평가자의 의견이 아직 없습니다." }}</textarea>
-            </div>
-            <ul class="machine-inform-title">
-              <li class="text-secondary opacity-50">거래지역</li>
-              <li class="info-num">경기>성남시 중원구</li>
-            </ul>
-            <ul class="machine-inform-title">
-              <li class="text-secondary opacity-50">기타이력</li>
-              <li class="info-num">-</li>
-            </ul>
-            <ul class="machine-inform-title">
-              <li class="text-secondary opacity-50">차량명의</li>
-              <li class="info-num">개인</li>
-            </ul>
+          
+          
+          <!-- <div class="contour-style"></div> -->
+
+          <div>
+            <a href="#" class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="toggleCarHistory">차량 세부정보</a>
           </div>
+
+          <div id="car-history-detail" v-if="showCarHistory">
+            <!-- 차량 세부 정보 내용 -->
+
+            <div class="container px-4 py-5">
+              <h5>이력</h5>
+              <div class="p-4 rounded text-body-emphasis bg-body-secondary">
+                <ul class="mt-0 machine-inform-title">
+                  <li class="text-secondary opacity-50">용도 변경이력</li>
+                  <li class="info-num">-</li>
+                </ul>
+                <ul class="mt-0 machine-inform-title">
+                  <li class="text-secondary opacity-50">소유자 변경</li>
+                  <li class="info-num">1</li>
+                </ul>
+                <ul class="mt-0 machine-inform-title">
+                  <li class="text-secondary opacity-50">압류/저당</li>
+                  <li class="info-num">-</li>
+                </ul>
+                <ul class="mt-0 mb-0 machine-inform-title">
+                  <li class="text-secondary opacity-50">특수사고 이력</li>
+                  <li class="info-num">전손 0 침수 0 도난 0</li>
+                </ul>
+              </div>
+              <div class="flex-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                <div class="column" style="overflow-x: auto;">
+                  <h5 class="mt-5">내차피해 (<span class="tc-red">1</span>건)</h5>
+                  <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
+                    <div class="tbl_basic">
+                      <table style="min-width: 600px;">
+                        <tbody>
+                          <tr>
+                            <th>일시</th>
+                            <th>부품</th>
+                            <th>공임</th>
+                            <th>조회</th>
+                            <th>날짜</th>
+                          </tr>
+                          <tr>
+                            <td>2024-03-22</td>
+                            <td>12,000</td>
+                            <td>10,000</td>
+                            <td>7</td>
+                            <td>2022-05-01</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+                
+                <div class="column" style="overflow-x: auto;">
+                  <h5 class="mt-5">타차피해 (<span class="tc-red">1</span>건)</h5>
+                  <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
+                    <div class="tbl_basic">
+                      <table style="min-width: 600px;">
+                        <tbody>
+                          <tr>
+                            <th>일시</th>
+                            <th>부품</th>
+                            <th>공임</th>
+                            <th>조회</th>
+                            <th>날짜</th>
+                          </tr>
+                          <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
+                          <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
+                          <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <h5 class="mt-5">판매자 메모</h5>
+              <div class="form-group">
+                <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo || "판매자 메모사항이 없습니다."}}</textarea>
+              </div>
+              <h5 class="mt-5">평가자 의견</h5>
+              <div class="form-group">
+                <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo_digician || "평가자의 의견이 아직 없습니다." }}</textarea>
+              </div>
+              <ul class="machine-inform-title">
+                <li class="text-secondary opacity-50">거래지역</li>
+                <li class="info-num">경기>성남시 중원구</li>
+              </ul>
+              <ul class="machine-inform-title">
+                <li class="text-secondary opacity-50">기타이력</li>
+                <li class="info-num">-</li>
+              </ul>
+              <ul class="machine-inform-title">
+                <li class="text-secondary opacity-50">차량명의</li>
+                <li class="info-num">개인</li>
+              </ul>
+            </div>
+
+          </div>
+
+          
+
         </div>
         <!--
           사용자 바텀시트
@@ -1801,6 +1816,7 @@ let timer;
 const currentTime = ref(new Date());
 onMounted(async () => {
   await fetchAuctionDetail();
+  document.title = auctionDetail.value.data.car_model +' '+ auctionDetail.value.data.car_model_sub +' - 위카옥션';
   timer = setInterval(() => {
     currentTime.value = new Date();
   }, 1000);
@@ -1946,6 +1962,14 @@ async function loadPage(page) {
   window.scrollTo(0, 0);
 }
 
+// 차량 세부 정보의 가시성을 제어하는 상태
+const showCarHistory = ref(false);
+
+// 차량 세부 정보의 가시성을 토글하는 함수
+function toggleCarHistory() {
+  showCarHistory.value = !showCarHistory.value;
+}
+
 </script>
 
 
@@ -1990,5 +2014,11 @@ input[type="checkbox"]{align-self:center;}
 .scrollable-content{max-height:300px;overflow-y:auto;}
 .sticky-top{position:sticky;top:71px;z-index:1020;height:100px;}
 .sheet-content-wrap{width:100%!important;}
+
+.flex-container .column{width:48%;}
+
+@media (max-width:991px) {
+  .flex-container .column{width:100%;}
+}
 
 </style>
