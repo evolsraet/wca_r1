@@ -148,16 +148,16 @@ class Auction extends Model implements HasMedia
         }
     }
 
-    protected static function boot()
-    {
-        parent::boot();
+    // protected static function boot()
+    // {
+    //     parent::boot();
 
-        static::creating(function ($auction) {
-            // $auction->id = (string) Str::uuid();
-            $auction->unique_number = generateUniqueNumber();
-            $auction->id = $auction->unique_number;
-        });
-    }
+    //     static::creating(function ($auction) {
+    //         // $auction->id = (string) Str::uuid();
+    //         $auction->unique_number = generateUniqueNumber();
+    //         // $auction->id = $auction->unique_number;
+    //     });
+    // }
 }
 
 function generateRandomId()

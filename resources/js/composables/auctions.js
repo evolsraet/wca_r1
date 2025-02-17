@@ -333,6 +333,7 @@ const AuctionCarInfo = async (carInfoForm) => {
 
     let payload = {
         auction : {
+            auction_type: auctionData.auction.auction_type,
             owner_name: auctionData.auction.owner_name,
             car_no: auctionData.auction.car_no,
             region: auctionData.auction.region,

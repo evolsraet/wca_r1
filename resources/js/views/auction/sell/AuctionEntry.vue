@@ -345,6 +345,7 @@ const auctionEntry = async () => {
   }
 
   const auctionData = {
+    auction_type: '0',
     owner_name: ownerName.value,
     car_no: carNumber.value,
     region: selectedRegion.value,

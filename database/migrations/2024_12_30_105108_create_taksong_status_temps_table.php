@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('taksong_status_temps', function (Blueprint $table) {
             $table->id();
-            $table->uuid('auction_id'); // UUID 타입으로 변경
-            $table->foreign('auction_id')->references('id')->on('auctions')->onDelete('cascade')->onUpdate('cascade');
+            $table->foreignId('auction_id')->constrained()->onDelete('cascade')->onUpdate('cascade')->comment('경매아이디');
             $table->string('chk_id')->nullable()->comment('탁송아이디');
             $table->string('chk_status')->nullable()->comment('탁송상태');
             $table->timestamps();
