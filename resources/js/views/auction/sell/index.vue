@@ -5,27 +5,33 @@
             <template v-else>
                 <h4>차량 정보 조회 되었어요</h4>
                 <hr>
-                <CarInfoItem label="차량번호" :value="carDetails.no" icon="car-icon" :isTitle="true" />
-                <CarInfoItem label="제조사" :value="carDetails.maker" />
-                <CarInfoItem label="차명" :value="carDetails.model" />
-                <CarInfoItem label="세부모델" :value="carDetails.modelSub" />
-                <CarInfoItem label="등급" :value="carDetails.grade" />
-                <!-- <CarInfoItem label="세부등급" :value="carDetails.gradeSub" /> -->
+                <div class="car-info-grid">
 
-                <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" icon="car-aside-icon" :isTitle="true" />
-                <CarInfoItem label="년식" :value="carDetails.year" />
-                <CarInfoItem label="차량유형" value="종합 승용차" />
-
-                <CarInfoItem label="배기량" value="2000cc" icon="gasoline-icon" :isTitle="true" />
-                <CarInfoItem label="연료" :value="carDetails.fuel" />
+                <CarInfoItem label="차량번호" :value="carDetails.no" />
+                <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" :isTitle="true" />
                 <CarInfoItem label="미션" :value="carDetails.mission" />
 
-                <CarInfoItem label="용도변경이력" value="-" icon="clean-icon" :isTitle="true" />
+                <CarInfoItem label="제조사" :value="carDetails.maker" />
+                <CarInfoItem label="년식" :value="carDetails.year" />
+                <CarInfoItem label="용도변경이력" value="-" :isTitle="true" />
+
+                <CarInfoItem label="모델" :value="carDetails.model" />
+                <CarInfoItem label="배기량" value="2000cc" :isTitle="true" />
                 <CarInfoItem label="튜닝이력" value="1회" />
+
+                <CarInfoItem label="등급" :value="carDetails.grade" />
+                <CarInfoItem label="연료" :value="carDetails.fuel" />
                 <CarInfoItem label="리콜이력" value="-" />
+
+                <div class="detail-row" v-if="carDetails.modelSub || carDetails.gradeSub">
+                <CarInfoItem label="세부모델" :value="carDetails.modelSub" v-if="carDetails.modelSub" />
+                <CarInfoItem label="세부등급" :value="carDetails.gradeSub" v-if="carDetails.gradeSub" />
+                </div>
+
+                </div>
             </template>
-        </div>
-         <BottomSheet02 class="mt-5" initial="half" :dismissable="true">
+                </div>
+                <BottomSheet02 class="mt-5" initial="half" :dismissable="true">
                     <div class="top-content-style wd-100">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(소매가)</span></p>
                         <span class="tc-primary bold-18-font">{{ carDetails.priceNow }} 만원</span>
@@ -838,7 +844,7 @@ const applyAuction = () => {
 }
 @media (min-width: 1400px) {
     .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
-        max-width: 1000px;
+        max-width: 1073px;
     }
 }
 
