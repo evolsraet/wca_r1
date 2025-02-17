@@ -16,7 +16,7 @@ TODO:
    
      <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded" @click.stop="">후기 남기기</div>
   </div>-->
-  <div class="container my-5 auction-content">
+  <div class="my-5 container auction-content" style="margin-top: 6rem !important;">
     <div class="px-2 d-flex justify-content-between">
       <div>      
         <h5>소·도매 시세를 확인해보세요</h5>
@@ -37,7 +37,7 @@ TODO:
       </div>
     </div>
     </div>
-  <div class="content-main mt-3" :class="{ row: isDealer }">
+  <div class="content-main mt-5" :class="{ row: isDealer }">
      <Filter/>
           <!-- 메인 컨텐츠 -->
           <div class="col-md-9 auction-main">
