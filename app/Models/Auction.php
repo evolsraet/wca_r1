@@ -75,7 +75,8 @@ class Auction extends Model implements HasMedia
         'region',
         'addr1',
         'addr2',
-        'car_model'
+        'car_model',
+        'auction_type'
     ];
 
     public $enums = [

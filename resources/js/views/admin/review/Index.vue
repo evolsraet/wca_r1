@@ -1,15 +1,18 @@
 <template>
     <div class="row justify-content-center my-2 p-3">
-        <div class="col-md-12">
+
+        <div class="col-md-12 d-flex justify-content-between">
             <h4>후기 관리<p class="text-secondary opacity-75 fs-6 my-3">후기 관리 페이지 입니다.</p></h4>
-            </div>
             <div class="search-type2 mb-2" style="display: flex; align-items: center;">
-                    <div class="border-xsl" style="margin-right: 10px;">
-                        <div class="image-icon-excel pointer" @click="downloadUsersExcel">
-            
-                        </div>
+                <div class="border-xsl" style="margin-right: 10px;">
+                    <div class="image-icon-excel pointer" @click="downloadUsersExcel">
+        
                     </div>
                 </div>
+            </div>
+        </div>
+
+        
                 <div class="container mb-3">
                     <div class="d-flex justify-content-end responsive-flex-end gap-2">
                         <div class="text-end select-option">
@@ -28,6 +31,9 @@
                             </div>
                         </div>
                     </div>
+
+                    
+
                     <div class="o_table_mobile my-5">
                     <div class="tbl_basic tbl_dealer">
                         <table class="table">

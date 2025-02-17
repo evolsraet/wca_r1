@@ -7,8 +7,39 @@
         <div class="container my-4 mov-wide">
           <div>
             <div class="mb-4">
+
+              <div class="d-flex align-items-baseline justify-content-between">
+                <h4>No.{{id}}<span class="text-secondary opacity-50 ms-3 fw-lighter">차량번호 {{auction.car_no}}</span></h4>
+                <input type="hidden" v-model="auction.car_no" id="car_no">
+              </div>
+
+              <div class="sell-info mb-5">
+                  <div class="car-image-style">
+                    <div class="card-img-top-ty01" :style="{ backgroundImage: `url(${auction.car_thumbnail})` }">
+                      <!-- <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2"> -->
+                    </div>
+                  </div>
+                  <div class="car-info">
+                      <div class="item">
+                          <span class="label">등록일자</span>
+                          <span class="value">{{ created_at }}</span>
+                          <input type="hidden" v-model="created_at" id="created_at">
+                      </div>
+                      <div class="item">
+                          <span class="label">최종 수정일자</span>
+                          <span class="value">{{ updated_at }}</span>
+                          <input type="hidden" v-model="updated_at" id="updated_at">
+                      </div>
+                      <div class="total">
+                          <span>소유자명</span>
+                          <span>{{ auction.owner_name }}</span>
+                          <input type="hidden" v-model="auction.owner_name" id="owner_name">
+                      </div>
+                  </div>
+              </div>
+
               <div class="card my-auction">
-                <div v-if="!isMobileView" class="img-container">
+                <!-- <div v-if="!isMobileView" class="img-container">
                   <div class="img-wrapper">
                     <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2">
                   </div>
@@ -17,13 +48,15 @@
                   <div class="img-wrapper">
                     <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2">
                   </div>
-                </div>
+                </div> -->
                 <!--
                 <div class="card-body">
                   <p class="text-secondary opacity-50">수정일자</p>
                   <input v-model="auction.updated_at" id="updatedAt" class="form-control" type="datetime-local">
                 </div>-->
-                <div class="card-body">
+
+
+                <!-- <div class="card-body">
                   <p class="text-secondary opacity-50">차량번호</p>
                   <input v-model="auction.car_no" id="car_no" class="form-control"/>
                 </div>
@@ -38,7 +71,9 @@
                 <div class="card-body">
                   <p class="text-secondary opacity-50">소유자명</p>
                   <input v-model="auction.owner_name" id="owner_name" class="form-control"/>
-                </div>
+                </div> -->
+
+                
                 <div class="card-body">
                   <p class="text-secondary opacity-50">상태</p>
                   <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
@@ -924,6 +959,15 @@ onBeforeUnmount(() => {
 .bottom-sheet {
   height: auto !important;
 }
+/* .card-img-top-ty01 {
+  width: 100%;
+  height: 160px;
+  background-image: url('../../../../img/car_example.png');
+  background-size: cover;
+  background-position: center;
+  border-radius: 6px;
+} */
+
 .card-img-top-ty01 {
   width: 100%;
   height: 160px;
@@ -932,6 +976,7 @@ onBeforeUnmount(() => {
   background-position: center;
   border-radius: 6px;
 }
+
 .slide-enter-active, .slide-leave-active {
   transition: all 0.5s ease;
 }
@@ -975,5 +1020,57 @@ onBeforeUnmount(() => {
     .img-container{
         height: auto !important;
     }
+}
+
+.sell-info {
+          display: flex;
+          align-items: center;
+          border: 1px solid #ccc;
+          border-radius: 10px;
+          width: 100%;
+          padding-right: 25px;
+      }
+      .car-image-style {
+          flex: 1;
+      }
+      .car-info {
+          flex: 1;
+          padding-left: 25px;
+      }
+      .car-info .item {
+          display: flex;
+          justify-content: space-between;
+          margin-bottom: 10px;
+      }
+      .car-info .item .label {
+          font-weight: bold;
+      }
+      .car-info .total {
+          display: flex;
+          justify-content: space-between;
+          font-size: 1.2em;
+          font-weight: bold;
+          color: blue;
+      }
+  .container-receipt {
+    position: relative;
+    text-align: center;
+    color: white;
+  }
+  .text-block {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 20px;
+  }
+ @media (max-width: 400px) {
+.car-info {
+  padding-left: 10px;
+}
+.sell-info{
+  padding-right: 15px;
+}
 }
 </style>

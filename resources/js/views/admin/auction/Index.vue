@@ -1,29 +1,47 @@
 <template>
     <div class="row justify-content-center my-2 p-3">
         
-        <div class="col-md-12">
+        <div class="col-md-12 d-flex justify-content-between">
             <h4>매물 관리<p class="text-secondary opacity-75 fs-6 my-3">매물의 상세 관리, 상태 수정이 가능합니다.</p></h4>
-            </div>
             <div class="search-type2 mb-2" style="display: flex; align-items: center;">
-                    <div class="border-xsl" style="margin-right: 10px;">
-                        <div class="image-icon-excel pointer" @click="downloadUsersExcel">
-            
-                        </div>
+                <div class="border-xsl" style="margin-right: 10px;">
+                    <div class="image-icon-excel pointer" @click="downloadUsersExcel">
+        
                     </div>
                 </div>
-                <div class="container mb-3">
-                    <div class="d-flex justify-content-end responsive-flex-end gap-2">
-                        <div class="text-end select-option">
-                            <select class="form-select select-rank" aria-label="상태" @change="event => setFilter(event.target.value)">
-                                <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == 'all'">{{ label }}</option>
-                            </select>
-                        </div>
-                        <div class="search-type2 p-0">
-                            <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;" @keyup.enter="searchBtn">
-                            <button type="button" class="search-btn" @click="searchBtn">검색</button>
-                        </div>
-                    </div>
+            </div>
+        </div>
+
+
+        <div class="container mb-3 d-flex flex-column flex-md-row justify-content-between">
+
+            <div class="text-end status-selector">
+                <input type="radio" name="auction_type" value="all" id="all" hidden checked @change="setAuctionTypeFilter('all')">
+                <label for="all" class="mx-2">전체</label>
+
+                <input type="radio" name="auction_type" value="auction" id="auction" hidden @change="setAuctionTypeFilter('auction')">
+                <label for="auction">경매</label>
+
+                <input type="radio" name="auction_type" value="tender" id="tender" hidden @change="setAuctionTypeFilter('tender')">
+                <label for="tender" class="mx-2">공매</label>
+            </div>
+
+            <div class="d-flex justify-content-end responsive-flex-end gap-3">
+                
+                
+                <div class="text-end select-option">
+                    <select class="form-select select-rank" @change="event => setStatusFilter(event.target.value)">
+                        <option v-for="(label, value) in statusLabel" :key="value" :value="value" :selected="value == 'all'">{{ label }}</option>
+                    </select>
                 </div>
+                <div class="search-type2 p-0">
+                    <input type="text" placeholder="회원 검색" v-model="search_title" id="searchUserName" @keyup.enter="searchBtn" style="width: auto !important; margin-right: 10px;"/>
+                    <button type="button" class="search-btn" @click="searchBtn">검색</button>
+                </div>
+            </div>
+        </div>
+
+
         <div class="o_table_mobile my-5">
             <div class="tbl_basic tbl_dealer">
                 <div class="overflow-auto">
@@ -42,13 +60,14 @@
                                     </div>
                                 </div>
                             </th> -->
-
-                            <th class="px-6 py-3 bg-gray-50 justify-content-center">
-                                매물번호
-                            </th>
                             <th class="px-6 py-3 bg-gray-50 text-left">
                                 경매/공매
                             </th>
+                            
+                            <th class="px-6 py-3 bg-gray-50 justify-content-center">
+                                매물번호
+                            </th>
+
                             <th class="px-6 py-3 bg-gray-50 text-left">
                                 <div class="flex flex-row items-center justify-content-center justify-between cursor-pointer" @click="updateOrdering('car_no')">
                                     <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider" :class="{ 'font-bold text-blue-600': orderColumn === 'car_no' }">
@@ -70,14 +89,15 @@
                                 등록년도
                             </th>
 
-                            <th class="px-6 py-3 text-left">
-                                상태
-                            </th>
+                            
                             <th class="px-6 py-3 bg-gray-50 text-center">
                                 입찰 종료일
                             </th>
                             <th class="px-6 py-3 bg-gray-50 text-center">
                                 입찰 건수
+                            </th>
+                            <th class="px-6 py-3 text-left">
+                                상태
                             </th>
                             <th class="px-6 py-3 bg-gray-50 text-center">
                                 비고
@@ -90,17 +110,15 @@
                                 {{ auction.created_at }}
                             </td> -->
                             <td class="px-6 py-4 text-sm">
-                                {{ auction.id }}
-                            </td>
-                            <td class="px-6 py-4 text-sm">
                                 <div :class="auction.auction_type === '1' ? 'tc-red' : 'tc-blue'">
                                     {{ auction.auction_type === '1' ? '공매' : '경매' }}
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                <div class="blue-box">
-                                    {{ auction.car_no }}
-                                </div>
+                                {{ auction.id }}
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                {{ auction.car_no }}
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 {{ auction.car_model }}
@@ -108,6 +126,14 @@
                             <td class="px-6 py-4 text-sm">
                                 {{ auction.car_year }}
                             </td>
+                            
+                            <td class="px-6 py-4 text-sm">
+                                {{ auction.final_at ? auction.final_at : '-' }}
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                {{ auction.bids_count ? auction.bids_count : '-' }}
+                            </td>
+                            
                             <td class="px-6 py-4 text-sm">
                                 <div>
                                     <p v-if="auction.status === 'chosen'" class="ml-auto"><span class="blue-box02 bg-opacity-50">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
@@ -120,12 +146,7 @@
                                     <p v-if="auction.status === 'dlvr'" class="ml-auto"><span class="box bg-info">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
                                 </div>
                             </td>
-                            <td class="px-6 py-4 text-sm">
-                                {{ auction.final_at ? auction.final_at : '-' }}
-                            </td>
-                            <td class="px-6 py-4 text-sm">
-                                {{ auction.bids_count ? auction.bids_count : '-' }}
-                            </td>
+
                             <td class="px-6 py-4 text-sm">
                                 <router-link
                                     :to="{ 
@@ -191,6 +212,7 @@
     const { can } = useAbility();
     const currentStatus = ref('all'); 
     const currentPage = ref(1); // 현재 페이지 번호
+    const currentAuctionType = ref('all');
     const orderingState = {
         created_at: { direction: '', column: '', hit: 0 },
         car_no: { direction: '', column: '', hit: 0 },
@@ -249,11 +271,34 @@
         fetchAuctions();
     }
 
+    const setStatusFilter = (status) => {
+        currentPage.value = 1;
+        currentStatus.value = status;
+        fetchAuctions();
+    }
+
+    const setAuctionTypeFilter = (type) => {
+        currentPage.value = 1;
+        switch(type){
+            case 'all':
+                currentAuctionType.value = 'all';
+                break;
+            case 'auction':
+                currentAuctionType.value = '0';
+                break;
+            case 'tender':
+                currentAuctionType.value = '1';
+                break;
+        }
+        fetchAuctions();
+    }
+
     function fetchAuctions() {
         adminGetAuctions(   currentPage.value,
                             orderColumn.value,
                             orderDirection.value,
                             currentStatus.value,
+                            currentAuctionType.value,
                             search_title.value
                         );
     }   

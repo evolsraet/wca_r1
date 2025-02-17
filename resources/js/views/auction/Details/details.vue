@@ -1986,7 +1986,7 @@ input[type="checkbox"]{align-self:center;}
 .card-img-top-ty02{border-top-left-radius:6px;border-top-right-radius:6px;}
 .flex-column .card-img-top-ty02{border-top-left-radius:0px!important;border-bottom-left-radius:0px!important;border-top-right-radius:6px;border-top-left-radius:6px!important;}
 .img_box img{width:100%;height:100%;object-fit:cover;}
-.sheet.half{max-height:none!important;height:calc(fit-content+env(safe-area-inset-bottom))!important;}
+.sheet.half{max-height:none!important;height:calc(fit-content + env(safe-area-inset-bottom))!important;}
 .scrollable-content{max-height:300px;overflow-y:auto;}
 .sticky-top{position:sticky;top:71px;z-index:1020;height:100px;}
 .sheet-content-wrap{width:100%!important;}

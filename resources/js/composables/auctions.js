@@ -32,12 +32,17 @@ export default function useAuctions() {
         column = '',
         direction = '',
         status = 'all',
+        auctionType = 'all',
         search_title = ''
     ) => {
         const apiList = [];
 
         if(status != 'all'){
             apiList.push(`auctions.status:${status}`)
+        }
+
+        if(auctionType != 'all'){
+            apiList.push(`auctions.auction_type:${auctionType}`)
         }
 
         return wicac.conn()
@@ -467,6 +472,8 @@ const updateAuction = async (id,auction) => {
             addr2: auction.addr2,
             success_fee: auction.success_fee,
             diag_fee: auction.diag_fee,
+            diag_first_at: auction.diag_first_at,
+            diag_second_at: auction.diag_second_at,
             total_fee: auction.total_fee,
             hope_price: auction.hope_price,
             final_price: auction.final_price,
