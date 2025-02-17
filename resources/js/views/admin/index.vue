@@ -3,7 +3,7 @@
         <div class="card-container mt-5">
             <div class="section">
                 <h5 class="text-start"><span class="admin-icon admin-icon-menu"></span>회원 {{ userAllCnt }}</h5>
-                <div class="card">
+                <div class="card" @click="navigateTo('회원')">
                     <div class="number d-flex justify-content-between">심사중 <span class="tc-red">{{ animatedUserAskCnt }}</span></div>
                     <div class="number d-flex justify-content-between">정&nbsp;&nbsp;상 <span>{{ animatedUserOkCnt }}</span></div>
                     <div class="divider"></div>
@@ -13,7 +13,7 @@
             </div>
             <div class="section">
                 <h5 class="text-start"><span data-v-831d09df="" class="admin-icon admin-icon-menu02"></span>입금</h5>
-                <div class="card">
+                <div class="card" @click="navigateTo('입금')">
                     <div class="number d-flex justify-content-between">입금 대기 <span class="tc-red">{{ animatedAuctionDlvrCnt }}</span></div>
                     <div class="divider"></div>
                     <div class="d-flex justify-content-between text-secondary opacity-50">입금 완료 <span>{{ animatedAuctionDoneCnt }}</span></div>
@@ -21,7 +21,7 @@
             </div>
             <div class="section">
                 <h5 class="text-start"><span data-v-ee657362="" class="admin-icon admin-icon-menu03"></span>매물 {{ auctionAllCnt }}</h5>
-                <div class="card">
+                <div class="card" @click="navigateTo('매물')">
                     <div class="number d-flex justify-content-between">신청 완료<span class="tc-red">{{ animatedAuctionAskCnt }}</span></div>
                     <div class="number d-flex justify-content-between">진단 중<span class="tc-red">{{ animatedAuctionDiagCnt }}</span></div>
                     <div class="number d-flex justify-content-between">경매 중<span class="tc-red">{{ animatedAuctionWIAddCnt }}</span></div>
@@ -33,7 +33,7 @@
             </div>
             <div class="section">
                 <h5 class="text-start"><span data-v-ee657362="" class="admin-icon admin-icon-menu04"></span>후기 {{ reviewAllCnt }}</h5>
-                <div class="card">
+                <div class="card" @click="navigateTo('후기')">
                     <div class="number d-flex justify-content-between">작성<span class="tc-red">{{ animatedReviewWriteCnt }}</span></div>
                     <div class="divider"></div>
                     <div class="d-flex justify-content-between text-secondary opacity-50">미작성 <span>{{ animatedReviewNotWriteCnt }}</span></div>
@@ -222,6 +222,27 @@ onMounted(async () => {
 const goToDetail = (postId) => {
   router.push({ name: 'posts.edit', params: { boardId: 'notice', id: postId }, query: { navigatedThroughHandleRowClick: true } });
 };
+
+function navigateTo(status) {
+  let routeName;
+  switch (status) {
+    case '회원':
+      routeName = 'users.index'; // 심사중 페이지의 라우트 이름
+      break;
+    case '입금':
+      routeName = 'deposit.index'; // 정상 페이지의 라우트 이름
+      break;
+    case '매물':
+      routeName = 'auctions.index'; // 가입거부 페이지의 라우트 이름
+      break;
+    case '후기':
+      routeName = 'review.index'; // 가입거부 페이지의 라우트 이름
+      break;
+    default:
+      return;
+  }
+  router.push({ name: routeName });
+}
 </script>
 
 <style scoped>
@@ -259,5 +280,9 @@ const goToDetail = (postId) => {
 #dashadmin tbody .actions {
     width: 10%;
     text-align: right;
+}
+
+#dashadmin .card {
+    cursor: pointer;
 }
 </style>
