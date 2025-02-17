@@ -281,4 +281,8 @@ function navigateTo(status) {
     width: 10%;
     text-align: right;
 }
+
+#dashadmin .card {
+    cursor: pointer;
+}
 </style>
