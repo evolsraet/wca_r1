@@ -2,7 +2,7 @@
   <div class="container-fluid" v-if="auctionDetail">
     <div v-if="isDealer || !chosendlvr && !auctionChosn && !showReauctionView && (auctionDetail.data.status !== 'wait' && isUser)" class="container">
       <div class="web-content-style02">
-        <div class="container p-1">
+        <div class="container p-1 auction-container-style">
           <div>
             <div>
               <div class="mb-2">
@@ -1955,6 +1955,11 @@ async function loadPage(page) {
 @media (min-width:992px) {.mov-wide{width:80vw;margin:auto;}.hv-25{height:auto!important;}}
 @media (max-width:991px) {.container{--bs-gutter-x:0rem!important;max-width:none!important;}}
 @media (max-width:406px) {.img-container{height:auto!important;max-width:400px;}}
+@media (max-width: 1199px) and (min-width: 992px) {
+  .auction-container-style {
+    width: 500px;
+  }
+}
 
 .animCircle::after{border-radius:50%;}
 .dealer-check{margin-top:50px;display:flex;align-items:center;justify-content:space-between;background:#F5F5F6;border-radius:30px;padding:10px;}
@@ -1986,7 +1991,7 @@ input[type="checkbox"]{align-self:center;}
 .card-img-top-ty02{border-top-left-radius:6px;border-top-right-radius:6px;}
 .flex-column .card-img-top-ty02{border-top-left-radius:0px!important;border-bottom-left-radius:0px!important;border-top-right-radius:6px;border-top-left-radius:6px!important;}
 .img_box img{width:100%;height:100%;object-fit:cover;}
-.sheet.half{max-height:none!important;height:calc(fit-content+env(safe-area-inset-bottom))!important;}
+.sheet.half{max-height:none!important;/*height:calc(fit-content+env(safe-area-inset-bottom))!important;*/    height: min-content !important;}
 .scrollable-content{max-height:300px;overflow-y:auto;}
 .sticky-top{position:sticky;top:71px;z-index:1020;height:100px;}
 .sheet-content-wrap{width:100%!important;}
