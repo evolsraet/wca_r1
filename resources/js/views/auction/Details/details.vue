@@ -5,7 +5,7 @@
         <div class="container p-1">
           <div>
             <div>
-              <div class="mb-4">
+              <div class="mb-2">
                 <div class="card my-auction">
                   <div>
                     <div class="mb-3 px-0" v-if="auctionDetail.data.status === 'ask' || auctionDetail.data.status === 'diag'">
@@ -91,7 +91,7 @@
                     <div v-if="auctionDetail.data.status !== 'diag' && auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'cancel'">
                       <!-- <p v-if="!showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 숨기기</p> -->
                       <!-- <p v-if="showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p> -->
-                      <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
+                      <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
                       <!-- <div class="mt-5" v-if="!showPdf">
                       <h5>진단 평가</h5>
                       <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
@@ -105,11 +105,11 @@
                       </div> -->
                     </div>
                     <div v-if="auctionDetail.data.status === 'chosen' && isDealer">
-                      <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
+                      <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
                     </div>
                     <div v-if="auctionDetail.data.status === 'chosen' && isUser">
                       <div v-if="auctionDetail.data.top_bids[0].dealerInfo.biz_check">
-                        <p class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">구매자 사업자등록증</p>
+                        <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">구매자 사업자등록증</p>
                       </div>
                     </div>
                </div>
@@ -140,26 +140,32 @@
               </div>
             </div>
           </div>
-          <div class="container p-4">
-            <h5>차량 정보</h5>
-              <CarInfoItem label="차량번호" :value="carDetails.no" icon="car-icon" :isTitle="true" />
-              <CarInfoItem label="제조사" :value="carDetails.maker" />
-              <CarInfoItem label="모델" :value="carDetails.model" />
-              <CarInfoItem label="세부모델" :value="carDetails.modelSub" />
-              <CarInfoItem label="등급" :value="carDetails.grade" />
-              <CarInfoItem label="세부등급" :value="carDetails.gradeSub" />
+          <div class="container">
+            <h4 class="mb-4">차량 정보</h4>
+            <div class="car-info-grid">
 
-              <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" icon="car-aside-icon" :isTitle="true" />
-              <CarInfoItem label="년식" :value="carDetails.year" />
-              <CarInfoItem label="차량유형" value="종합 승용차" />
-
-              <CarInfoItem label="배기량" value="2000cc" icon="gasoline-icon" :isTitle="true" />
-              <CarInfoItem label="연료" :value="carDetails.fuel" />
+              <CarInfoItem label="차량번호" :value="carDetails.no" />
+              <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" :isTitle="true" />
               <CarInfoItem label="미션" :value="carDetails.mission" />
 
-              <CarInfoItem label="용도변경이력" value="-" icon="clean-icon" :isTitle="true" />
+              <CarInfoItem label="제조사" :value="carDetails.maker" />
+              <CarInfoItem label="년식" :value="carDetails.year" />
+              <CarInfoItem label="용도변경이력" value="-" :isTitle="true" />
+
+              <CarInfoItem label="모델" :value="carDetails.model" />
+              <CarInfoItem label="배기량" value="2000cc" :isTitle="true" />
               <CarInfoItem label="튜닝이력" value="1회" />
+
+              <CarInfoItem label="등급" :value="carDetails.grade" />
+              <CarInfoItem label="연료" :value="carDetails.fuel" />
               <CarInfoItem label="리콜이력" value="-" />
+
+              <div class="detail-row" v-if="carDetails.modelSub || carDetails.gradeSub">
+                <CarInfoItem label="세부모델" :value="carDetails.modelSub" v-if="carDetails.modelSub" />
+                <CarInfoItem label="세부등급" :value="carDetails.gradeSub" v-if="carDetails.gradeSub" />
+              </div>
+
+            </div>
             <ul class="machine-inform-title">
               <li class="text-secondary opacity-50">옵션정보</li>
             </ul>
@@ -173,7 +179,7 @@
                   <div class="icon navigation-ac"></div>
                   <p>네비게이션</p>
                 </div>
-                <div class="option-icon">
+                <div class="option-icon"> c
                   <div class="icon rear-camera-ac"></div>
                   <p>후방카메라</p>
                 </div>
@@ -247,67 +253,55 @@
                 <li class="info-num">전손 0 침수 0 도난 0</li>
               </ul>
             </div>
-            <h5 class="mt-5">내차피해 (<span class="tc-red">1</span>건)</h5>
-            <div class="o_table_mobile">
-              <div class="tbl_basic">
-                <table>
-                  <tbody>
-                    <tr>
-                      <th>일시</th>
-                      <th>부품</th>
-                      <th>공임</th>
-                      <th>조회</th>
-                      <th>날짜</th>
-                    </tr>
-                    <tr>
-                      <td>2024-03-22</td>
-                      <td>12,000</td>
-                      <td>10,000</td>
-                      <td>7</td>
-                      <td>2022-05-01</td>
-                    </tr>
-                  </tbody>
-                </table>
+            <div class="flex-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
+              <div class="column" style="width: 48%; overflow-x: auto;">
+                <h5 class="mt-5">내차피해 (<span class="tc-red">1</span>건)</h5>
+                <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
+                  <div class="tbl_basic">
+                    <table style="min-width: 600px;">
+                      <tbody>
+                        <tr>
+                          <th>일시</th>
+                          <th>부품</th>
+                          <th>공임</th>
+                          <th>조회</th>
+                          <th>날짜</th>
+                        </tr>
+                        <tr>
+                          <td>2024-03-22</td>
+                          <td>12,000</td>
+                          <td>10,000</td>
+                          <td>7</td>
+                          <td>2022-05-01</td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              
+              <div class="column" style="width: 48%; overflow-x: auto;">
+                <h5 class="mt-5">타차피해 (<span class="tc-red">1</span>건)</h5>
+                <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
+                  <div class="tbl_basic">
+                    <table style="min-width: 600px;">
+                      <tbody>
+                        <tr>
+                          <th>일시</th>
+                          <th>부품</th>
+                          <th>공임</th>
+                          <th>조회</th>
+                          <th>날짜</th>
+                        </tr>
+                        <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
+                        <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
+                        <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
               </div>
             </div>
-            <h5 class="mt-5">타차피해 (<span class="tc-red">1</span>건)</h5>
-            <div class="o_table_mobile">
-              <div class="tbl_basic">
-                <table>
-                  <tbody>
-                    <tr>
-                      <th>일시</th>
-                      <th>부품</th>
-                      <th>공임</th>
-                      <th>조회</th>
-                      <th>날짜</th>
-                    </tr>
-                    <tr>
-                      <td>2024-03-22</td>
-                      <td>12,000</td>
-                      <td>10,000</td>
-                      <td>7</td>
-                      <td>2022-05-01</td>
-                    </tr>
-                    <tr>
-                      <td>2024-03-22</td>
-                      <td>12,000</td>
-                      <td>10,000</td>
-                      <td>7</td>
-                      <td>2022-05-01</td>
-                    </tr>
-                    <tr>
-                      <td>2024-03-22</td>
-                      <td>12,000</td>
-                      <td>10,000</td>
-                      <td>7</td>
-                      <td>2022-05-01</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
             <h5 class="mt-5">판매자 메모</h5>
             <div class="form-group">
               <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo || "판매자 메모사항이 없습니다."}}</textarea>
@@ -1957,321 +1951,44 @@ async function loadPage(page) {
 
 
 <style scoped>
-  @media (min-width: 992px){
-    .handle{
-      display: none;
-    }
-    .sheet-content{
-      width: 80% !important;
-      padding: 0px !important;
-      /* padding-top: 30px !important */
-      /* margin-top: 60px !important; */
-    }
-    .sheet{
-    position: relative !important;
-    border-radius: 10px !important;
-}
-    .web-content-style02{
-        display: flex;
-        gap: 20px;
-        padding: 15px;
-        justify-content: center;
-    }
-  }
-@media (min-width: 992px) {
-  .mov-wide {
-    width: 80vw;
-    margin: auto;
-  }
-  .hv-25{
-    height: auto !important;
-  }
-}
-@media (max-width: 991px) {
-  .container {
-     --bs-gutter-x: 0rem !important;
-       max-width:none !important;
-    }
-}
-@media (max-width:406px){
-  .img-container{
-    height: auto !important;
-    max-width: 400px;
-  }
-}
+@media (min-width:992px) {.handle{display:none;}.sheet-content{width:80%!important;padding:0px!important;}.sheet{position:relative!important;border-radius:10px!important;}.web-content-style02{display:flex;gap:20px;padding:15px;justify-content:center;}}
+@media (min-width:992px) {.mov-wide{width:80vw;margin:auto;}.hv-25{height:auto!important;}}
+@media (max-width:991px) {.container{--bs-gutter-x:0rem!important;max-width:none!important;}}
+@media (max-width:406px) {.img-container{height:auto!important;max-width:400px;}}
 
+.animCircle::after{border-radius:50%;}
+.dealer-check{margin-top:50px;display:flex;align-items:center;justify-content:space-between;background:#F5F5F6;border-radius:30px;padding:10px;}
+.no-resize{resize:none;}
+.dealer-check input[type=checkbox]{margin-right:10px;}
+.dealer-check label{display:flex;align-items:center;font-size:14px;color:#333;}
+input[type="checkbox"]{align-self:center;}
+.card-style{padding-top:1.5rem;padding-right:1.5rem;padding-left:1.5rem;}
+.blinking{animation:blink 1.5s linear infinite;}
 
+@keyframes blink{50%{opacity:0.5;}}
 
-.w-30{
-  width: 30% !important; 
-}
-.animCircle::after {
-  border-radius: 50%;
-}
-  .dealer-check {
-      margin-top: 50px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      background: #F5F5F6;
-      border-radius: 30px;
-      padding: 10px;
-  }
+.styled-input{border:none;outline:none;flex-grow:1;font-size:16px;padding-left:30px;color:#333;background-color:transparent;width:100%;direction:rtl;background-image:url('../../../../img/icon-won.png');background-repeat:no-repeat;background-size:20px 20px;background-position:left 0px center;}
+.styled-input::placeholder{color:#CCC;direction:ltr;}
+.more-page{color:white;font-size:16px;}
+.more-img{color:white;border:none;margin-left:10px;text-decoration:none;border-radius:3px;cursor:pointer;}
 
-  .no-resize {
-      resize: none;
-  }
+@media screen and (min-width:1200px) {.bottom-sheet{width:50%;}}
+.label-style{top:22px!important;width:100px;}
+.label-style02{top:20px!important;width:100px;}
+.fade-enter-active,.fade-leave-active{transition:opacity 0.5s;}
+.fade-enter,.fade-leave-to{opacity:0;}
 
-  .dealer-check input[type=checkbox] {
-      margin-right: 10px;
-  }
+@media (max-width:500px) {.container{--bs-gutter-x:0rem;}}
 
-  .dealer-check label {
-      display: flex;
-      align-items: center;
-      font-size: 14px;
-      color: #333;
-  }
+.img-container{width:100%;height:400px;display:flex;justify-content:center;align-items:center;overflow:hidden;}
+.img-wrapper{width:100%;height:100%;position:relative;overflow:hidden;border-radius:10px;}
+.img-wrapper img{width:100%;height:100%;object-fit:cover;}
+.card-img-top-ty02{border-top-left-radius:6px;border-top-right-radius:6px;}
+.flex-column .card-img-top-ty02{border-top-left-radius:0px!important;border-bottom-left-radius:0px!important;border-top-right-radius:6px;border-top-left-radius:6px!important;}
+.img_box img{width:100%;height:100%;object-fit:cover;}
+.sheet.half{max-height:none!important;height:calc(fit-content+env(safe-area-inset-bottom))!important;}
+.scrollable-content{max-height:300px;overflow-y:auto;}
+.sticky-top{position:sticky;top:71px;z-index:1020;height:100px;}
+.sheet-content-wrap{width:100%!important;}
 
-.custom-checkbox-input {
-  display: none;
-}
-
-.custom-checkbox-label {
-  position: relative;
-  cursor: pointer;
-  display: inline-block;
-  width: 20px; 
-  height: 20px; 
-}
-
-.custom-checkbox-label:before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: #fff; 
-  border: 2px solid #ccc; 
-  box-sizing: border-box;
-  transition: background-color 0.2s, border-color 0.2s;
-}
-
-.custom-checkbox-label:after {
-  content: '✔'; 
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #fff; 
-  font-size: 14px; 
-  opacity: 0; 
-  transition: opacity 0.2s; 
-}
-
-.custom-checkbox-input:checked + .custom-checkbox-label:before {
-  background-color: red; 
-  border-color: red; 
-}
-.custom-checkbox-input:checked + .custom-checkbox-label:after {
-  opacity: 1; 
-}
-
-input[type="checkbox"] {
-  align-self: center; 
-}
-
-.card-style{
-  padding-top: 1.5rem;
-  padding-right: 1.5rem;
-  padding-left: 1.5rem;
-}
-.blinking {
-animation: blink 1.5s linear infinite;
-}
-
-@keyframes blink {
-50% {
-  opacity: 0.5;
-}
-}
-
-.styled-input {
-  border: none;
-  outline: none;
-  flex-grow: 1;
-  font-size: 16px;
-  padding-left: 30px; 
-  color: #333;
-  background-color: transparent;
-  width: 100%;
-  direction: rtl; 
-  background-image: url('../../../../img/icon-won.png'); 
-  background-repeat: no-repeat;
-  background-size: 20px 20px;
-  background-position: left 0px center; 
-}
-
-.styled-input::placeholder {
-  color: #CCC;
-  direction: ltr; 
-}
-  .more-page {
-      color: white;
-      font-size: 16px;
-      
-  }
-  .more-img{
-      color: white;
-      border: none;
-      margin-left: 10px;
-      text-decoration: none;
-      border-radius: 3px;
-      cursor: pointer;
-  }
-@media screen and (min-width:1200px) {
-  .bottom-sheet {
-      width:50%;
-  }
-}
-@media screen and (min-width:575px) {
-
-}
-.label-style{
-  top: 22px !important;
-  width: 100px;
-}
-.label-style02{
-  top: 20px !important;
-  width: 100px;
-}
-.fade-enter-active, .fade-leave-active {
-transition: opacity 0.5s;
-}
-.fade-enter, .fade-leave-to{
-opacity: 0;
-}
-
-@media (max-width: 500px){
-.container {
-    --bs-gutter-x: 0rem;
-}
-}
-.img-container {
-  width: 100%; 
-  height: 400px;
-  display: flex; 
-  justify-content: center;
-  align-items: center;
-  overflow: hidden; 
-}
-
-.img-wrapper {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  overflow: hidden;
-  border-radius: 10px;
-}
-
-.img-wrapper img {
-  width: 100%; 
-  height: 100%; 
-  object-fit: cover; 
-}
-.card-img-top-ty02{
-  border-top-left-radius: 6px;
-  border-top-right-radius: 6px;
-}
-.flex-column .card-img-top-ty02{
-  border-top-left-radius: 0px !important;
-  border-bottom-left-radius: 0px !important;
-  border-top-right-radius: 6px;
-  border-top-left-radius: 6px !important;
-}
-.img_box img{
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.sheet.half{
-  max-height: none !important;
-  /* height: fit-content !important; */
-  height: calc(fit-content + env(safe-area-inset-bottom)) !important;
-}
-.sm-height{
-  height: 34px !important;
-}
-.ul.px-0.inspector_list.max_width_900.selected {
-  background-color: lightgray !important;
-  border: 2px solid blue !important;
-  color: red;
-}
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-container {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  max-width: 100%;
-  max-height: 90%;
-  overflow-y: auto;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-  width: -webkit-fill-available;
-  z-index: 999;
-  animation: fadeIn 0.5s ease-in-out;
-}
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.scrollable-content {
-  max-height: 300px;
-  overflow-y: auto;
-}
-
-@media (min-width: 768px) {
-  .modal-container {
-    max-width: 600px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .modal-container {
-    max-width: 800px;
-  }
-}
-/* .sheet.half > .content{
-  height: auto !important;
-} */
-
-.sticky-top{
-  position: sticky;
-  top: 71px;
-  z-index: 1020;
-  height: 100px;
-}
-.sheet-content-wrap{
-  width: 100% !important;
-}
 </style>

@@ -2511,19 +2511,17 @@ video{
 .machine-inform-title {
     list-style: none; 
     padding: 0; 
-    margin-top: 30px;
-    display: flex;
-    justify-content: flex-start;
-}
-.machine-inform {
-    list-style: none; 
-    padding: 0; 
     margin-top: 10px;
     display: flex;
     justify-content: flex-start;
+    gap: 10px;
 }
-.sub-title {
-    margin-right: 30px;
+.machine-inform {
+    list-style: none;
+    padding: 0;
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-start;
 }
 .machine-inform-title li, .machine-inform li {
     flex: 1;
@@ -2564,8 +2562,9 @@ video{
     margin-left: auto; 
 }
 
-
-
+.flex-custom {
+    flex: 4.5 !important;
+}
 
 .machine-inform-title li.car-icon{
     flex: 0 0 30px;
@@ -2868,7 +2867,9 @@ video{
     display: flex;
     align-items: center;
 }
-
+.w-30{
+    width: 30% !important; 
+  }
 .bottom-sheet {
     position: fixed;
     bottom: 0;
@@ -4903,4 +4904,115 @@ input[type="checkbox"] {
         text-overflow: ellipsis;
         white-space: nowrap;
     }
-    
+/* 차량 정보 */
+.ul-custom {
+    gap: 55px !important; 
+}
+.ul-custom li{
+    flex: 0 !important;
+}
+.ul-custom .car-icon{
+    margin-left: 50px !important;
+}
+@media (max-width:541px) {
+    .machine-inform-title li, .machine-inform li{
+        flex: 0;
+    }
+    .machine-inform-title li.info-num, .machine-inform li.sub-title{
+        flex: 0;
+        margin-right: 0px;
+    }
+    .machine-inform {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
+        align-content: center;
+        align-items: center;
+    }
+    .machine-inform-title {
+        list-style: none;
+        padding: 0;
+        margin-top: 10px;
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        align-items: center;
+        align-content: center;
+    } 
+}
+.car-info-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    align-items: center;
+  }
+  
+  .detail-row {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 16px;
+    padding: 16px 0;
+    border-top: 1px dashed #ccc;
+    font-weight: bold;
+  }
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @media (min-width: 768px) {
+    .modal-container {
+      max-width: 600px;
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .modal-container {
+      max-width: 800px;
+    }
+  }
+
+  .modal-container {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    max-width: 100%;
+    max-height: 90%;
+    overflow-y: auto;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: -webkit-fill-available;
+    z-index: 999;
+    animation: fadeIn 0.5s ease-in-out;
+  }
+  
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .ul.px-0.inspector_list.max_width_900.selected {
+    background-color: lightgray !important;
+    border: 2px solid blue !important;
+    color: red;
+  }
+  .sm-height{
+    height: 34px !important;
+  }
+  
+  
