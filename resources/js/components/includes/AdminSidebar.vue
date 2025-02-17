@@ -168,6 +168,11 @@ onMounted(async () => {
 .ft-13{
     font-size: 13px !important;
 }
+.admin-nav{
+    position: fixed !important;
+    right: 0 !important;
+    left: -270px !important;
+}
 .admin-nav .nav-link{
   color:#cacaca
 }

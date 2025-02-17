@@ -423,3 +423,12 @@
 .file-upload-container img{
   max-width: 40%;
 }
+
+.container-fluid {
+  margin-left: 270px !important;
+}
+@media (max-width: 767.98px){
+  .container-fluid {
+      margin-left: 0px !important;
+  }
+}
