@@ -105,11 +105,11 @@
                       </div> -->
                     </div>
                     <div v-if="auctionDetail.data.status === 'chosen' && isDealer">
-                      <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
+                      <p class="ac-evaluation btn-fileupload-red btn-shadow mt-3" @click.prevent="openCarLicenseModal">자동차등록증</p>
                     </div>
                     <div v-if="auctionDetail.data.status === 'chosen' && isUser">
                       <div v-if="auctionDetail.data.top_bids[0].dealerInfo.biz_check">
-                        <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">구매자 사업자등록증</p>
+                        <p class="ac-evaluation btn-fileupload-red btn-shadow mt-3" @click.prevent="openDealerLicenseModal">구매자 사업자등록증</p>
                       </div>
                     </div>
                </div>
