@@ -12,6 +12,8 @@ use App\Jobs\AuctionStartJob;
 use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
+use App\Services\MediaService;
+
 class AuctionController extends Controller
 {
     use CrudControllerTrait;
@@ -321,6 +323,19 @@ class AuctionController extends Controller
         }
 
         return response()->api($result);
+    }
+
+    public function uploadFile(Request $request, Auction $auction)
+    {
+        if ($request->hasFile('file_auction_owner')) {
+            $file = $request->file('file_auction_owner');
+            $mediaService = new MediaService();
+            $media = $mediaService->uploadFile($file, $auction);
+
+            return response()->json(['success' => true, 'media' => $media]);
+        } else {
+            return response()->json(['success' => false, 'message' => '파일이 전송되지 않았습니다.'], 400);
+        }
     }
 
 }

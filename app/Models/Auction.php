@@ -12,8 +12,6 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
 
 class Auction extends Model implements HasMedia
 {
@@ -21,8 +19,6 @@ class Auction extends Model implements HasMedia
     use InteractsWithMedia;
     use ModelTrait;
 
-    public $incrementing = false;
-    protected $keyType = 'string';
 
     // protected $fillable = [
     //     'bank',
@@ -75,8 +71,7 @@ class Auction extends Model implements HasMedia
         'region',
         'addr1',
         'addr2',
-        'car_model',
-        'auction_type'
+        'car_model'
     ];
 
     public $enums = [
@@ -147,46 +142,4 @@ class Auction extends Model implements HasMedia
                 ->height(env('IMAGE_HEIGHT', 300));
         }
     }
-
-    // protected static function boot()
-    // {
-    //     parent::boot();
-
-    //     static::creating(function ($auction) {
-    //         // $auction->id = (string) Str::uuid();
-    //         $auction->unique_number = generateUniqueNumber();
-    //         // $auction->id = $auction->unique_number;
-    //     });
-    // }
-}
-
-function generateRandomId()
-{
-    $id = null;
-    do {
-        $id = mt_rand(1000, 9999); // 1000부터 9999까지의 랜덤 숫자 생성
-        $exists = DB::table('auctions')->where('id', $id)->exists();
-    } while ($exists);
-
-    return $id;
-}
-
-function generateUniqueNumber()
-{
-    $number = null;
-    $rangeStart = 1000;
-    $rangeEnd = 9999;
-
-    do {
-        $number = mt_rand($rangeStart, $rangeEnd);
-        $exists = DB::table('auctions')->where('unique_number', $number)->exists();
-
-        // 범위가 모두 사용되었을 경우 확장
-        if ($exists && $rangeEnd - $rangeStart + 1 == DB::table('auctions')->count()) {
-            $rangeStart *= 10;
-            $rangeEnd = $rangeEnd * 10 + 9;
-        }
-    } while ($exists);
-
-    return $number;
 }

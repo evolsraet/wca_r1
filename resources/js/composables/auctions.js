@@ -822,8 +822,9 @@ const getDoneAuctions = async (bidsNumList,page) => {
 };
 
 const setTacksong = async (id, data) => {
+
     try {
-      const result2 = await wicac.conn()
+        const result2 = await wicac.conn()
         .url(`/api/auctions/${id}`)
         .param(data)
         .put();
@@ -838,6 +839,7 @@ const setTacksong = async (id, data) => {
           .useHtmlText()
           .icon('E') 
           .alert('관리자에게 문의해주세요.');
+
       }
     } catch (error) {
       console.error('Error during API request:', error);

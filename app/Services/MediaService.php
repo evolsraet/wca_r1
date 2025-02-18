@@ -4,6 +4,7 @@ namespace App\Services;
 
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Support\Facades\Auth;
+use App\Models\Auction;
 
 class MediaService
 {
@@ -49,5 +50,14 @@ class MediaService
         }
 
         return $count;
+    }
+
+    public function uploadFile($file, Auction $auction)
+    {
+        // 파일 업로드 로직
+        $media = $auction->addMedia($file)
+                         ->toMediaCollection('file_auction_owner');
+
+        return $media;
     }
 }

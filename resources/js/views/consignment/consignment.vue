@@ -89,7 +89,18 @@
       </div>
 
       <hr class="custom-hr" />
-      <p class="text-center mb-2">매도용 인감증명서를 <br> 준비해 주세요.</p>
+      <h4 class="mt-4"><span class="text-danger me-2">*</span>매도용 인감증명서</h4>
+      <p class="text-secondary opacity-50">매도용 인감증명서를 준비해 주세요.</p>
+    
+      <div class="form-group">
+        <input type="file" @change="handleFileUploadAuctionOwner" ref="fileInputRefAuctionOwner" style="display:none">
+        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadAuctionOwner">
+          파일 첨부
+        </button>
+        <div class="text-start text-secondary opacity-50" v-if="fileAuctionOwnerName">매도용 인감증명서: {{ fileAuctionOwnerName }}</div>
+      </div>
+
+
       <button type="button" class="btn btn-primary w-100" @click="toggleView">다음</button>
     </div>
     <div v-if="fileUploadView" class="card p-3 my-4">
@@ -149,7 +160,7 @@ const registerForm = ref({ file_user_sign: null, file_user_sign_name: '' });
 const imageSrc = ref('');
 const router = useRouter();
 const route = useRoute();
-const { amtComma, wica, openPostcode, closePostcode } = cmmn();
+const { amtComma, wica, openPostcode, closePostcode, wicac } = cmmn();
 const auctionDetail = ref(null);
 const selectedBid = ref(null);
 const userInfo = ref(null);
@@ -157,6 +168,9 @@ const days = ref([]);
 const addrPost = ref('');
 const addr = ref(''); // 주소
 const addrdt = ref(''); // 상세 주소
+const fileInputRefAuctionOwner = ref(null);
+const fileAuctionOwner = ref(null); // 추가: 파일 저장 변수
+const fileAuctionOwnerName = ref(''); // 추가: 파일 이름 저장 변수
 
 const props = defineProps({
   bid: Object,
@@ -183,6 +197,32 @@ watch(() => props.bid, (newVal) => {
 const selectedDateLabel = ref('');
 const confirmSelection = async () => {
   const auctionId = auctionDetail.value?.data?.id;
+
+  // 매도용파일 업로드
+  if (fileAuctionOwner.value) {
+    try {
+      const formData = new FormData();
+      formData.append('file_auction_owner', fileAuctionOwner.value);
+      await wicac.conn()
+      .url(`/api/auctions/${auctionId}/upload`)
+      .param(formData)
+      .multipart()
+      .post();
+    } catch (error) {
+      // console.error('Error during file upload:', error);
+      wica.ntcn(swal)
+      .title('오류가 발생하였습니다.')
+      .useHtmlText()
+      .icon('E') //E:error , W:warning , I:info , Q:question
+      .alert('관리자에게 문의해주세요.');
+    }
+
+  }else{
+    wica.ntcn(swal)
+    .title('매도용 인감증명서를 준비해 주세요')
+    .icon('W') //E:error , W:warning , I:info , Q:question
+    .alert('매도용 인감증명서파일을 첨부해 주세요.');
+  }
   
   if (auctionId && selectedDay.value !== null && selectedTime.value) {
     const selectedDate = days.value[selectedDay.value].date;
@@ -192,7 +232,6 @@ const confirmSelection = async () => {
     
     const [hours, minutes] = selectedTime.value.split(':');
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:00`;
-
     const data = {
       auction: {
         taksong_wish_at: formattedDate,
@@ -225,9 +264,8 @@ const confirmSelection = async () => {
     fileSignData: registerForm.value,
     selectedTime: selectedTime.value,
   });
+
 };
-
-
 
 const fetchAuctionDetail = async () => {
   try {
@@ -310,6 +348,16 @@ const toggleView = () => {
     return;
   }
 
+  if (fileAuctionOwner.value === null) {
+    swal.fire({
+      title: '매도용 인감증명서를 준비해 주세요',
+      text: '매도용 인감증명서파일을 첨부해 주세요.',
+      icon: 'warning',
+      confirmButtonText: '확인'
+    });
+    return;
+  }
+
   // if (!selectedBank.value || !account.value) {
   //   swal.fire({
   //     title: '은행 정보 입력 필요',
@@ -344,7 +392,7 @@ const toggleView = () => {
     .callback(function (result) {
       if (result.isOk) {
         confirmSelection();
-        window.location.href = '/auction';
+        // window.location.href = '/auction';
         }
       })
     .confirm(textOk);
@@ -458,6 +506,25 @@ function editPostCode(elementName) {
         addr.value = address;
     })
 }
+
+const triggerFileUploadAuctionOwner = () => {
+  if (fileInputRefAuctionOwner.value) {
+    fileInputRefAuctionOwner.value.click();
+  } else {
+    console.error('파일을 찾을 수 없습니다.');
+  }
+}
+
+const handleFileUploadAuctionOwner = event => {
+  const file = event.target.files[0];
+  if (file) {
+    fileAuctionOwner.value = file;
+    fileAuctionOwnerName.value = file.name;
+  } else {
+    console.error('No file selected');
+  }
+}
+
 </script>
 
 <style scoped lang="scss">
