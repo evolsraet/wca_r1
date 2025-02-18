@@ -139,6 +139,9 @@
                 <div class="text-start text-secondary opacity-50" v-if="profile.file_user_photo_name">
                   사진 (본인 확인용) 파일 : <a :href=photoUrl download>{{ profile.file_user_photo_name }}</a>
                 </div>
+                <div v-for="message in validationErrors?.file_user_photo_name" class="text-danger mt-1">
+                  {{ message }}
+                </div>
           </div>
           <div class="form-group">
             <label for="dealerName"><span class="text-danger">*</span>딜러 이름</label>
@@ -246,6 +249,9 @@
                          @change="profile.biz_check = $event.target.checked ? 1 : 0">
                   <label class="form-check-label" for="bizCheck">사업자 정보 확인 완료</label>
                 </div>
+                <div v-for="message in validationErrors?.file_user_biz_name" class="text-danger mt-1">
+                  {{ message }}
+                </div>
             </div>
             <div class="mb-3">
                 <label for="user-title" class="form-label"
@@ -258,6 +264,9 @@
                 <div class="text-start text-secondary opacity-50" v-if="profile.file_user_sign_name">
                     매도용인감정보 파일 : <a :href=fileSignUrl download>{{ profile.file_user_sign_name }}</a>
                 </div>
+                <div v-for="message in validationErrors?.file_user_sign_name" class="text-danger mt-1">
+                  {{ message }}
+                </div>
             </div>
             <div class="mb-3">
                 <label for="user-title" class="form-label"
@@ -269,6 +278,9 @@
                 </button>
                 <div class="text-start text-secondary opacity-50" v-if="profile.file_user_cert_name">
                     매매업체 대표증 / 종사원증 파일 : <a :href=fileCertUrl download>{{ profile.file_user_cert_name }}</a>
+                </div>
+                <div v-for="message in validationErrors?.file_user_cert_name" class="text-danger mt-1">
+                  {{ message }}
                 </div>
             </div>
           </div>

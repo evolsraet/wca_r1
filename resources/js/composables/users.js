@@ -373,7 +373,7 @@ export default function useUsers() {
                 phone: profileData.phone,
                 password: profileData.password,
                 password_confirmation: profileData.password_confirmation,
-                status: 'ok',
+                role: 'user',
             }
         };
         if (profileData.isDealer) {
@@ -391,6 +391,10 @@ export default function useUsers() {
                 receive_addr1: profileData.receive_addr1,
                 receive_addr2: profileData.receive_addr2,
                 introduce: profileData.introduce,
+                file_user_photo_name: profileData.file_user_photo_name,
+                file_user_biz_name: profileData.file_user_biz_name,
+                file_user_cert_name: profileData.file_user_cert_name,
+                file_user_sign_name: profileData.file_user_sign_name,
             }
             payload.user.role = 'dealer'; 
             payload.user.status = 'ask';
@@ -426,6 +430,9 @@ export default function useUsers() {
         .callback(async function(result) {
             console.log('wicac.conn callback ' , result);
             if(result.isError) {
+
+                console.log('result.msg' , result.msg);
+
                 processing.value = false;
                 validationErrors.value = result.msg;
                 wica.ntcn(swal)

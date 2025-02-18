@@ -80,7 +80,8 @@ class UserService
 
 
             // 본인회원가입 - 사용자일경우
-            if (!auth()->check() && $data['role'] == 'user') {
+            // if (!auth()->check() && $data['role'] == 'user') {
+            if ($data['role'] == 'user') {
                 $data['status'] = 'ok';
             }
 
@@ -93,6 +94,10 @@ class UserService
             // 하위 모델
             if ($data['role'] == 'dealer') {
                 $dealerData = $dealerData;
+
+                // print_r($dealerData);
+                // die();
+
                 $dealerData['user_id'] = $item->id;
 
                 $validator = Validator::make($dealerData, [
@@ -105,11 +110,20 @@ class UserService
                     'company_addr1' => 'required',
                     'company_addr2' => 'required',
                     'introduce' => 'required',
+                    'file_user_photo_name' => 'required',
+                    'file_user_biz_name' => 'required',
+                    'file_user_cert_name' => 'required',
+                    'file_user_sign_name' => 'required',
                 ]);
                 // 유효성 검사 실패 시
                 if ($validator->fails()) {
                     return response()->api(null, '필수값이 누락되었습니다.', 'fail', 422, ['errors' => $validator->errors()]);
                 }
+
+                unset($dealerData['file_user_photo_name']);
+                unset($dealerData['file_user_biz_name']);
+                unset($dealerData['file_user_cert_name']);
+                unset($dealerData['file_user_sign_name']);
 
                 $item->dealer()->create($dealerData);
             }
@@ -263,6 +277,7 @@ class UserService
                     if ($validator->fails()) {
                         return response()->api(null, '필수값이 누락되었습니다.', 'fail', 422, ['errors' => $validator->errors()]);
                     }
+
                     $item->dealer()->create($data['dealer']);
                     // TODO: 알림 : 누구에게?
 
