@@ -373,6 +373,7 @@ export default function useUsers() {
                 phone: profileData.phone,
                 password: profileData.password,
                 password_confirmation: profileData.password_confirmation,
+                status: 'ok',
             }
         };
         if (profileData.isDealer) {
@@ -381,6 +382,7 @@ export default function useUsers() {
                 phone: profileData.dealerContact,
                 birthday: profileData.dealerBirthDate,
                 company: profileData.company,
+                biz_check: '0',
                 company_duty: profileData.dealerCompanyDuty,
                 company_post: profileData.company_post,
                 company_addr1: profileData.company_addr1,
@@ -391,6 +393,7 @@ export default function useUsers() {
                 introduce: profileData.introduce,
             }
             payload.user.role = 'dealer'; 
+            payload.user.status = 'ask';
         } else {
             payload.user.role = 'user';
         } 

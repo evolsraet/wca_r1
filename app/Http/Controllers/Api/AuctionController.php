@@ -75,6 +75,16 @@ class AuctionController extends Controller
         $cacheKey = "carInfo." . $request->input('owner') . $request->input('no');
         $message = null;
 
+        // 경매중인 차량번호 중에 같은 차량번호 있는지 확인
+        $auction = Auction::where('car_no', $request->input('no'))->where('status', 'ing')->first();
+        if($auction){
+            $data = [
+                'status' => 'is_not',
+                'message' => '경매중인 차량번호입니다.',
+            ];
+            return response()->api($data, '경매중인 차량번호입니다.', 400);
+        }
+
         // 캐시 삭제 조건
         // 강제동기 && 캐시있을때 && 같은 차번 하루1회만
         if ($request->input('forceRefresh') && Cache::has($cacheKey) && !Cache::has($cacheKey . "forceRefresh")) {

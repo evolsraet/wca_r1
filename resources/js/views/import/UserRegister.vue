@@ -238,7 +238,7 @@
                 <div class="text-start text-secondary opacity-50" v-if="profile.file_user_biz_name">
                     사업자 등록증 파일 : <a :href="fileBizUrl" download>{{ profile.file_user_biz_name }}</a>
                 </div>
-                <div class="form-check mt-2">
+                <div class="form-check mt-2" v-if="adminEditURL">
                   <input type="checkbox" 
                          class="form-check-input" 
                          id="bizCheck" 
@@ -357,7 +357,7 @@
     file_user_cert_name:"",
     status:'',
     role:'',
-    biz_check: false,
+    biz_check: '0',
     //디비외
     photoImgChg : false,
     photoUUID : '',

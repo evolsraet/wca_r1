@@ -406,7 +406,12 @@ const submitCarInfoIsOk = () => {
   submitCarInfo().then((response) => {
 
     if(!isValid.value){
-      ntcn.icon('E').title('올바른 차량번호 형식으로 입력해주세요.').fire();
+      wica.ntcn(swal).icon('E').title('올바른 차량번호 형식으로 입력해주세요.').fire();
+      return false;
+    }
+
+    if(response.data.status == 'is_not'){
+      wica.ntcn(swal).icon('E').title('경매중인 차량번호입니다.').fire();
       return false;
     }
 
