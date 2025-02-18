@@ -72,7 +72,7 @@
                                     <span class="d-flex mx-2 rating-score tc-red"></span>
                                 </div>
                                 <textarea class="custom-textarea mt-2" rows="4" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content">{{ review.content }}</textarea>
-                                <div class="btn-group mt-3">
+                                <div class="btn-group mt-3 w-100">
                                     <button class="btn btn-primary"> 수정 완료 </button>
                                 </div>
                             </div>

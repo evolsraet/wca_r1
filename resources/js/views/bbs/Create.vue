@@ -97,7 +97,7 @@
                                 </div>
                                 <textarea class="custom-textarea mt-2" rows="6" placeholder="다른 판매자들에게 알려주고 싶은 정보가 있으면 공유해주세요." id="content" v-model="rv.content"></textarea>
                                 
-                                <div class="btn-group mt-3 mb-4">
+                                <div class="btn-group mt-3 mb-4 w-100">
                                     <button class="btn btn-primary mt-2"> 작성 완료 </button>
                                 </div>
                             </div>
