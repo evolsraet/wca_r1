@@ -55,7 +55,7 @@ class AuctionResource extends JsonResource
         
         else if ($count >= 3) {
             // 최소값과 최대값을 제외한 중간 3개 값 선택
-            $middlePrices = $prices->slice(1, $count - 2)->slice(0, 3);
+            $middlePrices = $prices->slice(1, $count)->slice(0, 3);
             $addArray['middle_prices'] = [
                 'min' => $middlePrices->min(),
                 'max' => $middlePrices->max(),

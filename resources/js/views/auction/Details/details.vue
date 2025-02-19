@@ -1674,13 +1674,20 @@ if (!amount.value || isNaN(parseFloat(amount.value))) {
     const minAmount = auctionDetail.value?.data?.middle_prices?.min * 10000;
     const avgAmount = auctionDetail.value?.data?.middle_prices?.avg * 10000;
 
-    if(amount.value > maxAmount){
-      wica.ntcn(swal).icon('S').title('경매 최대 금액을 넘어갑니다.').fire();
-      return;
-    }
-    if(amount.value < minAmount){
-      wica.ntcn(swal).icon('S').title('경매 최소 금액을 넘어갑니다.').fire();
-      return;
+    if(auctionDetail.value?.data?.bids_count < 3){
+      if(amount.value < minAmount){
+        wica.ntcn(swal).icon('S').title('경매 최소 금액을 넘어갑니다.').fire();
+        return;
+      }
+    }else{
+      if(amount.value > maxAmount){
+        wica.ntcn(swal).icon('S').title('경매 최대 금액을 넘어갑니다.').fire();
+        return;
+      }
+      if(amount.value < minAmount){
+        wica.ntcn(swal).icon('S').title('경매 최소 금액을 넘어갑니다.').fire();
+        return;
+      }
     }
 
     openBidModal();
