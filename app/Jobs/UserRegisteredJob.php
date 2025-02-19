@@ -11,6 +11,8 @@ use App\Notifications\WelcomeNotification;
 use App\Notifications\AligoNotification;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\Templates\NotificationTemplate;
+use App\Models\User;
+
 class UserRegisteredJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -31,13 +33,19 @@ class UserRegisteredJob implements ShouldQueue
     public function handle(): void
     {
 
-        // Log::info('UserRegisteredJob 실행되었습니다!....', ['item' => $this->item]);
+        Log::info('UserRegisteredJob 실행되었습니다!....', ['item' => $this->item]);
         
         $item = $this->item;
         $name = $item->name;
 
         // 회원가입 메시지 템플릿
         $sendMessage = NotificationTemplate::welcomeTemplate($name);
+
+        // 운영자 회원에게 알림 보내기 추가 / id 가 1, 2 인 회원에게 알림 보내기
+        $adminUsers = User::whereIn('id', [1, 2])->get();
+        foreach ($adminUsers as $adminUser) {
+            $adminUser->notify(new WelcomeNotification($this->item, $sendMessage));
+        }
 
         // 이메일 전송
         $this->item->notify(new WelcomeNotification($this->item, $sendMessage));
