@@ -247,7 +247,7 @@
                          id="bizCheck" 
                          :checked="profile.biz_check == 1"
                          @change="profile.biz_check = $event.target.checked ? 1 : 0">
-                  <label class="form-check-label" for="bizCheck">사업자 정보 확인 완료</label>
+                  <label class="form-check-label" for="bizCheck">사업자 정보 확인 완료 (체크 하면 매물정보에서 딜러의 사업자정보를 볼 수 있도록 활성화 합니다.)</label>
                 </div>
                 <div v-for="message in validationErrors?.file_user_biz_name" class="text-danger mt-1">
                   {{ message }}
@@ -301,6 +301,13 @@
             <span>등록</span>
           </button>
         </div>
+
+        <div v-if="adminEditURL" class="mt-4">
+          <button type="button" class="w-100 btn btn-success" @click="approveUser">
+            <span>심사승인</span>
+          </button>          
+        </div>
+
       </form>
       <transition name="fade" mode="out-in">
         <LawGid v-if="isModalOpen" :content="modalContent" @close="closeModal"/>
@@ -535,7 +542,7 @@
     }else if(route.path == '/register'){
       setRegisterUser(profile.value);
     }else if(route.path.includes('/admin/users/edit/')){
-      updateUser(profile.value,userId.value);
+      updateUser(profile.value,userId.value, '');
     }else if(route.path.includes('/admin/users/create')){
       adminStoreUser(profile.value);
     }
@@ -632,6 +639,11 @@
     profile.value.photoImgChg = true;
     photoUrl.value = profileDom;
   }
+
+  function approveUser(){
+    updateUser(profile.value,userId.value, true);
+  }
+
   </script>
   
   <style scoped>

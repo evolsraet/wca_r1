@@ -114,12 +114,15 @@ export default function useUsers() {
         }
     }
 
-    const updateUser = async (editForm, id) => {
+    const updateUser = async (editForm, id, status = false) => {
         if (isLoading.value) return;
+        
+        let isStatus = status ? 'ok' : editForm.status;
+        
         let payload = {
             user: {
                 name: editForm.name,
-                status: editForm.status,
+                status: isStatus,
                 role: editForm.role
             },
             dealer: {
