@@ -664,7 +664,7 @@
                               <div>
                                 <h4 class="text-start process mb-5 mt-4">입찰 금액을 입력해주세요</h4>
                                 <div class="input-container mt-5">
-                                  <input type="text" class="styled-input" placeholder="0" v-model="amount" @input="updateKoreanAmount">
+                                  <input type="text" class="styled-input" :placeholder="`${avgAmount}`" v-model="amount" @input="updateKoreanAmount">
                                 </div>
                                 <p class="d-flex justify-content-end fw-bolder fs-4 text-primary p-2">{{ koreanAmount }}</p>
                                 <button type="button" class="tc-wh btn btn-primary w-100 my-4" @click="submitAuctionBid">입찰 완료</button>
@@ -833,11 +833,16 @@ const { numberToKoreanUnit , amtComma , wica , wicaLabel, wicas } = cmmn();
 const chosendlvr = ref(false);
 const reviewIsOk = ref(true);
 let likeMessage;
-
 const fileOwnerUrl = ref('');
 const fileSignUrl =ref('');
 
 const destAddrBtn = ref(true);
+
+const avgAmount = computed(() => {
+  return auctionDetail.value?.data?.middle_prices ? 
+      '평균 '+auctionDetail.value?.data?.middle_prices?.avg * 10000 + '원' :
+      '0';
+});
 
 const swal = inject('$swal');
 const myBidPrice = computed(() => {
@@ -1661,8 +1666,23 @@ const closeBidModal = () => {
 const submitAuctionBid = async () => {
 const userBidExists = auctionDetail.value?.data?.bids?.some(bid => bid.user_id === user.value.id && !bid.deleted_at);
 if (!amount.value || isNaN(parseFloat(amount.value))) {
-  alert('유효한 금액을 입력해주세요.');
+  wica.ntcn(swal).icon('S').title('유효한 금액을 입력해주세요.').fire();
+  // alert('유효한 금액을 입력해주세요.');
 } else {
+    // 최대값의 값을 만원 단위로 숫자를 바꾼다음 amount와 비교 하여 최대값을 넘어가지 않게 한다. 
+    const maxAmount = auctionDetail.value?.data?.middle_prices?.max * 10000;
+    const minAmount = auctionDetail.value?.data?.middle_prices?.min * 10000;
+    const avgAmount = auctionDetail.value?.data?.middle_prices?.avg * 10000;
+
+    if(amount.value > maxAmount){
+      wica.ntcn(swal).icon('S').title('경매 최대 금액을 넘어갑니다.').fire();
+      return;
+    }
+    if(amount.value < minAmount){
+      wica.ntcn(swal).icon('S').title('경매 최소 금액을 넘어갑니다.').fire();
+      return;
+    }
+
     openBidModal();
 };
 }

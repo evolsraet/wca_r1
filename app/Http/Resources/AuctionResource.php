@@ -36,6 +36,40 @@ class AuctionResource extends JsonResource
 
         $addArray['bids_count'] = Bid::where('auction_id', $auction->id)->count();
 
+        // Bid 의 price 의 값이 auction_id 를 기준으로 중간 3개 값을 찾아서 최소값과 최대값 그리고 평균값을 구함 
+        $bids = Bid::where('auction_id', $auction->id)->get();
+        $prices = $bids->pluck('price')->sort();
+
+        $middlePrices = collect();
+        $count = $prices->count();
+
+        if ($count >= 5) {
+            // 최소값과 최대값을 제외한 중간 3개 값 선택
+            $middlePrices = $prices->slice(1, $count - 2)->slice(0, 5);
+            $addArray['middle_prices'] = [
+                'min' => $middlePrices->min(),
+                'max' => $middlePrices->max(),
+                'avg' => round($middlePrices->avg(), 0),
+            ];
+        }
+        
+        else if ($count >= 3) {
+            // 최소값과 최대값을 제외한 중간 3개 값 선택
+            $middlePrices = $prices->slice(1, $count - 2)->slice(0, 3);
+            $addArray['middle_prices'] = [
+                'min' => $middlePrices->min(),
+                'max' => $middlePrices->max(),
+                'avg' => round($middlePrices->avg(), 0),
+            ];
+        }
+
+        else {
+            // 3개 미만일 경우 최대값만 사용
+            $addArray['middle_prices'] = [
+                'max' => $prices->max(),
+            ];
+        }
+
         // 상위 5개 입찰건
         if ($parentArray['status'] != 'ask') {
             $addArray['top_bids'] = BidResource::collection(
