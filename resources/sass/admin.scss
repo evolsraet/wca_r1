@@ -431,6 +431,10 @@
   margin-left: 0px !important;
 }
 @media (max-width: 767.98px){
+
+  #app div:first-child .container-fluid:first-child {
+    margin-top: calc(90px + env(safe-area-inset-top)) !important;
+  }
   #app div:first-child .container-fluid {
       margin-left: 0px !important;
   }

@@ -29,7 +29,7 @@
       <router-link :to="{ name: 'myinfo.edit' }" class="menu-item mt-0">내 정보 수정</router-link>
       <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
     </div>
-    <div :class="['menu-container', { show: isMenuOpen || !isAdminPage }]" id="navbarSupportedContent">
+    <div :class="['menu-container sticky-top', { show: isMenuOpen || !isAdminPage }]" id="navbarSupportedContent">
         <ul class="d-flex mb-0 ps-3 ms-auto mb-lg-0 overflow-x-auto overflow-y-hidden">
             <div class="navbar-nav flex-row justify-content-center gap-5 bold-18-font"> 
                 <router-link 
@@ -171,6 +171,9 @@ watch(() => route.name, (to, from) => {
 
 
 <style scoped>
+.navbar {
+    background-color: #fff;
+}
 @media (max-width: 767.98px) {
     .navbar-toggler {
         display: block !important;
@@ -233,7 +236,8 @@ watch(() => route.name, (to, from) => {
     margin-top: 6rem !important;
 }
 #navbarSupportedContent {
-    position: static;
+    /* position: static; */
+    top:79px;
     right: 7px;
     height: auto;
     width: 100%;
@@ -272,9 +276,6 @@ watch(() => route.name, (to, from) => {
     bottom: -2px;
     height: 5px;
     background-color: red;
-}
-.sticky-top{
-    position: relative !important;
 }
 
 .settings-menu {
