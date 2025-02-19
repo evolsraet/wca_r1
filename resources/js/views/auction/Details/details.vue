@@ -839,7 +839,7 @@ const fileSignUrl =ref('');
 const destAddrBtn = ref(true);
 
 const avgAmount = computed(() => {
-  return auctionDetail.value?.data?.middle_prices ? 
+  return auctionDetail.value.data.middle_prices.max ? 
       '평균 '+auctionDetail.value?.data?.middle_prices?.avg * 10000 + '원' :
       '0';
 });

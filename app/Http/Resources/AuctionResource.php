@@ -37,7 +37,7 @@ class AuctionResource extends JsonResource
         $addArray['bids_count'] = Bid::where('auction_id', $auction->id)->count();
 
         // Bid 의 price 의 값이 auction_id 를 기준으로 중간 3개 값을 찾아서 최소값과 최대값 그리고 평균값을 구함 
-        $bids = Bid::where('auction_id', $auction->id)->get();
+        $bids = Bid::where('auction_id', $auction->id)->select('price')->orderBy('price')->get();
         $prices = $bids->pluck('price')->sort();
 
         $middlePrices = collect();
