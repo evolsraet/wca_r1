@@ -36,20 +36,25 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const path = window.location.pathname;
-        const body = document.getElementById('app');
-        if (path.startsWith('/admin')) {
-            body.classList.add('adminPage');
-        }
-        else if (path.startsWith('/')) {
-            body.classList.add('mainPage');
-        }
-        else if (path.startsWith('/loing')) {
-            body.classList.add('mainPage');
-        }
-        else {
-            body.classList.remove('adminPage');
-        }
+        
+        setTimeout(() => {
+            const path = window.location.pathname;
+            const body = document.getElementById('app');
+            if (path.startsWith('/admin')) {
+                body.classList.add('adminPage');
+            }
+            else if (path.startsWith('/')) {
+                body.classList.add('mainPage');
+            }
+            else if (path.startsWith('/loing')) {
+                body.classList.add('mainPage');
+            }
+            else {
+                body.classList.remove('adminPage');
+            }    
+        }, 100);
+
+        
     });
 </script>
 

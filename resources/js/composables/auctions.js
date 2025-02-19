@@ -249,6 +249,8 @@ const submitCarInfo = async () => {
     processing.value = false;
     validationErrors.value = {};
 
+    carInfoForm.mode = 'carInfo';
+
     return wicac.conn()
     //.log() //로그 출력
     .url('/api/auctions/carInfo') //호출 URL
