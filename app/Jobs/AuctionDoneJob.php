@@ -48,7 +48,7 @@ class AuctionDoneJob implements ShouldQueue
                     'message' => '위카옥션을 이용해주셔서 감사합니다. 후기를 남겨주세요!',
                     'data' => $auction,
                     'status9' => $auction->final_price,
-                    'link' => $baseUrl.'/view-do/' . $auction->id,
+                    'link' => $baseUrl.'/view-do/' . $auction->unique_number,
                     'linkTitle' => '후기 남기기'
                 ];
                 

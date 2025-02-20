@@ -56,7 +56,7 @@ class AuctionBidStatusJob implements ShouldQueue
                 'data' => $this->auction,
                 'status3' => $dealer['dealer']['company'].' - '.$dealer['dealer']['name'],
                 'status4' => $this->price,
-                'link' => $baseUrl.'/auction/'.$this->auction->id
+                'link' => $baseUrl.'/auction/'.$this->auction->unique_number
             ];
 
             $sendMessage2 = NotificationTemplate::basicTemplate($data2);
@@ -79,7 +79,7 @@ class AuctionBidStatusJob implements ShouldQueue
                 'title' => '경매 상태가 선택대기로 변경되었습니다.',
                 'data' => $this->auction,
                 'status' => '선택대기',
-                'link' => $baseUrl.'/auction/'.$this->auction->id
+                'link' => $baseUrl.'/auction/'.$this->auction->unique_number
             ];
 
             $sendMessage3 = NotificationTemplate::basicTemplate($data3);
@@ -103,7 +103,7 @@ class AuctionBidStatusJob implements ShouldQueue
                 'title' => '경매 상태가 취소상태로 변경되었습니다.',
                 'data' => $this->auction,
                 'status' => '취소',
-                'link' => $baseUrl.'/auction/'.$this->auction->id
+                'link' => $baseUrl.'/auction/'.$this->auction->unique_number
             ];
 
             $sendMessage3 = NotificationTemplate::basicTemplate($data3);
@@ -127,7 +127,7 @@ class AuctionBidStatusJob implements ShouldQueue
                 'title' => '경매 상태가 재경매로 변경되었습니다.',
                 'data' => $this->auction,
                 'status' => '재경매',
-                'link' => $baseUrl.'/auction/'.$this->auction->id
+                'link' => $baseUrl.'/auction/'.$this->auction->unique_number
             ];
 
             $sendMessage4 = NotificationTemplate::basicTemplate($data4);

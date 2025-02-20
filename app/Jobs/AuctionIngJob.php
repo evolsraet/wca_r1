@@ -53,7 +53,7 @@ class AuctionIngJob implements ShouldQueue
             'data' => Auction::find($this->auction),
             'status' => '경매진행',
             'status2' => $finalAtTrans,
-            'link' => $baseUrl.'/auction/'.$this->auction
+            'link' => $baseUrl.'/auction/'.$auction->unique_number
         ];
 
         $sendMessage = NotificationTemplate::basicTemplate($data);

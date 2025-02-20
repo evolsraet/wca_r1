@@ -9,7 +9,7 @@
             <div class="mb-4">
 
               <div class="d-flex align-items-baseline justify-content-between">
-                <h4>No.{{auction.unique_number}}<span class="text-secondary opacity-50 ms-3 fw-lighter">차량번호 {{auction.car_no}}</span></h4>
+                <h4><span class="text-secondary opacity-50 ms-3 fw-lighter">차량번호 {{auction.car_no}}</span></h4>
                 <input type="hidden" v-model="auction.car_no" id="car_no">
               </div>
 

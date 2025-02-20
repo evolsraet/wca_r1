@@ -46,7 +46,7 @@ class AuctionCohosenJob implements ShouldQueue
                 'message' => '금액을 다시 한번 확인하시고, 탁송정보를 입력해주세요! 미입력시 경매 절차가 진행되지않아요 😅',
                 'data' => $auction,
                 'status4' => $auction->final_price,
-                'link' => $baseUrl.'/auction/'.$this->auction
+                'link' => $baseUrl.'/auction/'.$auction->unique_number
             ];
     
             $sendMessage = NotificationTemplate::basicTemplate($data);
@@ -73,7 +73,7 @@ class AuctionCohosenJob implements ShouldQueue
             $data = [
                 'title' => '딜러님의 입찰이 선택되었습니다.',
                 'data' => $auction,
-                'link' => $baseUrl.'/auction/'.$this->auction
+                'link' => $baseUrl.'/auction/'.$auction->unique_number
             ];
     
             $sendMessage = NotificationTemplate::basicTemplate($data);

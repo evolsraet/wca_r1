@@ -36,12 +36,13 @@ class AuctionCancelJob implements ShouldQueue
 
         $baseUrl = config('app.url');
         $user = User::find($this->user);
+        $auction = Auction::find($this->auction);
 
         $data = [
             'title' => '경매가 취소되었습니다.',
             'data' => Auction::find($this->auction),
             'status' => '취소',
-            'link' => $baseUrl.'/auction/'.$this->auction
+            'link' => $baseUrl.'/auction/'.$auction->unique_number
         ];
 
         $sendMessage = NotificationTemplate::basicTemplate($data);

@@ -5,18 +5,18 @@
             <template v-else>
                 <h4>차량 정보 조회 되었어요</h4>
                 <hr>
-                <div class="car-info-grid">
+                <div>
 
                 <CarInfoItem label="차량번호" :value="carDetails.no" />
-                <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" :isTitle="true" />
+                <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" />
                 <CarInfoItem label="미션" :value="carDetails.mission" />
 
                 <CarInfoItem label="제조사" :value="carDetails.maker" />
                 <CarInfoItem label="년식" :value="carDetails.year" />
-                <CarInfoItem label="용도변경이력" value="-" :isTitle="true" />
+                <CarInfoItem label="용도변경이력" value="-" />
 
                 <CarInfoItem label="모델" :value="carDetails.model" />
-                <CarInfoItem label="배기량" value="2000cc" :isTitle="true" />
+                <CarInfoItem label="배기량" value="2000cc" />
                 <CarInfoItem label="튜닝이력" value="1회" />
 
                 <CarInfoItem label="등급" :value="carDetails.grade" />
