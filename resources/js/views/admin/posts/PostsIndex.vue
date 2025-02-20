@@ -14,7 +14,7 @@
           {{ boardTextMessage }}
         </p>
       </div>
-      <div v-if="boardId === 'notice'">
+      <div v-if="boardId === 'notice' && (isDealer || isUser)">
         <UseGuide class="mt-4"/>
       </div>
       <IntroModal :show="showModal" @close="closeModal"  @click="openModal"/>

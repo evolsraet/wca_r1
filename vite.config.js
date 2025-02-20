@@ -40,7 +40,8 @@ export default defineConfig({
         host: '0.0.0.0', // 모든 네트워크 인터페이스에서 접속 가능
         port: 5173,      // Vite 서버의 포트 (필요에 따라 변경 가능)
         hmr: {
-            host: '192.168.10.185', // 외부 접속용 IP
+            // host: '192.168.10.185', // 외부 접속용 IP
+            host: 'localhost',
         },
     },
 });

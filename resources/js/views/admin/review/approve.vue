@@ -33,16 +33,16 @@
                         <input type="hidden" id="dealer_id" :v-model="rv.dealer_id">
                     </div>
                     <div class="card-body">
-                        <p class="text-secondary opacity-50">차량명(추가예정)</p>
-                        <input class="input-dis form-control text-secondary opacity-50" readonly/>
+                        <p class="text-secondary opacity-50">차량명</p>
+                        <input v-model="car_name" class="input-dis form-control text-secondary opacity-50" readonly/>
                     </div>
                     <div class="card-body">
                         <p class="text-secondary opacity-50">차량번호</p>
                         <input v-model="car_no" class="input-dis form-control text-secondary opacity-50" readonly/>
                     </div>
                     <div class="card-body">
-                        <p class="text-secondary opacity-50">매물번호(추가예정)</p>
-                        <input class="input-dis form-control text-secondary opacity-50" readonly/>
+                        <p class="text-secondary opacity-50">매물번호</p>
+                        <input v-model="item_id" class="input-dis form-control text-secondary opacity-50" readonly/>
                     </div>
                     <div class="card-body">
                         <p class="text-secondary opacity-50">딜러명</p>
@@ -55,13 +55,16 @@
                     <div class="card-body">
                         <p class="text-secondary opacity-50">별점</p>
                         <div class="wrap">
-                            <select class="form-select" :v-model="rv.star" id="starSelect" @change="changeStar($event)">
+                            <!-- <select class="form-select" :v-model="rv.star" id="starSelect" @change="changeStar($event)">
                                 <option value="1">1점</option>
                                 <option value="2">2점</option>
                                 <option value="3">3점</option>
                                 <option value="4">4점</option>
                                 <option value="5">5점</option>
-                            </select>
+                            </select> -->
+
+                            <input v-model="star" class="input-dis form-control text-secondary opacity-50" readonly/>
+
                         </div>
                     </div>
                     <div class="card-body">
@@ -102,9 +105,12 @@ const checkScreenWidth = () => {
     }
   };
 const car_no = ref("");
+const car_name = ref("");
+const item_id = ref("");
 const dealer_name = ref("");
 const price = ref("");
 const car_thumbnail = ref("");
+const star = ref("");
 //바텀 시트 토글시 스타일변경
 function toggleSheet() {
     const bottomSheet = document.querySelector('.bottom-sheet');   
@@ -121,9 +127,9 @@ function submitForm(){
     editReview(reviewId, rv, 'admin');
 }
 
-function changeStar(event) {
-  rv.star = event.target.value;
-}
+// function changeStar(event) {
+//   rv.star = event.target.value;
+// }
 
 const rv = reactive({
     user_id:route.params.id,
@@ -137,6 +143,9 @@ onMounted(async () => {
     window.addEventListener('resize', checkScreenWidth);
     checkScreenWidth();
     const response = await getUserReviewInfo(reviewId);
+    
+    console.log('responseDATA',response);
+
     reviewData.value = [response];
     //carInfo.value = await getCarInfo(response.auction.owner_name, response.auction.car_no);
     await nextTick();
@@ -144,14 +153,17 @@ onMounted(async () => {
     initReviewSystem();
     watchEffect(() => {
         car_no.value = response.auction.car_no,
-        price.value = amtComma(response.auction.win_bid.price),
+        car_name.value = response.auction.car_maker + " " + response.auction.car_model + " " + response.auction.car_model_sub,
+        price.value = amtComma(response.auction.win_bid?.price || response.auction.final_price),
         dealer_name.value = response.dealer.name,
+        item_id.value = response.auction.unique_number,
         rv.auction_id = response.auction_id;
         rv.dealer_id = response.dealer.id;
-        document.getElementById("starSelect").value = response.star;
-        rv.star = response.star;
+        // document.getElementById("starSelect").value = response.star;
+        // rv.star = response.star;
         rv.user_id = response.user_id;
         rv.content = response.content;
+        star.value = response.star;
         car_thumbnail.value = response.auction.car_thumbnail;
     })
 

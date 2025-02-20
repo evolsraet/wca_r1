@@ -26,7 +26,7 @@
                                 </select>
                             </div>
                             <div class="search-type2 p-0">
-                                <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;">
+                                <input type="text" placeholder="검색어" v-model="search_title" style="width: auto !important;" @keyup.enter="searchBtn">
                                 <button type="button" class="search-btn" @click="searchBtn">검색</button>
                             </div>
                         </div>

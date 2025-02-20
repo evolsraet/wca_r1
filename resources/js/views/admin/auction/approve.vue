@@ -96,7 +96,7 @@
                     </div>
                     <div class="card-body">
                       <p class="text-secondary opacity-50">메모</p>
-                      <input v-model="auction.memo" id="memo" class="form-control"/>
+                      <textarea v-model="auction.memo" id="memo" class="form-control" rows="3"></textarea>
                     </div>
                     
 
@@ -275,7 +275,6 @@
               </div>
           </div>
 
-          <hr/>
 
           <div class="mt-3">
             <div class="mt-3">
@@ -283,13 +282,22 @@
             </div>
           </div>
 
+          <hr/>
+
           <div class="mt-3">
+            <!-- 테스트 메뉴 -->
+             <label> 테스트 메뉴 </label>
+             <button type="button" class="btn btn-secondary w-100" @click="diagAuction('ing')"> 경매진행 </button>
+             <button type="button" class="btn btn-secondary w-100 mt-2" @click="AuctionIsDeposit('totalDeposit')"> 입금완료 </button>
+             <button type="button" class="btn btn-secondary w-100 mt-2" @click="AuctionIsDeposit('totalAfterFee')"> 수수료 입금완료 </button>
+
+          </div>
+
+          <!-- <div class="mt-3">
             <div class="mt-3">
               <button type="button" class="btn btn-secondary w-100" @click="diagAuction('ing')"> 경매진행 </button>
             </div>
           </div>
-
-          <hr/>
 
           <div class="mt-3">
             <div class="mt-3">
@@ -301,7 +309,7 @@
             <div class="mt-3">
               <button type="button" class="btn btn-secondary w-100" @click="AuctionIsDeposit('totalAfterFee')"> 수수료 입금완료 </button>
             </div>
-          </div>
+          </div> -->
 
           <!--
           <div @click="toggleVisibility" class="d-flex justify-content-between align-items-center p-3 border-bottom">
