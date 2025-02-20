@@ -10,7 +10,7 @@ class CreateAuctionsTable extends Migration
     {
         Schema::create('auctions', function (Blueprint $table) {
             $table->id();
-            // $table->string('unique_number')->unique()->nullable()->comment('고유 번호');
+            $table->integer('unique_number')->unique();
             $table->string('auction_type')->comment('경매 타입');
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('owner_name')->comment('소유자명');

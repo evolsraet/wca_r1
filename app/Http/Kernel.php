@@ -70,4 +70,9 @@ class Kernel extends HttpKernel
         'permission' => \Spatie\Permission\Middlewares\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middlewares\RoleOrPermissionMiddleware::class,
     ];
+
+    protected $routeMiddleware = [
+        // 다른 미들웨어...
+        'convert.id.to.unique' => \App\Http\Middleware\ConvertIdToUniqueNumber::class,
+    ];
 }

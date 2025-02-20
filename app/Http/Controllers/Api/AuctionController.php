@@ -350,4 +350,15 @@ class AuctionController extends Controller
         }
     }
 
+    public function showByUniqueNumber($unique_number)
+    {
+        $auction = Auction::where('unique_number', $unique_number)->first();
+
+        if (!$auction) {
+            return response()->json(['message' => '경매를 찾을 수 없습니다.'], 404);
+        }
+
+        return response()->json($auction);
+    }
+
 }

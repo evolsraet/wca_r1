@@ -43,7 +43,7 @@ Route::apiResource('users', UserController::class)
 // auction
 Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);
 Route::apiResource('auctions', AuctionController::class)
-    ->middleware('auth:sanctum');
+    ->middleware(['auth:sanctum', 'convert.id.to.unique']);
 Route::post('auctions/checkExpectedPrice', [AuctionController::class, 'CheckExpectedPrice']);
 Route::post('auctions/allIngCount', [AuctionController::class, 'AllIngCount']);
 Route::post('/auctions/{auction}/upload', [AuctionController::class, 'uploadFile']);

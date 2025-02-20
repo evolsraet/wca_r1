@@ -915,7 +915,7 @@ function loadPage( page, type, pagination) {
 
 function navigateToDetail(auction) { 
     //console.log("디테일 :", auction.id);
-    router.push({ name: 'AuctionDetail', params: { id: auction.id } });
+    router.push({ name: 'AuctionDetail', params: { id: auction.unique_number } });
 }
 
 function getAuctionStyle(auction) { 

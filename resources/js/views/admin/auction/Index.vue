@@ -35,7 +35,7 @@
                     </select>
                 </div>
                 <div class="search-type2 p-0">
-                    <input type="text" placeholder="회원 검색" v-model="search_title" id="searchUserName" @keyup.enter="searchBtn" style="width: auto !important; margin-right: 10px;"/>
+                    <input type="text" placeholder="매물 검색" v-model="search_title" id="searchUserName" @keyup.enter="searchBtn" style="width: auto !important; margin-right: 10px;"/>
                     <button type="button" class="search-btn" @click="searchBtn">검색</button>
                 </div>
             </div>
@@ -115,7 +115,7 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                {{ auction.id }}
+                                {{ auction.unique_number }}
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 {{ auction.car_no }}
@@ -150,7 +150,7 @@
                             <td class="px-6 py-4 text-sm">
                                 <router-link
                                     :to="{ 
-                                        name: 'auction.approve', params: { id: auction.id } 
+                                        name: 'auction.approve', params: { id: auction.unique_number } 
                                     }"
                                     class="ms-2 fs-6 badge edit"
                                     >수정

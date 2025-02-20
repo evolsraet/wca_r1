@@ -9,7 +9,7 @@
             <div class="mb-4">
 
               <div class="d-flex align-items-baseline justify-content-between">
-                <h4>No.{{id}}<span class="text-secondary opacity-50 ms-3 fw-lighter">차량번호 {{auction.car_no}}</span></h4>
+                <h4>No.{{auction.unique_number}}<span class="text-secondary opacity-50 ms-3 fw-lighter">차량번호 {{auction.car_no}}</span></h4>
                 <input type="hidden" v-model="auction.car_no" id="car_no">
               </div>
 
@@ -73,115 +73,142 @@
                   <input v-model="auction.owner_name" id="owner_name" class="form-control"/>
                 </div> -->
 
-                
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">상태</p>
-                  <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
-                    <option v-for="(label, value) in statusLabel" :key="value" :value="value">{{ label }}</option>
-                  </select>
-                  <p class="opacity-50 text-red">*신청완료 -> 진단대기 -> 경매진행 순서로 진단대기를 거쳐야 경매마감일자가 나옵니다. </p>
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">은행</p>
-                  <input v-model="auction.bank" type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" class="input-dis form-control" readonly>
-                </div>
-                <!--<component :is="currentComponent" v-bind:id="dynamicId"></component>-->
-              <!--  <BankModal  :showDetails="showDetails" @update:showDetails="showDetails = $event" @select-bank="selectBank" />-->
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">계좌번호</p>
-                  <input v-model="auction.account" id="account" class="form-control"/>
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">메모</p>
-                  <input v-model="auction.memo" id="memo" class="form-control"/>
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">지역</p>
-                  <select class="form-select" :v-model="auction.region" @change="changeRegion" id="region">
-                    <option value="" selected>시/도 선택</option>
-                    <option v-for="region in regions" :key="region" :value="region">{{ region }}</option>
-                  </select>
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">우편주소</p>
-                  <input v-model="auction.addr_post" placeholder="우편번호" class="input-dis form-control" readonly>
-                  <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
-                  <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
-                  </div>
-                  <div>
-                    <input v-model="auction.addr1" class="input-dis form-control" readonly>
-                  </div>
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">상세주소</p>
-                  <input v-model="auction.addr2" class="form-control" id="addr2">
-                </div>
-                <!--
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">경매마감일</p>
-                  <input v-model="auction.final_at" id="finalAt" class="form-control" type="datetime-local">
-                </div>
-                -->
+                <div class="row">
+                  <div class="col-lg-6">
 
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">진단희망일1</p>
-                  <input v-model="auction.diag_first_at" id="diagFirstAt" class="form-control" type="datetime-local">
+
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">상태</p>
+                      <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
+                        <option v-for="(label, value) in statusLabel" :key="value" :value="value">{{ label }}</option>
+                      </select>
+                      <p class="opacity-50 text-red">*신청완료 -> 진단대기 -> 경매진행 순서로 진단대기를 거쳐야 경매마감일자가 나옵니다. </p>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">은행</p>
+                      <input v-model="auction.bank" type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" class="input-dis form-control" readonly>
+                    </div>
+                    <!--<component :is="currentComponent" v-bind:id="dynamicId"></component>-->
+                  <!--  <BankModal  :showDetails="showDetails" @update:showDetails="showDetails = $event" @select-bank="selectBank" />-->
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">계좌번호</p>
+                      <input v-model="auction.account" id="account" class="form-control"/>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">메모</p>
+                      <input v-model="auction.memo" id="memo" class="form-control"/>
+                    </div>
+                    
+
+                  </div>
+                  <div class="col-lg-6">
+
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">지역</p>
+                      <select class="form-select" :v-model="auction.region" @change="changeRegion" id="region">
+                        <option value="" selected>시/도 선택</option>
+                        <option v-for="region in regions" :key="region" :value="region">{{ region }}</option>
+                      </select>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">우편주소</p>
+                      <input v-model="auction.addr_post" placeholder="우편번호" class="input-dis form-control" readonly>
+                      <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
+                      <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                        <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
+                      </div>
+                      <div>
+                        <input v-model="auction.addr1" class="input-dis form-control" readonly>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">상세주소</p>
+                      <input v-model="auction.addr2" class="form-control" id="addr2">
+                    </div>
+                    <!--
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">경매마감일</p>
+                      <input v-model="auction.final_at" id="finalAt" class="form-control" type="datetime-local">
+                    </div>
+                    -->
+
+                  </div>
                 </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">진단희망일2</p>
-                  <input v-model="auction.diag_second_at" id="diagSecondAt" class="form-control" type="datetime-local">
+
+                
+                <div class="row">
+                  <div class="col-lg-6">
+
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">진단희망일1</p>
+                      <input v-model="auction.diag_first_at" id="diagFirstAt" class="form-control" type="datetime-local">
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">진단희망일2</p>
+                      <input v-model="auction.diag_second_at" id="diagSecondAt" class="form-control" type="datetime-local">
+                    </div>
+                    
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">선택일</p>
+                      <input v-model="auction.choice_at" id="choiceAt" class="form-control" type="datetime-local">
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">탁송희망일</p>
+                      <input v-model="auction.taksong_wish_at" id="choiceAt" class="form-control" type="datetime-local">
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">완료일</p>
+                      <input v-model="auction.done_at" id="taksongWishAt" class="form-control" type="datetime-local">
+                    </div>
+
+
+                  </div>
+                  <div class="col-lg-6">
+
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">성공수수료</p>
+                      <input v-model="auction.success_fee" id="successFee" class="form-control" @input="updateKoreanAmount('successFee')">
+                      <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ successFeeKorean }}</p>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">진단수수료</p>
+                      <input v-model="auction.diag_fee" id="diagFee" class="form-control" @input="updateKoreanAmount('diagFee')">
+                      <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ diagFeeKorean }}</p>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">총 비용</p>
+                      <input v-model="auction.total_fee" id="totalFee" class="form-control" @input="updateKoreanAmount('totalFee')">
+                      <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ totalFeeKorean }}</p>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">희망가</p>
+                      <input v-model="auction.hope_price" id="hopePrice" class="form-control" @input="updateKoreanAmount('hopePrice')">
+                      <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ hopePriceFeeKorean }}</p>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">낙찰가</p>
+                      <input v-model="auction.final_price" id="finalPrice" class="form-control" @input="updateKoreanAmount('finalPrice')">
+                      <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ finalPriceFeeKorean }}</p>
+                    </div>
+                    <div class="form-group my-3">
+                      <label for="dealer">인수차량 도착지 주소</label>
+                      <input type="text" v-model="auction.dest_addr_post" class="input-dis form-control" readonly />
+                      <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
+                      <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                        <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
+                      </div>
+                      <div class="input-with-button">
+                        <input type="text" v-model="auction.dest_addr1" class="input-dis form-control" readonly />
+                      </div>
+                      <input type="text" v-model="auction.dest_addr2" class="form-control" />
+                    </div>
+
+                  </div>
                 </div>
                 
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">선택일</p>
-                  <input v-model="auction.choice_at" id="choiceAt" class="form-control" type="datetime-local">
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">탁송희망일</p>
-                  <input v-model="auction.taksong_wish_at" id="choiceAt" class="form-control" type="datetime-local">
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">완료일</p>
-                  <input v-model="auction.done_at" id="taksongWishAt" class="form-control" type="datetime-local">
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">성공수수료</p>
-                  <input v-model="auction.success_fee" id="successFee" class="form-control" @input="updateKoreanAmount('successFee')">
-                  <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ successFeeKorean }}</p>
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">진단수수료</p>
-                  <input v-model="auction.diag_fee" id="diagFee" class="form-control" @input="updateKoreanAmount('diagFee')">
-                  <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ diagFeeKorean }}</p>
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">총 비용</p>
-                  <input v-model="auction.total_fee" id="totalFee" class="form-control" @input="updateKoreanAmount('totalFee')">
-                  <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ totalFeeKorean }}</p>
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">희망가</p>
-                  <input v-model="auction.hope_price" id="hopePrice" class="form-control" @input="updateKoreanAmount('hopePrice')">
-                  <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ hopePriceFeeKorean }}</p>
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">낙찰가</p>
-                  <input v-model="auction.final_price" id="finalPrice" class="form-control" @input="updateKoreanAmount('finalPrice')">
-                  <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ finalPriceFeeKorean }}</p>
-                </div>
-                <div class="form-group my-3">
-                  <label for="dealer">인수차량 도착지 주소</label>
-                  <input type="text" v-model="auction.dest_addr_post" class="input-dis form-control" readonly />
-                  <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
-                  <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-                    <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
-                  </div>
-                  <div class="input-with-button">
-                    <input type="text" v-model="auction.dest_addr1" class="input-dis form-control" readonly />
-                  </div>
-                  <input type="text" v-model="auction.dest_addr2" class="form-control" />
-                </div>
+
+                
+                
                 <div></div>
                 <div class="mb-3">
                   <label for="user-title" class="form-label">자동차등록증</label>

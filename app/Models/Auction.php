@@ -142,4 +142,30 @@ class Auction extends Model implements HasMedia
                 ->height(env('IMAGE_HEIGHT', 300));
         }
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($auction) {
+            $auction->unique_number = self::generateUniqueNumber();
+        });
+    }
+
+    private static function generateUniqueNumber()
+    {
+        $maxNumber = 9999;
+        $minNumber = 1000;
+
+        do {
+            $number = rand($minNumber, $maxNumber);
+            if (self::where('unique_number', $number)->exists()) {
+                // 모든 숫자가 사용된 경우, 범위를 확장
+                $minNumber = $maxNumber + 1;
+                $maxNumber = $minNumber * 10 - 1;
+            }
+        } while (self::where('unique_number', $number)->exists());
+
+        return $number;
+    }
 }
