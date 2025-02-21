@@ -57,6 +57,9 @@
             </div>
             <!-- Content -->
             <div class="mb-3">
+              <div v-if="post.filePath">
+                <img :src="post.filePath" alt="첨부 이미지" class="img-fluid">
+              </div>
               <label v-if="!navigatedThroughHandleRowClick && isAdmin" for="post-content" class="form-label">컨텐츠 내용</label>
               <div v-if="navigatedThroughHandleRowClick" class="py-3">
                 <div v-html="sanitizedContent"></div>
@@ -170,6 +173,7 @@ const post = reactive({
   board_attach: '',
   board_attach_name: '',
   fileUUID: '',
+  filePath: '',
   fileDeleteChk: false
 });
 
@@ -277,6 +281,7 @@ function fileExstCheck(info){
         boardAttachUrl.value = info.files.board_attach[0].original_url;
         post.board_attach_name = info.files.board_attach[0].file_name;
         post.fileUUID = info.files.board_attach[0].uuid;
+        post.filePath = info.files.board_attach[0].original_url;
       }
     }
   }
@@ -288,6 +293,8 @@ onMounted(async () => {
   await getBoardCategories(boardId.value);
   await getPost(boardId.value, postId);
   if (postData.value) {
+    console.log('postData.value',postData.value);
+
     fileExstCheck(postData.value);
     post.title = postData.value.title;
     post.content = postData.value.content;

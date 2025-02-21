@@ -68,13 +68,13 @@
                     </div>
                   </div>
                   <div class="card-body p-3 pt-0 ">
-                    <p class="card-title fs-5 fw-bolder">{{ auctionDetail.data.car_model ? auctionDetail.data.car_model +' '+ auctionDetail.data.car_model_sub +' '+ auctionDetail.data.car_fuel + ' ('+ auctionDetail.data.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
-                    <p>{{ auctionDetail.data.car_year ? auctionDetail.data.car_year : '2020' }} 년 | {{ auctionDetail.data.car_km ? auctionDetail.data.car_km : '2.4' }}km</p>
-                    <p class="text-secondary opacity-50">{{ auctionDetail.data.car_maker ? auctionDetail.data.car_maker +' '+ auctionDetail.data.car_model : '현대 소나타' }} ({{ auctionDetail.data.car_grade ? auctionDetail.data.car_grade : 'DN8' }})</p>
+                    <!--<p>{{ auctionDetail.data.car_year ? auctionDetail.data.car_year : '2020' }} 년 | {{ auctionDetail.data.car_km ? auctionDetail.data.car_km : '2.4' }}km</p>-->
+                    <!--<p class="text-secondary opacity-50">{{ auctionDetail.data.car_maker ? auctionDetail.data.car_maker +' '+ auctionDetail.data.car_model : '현대 소나타' }} ({{ auctionDetail.data.car_grade ? auctionDetail.data.car_grade : 'DN8' }})</p>-->
                     <div class="enter-view">
                       <AlarmModal ref="alarmModal" />
                     </div>
-                    <div class="d-flex">
+                    <div class="d-flex justify-content-between align-items-baseline">
+                      <p class="card-title fs-5 fw-bolder">{{ auctionDetail.data.car_model ? auctionDetail.data.car_model +' '+ auctionDetail.data.car_model_sub +' '+ auctionDetail.data.car_fuel + ' ('+ auctionDetail.data.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
                       <h5 class="card-title"><span class="blue-box border-6">{{ isAccident(auctionDetail.data.is_accident) }}</span></h5>
                       <h5 v-if="auctionDetail.data.is_reauction !== 0"><span class="gray-box border-6">재경매</span></h5>
                       <h5 v-if="auctionDetail.data.is_biz !== 0"><span class="red-box-type03 border-6">법인 / 사업자</span></h5>
@@ -183,8 +183,6 @@
                   <div class="icon rear-camera-ac"></div>
                   <p>후방카메라</p>
                 </div>
-              </div>
-              <div class="option-row">
                 <div class="option-icon">
                   <div class="icon sunroof"></div>
                   <p>선루프</p>
@@ -198,7 +196,7 @@
                   <p>자동에어컨</p>
                 </div>
               </div>
-              <div class="option-row">
+              <div class="option-row">                
                 <div class="option-icon">
                   <div class="icon electric-seat-ac"></div>
                   <p>전동</p>
@@ -215,8 +213,6 @@
                   <div class="icon ventilated-seat"></div>
                   <p>통풍</p>
                 </div>
-              </div>
-              <div class="option-row">
                 <div class="option-icon">
                   <div class="icon parking-sensor"></div>
                   <p>주차 감지 센서</p>
@@ -226,6 +222,10 @@
                   <p>전동 사이드미러</p>
                 </div>
               </div>
+              <!-- <div class="option-row">
+              </div> -->
+              <!-- <div class="option-row">
+              </div> -->
             </div>
             <ul class="machine-inform-title">
               <li class="text-secondary opacity-50">추가옵션</li>

@@ -3724,11 +3724,11 @@ input[type="checkbox"] {
 }
 
 .option-row:nth-child(1) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);
 }
 
 .option-row:nth-child(2) {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);
 }
 
 .option-row:nth-child(3) {
@@ -3746,8 +3746,8 @@ input[type="checkbox"] {
 }
 
 .option-icon .icon {
-    width: 40px;
-    height: 40px;
+    width: 30px;
+    height: 30px;
     margin-bottom: 10px;
     background-size: contain;
     background-repeat: no-repeat;
@@ -3857,7 +3857,7 @@ input[type="checkbox"] {
 
 .option-icon p {
     margin: 0;
-    font-size: 14px;
+    font-size: 12px;
     color: #333;
 }
 
