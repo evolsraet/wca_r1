@@ -57,7 +57,7 @@
             </div>
             <!-- Content -->
             <div class="mb-3">
-              <div v-if="post.filePath">
+              <div v-if="navigatedThroughHandleRowClick && post.filePath">
                 <img :src="post.filePath" alt="첨부 이미지" class="img-fluid">
               </div>
               <label v-if="!navigatedThroughHandleRowClick && isAdmin" for="post-content" class="form-label">컨텐츠 내용</label>
