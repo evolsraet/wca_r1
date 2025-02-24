@@ -1,5 +1,18 @@
 <template>
-  <h4><span class="admin-icon admin-icon-menu03"></span>매물 관리</h4>
+  <div class="d-flex flex-column flex-md-row justify-content-between sticky-top">
+    <h4><span class="admin-icon admin-icon-menu03"></span>매물 관리</h4>
+    <div class="dropdown">
+      <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+        테스트메뉴
+      </button>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item" href="#" @click="diagAuction('ing')">경매진행</a></li>
+        <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalDeposit')">입금완료</a></li>
+        <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalAfterFee')">수수료 입금완료</a></li>
+      </ul>
+    </div>
+  </div>
+
   <div class="container my-5">
   <div class="container-fluid" v-if="auctionDetails">
     <form @submit.prevent="updateAuction(auctionId, auction)">
@@ -8,18 +21,18 @@
           <div>
             <div class="mb-4">
 
-              <div class="d-flex align-items-baseline justify-content-between">
-                <h4><span class="text-secondary opacity-50 ms-3 fw-lighter">차량번호 {{auction.car_no}}</span></h4>
-                <input type="hidden" v-model="auction.car_no" id="car_no">
-              </div>
-
-              <div class="sell-info mb-5">
+              <div class="sell-info">
                   <div class="car-image-style">
                     <div class="card-img-top-ty01" :style="{ backgroundImage: `url(${auction.car_thumbnail})` }">
                       <!-- <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2"> -->
                     </div>
                   </div>
                   <div class="car-info">
+                      <div class="item">
+                        <span class="label">차량번호</span>
+                        <span class="value">{{ auction.car_no }}</span>
+                        <input type="hidden" v-model="auction.car_no" id="car_no">
+                      </div>
                       <div class="item">
                           <span class="label">등록일자</span>
                           <span class="value">{{ created_at }}</span>
@@ -30,12 +43,12 @@
                           <span class="value">{{ updated_at }}</span>
                           <input type="hidden" v-model="updated_at" id="updated_at">
                       </div>
-                      <div class="total">
-                          <span>소유자명</span>
-                          <span>{{ auction.owner_name }}</span>
-                          <input type="hidden" v-model="auction.owner_name" id="owner_name">
+                      <div class="item">
+                        <span class="label">소유자명</span>
+                        <span class="value">{{ auction.owner_name }}</span>
+                        <input type="hidden" v-model="auction.owner_name" id="owner_name">
                       </div>
-                  </div>
+                   </div>
               </div>
 
               <div class="card my-auction">
@@ -280,17 +293,6 @@
             <div class="mt-3">
               <button type="button" class="btn btn-success w-100" @click="diagAuction('diag')"> 진단대기 </button>
             </div>
-          </div>
-
-          <hr/>
-
-          <div class="mt-3">
-            <!-- 테스트 메뉴 -->
-             <label> 테스트 메뉴 </label>
-             <button type="button" class="btn btn-secondary w-100" @click="diagAuction('ing')"> 경매진행 </button>
-             <button type="button" class="btn btn-secondary w-100 mt-2" @click="AuctionIsDeposit('totalDeposit')"> 입금완료 </button>
-             <button type="button" class="btn btn-secondary w-100 mt-2" @click="AuctionIsDeposit('totalAfterFee')"> 수수료 입금완료 </button>
-
           </div>
 
           <!-- <div class="mt-3">
@@ -806,28 +808,64 @@ const registerAuction = async () => {
 
 const diagAuction = async (status) => {
 
-  try {
-    const id = route.params.id;
-    await updateAuctionStatus(id, status);
-    router.push({ name: 'auctions.index' }); 
-    status == 'ing' ? alert('경매진행으로 상태가 변경되었습니다.') : alert('진단대기로 상태가 변경되었습니다.');
-  } catch (error) {
-    console.error('Error updating auction status:', error);
-    alert('등록에 실패했습니다.');
+  const confirm = await swal.fire({
+    title: '경매진행 상태 변경',
+    text: '경매진행 상태로 변경하시겠습니까?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: '예',
+    cancelButtonText: '아니오'
+  });
+
+  if (confirm.isConfirmed) {
+    try {
+      const id = route.params.id;
+      await updateAuctionStatus(id, status);
+      router.push({ name: 'auctions.index' }); 
+      status == 'ing' ? alert('경매진행으로 상태가 변경되었습니다.') : alert('진단대기로 상태가 변경되었습니다.');
+    } catch (error) {
+      console.error('Error updating auction status:', error);
+      alert('등록에 실패했습니다.');
+    }
+  }else{
+    return;
   }
 
 }
 
 const AuctionIsDeposit = async (IsDeposit) => {
-  try {
-    const id = route.params.id;
-    await updateAuctionIsDeposit(id, IsDeposit);
-    router.push({ name: 'auctions.index' }); 
-    alert('등록되었습니다.');
-  } catch (error) {
-    console.error('Error updating auction status:', error);
-    alert('등록에 실패했습니다.');
+  
+  const confirm = await swal.fire({
+    title: '상태 변경',
+    text: '상태를 변경하시겠습니까?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#3085d6',
+    cancelButtonColor: '#d33',
+    confirmButtonText: '예',
+    cancelButtonText: '아니오'
+  });
+
+  if (confirm.isConfirmed) {
+  
+    try {
+      const id = route.params.id;
+      await updateAuctionIsDeposit(id, IsDeposit);
+      router.push({ name: 'auctions.index' }); 
+      alert('등록되었습니다.');
+    } catch (error) {
+      console.error('Error updating auction status:', error);
+      alert('등록에 실패했습니다.');
+    }
+
+  }else{
+    return;
   }
+  
+  
+  
 }
 
 function editPostCode(elementName) {
@@ -1107,5 +1145,14 @@ onBeforeUnmount(() => {
 .sell-info{
   padding-right: 15px;
 }
+}
+
+.sticky-top {
+  background-color: #fff !important;
+  padding: 5px 0px !important;
+}
+
+button.btn {
+  height: auto !important;
 }
 </style>

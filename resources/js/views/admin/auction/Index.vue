@@ -13,7 +13,7 @@
         </div>
 
 
-        <div class="container mb-3 d-flex flex-column flex-md-row justify-content-between">
+        <div class="container mb-3 d-flex flex-column flex-md-row justify-content-between sticky-top">
 
             <div class="text-end status-selector">
                 <input type="radio" name="auction_type" value="all" id="all" hidden checked @change="setAuctionTypeFilter('all')">
@@ -413,6 +413,11 @@
 .search-type2 .search-btn{
     top: 47px !important;  
     right: 4px !important;
+}
+
+.sticky-top {
+    background-color: #fff !important;
+    padding:5px 0px !important;
 }
     </style>
     

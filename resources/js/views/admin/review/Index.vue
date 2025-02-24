@@ -424,4 +424,8 @@ watch(
   height: 100%; 
   object-fit: cover; 
 }
+.sticky-top {
+    background-color: #fff !important;
+    padding:5px 0px !important;
+}
 </style>

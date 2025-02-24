@@ -3,7 +3,7 @@
         <div class="col-md-12">
             <h4>입금 관리<p class="text-secondary opacity-75 fs-6 my-3">입금 내역 관리 페이지 입니다.</p></h4>
             </div>
-                <div class="container mb-2">
+                <div class="container mb-2 sticky-top">
                     <div class="d-flex justify-content-end responsive-flex-end gap-2">
                         <div class="text-end select-option">
                             <select class="form-select select-rank" aria-label="상태" @change="event => setFilter(event.target.value)">
@@ -229,6 +229,9 @@ function setFilter(status) { // 필터 설정
     min-width: 73px !important;
     padding: 0 10px !important; 
 }
-
+.sticky-top {
+    background-color: #fff !important;
+    padding:5px 0px !important;
+}
     </style>
     
