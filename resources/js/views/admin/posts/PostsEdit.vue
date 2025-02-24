@@ -317,8 +317,11 @@ watchEffect(() => {
 
 /* 글 수정시 */ 
 async function submitForm() {
-  // 초기화: 이전 오류 메시지를 제거
-  Object.keys(validationErrors).forEach(key => validationErrors[key] = '');
+  // validationErrors가 객체인지 확인하고, 객체가 아닐 경우 빈 객체로 초기화
+  if (typeof validationErrors !== 'object' || validationErrors === null) {
+    // 초기화: 이전 오류 메시지를 제거
+    Object.keys(validationErrors).forEach(key => validationErrors[key] = '');
+  }
 
   // 유효성 검사
   const form = await validate();
