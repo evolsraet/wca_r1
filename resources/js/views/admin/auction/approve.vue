@@ -34,6 +34,11 @@
                         <input type="hidden" v-model="auction.car_no" id="car_no">
                       </div>
                       <div class="item">
+                        <span class="label">소유자명</span>
+                        <span class="value">{{ auction.owner_name }}</span>
+                        <input type="hidden" v-model="auction.owner_name" id="owner_name">
+                      </div>
+                      <div class="item">
                           <span class="label">등록일자</span>
                           <span class="value">{{ created_at }}</span>
                           <input type="hidden" v-model="created_at" id="created_at">
@@ -42,12 +47,7 @@
                           <span class="label">최종 수정일자</span>
                           <span class="value">{{ updated_at }}</span>
                           <input type="hidden" v-model="updated_at" id="updated_at">
-                      </div>
-                      <div class="item">
-                        <span class="label">소유자명</span>
-                        <span class="value">{{ auction.owner_name }}</span>
-                        <input type="hidden" v-model="auction.owner_name" id="owner_name">
-                      </div>
+                      </div>                      
                    </div>
               </div>
 
@@ -941,8 +941,16 @@ onMounted(async () => {
     auction.addr_post = data.addr_post;
     auction.addr1 = data.addr1;
     auction.addr2 = data.addr2;
-    auction.diag_first_at = data.diag_first_at;
-    auction.diag_second_at = data.diag_second_at;
+    // auction.diag_first_at = data.diag_first_at;
+    if(data.diag_first_at){
+      const formattedValue = data.diag_first_at.replace(" ", "T").substring(0, 16);  // 형식 변환
+      auction.diag_first_at = formattedValue;
+    }
+    // auction.diag_second_at = data.diag_second_at;
+    if(data.diag_second_at){
+      const formattedValue = data.diag_second_at.replace(" ", "T").substring(0, 16);  // 형식 변환
+      auction.diag_second_at = formattedValue;
+    }
     auction.car_thumbnail = data.car_thumbnail;
     //auction.final_at = data.final_at;
 
@@ -1153,6 +1161,6 @@ onBeforeUnmount(() => {
 }
 
 button.btn {
-  height: auto !important;
+  height: auto;
 }
 </style>
