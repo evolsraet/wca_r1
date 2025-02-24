@@ -1,16 +1,26 @@
 <template>
   <div class="d-flex flex-column flex-md-row justify-content-between sticky-top">
     <h4><span class="admin-icon admin-icon-menu03"></span>매물 관리</h4>
-    <div class="dropdown">
-      <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-        테스트메뉴
-      </button>
-      <ul class="dropdown-menu">
-        <li><a class="dropdown-item" href="#" @click="diagAuction('ing')">경매진행</a></li>
-        <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalDeposit')">입금완료</a></li>
-        <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalAfterFee')">수수료 입금완료</a></li>
-      </ul>
+
+    <div class="d-flex flex-column flex-md-row justify-content-between">
+      <div style="margin-right: 10px;"> 
+        <button class="btn btn-primary btn-sm" @click="updateAuction(auctionId, auction)">저장</button>
+      </div>
+      <div style="margin-right: 10px;"> 
+        <button class="btn btn-success btn-sm" @click="diagAuction('diag')">진단대기</button>
+      </div>
+      <div class="dropdown">
+        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          테스트메뉴
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" @click="diagAuction('ing')">경매진행</a></li>
+          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalDeposit')">입금완료</a></li>
+          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalAfterFee')">수수료 입금완료</a></li>
+        </ul>
+      </div>
     </div>
+    
   </div>
 
   <div class="container my-5">
