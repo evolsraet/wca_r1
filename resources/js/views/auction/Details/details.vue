@@ -74,7 +74,7 @@
                       <AlarmModal ref="alarmModal" />
                     </div>
                     <div class="d-flex justify-content-between align-items-baseline">
-                      <p class="card-title fs-5 fw-bolder">{{ auctionDetail.data.car_model ? auctionDetail.data.car_model +' '+ auctionDetail.data.car_model_sub +' '+ auctionDetail.data.car_fuel + ' ('+ auctionDetail.data.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                      <p class="card-title fs-4 fw-bolder">{{ auctionDetail.data.car_model ? auctionDetail.data.car_model +' '+ auctionDetail.data.car_model_sub +' '+ auctionDetail.data.car_fuel + ' ('+ auctionDetail.data.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
                       <h5 class="card-title"><span class="blue-box border-6">{{ isAccident(auctionDetail.data.is_accident) }}</span></h5>
                       <h5 v-if="auctionDetail.data.is_reauction !== 0"><span class="gray-box border-6">재경매</span></h5>
                       <h5 v-if="auctionDetail.data.is_biz !== 0"><span class="red-box-type03 border-6">법인 / 사업자</span></h5>
@@ -88,6 +88,9 @@
                       <p class="text-secondary opacity-50">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 : <span class="tc-red">&nbsp;2024년 6월 26일 오후 6:12</span></p>
                       </div>-->
                     </div>
+
+                    <hr style="border-top: 1px dashed;"/>
+
                     <div v-if="auctionDetail.data.status !== 'diag' && auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'cancel'">
                       <!-- <p v-if="!showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 숨기기</p> -->
                       <!-- <p v-if="showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p> -->
