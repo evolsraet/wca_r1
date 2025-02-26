@@ -126,7 +126,7 @@ const isDealer = computed(() => user.value?.roles?.includes('dealer'));
 const isUser = computed(() => user.value?.roles?.includes('user'));
 
 function navigateToDetail(auction) {
-  router.push({ name: 'AuctionDetail', params: { id: auction.id } });
+  router.push({ name: 'AuctionDetail', params: { id: auction.unique_number } });
 }
 
 const checkScreenWidth = () => {
