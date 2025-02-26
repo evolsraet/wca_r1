@@ -2,11 +2,11 @@
   <div class="d-flex flex-column flex-md-row justify-content-between sticky-top">
     <h4><span class="admin-icon admin-icon-menu03"></span>매물 관리</h4>
 
-    <div class="d-flex flex-column flex-md-row justify-content-between">
-      <div style="margin-right: 10px;"> 
+    <div class="d-flex flex-column flex-md-row justify-content-between pc-bottoms">
+      <div style="margin-right: 5px;"> 
         <button class="btn btn-primary btn-sm" @click="updateAuction(auctionId, auction)">저장</button>
       </div>
-      <div style="margin-right: 10px;"> 
+      <div style="margin-right: 5px;"> 
         <button class="btn btn-success btn-sm" @click="diagAuction('diag')">진단대기</button>
       </div>
       <div class="dropdown">
@@ -121,10 +121,7 @@
                       <p class="text-secondary opacity-50">메모</p>
                       <textarea v-model="auction.memo" id="memo" class="form-control" rows="3"></textarea>
                     </div>
-                    
 
-                  </div>
-                  <div class="col-lg-6">
 
                     <div class="card-body">
                       <p class="text-secondary opacity-50">지역</p>
@@ -155,19 +152,10 @@
                     </div>
                     -->
 
-                  </div>
-                </div>
-
-                
-                <div class="row">
-                  <div class="col-lg-6">
 
                     <div class="card-body">
-                      <p class="text-secondary opacity-50">진단희망일1</p>
+                      <p class="text-secondary opacity-50">진단희망일</p>
                       <input v-model="auction.diag_first_at" id="diagFirstAt" class="form-control" type="datetime-local">
-                    </div>
-                    <div class="card-body">
-                      <p class="text-secondary opacity-50">진단희망일2</p>
                       <input v-model="auction.diag_second_at" id="diagSecondAt" class="form-control" type="datetime-local">
                     </div>
                     
@@ -183,35 +171,46 @@
                       <p class="text-secondary opacity-50">완료일</p>
                       <input v-model="auction.done_at" id="taksongWishAt" class="form-control" type="datetime-local">
                     </div>
-
+                    
 
                   </div>
                   <div class="col-lg-6">
 
+
                     <div class="card-body">
-                      <p class="text-secondary opacity-50">성공수수료</p>
+                      <div class="d-flex justify-content-between">
+                        <p class="text-secondary opacity-50">성공수수료</p>
+                        <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ successFeeKorean }}</p>
+                      </div>
                       <input v-model="auction.success_fee" id="successFee" class="form-control" @input="updateKoreanAmount('successFee')">
-                      <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ successFeeKorean }}</p>
                     </div>
                     <div class="card-body">
-                      <p class="text-secondary opacity-50">진단수수료</p>
+                      <div class="d-flex justify-content-between">
+                        <p class="text-secondary opacity-50">진단수수료</p>
+                        <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ diagFeeKorean }}</p>
+                      </div>
                       <input v-model="auction.diag_fee" id="diagFee" class="form-control" @input="updateKoreanAmount('diagFee')">
-                      <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ diagFeeKorean }}</p>
                     </div>
                     <div class="card-body">
-                      <p class="text-secondary opacity-50">총 비용</p>
+                      <div class="d-flex justify-content-between">
+                        <p class="text-secondary opacity-50">총 비용</p>
+                        <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ totalFeeKorean }}</p>
+                      </div>
                       <input v-model="auction.total_fee" id="totalFee" class="form-control" @input="updateKoreanAmount('totalFee')">
-                      <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ totalFeeKorean }}</p>
                     </div>
                     <div class="card-body">
-                      <p class="text-secondary opacity-50">희망가</p>
+                      <div class="d-flex justify-content-between">
+                        <p class="text-secondary opacity-50">희망가</p>
+                        <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ hopePriceFeeKorean }}</p>
+                      </div>
                       <input v-model="auction.hope_price" id="hopePrice" class="form-control" @input="updateKoreanAmount('hopePrice')">
-                      <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ hopePriceFeeKorean }}</p>
                     </div>
                     <div class="card-body">
-                      <p class="text-secondary opacity-50">낙찰가</p>
+                      <div class="d-flex justify-content-between">
+                        <p class="text-secondary opacity-50">낙찰가</p>
+                        <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ finalPriceFeeKorean }}</p>
+                      </div>
                       <input v-model="auction.final_price" id="finalPrice" class="form-control" @input="updateKoreanAmount('finalPrice')">
-                      <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ finalPriceFeeKorean }}</p>
                     </div>
                     <div class="form-group my-3">
                       <label for="dealer">인수차량 도착지 주소</label>
@@ -225,84 +224,87 @@
                       </div>
                       <input type="text" v-model="auction.dest_addr2" class="form-control" />
                     </div>
+                    
+
+                    <div class="mb-3">
+                      <label for="user-title" class="form-label">자동차등록증</label>
+                      <input type="file" @change="handleFileUploadCarLicense" ref="fileAuctionCarLicense" style="display:none">
+                      <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCarLicense">
+                          파일 첨부
+                      </button>
+                      <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionCarLicenseFileList.length > 0 || fileCarLicenseUrl">
+                        자동차등록증 : 
+                        <li v-for="(file, index) in fileAuctionCarLicenseFileList" :key="index">
+                            <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
+                        </li>
+                        <li v-if="fileCarLicenseUrl">
+                          <a :href=fileCarLicenseUrl download>{{ auction.file_auction_car_license_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerCarLicenseFileDelete()"></span>
+                        </li>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="user-title" class="form-label">위임장 or 소유자 인감 증명서</label>
+                      <input type="file" @change="handleFileUploadProxy" ref="fileAuctionProxy" style="display:none">
+                      <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadProxy">
+                          파일 첨부
+                      </button>
+                      <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionProxyFileList.length > 0 || fileProxyUrl">
+                        매매업체 대표증 / 종사원증 : 
+                        <li v-for="(file, index) in fileAuctionProxyFileList" :key="index">
+                            <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
+                        </li>
+                        <li v-if="fileProxyUrl">
+                          <a :href=fileProxyUrl download>{{ auction.file_auction_proxy_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerProxyFileDelete()"></span>
+                        </li>
+                      </div>
+                    </div>
+                    <div class="mb-3">
+                      <label for="user-title" class="form-label">매도자관련서류</label>
+                      <input type="file" @change="handleFileUploadOwner" ref="fileAuctionOwner" style="display:none">
+                      <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
+                          파일 첨부
+                      </button>
+                      <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionOwnerFileList.length > 0 || fileOwnerUrl">
+                        매매업체 대표증 / 종사원증 : 
+                        <li v-for="(file, index) in fileAuctionOwnerFileList" :key="index">
+                            <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
+                        </li>
+                        <li v-if="fileOwnerUrl">
+                          <a :href=fileOwnerUrl download>{{ auction.file_auction_owner_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerOwnerFileDelete()"></span>
+                        </li>
+                      </div>
+                    </div>
+                    <div class="form-group dealer-check fw-bolder pb-2">
+                      <p for="dealer">법인 / 사업자차량</p>
+                      <div class="check_box">
+                        <input type="checkbox" id="ch2" v-model="auction.isBizChecked" class="form-control">
+                        <label for="ch2"></label>
+                      </div>
+                    </div>
 
                   </div>
                 </div>
-                
 
-                
-                
-                <div></div>
-                <div class="mb-3">
-                  <label for="user-title" class="form-label">자동차등록증</label>
-                  <input type="file" @change="handleFileUploadCarLicense" ref="fileAuctionCarLicense" style="display:none">
-                  <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCarLicense">
-                      파일 첨부
-                  </button>
-                  <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionCarLicenseFileList.length > 0 || fileCarLicenseUrl">
-                    자동차등록증 : 
-                    <li v-for="(file, index) in fileAuctionCarLicenseFileList" :key="index">
-                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
-                    </li>
-                    <li v-if="fileCarLicenseUrl">
-                      <a :href=fileCarLicenseUrl download>{{ auction.file_auction_car_license_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerCarLicenseFileDelete()"></span>
-                    </li>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <label for="user-title" class="form-label">위임장 or 소유자 인감 증명서</label>
-                  <input type="file" @change="handleFileUploadProxy" ref="fileAuctionProxy" style="display:none">
-                  <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadProxy">
-                      파일 첨부
-                  </button>
-                  <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionProxyFileList.length > 0 || fileProxyUrl">
-                    매매업체 대표증 / 종사원증 : 
-                    <li v-for="(file, index) in fileAuctionProxyFileList" :key="index">
-                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
-                    </li>
-                    <li v-if="fileProxyUrl">
-                      <a :href=fileProxyUrl download>{{ auction.file_auction_proxy_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerProxyFileDelete()"></span>
-                    </li>
-                  </div>
-                </div>
-                <div class="mb-3">
-                  <label for="user-title" class="form-label">매도자관련서류</label>
-                  <input type="file" @change="handleFileUploadOwner" ref="fileAuctionOwner" style="display:none">
-                  <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
-                      파일 첨부
-                  </button>
-                  <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionOwnerFileList.length > 0 || fileOwnerUrl">
-                    매매업체 대표증 / 종사원증 : 
-                    <li v-for="(file, index) in fileAuctionOwnerFileList" :key="index">
-                        <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
-                    </li>
-                    <li v-if="fileOwnerUrl">
-                      <a :href=fileOwnerUrl download>{{ auction.file_auction_owner_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerOwnerFileDelete()"></span>
-                    </li>
-                  </div>
-                </div>
-                <div class="form-group dealer-check fw-bolder pb-2">
-                  <p for="dealer">법인 / 사업자차량</p>
-                  <div class="check_box">
-                    <input type="checkbox" id="ch2" v-model="auction.isBizChecked" class="form-control">
-                    <label for="ch2"></label>
-                  </div>
-                </div>
 
               </div>
             </div>
           </div>
-          <div class="mt-3" @click.stop="">
-              <div class="mt-3">
-                <button class="btn btn-primary tc-wh w-100"> 저장 </button>
-              </div>
-          </div>
+
+          <div class="mobile-bottoms">
+
+            <div class="mt-3" @click.stop="">
+                <div class="mt-3">
+                  <button class="btn btn-primary tc-wh w-100"> 저장 </button>
+                </div>
+            </div>
 
 
-          <div class="mt-3">
             <div class="mt-3">
-              <button type="button" class="btn btn-success w-100" @click="diagAuction('diag')"> 진단대기 </button>
+              <div class="mt-3">
+                <button type="button" class="btn btn-success w-100" @click="diagAuction('diag')"> 진단대기 </button>
+              </div>
             </div>
+
           </div>
 
           <!-- <div class="mt-3">
@@ -1173,4 +1175,16 @@ onBeforeUnmount(() => {
 button.btn {
   height: auto;
 }
+
+.mobile-bottoms {
+  display: none;
+}
+@media screen and (max-width: 767px) {
+  .mobile-bottoms {
+    display: block;
+  }
+  .pc-bottoms {
+    display: none !important;
+  }
+} 
 </style>
