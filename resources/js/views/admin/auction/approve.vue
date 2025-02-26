@@ -305,25 +305,34 @@
               </div>
             </div>
 
+
+            <!-- 테스트 메뉴 -->
+            <hr>
+            <div>
+              <label class="form-label">테스트 메뉴</label>
+            </div>
+
+            <div class="mt-3">
+              <div class="mt-3">
+                <button type="button" class="btn btn-secondary w-100" @click="diagAuction('ing')"> 경매진행 </button>
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <div class="mt-3">
+                <button type="button" class="btn btn-secondary w-100" @click="AuctionIsDeposit('totalDeposit')"> 입금완료 </button>
+              </div>
+            </div>
+
+            <div class="mt-3">
+              <div class="mt-3">
+                <button type="button" class="btn btn-secondary w-100" @click="AuctionIsDeposit('totalAfterFee')"> 수수료 입금완료 </button>
+              </div>
+            </div>
+
           </div>
 
-          <!-- <div class="mt-3">
-            <div class="mt-3">
-              <button type="button" class="btn btn-secondary w-100" @click="diagAuction('ing')"> 경매진행 </button>
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <div class="mt-3">
-              <button type="button" class="btn btn-secondary w-100" @click="AuctionIsDeposit('totalDeposit')"> 입금완료 </button>
-            </div>
-          </div>
-
-          <div class="mt-3">
-            <div class="mt-3">
-              <button type="button" class="btn btn-secondary w-100" @click="AuctionIsDeposit('totalAfterFee')"> 수수료 입금완료 </button>
-            </div>
-          </div> -->
+          
 
           <!--
           <div @click="toggleVisibility" class="d-flex justify-content-between align-items-center p-3 border-bottom">
@@ -1185,6 +1194,11 @@ button.btn {
   }
   .pc-bottoms {
     display: none !important;
+  }
+  .sticky-top {
+    position: relative !important;
+    top: 0 !important;
+    z-index: 100 !important;
   }
 } 
 </style>
