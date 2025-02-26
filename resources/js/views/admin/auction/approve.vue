@@ -133,7 +133,7 @@
                     <div class="card-body">
                       <p class="text-secondary opacity-50">우편주소</p>
                       <input v-model="auction.addr_post" placeholder="우편번호" class="input-dis form-control" readonly>
-                      <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
+                      <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')" style="right:32px !important">검색</button>
                       <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                         <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
                       </div>
@@ -1110,6 +1110,7 @@ onBeforeUnmount(() => {
 }
 .search-btn {
   transform: translateY(-119%) !important;
+  right: 15px !important;
 }
 @media screen and (max-width: 767px) {
     .left-container{
@@ -1201,4 +1202,9 @@ button.btn {
     z-index: 100 !important;
   }
 } 
+
+.col-lg-6 {
+  position: relative;
+}
+
 </style>

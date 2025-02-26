@@ -1188,7 +1188,7 @@ const openAlarmModal = () => {
         <iframe
             src="https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf"
             width="100%"
-            height="600px"
+            height="680px"
             
         ></iframe>
     </div>
@@ -1198,7 +1198,7 @@ const openAlarmModal = () => {
     .useHtmlText() // HTML 태그 활성화
     .useClose()
     .addClassNm('intromodal') // 클래스명 설정
-    .addOption({ padding: 20, height:700 }) // swal 옵션 추가
+    .addOption({ padding: 20, height:840 }) // swal 옵션 추가
     .callback(function (result) {
       // 결과 처리 로직
     })
