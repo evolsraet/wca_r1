@@ -2,7 +2,7 @@
   <!--
     TODO:allreview에 판매가 가격 안나오는문제???
   -->
-  <div class="container">
+  <div class="container" style="margin-top: 100px !important;">
     <div class="review">
     </div>
    <!-- <div class="style-view bottom-sheet" :style="bottomSheetStyle" @click="toggleSheet" v-if="isUser && !showFullView">
