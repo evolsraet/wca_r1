@@ -110,8 +110,8 @@
                                 {{ auction.created_at }}
                             </td> -->
                             <td class="px-6 py-4 text-sm">
-                                <div :class="auction.auction_type === '1' ? 'tc-red' : 'tc-blue'">
-                                    {{ auction.auction_type === '1' ? '공매' : '경매' }}
+                                <div :class="auction.auction_type === 1 ? 'tc-red' : 'tc-blue'">
+                                    {{ auction.auction_type === 1 ? '공매' : '경매' }}
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
