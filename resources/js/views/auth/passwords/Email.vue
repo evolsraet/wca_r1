@@ -1,6 +1,6 @@
 <template>
     <div class="container mov-wide">
-        <div class="container my-5">
+        <div class="container my-5" style="margin-top: 100px !important;">
             <div>
                 <h5 class="my-3">비밀번호 초기화</h5>
                 <div class="card border-0 shadow-sm">

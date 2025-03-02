@@ -23,7 +23,7 @@
         <div class="form-group">
           <label for="sido1"><span class="text-danger me-2">*</span> 지역</label>
           <div class="region">
-            <select class="w-100" v-model="selectedRegion" @change="onRegionChange">
+            <select class="w-100" v-model="selectedRegion" @change="onRegionChange" ref="regionSelect">
               <option value="">시/도 선택</option>
               <option v-for="region in regions" :key="region" :value="region">{{ region }}</option>
             </select>
@@ -36,7 +36,7 @@
         </div>
         <!-- 주소 입력 -->
         <div class="form-group mb-2 input-wrapper">
-          <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly>
+          <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly ref="addrPostSelect">
           <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
           <div class="text-danger mt-1">
             <div v-for="message in validationErrors?.addr_post">
@@ -54,7 +54,7 @@
               </div>
             </div>
           </div>
-          <input type="text" v-model="addrdt" placeholder="상세주소">
+          <input type="text" v-model="addrdt" placeholder="상세주소" ref="addrdtSelect">
           <div class="text-danger mt-1">
             <div v-for="message in validationErrors?.addr2">
               {{ message }}
@@ -64,28 +64,28 @@
         <!-- 은행 선택 -->
         <div class="form-group mt-4">
           <label for="carNumber"><span class="text-danger me-2">*</span>은행</label>
-          <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly>
-          <input type="text" v-model="account" placeholder="계좌번호" :class="{'block': accountDetails}" class="account-num">
+          <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly ref="bankSelect">
+          <input type="text" v-model="account" placeholder="계좌번호" :class="{'block': accountDetails}" class="account-num" ref="accountSelect">
           <p class="tc-gray">주의 : 계좌는 차량 소유주의 계좌번호만 입력가능 합니다.</p>
         </div>
         <!-- 주요 사항 입력 -->
         <div class="form-group mt-5">
           <label for="memo"><span class="text-danger me-2">*</span>주요사항</label>
-          <textarea type="text" id="memo" v-model="memo" placeholder="ex)외관에 손상이 있어요, 시트에 구멍이 나있어요, 화재이력이 있어요, 뒤쪽 트렁크에 사고 있어요." rows="2"></textarea>
+          <textarea type="text" id="memo" v-model="memo" placeholder="ex)외관에 손상이 있어요, 시트에 구멍이 나있어요, 화재이력이 있어요, 뒤쪽 트렁크에 사고 있어요." rows="2" ref="memoSelect"></textarea>
         </div>
         <div class="form-group mb-5">
         <label for="datetime">
           <span class="text-danger me-2">*</span>진단희망 날짜 및 시간
         </label>
-        <input id="datetimeInput" type="datetime-local" v-model="diagFirstAt" style="width: 100%; padding: 10px;" placeholder="진단희망일1" />
-        <input id="datetimeInput" type="datetime-local" v-model="diagSecondAt" style="width: 100%; padding: 10px;" placeholder="진단희망일2" />
+        <input id="datetimeInput" type="datetime-local" v-model="diagFirstAt" style="width: 100%; padding: 10px;" placeholder="진단희망일1" ref="diagFirstAtSelect" />
+        <input id="datetimeInput" type="datetime-local" v-model="diagSecondAt" style="width: 100%; padding: 10px;" placeholder="진단희망일2" ref="diagSecondAtSelect" />
         <p class="tc-gray">※ 진단희망은 신청일로 부터 2일후 부터 입력가능합니다. (진단시간 오전9시 ~ 오후6시)</p>
       </div>
 
       <div class="form-group mt-5">
         <label for="memo"><span class="text-danger me-2">*</span>자동차등록증</label>
-        <input type="file" @change="handleFileUploadCarLicense" ref="fileInputRefCarLicense" style="display:none">
-        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCarLicense">
+        <input type="file" @change="handleFileUploadCarLicense" ref="fileInputRefCarLicense" style="display:none" >
+        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCarLicense" ref="fileInputRefCarLicenseBtn">
           파일 첨부
         </button>
         <div class="text-start text-secondary opacity-50" v-if="fileAuctionCarLicenseName">자동차등록증: {{ fileAuctionCarLicenseName }}</div>
@@ -302,6 +302,16 @@ const carPriceNowWhole = ref(''); // 자동차 도매 시세
 const carKm = ref(''); // 자동차 주행거리
 const carThumbnail = ref(''); // 자동차 썸네일
 
+const regionSelect = ref(null);
+const addrPostSelect = ref(null);
+const addrdtSelect = ref(null);
+const bankSelect = ref(null);
+const accountSelect = ref(null);
+const memoSelect = ref(null);
+const diagFirstAtSelect = ref(null);
+const diagSecondAtSelect = ref(null);
+const fileInputRefCarLicenseBtn = ref(null);
+
 const is_biz = computed({
   get() {
     return isBizChecked.value ? 1 : 0;
@@ -331,18 +341,77 @@ const isWeekend = (dateString) => {
   return day === 0 || day === 6;
 };
 
-const auctionEntry = async () => {
-  // 필수 정보를 확인
-  if (!fileAuctionCarLicense.value) {
+// 입력폼 검사 알림 
+const checkInputForm = (id) => {
+
+  const idValue = '';
+  const msg = '';
+  switch(id){
+    case 'region':
+      idValue = selectedRegion.value;
+      msg = '지역번호를 선택해 주세요.';
+    break;
+
+    case 'addrPost':
+      idValue = addrPost.value;
+      msg = '우편번호를 입력해 주세요.';
+    break;
+
+    case 'addrdt':
+      idValue = addrdt.value;
+      msg = '상세주소를 입력해 주세요.';
+    break;
+
+    case 'bank':
+      idValue = selectedBank.value;
+      msg = '은행을 선택해 주세요.';
+    break;
+
+    case 'account':
+      idValue = account.value;
+      msg = '계좌번호를 입력해 주세요.';
+    break;
+
+    case 'diagFirstAt':
+      idValue = diagFirstAt.value;
+      msg = '진단희망일1을 입력해 주세요.';
+    break;
+
+    case 'diagSecondAt':
+      idValue = diagSecondAt.value;
+      msg = '진단희망일2을 입력해 주세요.';
+    break;
+
+    case 'fileAuctionCarLicense':
+      idValue = fileAuctionCarLicense.value;
+      msg = '자동차등록증을 첨부해 주세요.';
+    break;
+    
+  }
+
+  if(idValue === ''){
     wica.ntcn(swal)
     .icon('W')
     .addClassNm('cmm-review-custom')
     .addOption({ padding: 20})
     .callback(function(result) {
     })
-    .alert('자동차등록증을 첨부해 주세요.');
+    .alert(msg);
     return;
   }
+
+}
+
+const auctionEntry = async () => {
+
+  // checkInputForm('region');
+  // checkInputForm('addrPost');
+  // checkInputForm('addrdt');
+  // checkInputForm('bank');
+  // checkInputForm('account');
+  // checkInputForm('diagFirstAt');
+  // checkInputForm('diagSecondAt');
+  // checkInputForm('fileAuctionCarLicense');
 
   const auctionData = {
     auction_type: '0',
@@ -375,8 +444,148 @@ const auctionEntry = async () => {
     car_thumbnail: carThumbnail.value,
     car_km: carKm.value,
   };
-  console.log(auctionData);
+
   if(isVerified.value){
+    
+
+    // 지역번호 확인
+    if(selectedRegion.value === ''){
+      
+      if(regionSelect.value){
+        regionSelect.value.focus();
+      }
+
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('지역번호를 선택해 주세요.');
+      // onRegionFocus 에 포커스 
+      
+      return;
+    }
+
+    // 우편번호 확인
+    if(addrPost.value === ''){
+
+      if(addrPostSelect.value){
+        addrPostSelect.value.focus();
+      }
+
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('우편번호를 입력해 주세요.');
+      return;
+    }
+
+    // 살세주소 확인
+    if(addrdt.value === ''){
+
+      if(addrdtSelect.value){
+        addrdtSelect.value.focus();
+      }
+
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })  
+      .alert('상세주소를 입력해 주세요.');
+      return;
+    }
+
+    // 은행선택 확인 
+    if(selectedBank.value === ''){
+
+      if(bankSelect.value){
+        bankSelect.value.focus();
+      }
+
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('은행을 선택해 주세요.');
+      return;
+    }
+
+    // 계좌번호 확인
+    if(account.value === ''){
+
+      if(accountSelect.value){
+        accountSelect.value.focus();
+      }
+
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('계좌번호를 입력해 주세요.');
+      return;
+    }
+    
+    // 진단희망일1 확인 
+    if(diagFirstAt.value === ''){
+
+      if(diagFirstAtSelect.value){
+        diagFirstAtSelect.value.focus();
+      }
+
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('진단희망일1을 입력해 주세요.');
+      return;
+    }
+
+    // 진단희망일2 확인 
+    if(diagSecondAt.value === ''){
+
+      if(diagSecondAtSelect.value){
+        diagSecondAtSelect.value.focus();
+      }
+
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('진단희망일2을 입력해 주세요.');
+      return;
+    }
+
+    // 필수 정보를 확인
+    if (!fileAuctionCarLicense.value) {
+
+      if(fileInputRefCarLicenseBtn.value){
+        fileInputRefCarLicenseBtn.value.click();
+      }
+
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('자동차등록증을 첨부해 주세요.');
+      return;
+    }
+    
     try {
       const result = await createAuction({ auction: auctionData });
       if(result){
@@ -397,6 +606,18 @@ const auctionEntry = async () => {
     } catch (error) {
     }
   }else{
+
+    // certification 클래스에 포커스 
+    const certification = document.querySelector('.certification');
+    if(certification){
+      certification.focus();
+      // 버튼의 테두리 색상을 잠깐 주고 원래대로 돌리기
+      certification.style.borderColor = 'red';
+      setTimeout(() => {
+        certification.style.borderColor = '#000';
+      }, 2000);
+    }
+    
     wica.ntcn(swal)
     .title('')
     .useHtmlText()
@@ -404,6 +625,7 @@ const auctionEntry = async () => {
     .callback(function(result) {
         //console.log(result);
     }).alert('본인인증 후에 이용 가능한 서비스입니다.');
+
   }
 };
 

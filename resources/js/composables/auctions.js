@@ -1012,6 +1012,61 @@ const isAccident = (id) => {
   };
 
 
+  const sellCheckInputForm = (elementValue, id) => {
+
+    console.log(elementValue);
+
+    const idValue = elementValue;
+    const msg = '';
+    switch(id){
+      case 'region':
+        msg = '지역번호를 선택해 주세요.';
+      break;
+  
+      case 'addrPost':
+        msg = '우편번호를 입력해 주세요.';
+      break;
+  
+      case 'addrdt':
+        msg = '상세주소를 입력해 주세요.';
+      break;
+  
+      case 'bank':
+        msg = '은행을 선택해 주세요.';
+      break;
+  
+      case 'account':
+        msg = '계좌번호를 입력해 주세요.';
+      break;
+  
+      case 'diagFirstAt':
+        msg = '진단희망일1을 입력해 주세요.';
+      break;
+  
+      case 'diagSecondAt':
+        msg = '진단희망일2을 입력해 주세요.';
+      break;
+  
+      case 'fileAuctionCarLicense':
+        msg = '자동차등록증을 첨부해 주세요.';
+      break;
+      
+    }
+  
+    if(!idValue){
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert(msg);
+      return;
+    }
+  
+  }
+
+
     return {
         getAuctionsByDealerLike,
         adminGetAuctions,
@@ -1050,7 +1105,8 @@ const isAccident = (id) => {
         checkExpectedPrice,
         updateAuctionIsDeposit,
         allIngCount,
-        isAccident
+        isAccident,
+        sellCheckInputForm
     };
     
 }
