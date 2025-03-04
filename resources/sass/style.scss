@@ -5017,4 +5017,110 @@ input[type="checkbox"] {
     height: 34px !important;
   }
   
-  
+/* 옥션 가이드 팝업 스타일 */
+.auction-guid-popup-container {
+    position: relative;
+    display: inline-block;
+}
+
+.auction-detail-img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.auction-guid-popup .title {
+
+    /* transform: translate(-50%, -50%); */
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+.auction-guid-popup .sub {
+
+    /* transform: translate(-50%, -50%); */
+    font-size: 15px !important;
+    /* font-weight: bold !important; */
+    text-align: right;
+    color: #AAAEBE;
+}
+.auction-guid-popup .steps {
+    line-height: 1;
+    font-size: 17px !important;
+    /* font-weight: bold !important; */
+    text-align: right;
+    color: #AAAEBE;
+}
+.step02 {
+    display: flex;
+    top: 109px;
+    gap: 0px;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    align-items: flex-start;
+}
+.step01{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    top: -2px;
+    right: 0;
+    align-items: flex-end;   
+}
+.step03{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    top: 216px;
+    right: 0;
+    align-items: flex-end;   
+}
+.step04 {
+    display: flex;
+    top: 325px;
+    gap: 0px;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    align-items: flex-start;
+}
+.step05{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    top: 432px;
+    right: 0;
+    align-items: flex-end;   
+}
+.new-style-step{
+    display: flex !important;
+    gap: 4px;
+    align-items: center;  
+}
+.step06 {
+    display: flex;
+    top: 543px;
+    gap: 0px;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    align-items: flex-start;
+}
+.step07{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    top: 644px;
+    right: 0;
+    align-items: flex-end;   
+}
+.auction-icon{
+    width: 22px;
+    /* line-height: 14px; */
+    height: 22px;
+    margin-bottom: 4px;   
+}

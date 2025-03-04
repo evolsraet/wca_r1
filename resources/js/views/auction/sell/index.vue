@@ -123,6 +123,7 @@ import useAuctions from '@/composables/auctions';
 import { cmmn } from '@/hooks/cmmn';
 import drift from '../../../../../resources/img/drift.png';
 import imgInfo from'../../../../img/auction-detil.png';
+import imgInfoIcon from'../../../../../resources/img/q-mark.png';
 import info1 from '../../../../../resources/img/modal/info3.png';
 import info2 from '../../../../../resources/img/modal/info1.png';
 import info3 from '../../../../../resources/img/modal/info2.png';
@@ -556,9 +557,48 @@ const checkRefreshAvailability = () => {
 const UserapplyAuction = () => {
     const text = `
     <h5 class="text-start mb-3">경매 진행 순서 안내</h5>
-    <div class="sellInfo my-3 p-4" style="position: relative;">
-        <img src="${imgInfo}" alt="Auction Detail" class="auction-detail-img">
-        <div id="tooltip-area" class="tooltip-area" style="cursor: pointer; position: absolute; width: 50px; height: 50px;"></div>
+    <div class="sellInfo my-3 p-4 mb-4" style="position: relative;">
+        <div class="auction-guid-popup-container">
+            <img src="${imgInfo}" alt="Auction Detail" class="auction-detail-img">
+            <div class="auction-guid-popup">
+                <div class="step01">
+                    <p class="steps">STEP 01</p>
+                    <p class="title">경매신청</p>
+                    <p class="sub text-end">경매 신청 후,<br>24시간 이후부터<br>진단 일자를 지정해<br>차량을 진단합니다.</p>
+                </div>
+                <div class="step02">
+                    <p class="steps">STEP 02</p>
+                    <p class="title">평가사 방문 진단</p>
+                    <p class="sub text-start">세부적인 진단 시간은<br>평가사와 협의하여<br>정해주세요.</p>
+                </div>
+                 <div class="step03">
+                    <p class="steps">STEP 03</p>
+                    <p class="title">경매</p>
+                    <p class="sub text-end">경매는 48시간동안<br>진행됩니다.</p>
+                </div>
+                <div class="step04">
+                    <p class="steps">STEP 04</p>
+                    <p class="title">낙찰(딜러 선택)</p>
+                    <p class="sub text-start">경매가 종료된 이후<br>48시간 이내에 고객이<br>판매딜러를 선택합니다.</p>
+                </div>
+                <div class="step05">
+                    <p class="steps">STEP 05</p>
+                    <p class="title new-style-step">탁송 및 대금<img src="${imgInfoIcon}" alt="Auction Detail" class="auction-icon"></p>
+                    <p class="sub text-end">탁송은 당사 직접 진행하며,<br>탁송전 00 시간까지<br>나이스 에스크 계좌로<br>매매대금이 입금됩니다.</p>
+                </div>
+                <div class="step06">
+                    <p class="steps">STEP 06</p>
+                    <p class="title">매매대금 입금</p>
+                    <p class="sub text-start">탁송기사가 차량등록증등<br>이전에 필요한 서류를 받으면<br>매매대금이 나이스 에스크로<br>계좌에서 개인 계좌로<br>송부됩니다.</p>
+                </div>
+                <div class="step07">
+                    <p class="steps">STEP 07</p>
+                    <p class="title">이전</p>
+                    <p class="sub text-end">경매는 48시간동안<br>진행됩니다.</p>
+                </div>
+            </div>
+        </div>
+        <div id="tooltip-area" class="tooltip-area" style="cursor: pointer; position: absolute; width: 37px; height: 43px;"></div>
         <div id="tooltip" class="p-4 tooltip2" style="display: none; position: absolute; background: white; color: black; padding: 10px; border-radius: 5px; border:1px solid #aaaebe;">
             <div class="text-center">
                 <h5>※ 탁송 및 대금</h5>
@@ -660,7 +700,6 @@ const secondModal = () => {
                 <img src="${info1}" class="info-img">
                 <div class="text-center">
                   <p>필요서류 없음</p>
-                  <p class="text-secondary opacity-50">본인 소유 차량이 아닐경우<br>위임장 또는 소유자 인감<br>증명서가 필요합니다.</p>
                 </div>
               </div>
               <div class="info-block">
