@@ -13,31 +13,20 @@
             <input type="text" id="owner-name" v-model="ownerName" placeholder="홍길동" :disabled="isVerified">
             <button class="btn border certification" @click.stop="verifyOwner" :disabled="isVerified">본인인증</button>
           </div>
+          <div class="text-danger mt-2">※ 차량 소유자 확인을 위해 본인 인증 버튼을 클릭해주세요.</div>
         </div>
         <!-- 차량 번호 입력 -->
         <div class="form-group">
           <label for="carNumber"><span class="text-danger me-2">*</span>차량 번호</label>
           <input type="text" id="carNumber" v-model="carNumber" placeholder="12 삼 4567" :disabled="true">
         </div>
-        <!-- 지역 선택 -->
-        <div class="form-group">
-          <label for="sido1"><span class="text-danger me-2">*</span> 지역</label>
-          <div class="region">
-            <select class="w-100" v-model="selectedRegion" @change="onRegionChange" ref="regionSelect">
-              <option value="">시/도 선택</option>
-              <option v-for="region in regions" :key="region" :value="region">{{ region }}</option>
-            </select>
-          </div>
-          <div class="text-danger mt-1">
-            <div v-for="message in validationErrors?.region">
-              {{ message }}
-            </div>
-          </div>
-        </div>
+        
         <!-- 주소 입력 -->
+        <label for="sido1"><span class="text-danger me-2">*</span> 주소 <br/><span class="text-danger">차량 실주소지를 입력해주세요. (차량 진단 가능 지역)</span></label>
+
         <div class="form-group mb-2 input-wrapper">
           <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly ref="addrPostSelect">
-          <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
+          <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')" style="top:">검색</button>
           <div class="text-danger mt-1">
             <div v-for="message in validationErrors?.addr_post">
               {{ message }}
@@ -54,33 +43,57 @@
               </div>
             </div>
           </div>
-          <input type="text" v-model="addrdt" placeholder="상세주소" ref="addrdtSelect">
+          <input type="text" v-model="addrdt" placeholder="상세주소" ref="addrdtSelect" @keydown.enter="handleEnterPress('memoSelect')">
           <div class="text-danger mt-1">
             <div v-for="message in validationErrors?.addr2">
               {{ message }}
             </div>
           </div>
         </div>
+
+        <!-- 지역 선택 -->
+        <div class="form-group">
+          <label for="sido1"><span class="text-danger me-2">*</span> 지역</label>
+          <div class="region">
+            <select class="w-100" v-model="selectedRegion" @change="onRegionChange" ref="regionSelect">
+              <option value="">시/도 선택</option>
+              <option v-for="region in regions" :key="region" :value="region">{{ region }}</option>
+            </select>
+          </div>
+          <div class="text-danger mt-1">
+            <div v-for="message in validationErrors?.region">
+              {{ message }}
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="memo"><span class="text-danger me-2">*</span>차량상태입력</label>
+          <textarea type="text" id="memo" v-model="memo" placeholder="ex)외관에 손상이 있어요, 시트에 구멍이 나있어요, 화재이력이 있어요, 뒤쪽 트렁크에 사고 있어요." rows="2" ref="memoSelect"></textarea>
+        </div>
+
         <!-- 은행 선택 -->
+
+        <h4>은행/진단 정보</h4>
+
         <div class="form-group mt-4">
           <label for="carNumber"><span class="text-danger me-2">*</span>은행</label>
           <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly ref="bankSelect">
-          <input type="text" v-model="account" placeholder="계좌번호" :class="{'block': accountDetails}" class="account-num" ref="accountSelect">
-          <p class="tc-gray">주의 : 계좌는 차량 소유주의 계좌번호만 입력가능 합니다.</p>
+          <input type="text" v-model="account" placeholder="계좌번호" :class="{'block': accountDetails}" class="account-num" ref="accountSelect" @keydown.enter="handleEnterPress('diagFirstAtSelect')">
+          <p class="text-danger">※ 계좌는 차량 소유주의 계좌번호만 입력가능 합니다.</p>
         </div>
         <!-- 주요 사항 입력 -->
-        <div class="form-group mt-5">
-          <label for="memo"><span class="text-danger me-2">*</span>주요사항</label>
-          <textarea type="text" id="memo" v-model="memo" placeholder="ex)외관에 손상이 있어요, 시트에 구멍이 나있어요, 화재이력이 있어요, 뒤쪽 트렁크에 사고 있어요." rows="2" ref="memoSelect"></textarea>
-        </div>
         <div class="form-group mb-5">
         <label for="datetime">
           <span class="text-danger me-2">*</span>진단희망 날짜 및 시간
         </label>
-        <input id="datetimeInput" type="datetime-local" v-model="diagFirstAt" style="width: 100%; padding: 10px;" placeholder="진단희망일1" ref="diagFirstAtSelect" />
+        <input id="datetimeInput" type="datetime-local" v-model="diagFirstAt" style="width: 100%; padding: 10px;" placeholder="진단희망일1" ref="diagFirstAtSelect" @keydown.enter="handleEnterPress('diagSecondAtSelect')" />
         <input id="datetimeInput" type="datetime-local" v-model="diagSecondAt" style="width: 100%; padding: 10px;" placeholder="진단희망일2" ref="diagSecondAtSelect" />
-        <p class="tc-gray">※ 진단희망은 신청일로 부터 2일후 부터 입력가능합니다. (진단시간 오전9시 ~ 오후6시)</p>
+        <p class="text-danger">※ 진단희망은 신청일로 부터 2일후 부터 입력가능합니다. (진단시간 오전9시 ~ 오후6시)</p>
       </div>
+
+
+      <h4>첨부파일</h4>
 
       <div class="form-group mt-5">
         <label for="memo"><span class="text-danger me-2">*</span>자동차등록증</label>
@@ -91,13 +104,21 @@
         <div class="text-start text-secondary opacity-50" v-if="fileAuctionCarLicenseName">자동차등록증: {{ fileAuctionCarLicenseName }}</div>
       </div>
 
+      
+      <div class="d-flex justify-content-between">
         <h5 class="mt-5"><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
+        <div class="align-self-end">
+          <button type="button" class="btn btn-success w-100 text-end" @click="openAlarmModal">위임장 양식</button>
+        </div>
+      </div>
         <input type="file" @change="handleFileUploadOwner" ref="fileInputRefOwner" style="display:none">
         <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
           파일 첨부
         </button>
         <div class="text-start text-secondary opacity-50" v-if="fileAuctionProxyName">위임장 / 소유자 인감 증명서: {{ fileAuctionProxyName }}</div>
-        <div class="form-group dealer-check fw-bolder pb-2">
+        
+        
+        <!-- <div class="form-group dealer-check fw-bolder pb-2">
           <p for="dealer">법인 / 사업자차량</p>
           <div class="check_box">
             <input type="checkbox" id="ch2" v-model="isBizChecked" class="form-control">
@@ -106,9 +127,9 @@
         </div>
         <div>
         <P class="bold size_16">첨부해야하는 서류를 확인해 주세요</P>
-        <div>
+        <div>   
       </div>
-      </div>
+      </div> -->
     </form>
     </div>
     
@@ -116,7 +137,7 @@
   </div>
   <!-- 파일 첨부 -->
   <!-- 일반 고객 섹션 -->
-    <div class="dropdown border-bottom">
+    <!-- <div class="dropdown border-bottom">
       <button
         class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
         @click="toggleDropdown('general')"
@@ -138,9 +159,9 @@
         <p class="mb-1">· 수출 폐차딜러에게 판매된다면 인감증명서 대신 신분증 사진이 필요​합니다.</p>
       </div>
     </transition>
-    </div>
+    </div> -->
 
-      <div class="dropdown border-bottom">
+      <!-- <div class="dropdown border-bottom">
         <button
           class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
           @click="toggleDropdown('business')"
@@ -193,7 +214,7 @@
           </div>
         </div>
       </transition>
-        </div>
+        </div> -->
           <div class="px-2 mb-3 flex items-center justify-end mt-5">
             <button type="submit" class="btn primary-btn normal-16-font w-100" @click="auctionEntry()" >경매 신청하기</button>
           </div>
@@ -679,9 +700,21 @@ const triggerFileUploadOwner = () => {
 const handleFileUploadOwner = event => {
   const file = event.target.files[0];
   if (file) {
-    fileAuctionProxy.value = file; // 파일 저장
-    fileAuctionProxyName.value = file.name; // 파일 이름 저장
-    console.log("위임장 / 소유자 인감 증명서:", file.name);
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('최대 10MB 이하의 파일만 첨부할 수 있습니다.');
+      return;
+    }else{
+      fileAuctionProxy.value = file; // 파일 저장
+      fileAuctionProxyName.value = file.name; // 파일 이름 저장
+      console.log("위임장 / 소유자 인감 증명서:", file.name);
+    }
   } else {
     console.error('No file selected');
   }
@@ -698,8 +731,21 @@ const triggerFileUploadCarLicense = () => {
 const handleFileUploadCarLicense = event => {
   const file = event.target.files[0];
   if (file) {
-    fileAuctionCarLicense.value = file; // 파일 저장
-    fileAuctionCarLicenseName.value = file.name; // 파일 이름 저장
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('최대 10MB 이하의 파일만 첨부할 수 있습니다.');
+      return;
+    }else{
+      fileAuctionCarLicense.value = file; // 파일 저장
+      fileAuctionCarLicenseName.value = file.name; // 파일 이름 저장
+    }
+
   } else {
     console.error('No file selected');
   }
@@ -725,6 +771,12 @@ const handleBankLabelClick = async () => {
             onSelectBank: (bankName) => {
               selectedBank.value = bankName;
               swal.close();
+
+              setTimeout(() => {
+                if (accountSelect.value) {
+                  accountSelect.value.focus();
+                }
+              }, 500); // 100ms 지연
             }
           });
           app.mount(modalContent);
@@ -739,10 +791,92 @@ function editPostCode(elementName) {
     .then(({ zonecode, address }) => {
         addrPost.value = zonecode;
         addr.value = address;
+        // address 에서 시/도 추출
+        const sido = address.split(' ')[0];
+        selectedRegion.value = sido;
+
+        // 주소 입력 후 포커스 이동
+        if (addrdtSelect.value) {
+          addrdtSelect.value.focus();
+        }
+
     })
 }
 
+const handleEnterPress = (id) => {
+  if(id === 'memoSelect'){
+    memoSelect.value.focus();
+  }else if(id === 'diagFirstAtSelect'){
+    diagFirstAtSelect.value.focus();
+  }else if(id === 'diagSecondAtSelect'){
+    diagSecondAtSelect.value.focus();
+  }
+  // handleBankLabelClick();
+  return;
+
+};
+
+
+const openAlarmModal = () => {
+  const text = `
+  <div style="font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; padding: 20px; border: 1px solid #ddd; text-align: left;">
+    <h2 style="text-align: center; text-decoration: underline;">위 &nbsp; 임 &nbsp; 장</h2>
+    
+    <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
+        <h3 style="margin-bottom: 10px; color: #333;">수임자 정보</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">성명</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
+            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주민등록번호</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
+            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주소</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
+        </table>
+
+        <h3 style="margin-bottom: 10px; color: #333; margin-top: 20px;">위임받은 사항</h3>
+        <p>자동차(신규, 전입, 말소, 변경, 이전, 근저당 설정, 근저당 말소, 등록증 재교부, 말소사실 증명서 발급 등) 등록(신청)에 관한 사항을 위임합니다.</p>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; margin-top: 10px;">
+            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">자동차등록번호</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
+            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">신규 차대번호</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
+        </table>
+        <p>첨부서류 : 위임인의 인감증명서</p>
+    </div>
+
+    <div style="margin-top: 20px; margin-bottom: 20px;">
+      <h3 style="margin-bottom: 10px; color: #333; text-align: center;">201 &nbsp; 년 &nbsp; 월 &nbsp; 일</h3>
+    </div>
+    
+    <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
+        <h3 style="margin-bottom: 10px; color: #333;">위임자 정보</h3>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">성명</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%; color: red; font-weight: bold;">(인감날인)</td></tr>
+            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주민등록번호</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
+            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주소</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
+            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">연락처</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
+        </table>
+    </div>
+    
+    <div style="font-size: 0.9em; color: #555; padding: 10px; border-top: 2px solid #ddd;">
+        <strong>※ 유의사항</strong><br>
+        타인의 서명 또는 인장을 도용 등에 의해 위임장을 작성할 경우에는 형법 제231조와 제232조의 규정에 의하여 사문서 위·변조로 5년 이하의 징역 또는 1천만원 이하의 벌금형에 처해질 수 있습니다.
+    </div>
+  </div>
+  `;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20, height:840 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+}
+
 onMounted(() => {
+
+  if (addrPostSelect.value) {
+    addrPostSelect.value.focus();
+  }
+
   const carDetailsJSON = localStorage.getItem("carDetails");
   if (carDetailsJSON) {
     const carDetails = JSON.parse(carDetailsJSON);
@@ -775,7 +909,8 @@ onMounted(() => {
 <style scoped>
 @media (min-width: 992px){
   .mov-wide {
-      width: 45rem !important;
+      width: 35rem !important;
+      padding-top: 20px !important;
   }
 }
 .input-wrapper {

@@ -36,10 +36,12 @@
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(소매가)</span></p>
                         <span class="tc-primary bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
+                    <div class="text-end">※ NICE D&R 제공</div>
                     <div class="top-content-style wd-100 mt-4">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(도매가)</span></p>
                         <span class="tc-primary bold-18-font">{{ carDetails.priceNowWhole }} 만원</span>
                     </div>
+                    <div class="text-end">※ 오토허브셀카 제공</div>
                     <p class="mt-3 text-secondary">※ 소매 시세는 나이스디엔알에서 제공하며, 도매시세는 오토허브셀카에서 제공합니다.</p>
                     <div v-if="user?.name">
                         <div class="d-flex justify-content-between mt-4 mb-3 align-items-center pointer">
@@ -190,12 +192,12 @@ const ExpectationPrice = () => {
             </div>
             <div class="text-start tc-gray">
                <div class="form-group">
-                    <label>주행거리</label>
+                    <label class="text-danger" style="display: block; font-weight: bold; margin-bottom: 5px;">주행거리</label>
                     <input type="text" placeholder="km" name="mileage" class="mileage_input" value="">
                     <div class="error mileage-error" style="color: red;"></div>
                 </div>
                 <div style="margin-bottom: 15px;">
-                    <label style="display: block; font-weight: bold; margin-bottom: 5px;">과거 사고이력</label>
+                    <label class="text-danger" style="display: block; font-weight: bold; margin-bottom: 5px;">과거 사고이력</label>
                     <div class="manufacturer-model02 my-3">
                         <label class="item">
                             <input type="radio" name="accident" value="완전 무사고" onclick="selectItem(this)">
@@ -220,20 +222,20 @@ const ExpectationPrice = () => {
                     <p class="mb-3">※ 이 감가 기준은 일반적인 감가 기준이며, 실제 평가 금액과는 차이가 있을 수 있습니다. </p>    
                 </div>
                 <div class="form-group">
-                    <label class="mb-2">수리필요</label>
+                    <label class="text-danger" style="display: block; font-weight: bold; margin-bottom: 5px;">수리필요</label>
                 </div>
                 <div class="form-group">
-                    <label>키 갯수</label>
+                    <label style="color:blue">키 갯수</label>
                     <input type="text" placeholder="개" name="keyCount" value="">
                     <div class="error keyCount-error" style="color: red;"></div>
                 </div>
                 <div class="form-group">
-                    <label>휠스크래치</label>
+                    <label style="color:blue">휠스크래치</label>
                     <input type="text" placeholder="개" name="wheelScratch" value="">
                     <div class="error wheelScratch-error" style="color: red;"></div>
                 </div>
                 <div class="form-group">
-                    <label class="mb-2">타이어 상태</label>
+                    <label class="mb-2" style="color:blue">타이어 상태</label>
                     <div class="input-wrapper">
                         <span class="size_14">정상</span>
                         <input type="text" placeholder="개" name="tireStatusNormal" class="text-right" value="">
@@ -246,7 +248,25 @@ const ExpectationPrice = () => {
                     <div class="error tireStatusReplaced-error" style="color: red;"></div>
                 </div>
 
-                <button id="customSubmitButton" class="btn btn-primary mt-3 w-100">평가사 진단 신청</button>
+                <div class="form-group">
+                    <label class="mb-2" style="color:blue">외관수리필요</label>
+                    <div class="input-wrapper">
+                        <span class="size_14">판금, 도색</span>
+                        <input type="text" placeholder="개" name="tireStatusNormal" class="text-right" value="">
+                    </div>
+                    <div class="error tireStatusNormal-error" style="color: red;"></div>
+                    <div class="input-wrapper">
+                        <span class="size_14">교환</span>
+                        <input type="text" placeholder="개" name="tireStatusReplaced" class="text-right" value="">
+                    </div>
+                    <div class="input-wrapper">
+                        <span class="size_14">깨짐</span>
+                        <input type="text" placeholder="개" name="tireStatusReplaced" class="text-right" value="">
+                    </div>
+                    <div class="error tireStatusReplaced-error" style="color: red;"></div>
+                </div>
+
+                <button id="customSubmitButton" class="btn btn-primary mt-3 w-100">예상 가격 확인</button>
             </div>
         </div>
     `;
