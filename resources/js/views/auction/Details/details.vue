@@ -632,14 +632,15 @@
                       <h4>낙찰 완료</h4>
                       <p class="tc-gray mb-3">※ 차량에 문제가 있으신가요?</p>
                       <div>
-                        <router-link v-if="!isClaimed"
+                        <button v-if="!isClaimed" class="my-2 btn btn-primary w-100" @click="openClaimInfoModal(auctionId)">클레임 신청</button>
+                        <!-- <router-link v-if="!isClaimed"
                           :to="{ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId } }" 
                           class="my-2 btn btn-primary w-100"
                           :disabled="disableClaimButton" 
                           @click.prevent="!isClaimed && navigateToClaim"
                         >
                           클레임 신청
-                        </router-link>
+                        </router-link> -->
                         <p v-else-if="isClaimed" class="btn primary-disable">클레임 신청 완료</p>
                       </div>
                     </div>
@@ -993,6 +994,11 @@ const fetchPosts = async () => {
 
 const navigateToClaim = () => {
   if (!disableClaimButton.value) {
+
+    // 팝업 문서 열기 & 확인후 클레임 페이지로 이동
+    openClaimInfoModal();
+    return;
+
     router.push({ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId.value } });
   }
 };
@@ -1203,6 +1209,122 @@ const openAlarmModal = () => {
       // 결과 처리 로직
     })
     .confirm(text); // 모달 내용 설정
+}
+
+const openClaimInfoModal = (id) => {
+  const text = `<div style="height: 592px; overflow-y: auto;">
+    <h3 style="text-align: center;">진단오류 보상 안내</h3>
+      <div style="padding: 20px; text-align: left;">
+        <p>진단결과에 중대한 오류가 있다면, 인수 후 영업일 기준 2일 내 클레임이 가능합니다.</p>
+        <br/>
+        <h5>중요</h5>
+        <p>현장진단의 특성상 클레임 제외사항이 발생합니다. 아래의 사항은 클레임 대상에서 제외됩니다.</p>
+        <br/>
+        <ul>
+            <li>• 문콕, 생활기스, 사용감, 미세누유, 소모품 상태, 썬팅손상 등 경미한 사항</li>
+            <li>• 단순 판금/도장, 라디에이터 서포트, 크로스멤버 교환, 틀 틈, FRP 또는 비금속 재질의 교환/파손 등</li>
+            <li>• 하체, 조향, 제동 등의 소모성 부품(비내구성 포함) 관련</li>
+            <li>• 하부 진단이 반드시 필요한 누유</li>
+            <li>• 자동차 제작사에서 보증수리 가능한 기능적 문제</li>
+            <li>• 정지상태에서는 판단할 수 없는 고장</li>
+            <li>• 차량 10년 이상, 주행거리 200,000km 이상</li>
+            <li>• 주관적인 측면에서 문제가 되는 사항(냄새, 이음, 진동 등)</li>
+        </ul>
+        <br/>
+        <h5>감가항목별 보상기준</h5>
+        <table border="1" style="width: 100%; text-align: center; border:1px solid #000; border-collapse: collapse;">
+          <tr>
+              <th style="width: 30%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">감가항목</th>
+              <th style="width: 30%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">감가율</th>
+              <th style="width: 40%; border: 1px solid #000; padding: 5px; background-color: #f0f0f0;">비고</th>
+          </tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">후드</td><td style="border: 1px solid #000; padding: 5px;">3%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">프론트휀더</td><td style="border: 1px solid #000; padding: 5px;">2%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">도어</td><td style="border: 1px solid #000; padding: 5px;">2%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">트렁크리드</td><td style="border: 1px solid #000; padding: 5px;">2%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">귀타패널</td><td style="border: 1px solid #000; padding: 5px;">3%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">루프패널</td><td style="border: 1px solid #000; padding: 5px;">6%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">사이드실패널</td><td style="border: 1px solid #000; padding: 5px;">3%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">프론트패널</td><td style="border: 1px solid #000; padding: 5px;">3%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">인사이드패널</td><td style="border: 1px solid #000; padding: 5px;">3%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">사이드멤버</td><td style="border: 1px solid #000; padding: 5px;">3%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">휠하우스</td><td style="border: 1px solid #000; padding: 5px;">5%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">필러패널</td><td style="border: 1px solid #000; padding: 5px;">3%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">대쉬패널</td><td style="border: 1px solid #000; padding: 5px;">3%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">트렁크플로어</td><td style="border: 1px solid #000; padding: 5px;">3%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">리어패널</td><td style="border: 1px solid #000; padding: 5px;">3%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">라디에이터 서포트</td><td style="border: 1px solid #000; padding: 5px;">1%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+          <tr><td style="border: 1px solid #000; padding: 5px;">패키지트레이</td><td style="border: 1px solid #000; padding: 5px;">3%</td><td style="border: 1px solid #000; padding: 5px;"></td></tr>
+      </table>
+        <br/>
+        <ul>
+          <li>※ 클레임 보상 : 매입금액 x감가율= 보상금역 (보상한도 100만원]</li>
+          <li>※ 교환/단금에 대한 정의는 자동차관리법상 성능상태점검기준에 따라 적용</li>
+          <li>※ 단금오류시 보상비율을 교환다비 50% 김가</li>
+          <li>※ 사이드멤버. 필하우스, 인사이드 패널은 좌우앞뒤가 상관없이 단일품목으로 감가</li>
+        </ul>
+      
+        <br/>
+        <h5>비내구성 부품(소모품)</h5>
+        <table border="1" style="width: 100%; text-align: left; border:1px solid #000; border-collapse: collapse;">
+          <tr>
+              <th style="width: 30%; border: 1px solid #000; padding: 5px; text-align: center; background-color: #f0f0f0;">구분</th>
+              <th style="width: 70%; border: 1px solid #000; padding: 5px; text-align: center; background-color: #f0f0f0;">주변장치</th>
+          </tr>
+          <tr>
+              <td style="border: 1px solid #000; padding: 5px; text-align: center;">엔진</td>
+              <td style="border: 1px solid #000; padding: 5px;">
+                - 엔진장치 일체 (체너레이터, 콤프레서, 인젝터, 강흡 모터류, 열형장치, 케이블, 벨트류, 센서류, 플러그, 점화코일, 배전기, 스위치류 등) <br/>
+                - 냉각장치 (라디에이터) <br/>
+                - 터보 <br/>
+                </td>
+          </tr>
+          <tr>
+              <td style="border: 1px solid #000; padding: 5px; text-align: center;">변속기 주진축</td>
+              <td style="border: 1px solid #000; padding: 5px;">
+                - 클러치 케이블 및 변속조작장치 <br/>
+                - 입/출력 센서 <br/>
+                - 인디케이터스위치 <br/>
+              </td>
+          </tr>
+          <tr>
+              <td style="border: 1px solid #000; padding: 5px; text-align: center;">앞뒤 차축</td>
+              <td style="border: 1px solid #000; padding: 5px;">
+                - 현가 장치 부품 (소비부품, 쇼버(전자, 에어 등) 판스프링 등) <br/>
+                - 제동장치 부품 (라이닝, 도료, 브레이크디스크 등) <br/>
+                - 조향 장치 부품 (경기어, MDPS, 조인트 등) <br/>
+                ※ 월 허브, 너를, 링핀, 볼조인트, 허브베어링, 등 앞뒤 차속 관련부품 포함
+              </td>
+          </tr>
+          <tr>
+              <td style="border: 1px solid #000; padding: 5px; text-align: center;">기타</td>
+              <td style="border: 1px solid #000; padding: 5px;">
+                - 배터리(AGM 포함), 고무부트, 상시 4WD. 연료핑프, 연료필터, 플랜저, 별트류, 엔진/미션 마운팅, 소유기, 모일물러, 크로스멤버, 타이어, 월 등 주기적인 교환 필요부품의 품 또는 함
+              </td>
+          </tr>
+      </table> 
+    </div>
+    <div class="sticky-bottom">
+      <a href="/board/claim/create/${id}" class="my-2 btn btn-primary w-100" @click="toClaim">클레임 신청하기</a>
+    </div>
+    </div>
+  `;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20, height:840 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+}
+
+const toClaim = () => {
+  if (!disableClaimButton.value) {
+    router.push({ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId.value } });
+  }
 }
 
 const openCarLicenseModal = () => {
