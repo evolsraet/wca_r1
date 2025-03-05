@@ -362,77 +362,7 @@ const isWeekend = (dateString) => {
   return day === 0 || day === 6;
 };
 
-// 입력폼 검사 알림 
-const checkInputForm = (id) => {
-
-  const idValue = '';
-  const msg = '';
-  switch(id){
-    case 'region':
-      idValue = selectedRegion.value;
-      msg = '지역번호를 선택해 주세요.';
-    break;
-
-    case 'addrPost':
-      idValue = addrPost.value;
-      msg = '우편번호를 입력해 주세요.';
-    break;
-
-    case 'addrdt':
-      idValue = addrdt.value;
-      msg = '상세주소를 입력해 주세요.';
-    break;
-
-    case 'bank':
-      idValue = selectedBank.value;
-      msg = '은행을 선택해 주세요.';
-    break;
-
-    case 'account':
-      idValue = account.value;
-      msg = '계좌번호를 입력해 주세요.';
-    break;
-
-    case 'diagFirstAt':
-      idValue = diagFirstAt.value;
-      msg = '진단희망일1을 입력해 주세요.';
-    break;
-
-    case 'diagSecondAt':
-      idValue = diagSecondAt.value;
-      msg = '진단희망일2을 입력해 주세요.';
-    break;
-
-    case 'fileAuctionCarLicense':
-      idValue = fileAuctionCarLicense.value;
-      msg = '자동차등록증을 첨부해 주세요.';
-    break;
-    
-  }
-
-  if(idValue === ''){
-    wica.ntcn(swal)
-    .icon('W')
-    .addClassNm('cmm-review-custom')
-    .addOption({ padding: 20})
-    .callback(function(result) {
-    })
-    .alert(msg);
-    return;
-  }
-
-}
-
 const auctionEntry = async () => {
-
-  // checkInputForm('region');
-  // checkInputForm('addrPost');
-  // checkInputForm('addrdt');
-  // checkInputForm('bank');
-  // checkInputForm('account');
-  // checkInputForm('diagFirstAt');
-  // checkInputForm('diagSecondAt');
-  // checkInputForm('fileAuctionCarLicense');
 
   const auctionData = {
     auction_type: '0',
@@ -471,122 +401,43 @@ const auctionEntry = async () => {
 
     // 지역번호 확인
     if(selectedRegion.value === ''){
-      
-      if(regionSelect.value){
-        regionSelect.value.focus();
-      }
-
-      wica.ntcn(swal)
-      .icon('W')
-      .addClassNm('cmm-review-custom')
-      .addOption({ padding: 20})
-      .callback(function(result) {
-      })
-      .alert('지역번호를 선택해 주세요.');
-      // onRegionFocus 에 포커스 
-      
+      focusAndAlert(regionSelect, '지역번호를 선택해 주세요.');
       return;
     }
 
     // 우편번호 확인
     if(addrPost.value === ''){
-
-      if(addrPostSelect.value){
-        addrPostSelect.value.focus();
-      }
-
-      wica.ntcn(swal)
-      .icon('W')
-      .addClassNm('cmm-review-custom')
-      .addOption({ padding: 20})
-      .callback(function(result) {
-      })
-      .alert('우편번호를 입력해 주세요.');
+      focusAndAlert(addrPostSelect, '우편번호를 입력해 주세요.');
       return;
     }
 
     // 살세주소 확인
     if(addrdt.value === ''){
-
-      if(addrdtSelect.value){
-        addrdtSelect.value.focus();
-      }
-
-      wica.ntcn(swal)
-      .icon('W')
-      .addClassNm('cmm-review-custom')
-      .addOption({ padding: 20})
-      .callback(function(result) {
-      })  
-      .alert('상세주소를 입력해 주세요.');
+      focusAndAlert(addrdtSelect, '상세주소를 입력해 주세요.');
       return;
     }
 
     // 은행선택 확인 
     if(selectedBank.value === ''){
-
-      if(bankSelect.value){
-        bankSelect.value.focus();
-      }
-
-      wica.ntcn(swal)
-      .icon('W')
-      .addClassNm('cmm-review-custom')
-      .addOption({ padding: 20})
-      .callback(function(result) {
-      })
-      .alert('은행을 선택해 주세요.');
+      focusAndAlert(bankSelect, '은행을 선택해 주세요.');
       return;
     }
 
     // 계좌번호 확인
     if(account.value === ''){
-
-      if(accountSelect.value){
-        accountSelect.value.focus();
-      }
-
-      wica.ntcn(swal)
-      .icon('W')
-      .addClassNm('cmm-review-custom')
-      .addOption({ padding: 20})
-      .callback(function(result) {
-      })
-      .alert('계좌번호를 입력해 주세요.');
+      focusAndAlert(accountSelect, '계좌번호를 입력해 주세요.');
       return;
     }
     
     // 진단희망일1 확인 
     if(diagFirstAt.value === ''){
-
-      if(diagFirstAtSelect.value){
-        diagFirstAtSelect.value.focus();
-      }
-
-      wica.ntcn(swal)
-      .icon('W')
-      .addClassNm('cmm-review-custom')
-      .addOption({ padding: 20})
-      .callback(function(result) {
-      })
-      .alert('진단희망일1을 입력해 주세요.');
+      focusAndAlert(diagFirstAtSelect, '진단희망일1을 입력해 주세요.');
       return;
     }
 
     // 진단희망일2 확인 
     if(diagSecondAt.value === ''){
-
-      if(diagSecondAtSelect.value){
-        diagSecondAtSelect.value.focus();
-      }
-
-      wica.ntcn(swal)
-      .icon('W')
-      .addClassNm('cmm-review-custom')
-      .addOption({ padding: 20})
-      .callback(function(result) {
-      })
-      .alert('진단희망일2을 입력해 주세요.');
+      focusAndAlert(diagSecondAtSelect, '진단희망일2을 입력해 주세요.');
       return;
     }
 
@@ -620,6 +471,8 @@ const auctionEntry = async () => {
         .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
         .addOption({ padding: 20 }) // swal 기타 옵션 추가
         .callback(function (result) {
+          console.log(result);
+          return;
           window.location.href = '/auction';
         })
         .confirm(textOk);
@@ -648,6 +501,18 @@ const auctionEntry = async () => {
     }).alert('본인인증 후에 이용 가능한 서비스입니다.');
 
   }
+};
+
+const focusAndAlert = (inputRef, message) => {
+  if (inputRef.value) {
+    inputRef.value.focus();
+  }
+  wica.ntcn(swal)
+    .icon('W')
+    .addClassNm('cmm-review-custom')
+    .addOption({ padding: 20 })
+    .callback(function(result) {})
+    .alert(message);
 };
 
 const onRegionChange = () => {
