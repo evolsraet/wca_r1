@@ -460,7 +460,8 @@ const auctionEntry = async () => {
     
     try {
       const result = await createAuction({ auction: auctionData });
-      if(result){
+      const uniqueNumber = result.unique_number;
+      if(result.isSuccess){
           const textOk = `<div class="enroll_box" style="position: relative;">
                     <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
                     <p class="overlay_text02">경매 신청이 완료되었습니다.</p>
@@ -471,9 +472,7 @@ const auctionEntry = async () => {
         .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
         .addOption({ padding: 20 }) // swal 기타 옵션 추가
         .callback(function (result) {
-          console.log(result);
-          return;
-          window.location.href = '/auction';
+          window.location.href = '/auction/'+uniqueNumber;
         })
         .confirm(textOk);
       }

@@ -388,7 +388,11 @@ const AuctionCarInfo = async (carInfoForm) => {
             throw new Error;          
         } else {
             processing.value = false;
-            return result.isSuccess;
+            const resultData = {
+                unique_number: result.data.unique_number,
+                isSuccess: result.isSuccess
+            };
+            return resultData;
         }
     })
     .post();
