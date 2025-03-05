@@ -37,7 +37,7 @@
           </div>
           <!-- Content -->
           <div class="mb-3">
-            <label for="post-content" class="form-label">컨텐츠 내용</label>
+            <label for="post-content" class="form-label">{{ boardText === '클레임' ? '클레임 내용' : '컨텐츠 내용' }}</label>
             <TextEditorComponent v-model="post.content"/>
             <div class="text-danger mt-1">
               <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
