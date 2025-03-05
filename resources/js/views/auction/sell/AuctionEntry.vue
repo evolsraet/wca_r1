@@ -118,7 +118,7 @@
         <div class="text-start text-secondary opacity-50" v-if="fileAuctionProxyName">위임장 / 소유자 인감 증명서: {{ fileAuctionProxyName }}</div>
         
         
-        <!-- <div class="form-group dealer-check fw-bolder pb-2">
+        <div class="form-group dealer-check fw-bolder pb-2">
           <p for="dealer">법인 / 사업자차량</p>
           <div class="check_box">
             <input type="checkbox" id="ch2" v-model="isBizChecked" class="form-control">
@@ -126,10 +126,10 @@
           </div>
         </div>
         <div>
-        <P class="bold size_16">첨부해야하는 서류를 확인해 주세요</P>
         <div>   
       </div>
-      </div> -->
+      </div>
+
     </form>
     </div>
     

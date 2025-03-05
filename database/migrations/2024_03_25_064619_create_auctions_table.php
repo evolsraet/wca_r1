@@ -79,6 +79,10 @@ class CreateAuctionsTable extends Migration
             $table->string('dest_addr1')->nullable()->comment('도착지 주소');
             $table->string('dest_addr2')->nullable()->comment('도착지 상세주소');
 
+            $table->string('customTel1')->nullable()->comment('고객 전화번호1');
+            $table->string('customTel2')->nullable()->comment('고객 전화번호2');
+
+
             $table->timestamps();
             $table->softDeletes();
         });

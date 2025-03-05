@@ -53,7 +53,9 @@ class Auction extends Model implements HasMedia
         'car_fuel' => 'string',
         'car_price_now' => 'string',
         'car_price_now_whole' => 'string',
-        'car_km' => 'string'
+        'car_km' => 'string',
+        'customTel1' => 'string',
+        'customTel2' => 'string',
     ];
 
     // 업로드 가능한 파일들

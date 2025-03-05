@@ -1,5 +1,5 @@
 <template>
-  <div class="container d-flex flex-column gap-5">
+  <div class="container mov-wide d-flex flex-column gap-5">
     <div v-if="!fileUploadView" class="p-3 my-4">
       <h4 class="my-1 mb-5">탁송 요청</h4>
       <div class="profile ms-0 p-0">
@@ -61,7 +61,7 @@
         <h4 class="mt-4">탁송주소</h4>
         <p class="text-secondary opacity-50">탁송 주소는 탁송 출발지 배송 주소로 사용됩니다.</p>
         <div class="form-group mb-2 input-wrapper">
-          <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly>
+          <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly ref="addrPostSelect">
           <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
           <div class="text-danger mt-1">
             <div v-for="message in validationErrors?.addr_post">
@@ -79,7 +79,7 @@
               </div>
             </div>
           </div>
-          <input type="text" v-model="addrdt" placeholder="상세주소">
+          <input type="text" v-model="addrdt" placeholder="상세주소" ref="addrdtSelect">
           <div class="text-danger mt-1">
             <div v-for="message in validationErrors?.addr2">
               {{ message }}
@@ -93,12 +93,102 @@
       <p class="text-secondary opacity-50">매도용 인감증명서를 준비해 주세요.</p>
     
       <div class="form-group">
-        <input type="file" @change="handleFileUploadAuctionOwner" ref="fileInputRefAuctionOwner" style="display:none">
+        <!-- <input type="file" @change="handleFileUploadAuctionOwner" ref="fileInputRefAuctionOwner" style="display:none">
         <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadAuctionOwner">
           파일 첨부
         </button>
-        <div class="text-start text-secondary opacity-50" v-if="fileAuctionOwnerName">매도용 인감증명서: {{ fileAuctionOwnerName }}</div>
+        <div class="text-start text-secondary opacity-50" v-if="fileAuctionOwnerName">매도용 인감증명서: {{ fileAuctionOwnerName }}</div> -->
+        
+
+        <div class="dropdown border-bottom" v-if="!isBizChecked">
+        <button
+          class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
+          @click="toggleDropdown('general')"
+        >
+          이전에 필요한 서류 안내 (일반 고객)
+          <img
+            :src="openSection === 'general' ? iconUp : iconDown"
+            alt="Dropdown Icon"
+            class="dropdown-icon"
+            width="14"
+          />
+        </button>
+        <transition name="slide">
+        <div v-show="openSection === 'general'" class="dropdown-content mt-0 p-4">
+          <p class="mb-1">1. 자동차등록증 원본</p>
+          <p class="mb-1">2. 자동차매도용인감증명서 또는 본인 서명 사실 확인서 (매수자 인적사항 기재 필수)</p>
+          <p class="ms-3 tc-gray mb-1">매수자 인적사항은 판매딜러가 결정되면 고객에게 인적사항이 통보됩니다.</p>
+          <p class="mb-1">· 공동명의인 경우 명의자 각자 서류 필요</p>
+          <p class="mb-1">· 수출 폐차딜러에게 판매된다면 인감증명서 대신 신분증 사진이 필요​합니다.</p>
+        </div>
+        </transition>
       </div>
+
+      <div class="dropdown border-bottom" v-if="isBizChecked">
+        <button
+          class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
+          @click="toggleDropdown('business')"
+        >
+          이전에 필요한 서류 안내 (사업자 또는 법인)
+          <img
+            :src="openSection === 'business' ? iconUp : iconDown"
+            alt="Dropdown Icon"
+            class="dropdown-icon"
+            width="14"
+          />
+        </button>
+        <transition name="slide">
+          <div v-show="openSection === 'business'" class="dropdown-content p-4">
+            <p class="bold mb-2">사업용으로 사용한 경우, 기본 필수 서류</p>
+            <div>
+            <p>1. 자동차등록증 원본</p>
+            <p>2. 자동차매도용 인감증명서 (매수자 인적사항 기재 필수)</p>
+            <p>3. 사업자동등록증</p>
+            <p class="bolder my-2">사업용으로 사용한 경우, 기본 필수 서류</p>
+            <p>복식부기</p>
+            <p>1. 자동차등록증 원본</p>
+            <p>2. 자동차매도용 인감증명서 (매수자 인적사항 기재 필수)</p>
+            <p>3. 일반 인감증명서 (사실확인 증빙용)</p>
+            <p>4. 사업자동등록증 사본</p>
+            <p>5. 비사업용 사실확인서 (세무사 명판 날인)</p>
+            <p class="mb-3">6. ‘차량운반구 감가상각비명세서’ 또는 ‘고정자산명세서’</p>
+            <p>간편등록부의 경우, 상기 1~5번 제출 서류들과 ‘총 수입금액 및 필요경비명세서’가 필요합니다.</p>
+            <div class="my-4">
+              <p class="bolder">간이과세자</p>
+              <p>1. 기본 필수 서류</p>
+            </div>
+            <div class="my-4">
+              <p class="bolder">간이과세자 (세금계산서 발급사업자)</p>
+              <p>1. 기본 필수 서류</p>
+              <p>2. 세금계산서 (부가세 포함)</p>
+            </div>
+            <div class="my-4">
+              <p class="bolder">면세사업자</p>
+              <p>1. 기본 필수 서류</p>
+              <p>2. 세금계산서 (부가세 면제)</p>
+            </div>
+            <div class="mt-4">
+              <p class="bolder">법인사업자</p>
+              <p>1. 기본 필수 서류</p>
+              <p>2. 세금계산서 (부가세 면제)</p>
+              <p>3. 법인등기부등본 (15일내에 발급, 말소사항 포함)</p>
+              <p>4. 양도계약서</p>
+            </div>
+            </div>
+          </div>
+        </transition>
+        </div>
+
+        </div>
+
+        <div class="form-group">
+          <h4 class="mt-4"><span class="text-danger me-2">*</span>고객 연락처</h4>
+          <p class="text-secondary opacity-50">고객 연락처를 입력해 주세요.</p>
+          <div>
+            <input type="text" v-model="customTel1" placeholder="연락처1 (필수)" ref="customTel1Select">
+            <input type="text" v-model="customTel2" placeholder="연락처2">
+          </div>
+        </div>
 
 
       <button type="button" class="btn btn-primary w-100" @click="toggleView">다음</button>
@@ -135,12 +225,29 @@
   </div>
 </template>
 <script setup>
+import iconUp from "../../../img/Icon-black-up.png";
+import iconDown from "../../../img/Icon-black-down.png";
 import { ref, onMounted, defineProps, defineEmits, watch, nextTick, createApp, inject } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { cmmn } from '@/hooks/cmmn';
 import BankModal from '@/views/modal/bank/BankModal.vue';
 import profileDom from '/resources/img/profile_dom.png';
 import useAuctions from '@/composables/auctions';
+
+
+// export default {
+//   data() {
+//     return {
+//       openSection: null,
+//     };
+//   },
+//   methods: {
+//     toggleDropdown(type) {
+//       this.openSection = this.openSection === type ? null : type;
+//       console.log(`${type} 상태:`, this.openSection === type);
+//     },
+//   },
+// }
 
 const {setTacksong,  getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress, validationErrors } = useAuctions();
 const selectedDay = ref(null);
@@ -171,7 +278,14 @@ const addrdt = ref(''); // 상세 주소
 const fileInputRefAuctionOwner = ref(null);
 const fileAuctionOwner = ref(null); // 추가: 파일 저장 변수
 const fileAuctionOwnerName = ref(''); // 추가: 파일 이름 저장 변수
-
+const openSection = ref(null);
+const isBizChecked = ref(false);
+const customTel1 = ref('');
+const customTel2 = ref('');
+const customTel1Select = ref(null);
+// const datePickerRef = ref(null);
+const addrPostSelect = ref(null);
+const addrdtSelect = ref(null);
 const props = defineProps({
   bid: Object,
   userData: Object,
@@ -199,30 +313,30 @@ const confirmSelection = async () => {
   const auctionId = auctionDetail.value?.data?.id;
 
   // 매도용파일 업로드
-  if (fileAuctionOwner.value) {
-    try {
-      const formData = new FormData();
-      formData.append('file_auction_owner', fileAuctionOwner.value);
-      await wicac.conn()
-      .url(`/api/auctions/${auctionId}/upload`)
-      .param(formData)
-      .multipart()
-      .post();
-    } catch (error) {
-      // console.error('Error during file upload:', error);
-      wica.ntcn(swal)
-      .title('오류가 발생하였습니다.')
-      .useHtmlText()
-      .icon('E') //E:error , W:warning , I:info , Q:question
-      .alert('관리자에게 문의해주세요.');
-    }
+  // if (fileAuctionOwner.value) {
+  //   try {
+  //     const formData = new FormData();
+  //     formData.append('file_auction_owner', fileAuctionOwner.value);
+  //     await wicac.conn()
+  //     .url(`/api/auctions/${auctionId}/upload`)
+  //     .param(formData)
+  //     .multipart()
+  //     .post();
+  //   } catch (error) {
+  //     // console.error('Error during file upload:', error);
+  //     wica.ntcn(swal)
+  //     .title('오류가 발생하였습니다.')
+  //     .useHtmlText()
+  //     .icon('E') //E:error , W:warning , I:info , Q:question
+  //     .alert('관리자에게 문의해주세요.');
+  //   }
 
-  }else{
-    wica.ntcn(swal)
-    .title('매도용 인감증명서를 준비해 주세요')
-    .icon('W') //E:error , W:warning , I:info , Q:question
-    .alert('매도용 인감증명서파일을 첨부해 주세요.');
-  }
+  // }else{
+  //   wica.ntcn(swal)
+  //   .title('매도용 인감증명서를 준비해 주세요')
+  //   .icon('W') //E:error , W:warning , I:info , Q:question
+  //   .alert('매도용 인감증명서파일을 첨부해 주세요.');
+  // }
   
   if (auctionId && selectedDay.value !== null && selectedTime.value) {
     const selectedDate = days.value[selectedDay.value].date;
@@ -242,6 +356,8 @@ const confirmSelection = async () => {
         addr_post: addrPost.value,
         addr1: addr.value,
         addr2: addrdt.value,
+        customTel1: customTel1.value,
+        customTel2: customTel2.value,
       }
     };
 
@@ -271,6 +387,8 @@ const fetchAuctionDetail = async () => {
   try {
     const auctionId = route.params.id;  
     auctionDetail.value = await getAuctionById(auctionId);  
+    isBizChecked.value = auctionDetail.value.data.is_biz;
+    openSection.value = auctionDetail.value.data.is_biz ? 'business' : 'general';
     days.value = getNextAvailableDays(auctionDetail.value.data.choice_at, auctionDetail.value.data.takson_end_at);  
     console.log('Auction Detail:', auctionDetail.value); 
   } catch (error) {
@@ -339,25 +457,56 @@ function getNextAvailableDays(choiceAt, taksonEndAt) {
 
 const toggleView = () => {
   if (selectedDay.value === null || selectedTime.value === null) {
+    // datePickerRef.value.focus(); // 포커스가 안되네, 해당 위치로 이동 가능 한가 ? 
     swal.fire({
       title: '탁송일을 선택해 주세요',
       text: '원하는 탁송일과 시간을 선택해 주세요.',
       icon: 'warning',
       confirmButtonText: '확인'
+    }).then(() => {
+      setTimeout(() => {
+        const datePickerElement = document.querySelector('.container-fluid');
+        if (datePickerElement) {
+          datePickerElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 500);
     });
+    
     return;
   }
 
-  if (fileAuctionOwner.value === null) {
+  // 탁송주소 확인 
+  if(addrPost.value === '') {
+    addrPostSelect.value.focus();
     swal.fire({
-      title: '매도용 인감증명서를 준비해 주세요',
-      text: '매도용 인감증명서파일을 첨부해 주세요.',
+      title: '탁송주소를 입력해 주세요',
+      text: '탁송주소를 입력해 주세요.',
       icon: 'warning',
       confirmButtonText: '확인'
     });
     return;
   }
 
+  // if (fileAuctionOwner.value === null) {
+  //   swal.fire({
+  //     title: '매도용 인감증명서를 준비해 주세요',
+  //     text: '매도용 인감증명서파일을 첨부해 주세요.',
+  //     icon: 'warning',
+  //     confirmButtonText: '확인'
+  //   });
+  //   return;
+  // }
+
+  if(customTel1.value === '') {
+    customTel1Select.value.focus();
+    swal.fire({
+      title: '고객 연락처를 입력해 주세요',
+      text: '고객 연락처를 입력해 주세요.',
+      icon: 'warning',
+      confirmButtonText: '확인'
+    });
+    return;
+  }
   // if (!selectedBank.value || !account.value) {
   //   swal.fire({
   //     title: '은행 정보 입력 필요',
@@ -376,8 +525,16 @@ const toggleView = () => {
         <p class="mb-0"><span>${yearLabel.value} </span>&nbsp;${monthLabel.value} ${selectedDateLabel.value} ${selectedTime.value}</p>
       </div>
       <div class="d-flex justify-content-start gap-5 mt-2">
+        <p class="mb-0">탁송주소</p>
+        <p class="mb-0"><span>${addrPost.value}</span>|<span>${addr.value}</span>|<span>${addrdt.value}</span></p>
+      </div>
+      <div class="d-flex justify-content-start gap-5 mt-2">
         <p class="mb-0"><span class="me-3">은</span>행</p>
         <p class="mb-0"><span class="me-2">${auctionDetail.value?.data?.bank ?? '선택 안됨'}</span>|<span class="ms-2">${auctionDetail.value?.data?.account ?? '계좌번호 없음'}</span></p>
+      </div>
+      <div class="d-flex justify-content-start gap-5 mt-2">
+        <p class="mb-0">고객 연락처</p>
+        <p class="mb-0"><span>${customTel1.value}</span>|<span>${customTel2.value}</span></p>
       </div>
     </div>
     <p class="text-secondary opacity-75 text-center mt-3">취소와 변경이 어려우니 유의해 주세요.</p>
@@ -504,6 +661,10 @@ function editPostCode(elementName) {
     .then(({ zonecode, address }) => {
         addrPost.value = zonecode;
         addr.value = address;
+
+        // 포커스 
+        addrdtSelect.value.focus();
+
     })
 }
 
@@ -525,12 +686,20 @@ const handleFileUploadAuctionOwner = event => {
   }
 }
 
+const toggleDropdown = (section) => {
+  openSection.value = openSection.value === section ? null : section;
+};
+
 </script>
 
 <style scoped lang="scss">
 .container {
   width: 400px;
   margin: 0 auto;
+}
+
+.input-wrapper {
+  position: relative;
 }
 
 .date-time-picker {
@@ -646,7 +815,46 @@ const handleFileUploadAuctionOwner = event => {
 
 @media (min-width: 992px) {
   .mov-wide {
-    width: 55vw;
+    // width: 55vw;
+    width: 35rem !important;
   }
 }
+
+
+.dropdown {
+  margin-bottom: 10px;
+}
+
+.dropdown-btn {
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: block;
+  max-height:none;
+  padding: 10px;
+  border-top: none;
+  background-color: #F5F5F6;
+}
+/* Slide animation */
+.slide-enter-active,
+.slide-leave-active {
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
+}
+.slide-enter-from,
+.slide-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+.slide-enter-to,
+.slide-leave-from {
+  max-height: 500px; /* 적절한 최대 높이 값으로 조정 */
+  opacity: 1;
+}
+
 </style>

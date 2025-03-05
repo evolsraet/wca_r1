@@ -111,7 +111,7 @@
                       <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
                     </div>
                     <div v-if="auctionDetail.data.status === 'chosen' && isUser">
-                      <div v-if="auctionDetail.data.top_bids[0]?.dealerInfo.biz_check">
+                      <div v-if="auctionDetail.data.top_bids[0]?.dealerInfo?.biz_check">
                         <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">구매자 사업자등록증</p>
                       </div>
                     </div>
@@ -547,21 +547,28 @@
                 <li>
                   <div class="d-flex gap-2">
                     <div class="circle">1</div>
-                    <span>키와 서류를 전달해 주세요.</span>
+                    <span>키와 서류를 탁송기사에게 전달해 주세요.</span>
                   </div>
                 </li>
                 <div class="small-circles my-3"></div>
                 <li>
                   <div class="d-flex gap-2">
                     <div class="circle">2</div>
-                    <span>상단의 탁송 완료 처리 버튼을 탁송 <br>기사분에게 제시해 주세요.</span>
+                    <span>탁송기사가 서류를 수령하면 서류접수 <br>완료 처리 버튼을 클릭합니다.</span>
                   </div>
                 </li>
                 <div class="small-circles mb-3"></div>
                 <li>
                   <div class="d-flex gap-2">
                     <div class="circle">3</div>
-                    <span>차량대금 지급 후, 경매 완료 처리 됩니다.</span>
+                    <span>차량대금이 나이스에서 고객 계좌로 송부되어집니다.</span>
+                  </div>
+                </li>
+                <div class="small-circles mb-3"></div>
+                <li>
+                  <div class="d-flex gap-2">
+                    <div class="circle">4</div>
+                    <span>경매완료 처리 됩니다.</span>
                   </div>
                 </li>
               </ul>
