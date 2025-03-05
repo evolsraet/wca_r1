@@ -1,6 +1,6 @@
 <template>
-    <div class="d-flex container justify-content-between my-5 px-4 gap-4 guide-card-content pt-4">
-      <!-- 이용가이드 카드 -->
+    <div v-if="isDealer" class="d-flex container justify-content-between my-5 px-4 gap-4 guide-card-content pt-4">
+      <!-- 딜러가이드 카드 -->
       <div class="guide-card pointer" @click.prevent="openAlarmModal" >
         <div class="guide-content ">
             <p class="guide-title">이용가이드</p>
@@ -23,16 +23,38 @@
         <img src="../../../img/use_icon3.png" alt="책 아이콘" class="guide-icon" />
       </div>
     </div>
+    <div v-if="isUser" class="d-flex container justify-content-between my-5 p-0 gap-4 guide-card-content pt-4">
+      <div class="guide-card pointer" @click.prevent="openAlarmModal04" >
+        <div class="guide-content ">
+            <p class="guide-title">경매 절차 안내</p>
+            <p class="guide-description">이런 순서대로 경매가 이루어져요</p>
+        </div>
+        <img src="../../../img/use_icon4.png" alt="책 아이콘" class="guide-icon" />
+        </div>
+        <div class="guide-card pointer"@click.prevent="openAlarmModal05">
+        <div class="guide-content">
+            <p class="guide-title">명의 이전시 필요 서류</p>
+            <p class="guide-description">이런 서류들이 필요해요</p>
+        </div>
+        <img src="../../../img/use_icon5.png" alt="책 아이콘" class="guide-icon" />
+        </div>
+    </div>
   </template>
   
-  <script setup>
-  import { inject } from "vue";
-  import arrow from '../../../../resources/img/dash-black.png';
-  import bid from '../../../../resources/img/bid.png';
-  import hand from '../../../../resources/img/hand.png';
-  import Iconcare from '../../../../resources/img/Iconcare.png';
-  import hand02 from '../../../../resources/img/hand02.png';
-  import { cmmn } from '@/hooks/cmmn';
+<script setup>
+import { inject,computed } from "vue";
+import { useStore } from 'vuex';
+import useAuth from '@/composables/auth';
+import arrow from '../../../../resources/img/dash-black.png';
+import bid from '../../../../resources/img/bid.png';
+import hand from '../../../../resources/img/hand.png';
+import Iconcare from '../../../../resources/img/Iconcare.png';
+import hand02 from '../../../../resources/img/hand02.png';
+import { cmmn } from '@/hooks/cmmn';
+const store = useStore();
+const user = computed(() => store.getters['auth/user']);
+const isDealer = computed(() => user.value?.roles?.includes('dealer'));
+const isUser = computed(() => user.value?.roles?.includes('user'));
 const swal = inject('$swal');
 const { wica } = cmmn();
   const openAlarmModal = () => {
@@ -64,60 +86,7 @@ const { wica } = cmmn();
                 <li>최고가는 경매 종료후 공개됩니다.</li>
                 <li>리스차량은 "승계후 완납 조건"으로 입찰해야 합니다.</li>
             </ul>
-            <div class="bidding-section">
-            <h3 class="size_32 bolder">2<span class="size_24 ms-2">견적 취소</span></h3>
-            <ol class="mt-3 step-list">
-                <li class="step-item">
-                    <span class="step-connector"></span>
-                    <span class="step-circle">1</span>
-                    <div class="step-text">입찰을 한 후에도 취소 후 재견적을 입력할 수 있습니다.</div>
-                </li>
-                <li class="step-item">
-                    <span class="step-connector"></span>
-                    <span class="step-circle">2</span>
-                    <div class="step-text">견적취소는 입찰 종료 전 30분전까지 가능합니다.</div>
-                </li>
-                <li class="step-item">
-                    <span class="step-circle">3</span>
-                    <div class="step-text">견적실수시 본사(1544-2165)에 즉시 연락주시기 바랍니다.</div>
-                </li>
-            </ol>
-            <ul class="list-block">
-                <li>1회 견적실수 패널티 3일 이용정지</li>
-                <li>2회 견적실수 패널티 1달 이용정지</li>
-                <li>3회 견적실수 패널티 계정 정지</li>
-            </ul>
-             <div class="bidding-section">
-            <h3 class="size_32 bolder">3<span class="size_24 ms-2">차량 인수</span></h3>
-            <ol class="mt-3 step-list">
-                <li class="step-item align-items-start">
-                    <span class="step-connector02"></span>
-                    <span class="step-circle">1</span>
-                    <div class="step-text">낙찰이 확정되면 인수정보를 입력합니다. (딜러 : 매수자, 고객 : 탁송정보)
-                      <p>※ 낙찰 확정일 익일부터 48시간 이내 인수정보 반드시 입력</p>
-                      <p>※ 압류/저당, 사업자유무, 비사업용 여부등을 파악하여 이전 필요서를 차와 함께 보내드립니다.</p>
-                    </div>
-                </li>
-                <li class="step-item align-items-start">
-                    <span class="step-connector02"></span>
-                    <span class="step-circle">2</span>
-                    <div class="step-text">탁송 2시간전까지 나이스에스크로 계좌로 차량 대금 입금이 필요합니다. (입급증 완료시 입금증 발송)
-                      <p>※ 탁송 2시간전까지 대금이 입금되지 않으면 낙찰 취소가 됩니다. 11시 이전에 탁송이 진행되는 경우는 전라 18시까지 차량 대금을 입급해야합니다.</p>
-                    </div>
-                </li>
-                <li class="step-item align-items-start">
-                    <span class="step-circle">3</span>
-                    <div class="step-text">거래 마무리
-                      <p>※ 인수후 영업일 기준 2일내 진단오류에 대한 클레임을 제기할 수 있습니다. (성능기록부 및 증빙 자료 제출)</p>
-                    </div>
-                </li>
-            </ol>
-            <ul class="list-block">
-                <li>1회 견적실수 패널티 3일 이용정지</li>
-                <li>2회 견적실수 패널티 1달 이용정지</li>
-                <li>3회 견적실수 패널티 계정 정지</li>
-            </ul>
-        </div>
+            
     </div>
   `;
 
@@ -260,6 +229,47 @@ const openAlarmModal03 = () => {
     })
     .confirm(text); // 모달 내용 설정
 };
+
+const openAlarmModal04 = () => {
+  const text = `
+    <div>
+        <div >
+          <h5>경매 절차 안내 데모</h5>
+        </div>
+    </div>
+  `;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+};
+
+const openAlarmModal05 = () => {
+  const text = `
+    <div>
+        <div>
+          <h5>명의 이전시 필요서류 안내 데모</h5>
+        </div>
+    </div>
+  `;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+};
+
 </script>
 <style scoped>
 

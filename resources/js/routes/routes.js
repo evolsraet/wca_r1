@@ -196,6 +196,12 @@ export default [
                 component: () => import('../views/category/posts.vue'),
             },
             {
+                path: '/transferGuide-do',
+                name: 'user.transferGuide',
+                component: () => import('../views/guide/view.vue'),
+                beforeEnter: requireAct(['act.super', 'act.admin', 'act.user']),
+            },
+            {
                 path: '/list-do',
                 name: 'user.review',
                 component: () => import('../views/bbs/review.vue'),

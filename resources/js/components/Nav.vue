@@ -273,6 +273,9 @@
                 <router-link :to="{ name: 'user.review'}" class="nav-link mx-2 nav-review" exact-active-class="active-link">이용후기</router-link>
               </li>
               <li class="nav-item">
+                <router-link :to="{ name: 'user.transferGuide'}" class="nav-link mx-2 nav-review" exact-active-class="active-link">명의이전서류</router-link>
+              </li>
+              <li class="nav-item">
               <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="nav-link mx-2 " exact-active-class="active-link">공지사항</router-link>
               </li>
             </div>
