@@ -4,8 +4,8 @@
       <div>
         <div class="card border-0 shadow-none">
           <!-- Form Header -->
-          <h4 class="mt-4">{{ boardText }}</h4>
-          <p class="text-secondary opacity-75 fs-6 mb-4">
+          <h4 class="mt-5 mx-2">{{ boardText }}</h4>
+          <p class="text-secondary opacity-75 fs-6 mb-4 mx-2">
             {{ boardTextMessage }}
           </p>
           <div class="card-body my-2">

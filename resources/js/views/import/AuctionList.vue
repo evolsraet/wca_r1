@@ -83,24 +83,39 @@
         <div v-else>
           <div class="complete-car my-4">
             <div>
-              <div class="none-content p-3 d-flex align-items-center flex-column gap-3">
+              <div v-if="isUser" class="none-content p-3 d-flex align-items-center flex-column gap-3">
                 <div class="text-secondary opacity-50 d-flex align-items-center flex-column gap-3">
-                  <h4 v-if="isUser">등록된 차가 없어요</h4>
-                  <h5 v-if="isUser">차량 등록 후, 경매를 시작해보세요.</h5>
-                  <div v-if="isDealer" class="px-2">
+                  <h4>등록된 차가 없어요</h4>
+                  <h5>차량 등록 후, 경매를 시작해보세요.</h5>
                     <router-link :to="{ name: 'auction.index' }" class="px-5 btn btn-outline-secondary btn-lg bc-wh">
                       입찰하러 가기
                     </router-link>
                   </div>
-                  <p v-if="isDealer" class="text-center">탁송지 미등록 매물이 없습니다</p>
                 </div>
+              </div>
+              <div v-if="isDealer" class="none-content02 p-4">
+                <div class="car-info-section">
+                  <div class="car-info">
+                    <img src="../../../img/favorite-car-icon02.png" alt="경매장 아이콘" width="110px" />
+                    <p class="car-count">349대</p>
+                    <p class="car-label">경매장</p>
+                  </div>
+                  <div class="divider-line"></div>
+                  <div class="car-info">
+                    <img src="../../../img/favorite-car-icon.png" alt="관심차 아이콘" width="105px"/>
+                    <p class="car-count">13대</p>
+                    <p class="car-label">관심차</p>
+                  </div>
+                </div>
+                <router-link :to="{ name: 'auction.index' }" class="w-100 px-5 btn btn-outline-secondary btn-lg dealer-bid-style">
+                  입찰하러 가기
+                </router-link>
               </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 </template>
 
 <script setup>
@@ -269,6 +284,10 @@ p {
     }
     .none-content{
         padding: 10px 40px 35.5px !important;
+    }
+    .none-content02{
+        padding: 10px 40px 35.5px !important;
+        height: auto;
     }
     .scrollable-content{
         height: auto;
@@ -445,6 +464,59 @@ margin-top: 10px;
 justify-content: flex-start;
 width: 439px;
 flex-wrap: wrap;
+}
+.auction-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #f9fafb;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 350px;
+}
+
+.car-info-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 10px;
+    gap: 45px;
+}
+.dealer-bid-style{
+  height: 55px !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}  
+
+.car-info-section .car-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 12px;
+}
+
+.car-info-section .car-count {
+  font-size: 22px;
+  font-weight: bold;
+  color: #2d2d2d;
+}
+
+.car-info-section .car-label {
+  font-size: 15px;
+  color: #707070;
+}
+
+.car-info-section .divider-line {
+  width: 2px;
+  height: 55px;
+  background-color: #e0e0e0;
+  margin: 0 24px;
 }
 
 .tag {

@@ -83,7 +83,12 @@ video {
 	background-color: rgba(0, 0, 0, 0.5);
     z-index: 1000;
 }
-
+.grid2{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 2열 */
+    grid-template-rows: repeat(2, auto); /* 2행 */
+    gap: 10px; /* 요소 간 간격 */    
+}
 /*   text-style  */
 
 .bold-link {
@@ -102,6 +107,11 @@ video {
     padding: 25px 20px !important;
     width: 415px;
 }
+}
+@media (max-width:1168px) {
+    .swiper-slide{
+        max-height: none !important;
+    }
 }
 /*--------------------------
     딜러 메인(홈)
@@ -418,11 +428,33 @@ video{
     background-repeat: no-repeat;
     z-index: 1;
 }
+@media (max-width:519px) {
+    .car-info-section{
+        gap: 0px !important;
+    } 
+}
+@media (max-width:383px) {
+    .sheet-contents .label {
+        font-size: 11px;
+    }
+    .steps-container {
+        padding: 50px 20px 20px !important;
+    }
+}
 .none-content{
     align-items: center;
     justify-content: center;
     position: relative;
     height: 390px;
+    width: 100%;
+    background-color: #f5f5f6;
+    padding: 10px 100px 47.5px;
+}
+.none-content02{
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    height: 315px;
     width: 100%;
     background-color: #f5f5f6;
     padding: 10px 100px 47.5px;
@@ -498,6 +530,7 @@ video{
     width: 100% !important;
 }
 @media (max-width: 991px){
+    .steps-container { margin-top: 2rem !important;}
     .review-button-container{
         display:flex !important;
     }
@@ -2156,7 +2189,29 @@ video{
         font-size: 15px;
     }
 }
+.grid3 {
+    display: grid;
+    grid-template-columns: repeat(1, 1fr) !important;
+    grid-template-rows: repeat(2, auto);
+    gap: 10px;
+}
 @media (max-width: 767px){
+.fee-section {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr); 
+    grid-template-rows: repeat(2, auto);  
+    gap: 20px; 
+    width: 100%;
+}
+.postindex{
+    flex-direction: column;
+}
+.fee-section .arrow{
+    display: none !important;
+}
+.grid3{
+    grid-template-columns: repeat(1, 1fr);
+}    
 .auction-content .row {
     justify-content: left !important;
 }
@@ -2735,7 +2790,7 @@ video{
         --color-icon-default: var(--color-timeline-default);
     }
      
-    .sheet-content .steps-container {
+    .steps-container {
         padding: 40px;
         position: relative;
         display: flex;
@@ -2756,7 +2811,19 @@ video{
         border: 4px solid var(--color-timeline-default);
         border-radius: 50%;
     }
-    
+    .step.completing::before {
+        content: '';
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        background-color: var(--color-step-completed); 
+        border-radius: 50%;
+        position: absolute;
+        left: 0px; 
+        top: 50%;
+        transform: translateY(-50%);
+        animation: blink 2s infinite;
+      }
     .sheet-content .step.completed {
         border: 2px solid var(--color-label-completed);
     }
@@ -2764,6 +2831,7 @@ video{
         border: 2px solid var(--color-label-completed);
         animation: blink 2s infinite;
     }
+
     .sheet-content .step.completing-text{
         top: 20px !important;
         animation: blink 2s infinite;
@@ -2815,7 +2883,94 @@ video{
     .sheet-content .line.completed {
         background: var(--color-step-completed);
     }
+
+    .sheet-contents .step {
+        z-index: 1;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 200ms ease;
+        flex-grow: 0;
+        height: 10px;
+        width: 10px;
+        background-color: var(--color-timeline-default);
+        border-radius: 50%;
+    }
+    .sheet-contents .step .completing {
+        background-color: var(--color-label-completed);
+    }
+    .sheet-contents .step .completed {
+        background-color: var(--color-label-completed);
+    }
+
+    .sheet-contents .label-style02{
+        top:20px!important;
+    }
+    .sheet-contents .step.in-progress {
+        width: 18px;
+        height: 18px;
+        background: var(--color-in-progress);
+        border: none;
+    }
     
+    .sheet-contents .preloader {
+        display: none;
+        height: 10px;
+        width: 10px;
+        border: 2px solid #fff;
+        border-radius: 50%;
+        border-left-color: transparent;
+        animation-name: spin;
+        animation-duration: 2000ms;
+        animation-iteration-count: infinite;
+        animation-timing-function: linear;
+    }
+    
+    .sheet-contents .label {
+        position: absolute;
+        bottom: 17px;
+        filter: none;
+        z-index: 2000;
+        color: var(--color-label-default);
+        transition: all 200ms ease;
+        font-weight: 700;
+    }
+    
+    .sheet-contents .label.completed {
+        color: $primary !important;
+        background-color: $primary-sub !important;
+        padding: 2px 6px;
+        border-radius: 6px;
+    }
+    .sheet-contents .completed{
+        background-color: $primary; 
+    }
+    .sheet-contents .completing-text{
+        background-color: $primary !important;
+        color: $primary !important;  
+    }
+    .sheet-contents .label.completing {
+        color: $primary !important;
+        background-color: $primary-sub !important;
+        padding: 2px 6px;
+        border-radius: 6px;
+    }
+    .sheet-contents .completing{
+        background-color: $primary; 
+    }
+    
+    .sheet-contents .line {
+        transition: all 200ms ease;
+        height: 2px;
+        flex-grow: 1;
+        max-width: 120px;
+        background: var(--color-timeline-default);
+    }
+    
+    .sheet-contents .line.completed {
+        background: var(--color-step-completed);
+    }
     
     /* bottom sheet */
 
@@ -3936,6 +4091,10 @@ input[type="checkbox"] {
 }
 
 @media screen and (max-width: 481px){
+    .fee-section {
+        grid-template-columns: repeat(1, 1fr) !important; 
+        grid-template-rows: repeat(1, auto) !important;  
+    }
     .o_table_mobile .tbl_basic table {
         width: 100%;
         min-width: 600px !important;
@@ -3988,6 +4147,7 @@ input[type="checkbox"] {
   
   .swiper-slide {
     width: 100%;
+    max-height: 500px !important;
   }
   
   .review-card {
@@ -4459,6 +4619,7 @@ input[type="checkbox"] {
 .bc-wh{
     background-color: white ;
 }
+
 /* 애니메이션 커스텀 */
 .fade-enter-active, .fade-leave-active {
     transition: opacity 0.5s;
@@ -4618,7 +4779,7 @@ input[type="checkbox"] {
   .step-item {
     display: flex;
     align-items: center;
-    margin-bottom: 30px;
+    margin-bottom: 18px;
     position: relative;
     font-size: 1.2em;
     color: #555;
@@ -4647,31 +4808,8 @@ input[type="checkbox"] {
     background: repeating-linear-gradient(180deg, #d9534f, #d9534f 4px, transparent 4px, transparent 8px);
     z-index: -1;
   }
-  @media (max-width:593px) {
-    .step-connector02{
-        height: 165px; 
-    }
-  }
-  @media (max-width:445px) {
-    .step-connector02{
-        height: 190px; 
-    }
-  }
-  .step-connector {
-    position: absolute;
-    top: 32px;
-    left: 15px;
-    width: 2px;
-    height: 60px;
-    background: repeating-linear-gradient(
-      180deg,
-      #d9534f,
-      #d9534f 4px,
-      transparent 4px,
-      transparent 8px
-    );
-    z-index: -1;
-  }
+
+
   
   .step-text {
     margin-left: 15px;
@@ -4810,7 +4948,7 @@ input[type="checkbox"] {
     display: flex;
     align-items: center;
     padding: 25px 48px;
-    width: 400px;
+    width: 100%;
     border-radius: 8px;
     background-color: #fff;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -4821,6 +4959,7 @@ input[type="checkbox"] {
   .guide-card:hover{
     box-shadow: 1px 4px 4px rgba(0, 0, 0, 0.15);
   }
+  
   .guide-icon {
     width: 56px;
     height: 56px;
@@ -4832,7 +4971,7 @@ input[type="checkbox"] {
   }
   
   .guide-title {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: bold;
     margin: 0 0 8px;
     color: #333;
@@ -5017,4 +5156,386 @@ input[type="checkbox"] {
     height: 34px !important;
   }
   
+/* 옥션 가이드 팝업 스타일 */
+.auction-guid-popup-container {
+    position: relative;
+    display: inline-block;
+}
+
+.auction-detail-img {
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+.auction-guid-popup .title {
+
+    /* transform: translate(-50%, -50%); */
+    font-size: 20px !important;
+    font-weight: bold !important;
+}
+.auction-guid-popup .sub {
+
+    /* transform: translate(-50%, -50%); */
+    font-size: 15px !important;
+    /* font-weight: bold !important; */
+    text-align: right;
+    color: #AAAEBE;
+}
+.auction-guid-popup .steps {
+    line-height: 1;
+    font-size: 17px !important;
+    /* font-weight: bold !important; */
+    text-align: right;
+    color: #AAAEBE;
+}
+.step02 {
+    display: flex;
+    top: 109px;
+    gap: 0px;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    align-items: flex-start;
+}
+.step01{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    top: -2px;
+    right: 0;
+    align-items: flex-end;   
+}
+.step03{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    top: 216px;
+    right: 0;
+    align-items: flex-end;   
+}
+.step04 {
+    display: flex;
+    top: 325px;
+    gap: 0px;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    align-items: flex-start;
+}
+.step05{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    top: 432px;
+    right: 0;
+    align-items: flex-end;   
+}
+.new-style-step{
+    display: flex !important;
+    gap: 4px;
+    align-items: center;  
+}
+.step06 {
+    display: flex;
+    top: 543px;
+    gap: 0px;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    align-items: flex-start;
+}
+.step07{
+    display: flex;
+    position: absolute;
+    flex-direction: column;
+    gap: 1px;
+    top: 644px;
+    right: 0;
+    align-items: flex-end;   
+}
+.auction-icon{
+    width: 22px;
+    /* line-height: 14px; */
+    height: 22px;
+    margin-bottom: 4px;   
+}
+.progress-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 10px;
+    position: relative;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    color: #ccc;
+    font-size: 14px;
+    font-weight: bold;
+}
+
+.step.active {
+    color: #e60012;
+}
+
+.step .circle {
+    width: 8px;
+    height: 8px;
+    background-color: #ccc;
+    border-radius: 50%;
+    margin-bottom: 5px;
+}
+
+.step.active .circle {
+    background-color: #e60012;
+}
+
+.step-label {
+    margin-top: 5px;
+}
+
+.step-badge {
+    background: #fde7e7;
+    color: #e60012;
+    padding: 3px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 5px;
+    margin-bottom: 5px;
+}
+
+.progress-line {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #ccc;
+    z-index: -1;
+}
+
+.progress-line.active {
+    background-color: #e60012;
+    width: 14%;
+}
+
+.progress-step.active .progress-circle {
+  background-color: #e60012;
+}
+@media (max-width: 991px) {
+    .progress-inactive-line {
+        transform: scaleX(0.9);
+    }
+    .progress-active-line{
+        transform: scaleX(0.91);
+    }
+}
+@media (max-width: 573px) {
+    .progress-inactive-line {
+        transform: scaleX(0.95);
+    }
+    .progress-active-line{
+        transform: scaleX(0.95);
+    }
+}
+
+  /* 진행 바 배경 */
+  .progress-line-container {
+    position: absolute;
+    bottom: 46px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background-color: #e9e9e9;
+    z-index: -1;
+  }
   
+  .progress-inactive-line {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: #e9e9e9;
+  }
+  
+  .progress-active-line {
+    position: absolute;
+    height: 100%;
+    background-color: #e60012;
+    transition: width 0.5s ease-in-out;
+  }
+  
+  /* 단계 리스트 */
+  .multi-steps {
+    display: table;
+    table-layout: fixed;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+    text-align: center;
+  }
+  
+  .multi-steps li {
+    display: table-cell;
+    position: relative;
+    font-size: 14px;
+    color: #ccc;
+    font-weight: bold;
+  }
+  
+  /* 진행된 스텝 */
+  .multi-steps li.is-complete {
+    color: #666;
+  }
+  
+  .multi-steps li.is-complete .progress-circle {
+    background-color: #666;
+  }
+  
+  /* 현재 진행 중인 스텝 */
+  .multi-steps li.is-active {
+    color: #e60012;
+  }
+  
+  .multi-steps li.is-active .progress-circle {
+    background-color: #e60012;
+    width: 12px;
+    height: 12px;
+  }
+  
+
+  .step-label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 4px;
+  }
+
+  .step-name {
+    display: block;
+    font-size: 12px;
+    margin-top: 4px;
+  }
+  
+
+  .progress-circle {
+    width: 10px;
+    height: 10px;
+    background-color: #e9e9e9;
+    border-radius: 50%;
+    margin: 0 auto;
+    transition: background-color 0.3s ease;
+  }
+.pannel-box{
+    padding: 30px;
+    border: 1px solid #E5E7EB;
+    border-radius:12px;
+    box-shadow: 1px 1px 7px #aaaebe4a;
+}
+.intocontent .text-muted02{color:#111111;}
+.intocontent .align-center{
+    align-items: center;
+}
+.intocontent .mb-22{
+    margin-bottom: 2.2rem !important;
+}
+.intocontent .section01 {
+    text-align: center;
+    width: 100%;
+    padding: 50px 0px;
+}
+.intocontent .section04{
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+.intocontent .section03 {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.intocontent .bk-section {
+    height: 310px; 
+    width: 100%;  
+    display: block;
+}
+
+.intocontent .content {
+    position: absolute;
+    top: 50%; 
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+}
+
+.intocontent .small-text {
+    font-size: 1.2rem;
+    font-weight: normal;
+}
+
+.intocontent .title {
+    font-size: 1.8rem;
+    font-weight: 900;
+}
+
+.intocontent .chat-box {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.intocontent .chat-img {
+    width: 500px;
+    max-width: 100%;
+    border-radius: 10px;
+}
+
+.intocontent .section02 {
+    text-align: center;
+    width: 100%;
+    background-color: #F7F8FB;
+    padding: 50px 0px;
+}
+
+.intocontent .features {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.intocontent .feature-item {
+    background: #ffffff;
+    padding: 30px;
+    border: solid 1px #E5E7EB;
+    border-radius: 12px;
+    width: 265px;
+    text-align: center;
+}
+
+.intocontent .hand-img {
+    width: 55px;
+    margin-bottom: 10px;
+}
+.headers{
+    align-items: baseline;
+}
+.headers h2{
+    font-size: 43px;
+    font-weight: bold;
+}

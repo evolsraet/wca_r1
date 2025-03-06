@@ -90,7 +90,13 @@
                     <p class="text-center tc-primary"><span class="tc-primary mb-0" ref="item3">{{ myScsBidCount }}</span><span>건</span></p>
                 </router-link>
             </div>
-            <UseGuide class="mt-4"/>
+            <div class="grid2 container justify-content-between my-5 px-4 gap-4 guide-card-content pt-4">
+                <!-- 딜러가이드 카드 -->
+                <useGid/>
+                <feeGuid/>
+                <dgnssErrReward/>
+                <PenaltyLevy/>
+                </div>
             </div>
             <div class="container layout-container02">
     
@@ -178,7 +184,7 @@ export default {
 </script>
 
 <script setup>
-import { ref, onMounted, computed, watch } from 'vue';
+import { ref, onMounted, computed, watch,inject } from 'vue';
 import useBid from "@/composables/bids";
 import Footer from "@/views/layout/footer.vue";
 import { useStore } from 'vuex';
@@ -189,8 +195,15 @@ import useLikes from '@/composables/useLikes';
 import AuctionList from "@/views/import/AuctionList.vue";
 import { initPostSystem } from "@/composables/posts";
 import { cmmn } from '@/hooks/cmmn';
-import UseGuide from "@/views/import/UseGuide.vue";
-
+import UseGid from "@/views/guide/useGid.vue";
+import feeGuid from "@/views/guide/feeGuidance.vue";
+import PenaltyLevy from "@/views/guide/penaltyLevy.vue";
+import dgnssErrReward from "@/views/guide/dgnssErrReward.vue";
+import arrow from '../../../../resources/img/dash-black.png';
+import bid from '../../../../resources/img/bid.png';
+import hand from '../../../../resources/img/hand.png';
+import Iconcare from '../../../../resources/img/Iconcare.png';
+import hand02 from '../../../../resources/img/hand02.png';
 const { wicas , wica , updateAuctionTimes , calculateTimeLeft } = cmmn();
 
 const isVisible = ref(false);
@@ -233,8 +246,10 @@ const user = computed(() => store.state.auth.user);
 const myBidCount = ref(0);
 const myLikeCount=ref(0);
 const myScsBidCount=ref(0);
+const swal = inject('$swal');
 const categoriesList=ref(0);
 const bidsIdString = ref('');
+
 
 const latestNotices = computed(() => {
   if (!posts.value || posts.value.length === 0) {
@@ -468,7 +483,7 @@ p {
 
 .activity-info {
     position: absolute;
-    bottom: 0px;
+    bottom: -2px;
     left: 50%;
     transform: translateX(-50%);
     background: rgba(255, 255, 255);
@@ -569,10 +584,10 @@ align-items: center;
 }
 .centered-text {
     position: absolute;
-    top: 40%; /* 수직 중앙 정렬 */
-    left: 15%; /* 수평 중앙 정렬 */
-    transform: translate(-10%, -50%); /* 중앙 정렬 보정 */
-    z-index: 10; /* 슬라이더 위로 배치 */
+    top: 40%; 
+    left: 15%; 
+    transform: translate(-10%, -50%); 
+    z-index: 10; 
     text-align: start;
     font-size: 2rem;
     line-height: 50px;
@@ -582,13 +597,16 @@ align-items: center;
 .venture{
     position: absolute;
     top: 47%;
-    right: 12%; /* 수평 중앙 정렬 */
-    transform: translate(-10%, -50%); /* 중앙 정렬 보정 */
-    z-index: 10; /* 슬라이더 위로 배치 */
+    right: 12%; 
+    transform: translate(-10%, -50%); 
+    z-index: 10; 
     text-align: start;
     font-size: 2rem;
     line-height: 50px;
     font-weight: bold;
     color: #ffffff; 
 }
+.swiper-slide{
+    max-height: 500px ; 
+  }
 </style>

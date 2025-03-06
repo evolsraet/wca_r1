@@ -5,6 +5,46 @@
         <div class="container p-1">
           <div>
             <div>
+                <div class="sheet-contents">
+                  <div class="steps-container mb-3">
+                    <template v-for="(step, index) in steps" :key="index">
+                      <!-- Step 요소 -->
+                      <div 
+                        class="step"
+                        :class="{
+                          'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
+                          'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
+                        }"
+                      >
+                        <div 
+                          class="label"
+                          :class="{
+                            'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
+                            'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
+                          }"
+                        >
+                          {{ step.label }}
+                        </div>
+                        <div 
+                          class="label label-style02"
+                          :class="{
+                            'completing-text': getStatusIndex(step.status) <= getStatusIndex(auctionDetail.data.status),
+                            'text-secondary opacity-50': getStatusIndex(step.status) > getStatusIndex(auctionDetail.data.status)
+                          }"
+                        >
+                          {{ step.text }}
+                        </div>
+                      </div>
+
+                      <!-- Line 요소 -->
+                      <div 
+                        v-if="index < steps.length - 1" 
+                        class="line" 
+                        :class="{ 'completed': getStatusIndex(steps[index + 1].status) <= getStatusIndex(auctionDetail.data.status) }"
+                      ></div>
+                    </template>
+                  </div>
+                </div>
               <div class="mb-2">
                 <div class="card my-auction">
                   <div>
@@ -503,7 +543,7 @@
               </div>
             </BottomSheet02>
           </div>
-          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid" class="">
+          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid" style="height: 581px !important;">
              <div class="d-flex justify-content-between align-items-baseline">
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
@@ -784,6 +824,30 @@
                         <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo"  :fileSignData = "registerForm" @close="handleModalClose" @confirm="handleDealerConfirm" />
                     </div>
         </template>
+<script>
+export default {
+  data() {
+    return {
+      steps: [
+        { status: "ask", label: "STEP1", text: "신청완료" },
+        { status: "diag", label: "STEP2", text: "진단대기" },
+        { status: "ing", label: "STEP3", text: "경매진행" },
+        { status: "chosen", label: "STEP4", text: "선택완료" },
+        { status: "dlvr", label: "STEP5", text: "탁송중" },
+        { status: "done", label: "STEP6", text: "경매완료" }
+      ],
+      auctionDetail: {
+      }
+    };
+  },
+  methods: {
+    getStatusIndex(status) {
+      return this.steps.findIndex((step) => step.status === status);
+    }
+  }
+};
+</script>
+
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount , inject,reactive,nextTick} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
@@ -2156,8 +2220,8 @@ input[type="checkbox"]{align-self:center;}
 .more-img{color:white;border:none;margin-left:10px;text-decoration:none;border-radius:3px;cursor:pointer;}
 
 @media screen and (min-width:1200px) {.bottom-sheet{width:50%;}}
-.label-style{top:22px!important;width:100px;}
-.label-style02{top:20px!important;width:100px;}
+.sheet-content .label-style{top:22px!important;width:100px;}
+.sheet-content .label-style02{top:20px!important;width:100px;}
 .fade-enter-active,.fade-leave-active{transition:opacity 0.5s;}
 .fade-enter,.fade-leave-to{opacity:0;}
 
