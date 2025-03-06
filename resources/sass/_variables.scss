@@ -23,6 +23,7 @@ $sub-color01: #4263EA;
 $sub-color02: #f7f8fb;
 $sub-color03: #aaaebe;
 $sub-color04: #EBEFFD;
+$sub-color05:#FFF9F9;
 a {
     font-weight: bold;
 }
@@ -82,6 +83,7 @@ h5{
     background-color: $sub-color02 !important;
     color: $sub-color03 !important;
 }
+.tc-sub05{background-color: $sub-color05 !important;}
 .tc-gray{
     color: $sub-color03 !important;
 }
