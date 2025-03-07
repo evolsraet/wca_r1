@@ -233,7 +233,7 @@
                             <div class="none-complete flex-column">
                                 <div class="text-secondary opacity-50 d-flex align-items-center gap-3 my-3">
                                     <router-link to="/"  class="px-5 btn btn-outline-secondary btn-lg bc-wh">
-                                        내 차 판매하러 가기
+                                        이용후기 등록 하기
                                     </router-link>
                                 </div>
                                 <span class="text-secondary opacity-50">내 차 판매 후, 이용후기를 작성해보세요.</span>

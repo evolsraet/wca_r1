@@ -5,46 +5,7 @@
         <div class="container p-1">
           <div>
             <div>
-                <div class="sheet-contents">
-                  <div class="steps-container mb-3">
-                    <template v-for="(step, index) in steps" :key="index">
-                      <!-- Step 요소 -->
-                      <div 
-                        class="step"
-                        :class="{
-                          'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
-                          'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
-                        }"
-                      >
-                        <div 
-                          class="label"
-                          :class="{
-                            'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
-                            'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
-                          }"
-                        >
-                          {{ step.label }}
-                        </div>
-                        <div 
-                          class="label label-style02"
-                          :class="{
-                            'completing-text': getStatusIndex(step.status) <= getStatusIndex(auctionDetail.data.status),
-                            'text-secondary opacity-50': getStatusIndex(step.status) > getStatusIndex(auctionDetail.data.status)
-                          }"
-                        >
-                          {{ step.text }}
-                        </div>
-                      </div>
-
-                      <!-- Line 요소 -->
-                      <div 
-                        v-if="index < steps.length - 1" 
-                        class="line" 
-                        :class="{ 'completed': getStatusIndex(steps[index + 1].status) <= getStatusIndex(auctionDetail.data.status) }"
-                      ></div>
-                    </template>
-                  </div>
-                </div>
+                
               <div class="mb-2">
                 <div class="card my-auction">
                   <div>
@@ -156,6 +117,50 @@
                       </div>
                     </div>
                </div>
+
+
+               <div class="sheet-contents">
+                  <div class="steps-container mb-3">
+                    <template v-for="(step, index) in steps" :key="index">
+                      <!-- Step 요소 -->
+                      <div 
+                        class="step"
+                        :class="{
+                          'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
+                          'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
+                        }"
+                      >
+                        <div 
+                          class="label"
+                          :class="{
+                            'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
+                            'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
+                          }"
+                        >
+                          {{ step.label }}
+                        </div>
+                        <div 
+                          class="label label-style02"
+                          :class="{
+                            'completing-text': getStatusIndex(step.status) <= getStatusIndex(auctionDetail.data.status),
+                            'text-secondary opacity-50': getStatusIndex(step.status) > getStatusIndex(auctionDetail.data.status)
+                          }"
+                        >
+                          {{ step.text }}
+                        </div>
+                      </div>
+
+                      <!-- Line 요소 -->
+                      <div 
+                        v-if="index < steps.length - 1" 
+                        class="line" 
+                        :class="{ 'completed': getStatusIndex(steps[index + 1].status) <= getStatusIndex(auctionDetail.data.status) }"
+                      ></div>
+                    </template>
+                  </div>
+                </div>
+
+                
                   <!--   <template v-if="auctionDetail.data.hope_price !== null">
                     <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
                       <p>현재 희망가</p>
