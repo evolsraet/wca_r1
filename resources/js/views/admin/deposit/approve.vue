@@ -14,42 +14,93 @@
                 </div>
                 <div class="sell-info mb-5">
                     <div class="car-image-style">
-                      <div class="card-img-top-ty01"></div>
+                      <div class="card-img-top-ty01" :style="{ backgroundImage: `url(${auctionDetails.data.car_thumbnail})` }">
+                        <!-- <img :src="auctionDetails.data.car_thumbnail" alt="차량 사진" class="mb-2"> -->
+                      </div>
                     </div>
                     <div class="car-info">
                         <div class="item">
-                            <span class="label">성공수수료</span>
-                            <span class="value">{{ auction.success_fee_label }}</span>
+                          <span class="label">차량명</span>
+                          <span class="value">{{ auctionDetails.data.car_model + ' ' + auctionDetails.data.car_model_sub + ' ' + auctionDetails.data.car_grade_sub }}</span>
                         </div>
                         <div class="item">
-                            <span class="label">진단 비</span>
-                            <span class="value">{{auction.diag_fee_label}}</span>
+                          <span class="label">차량년식</span>
+                          <span class="value">{{ auctionDetails.data.car_year + '년식' }}</span>
                         </div>
-                        <div class="total">
-                            <span>합 계</span>
-                            <span>{{ add_pee }}</span>
+                        <div class="item">
+                          <span class="label">차량번호</span>
+                          <span class="value">{{ auction.car_no }}</span>
                         </div>
+                        <div class="item">
+                          <span class="label">소유자명</span>
+                          <span class="value">{{ auction.owner_name }}</span>
+                        </div>     
                     </div>
                 </div>
-                <div class="card-body">
-                    <p class="text-secondary opacity-50">입금 상태</p>
-                    <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
-                    <option value="done">입금 완료</option>
-                    <option value="dlvr">입금 대기</option> <!-- dlvr자리 -->
-                    </select>
+
+
+                <div class="row">
+                  <div class="col-lg-6">
+
+                    <div class="title mb-3">
+                      <h4>차량대금</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="text-secondary opacity-50">입금 상태</p>
+                        <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
+                        <option value="done">입금 완료</option>
+                        <option value="dlvr">입금 대기</option> <!-- dlvr자리 -->
+                        </select>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">낙찰 금액</p>
+                      <input v-model="auction.final_price" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">입금 총액</p>
+                      <input value="35,000,000 원" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">미수금</p>
+                      <input value="5,000,000 원"  class="input-dis tc-red form-control bg-secondary bg-opacity-10" readonly/>
+                    </div>
+
+                  </div>
+                  <div class="col-lg-6">
+
+                    <div class="title mb-3">
+                      <h4>성공 수수료</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <p class="text-secondary opacity-50">입금 상태</p>
+                        <select class="form-select">
+                        <option value="done">입금 완료</option>
+                        </select>
+                    </div>
+                    
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">수수료</p>
+                      <input v-model="add_pee.value" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">입금계좌</p>
+                      <input v-model="auction.bank" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">입금액</p>
+                      <input v-model="auction.final_price" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
+                    </div>
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">미수액</p>
+                      <input v-model="auction.outstanding" class="input-dis tc-red form-control bg-secondary bg-opacity-10" readonly/>
+                    </div>
+                  </div>
                 </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">낙찰 금액</p>
-                  <input v-model="auction.final_price" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">입금 총액</p>
-                  <input value="35,000,000 원" class="input-dis form-control bg-secondary bg-opacity-10" readonly/>
-                </div>
-                <div class="card-body">
-                  <p class="text-secondary opacity-50">미수금</p>
-                  <input value="5,000,000 원"  class="input-dis tc-red form-control bg-secondary bg-opacity-10" readonly/>
-                </div>
+
+
+                
                 
                 <!--       <div class="container-receipt mt-5">
                       <img src="../../../../img/admin/admin-back-sell.png" alt="Image" style="width:100%; height: auto;">
@@ -106,6 +157,8 @@ const auction = reactive({
     final_price: '0 원',
     success_fee_label: '0 원',
     diag_fee_label: '0 원',
+    outstanding: '0',
+    transactions: [],
 }); 
 const add_pee = ref(0);
 
