@@ -9,6 +9,7 @@
 </template>
 <script setup>
 import { ref, onMounted, computed, watch,inject } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
 import { cmmn } from '@/hooks/cmmn';
 import pannel01 from '../../../../resources/img/pannel01.png';
 import pannel02 from '../../../../resources/img/pannel02.png';
@@ -16,24 +17,28 @@ import pannel03 from '../../../../resources/img/pannel03.png';
 import pannel04 from '../../../../resources/img/pannel04.png';
 const { wicas , wica , updateAuctionTimes , calculateTimeLeft } = cmmn();
 const swal = inject('$swal');
+const router = useRouter();
 const openAlarmModal05 = () => {
-  const text = `
-    <div>
-        <div>
-          <h5>명의 이전시 필요서류 안내 데모</h5>
-        </div>
-    </div>
-  `;
+  // const text = `
+  //   <div>
+  //       <div>
+  //         <h5>명의 이전시 필요서류 안내 데모</h5>
+  //       </div>
+  //   </div>
+  // `;
 
-  wica.ntcn(swal)
-    .useHtmlText() // HTML 태그 활성화
-    .useClose()
-    .addClassNm('intromodal') // 클래스명 설정
-    .addOption({ padding: 20 }) // swal 옵션 추가
-    .callback(function (result) {
-      // 결과 처리 로직
-    })
-    .confirm(text); // 모달 내용 설정
+  // wica.ntcn(swal)
+  //   .useHtmlText() // HTML 태그 활성화
+  //   .useClose()
+  //   .addClassNm('intromodal') // 클래스명 설정
+  //   .addOption({ padding: 20 }) // swal 옵션 추가
+  //   .callback(function (result) {
+  //     // 결과 처리 로직
+  //   })
+  //   .confirm(text); // 모달 내용 설정
+
+  router.push({ name: 'user.transferGuide'});
+
 };
 
     

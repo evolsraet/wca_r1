@@ -708,29 +708,47 @@ const UserapplyAuction = () => {
 
 
 const secondModal = () => {
+
+    // const text = `<div class="content p-2 mt-0"> 
+    //       <h3 class="mb-2 fw-semibold">필요 서류</h3>
+    //       <h5 class="text-secondary opacity-50 fw-normal mb-4">미리 준비하면 더 빠르게 진행돼요!</h5>
+    //       <div class="text-start my-3 process"> 
+    //         <h4 class="mb-3">개인</h4>
+    //         <div class="d-flex justify-content-between">
+    //           <div class="info-block">
+    //             <p class="text-start">경매 등록시</p>
+    //             <img src="${info1}" class="info-img">
+    //             <div class="text-center">
+    //               <p>필요서류 없음</p>
+    //             </div>
+    //           </div>
+    //           <div class="info-block">
+    //             <p class="text-start">경매 완료시</p>
+    //             <img src="${info3}" class="info-img2">
+    //             <p class="text-center">매도용 인감 증명서</p>
+    //           </div>
+    //         </div>
+    //       </div>
+    //       <hr class="custom-hr" />
+    //       <div>
+    //         <div class="text-start my-3 process"> 
+    //           <h4 class="mb-3">법인</h4>
+    //           <div class="d-flex justify-content-between align-items-end">
+    //             <div class="info-block">
+    //               <p class="text-start">경매 등록시</p>
+    //               <img src="${info2}" class="info-img3">
+    //             </div>
+    //             <div class="info-block">
+    //               <p>차량 이전서류</p>
+    //             </div>
+    //           </div>
+    //         </div>
+    //       </div>
+    //       </div>`;
     
     const text = `<div class="content p-2 mt-0"> 
           <h3 class="mb-2 fw-semibold">필요 서류</h3>
           <h5 class="text-secondary opacity-50 fw-normal mb-4">미리 준비하면 더 빠르게 진행돼요!</h5>
-          <div class="text-start my-3 process"> 
-            <h4 class="mb-3">개인</h4>
-            <div class="d-flex justify-content-between">
-              <div class="info-block">
-                <p class="text-start">경매 등록시</p>
-                <img src="${info1}" class="info-img">
-                <div class="text-center">
-                  <p>필요서류 없음</p>
-                </div>
-              </div>
-              <div class="info-block">
-                <p class="text-start">경매 완료시</p>
-                <img src="${info3}" class="info-img2">
-                <p class="text-center">매도용 인감 증명서</p>
-              </div>
-            </div>
-          </div>
-          <hr class="custom-hr" />
-          <div>
             <div class="text-start my-3 process"> 
               <h4 class="mb-3">법인</h4>
               <div class="d-flex justify-content-between align-items-end">
