@@ -96,6 +96,9 @@
                             <th class="px-6 py-3 bg-gray-50 text-center">
                                 입찰 건수
                             </th>
+                            <th class="px-6 py-3 bg-gray-50 text-center">
+                                입찰최고가
+                            </th>
                             <th class="px-6 py-3 text-left">
                                 상태
                             </th>
@@ -133,7 +136,9 @@
                             <td class="px-6 py-4 text-sm">
                                 {{ auction.bids_count ? auction.bids_count : '-' }}
                             </td>
-                            
+                            <td class="px-6 py-4 text-sm">
+                                {{ auction.final_price ? auction.final_price : '-' }}
+                            </td>
                             <td class="px-6 py-4 text-sm">
                                 <div>
                                     <p v-if="auction.status === 'chosen'" class="ml-auto"><span class="blue-box02 bg-opacity-50">{{ wicas.enum(store).toLabel(auction.status).auctions() }}</span></p>
