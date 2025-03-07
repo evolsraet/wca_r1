@@ -48,7 +48,7 @@
             <h1 class="font-title"><span class="bolder">{{ wicaLabel.title() }}</span>에서 <span class="bolder">높은 가격</span>으로!</h1>
             <h5 class="mt-3 normal">자동차 진단 전문가 <span class="bolder">위카모빌리티</span>가 함께합니다.</h5>
           </div>
-          <router-link
+          <!-- <router-link
               class="btn-sell-car d-flex"
               :to="{ path: '/' }"
             >
@@ -56,9 +56,14 @@
             <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20"></span><span class="size_14">내 차 판매하기</span> 
           </div>
           <img src="../../../img/Icon-right-wh.png" class="dash-wh" width="10">
-          </router-link>
+          </router-link> -->
+
+          <div class="btn-sell-car d-flex" @click="carSearch">
+            <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20"></span><span class="size_14">내 차 판매하기</span> 
+          </div>
+
           <div class="web-style-overlay02">
-            <h5 class="size_18 tc-wh">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></h5>
+            <h5 class="size_18 tc-wh">저는 딜러에요! <router-link :to="{ path: '/register' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></h5>
           </div>
         </div>
         <div class=" web-stlye">
@@ -142,7 +147,7 @@
           <h1 class="font-title"><span class="bolder">{{ wicaLabel.title() }}</span>에서 <span class="bolder">높은 가격</span>으로!</h1>
           <h4 class="mt-3 normal">자동차 진단 전문가 <span class="bolder">위카모빌리티</span>가 함께합니다.</h4>
         </div>
-        <router-link
+        <!-- <router-link
               class="btn-sell-car d-flex"
               :to="{ path: '/' }"
             >
@@ -150,13 +155,19 @@
             <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20"></span><span class="size_14">내 차 판매하기</span> 
           </div>
           <img src="../../../img/Icon-right-wh.png" class="dash-wh" width="10">
-          </router-link>
+          </router-link> -->
+
+          <div class="btn-sell-car d-flex" @click="carSearch">
+            <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20"></span><span class="size_14">내 차 판매하기</span> 
+            <img src="../../../img/Icon-right-wh.png" class="dash-wh" width="10">
+          </div>
+
       <!--<p class="text-secondary opacity-50 font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>-->
     </div>
       <div class="ps-3"> 
       <img src="../../../img/logo.png" width="110" class="mb-3 mobile-css">
       <div class="tc-wh mobile-css">
-        <p class="size_18 ps-2">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></p>
+        <p class="size_18 ps-2">저는 딜러에요! <router-link :to="{ path: '/register' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></p>
       </div>
     </div>
     </div>
@@ -464,6 +475,27 @@ const validateCarNumber = (carNumber) => {
   }
 }
 
+const carSearch = () => {
+  // const animatedSectionElement = animatedSection.value;
+  // animatedSectionElement.classList.add('enter-active');
+
+  nextTick(() => {
+      const animatedSectionElement = animatedSection.value;
+      const loginCard = loginCardRef.value;
+      setTimeout(() => {
+        // loginCard.classList.remove('hidden');
+        loginCard.classList.add('enter-active');
+      }, 200);
+      // setTimeout(() => {
+      //   if (animatedSectionElement) {
+      //     animatedSectionElement.classList.remove('enter-active');
+      //     animatedSectionElement.classList.add('hidden');
+      //   }
+      // }, 600);
+    });
+
+}
+
 // 차량번호 변경 감지
 watch(() => carInfoForm.no, (newValue) => {
   validateCarNumber(newValue)
@@ -482,7 +514,8 @@ watch(() => carInfoForm.no, (newValue) => {
       const animatedSectionElement = animatedSection.value;
       const loginCard = loginCardRef.value;
       setTimeout(() => {
-        if(loginCard!=null) loginCard.classList.add('enter-active');
+        // if(loginCard!=null) loginCard.classList.add('enter-active');
+        if(loginCard!=null) loginCard.classList.add('hidden');
       }, 200);
       setTimeout(() => {
         if (animatedSectionElement) {

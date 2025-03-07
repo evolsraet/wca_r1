@@ -72,7 +72,9 @@
 <script setup>
 
 import useAuth from '@/composables/auth'
-
+import useRoute from 'vue-router'; 
 const { registerForm, validationErrors, processing, submitRegister } = useAuth();
-
+const route = useRoute();
+const id = route.params.id;
+console.log('id',id);
 </script>

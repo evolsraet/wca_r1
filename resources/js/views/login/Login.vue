@@ -152,7 +152,7 @@
       <div class="ps-3"> 
         <img src="../../../img/logo.png" width="110" class="mb-3 mobile-css">
         <div class="tc-wh mobile-css">
-          <p class="size_18 ps-2">저는 딜러에요! <router-link :to="{ path: '/login' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></p>
+          <p class="size_18 ps-2">저는 딜러에요! <router-link :to="{ path: '/register' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></p>
         </div>
         </div>
       </div>
@@ -184,7 +184,7 @@
                   <!-- 백엔드 오류 메시지 -->
       
                   <!-- 소셜 로그인 섹션 -->
-                  <div class="login-v2 mb-3">
+                  <div class="login-v2 mb-3" style="display: none;">
                     <h3 class="my-4 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
                     <ul class="login-v2-area">
                       <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal">Google</a></li>
