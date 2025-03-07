@@ -89,6 +89,14 @@ export default [
                 },
             },
             {
+                path: '/carfind-do',
+                name: 'carfind',
+                component: () => import('../views/home/index.vue'),
+                beforeEnter: (to, from, next) => {
+                    takingVerificationHomeRole(next);
+                },
+            },
+            {
                 path: '/user',
                 name: 'user.index',
                 component: () => import('../views/user/index.vue'),

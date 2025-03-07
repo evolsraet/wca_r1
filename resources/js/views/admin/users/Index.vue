@@ -11,6 +11,26 @@
             </div>
         </div>
                 
+        <div id="dashadmin">
+            <div class="card-container mt-2 mb-2">
+                <div class="section">
+                    <h5 class="text-start">정상회원 {{ userOkCnt }} 명</h5>
+                </div>
+                <div class="section">
+                    <h5 class="text-start">심사중 {{ userAskCnt }} 명</h5>
+                </div>
+                <div class="section">
+                    <h5 class="text-start">거절 {{ userRejectCnt }} 명</h5>
+                </div>
+                <div class="section">
+                    <h5 class="text-start">경고 {{ userWarningCnt }} 명</h5>
+                </div>
+                <div class="section">
+                    <h5 class="text-start">재명 {{ userExpulsionCnt }} 명</h5>
+                </div>
+            </div>
+        </div>
+        
             
         <div class="container mb-3 d-flex flex-column flex-md-row justify-content-between sticky-top">
 
@@ -143,6 +163,9 @@
                                 회원
                             </th>
                             <th class="px-6 py-3 bg-gray-50 text-left">
+                                페널티
+                            </th>
+                            <th class="px-6 py-3 bg-gray-50 text-left">
                                 수정/삭제
                             </th>
                         </tr>
@@ -157,7 +180,7 @@
                                     {{ post.name }}
                                 
                                 <div :class="{'blue-box ms-2': post.status === 'ok', 'blue-box02 ms-2': post.status === 'ask', 'red-box ms-2': post.status === 'reject'}">
-                                    {{ wicas.enum(store).toLabel(post.status).users() }}
+                                    {{ wicas.enum(store).toLabel(post.status).users() === '정상' || wicas.enum(store).toLabel(post.status).users() === '심사중' ? wicas.enum(store).toLabel(post.status).users() : '' }}
                                 </div>
                                 
                                 
@@ -167,6 +190,11 @@
                                 </td>
                                 <td class="px-6 py-4 pb-3 text-sm">
                                     {{ (post.roles || []).includes('dealer') ? '딜러' : '일반' }}
+                                </td>
+                                <td>
+                                    {{ post.status === 'warning1' ? '경고1' : '' }}
+                                    {{ post.status === 'warning2' ? '경고2' : '' }}
+                                    {{ post.status === 'expulsion' ? '재명' : '' }}
                                 </td>
                                 <td class="px-6 py-4 pb-3 text-sm">
                                     <router-link
@@ -232,7 +260,7 @@ const store = useStore();
 const router = useRouter();
 const orderColumn = ref("created_at");
 const orderDirection = ref("desc");
-const { users, getUsers, deleteUser, adminGetUsers , pagination } = useUsers();
+const { users, getUsers, deleteUser, adminGetUsers , pagination, getUserStatus } = useUsers();
 const { can } = useAbility();
 const currentRoleStatus = ref('all');
 const currentStatus = ref('all');
@@ -245,9 +273,23 @@ const orderingState = {
 let statusLabel;
 const search_title = ref('');
 
+const userAskCnt = ref(0);
+const userOkCnt = ref(0);
+const userRejectCnt = ref(0);
+const userAllCnt = ref(0);
+const userWarningCnt = ref(0);
+const userExpulsionCnt = ref(0);
+
 onMounted(async () => {
-    statusLabel = wicas.enum(store).addFirst('all','전체').users();
+    statusLabel = wicas.enum(store).addFirst('all','상태').users();
     adminGetUsers(1,currentStatus.value,currentRoleStatus.value);                  
+
+    userAskCnt.value = await getUserStatus('ask');
+    userOkCnt.value = await getUserStatus('ok');
+    userRejectCnt.value = await getUserStatus('reject');
+    userAllCnt.value = await getUserStatus('all');
+    userWarningCnt.value = await getUserStatus('warning1') + await getUserStatus('warning2');
+    userExpulsionCnt.value = await getUserStatus('expulsion');
 });
 
 function loadPage(page) {

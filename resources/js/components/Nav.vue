@@ -264,7 +264,8 @@
           <template v-if="isUser">
             <div class="d-flex">
               <li class="nav-item">
-                <router-link to="/" class="nav-link mx-2 nav-inq" aria-current="page" exact-active-class="active-link">내차조회</router-link>
+                <a href="/carfind-do" class="nav-link mx-2 nav-inq">내차조회</a>
+                <!-- <router-link to="/carfind" class="nav-link mx-2 nav-inq" aria-current="page" exact-active-class="active-link">내차조회</router-link> -->
               </li>
               <li class="nav-item">
                 <router-link :to="{ name: 'auction.index'}" class="nav-link mx-2 nav-auction" aria-current="page" exact-active-class="active-link">내 매물관리</router-link>
@@ -291,7 +292,8 @@
           </template>
           <template v-else-if="!user?.name">
             <li class="nav-item">
-              <router-link :to="{ name: 'home'}" class="nav-link mx-3 nav-inq" exact-active-class="active-link">내차조회</router-link>
+              <a href="/carfind-do" class="nav-link mx-3 nav-inq">내차조회</a>
+              <!-- <router-link :to="{ name: 'carfind'}" class="nav-link mx-3 nav-inq" exact-active-class="active-link" target="_self">내차조회</router-link> -->
             </li>
             <li class="nav-item">
               <router-link :to="{ name: 'index.allreview'}" class="nav-link me-0 mx-3-review nav-review" exact-active-class="active-link">이용후기</router-link>

@@ -93,6 +93,9 @@ class User extends Authenticatable implements HasMedia
             'ok'     => '정상',
             'ask'    => '심사중',
             'reject' => '거절',
+            'warning1'   => '경고1',
+            'warning2'   => '경고2',
+            'expulsion'   => '제명',
         ],
     ];
 

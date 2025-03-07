@@ -322,6 +322,10 @@ export default {
   import { routerKey } from "vue-router";
   import { useRoute, useRouter } from 'vue-router';
   import carInfo from '../../../../resources/img/electric-car.png';
+
+  // route 가 필요함, 주소가 변경되면 화면이 변경되어야 함.
+  const route = useRoute();
+  // console.log('route',route.path);
   
   const swal = inject('$swal');
   const { wica , wicaLabel } = cmmn();
@@ -516,6 +520,9 @@ watch(() => carInfoForm.no, (newValue) => {
       setTimeout(() => {
         // if(loginCard!=null) loginCard.classList.add('enter-active');
         if(loginCard!=null) loginCard.classList.add('hidden');
+        if(route.path === '/carfind-do'){
+          loginCard.classList.add('enter-active');
+        }
       }, 200);
       setTimeout(() => {
         if (animatedSectionElement) {
