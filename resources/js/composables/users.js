@@ -119,6 +119,14 @@ export default function useUsers() {
         
         let isStatus = status ? 'ok' : editForm.status;
         
+        if(status == 'warning1'){
+            isStatus = 'warning1';
+        }else if(status == 'warning2'){
+            isStatus = 'warning2';
+        }else if(status == 'expulsion'){
+            isStatus = 'expulsion';
+        }
+        
         let payload = {
             user: {
                 name: editForm.name,

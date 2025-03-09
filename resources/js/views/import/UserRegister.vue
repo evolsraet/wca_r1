@@ -285,6 +285,23 @@
             </div>
           </div>
         </div>
+
+        <!-- HTML 부분 - 패널티 선택 드롭다운 -->
+        <div v-if="adminEditURL" class="mb-3">
+            <label for="penalty" class="form-label">패널티 설정</label>
+            <select class="form-select" :v-model="profile.penalty" @change="changePenalty($event)" id="penalty">
+                <option value="">패널티 없음</option>
+                <option value="warning1">경고1</option>
+                <option value="warning2">경고2</option>
+                <option value="expulsion">제명</option>
+            </select>
+            <div class="text-secondary opacity-50 mt-2">
+              - 경고1: 3일<br>
+              - 경고2: 30일<br>
+              - 제명: 영구적 (종료 시간 없음)
+            </div>
+        </div>
+
         <div v-if="userEditURL">
           <button type="submit" class="mt-3 w-100 btn btn-primary">저장</button>
         </div>
@@ -389,6 +406,46 @@
   const triggerFileInput = () => {
     fileInput.value.click();
   };
+
+  const penaltyLabel = {
+      '': '패널티 없음',
+      'warning1': '경고1',
+      'warning2': '경고2',
+      'expulsion': '제명'
+  };
+
+  const isPenalty = ref(false);
+
+  const changePenalty = (event) => {
+
+    const selectedPenalty = event.target.value;
+    profile.penalty = selectedPenalty;
+    
+    // 패널티 선택 시 승인 여부도 함께 변경
+    if (selectedPenalty) {
+        // 패널티가 선택되면 status도 같은 값으로 설정
+        profile.status = selectedPenalty;
+        
+        // status 드롭다운의 값도 변경 (DOM 직접 조작)
+        const statusSelect = document.getElementById('status');
+        if (statusSelect) {
+            statusSelect.value = selectedPenalty;
+        }
+
+        isPenalty.value = true;
+
+    } else {
+        // 패널티가 없음을 선택한 경우 status를 'ok'로 설정
+        profile.status = 'ok';
+        
+        // status 드롭다운의 값도 변경
+        const statusSelect = document.getElementById('status');
+        if (statusSelect) {
+            statusSelect.value = 'ok';
+        }
+    }
+
+  };
   
   const fileInput = ref(null);
   const openModal = (type) => {
@@ -479,6 +536,7 @@
       profile.value.phone = user.value.phone;
       profile.value.email = user.value.email;
       profile.value.status = user.value.status;
+      profile.value.penalty = user.value.status;
       if (profile.value.isDealer) {
         profile.value.dealer_name = user.value.dealer.name;
         profile.value.dealerContact = user.value.dealer.phone;
@@ -542,7 +600,8 @@
     }else if(route.path == '/register'){
       setRegisterUser(profile.value);
     }else if(route.path.includes('/admin/users/edit/')){
-      updateUser(profile.value,userId.value, '');
+      console.log('isPenalty',isPenalty.value);
+      updateUser(profile.value,userId.value, profile.status);
     }else if(route.path.includes('/admin/users/create')){
       adminStoreUser(profile.value);
     }
