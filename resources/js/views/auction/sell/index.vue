@@ -642,7 +642,9 @@ const UserapplyAuction = () => {
         .callback(function (result) {
             if (result.isOk) {
                 console.log(result);
-                secondModal();
+                // secondModal();
+                router.push({ path: '/selldt2' }); 
+
             }
         })
         .confirm(text);

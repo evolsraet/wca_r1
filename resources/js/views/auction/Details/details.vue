@@ -492,7 +492,7 @@
                   </div>
                   <hr/>
                   <p class="text-center tc-red my-2">현재  {{ auctionDetail.data.bids_count }}명이 입찰했어요.</p>
-                  <button type="button" class="btn btn-primary w-100 align-items-center d-flex justify-content-center gap-3" @click="showbidView">입찰하기<p class="icon-up-wh"></p></button>
+                  <button type="button" class="btn btn-primary w-100 align-items-center d-flex justify-content-center gap-3" v-if="isAccident(auctionDetail.data.is_accident) !== '사고여부 미진단' && auctionDetail.data.status === 'ing'" @click="showbidView">입찰하기<p class="icon-up-wh"></p></button>
                 </div>
               </BottomSheet02>
 

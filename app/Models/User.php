@@ -62,7 +62,6 @@ class User extends Authenticatable implements HasMedia
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
         'deleted_at' => 'datetime',
-        'penalty_until' => 'datetime',
     ];
 
     // 검색어로 검색가능한 경우
