@@ -69,7 +69,41 @@
 
         <div class="form-group">
           <label for="memo"><span class="text-danger me-2">*</span>차량상태입력</label>
-          <textarea type="text" id="memo" v-model="memo" placeholder="ex)외관에 손상이 있어요, 시트에 구멍이 나있어요, 화재이력이 있어요, 뒤쪽 트렁크에 사고 있어요." rows="2" ref="memoSelect"></textarea>
+
+          <div class="form-check">
+            <div class="row">
+              <div class="col-3">
+                <input class="form-check-input" type="checkbox" value="침수" id="flexCheckDefault1" @change="updateCarConditionValue()">
+                <label class="form-check-label" for="flexCheckDefault1">
+                  침수
+                </label>
+              </div>
+              <div class="col-3">
+                <input class="form-check-input" type="checkbox" value="화제" id="flexCheckDefault2" @change="updateCarConditionValue()">
+                <label class="form-check-label" for="flexCheckDefault2">
+                  화제 
+                </label>
+              </div>
+              <div class="col-3">
+                <input class="form-check-input" type="checkbox" value="엔진고장" id="flexCheckDefault3" @change="updateCarConditionValue()">
+                <label class="form-check-label" for="flexCheckDefault3">
+                  엔진고장
+                </label>
+              </div>
+              <div class="col-3">
+                <input class="form-check-input" type="checkbox" value="변속기고장" id="flexCheckDefault4" @change="updateCarConditionValue()">
+                <label class="form-check-label" for="flexCheckDefault4">
+                  변속기고장
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="mt-1">
+            <input type="text" id="car_condition" v-model="carCondition" placeholder="키로수">
+          </div>
+
+          <textarea type="text" id="memo" v-model="memo" placeholder="ex) 외관손상, 차량내부손상, 사고유무등 &#13;&#10;주의) 주요결함 미고지시 추후 환불등 불이익이 있을수 있습니다." rows="2" ref="memoSelect"></textarea>
         </div>
 
         <!-- 은행 선택 -->
@@ -77,7 +111,7 @@
         <h4>은행/진단 정보</h4>
 
         <div class="form-group mt-4">
-          <label for="carNumber"><span class="text-danger me-2">*</span>은행</label>
+          <label><span class="text-danger me-2">*</span>은행</label>
           <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly ref="bankSelect">
           <input type="text" v-model="account" placeholder="계좌번호" :class="{'block': accountDetails}" class="account-num" ref="accountSelect" @keydown.enter="handleEnterPress('diagFirstAtSelect')">
           <p class="text-danger">※ 계좌는 차량 소유주의 계좌번호만 입력가능 합니다.</p>
@@ -262,7 +296,7 @@ export default {
 
 
 <script setup>
-import { ref, onMounted, nextTick, inject, createApp,computed  } from 'vue';
+import { ref, onMounted, nextTick, inject, createApp,computed, reactive  } from 'vue';
 import { useStore } from 'vuex';
 import Modal from '@/views/modal/modal.vue';
 import BankModal from '@/views/modal/bank/BankModal.vue';
@@ -287,6 +321,7 @@ const addr = ref(''); // 주소
 const addrdt = ref(''); // 상세 주소
 const account = ref(''); // 계좌 번호
 const selectedTab = ref('bank'); // 선택된 탭
+const carCondition = ref(''); // 차량 상태
 const memo = ref(''); // 메모
 const uploadedFileName = ref(''); // 업로드된 파일 이름
 const showDetails = ref(false); // 은행 선택 모달 표시 여부
@@ -332,6 +367,25 @@ const memoSelect = ref(null);
 const diagFirstAtSelect = ref(null);
 const diagSecondAtSelect = ref(null);
 const fileInputRefCarLicenseBtn = ref(null);
+
+const carStatus = ref('');
+
+// 체크박스 변경 시 호출되는 함수
+const updateCarConditionValue = () => {
+  // 모든 체크된 체크박스 선택
+  const checkboxes = document.querySelectorAll('input[type="checkbox"]:checked');
+  
+  // 선택된 값들을 배열에 담기
+  const selectedValues = Array.from(checkboxes).map(checkbox => checkbox.value);
+  
+  // 배열을 JSON 문자열로 변환하여 저장
+  carStatus.value = JSON.stringify(selectedValues);
+  
+  console.log('차량 상태:', carStatus.value); // 디버깅용
+};
+
+
+
 
 const is_biz = computed({
   get() {
@@ -394,6 +448,8 @@ const auctionEntry = async () => {
     car_price_now_whole: carPriceNowWhole.value,
     car_thumbnail: carThumbnail.value,
     car_km: carKm.value,
+    car_condition: carCondition.value,
+    car_status: carStatus.value
   };
 
   if(isVerified.value){
@@ -764,6 +820,7 @@ onMounted(() => {
     carPriceNowWhole.value = carDetails.priceNowWhole;
     carThumbnail.value = carDetails.thumbnail;
     carKm.value = carDetails.km;
+    carCondition.value = localStorage.getItem('mileage');
 
   }
 });

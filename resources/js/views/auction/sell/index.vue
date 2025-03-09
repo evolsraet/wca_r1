@@ -371,6 +371,8 @@ const checkExpectedPriceClick = async () => {
             // 예상 가격 모달 즉시 표시
             showCurrentPriceModal(result.data.estimatedPrice);
 
+            localStorage.setItem('mileage', mileage);
+
             // "현재 예상 가격" 버튼 표시
             const currentPriceBtn = document.getElementById('currentPriceBtn');
             if (currentPriceBtn) {
@@ -457,6 +459,7 @@ const router = useRouter(); // 추가된 부분
 const carDetails = ref({});
 function saveCarNumberToLocalStorage() {
     localStorage.setItem('carNumber', carDetails.value.no);
+    
 }
 
 function toggleSheet() {

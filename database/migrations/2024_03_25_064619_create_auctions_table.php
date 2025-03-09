@@ -49,6 +49,11 @@ class CreateAuctionsTable extends Migration
             $table->string('car_km')->nullable()->comment('차량주행거리');
             $table->string('car_thumbnail')->nullable()->comment('차량썸네일');
 
+            // 차량상태
+            $table->string('car_status')->nullable()->comment('차량상태');
+            $table->string('car_condition')->nullable()->comment('차량키로수');
+
+
             $table->timestamp('final_at')->nullable()->comment('경매마감일');
             $table->timestamp('choice_at')->nullable()->comment('선택일');
             $table->timestamp('taksong_wish_at')->nullable()->comment('탁송희망일');
