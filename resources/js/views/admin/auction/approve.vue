@@ -176,7 +176,21 @@
                   </div>
                   <div class="col-lg-6">
 
+                    <!-- <div class="card-body">
+                      <div class="d-flex justify-content-between">
+                        <p class="text-secondary opacity-50">희망가</p>
+                        <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ hopePriceFeeKorean }}</p>
+                      </div>
+                      <input v-model="auction.hope_price" id="hopePrice" class="form-control" @input="updateKoreanAmount('hopePrice')">
+                    </div> -->
 
+                    <div class="card-body">
+                      <div class="d-flex justify-content-between">
+                        <p class="text-secondary opacity-50">낙찰가</p>
+                        <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ finalPriceFeeKorean }}</p>
+                      </div>
+                      <input v-model="auction.final_price" id="finalPrice" class="form-control" @input="updateKoreanAmount('finalPrice')">
+                    </div>
                     <div class="card-body">
                       <div class="d-flex justify-content-between">
                         <p class="text-secondary opacity-50">성공수수료</p>
@@ -198,35 +212,31 @@
                       </div>
                       <input v-model="auction.total_fee" id="totalFee" class="form-control" @input="updateKoreanAmount('totalFee')">
                     </div>
+                    
+                    
                     <div class="card-body">
-                      <div class="d-flex justify-content-between">
-                        <p class="text-secondary opacity-50">희망가</p>
-                        <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ hopePriceFeeKorean }}</p>
+                      <div class="form-group my-3">
+                        <label for="dealer">인수차량 도착지 주소</label>
+                        <input type="text" v-model="auction.dest_addr_post" class="input-dis form-control" readonly />
+                        <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
+                        <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
+                          <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
+                        </div>
+                        <div class="input-with-button">
+                          <input type="text" v-model="auction.dest_addr1" class="input-dis form-control" readonly />
+                        </div>
+                        <input type="text" v-model="auction.dest_addr2" class="form-control" />
                       </div>
-                      <input v-model="auction.hope_price" id="hopePrice" class="form-control" @input="updateKoreanAmount('hopePrice')">
                     </div>
+
                     <div class="card-body">
-                      <div class="d-flex justify-content-between">
-                        <p class="text-secondary opacity-50">낙찰가</p>
-                        <p class="d-flex justify-content-end text-secondary opacity-50 p-2">{{ finalPriceFeeKorean }}</p>
-                      </div>
-                      <input v-model="auction.final_price" id="finalPrice" class="form-control" @input="updateKoreanAmount('finalPrice')">
-                    </div>
-                    <div class="form-group my-3">
-                      <label for="dealer">인수차량 도착지 주소</label>
-                      <input type="text" v-model="auction.dest_addr_post" class="input-dis form-control" readonly />
-                      <button type="button" class="search-btn" @click="editPostCodeReceive('daumPostcodeDealerReceiveInput')">검색</button>
-                      <div id="daumPostcodeDealerReceiveInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
-                        <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeDealerReceiveInput')">
-                      </div>
-                      <div class="input-with-button">
-                        <input type="text" v-model="auction.dest_addr1" class="input-dis form-control" readonly />
-                      </div>
-                      <input type="text" v-model="auction.dest_addr2" class="form-control" />
+                      <p class="text-secondary opacity-50">연락처</p>
+                      <input v-model="auction.customTel1" id="customTel1" class="form-control" />
                     </div>
                     
 
                     <div class="mb-3">
+                    <div class="card-body">
                       <label for="user-title" class="form-label">자동차등록증</label>
                       <input type="file" @change="handleFileUploadCarLicense" ref="fileAuctionCarLicense" style="display:none">
                       <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCarLicense">
@@ -242,7 +252,9 @@
                         </li>
                       </div>
                     </div>
+                    </div>
                     <div class="mb-3">
+                      <div class="card-body">
                       <label for="user-title" class="form-label">위임장 or 소유자 인감 증명서</label>
                       <input type="file" @change="handleFileUploadProxy" ref="fileAuctionProxy" style="display:none">
                       <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadProxy">
@@ -257,8 +269,10 @@
                           <a :href=fileProxyUrl download>{{ auction.file_auction_proxy_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerProxyFileDelete()"></span>
                         </li>
                       </div>
+                      </div>
                     </div>
                     <div class="mb-3">
+                      <div class="card-body">
                       <label for="user-title" class="form-label">매도자관련서류</label>
                       <input type="file" @change="handleFileUploadOwner" ref="fileAuctionOwner" style="display:none">
                       <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
@@ -272,6 +286,7 @@
                         <li v-if="fileOwnerUrl">
                           <a :href=fileOwnerUrl download>{{ auction.file_auction_owner_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerOwnerFileDelete()"></span>
                         </li>
+                      </div>
                       </div>
                     </div>
                     <div class="form-group dealer-check fw-bolder pb-2">
@@ -962,6 +977,7 @@ onMounted(async () => {
     auction.addr_post = data.addr_post;
     auction.addr1 = data.addr1;
     auction.addr2 = data.addr2;
+    auction.customTel1 = data.customTel1;
     // auction.diag_first_at = data.diag_first_at;
     if(data.diag_first_at){
       const formattedValue = data.diag_first_at.replace(" ", "T").substring(0, 16);  // 형식 변환
