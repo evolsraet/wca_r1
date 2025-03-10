@@ -153,6 +153,52 @@
                     -->
 
 
+                    <div class="mb-3">
+                    <div class="card-body">
+                      <label for="user-title" class="form-label">자동차등록증</label>
+                      <input type="file" @change="handleFileUploadCarLicense" ref="fileAuctionCarLicense" style="display:none">
+                      <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCarLicense">
+                          파일 첨부
+                      </button>
+                      <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionCarLicenseFileList.length > 0 || fileCarLicenseUrl">
+                        자동차등록증 : 
+                        <li v-for="(file, index) in fileAuctionCarLicenseFileList" :key="index">
+                            <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
+                        </li>
+                        <li v-if="fileCarLicenseUrl">
+                          <a :href=fileCarLicenseUrl download>{{ auction.file_auction_car_license_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerCarLicenseFileDelete()"></span>
+                        </li>
+                      </div>
+                    </div>
+                    </div>
+                    <div class="mb-3">
+                      <div class="card-body">
+                      <label for="user-title" class="form-label">위임장 or 소유자 인감 증명서</label>
+                      <input type="file" @change="handleFileUploadProxy" ref="fileAuctionProxy" style="display:none">
+                      <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadProxy">
+                          파일 첨부
+                      </button>
+                      <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionProxyFileList.length > 0 || fileProxyUrl">
+                        매매업체 대표증 / 종사원증 : 
+                        <li v-for="(file, index) in fileAuctionProxyFileList" :key="index">
+                            <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
+                        </li>
+                        <li v-if="fileProxyUrl">
+                          <a :href=fileProxyUrl download>{{ auction.file_auction_proxy_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerProxyFileDelete()"></span>
+                        </li>
+                      </div>
+                      </div>
+                    </div>
+                    
+                    <div class="form-group dealer-check fw-bolder pb-2">
+                      <p for="dealer">법인 / 사업자차량</p>
+                      <div class="check_box">
+                        <input type="checkbox" id="ch2" v-model="auction.isBizChecked" class="form-control">
+                        <label for="ch2"></label>
+                      </div>
+                    </div>
+
+
                     <div class="card-body">
                       <p class="text-secondary opacity-50">진단희망일</p>
                       <input v-model="auction.diag_first_at" id="diagFirstAt" class="form-control" type="datetime-local">
@@ -230,50 +276,44 @@
                     </div>
 
                     <div class="card-body">
-                      <p class="text-secondary opacity-50">연락처</p>
+                      <p class="text-secondary opacity-50">인수자 연락처</p>
                       <input v-model="auction.customTel1" id="customTel1" class="form-control" />
                     </div>
-                    
+
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">매입자 정보</p>
+                      <div>
+                        
+                        <div class="car-info">
+                          <div class="item">
+                            <span class="label">성명</span>
+                            <span class="value">{{ auction.dealer_name }}</span>
+                          </div>
+                          <div class="item">
+                            <span class="label">연락처</span>
+                            <span class="value">{{ auction.dealer.phone }}</span>
+                          </div>
+                          <div class="item">
+                            <span class="label">소속</span>
+                            <span class="value">{{ auction.dealer.company }}</span>
+                          </div>
+                          <div class="item">
+                            <span class="label">직책</span>
+                            <span class="value">{{ auction.dealer.company_duty }}</span>
+                          </div>
+                          <div class="item">
+                            <span class="label">주소</span>
+                            <span class="value">{{ '(' + auction.dealer.company_post + ')' + ' ' + auction.dealer.company_addr1 + ' ' + auction.dealer.company_addr2 }}</span>
+                          </div>
+                        </div>
+                        
+                      </div>
+                    </div>
+
 
                     <div class="mb-3">
-                    <div class="card-body">
-                      <label for="user-title" class="form-label">자동차등록증</label>
-                      <input type="file" @change="handleFileUploadCarLicense" ref="fileAuctionCarLicense" style="display:none">
-                      <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCarLicense">
-                          파일 첨부
-                      </button>
-                      <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionCarLicenseFileList.length > 0 || fileCarLicenseUrl">
-                        자동차등록증 : 
-                        <li v-for="(file, index) in fileAuctionCarLicenseFileList" :key="index">
-                            <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
-                        </li>
-                        <li v-if="fileCarLicenseUrl">
-                          <a :href=fileCarLicenseUrl download>{{ auction.file_auction_car_license_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerCarLicenseFileDelete()"></span>
-                        </li>
-                      </div>
-                    </div>
-                    </div>
-                    <div class="mb-3">
                       <div class="card-body">
-                      <label for="user-title" class="form-label">위임장 or 소유자 인감 증명서</label>
-                      <input type="file" @change="handleFileUploadProxy" ref="fileAuctionProxy" style="display:none">
-                      <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadProxy">
-                          파일 첨부
-                      </button>
-                      <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionProxyFileList.length > 0 || fileProxyUrl">
-                        매매업체 대표증 / 종사원증 : 
-                        <li v-for="(file, index) in fileAuctionProxyFileList" :key="index">
-                            <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
-                        </li>
-                        <li v-if="fileProxyUrl">
-                          <a :href=fileProxyUrl download>{{ auction.file_auction_proxy_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerProxyFileDelete()"></span>
-                        </li>
-                      </div>
-                      </div>
-                    </div>
-                    <div class="mb-3">
-                      <div class="card-body">
-                      <label for="user-title" class="form-label">매도자관련서류</label>
+                      <label for="user-title" class="form-label">매도관련서류</label>
                       <input type="file" @change="handleFileUploadOwner" ref="fileAuctionOwner" style="display:none">
                       <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadOwner">
                           파일 첨부
@@ -289,13 +329,7 @@
                       </div>
                       </div>
                     </div>
-                    <div class="form-group dealer-check fw-bolder pb-2">
-                      <p for="dealer">법인 / 사업자차량</p>
-                      <div class="check_box">
-                        <input type="checkbox" id="ch2" v-model="auction.isBizChecked" class="form-control">
-                        <label for="ch2"></label>
-                      </div>
-                    </div>
+                    
 
                   </div>
                 </div>
@@ -1003,6 +1037,9 @@ onMounted(async () => {
       const formattedValue = data.taksong_wish_at.replace(" ", "T").substring(0, 16);  // 형식 변환
       auction.taksong_wish_at = formattedValue;
     }
+
+    console.log('data', data);
+
     auction.success_fee = data.success_fee;
     auction.diag_fee = data.diag_fee;
     auction.total_fee = data.total_fee;
@@ -1013,6 +1050,9 @@ onMounted(async () => {
     auction.dest_addr_post = data.dest_addr_post;
     auction.dest_addr1 = data.dest_addr1;
     auction.dest_addr2 = data.dest_addr2;
+    auction.dealer_name = data.dealer_name;
+    auction.dealer = data.dealer;
+    // auction.dealer_tel = data.phone;
     if(data.is_biz == 1){
       auction.isBizChecked = true;
     }

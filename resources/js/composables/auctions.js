@@ -217,6 +217,7 @@ const getAuctionById = async (id) => {
 
             const name = data.dealer.name;
             auction.value.dealer_name = name;
+            auction.value.dealer = data.dealer;
         } else {
             auction.value.dealer_name = null; 
         } 
