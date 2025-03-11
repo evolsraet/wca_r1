@@ -138,7 +138,7 @@
                     </tbody>
                     </table>
                 </div>
-                <AuctionList/>
+                <AuctionList :setData="{countData}"/>
             </div>
         </div>
     </div>
@@ -249,6 +249,7 @@ const myScsBidCount=ref(0);
 const swal = inject('$swal');
 const categoriesList=ref(0);
 const bidsIdString = ref('');
+const countData = [];
 
 
 const latestNotices = computed(() => {
@@ -299,6 +300,7 @@ const ingCountFetch = async() => {
     // return auctionsData.value.filter(auction => auction.status === 'ing').length;
     const allIngCnt =  await allIngCount();
     ingCount.value = allIngCnt;
+    // countData.push({'ing':allIngCnt});
 };
 
 const alertNoVehicle = (event) => {

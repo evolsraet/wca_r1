@@ -25,15 +25,15 @@ const openAlarmModal04 = () => {
           <h5>경매장 이용 오류시 패널티를 안내해드려요</h5>
           <h4 class="bold">패널티 부과 안내</h4>
         </div>
-        <div class="grid3">
-            <div class="pannel-box">
+        <div class="grid2 row justify-content-center">
+            <div class="pannel-box col-md-5">
                 <img src="${pannel01}" alt="패널티 아이콘 1" width="35px" class="mb-3"/>
                 <h5 class="mb-3">이의제기</h5>
                 <p>패널티 부과시점으로부터 1주일 <br>
                 이내에 이메일 부탁드립니다.<br>
                 (Email : wecar@wecar.auction)</p>
             </div>
-            <div class="pannel-box">
+            <div class="pannel-box col-md-5">
                 <img src="${pannel02}" alt="패널티 아이콘 2" width="35px" class="mb-3"/>
                 <h5 class="mb-3">거래정지</h5>
                 <p>· 직접거래 유도</p>
@@ -42,14 +42,14 @@ const openAlarmModal04 = () => {
                 <p>· 딜러나 매매상이 아닌자에게 계정 양도</p>
                 <p>· 반말, 욕설 등 불량한 언행으로 인한 클레임 발생</p>
             </div>
-            <div class="pannel-box">
+            <div class="pannel-box col-md-5">
                 <img src="${pannel03}" alt="패널티 아이콘 3" width="35px" class="mb-3"/>
                 <h5 class="mb-3">견적오류</h5>
                 <p>· 1회 견적실수 패널티 3일 이용정지</p>
                 <p>· 2회 견적실수 패널티 1달 이용정지</p>
                 <p>· 3회 견적실수 패널티 계정 정지</p>
             </div>
-            <div class="pannel-box">
+            <div class="pannel-box col-md-5">
                 <img src="${pannel04}" alt="패널티 아이콘 4" width="35px" class="mb-3"/>
                 <h5 class="mb-3">경고</h5>
                 <p>· 거래 후 48시간 내 등록증 미업로드</p>

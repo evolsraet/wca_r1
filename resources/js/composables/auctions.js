@@ -378,6 +378,10 @@ const AuctionCarInfo = async (carInfoForm) => {
     if(auctionData.auction.file_auction_car_license){
         formData.append('file_auction_car_license', auctionData.auction.file_auction_car_license);
     }
+
+    if(auctionData.auction.file_auction_company_license){
+        formData.append('file_auction_company_license', auctionData.auction.file_auction_company_license);
+    }
     
     return wicac.conn()
     .url(`/api/auctions`)
@@ -830,6 +834,40 @@ const getDoneAuctions = async (bidsNumList,page) => {
         */
 };
 
+
+const getIngAuctions = async (bidsNumList,page) => {
+    const apiList = [];
+    //apiList.push(`auctions.bid_id:>:0`);
+    return wicac.conn()
+        .url(`/api/auctions`)
+        .whereOr('auctions.id',`${bidsNumList}`)
+        .with([
+            'bids',
+        ])
+        .pageLimit(10)
+        .page(`${page}`)
+        .callback(function(result) {
+            if(result.isSuccess){
+                pagination.value = result.rawData.data.meta;
+                console.log('getIngAuctions',result);
+
+                return result.data;
+            }else{
+                wica.ntcn(swal)
+                .title('오류가 발생하였습니다.')
+                .useHtmlText()
+                .icon('E') //E:error , W:warning , I:info , Q:question
+                .alert('관리자에게 문의해주세요.');
+            }
+        })
+        .get();
+
+        /*
+        .addWhere('auctions.bid_id','116')
+        .addOrWhere('auctions.bid_id','117')
+        */
+};
+
 const setTacksong = async (id, data) => {
 
     try {
@@ -1073,6 +1111,25 @@ const isAccident = (id) => {
   
   }
 
+  // 공매 엑셀 파일 확인
+  const checkAuctionEntryPublic = async (file) => {
+
+    console.log('공매 엑셀 파일 확인',file);
+
+    const formData = new FormData();
+    if(file){
+        formData.append('file', file);
+    }
+
+    return wicac.conn()
+    .url(`/api/auctions/entryPublic`)
+    .param(formData)
+    .multipart()
+    .callback(function (result) {
+      return result;
+    })
+    .post();
+  }
 
     return {
         getAuctionsByDealerLike,
@@ -1113,7 +1170,9 @@ const isAccident = (id) => {
         updateAuctionIsDeposit,
         allIngCount,
         isAccident,
-        sellCheckInputForm
+        sellCheckInputForm,
+        getIngAuctions,
+        checkAuctionEntryPublic
     };
     
 }

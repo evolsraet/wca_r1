@@ -47,6 +47,7 @@ Route::apiResource('auctions', AuctionController::class)
 Route::post('auctions/checkExpectedPrice', [AuctionController::class, 'CheckExpectedPrice']);
 Route::post('auctions/allIngCount', [AuctionController::class, 'AllIngCount']);
 Route::post('/auctions/{auction}/upload', [AuctionController::class, 'uploadFile']);
+Route::post('auctions/entryPublic', [AuctionController::class, 'entryPublic']);
 
 // bid
 Route::apiResource('bids', BidController::class)

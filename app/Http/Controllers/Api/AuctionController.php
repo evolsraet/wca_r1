@@ -13,7 +13,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Services\MediaService;
-
+use Maatwebsite\Excel\Facades\Excel;
 class AuctionController extends Controller
 {
     use CrudControllerTrait;
@@ -359,6 +359,94 @@ class AuctionController extends Controller
         }
 
         return response()->json($auction);
+    }
+
+    public function entryPublic(Request $request)
+    {
+        $file = $request->file('file');
+    
+        // 파일이 들어왔는지 확인
+        if (!$file) {
+            return response()->json(['message' => '파일이 전송되지 않았습니다.'], 400);
+        }
+    
+        // 엑셀 파일에서 데이터 읽기
+        try {
+            $data = Excel::toArray(new Auction, $file);
+
+            // 첫 번째 시트만 선택
+            $firstSheet = $data[0] ?? [];
+
+            // 첫 번째 라인 제거
+            if (!empty($firstSheet)) {
+                array_shift($firstSheet); // 첫 번째 행 제거
+            }
+
+            // JSON 데이터로 변환
+            $jsonData = array_map(function($row) {
+
+                $auctionService = new AuctionService();
+                $niceDnrResult = $auctionService->getNiceDnr($row[2], $row[1]);
+            
+                if ($row[0]) { // car_no가 있고, part가 "공매"인 경우에만 변환
+                    return [
+                        'part' => $row[0] ?? null,
+                        'car_no' => $row[1] ?? null,
+                        'orner' => $row[2] ?? null,
+                        'hope_date' => $row[3] ?? null,
+                        'addr_code' => $row[4] ?? null,
+                        'addr1' => $row[5] ?? null,
+                        'addr2' => $row[6] ?? null,
+                        'tel' => $row[7] ?? null,
+                        'maker' => $niceDnrResult['carSize']['info']['makerNm'],
+                        'model' => $niceDnrResult['carSize']['info']['modelNm'],
+                        'modelSub' => $niceDnrResult['carSize']['info']['subGrade'],
+                        'grade' => $niceDnrResult['carSize']['info']['grade'],
+                        'gradeSub' => $niceDnrResult['carSize']['info']['subGrade'],
+                        'year' => $niceDnrResult['carSize']['info']['year'],
+                        'firstRegDate' => $niceDnrResult['carSize']['info']['firstRegistrationDate'],
+                        'mission' => $niceDnrResult['carSize']['info']['transmission'],
+                        'fuel' => $niceDnrResult['carSize']['info']['fuelType'],
+                        'priceNow' => $niceDnrResult['carSize']['info']['currentPrice'], // 소매 시세가 (나이스DNR 시세확인 API
+                        'priceNowWhole' => $this->getCarmerceResult($niceDnrResult['carSize']['info']), // 도매 시세가 (카머스 시세확인 API)
+                        'thumbnail' => $niceDnrResult['carSize']['info']['thumbnail'],
+                        'km' => $niceDnrResult['carSize']['info']['km'],
+                    ];
+                }
+
+                return null;
+
+            }, $firstSheet);
+
+            // $jsonData = array_filter($jsonData, function($item) {
+            //     // 데이터가 없는 경우 배열 제거
+            //     if (empty($item)) {
+            //         return false;
+            //     }
+            
+            //     // $item['part']가 "공매"인 경우만 유지
+            //     if ($item['part'] !== "공매") {
+            //         return false;
+            //     }
+            
+            //     return true;
+            // });
+
+            // 데이터 확인
+            if (empty($jsonData)) {
+                return response()->api([], '엑셀 파일에 데이터가 없습니다.', 400);
+            }
+
+            // JSON 데이터 출력 (디버깅용)
+            // dd($jsonData);
+            
+            return response()->api($jsonData);
+     
+        } catch (\Exception $e) {
+            return response()->api([], '엑셀 파일을 처리하는 중 오류가 발생했습니다.', 500);
+        }
+
+
     }
 
 }

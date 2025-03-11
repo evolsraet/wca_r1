@@ -280,7 +280,7 @@
                       <input v-model="auction.customTel1" id="customTel1" class="form-control" />
                     </div>
 
-                    <div class="card-body">
+                    <div class="card-body" v-if="auction.dealer">
                       <p class="text-secondary opacity-50">매입자 정보</p>
                       <div>
                         
@@ -291,19 +291,19 @@
                           </div>
                           <div class="item">
                             <span class="label">연락처</span>
-                            <span class="value">{{ auction.dealer.phone }}</span>
+                            <span class="value">{{ auction.dealer?.phone }}</span>
                           </div>
                           <div class="item">
                             <span class="label">소속</span>
-                            <span class="value">{{ auction.dealer.company }}</span>
+                            <span class="value">{{ auction.dealer?.company }}</span>
                           </div>
                           <div class="item">
                             <span class="label">직책</span>
-                            <span class="value">{{ auction.dealer.company_duty }}</span>
+                            <span class="value">{{ auction.dealer?.company_duty }}</span>
                           </div>
                           <div class="item">
                             <span class="label">주소</span>
-                            <span class="value">{{ '(' + auction.dealer.company_post + ')' + ' ' + auction.dealer.company_addr1 + ' ' + auction.dealer.company_addr2 }}</span>
+                            <span class="value">{{ '(' + auction.dealer?.company_post + ')' + ' ' + auction.dealer?.company_addr1 + ' ' + auction.dealer?.company_addr2 }}</span>
                           </div>
                         </div>
                         

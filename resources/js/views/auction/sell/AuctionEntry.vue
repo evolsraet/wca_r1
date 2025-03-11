@@ -2,12 +2,31 @@
   <div class="container mov-wide">
   <div class="container">
     <div class="main-contenter mt-4">
-      <h4 class="top-title mb-2">경매 할 차량을 등록해볼까요?</h4>
+      <h4 class="top-title mb-2" v-if="auctionType !== '1'">경매 할 차량을 등록해볼까요?</h4>
+      <h4 class="top-title mb-2" v-if="auctionType === '1'">공매 할 차량을 등록해볼까요?</h4>
     </div>
     <div class="form-body mt-4">
       <form @submit.prevent="auctionEntry">
+
+        <!-- 공매&경매 구분 -->
+        <!-- <div class="form-group">
+          <label for="auction-type"><span class="text-danger me-2">*</span>공매&경매 구분</label>
+          <select class="form-select" v-model="auctionType" id="auction-type">
+            <option value="">공매&경매 구분 선택</option>
+            <option value="1">공매</option>
+            <option value="0">경매</option>
+          </select>
+        </div> -->
+
+        <div class="form-group" v-if="auctionType === '1'">
+          <label for="owner-name"><span class="text-danger me-2">*</span>회사명</label>
+          <div class="owner-certificat" @click="confirmEditIfDisabled">
+            <input type="text" id="owner-name" v-model="companyName" placeholder="회사명" :disabled="isVerified" ref="companyNameRef">
+          </div>
+        </div>
+
         <!-- 소유자 입력 -->
-        <div class="form-group">
+        <div class="form-group" v-if="auctionType !== '1'">
           <label for="owner-name"><span class="text-danger me-2">*</span>소유자</label>
           <div class="owner-certificat" @click="confirmEditIfDisabled">
             <input type="text" id="owner-name" v-model="ownerName" placeholder="홍길동" :disabled="isVerified">
@@ -16,15 +35,15 @@
           <div class="text-danger mt-2">※ 차량 소유자 확인을 위해 본인 인증 버튼을 클릭해주세요.</div>
         </div>
         <!-- 차량 번호 입력 -->
-        <div class="form-group">
+        <div class="form-group" v-if="auctionType !== '1'">
           <label for="carNumber"><span class="text-danger me-2">*</span>차량 번호</label>
           <input type="text" id="carNumber" v-model="carNumber" placeholder="12 삼 4567" :disabled="true">
         </div>
         
         <!-- 주소 입력 -->
-        <label for="sido1"><span class="text-danger me-2">*</span> 주소 <br/><span class="text-danger">차량 실주소지를 입력해주세요. (차량 진단 가능 지역)</span></label>
+        <label for="sido1" v-if="auctionType !== '1'"><span class="text-danger me-2">*</span> 주소 <br/><span class="text-danger">차량 실주소지를 입력해주세요. (차량 진단 가능 지역)</span></label>
 
-        <div class="form-group mb-2 input-wrapper">
+        <div class="form-group mb-2 input-wrapper" v-if="auctionType !== '1'">
           <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly ref="addrPostSelect">
           <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')" style="top:">검색</button>
           <div class="text-danger mt-1">
@@ -52,7 +71,7 @@
         </div>
 
         <!-- 지역 선택 -->
-        <div class="form-group">
+        <div class="form-group" v-if="auctionType !== '1'">
           <label for="sido1"><span class="text-danger me-2">*</span> 지역</label>
           <div class="region">
             <select class="w-100" v-model="selectedRegion" @change="onRegionChange" ref="regionSelect">
@@ -67,7 +86,7 @@
           </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group" v-if="auctionType !== '1'">
           <label for="memo"><span class="text-danger me-2">*</span>차량상태입력</label>
 
           <div class="form-check">
@@ -108,7 +127,7 @@
 
         <!-- 은행 선택 -->
 
-        <h4>은행/진단 정보</h4>
+        <h4 v-if="auctionType !== '1'">은행/진단 정보</h4>
 
         <div class="form-group mt-4">
           <label><span class="text-danger me-2">*</span>은행</label>
@@ -116,8 +135,16 @@
           <input type="text" v-model="account" placeholder="계좌번호" :class="{'block': accountDetails}" class="account-num" ref="accountSelect" @keydown.enter="handleEnterPress('diagFirstAtSelect')">
           <p class="text-danger">※ 계좌는 차량 소유주의 계좌번호만 입력가능 합니다.</p>
         </div>
+
+        <div v-if="auctionType === '1'">
+          <div class="form-group mt-4">
+            <label>계좌소유자명</label>
+            <input type="text" v-model="accountOwner" placeholder="계좌소유자명" ref="accountOwnerRef">
+          </div>
+        </div>
+
         <!-- 주요 사항 입력 -->
-        <div class="form-group mb-5">
+        <div class="form-group mb-5" v-if="auctionType !== '1'">
         <label for="datetime">
           <span class="text-danger me-2">*</span>진단희망 날짜 및 시간
         </label>
@@ -129,7 +156,18 @@
 
       <h4>첨부파일</h4>
 
-      <div class="form-group mt-5">
+      <div v-if="auctionType === '1'">
+        <div class="form-group mt-5">
+          <label for="memo"><span class="text-danger me-2">*</span>사업자등록증</label>
+          <input type="file" @change="handleFileUploadCompanyLicense" ref="fileInputRefCompanyLicense" style="display:none" >
+          <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCompanyLicense" ref="fileInputRefCompanyLicenseBtn">
+            파일 첨부
+          </button>
+          <div class="text-start text-secondary opacity-50" v-if="fileAuctionCompanyLicenseName">사업자등록증: {{ fileAuctionCompanyLicenseName }}</div>
+        </div>
+      </div>
+
+      <div class="form-group mt-5" v-if="auctionType !== '1'">
         <label for="memo"><span class="text-danger me-2">*</span>자동차등록증</label>
         <input type="file" @change="handleFileUploadCarLicense" ref="fileInputRefCarLicense" style="display:none" >
         <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCarLicense" ref="fileInputRefCarLicenseBtn">
@@ -139,6 +177,7 @@
       </div>
 
       
+      <div v-if="auctionType !== '1'">
       <div class="d-flex justify-content-between">
         <h5 class="mt-5"><p>본인 소유 차량이 아닐 경우,</p>위임장 또는 소유자 인감 증명서가 필요해요</h5>
         <div class="align-self-end">
@@ -150,9 +189,9 @@
           파일 첨부
         </button>
         <div class="text-start text-secondary opacity-50" v-if="fileAuctionProxyName">위임장 / 소유자 인감 증명서: {{ fileAuctionProxyName }}</div>
+      </div>
         
-        
-        <div class="form-group dealer-check fw-bolder pb-2">
+        <div class="form-group dealer-check fw-bolder pb-2" v-if="auctionType !== '1'">
           <p for="dealer">법인 / 사업자차량</p>
           <div class="check_box">
             <input type="checkbox" id="ch2" v-model="isBizChecked" class="form-control">
@@ -162,6 +201,16 @@
         <div>
         <div>   
       </div>
+      </div>
+
+
+      <div class="form-group mt-5" v-if="auctionType === '1'">
+        <label for="memo"><span class="text-danger me-2">*</span>공매 엑셀파일 일괄등록</label>
+        <input type="file" @change="handleFileUploadAuctionPublic" ref="fileAuctionPublicRef" style="display:none" >
+        <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadAuctionPublic" ref="fileAuctionPublicBtn">
+          파일 첨부
+        </button>
+        <div class="text-start text-secondary opacity-50" v-if="fileAuctionPublicName">공매 일괄등록: {{ fileAuctionPublicName }}</div>
       </div>
 
     </form>
@@ -222,8 +271,8 @@
             <p>3. 일반 인감증명서 (사실확인 증빙용)</p>
             <p>4. 사업자동등록증 사본</p>
             <p>5. 비사업용 사실확인서 (세무사 명판 날인)</p>
-            <p class="mb-3">6. ‘차량운반구 감가상각비명세서’ 또는 ‘고정자산명세서’</p>
-            <p>간편등록부의 경우, 상기 1~5번 제출 서류들과 ‘총 수입금액 및 필요경비명세서’가 필요합니다.</p>
+            <p class="mb-3">6. '차량운반구 감가상각비명세서' 또는 '고정자산명세서'</p>
+            <p>간편등록부의 경우, 상기 1~5번 제출 서류들과 '총 수입금액 및 필요경비명세서'가 필요합니다.</p>
             <div class="my-4">
               <p class="bolder">간이과세자</p>
               <p>1. 기본 필수 서류</p>
@@ -249,8 +298,11 @@
         </div>
       </transition>
         </div> -->
-          <div class="px-2 mb-3 flex items-center justify-end mt-5">
+          <div class="px-2 mb-3 flex items-center justify-end mt-5" v-if="auctionType !== '1'">
             <button type="submit" class="btn primary-btn normal-16-font w-100" @click="auctionEntry()" >경매 신청하기</button>
+          </div>
+          <div class="px-2 mb-3 flex items-center justify-end mt-5" v-if="auctionType === '1'">
+            <button type="submit" class="btn primary-btn normal-16-font w-100" @click="auctionEntryPublic()" >공매 신청하기</button>
           </div>
           <Modal v-if="showAuctionModal" @close="handleAuctionClose" />
       </div>
@@ -307,7 +359,7 @@ import carObjects from '../../../../../resources/img/modal/car-objects-blur.png'
 
 const { openPostcode, closePostcode } = cmmn();
 const { wica } = cmmn();
-const { createAuction, validationErrors } = useAuctions();
+const { createAuction, validationErrors, checkAuctionEntryPublic } = useAuctions();
 const store = useStore();
 const swal = inject('$swal');
 
@@ -340,7 +392,14 @@ const isBizChecked = ref(false); // 체크박스 상태를 저장하는 변수
 const fileInputRefCarLicense = ref(null);
 const fileAuctionCarLicense = ref(null); // 추가: 파일 저장 변수
 const fileAuctionCarLicenseName = ref(''); // 추가: 파일 이름 저장 변수
-
+const fileAuctionPublic = ref(null);
+const fileAuctionPublicName = ref('');
+const fileAuctionPublicRef = ref(null);
+const fileInputRefCompanyLicense = ref(null);
+const fileAuctionCompanyLicense = ref(null); // 추가: 파일 저장 변수
+const fileAuctionCompanyLicenseName = ref(''); // 추가: 파일 이름 저장 변수
+// const fileAuctionCompanyLicenseBtn = ref(null);
+const fileInputRefCompanyLicenseBtn = ref(null);
 const diagFirstAt = ref('');
 const diagSecondAt = ref('');
 
@@ -367,8 +426,13 @@ const memoSelect = ref(null);
 const diagFirstAtSelect = ref(null);
 const diagSecondAtSelect = ref(null);
 const fileInputRefCarLicenseBtn = ref(null);
-
+const fileAuctionPublicBtn = ref(null);
+const auctionType = ref('0');
 const carStatus = ref('');
+const companyName = ref('');
+const companyNameRef = ref(null);
+const accountOwner = ref('');
+const accountOwnerRef = ref(null);
 
 // 체크박스 변경 시 호출되는 함수
 const updateCarConditionValue = () => {
@@ -419,7 +483,7 @@ const isWeekend = (dateString) => {
 const auctionEntry = async () => {
 
   const auctionData = {
-    auction_type: '0',
+    auction_type: auctionType.value,
     owner_name: ownerName.value,
     car_no: carNumber.value,
     region: selectedRegion.value,
@@ -449,7 +513,7 @@ const auctionEntry = async () => {
     car_thumbnail: carThumbnail.value,
     car_km: carKm.value,
     car_condition: carCondition.value,
-    car_status: carStatus.value
+    car_status: carStatus.value,
   };
 
   if(isVerified.value){
@@ -558,6 +622,178 @@ const auctionEntry = async () => {
   }
 };
 
+const auctionEntryPublic = async () => {
+  // 유효성 검사 코드 (기존 코드 유지)
+  if(companyName.value === ''){
+    focusAndAlert(companyNameRef, '회사명을 입력해 주세요.');
+    return;
+  }
+
+  // 은행선택 확인 
+  if(selectedBank.value === ''){
+    focusAndAlert(bankSelect, '은행을 선택해 주세요.');
+    return;
+  }
+
+  // 계좌번호 확인
+  if(account.value === ''){
+    focusAndAlert(accountSelect, '계좌번호를 입력해 주세요.');
+    return;
+  }
+
+  // 계좌소유자명 확인
+  if(accountOwner.value === ''){
+    focusAndAlert(accountOwnerRef, '계좌소유자명을 입력해 주세요.');
+    return;
+  }
+
+  // 사업자등록증 파일확인 
+  if(fileAuctionCompanyLicense.value === null){
+    if(fileInputRefCompanyLicenseBtn.value){
+      fileInputRefCompanyLicenseBtn.value.click();
+    }
+    wica.ntcn(swal)
+    .icon('W')
+    .addClassNm('cmm-review-custom')
+    .addOption({ padding: 20})
+    .callback(function(result) {
+    })
+    .alert('사업자등록증을 첨부해 주세요.');
+    return;
+  }
+
+  const file = fileAuctionPublic.value;
+  if(!file){
+    // focusAndAlert(fileAuctionPublicBtn, '공매 엑셀파일을 첨부해 주세요.');
+    // return;
+    if(fileAuctionPublicBtn.value){
+      fileAuctionPublicBtn.value.click();
+    }
+    wica.ntcn(swal)
+    .icon('W')
+    .addClassNm('cmm-review-custom')
+    .addOption({ padding: 20})
+    .callback(function(result) {
+    })
+    .alert('공매 엑셀파일을 첨부해 주세요.');
+    return;
+  }
+
+  try {
+    console.log('파일 업로드 시작');
+    const result = await checkAuctionEntryPublic(file);
+    console.log('받은 데이터:', result.data);
+    
+    let fileResult = result.data;
+
+    // 유효한 값만 필터링 (null, undefined, 빈 객체 제거)
+    fileResult = fileResult.filter(item => {
+      if (item === null || item === undefined) {
+        return false;
+      }
+      
+      if (typeof item !== 'object') {
+        return false;
+      }
+      
+      if (!item.car_no || item.car_no === 'null') {
+        return false;
+      }
+      
+      return true;
+    });
+
+    console.log('필터링 후 데이터 개수:', fileResult.length);
+    console.log('필터링 후 데이터:', fileResult);
+
+    if (fileResult.length === 0) {
+      console.log('유효한 데이터가 없습니다.');
+      wica.ntcn(swal)
+        .icon('W')
+        .addOption({ padding: 20 })
+        .alert('처리할 유효한 데이터가 없습니다.');
+      return;
+    }
+
+    // 처리 결과를 저장할 배열
+    const results = [];
+    let successCount = 0;
+
+    // for...of 루프를 사용하여 순차적으로 처리
+    for (const item of fileResult) {
+      console.log('처리 중인 데이터:', item);
+      
+      if(item.part === '공매'){
+
+        const setData = {
+          auction_type: '1',
+          company_name: companyName.value,
+          owner_name: item.orner,
+          car_no: item.car_no,
+          bank: selectedBank.value,
+          account: account.value,
+          account_name: accountOwner.value,
+          region: item.addr1.split(' ')[0],
+          addr1: item.addr1 || '',
+          addr2: item.addr2 || '',
+          addr_post: item.addr_code || '',
+          car_maker: item.maker || '',
+          car_model: item.model || '',
+          car_model_sub: item.modelSub || '',
+          car_grade: item.grade || '',
+          car_grade_sub: item.gradeSub || '',
+          car_year: item.year || '',
+          car_first_reg_date: item.firstRegDate || '',
+          car_mission: item.mission || '',
+          car_fuel: item.fuel || '',
+          car_price_now: item.priceNow || '',
+          car_price_now_whole: item.priceNowWhole || '',
+          car_thumbnail: item.thumbnail || '',
+          car_km: item.km || '',
+          file_auction_company_license: fileAuctionCompanyLicense.value
+        };
+        
+        try {
+          console.log('등록 시도:', setData.car_no);
+          const auctionResult = await createAuction({ auction: setData });
+          console.log('등록 결과:', auctionResult);
+          results.push(auctionResult);
+          successCount++;
+        } catch (innerError) {
+          console.error('항목 처리 중 오류 발생:', innerError);
+          results.push({ error: true, message: innerError.message });
+        }
+      }
+    }
+
+    console.log('처리 완료된 항목 수:', successCount);
+    console.log('모든 처리 결과:', results);
+    
+    // 성공 메시지 표시
+    const textOk = `<div class="enroll_box" style="position: relative;">
+                      <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
+                      <p class="overlay_text02">공매 신청이 완료되었습니다.</p>
+                      <p class="overlay_text03">총 ${fileResult.length}건 중 ${successCount}건이 등록되었습니다.</p>
+                    </div>`;
+    wica.ntcn(swal)
+      .useHtmlText()
+      .addClassNm('primary-check')
+      .addOption({ padding: 20 })
+      .callback(function (result) {
+        // 성공 후 처리 로직
+        // window.location.href = '/auction/'; // 필요시 페이지 이동
+      })
+      .confirm(textOk);
+      
+  } catch (error) {
+    console.error('전체 처리 중 오류 발생:', error);
+    wica.ntcn(swal)
+      .icon('E')
+      .addOption({ padding: 20 })
+      .alert('데이터 처리 중 오류가 발생했습니다: ' + (error.message || '알 수 없는 오류'));
+  }
+}
+
 const focusAndAlert = (inputRef, message) => {
   if (inputRef.value) {
     inputRef.value.focus();
@@ -617,6 +853,14 @@ const triggerFileUploadOwner = () => {
   }
 };
 
+const triggerFileUploadCompanyLicense = () => {
+  if (fileInputRefCompanyLicense.value) {
+    fileInputRefCompanyLicense.value.click();
+  } else {
+    console.error('파일을 찾을 수 없습니다.');
+  }
+};
+
 const handleFileUploadOwner = event => {
   const file = event.target.files[0];
   if (file) {
@@ -640,9 +884,39 @@ const handleFileUploadOwner = event => {
   }
 };
 
+const handleFileUploadCompanyLicense = event => {
+  const file = event.target.files[0];
+  if (file) {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('최대 10MB 이하의 파일만 첨부할 수 있습니다.');
+      return;
+    }else{
+      fileAuctionCompanyLicense.value = file; // 파일 저장
+      fileAuctionCompanyLicenseName.value = file.name; // 파일 이름 저장
+    }
+  } else {
+    console.error('No file selected');
+  }
+};
+
 const triggerFileUploadCarLicense = () => {
   if (fileInputRefCarLicense.value) {
     fileInputRefCarLicense.value.click();
+  } else {
+    console.error('파일을 찾을 수 없습니다.');
+  }
+};
+
+const triggerFileUploadAuctionPublic = () => {
+  if (fileAuctionPublicRef.value) {
+    fileAuctionPublicRef.value.click();
   } else {
     console.error('파일을 찾을 수 없습니다.');
   }
@@ -670,6 +944,31 @@ const handleFileUploadCarLicense = event => {
     console.error('No file selected');
   }
 };
+
+const handleFileUploadAuctionPublic = event => {
+  const file = event.target.files[0];
+  console.log('공매 엑셀파일',file);
+  if (file) {
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (file.size > maxSize) {
+      wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('최대 10MB 이하의 파일만 첨부할 수 있습니다.');
+      return;
+    }else{
+      fileAuctionPublic.value = file; // 파일 저장
+      fileAuctionPublicName.value = file.name; // 파일 이름 저장
+    }
+
+  } else {
+    console.error('No file selected');
+  }
+};
+
 
 
 const handleBankLabelClick = async () => {
@@ -792,6 +1091,15 @@ const openAlarmModal = () => {
 }
 
 onMounted(() => {
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const typeParam = urlParams.get('type');
+
+  if (typeParam === 'public') {
+    auctionType.value = '1'; // 공매
+  } else if (typeParam === 'normal') {
+    auctionType.value = '0'; // 일반경매
+  }
 
   if (addrPostSelect.value) {
     addrPostSelect.value.focus();

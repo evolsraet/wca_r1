@@ -14,6 +14,7 @@ class CreateAuctionsTable extends Migration
             $table->boolean('auction_type')->comment('경매 타입');
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('owner_name')->comment('소유자명');
+            $table->string('company_name')->nullable()->comment('회사명');
             $table->string('car_no')->comment('차량번호')->index();
             $table->string('status')->default('ask')->comment('진행상태');
             $table->unsignedBigInteger('diag_id')->nullable()->comment('진단아이디');
@@ -24,6 +25,7 @@ class CreateAuctionsTable extends Migration
             $table->string('addr2')->nullable()->comment('상세주소');
             $table->string('bank')->nullable()->comment('은행');
             $table->string('account')->nullable()->comment('은행번호');
+            $table->string('account_name')->nullable()->comment('예금주');
             $table->text('memo')->nullable()->comment('고객 메모');
             $table->text('memo_digician')->nullable()->comment('평가사 의견');
             $table->boolean('is_reauction')->default(0)->comment('재경매여부');
