@@ -39,6 +39,11 @@ TODO:
        <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded" @click.stop="">후기 남기기</div>
     </div>-->
     <div class="container my-3 auction-content">
+
+        <div class="d-flex justify-content-end">
+            <button @click="auctionEntryPublic" class="btn btn-primary">공매 등록</button>
+        </div>
+
     <div class="content-main mt-5" :class="{ row: isDealer }">
         <Filter/>
             <!-- 메인 컨텐츠 -->
@@ -911,6 +916,10 @@ function loadPage( page, type, pagination) {
             getScsBidsInfo();
             break;
     }
+}
+
+const auctionEntryPublic = () => {
+    router.push('selldt2?type=public');
 }
 
 function navigateToDetail(auction) { 
