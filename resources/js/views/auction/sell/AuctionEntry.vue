@@ -781,7 +781,7 @@ const auctionEntryPublic = async () => {
       .addOption({ padding: 20 })
       .callback(function (result) {
         // 성공 후 처리 로직
-        window.location.href = '/auction/'; // 필요시 페이지 이동
+        window.location.href = '/auction'; // 필요시 페이지 이동
       })
       .confirm(textOk);
       

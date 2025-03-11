@@ -9,13 +9,17 @@ TODO:
     <!-- 서브 네비게이션 바 -->
     <div class="sub-nav row ">
         <div class="col-12 p-0">
-            <div v-if="isUser" class="px-4 container mt-3">
+            <div v-if="isUser" class="px-4 container mt-3 d-flex justify-content-between">
                 <nav class="navbar navbar-expand navbar-light">
                     <div class="navbar-nav gap-2">
                         <a class="nav-item nav-link" @click="setCurrentTab('allInfo')" :class="{ active: currentTab === 'allInfo' }">전체</a>
                         <a class="nav-item nav-link pe-0" @click="setCurrentTab('auctionDone')" :class="{ active: currentTab === 'auctionDone' }">판매한 매물<span class="interest mx-2">{{filteredDone.length}}</span></a>
                     </div>
                 </nav>
+                <div class="d-flex justify-content-end">
+                    <button @click="auctionEntryPublic" class="btn btn-primary">공매 등록</button>
+                </div>
+
             </div>
             <div v-if="isDealer" class="px-3 container mt-3 overflow-x-auto">
                 <nav class="mx-width navbar navbar-expand navbar-light">
@@ -39,11 +43,6 @@ TODO:
        <div class="review-none" v-show="!isExpanded && !hasCompletedAuctions" :disabled="isExpanded" @click.stop="">후기 남기기</div>
     </div>-->
     <div class="container my-3 auction-content">
-
-        <div class="d-flex justify-content-end">
-            <button @click="auctionEntryPublic" class="btn btn-primary">공매 등록</button>
-        </div>
-
     <div class="content-main mt-5" :class="{ row: isDealer }">
         <Filter/>
             <!-- 메인 컨텐츠 -->
