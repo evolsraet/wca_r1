@@ -117,9 +117,9 @@
                                     <h5>[ {{bid.car_no}} ]</h5>
                                     <p>{{bid.car_year ? bid.car_year +'년' : '2020년'}} | {{bid.car_km ? bid.car_km +'km' : '2.4km'}} | {{ isAccident(bid.is_accident) }}</p>
                                     <div class="d-flex justify-content-between">
-                                        <div>
+                                        <!-- <div>
                                             <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
-                                        </div>
+                                        </div> -->
                                         <!--<p class="tc-primary">{{ amtComma(review.auction.win_bid.price) }}</p>-->
                                     </div>
                                 </div>
@@ -175,12 +175,21 @@
                                 <span v-if="bid.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                 <div class="card-body">
                                     <!--<h5 class="card-title"><span class="blue-box">무사고</span>{{bid.car_no}}</h5>-->
-                                    <h5 class="card-title">{{bid.car_model ? bid.car_model +' '+ bid.car_model_sub +' '+ bid.car_fuel + ' ['+ bid.car_no +']' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑'}}</h5>
-                                    <p>{{bid.car_year ? bid.car_year +'년' : '2020년'}} | {{bid.car_km ? bid.car_km +'km' : '2.4km'}} | {{ isAccident(bid.is_accident) }}</p>
+                                    <h4 class="card-title">{{bid.car_model ? bid.car_model +' '+ bid.car_model_sub +' '+ bid.car_fuel + ' [ '+ bid.car_no +' ]' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑'}}</h4>
+                                    <p>{{bid.car_year ? bid.car_year +'년' : '2020년'}} | {{bid.car_km ? bid.car_km +'km' : '2.4km'}} | {{ isAccident(bid.is_accident) }} </p>
                                     <p>입찰일 : {{ bid.bids[0].created_at }}</p>
-                                    <p>입찰금액 : {{ bid.bids[0].price }}</p>
-                                    <p>입찰최고액 : {{ bid.middle_prices?.max ? bid.middle_prices?.max : '-' }}</p>
-                                    <p>입찰최저액 : {{ bid.middle_prices?.min ? bid.middle_prices?.min : '-' }}</p>
+                                    <!-- <p>입찰최고액 : {{ bid.middle_prices?.max ? bid.middle_prices?.max : '-' }}</p>
+                                    <p>입찰최저액 : {{ bid.middle_prices?.min ? bid.middle_prices?.min : '-' }}</p> -->
+
+                                    <div class="d-flex justify-content-between">
+                                        <span>입찰금액 : {{ bid.bids[0].price }} 원</span>
+                                        <div>
+                                            <span class="blue-box border-6">최고액 {{ bid.middle_prices?.max ? bid.middle_prices?.max : '-' }} 원</span>
+                                            <span class="gray-box border-6">최저액 {{ bid.middle_prices?.min ? bid.middle_prices?.min : '-' }} 원</span>
+                                        </div>
+                                    </div>
+
+
                                     <div class="d-flex justify-content-between">
                                         <!-- <div>
                                             <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
