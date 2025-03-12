@@ -658,9 +658,15 @@ const updateAuctionStatus = async (id, status) => {
     isLoading.value = true;
     validationErrors.value = {};
 
+    let isAccident = 0;
+    if(status == 'ing'){
+        isAccident = 1;
+    }
+
     const data = {
         auction: {
-            status: status
+            status: status,
+            is_accident: isAccident
         }
     };
     return wicac.conn()
