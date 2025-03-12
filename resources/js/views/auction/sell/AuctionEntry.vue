@@ -205,7 +205,9 @@
 
 
       <div class="form-group mt-5" v-if="auctionType === '1'">
-        <label for="memo"><span class="text-danger me-2">*</span>공매 엑셀파일 일괄등록</label>
+        <label for="memo"><span class="text-danger me-2">*</span>공매 엑셀파일 일괄등록 
+          <span class="text-danger" @click="openModal('excel')"><img src="../../../../img/Icon-file.png" class="ms-2" alt="엑셀 파일 형식 참고"> 엑셀 파일 형식 참고</span>
+        </label>
         <input type="file" @change="handleFileUploadAuctionPublic" ref="fileAuctionPublicRef" style="display:none" >
         <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadAuctionPublic" ref="fileAuctionPublicBtn">
           파일 첨부
@@ -1088,6 +1090,66 @@ const openAlarmModal = () => {
       // 결과 처리 로직
     })
     .confirm(text); // 모달 내용 설정
+}
+
+const openModal = (modalName) => {
+  if(modalName === 'excel'){
+    const text = `
+  <div style="font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; padding: 20px; border: 1px solid #ddd; text-align: left;">
+    <h2 style="text-align: center; text-decoration: underline;"> 공매 엑셀파일 형식 참고 </h2>
+    
+    <div style="margin-bottom: 20px; padding: 10px; border-radius: 5px;">
+        <table style="width: 100%; border-collapse: collapse; background: #f9f9f9;">
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 10%; font-size:13px; font-weight: bold;">구분</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 15%; font-size:13px; font-weight: bold;">차량번호</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 15%; font-size:13px; font-weight: bold;">소유주</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; font-weight: bold;">진단희망일</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; font-weight: bold;">진단지(우편번호)</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px; font-weight: bold;">진단지(주소)</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px; font-weight: bold;">전단지(상세주소)</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; font-weight: bold;">연락처</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 10%; font-size:13px;">일반</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 15%; font-size:13px;">32다1451</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 15%; font-size:13px;">김우진</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">03월 13일</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">31122</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">진대전 광역시 서구</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">11번지</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">010-1234-5678</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 10%; font-size:13px;">공매</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 15%; font-size:13px;">43나4112</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 15%; font-size:13px;">나연주</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">03월 15일</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">51231</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">대전 광역시 동구</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">22번지</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">010-1234-5678</td>
+            </tr>
+        </table>
+        <br/>
+        <p>※  엑셀파일의 컬럼 순서는 위와 같습니다. 차량번호, 소유주, 진단희망일, 진단지-우편번호, 진단지-주소, 전단지-상세주소, 연락처 순입니다.</p>
+        <p>구분이 공매인 데이터만 공매 엑셀파일로 인식합니다.</p>
+    </div>
+
+    
+  </div>
+  `;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20, height:840 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+  }
 }
 
 onMounted(() => {
