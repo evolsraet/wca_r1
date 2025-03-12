@@ -62,7 +62,7 @@
             <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20"></span><span class="size_14">내 차 판매하기</span> 
           </div>
 
-          <div class="web-style-overlay02">
+          <div class="web-style-overlay02" v-if="!user?.name">
             <!-- <h5 class="size_18 tc-wh">저는 딜러에요! <router-link :to="{ path: '/register?type=dealer' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></h5> -->
             <h5 class="size_18 tc-wh">저는 딜러에요! <a href="/register?type=dealer" class="ms-3 tc-wh underline">딜러회원가입</a></h5>
           </div>
@@ -167,7 +167,7 @@
     </div>
       <div class="ps-3"> 
       <img src="../../../img/logo.png" width="110" class="mb-3 mobile-css">
-      <div class="tc-wh mobile-css">
+      <div class="tc-wh mobile-css" v-if="!user?.name">
         <!-- <p class="size_18 ps-2">저는 딜러에요! <router-link :to="{ path: '/register?type=dealer' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></p> -->
         <p class="size_18 ps-2">저는 딜러에요! <a href="/register?type=dealer" class="ms-3 tc-wh underline">딜러회원가입</a></p>
       </div>

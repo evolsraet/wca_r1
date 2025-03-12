@@ -175,8 +175,8 @@
                                 <span v-if="bid.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                 <div class="card-body">
                                     <!--<h5 class="card-title"><span class="blue-box">무사고</span>{{bid.car_no}}</h5>-->
-                                    <h4 class="card-title">{{bid.car_model ? bid.car_model +' '+ bid.car_model_sub +' '+ bid.car_fuel + ' [ '+ bid.car_no +' ]' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑'}}</h4>
-                                    <p>{{bid.car_year ? bid.car_year +'년' : '2020년'}} | {{bid.car_km ? bid.car_km +'km' : '2.4km'}} | {{ isAccident(bid.is_accident) }} </p>
+                                    <h4 class="card-title">{{bid.car_model ? bid.car_model +' '+ bid.car_model_sub +' '+ bid.car_fuel : '더 뉴 그랜저 IG 2.5 가솔린 르블랑'}}</h4>
+                                    <p>{{bid.car_no}} | {{bid.car_year ? bid.car_year +'년' : '2020년'}} | {{bid.car_km ? bid.car_km +'km' : '2.4km'}} | {{ isAccident(bid.is_accident) }} </p>
                                     <p>입찰일 : {{ bid.bids[0].created_at }}</p>
                                     <!-- <p>입찰최고액 : {{ bid.middle_prices?.max ? bid.middle_prices?.max : '-' }}</p>
                                     <p>입찰최저액 : {{ bid.middle_prices?.min ? bid.middle_prices?.min : '-' }}</p> -->
