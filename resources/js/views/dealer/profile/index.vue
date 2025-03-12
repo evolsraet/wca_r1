@@ -15,7 +15,7 @@
                             <div class="deal-info align-items-center">
                                 <p class="text-secondary opacity-50">{{ user.dealer.company }} </p>
                                 <p>딜러 <span class="fw-medium">{{ user.dealer.name }}</span>님</p>
-                                <p class="restar">4.5점</p>
+                                <p class="restar">{{ points }}점</p>
                             </div>
                         </div>
                     </div>
@@ -256,6 +256,7 @@ const auctionsDoneData = ref([]);
 const auctionsIngData = ref([]);
 const currentPage = ref(1); 
 const ingPage = ref(1);
+const points = ref(0);
 let isData = false;
 let isIngData = false;
 let bidsNumList ='';
@@ -279,6 +280,7 @@ function fileExstCheck(info){
 
 onMounted(async () => {
     const userInfo = await getUser(user.value.id);
+    points.value = userInfo.points;
     fileExstCheck(userInfo);
     await getHomeBids();
     bidsData.value.forEach(bid => {
