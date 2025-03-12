@@ -1000,6 +1000,14 @@
   
   onMounted(async () => {
     //await store.dispatch("auth/getUser");
+    const urlParams = new URLSearchParams(window.location.search);
+    const typeParam = urlParams.get('type');
+    
+    if(typeParam == 'dealer'){
+      isDealerApplyCheckSelect.value = false;
+      profile.value.isDealerApplyCheck = false;
+      profile.value.isDealer = true;
+    }
 
     if(route.path == '/edit-profile'){
       userEditURL.value = true; 
