@@ -170,13 +170,21 @@ TODO:
                                                     <div v-if="auction.status === 'ask'" class="time-remaining">신청 완료</div>
                                                 </div>-->
                                                     <div class="card-body">
-                                                        <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
+                                                        <p class="card-title fw-bolder">
+                                                            <!-- {{ auction.auction_type === '1' ? '공매' : '경매' }} -->
+                                                            {{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + ' [ '+ auction.car_no +' ]' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}
+                                                        </p>
                                                         <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span></p>
                                                         <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                         <div class="d-flex">
-                                                            <h5 class="card-title"><span class="blue-box fw-bold border-6">{{ isAccident(auction.is_accident) }}</span></h5>
+                                                            <h5 class="card-title">
+                                                                <span v-if="auction.auction_type !== 0" style="margin-right: 5px;"><span class="red-box border-6">공매</span></span>
+                                                                <!-- <span v-if="auction.auction_type !== 1"><span class="gray-box border-6">경매</span></span> -->
+                                                                <span class="blue-box fw-bold border-6">{{ isAccident(auction.is_accident) }}</span>
+                                                            </h5>
                                                             <h5 v-if="auction.is_reauction !== 0"><span class="gray-box border-6">재경매</span></h5>
                                                             <h5 v-if="auction.is_biz !== 0"><span class="red-box-type03 border-6">법인 / 사업자</span></h5>
+                                                            
                                                             <!--TODO: 이건 추후에 지우기 !! 일단 생성해놓음-->
                                                             <!--<p class="tc-gray">{{ auction.car_no }}</p>-->
                                                         </div>
