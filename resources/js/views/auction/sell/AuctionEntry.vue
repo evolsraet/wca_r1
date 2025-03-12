@@ -1099,16 +1099,16 @@ const openModal = (modalName) => {
     <h2 style="text-align: center; text-decoration: underline;"> 공매 엑셀파일 형식 참고 </h2>
     
     <div style="margin-bottom: 20px; padding: 10px; border-radius: 5px;">
-        <table style="width: 100%; border-collapse: collapse; background: #f9f9f9;">
+        <table style="width: 100%; border-collapse: collapse;">
             <tr>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 10%; font-size:13px; font-weight: bold;">구분</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 15%; font-size:13px; font-weight: bold;">차량번호</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 15%; font-size:13px; font-weight: bold;">소유주</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; font-weight: bold;">진단희망일</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; font-weight: bold;">진단지(우편번호)</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px; font-weight: bold;">진단지(주소)</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px; font-weight: bold;">전단지(상세주소)</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; font-weight: bold;">연락처</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 10%; font-size:13px; background: #f9f9f9; font-weight: bold;">구분</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 15%; font-size:13px; background: #f9f9f9; font-weight: bold;">차량번호</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 15%; font-size:13px; background: #f9f9f9; font-weight: bold;">소유주</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; background: #f9f9f9; font-weight: bold;">진단희망일</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; background: #f9f9f9; font-weight: bold;">진단지(우편번호)</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px; background: #f9f9f9; font-weight: bold;">진단지(주소)</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px; background: #f9f9f9; font-weight: bold;">전단지(상세주소)</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; background: #f9f9f9; font-weight: bold;">연락처</td>
             </tr>
             <tr>
               <td style="padding: 8px; border: 1px solid #ddd; width: 10%; font-size:13px;">일반</td>
