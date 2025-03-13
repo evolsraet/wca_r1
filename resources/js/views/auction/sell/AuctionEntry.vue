@@ -98,9 +98,9 @@
                 </label>
               </div>
               <div class="col-3">
-                <input class="form-check-input" type="checkbox" value="화제" id="flexCheckDefault2" @change="updateCarConditionValue()">
+                <input class="form-check-input" type="checkbox" value="화재" id="flexCheckDefault2" @change="updateCarConditionValue()">
                 <label class="form-check-label" for="flexCheckDefault2">
-                  화제 
+                  화재 
                 </label>
               </div>
               <div class="col-3">
@@ -130,7 +130,7 @@
         <h4 v-if="auctionType !== '1'">은행/진단 정보</h4>
 
         <div class="form-group mt-4">
-          <label><span class="text-danger me-2">*</span>은행</label>
+          <label><span class="text-danger me-2">*</span>은행 <span class="text-secondary">( 매매대금 입금 받을 계좌 )</span></label>
           <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly ref="bankSelect">
           <input type="text" v-model="account" placeholder="계좌번호" :class="{'block': accountDetails}" class="account-num" ref="accountSelect" @keydown.enter="handleEnterPress('diagFirstAtSelect')">
           <p class="text-danger">※ 계좌는 차량 소유주의 계좌번호만 입력가능 합니다.</p>
@@ -191,13 +191,17 @@
         <div class="text-start text-secondary opacity-50" v-if="fileAuctionProxyName">위임장 / 소유자 인감 증명서: {{ fileAuctionProxyName }}</div>
       </div>
         
-        <div class="form-group dealer-check fw-bolder pb-2" v-if="auctionType !== '1'">
+      <div v-if="auctionType !== '1'">   
+        <div class="form-group dealer-check fw-bolder pb-1">
           <p for="dealer">법인 / 사업자차량</p>
           <div class="check_box">
             <input type="checkbox" id="ch2" v-model="isBizChecked" class="form-control">
             <label for="ch2"></label>
           </div>
         </div>
+        <p class="text-danger">※ 법인 및 사업자 명의로 등록된 차량의 경우 체크해 주세요.</p>
+      </div>
+
         <div>
         <div>   
       </div>
@@ -739,6 +743,8 @@ const auctionEntryPublic = async () => {
           addr1: item.addr1 || '',
           addr2: item.addr2 || '',
           addr_post: item.addr_code || '',
+          hope_price: item.hope_price || '',
+          customTel1: item.tel || '',
           car_maker: item.maker || '',
           car_model: item.model || '',
           car_model_sub: item.modelSub || '',
@@ -1108,6 +1114,7 @@ const openModal = (modalName) => {
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; background: #f9f9f9; font-weight: bold;">진단지(우편번호)</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px; background: #f9f9f9; font-weight: bold;">진단지(주소)</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px; background: #f9f9f9; font-weight: bold;">전단지(상세주소)</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; background: #f9f9f9; font-weight: bold;">희망가</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; background: #f9f9f9; font-weight: bold;">연락처</td>
             </tr>
             <tr>
@@ -1118,6 +1125,7 @@ const openModal = (modalName) => {
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">31122</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">진대전 광역시 서구</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">11번지</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">124000</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">010-1234-5678</td>
             </tr>
             <tr>
@@ -1128,6 +1136,7 @@ const openModal = (modalName) => {
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">51231</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">대전 광역시 동구</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">22번지</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">410000</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">010-1234-5678</td>
             </tr>
         </table>

@@ -24,22 +24,6 @@ const openAlarmModal03 = () => {
           <h2 class="bold me-2">1</h2>
           <h5 class="bold">진단결과에 중대한 오류가 있다면, 인수 후 영업일 기준 2일내 클레임이 가능합니다.</h5>
         </div>
-      <ol class="mt-3 step-list">
-          <li class="step-item">
-              <span class="step-connector"></span>
-              <span class="step-circle">1</span>
-              <div class="step-text">위카옥션에서 매물을 검색합니다.</div>
-          </li>
-          <li class="step-item">
-              <span class="step-connector"></span>
-              <span class="step-circle">2</span>
-              <div class="step-text">진단평가 결과서와 시세등을 확인 후 입찰을 합니다.</div>
-          </li>
-          <li class="step-item">
-              <span class="step-circle">3</span>
-              <div class="step-text">경매종료후 48시간 이내 고객이 판매딜러를 선택합니다. 선택하지 않을 경우 입찰가 1위로 자동낙찰됩니다.</div>
-          </li>
-      </ol>
       <ul class="p-4 list-block tc-primary tc-sub05">
         <p class="bold">현장진단의 특성상 클레임 제외사항이 발생합니다. 아래의 사항은 클레임 대상에서 제외됩니다.</p>
           <p>· 문콕,생활기스, 사용감, 미세누유, 소모품 상태, 썬팅손상 등 경미한 사항</p>

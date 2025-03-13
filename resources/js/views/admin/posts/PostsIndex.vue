@@ -23,6 +23,7 @@
         <div v-if="isUser" class="postindex d-flex container justify-content-between my-5 px-4 gap-4 guide-card-content pt-4">
           <aucProcss/>
           <nmbefore/>
+          <CarEntryGuidePopup :propData="false" />
         </div>
       </div>
       <IntroModal :show="showModal" @close="closeModal"  @click="openModal"/>
@@ -193,6 +194,7 @@ import PenaltyLevy from "@/views/guide/penaltyLevy.vue";
 import aucProcss from "@/views/guide/aucProcssGuidance.vue";
 import dgnssErrReward from "@/views/guide/dgnssErrReward.vue";
 import nmbefore from "@/views/guide/nmBeforePapers.vue";
+import CarEntryGuidePopup from "@/views/guide/CarEntryGuidePopup.vue";
 const swal = inject('$swal');
 const { wica } = cmmn();
 

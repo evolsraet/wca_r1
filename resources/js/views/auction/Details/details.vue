@@ -7,6 +7,49 @@
             <div>
                 
               <div class="mb-2">
+
+                <div class="sheet-contents">
+                  <div class="steps-container step-box mb-3">
+                    <template v-for="(step, index) in steps" :key="index">
+                      <!-- Step 요소 -->
+                      <div 
+                        class="step"
+                        :class="{
+                          'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
+                          'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
+                        }"
+                      >
+                        <div 
+                          class="label"
+                          :class="{
+                            'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
+                            'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
+                          }"
+                        >
+                          {{ step.label }}
+                        </div>
+                        <div 
+                          class="label label-style02"
+                          :class="{
+                            'completing-text': getStatusIndex(step.status) <= getStatusIndex(auctionDetail.data.status),
+                            'text-secondary opacity-50': getStatusIndex(step.status) > getStatusIndex(auctionDetail.data.status)
+                          }"
+                        >
+                          {{ step.text }}
+                        </div>
+                      </div>
+
+                      <!-- Line 요소 -->
+                      <div 
+                        v-if="index < steps.length - 1" 
+                        class="line" 
+                        :class="{ 'completed': getStatusIndex(steps[index + 1].status) <= getStatusIndex(auctionDetail.data.status) }"
+                      ></div>
+                    </template>
+                  </div>
+                </div>
+
+
                 <div class="card my-auction">
                   <div>
                     <div class="mb-3 px-0" v-if="auctionDetail.data.status === 'ask' || auctionDetail.data.status === 'diag'">
@@ -92,22 +135,7 @@
 
                     <hr style="border-top: 1px dashed;"/>
 
-                    <div v-if="auctionDetail.data.status !== 'diag' && auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'cancel'">
-                      <!-- <p v-if="!showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 숨기기</p> -->
-                      <!-- <p v-if="showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p> -->
-                      <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p>
-                      <!-- <div class="mt-5" v-if="!showPdf">
-                      <h5>진단 평가</h5>
-                      <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-                          <iframe
-                              src="https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf"
-                              width="100%"
-                              height="600px"
-                              
-                          ></iframe>
-                      </div>
-                      </div> -->
-                    </div>
+                    
                     <div v-if="auctionDetail.data.status === 'chosen' && isDealer">
                       <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
                     </div>
@@ -119,46 +147,7 @@
                </div>
 
 
-               <div class="sheet-contents">
-                  <div class="steps-container mb-3">
-                    <template v-for="(step, index) in steps" :key="index">
-                      <!-- Step 요소 -->
-                      <div 
-                        class="step"
-                        :class="{
-                          'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
-                          'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
-                        }"
-                      >
-                        <div 
-                          class="label"
-                          :class="{
-                            'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
-                            'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
-                          }"
-                        >
-                          {{ step.label }}
-                        </div>
-                        <div 
-                          class="label label-style02"
-                          :class="{
-                            'completing-text': getStatusIndex(step.status) <= getStatusIndex(auctionDetail.data.status),
-                            'text-secondary opacity-50': getStatusIndex(step.status) > getStatusIndex(auctionDetail.data.status)
-                          }"
-                        >
-                          {{ step.text }}
-                        </div>
-                      </div>
-
-                      <!-- Line 요소 -->
-                      <div 
-                        v-if="index < steps.length - 1" 
-                        class="line" 
-                        :class="{ 'completed': getStatusIndex(steps[index + 1].status) <= getStatusIndex(auctionDetail.data.status) }"
-                      ></div>
-                    </template>
-                  </div>
-                </div>
+               
 
                 
                   <!--   <template v-if="auctionDetail.data.hope_price !== null">
@@ -281,110 +270,173 @@
             </ul>
           </div>
           
+
+
+          <div class="mb-3" v-if="auctionDetail.data.status !== 'diag' && auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'cancel'">
+            <!-- <p v-if="!showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 숨기기</p> -->
+            <!-- <p v-if="showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p> -->
+            <!-- <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p> -->
+            <!-- <div class="mt-5" v-if="!showPdf">
+            <h5>진단 평가</h5>
+            <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <iframe
+                    src="https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf"
+                    width="100%"
+                    height="600px"
+                    
+                ></iframe>
+            </div>
+            </div> -->
+
+            <div class="dropdown border-bottom">
+              <button
+                class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
+                @click="toggleDropdown('general')"
+              >
+                위카 진단평가 확인하기
+                <img
+                  :src="openSection === 'general' ? iconUp : iconDown"
+                  alt="Dropdown Icon"
+                  class="dropdown-icon"
+                  width="14"
+                />
+              </button>
+              <transition name="slide">
+              <div v-show="openSection === 'general'" class="dropdown-content mt-0 p-4">
+                <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                  <iframe
+                      src="https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf"
+                      width="100%"
+                      height="600px"
+                      
+                  ></iframe>
+                </div>
+              </div>
+              </transition>
+            </div>
+
+
+          </div>
           
           <!-- <div class="contour-style"></div> -->
 
-          <div>
-            <a href="#" class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="toggleCarHistory">차량 세부정보</a>
-          </div>
 
-          <div id="car-history-detail" v-if="showCarHistory">
+
+          <div class="dropdown border-bottom">
+              <button
+                class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
+                @click="toggleDropdown('carinfo')"
+              >
+                차량 세부정보
+                <img
+                  :src="openSection === 'carinfo' ? iconUp : iconDown"
+                  alt="Dropdown Icon"
+                  class="dropdown-icon"
+                  width="14"
+                />
+              </button>
+              <transition name="slide">
+              <div v-show="openSection === 'carinfo'" class="mt-0 p-4">
+                
+                <div id="car-history-detail">
             <!-- 차량 세부 정보 내용 -->
 
-            <div class="container px-4 py-5">
-              <h5>이력</h5>
-              <div class="p-4 rounded text-body-emphasis bg-body-secondary">
-                <ul class="mt-0 machine-inform-title">
-                  <li class="text-secondary opacity-50">용도 변경이력</li>
-                  <li class="info-num">-</li>
-                </ul>
-                <ul class="mt-0 machine-inform-title">
-                  <li class="text-secondary opacity-50">소유자 변경</li>
-                  <li class="info-num">1</li>
-                </ul>
-                <ul class="mt-0 machine-inform-title">
-                  <li class="text-secondary opacity-50">압류/저당</li>
-                  <li class="info-num">-</li>
-                </ul>
-                <ul class="mt-0 mb-0 machine-inform-title">
-                  <li class="text-secondary opacity-50">특수사고 이력</li>
-                  <li class="info-num">전손 0 침수 0 도난 0</li>
-                </ul>
-              </div>
-              <div class="flex-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
-                <div class="column" style="overflow-x: auto;">
-                  <h5 class="mt-5">내차피해 (<span class="tc-red">1</span>건)</h5>
-                  <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
-                    <div class="tbl_basic">
-                      <table style="min-width: 600px;">
-                        <tbody>
-                          <tr>
-                            <th>일시</th>
-                            <th>부품</th>
-                            <th>공임</th>
-                            <th>조회</th>
-                            <th>날짜</th>
-                          </tr>
-                          <tr>
-                            <td>2024-03-22</td>
-                            <td>12,000</td>
-                            <td>10,000</td>
-                            <td>7</td>
-                            <td>2022-05-01</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                <div class="container px-4 py-5">
+                  <h5>이력</h5>
+                  <div class="p-4 rounded text-body-emphasis bg-body-secondary">
+                    <ul class="mt-0 machine-inform-title">
+                      <li class="text-secondary opacity-50">용도 변경이력</li>
+                      <li class="info-num">-</li>
+                    </ul>
+                    <ul class="mt-0 machine-inform-title">
+                      <li class="text-secondary opacity-50">소유자 변경</li>
+                      <li class="info-num">1</li>
+                    </ul>
+                    <ul class="mt-0 machine-inform-title">
+                      <li class="text-secondary opacity-50">압류/저당</li>
+                      <li class="info-num">-</li>
+                    </ul>
+                    <ul class="mt-0 mb-0 machine-inform-title">
+                      <li class="text-secondary opacity-50">특수사고 이력</li>
+                      <li class="info-num">전손 0 침수 0 도난 0</li>
+                    </ul>
+                  </div>
+                  <div class="flex-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
+                    <div class="column" style="overflow-x: auto;">
+                      <h5 class="mt-5">내차피해 (<span class="tc-red">1</span>건)</h5>
+                      <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
+                        <div class="tbl_basic">
+                          <table style="min-width: 600px;">
+                            <tbody>
+                              <tr>
+                                <th>일시</th>
+                                <th>부품</th>
+                                <th>공임</th>
+                                <th>조회</th>
+                                <th>날짜</th>
+                              </tr>
+                              <tr>
+                                <td>2024-03-22</td>
+                                <td>12,000</td>
+                                <td>10,000</td>
+                                <td>7</td>
+                                <td>2022-05-01</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div class="column" style="overflow-x: auto;">
+                      <h5 class="mt-5">타차피해 (<span class="tc-red">1</span>건)</h5>
+                      <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
+                        <div class="tbl_basic">
+                          <table style="min-width: 600px;">
+                            <tbody>
+                              <tr>
+                                <th>일시</th>
+                                <th>부품</th>
+                                <th>공임</th>
+                                <th>조회</th>
+                                <th>날짜</th>
+                              </tr>
+                              <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
+                              <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
+                              <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-                
-                <div class="column" style="overflow-x: auto;">
-                  <h5 class="mt-5">타차피해 (<span class="tc-red">1</span>건)</h5>
-                  <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
-                    <div class="tbl_basic">
-                      <table style="min-width: 600px;">
-                        <tbody>
-                          <tr>
-                            <th>일시</th>
-                            <th>부품</th>
-                            <th>공임</th>
-                            <th>조회</th>
-                            <th>날짜</th>
-                          </tr>
-                          <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
-                          <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
-                          <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
-                        </tbody>
-                      </table>
-                    </div>
+                  <h5 class="mt-5">판매자 메모</h5>
+                  <div class="form-group">
+                    <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo || "판매자 메모사항이 없습니다."}}</textarea>
                   </div>
+                  <h5 class="mt-5">평가자 의견</h5>
+                  <div class="form-group">
+                    <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo_digician || "평가자의 의견이 아직 없습니다." }}</textarea>
+                  </div>
+                  <ul class="machine-inform-title">
+                    <li class="text-secondary opacity-50">거래지역</li>
+                    <li class="info-num">경기>성남시 중원구</li>
+                  </ul>
+                  <ul class="machine-inform-title">
+                    <li class="text-secondary opacity-50">기타이력</li>
+                    <li class="info-num">-</li>
+                  </ul>
+                  <ul class="machine-inform-title">
+                    <li class="text-secondary opacity-50">차량명의</li>
+                    <li class="info-num">개인</li>
+                  </ul>
                 </div>
+
               </div>
-              <h5 class="mt-5">판매자 메모</h5>
-              <div class="form-group">
-                <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo || "판매자 메모사항이 없습니다."}}</textarea>
+              
               </div>
-              <h5 class="mt-5">평가자 의견</h5>
-              <div class="form-group">
-                <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo_digician || "평가자의 의견이 아직 없습니다." }}</textarea>
-              </div>
-              <ul class="machine-inform-title">
-                <li class="text-secondary opacity-50">거래지역</li>
-                <li class="info-num">경기>성남시 중원구</li>
-              </ul>
-              <ul class="machine-inform-title">
-                <li class="text-secondary opacity-50">기타이력</li>
-                <li class="info-num">-</li>
-              </ul>
-              <ul class="machine-inform-title">
-                <li class="text-secondary opacity-50">차량명의</li>
-                <li class="info-num">개인</li>
-              </ul>
+              </transition>
             </div>
-
-          </div>
-
-          
 
         </div>
         <!--
@@ -451,7 +503,7 @@
                 </div>
                 <div class="container p-3 mt-3">
                 <div class="d-flex justify-content-between align-items-baseline">
-                <h4 class="custom-highlight">딜러 선택하기</h4>
+                <h4 class="custom-highlight">{{auctionDetail.data.status === 'wait' ? '딜러 선택하기' : '입찰한 딜러'}}</h4>
                 </div>
                 <p class="text-start text-secondary opacity-50">※ 입찰 금액이 가장 높은 순으로 5명까지만 표시돼요.</p>
               </div>
@@ -588,28 +640,28 @@
             <h4 class="custom-highlight">탁송 서비스 이용고객안내</h4>
           </div>
             <div>
-              <ul class="timeline p-0 mt-4">
+              <ul class="timeline p-0 mt-2">
                 <li>
                   <div class="d-flex gap-2">
                     <div class="circle">1</div>
                     <span>키와 서류를 탁송기사에게 전달해 주세요.</span>
                   </div>
                 </li>
-                <div class="small-circles my-3"></div>
+                <div class="small-circles mb-2"></div>
                 <li>
                   <div class="d-flex gap-2">
                     <div class="circle">2</div>
                     <span>탁송기사가 서류를 수령하면 서류접수 <br>완료 처리 버튼을 클릭합니다.</span>
                   </div>
                 </li>
-                <div class="small-circles mb-3"></div>
+                <div class="small-circles mb-2"></div>
                 <li>
                   <div class="d-flex gap-2">
                     <div class="circle">3</div>
                     <span>차량대금이 나이스에서 고객 계좌로 송부되어집니다.</span>
                   </div>
                 </li>
-                <div class="small-circles mb-3"></div>
+                <div class="small-circles mb-2"></div>
                 <li>
                   <div class="d-flex gap-2">
                     <div class="circle">4</div>
@@ -755,7 +807,7 @@
                           </div>
                           <div class="container p-3 mt-3">
                           <div class="d-flex justify-content-between align-items-baseline">
-                          <h4 class="custom-highlight">딜러 선택하기</h4>
+                          <h4 class="custom-highlight">{{auctionDetail.data.status === 'wait' ? '딜러 선택하기' : '입찰한 딜러'}}</h4>
                           </div>
                           <p class="text-secondary opacity-50">입찰 금액이 가장 높은 순으로 5명까지만 표시돼요.</p>
                           <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
@@ -854,6 +906,8 @@ export default {
 </script>
 
 <script setup>
+import iconUp from "../../../../img/Icon-black-up.png";
+import iconDown from "../../../../img/Icon-black-down.png";
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount , inject,reactive,nextTick} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from 'vuex';
@@ -1024,6 +1078,7 @@ const highestBid = ref(0);
 const lowestBid = ref(0);
 const fileUserSignData = ref({});
 const currentPage = ref(1);
+const openSection = ref('general');
 
 const sortedTopBids = computed(() => {
   console.log('sortedTopBids??', auctionDetail.value);
@@ -1684,6 +1739,12 @@ const selectDealer = async (bid, index) => {
   }
 };
 const handleClick = (bid, event, index) => {
+  
+  if(auctionDetail.value.data.status !== 'wait'){
+    wica.ntcn(swal).icon('S').title('경매가 진행중이므로 현재 딜러 선택을 할 수 없습니다.').fire();
+    return;
+  }
+
   selectedBid.value = bid;
   selectedIndex.value = index;
   const textOk = `<div>
@@ -2198,6 +2259,12 @@ function toggleCarHistory() {
   showCarHistory.value = !showCarHistory.value;
 }
 
+const toggleDropdown = (section) => {
+  openSection.value = openSection.value === section ? null : section;
+};
+
+// const 
+
 </script>
 
 
@@ -2248,5 +2315,49 @@ input[type="checkbox"]{align-self:center;}
 @media (max-width:991px) {
   .flex-container .column{width:100%;}
 }
+
+
+.step-box {
+  border: 2px solid #ff0000;
+  border-radius: 10px;
+}
+
+
+.dropdown {
+  margin-bottom: 10px;
+}
+
+.dropdown-btn {
+  padding: 10px;
+  width: 100%;
+  text-align: left;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dropdown-content {
+  display: block;
+  max-height:none;
+  padding: 10px;
+  border-top: none;
+  background-color: #F5F5F6;
+}
+/* Slide animation */
+.slide-enter-active,
+.slide-leave-active {
+  transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+  overflow: hidden;
+}
+.slide-enter-from,
+.slide-leave-to {
+  max-height: 0;
+  opacity: 0;
+}
+.slide-enter-to,
+.slide-leave-from {
+  max-height: 500px; /* 적절한 최대 높이 값으로 조정 */
+  opacity: 1;
+}
+
 
 </style>

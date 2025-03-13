@@ -67,7 +67,7 @@ const openAlarmModal02 = () => {
             <thead>
               <tr>
                 <th class="px-6 py-3 bg-gray-50 text-center" style="width: 50%;">금액</th>
-                <th class="px-6 py-3 bg-gray-50 text-center" style="width: 50%;">수수료</th>
+                <th class="px-6 py-3 bg-gray-50 text-center" style="width: 50%;">수수료 <span class="text-danger">(부과세 포함)</span></th>
               </tr>
             </thead>
             <tbody>

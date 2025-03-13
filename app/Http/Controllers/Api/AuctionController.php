@@ -148,7 +148,7 @@ class AuctionController extends Controller
             'accident' => 'required', // 사고여부
             'keyCount' => 'required', // 키건수
             'wheelScratch' => 'required', // 바퀴 손상여부
-            'tireStatusNormal' => 'required', // 타이어 손상여부
+            // 'tireStatusNormal' => 'required', // 타이어 손상여부
             'tireStatusReplaced' => 'required', // 타이어 교체여부
             'currentPrice' => 'required' // 소매 시세가
         ]);
@@ -157,7 +157,7 @@ class AuctionController extends Controller
         $accident = $request->input('accident');
         $keyCount = $request->input('keyCount');
         $wheelScratch = $request->input('wheelScratch');
-        $tireStatusNormal = $request->input('tireStatusNormal');
+        // $tireStatusNormal = $request->input('tireStatusNormal');
         $tireStatusReplaced = $request->input('tireStatusReplaced');
         $firstRegDate = $request->input('firstRegDate');
         $currentPrice = $request->input('currentPrice');
@@ -209,9 +209,9 @@ class AuctionController extends Controller
         }
 
         // 타이어 
-        if($tireStatusNormal > 0){
-            $resultPrice -= 150000;
-        }
+        // if($tireStatusNormal > 0){
+        //     $resultPrice -= 150000;
+        // }
 
         // 타이어 교체 
         if($tireStatusReplaced > 0){
@@ -397,7 +397,8 @@ class AuctionController extends Controller
                         'addr_code' => $row[4] ?? null,
                         'addr1' => $row[5] ?? null,
                         'addr2' => $row[6] ?? null,
-                        'tel' => $row[7] ?? null,
+                        'hope_price' => $row[7] ?? null,
+                        'tel' => $row[8] ?? null,
                         'maker' => $niceDnrResult['carSize']['info']['makerNm'],
                         'model' => $niceDnrResult['carSize']['info']['modelNm'],
                         'modelSub' => $niceDnrResult['carSize']['info']['subGrade'],

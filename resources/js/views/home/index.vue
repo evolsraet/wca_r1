@@ -360,6 +360,8 @@ export default {
   const openModal = (type) => {
   const container = document.createElement('div');
 
+  const isCarinfo = computed(() => localStorage.getItem('carDetails') ? true : false);
+
   const app = createApp({
     render() {
       return h(LawGid, { content: type });
@@ -484,6 +486,10 @@ const validateCarNumber = (carNumber) => {
 const carSearch = () => {
   // const animatedSectionElement = animatedSection.value;
   // animatedSectionElement.classList.add('enter-active');
+
+  // if(isCarinfo.value){
+  //   router.push({ path: '/sell' });
+  // }
 
   nextTick(() => {
       const animatedSectionElement = animatedSection.value;

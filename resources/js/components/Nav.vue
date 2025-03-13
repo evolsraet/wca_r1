@@ -264,7 +264,7 @@
           <template v-if="isUser">
             <div class="d-flex">
               <li class="nav-item">
-                <a href="/carfind-do" class="nav-link mx-2 nav-inq">내차조회</a>
+                <a :href="isCarinfo ? '/sell' : '/carfind-do'" class="nav-link mx-2 nav-inq">내차조회</a>
                 <!-- <router-link to="/carfind" class="nav-link mx-2 nav-inq" aria-current="page" exact-active-class="active-link">내차조회</router-link> -->
               </li>
               <li class="nav-item">
@@ -279,6 +279,9 @@
               <li class="nav-item">
               <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="nav-link mx-2 " exact-active-class="active-link">공지사항</router-link>
               </li>
+              <li class="nav-item">
+              <router-link :to="{ name: 'index.introduce'}" class="nav-link mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
+            </li>
             </div>
             <li class="nav-item my-member ms-auto dropdown">
               <a class="tc-wh p-1 pb-0 mx-2 dropdown-toggle mb-1" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -318,13 +321,16 @@
               <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">과거 낙찰 이력</router-link>
             </li>
             <li class="nav-item">
-              <router-link :to="{ name: 'posts.index', params: { boardId: 'claim' } }" class="nav-link tc-wh mx-3" exact-active-class="active-link">클레임</router-link>
-            </li>
-            <li class="nav-item">
               <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="nav-link tc-wh mx-3" exact-active-class="active-link">공지사항</router-link>
             </li>
             <li class="nav-item">
+              <router-link :to="{ name: 'posts.index', params: { boardId: 'claim' } }" class="nav-link tc-wh mx-3" exact-active-class="active-link">클레임</router-link>
+            </li>
+            <li class="nav-item">
               <router-link :to="{ name: 'dealer.searchbid'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">시세 조회</router-link>
+            </li>
+            <li class="nav-item">
+              <router-link :to="{ name: 'index.introduce'}" class="nav-link tc-wh mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
             </li>
             <li class="nav-item my-member-dealer ms-auto dropdown dropdown-arrow">
               <a class="tc-wh me-3" href="#" id="dealerDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -356,6 +362,7 @@
   import profileDom from '/resources/img/profile_dom.png';
   import sidenav02 from '../../../resources/img/side-nav/side-nav02.png';
   import sidenav01 from '../../../resources/img/side-nav/side-nav01.png';
+import { constant } from 'lodash';
   
   const photoUrl = ref(profileDom);
   const { wica, wicaLabel } = cmmn();
@@ -390,6 +397,8 @@
   const isUser = computed(() => user.value?.roles?.includes('user'));
   const navbarClass = computed(() => (isDealer.value ? 'bg-primary' : 'bg-white'));
   const textClass = computed(() => (isDealer.value ? 'text-white' : 'text-dark'));
+
+  const isCarinfo = computed(() => localStorage.getItem('carDetails') ? true : false);
   
   const redirectByName = (routeName) => {
     router.push({ name: routeName });

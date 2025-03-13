@@ -25,14 +25,21 @@
 
                 <div class="detail-row" v-if="carDetails.modelSub || carDetails.gradeSub">
                 <CarInfoItem label="세부모델" :value="carDetails.modelSub" v-if="carDetails.modelSub" />
-                <CarInfoItem label="세부등급" :value="carDetails.gradeSub" v-if="carDetails.gradeSub" />
+                <!-- <CarInfoItem label="세부등급" :value="carDetails.gradeSub" v-if="carDetails.gradeSub" /> -->
                 </div>
 
                 </div>
+
+                <CarEntryGuidePopup :propData="true" />
             </template>
                 </div>
                 <BottomSheet02 class="mt-5" initial="half" :dismissable="true">
-                    <div class="top-content-style wd-100">
+                    <div class="top-content-style wd-100" @click="ExpectationPrice" style="cursor: pointer;">
+                        <p class="text-secondary bold-18-font">예상 가격</p>
+                        <span class="tc-primary bold-18-font">{{ estimatedPrice ? estimatedPrice+' 만원' : '만원' }}</span>
+                    </div>
+                    
+                    <div class="top-content-style wd-100 mt-4">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(소매가)</span></p>
                         <span class="tc-primary bold-18-font">{{ carDetails.priceNow }} 만원</span>
                     </div>
@@ -42,7 +49,10 @@
                         <span class="tc-primary bold-18-font">{{ carDetails.priceNowWhole }} 만원</span>
                     </div>
                     <div class="text-end">※ 오토허브셀카 제공</div>
-                    <p class="mt-3 text-secondary">※ 소매 시세는 나이스디엔알에서 제공하며, 도매시세는 오토허브셀카에서 제공합니다.</p>
+                    <p class="mt-2 text-secondary">※ 도매 및 소매 시세는 무사고 차량 표준주행거리(1년 15000Km)를 기준으로 제시된 금액 입니다.</p>
+                    
+                    
+                    
                     <div v-if="user?.name">
                         <div class="d-flex justify-content-between mt-4 mb-3 align-items-center pointer">
                             <p>차량 정보가 다르신가요?
@@ -62,7 +72,7 @@
                             <div class="complete-car">
                                 <div class="card my-auction">
                                     <div class="none-complete-ty03">
-                                        <span class="text-secondary opacity-50">차량 조회에 성공하였습니다.</span>
+                                        <span class="text-secondary text-center fs-5">차량 조회에 성공하였습니다.</span>
                                     </div>
                                 </div>
                             </div>
@@ -77,7 +87,7 @@
                             >
                                 현재 예상 가격
                             </button>
-                            <button class="btn primary-btn w-100 bolder" @click="UserapplyAuction">경매 신청하기</button>
+                            <aucProcssGuidance :propData="true" />
                         </div>
                     </div>
                     <div v-if="!user?.name">
@@ -96,7 +106,7 @@
                             <div class="complete-car">
                                 <div class="card my-auction">
                                     <div class="none-complete-ty02">
-                                        <span class="text-secondary opacity-50">로그인을 하면 경매 신청이 가능해요.</span>
+                                        <span class="text-secondary text-center fs-5">로그인을 하면 <br/>경매 신청이 가능해요.</span>
                                     </div>
                                 </div>
                             </div>
@@ -129,6 +139,8 @@ import imgInfoIcon from'../../../../../resources/img/q-mark.png';
 import info1 from '../../../../../resources/img/modal/info3.png';
 import info2 from '../../../../../resources/img/modal/info1.png';
 import info3 from '../../../../../resources/img/modal/info2.png';
+import CarEntryGuidePopup from '@/views/guide/CarEntryGuidePopup.vue';
+import aucProcssGuidance from '@/views/guide/aucProcssGuidance.vue';
 
 
 const swal = inject('$swal');
@@ -142,6 +154,8 @@ const showModal = ref(false);
 const processing = ref(false);
 const validationErrors = ref({});
 const isLoading = ref(true); 
+const carEntryMode = ref('sell');
+const estimatedPrice = ref(null);
 const openModal = () => {
     //showModal.value = true;
     const text= `<div class="enroll_box" style="position: relative;">
@@ -174,6 +188,7 @@ const openPriceModal = () => {
         document.getElementById('priceDisplay').textContent =
             currentEstimatedPrice ? `${currentEstimatedPrice}원` : '데이터 없음';
         modal.style.display = 'block';
+        // estimatedPrice.value = currentEstimatedPrice;
     }
 };
 
@@ -185,6 +200,14 @@ const closePriceModal = () => {
     }
 };
 const ExpectationPrice = () => {
+
+    /*
+    <div class="input-wrapper">
+        <span class="size_14">정상</span>
+        <input type="text" placeholder="개" name="tireStatusNormal" class="text-right" value="">
+    </div>
+    */
+
     const text = `
         <div>
             <div class="text-start">
@@ -209,8 +232,8 @@ const ExpectationPrice = () => {
                             교환
                         </label>
                         <label class="item">
-                            <input type="radio" name="accident" value="판금 사고" onclick="selectItem(this)">
-                            판금 사고
+                            <input type="radio" name="accident" value="판금 도색" onclick="selectItem(this)">
+                            판금 도색
                         </label>
                         <label class="item">
                             <input type="radio" name="accident" value="전손이력" onclick="selectItem(this)">
@@ -299,6 +322,7 @@ const ExpectationPrice = () => {
         customSubmitButton.addEventListener('click', async () => {
             try {
                 await checkExpectedPriceClick();
+                // estimatedPrice.value = currentEstimatedPrice;
             } catch (error) {
                 console.error(error);
             }
@@ -328,7 +352,7 @@ const checkExpectedPriceClick = async () => {
     const accident = document.querySelector('input[name="accident"]:checked')?.value || '';
     const keyCount = document.querySelector('input[name="keyCount"]').value;
     const wheelScratch = document.querySelector('input[name="wheelScratch"]').value;
-    const tireStatusNormal = document.querySelector('input[name="tireStatusNormal"]').value;
+    // const tireStatusNormal = document.querySelector('input[name="tireStatusNormal"]').value;
     const tireStatusReplaced = document.querySelector('input[name="tireStatusReplaced"]').value;
     // console.log(carDetails.value);
 
@@ -342,7 +366,7 @@ const checkExpectedPriceClick = async () => {
         accident,
         keyCount,
         wheelScratch,
-        tireStatusNormal,
+        // tireStatusNormal,
         tireStatusReplaced,
         firstRegDate,
         currentPrice,
@@ -371,6 +395,9 @@ const checkExpectedPriceClick = async () => {
             // 예상 가격 모달 즉시 표시
             showCurrentPriceModal(result.data.estimatedPrice);
 
+            // alert(result.data.estimatedPrice);
+
+            estimatedPrice.value = result.data.estimatedPrice;
             localStorage.setItem('mileage', mileage);
 
             // "현재 예상 가격" 버튼 표시
@@ -430,6 +457,7 @@ const showCurrentPriceModal = (estimatedPrice) => {
                     } else {
                         console.error('.search-event-container 요소를 찾을 수 없습니다.');
                     }
+                    estimatedPrice.value = price;
                 }, 100); 
             }
         })
@@ -607,17 +635,17 @@ const UserapplyAuction = () => {
                 <div class="step05">
                     <p class="steps">STEP 05</p>
                     <p class="title new-style-step">탁송 및 대금<img src="${imgInfoIcon}" alt="Auction Detail" class="auction-icon"></p>
-                    <p class="sub text-end">탁송은 당사 직접 진행하며,<br>탁송전 00 시간까지<br>나이스 에스크 계좌로<br>매매대금이 입금됩니다.</p>
+                    <p class="sub text-end">탁송은 당사 직접 진행하며,<br>탁송 출발전 1시간까지<br>나이스 에스크 계좌로<br>매매대금이 입금됩니다.</p>
                 </div>
                 <div class="step06">
                     <p class="steps">STEP 06</p>
                     <p class="title">매매대금 입금</p>
-                    <p class="sub text-start">탁송기사가 차량등록증등<br>이전에 필요한 서류를 받으면<br>매매대금이 나이스 에스크로<br>계좌에서 개인 계좌로<br>송부됩니다.</p>
+                    <p class="sub text-start">탁송기사가<br>이전에 필요한 서류를 받고 확인을 누르면<br>매매대금이 나이스 에스크로<br>계좌에서 개인 계좌로<br>송부됩니다.</p>
                 </div>
                 <div class="step07">
                     <p class="steps">STEP 07</p>
                     <p class="title">이전</p>
-                    <p class="sub text-end">경매는 48시간동안<br>진행됩니다.</p>
+                    <p class="sub text-end">탁송완료후 48시간 내에<br/> 이전이 완료 됩니다.</p>
                 </div>
             </div>
         </div>
@@ -628,7 +656,7 @@ const UserapplyAuction = () => {
                 <div class="text-start mt-3">
                     <p>판매딜러가 선택되면 고객의 탁송 희망날짜에 <br>탁송이 진행됩니다.</p>
                     <p class="tc-gray">(탁송정보 낙찰확정 후 48시간 이내에 입력)</p>
-                    <p class="mt-2">탁송진행전 2시간전까지 나이스 에스크로 <br>계좌로 판매대금이 입금됩니다.</p>
+                    <p class="mt-2">탁송진행전 1시간전까지 나이스 에스크로 <br>계좌로 판매대금이 입금됩니다.</p>
                     <p class="mt-2">입금이 완료되면 나이​스에서 입급 완료<br>증명서가 고객에게 송부됩니다.</p>
                 </div>
             </div>
