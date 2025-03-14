@@ -203,6 +203,8 @@
               </div>
 
             </div>
+
+            <div v-if="auctionDetail.data.status !== 'ask'">
             <ul class="machine-inform-title">
               <li class="text-secondary opacity-50">옵션정보</li>
             </ul>
@@ -268,6 +270,7 @@
               <li class="text-secondary opacity-50">추가옵션</li>
               <li class="info-num">-</li>
             </ul>
+            </div>
           </div>
           
 
@@ -322,7 +325,7 @@
 
 
 
-          <div class="dropdown border-bottom">
+          <div class="dropdown border-bottom" v-if="auctionDetail.data.status !== 'ask'">
               <button
                 class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
                 @click="toggleDropdown('carinfo')"

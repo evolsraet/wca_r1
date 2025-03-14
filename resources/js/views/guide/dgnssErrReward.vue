@@ -61,6 +61,86 @@ const openAlarmModal03 = () => {
                 <td class="px-6 py-4 text-center">2%</td>
                 <td class="px-6 py-4 text-center">-</td>
               </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">도어</td>
+                <td class="px-6 py-4 text-center">2%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">트렁크리드</td>
+                <td class="px-6 py-4 text-center">2%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">쿼터패널</td>
+                <td class="px-6 py-4 text-center">3%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">루프패널</td>
+                <td class="px-6 py-4 text-center">6%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">사이드실패널</td>
+                <td class="px-6 py-4 text-center">3%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">프론트패널</td>
+                <td class="px-6 py-4 text-center">3%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">인사이드패널</td>
+                <td class="px-6 py-4 text-center">3%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">사이드멤버</td>
+                <td class="px-6 py-4 text-center">3%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">휠하우스</td>
+                <td class="px-6 py-4 text-center">5%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">필러패널</td>
+                <td class="px-6 py-4 text-center">3%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">대쉬패널</td>
+                <td class="px-6 py-4 text-center">3%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">트렁크플로어</td>
+                <td class="px-6 py-4 text-center">3%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">리어패널</td>
+                <td class="px-6 py-4 text-center">3%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">트렁크패널</td>
+                <td class="px-6 py-4 text-center">3%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">라디에이터 서포트</td>
+                <td class="px-6 py-4 text-center">1%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">패키지트레이</td>
+                <td class="px-6 py-4 text-center">3%</td>
+                <td class="px-6 py-4 text-center">-</td>
+              </tr>
               </tbody>
               </table>
               <p>※ 클레임 보상 : 매입금액 x 감가율 = 보상금액 (보상한도 100만원)</p>
@@ -79,20 +159,28 @@ const openAlarmModal03 = () => {
             <thead>
               <tr>
                 <th class="px-6 py-3 bg-gray-50 text-center" style="width: 20%;">구분</th>
-                <th class="px-6 py-3 bg-gray-50 text-start mx-4" style="width: 80%;">감가율</th>
+                <th class="px-6 py-3 bg-gray-50 text-start mx-4" style="width: 80%;">주변 장치</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td class="px-6 py-4 text-center">엔진</td>
-                <td class="px-6 py-4 text-start">· 엔진 전장품 일체(제너레이터, 콤프레셔, 인젝터, 각종 모터류, 예열장치, 케이블, 배선류, 센서류, 릴레이, 점화플러그, 배전기, 스위치류 등)<br>
-                · 냉각장치(라디에이터)<br>
-                · 터보</td>
+                  <td class="px-6 py-4 text-center">엔진</td>
+                  <td class="px-6 py-4 text-start">· 엔진 전장품 일체 (제너레이터, 콤프레셔, 인젝터, 각종 모터류, 예열장치, 케이블, 배선류, 센서류, 릴레이, 점화 플러그, 배전기, 스위치류 등)<br>
+                  · 냉각장치 (라디에이터) 터보</td>
               </tr>
-               <tr>
-                <td class="px-6 py-4 text-center">변속기 추진축</td>
-                <td class="px-6 py-4 text-start">· 클러치 케이블 및 변속조작장치<br>· 입/출력 센서<br>· 인히비터스위치</td>
+              <tr>
+                <td class="px-6 py-4 text-center">변속기추진축</td>
+                <td class="px-6 py-4 text-start">· 클러치 케이블 및 변속 조작장치<br>· 입/출력 센서<br>· 인히비터 스위치</td>
               </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">앞뒤 차축</td>
+                <td class="px-6 py-4 text-start">· 현가장치 부품 (쇼바[전자, 에어 등], 판스프링 등) 제동장치 부품 (라이닝, 드럼, 브레이크 디스크 등) 조향장치 부품 (웜기어, MDPS, 조인트 등) ※ 휠 허브, 너클, 킹핀, 볼조인트, 허브베어링 등 앞뒤 차축 관련 부품 포함</td>
+              </tr>
+              <tr>
+                <td class="px-6 py-4 text-center">기타</td>
+                <td class="px-6 py-4 text-start">· 배터리(AGM 포함), 고무부트, 상시 4WD, 연료펌프, 연료필터, 플랜저, 벨트류, 엔진/미션 마운팅, 소음기, 오일쿨러, 크로스멤버, 타이어, 휠 등 주기적인 교환 필요 부품의 결품 또는 결함</td>
+              </tr> 
+
               </tbody>
               </table>
             </div>
