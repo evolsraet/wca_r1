@@ -1935,6 +1935,13 @@ if (!amount.value || isNaN(parseFloat(amount.value))) {
     const maxAmount = auctionDetail.value?.data?.middle_prices?.max * 10000;
     const minAmount = auctionDetail.value?.data?.middle_prices?.min * 10000;
     const avgAmount = auctionDetail.value?.data?.middle_prices?.avg * 10000;
+    const carPriceNowWhole = auctionDetail.value.data.car_price_now_whole * 10000;
+
+
+    if(amount.value < carPriceNowWhole * 0.6){
+      wica.ntcn(swal).icon('S').title('도매가보다 60%가 낮은 금액은 입찰이 불가능합니다.').fire();
+      return;
+    }
 
     if(auctionDetail.value?.data?.bids_count < 3){
       if(amount.value < minAmount){
@@ -2223,8 +2230,17 @@ const handleCancelBid = async () => {
         myBid.deleted_at = new Date().toISOString();
         await fetchAuctionDetail();
         amount.value = '';
-        succesbid.value = false;
+        //succesbid.value = false;
         koreanAmount.value = '원';
+        swal.fire({
+          title: '',
+          icon: 'info',
+          text: '입찰이 취소되었습니다.',
+          showConfirmButton: true
+        }).then(() => {
+          window.location.reload();
+        });
+
       } else {
         wica.ntcn(swal)
         .title('')
