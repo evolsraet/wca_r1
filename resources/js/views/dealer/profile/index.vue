@@ -82,6 +82,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="d-flex justify-content-end mt-3">
+                    <a href="/edit-profile" class="btn btn-sm btn-outline-primary" >
+                        딜러정보 수정
+                    </a>
+                </div>
                 <div class="intro mt-3">
                     <h5 class="text-secondary opacity-50 mb-3">소개</h5>
                     <div style="height: 200px; overflow-y: auto;">

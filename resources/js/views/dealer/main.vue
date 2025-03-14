@@ -370,7 +370,6 @@ const getScsBidsGetData = async() => {
 onMounted(async () => {
 
     //bids id List가져오기
-    const bidsList = await getBidsByUserId(user.value.id);
     const myBidsList = await getMyBidsAll();
     const bidsIdList = [];
     for (let i = 0; i < myBidsList.data.length; i++) {
@@ -378,7 +377,31 @@ onMounted(async () => {
     }
 
     bidsIdString.value = bidsIdList.join(',');
-    bidsCount.value = bidsList.length;
+
+
+    let bidsList = await getBidsByUserId(user.value.id);
+    let bidsNumList = '';
+    let AuctionsNumList = '';
+    let auctionNum = 0;
+    if(bidsList){
+        for(let i=0; i<bidsList.length; i++){
+            bidsNumList += bidsList[i].id;
+            // bidsList[i].auction_id 가 중복되는 경우 중복 제거
+            if(!AuctionsNumList.includes(bidsList[i].auction_id)){
+                AuctionsNumList += bidsList[i].auction_id;
+                if (i < bidsList.length - 1) {
+                    AuctionsNumList += ',';
+                }
+                auctionNum += 1;
+            }
+            if (i < bidsList.length - 1) {
+                bidsNumList += ','; 
+            }
+        }
+    }
+
+
+    bidsCount.value = auctionNum;
 
     await getBoardCategories(); // 카테고리 로드
     await fetchPosts(); // 게시물 로드
