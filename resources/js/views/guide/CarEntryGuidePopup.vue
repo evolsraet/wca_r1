@@ -21,34 +21,23 @@
         default: false
     }
    });
-
-   console.log('props',props);
-
-
-//    const props = defineProps({
-//     mode: {
-//         type: String,
-//         default: 'carEntryMode'
-//     }
-//    });
-
       
    const openAlarmModal06 = () => {
      const text = `
-       <div class="intro-container container text-start">
+       <div class="container text-start">
         <div class="bidding-section">
             <h3 class="size_32 bolder mx-2"><span class="size_24 ms-2">자동차 출품 조건</span></h3>
             <ul class="list-block">
-                <li>입찰 딜러 수는 제한이 없습니다.</li>
-                <li>입찰후 차량 배송까지 시일이 걸립니다. 8일정도 후의 가격까지 고려하셔서 입찰해 주세요.</li>
-                <li>최고가는 경매 종료후 공개됩니다.</li>
-                <li>리스차량은 "승계후 완납 조건"으로 입찰해야 합니다.</li>
+                <li class="size_15 mt-2">입찰 딜러 수는 제한이 없습니다.</li>
+                <li class="size_15 mt-2">입찰후 차량 배송까지 시일이 걸립니다. 8일정도 후의 가격까지 고려하셔서 입찰해 주세요.</li>
+                <li class="size_15 mt-2">최고가는 경매 종료후 공개됩니다.</li>
+                <li class="size_15 mt-2">리스차량은 "승계후 완납 조건"으로 입찰해야 합니다.</li>
             </ul>
 
             <h3 class="size_32 bolder mx-2"><span class="size_24 ms-2">유의사항</span></h3>
             <ul class="list-block">
-                <li>출품자는 차량 등록 시 주요 사항(차량의 상태, 사고 이력, 침수 여부, 주행거리, 접합차량, 특이이력, 엔진 및 미션 이상 등 가격에 중대한 영향을 미치는 사항)을 정확히 기재해야 합니다. 만약 허위 기재나 미기재시는 출품자가 보상 또는 환불을 해야 합니다.</li>
-                <li>출품자는 출품차량의 소유자이거나 출품차량 소유자로부터 적법한 위임을 받은 자이어야 하며, 처분권을 가진 자로부터 적법한 위임을 받지 않거나 관련 법령에 의하여 부적격자로 판단될 경우에는 경매장은 출품을 제한할 수 있습니다.</li>
+                <li class="size_15 mt-2">출품자는 차량 등록 시 주요 사항(차량의 상태, 사고 이력, 침수 여부, 주행거리, 접합차량, 특이이력, 엔진 및 미션 이상 등 가격에 중대한 영향을 미치는 사항)을 정확히 기재해야 합니다. 만약 허위 기재나 미기재시는 출품자가 보상 또는 환불을 해야 합니다.</li>
+                <li class="size_15 mt-2">출품자는 출품차량의 소유자이거나 출품차량 소유자로부터 적법한 위임을 받은 자이어야 하며, 처분권을 가진 자로부터 적법한 위임을 받지 않거나 관련 법령에 의하여 부적격자로 판단될 경우에는 경매장은 출품을 제한할 수 있습니다.</li>
             </ul>
 
         </div>
@@ -57,7 +46,7 @@
      wica.ntcn(swal)
        .useHtmlText() // HTML 태그 활성화
        .useClose()
-       .addClassNm('intromodal') // 클래스명 설정
+       .addClassNm('primary-check') // 클래스명 설정
        .addOption({ padding: 20 }) // swal 옵션 추가
        .callback(function (result) {
          // 결과 처리 로직
