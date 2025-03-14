@@ -21,6 +21,7 @@
         "@casl/vue": "^2.2.1",
         "@ckeditor/ckeditor5-build-classic": "^40.0.0",
         "@ckeditor/ckeditor5-vue": "^5.1.0",
+        "@mdi/font": "^7.4.47",
         "@vuepic/vue-datepicker": "^10.0.0",
         "date-fns": "^3.6.0",
         "dayjs": "^1.11.13",

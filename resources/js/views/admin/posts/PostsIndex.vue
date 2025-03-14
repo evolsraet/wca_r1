@@ -19,6 +19,7 @@
           <useGid/>
           <feeGuid/>
           <dgnssErrReward/>
+          <PenaltyLevy/>
         </div>
         <div v-if="isUser" class="postindex d-flex container justify-content-between my-5 px-4 gap-4 guide-card-content pt-4">
           <aucProcss/>

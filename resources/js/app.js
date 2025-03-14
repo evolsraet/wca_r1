@@ -13,6 +13,7 @@ import i18n from "./plugins/i18n";
 
 import 'sweetalert2/dist/sweetalert2.min.css';
 import 'vue-select/dist/vue-select.css';
+import '@mdi/font/css/materialdesignicons.css';
 
 const app = createApp({
     created() {

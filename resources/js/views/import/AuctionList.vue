@@ -7,9 +7,14 @@
           <h5>내 매물관리</h5>
           <router-link :to="{ name: 'auction.index',state: { currentTab: 'myBidInfo',status: 'cnsgnmUnregist' } }" class="btn-apply">전체보기</router-link>
         </div>
-        <div v-else-if="isDealer">
-        <h5>탁송지 미등록 매물</h5>
-        <p class="text-sendary opacity-50">낙찰된 매물중 탁송지 미등록 매물입니다</p>
+        <div v-else-if="isDealer" class="d-flex justify-content-between">
+          <div>
+            <h5>탁송지 미등록 매물</h5>
+            <p class="text-sendary opacity-50">낙찰된 매물중 탁송지 미등록 매물입니다</p>
+          </div>
+          <div>
+            <DeliveryGuidePopup />
+          </div>
          </div>
 
         <!-- 차량이 존재할 경우 -->
@@ -126,7 +131,7 @@ import useAuctions from "@/composables/auctions";
 import { initReviewSystem } from '@/composables/review';
 import { cmmn } from '@/hooks/cmmn';
 import { useStore } from 'vuex';
-
+import DeliveryGuidePopup from '@/views/guide/DeliveryGuidePopup.vue';
 const props = defineProps({
   setData: {
     type: Object,

@@ -412,6 +412,7 @@ TODO:
                                                 <p class="card-title fw-bolder">{{ bid.car_model ? bid.car_model +' '+ bid.car_model_sub +' '+ bid.car_fuel + '('+ bid.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
                                                 <p class="tc-gray mt-0"> {{ bid.car_year ? bid.car_year : '2020' }} 년 |<span class="mx-1">{{ bid.car_km ? bid.car_km : '2.4' }}km</span></p>
                                                 <p class="tc-gray mt-0">{{ bid.car_maker ? bid.car_maker + bid.car_model : '현대 소나타' }} ({{ bid.car_grade ? bid.car_grade : 'DN8' }})</p>
+                                                <p class=""><i class="mdi mdi-currency-usd"></i> {{ bid.userPrice ? bid.userPrice + ' 만원' : '-' }}</p>
                                                 <div class="d-flex">
                                                     <h5 class="card-title"><span class="blue-box border-6">{{ isAccident(bid.is_accident) }}</span></h5>
                                                     <h5 v-if="bid.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>
@@ -990,6 +991,26 @@ const getMyBidsGetData = async(serach_content='') =>{
     const myAuctionBidsInfo = await getAuctionsWithBids(currentScsBidsPage.value,currentMyBidsStatus.value,user.value.id,serach_content,bidsIdString.value);
    
     mybidsData.value = myAuctionBidsInfo.data;
+    mybidsData.value.forEach(bids => {
+        bids.bids.forEach(bid => {
+            if(bid.user_id === user.value.id){                
+                if(bid.price < 10000){
+                    bids.userPrice = bid.price;
+                } else {
+                    bids.userPrice = Math.floor(bid.price / 10000).toString();
+                }
+
+            }
+        });
+    });
+
+    console.log('mybidsData.value??',mybidsData.value);
+
+    // const myBids = mybidsData.value.filter(bids => bids.user_id === user.value.id);
+    // console.log('myBids??',myBids);
+    // const myBids = mybidsData.value.filter(bids => bids.bids.user_id === user.value.id);
+    // console.log('myBids??',myBids);
+
     mybidPagination.value = myAuctionBidsInfo.rawData.data.meta;
     filterLikeData(mybidsData.value);
 }
