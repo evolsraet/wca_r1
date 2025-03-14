@@ -72,6 +72,10 @@
                             <p class="size_22 tc-black"><span class="tc-primary mb-0 size_22" ref="item3">{{ myScsBidCount }}</span><span>건</span></p>
                             <p class="suc-bid-icon text-secondary opacity-50 size_16 mb-0">낙찰</p>
                         </router-link>
+                        <router-link :to="{ name: 'dealer.profile', query: { currentTab: 'scsbidInfo2',status: 'bid' }}" class="item tc-black">
+                            <p class="size_22 tc-black"><span class="tc-primary mb-0 size_22" ref="item4">{{ bidsCount }}</span><span>건</span></p>
+                            <p class="bid-icon text-secondary opacity-50 size_16 mb-0">유찰</p>
+                        </router-link>
                     </div>
             
                 </div>
@@ -241,7 +245,7 @@ const fetchPosts = async () => {
 
 const alarmModal = ref(null);
 const { getAuctionsByDealer, auctionsData, getAuctionById, getAuctions, getAuctionsWithBids, getAuctionsByDealerLike, allIngCount } = useAuctions();
-const { bidsData, getHomeBids, viewBids, bidsCountByUser, getscsBids, getMyBidsAll } = useBid();
+const { bidsData, getHomeBids, viewBids, bidsCountByUser, getscsBids, getMyBidsAll, getBidsByUserId } = useBid();
 const user = computed(() => store.state.auth.user);
 const myBidCount = ref(0);
 const myLikeCount=ref(0);
@@ -250,6 +254,7 @@ const swal = inject('$swal');
 const categoriesList=ref(0);
 const bidsIdString = ref('');
 const countData = [];
+const bidsCount = ref(0);
 
 
 const latestNotices = computed(() => {
@@ -364,6 +369,8 @@ const getScsBidsGetData = async() => {
 
 onMounted(async () => {
 
+    //bids id List가져오기
+    const bidsList = await getBidsByUserId(user.value.id);
     const myBidsList = await getMyBidsAll();
     const bidsIdList = [];
     for (let i = 0; i < myBidsList.data.length; i++) {
@@ -371,6 +378,7 @@ onMounted(async () => {
     }
 
     bidsIdString.value = bidsIdList.join(',');
+    bidsCount.value = bidsList.length;
 
     await getBoardCategories(); // 카테고리 로드
     await fetchPosts(); // 게시물 로드
@@ -399,7 +407,8 @@ onMounted(async () => {
     await getAuctionsByDealer("all");
     const myLikeCountData = await getMyLikesCount(user.value.id);
     myLikeCount.value = myLikeCountData.rawData.data.data_count;
- 
+
+     
     await getHomeBids();
     bidsData.value.forEach(bid => {
         if (

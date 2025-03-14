@@ -279,6 +279,13 @@ function fileExstCheck(info){
 }
 
 onMounted(async () => {
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const typeParam = urlParams.get('currentTab');    
+    if(typeParam){
+        setCurrentTab(typeParam);
+    }
+
     const userInfo = await getUser(user.value.id);
     points.value = userInfo.points;
     fileExstCheck(userInfo);
