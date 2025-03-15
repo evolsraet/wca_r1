@@ -14,7 +14,8 @@
     
    const { wicas , wica , updateAuctionTimes , calculateTimeLeft } = cmmn();
    const swal = inject('$swal');
-
+   const isPopup = ref(true);
+   const isPopupStorage = localStorage.getItem('carEntryGuidePopup') ? localStorage.getItem('carEntryGuidePopup') : 'false';
    // 부모 컴포넌트에서 props 내용이 전달 되었는지 확인 
    const props = defineProps({
     propData: {
@@ -51,13 +52,19 @@
        .addOption({ padding: 20 }) // swal 옵션 추가
        .callback(function (result) {
          // 결과 처리 로직
+         if(result.isOk){
+            // ok 를 하면, 이 창을 띄우는걸 잠시 멈춘다. 
+            isPopup.value = false;
+            // 로컬스토리지에 저장 
+            localStorage.setItem('carEntryGuidePopup', 'true');
+         }
        })
        .confirm(text); // 모달 내용 설정
    };
 
    onMounted(() => {
 
-    if(props.propData === true){
+    if(props.propData === true && isPopupStorage === 'false'){
         openAlarmModal06();
     }
    });
