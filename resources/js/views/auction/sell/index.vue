@@ -34,7 +34,18 @@
             </template>
                 </div>
                 <BottomSheet02 class="mt-5" initial="half" :dismissable="true">
-                    <div class="top-content-style wd-100" @click="ExpectationPrice" style="cursor: pointer;">
+                    <div 
+                        class="top-content-style wd-100" 
+                        @click="ExpectationPrice" 
+                        ref="priceElement"
+                        style="cursor: pointer;"
+                        v-if="!currentPriceRef"
+                    >
+                        <p class="text-secondary bold-18-font">예상 가격</p>
+                        <span class="tc-primary bold-18-font">만원</span>
+                    </div>
+
+                    <div class="top-content-style wd-100 mt-4" v-if="currentPriceRef">
                         <p class="text-secondary bold-18-font">예상 가격</p>
                         <span class="tc-primary bold-18-font">{{ estimatedPrice ? estimatedPrice+' 만원' : '만원' }}</span>
                     </div>
@@ -156,6 +167,9 @@ const validationErrors = ref({});
 const isLoading = ref(true); 
 const carEntryMode = ref('sell');
 const estimatedPrice = ref(null);
+const priceElement = ref(null);
+const currentPriceRef = ref(false);
+
 const openModal = () => {
     //showModal.value = true;
     const text= `<div class="enroll_box" style="position: relative;">
@@ -206,6 +220,7 @@ const ExpectationPrice = () => {
         <span class="size_14">정상</span>
         <input type="text" placeholder="개" name="tireStatusNormal" class="text-right" value="">
     </div>
+    <div class="error tireStatusNormal-error" style="color: red;"></div>
     */
 
     const text = `
@@ -216,12 +231,14 @@ const ExpectationPrice = () => {
             </div>
             <div class="text-start tc-gray">
                <div class="form-group">
-                    <label class="text-danger" style="display: block; font-weight: bold; margin-bottom: 5px;">주행거리</label>
-                    <input type="text" placeholder="km" name="mileage" class="mileage_input" value="">
+                    <label style="color: #000; display: block; font-weight: bold; margin-bottom: 5px;">주행거리</label>
+                    <div class="d-flex align-items-center">
+                        <input type="text" placeholder="키로수" name="mileage" class="mileage_input" value="" style="margin-right: 10px;"> Km                        
+                    </div>
                     <div class="error mileage-error" style="color: red;"></div>
                 </div>
-                <div style="margin-bottom: 15px;">
-                    <label class="text-danger" style="display: block; font-weight: bold; margin-bottom: 5px;">과거 사고이력</label>
+                <div class="form-group" style="margin-bottom: 15px;">
+                    <label style="color: #000; display: block; font-weight: bold; margin-bottom: 5px;">과거 사고이력</label>
                     <div class="manufacturer-model02 my-3">
                         <label class="item">
                             <input type="radio" name="accident" value="완전 무사고" onclick="selectItem(this)">
@@ -243,31 +260,36 @@ const ExpectationPrice = () => {
                     <div class="error accident-error" style="color: red;"></div>
                 </div>
                 <div>
-                    <p class="mb-3">※ 이 감가 기준은 일반적인 감가 기준이며, 실제 평가 금액과는 차이가 있을 수 있습니다. </p>    
+                    <p class="mb-3 text-danger">※ 이 감가 기준은 일반적인 감가 기준이며, 실제 평가 금액과는 차이가 있을 수 있습니다. </p>    
                 </div>
                 <div class="form-group">
-                    <label class="text-danger" style="display: block; font-weight: bold; margin-bottom: 5px;">수리필요</label>
+                    <label style="color: #000; display: block; font-weight: bold; margin-bottom: 5px;">수리필요</label>
                 </div>
                 <div class="form-group">
                     <label style="color:blue">키 갯수</label>
-                    <input type="text" placeholder="개" name="keyCount" value="">
+                    <div class="d-flex align-items-center">
+                        <input type="text" placeholder="개" name="keyCount" value="0" style="margin-right: 10px;">
+                        <span class="size_14">개</span>
+                    </div>
                     <div class="error keyCount-error" style="color: red;"></div>
                 </div>
                 <div class="form-group">
                     <label style="color:blue">휠스크래치</label>
-                    <input type="text" placeholder="개" name="wheelScratch" value="">
+                    <div class="d-flex align-items-center">
+                        <input type="text" placeholder="개" name="wheelScratch" value="0" style="margin-right: 10px;">
+                        <span class="size_14">개</span>
+                    </div>
                     <div class="error wheelScratch-error" style="color: red;"></div>
                 </div>
                 <div class="form-group">
                     <label class="mb-2" style="color:blue">타이어 상태</label>
                     <div class="input-wrapper">
-                        <span class="size_14">정상</span>
-                        <input type="text" placeholder="개" name="tireStatusNormal" class="text-right" value="">
-                    </div>
-                    <div class="error tireStatusNormal-error" style="color: red;"></div>
-                    <div class="input-wrapper">
                         <span class="size_14">교환</span>
-                        <input type="text" placeholder="개" name="tireStatusReplaced" class="text-right" value="">
+
+                        <div class="d-flex align-items-center">
+                            <input type="text" placeholder="개" name="tireStatusReplaced" class="text-right" value="0" style="margin-right: 10px;">
+                            <span class="size_14">개</span>
+                        </div>
                     </div>
                     <div class="error tireStatusReplaced-error" style="color: red;"></div>
                 </div>
@@ -276,18 +298,28 @@ const ExpectationPrice = () => {
                     <label class="mb-2" style="color:blue">외관수리필요</label>
                     <div class="input-wrapper">
                         <span class="size_14">판금, 도색</span>
-                        <input type="text" placeholder="개" name="tireStatusNormal" class="text-right" value="">
+                        <div class="d-flex align-items-center">
+                            <input type="text" placeholder="개" name="viewPaint" class="text-right" value="0" style="margin-right: 10px;">
+                            <span class="size_14">개</span>
+                        </div>
                     </div>
-                    <div class="error tireStatusNormal-error" style="color: red;"></div>
+                    <div class="error viewPaint-error" style="color: red;"></div>
                     <div class="input-wrapper">
                         <span class="size_14">교환</span>
-                        <input type="text" placeholder="개" name="tireStatusReplaced" class="text-right" value="">
+                        <div class="d-flex align-items-center">
+                            <input type="text" placeholder="개" name="viewChange" class="text-right" value="0" style="margin-right: 10px;">
+                            <span class="size_14">개</span>
+                        </div>
                     </div>
+                    <div class="error viewChange-error" style="color: red;"></div>
                     <div class="input-wrapper">
                         <span class="size_14">깨짐</span>
-                        <input type="text" placeholder="개" name="tireStatusReplaced" class="text-right" value="">
+                        <div class="d-flex align-items-center">
+                            <input type="text" placeholder="개" name="viewBreak" class="text-right" value="0" style="margin-right: 10px;">
+                            <span class="size_14">개</span>
+                        </div>
                     </div>
-                    <div class="error tireStatusReplaced-error" style="color: red;"></div>
+                    <div class="error viewBreak-error" style="color: red;"></div>
                 </div>
 
                 <button id="customSubmitButton" class="btn btn-primary mt-3 w-100">예상 가격 확인</button>
@@ -302,18 +334,70 @@ const ExpectationPrice = () => {
         .addOption({ padding: 20 })
         .confirm(text);
     setTimeout(() => {
-        const selectItem = (input) => {
-        document.querySelectorAll('input[name="accident"]').forEach((radio) => {
-            const item = radio.closest('.item');
-            if (item) {
-                item.classList.remove('selected', 'active');
-            }
-        });
-        const parentItem = input.closest('.item');
-        if (parentItem) {
-            parentItem.classList.add('selected', 'active');
+
+        // mileage_input 에 값은 숫자만 입력 가능하게 한다. 
+        const mileageInput = document.querySelector('input[name="mileage"]');
+        mileageInput.focus();
+        if (mileageInput) {
+            mileageInput.addEventListener('input', () => {
+                mileageInput.value = mileageInput.value.replace(/[^0-9]/g, '');
+            });
         }
-    };
+
+        const keyCountInput = document.querySelector('input[name="keyCount"]');
+        if (keyCountInput) {
+            keyCountInput.addEventListener('input', () => {
+                keyCountInput.value = keyCountInput.value.replace(/[^0-9]/g, '');
+            });
+        }
+
+        const wheelScratchInput = document.querySelector('input[name="wheelScratch"]');
+        if (wheelScratchInput) {
+            wheelScratchInput.addEventListener('input', () => {
+                wheelScratchInput.value = wheelScratchInput.value.replace(/[^0-9]/g, '');
+            });
+        }
+
+        const tireStatusReplacedInput = document.querySelector('input[name="tireStatusReplaced"]');
+        if (tireStatusReplacedInput) {
+            tireStatusReplacedInput.addEventListener('input', () => {
+                tireStatusReplacedInput.value = tireStatusReplacedInput.value.replace(/[^0-9]/g, '');
+            });
+        }
+
+        const viewPaintInput = document.querySelector('input[name="viewPaint"]');
+        if (viewPaintInput) {
+            viewPaintInput.addEventListener('input', () => {
+                viewPaintInput.value = viewPaintInput.value.replace(/[^0-9]/g, '');
+            });
+        }
+
+        const viewChangeInput = document.querySelector('input[name="viewChange"]');
+        if (viewChangeInput) {
+            viewChangeInput.addEventListener('input', () => {
+                viewChangeInput.value = viewChangeInput.value.replace(/[^0-9]/g, '');
+            });
+        }   
+
+        const viewBreakInput = document.querySelector('input[name="viewBreak"]');
+        if (viewBreakInput) {
+            viewBreakInput.addEventListener('input', () => {
+                viewBreakInput.value = viewBreakInput.value.replace(/[^0-9]/g, '');
+            });
+        }
+
+        const selectItem = (input) => {
+            document.querySelectorAll('input[name="accident"]').forEach((radio) => {
+                const item = radio.closest('.item');
+                if (item) {
+                    item.classList.remove('selected', 'active');
+                }
+            });
+            const parentItem = input.closest('.item');
+            if (parentItem) {
+                parentItem.classList.add('selected', 'active');
+            }
+        };
 
         window.selectItem = selectItem;
 
@@ -359,6 +443,11 @@ const checkExpectedPriceClick = async () => {
     const firstRegDate = carDetails.value.firstRegDate;
     const currentPrice = carDetails.value.priceNow;
     const maker = carDetails.value.maker;
+
+    const viewPaint = document.querySelector('input[name="viewPaint"]').value;
+    const viewChange = document.querySelector('input[name="viewChange"]').value;
+    const viewBreak = document.querySelector('input[name="viewBreak"]').value;
+
     // console.log(currentPrice);
 
     const data = {
@@ -370,7 +459,10 @@ const checkExpectedPriceClick = async () => {
         tireStatusReplaced,
         firstRegDate,
         currentPrice,
-        maker
+        maker,
+        viewPaint,
+        viewChange,
+        viewBreak
     };
 
     try {
@@ -412,6 +504,9 @@ const checkExpectedPriceClick = async () => {
             if (estimatePriceBtn) {
                 estimatePriceBtn.style.display = 'none';
             }
+
+            currentPriceRef.value = true;
+
         }
         if (result.isError) {
             console.log('에러 처리 실행'); 
@@ -582,6 +677,7 @@ onMounted(async () => {
     }
     checkRefreshAvailability();
     isLoading.value = false;
+    highlightPriceElement();
 });
 
 
@@ -832,6 +928,32 @@ const applyAuction = () => {
     })
     .confirm(text);
 }
+
+const highlightPriceElement = () => {
+  setTimeout(() => {
+    if (!priceElement.value) return;
+    
+    // 초기 스타일 저장
+    const originalStyle = priceElement.value.style.cssText;
+    
+    // 하이라이트 스타일 적용
+    priceElement.value.style.transition = 'box-shadow 0.5s ease-in-out';
+    // 하이라이트색상을 레드계열의 색상중에 연하게 하는 색상으로 변경
+    priceElement.value.style.boxShadow = '0 0 0 3px #ff0000';
+    
+    // 3초 후 원래 스타일로 복원
+    setTimeout(() => {
+      priceElement.value.style.boxShadow = 'none';
+      
+      // 트랜지션 완료 후 원래 스타일로 완전히 복원
+      setTimeout(() => {
+        priceElement.value.style.cssText = originalStyle;
+        priceElement.value.style.cursor = 'pointer'; // cursor 스타일 유지
+      }, 500);
+    }, 1000);
+  }, 500);
+};
+
 </script>
 
 <style scoped>

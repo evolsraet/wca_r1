@@ -150,7 +150,10 @@ class AuctionController extends Controller
             'wheelScratch' => 'required', // 바퀴 손상여부
             // 'tireStatusNormal' => 'required', // 타이어 손상여부
             'tireStatusReplaced' => 'required', // 타이어 교체여부
-            'currentPrice' => 'required' // 소매 시세가
+            'currentPrice' => 'required', // 소매 시세가
+            'viewPaint' => 'required', // 외부 손상여부
+            'viewChange' => 'required', // 외부 교체여부
+            'viewBreak' => 'required', // 외부 부분 손상여부
         ]);
 
         $mileage = $request->input('mileage');
@@ -162,6 +165,10 @@ class AuctionController extends Controller
         $firstRegDate = $request->input('firstRegDate');
         $currentPrice = $request->input('currentPrice');
         // 계산식 작성 start
+
+        $viewPaint = $request->input('viewPaint');
+        $viewChange = $request->input('viewChange');
+        $viewBreak = $request->input('viewBreak');
 
         // Log::info('예상가 확인 호출', ['request' => $request->all()]);
 
@@ -194,7 +201,7 @@ class AuctionController extends Controller
                 $resultPrice -= 150000;
                 break;
             case '전손이력':
-                $resultPrice *= 0.9;
+                $resultPrice *= 0.5;
                 break;
         }
 
@@ -205,7 +212,7 @@ class AuctionController extends Controller
 
         // 휠스크래치   
         if($wheelScratch > 0){
-            $resultPrice -= 100000;
+            $resultPrice -= 150000;
         }
 
         // 타이어 
@@ -215,8 +222,24 @@ class AuctionController extends Controller
 
         // 타이어 교체 
         if($tireStatusReplaced > 0){
-            $resultPrice -= 150000;
+            $resultPrice -= 300000;
         }
+
+        // 외부 손상
+        if($viewPaint > 0){
+            $resultPrice -= 100000;
+        }
+
+        // 외부 교체    
+        if($viewChange > 0){
+            $resultPrice -= 300000;
+        }
+
+        // 외부 부분 손상
+        if($viewBreak > 0){
+            $resultPrice -= 100000;
+        }
+        
         
         /***
         # 표준주행거리 계산 ( 25(현재년도) - 이차량의 최초등록일 연도  ) 
