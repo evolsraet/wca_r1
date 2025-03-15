@@ -45,7 +45,7 @@
           </div>
         </div>
       </div>
-      <!-- <hr class="custom-hr" />
+      <hr class="custom-hr" />
       <div>
         <h4 class="mt-4">입금받을 계좌를 알려주세요</h4>
         <div class="form-group mt-4">
@@ -54,7 +54,7 @@
           <label for="bankNumber" class="mt-3">계좌번호</label>
           <input type="text" v-model="account" placeholder="계좌번호 직접입력" :class="{'block': accountDetails}" class="account-num">
         </div>
-      </div> -->
+      </div>
 
       <hr class="custom-hr" />
       <div>
@@ -348,10 +348,10 @@ const confirmSelection = async () => {
     const data = {
       auction: {
         taksong_wish_at: formattedDate,
-        // bank: selectedBank.value,
-        // account: account.value,
-        bank: auctionDetail.value?.data?.bank,
-        account: auctionDetail.value?.data?.account,
+        bank: selectedBank.value,
+        account: account.value,
+        // bank: auctionDetail.value?.data?.bank,
+        // account: auctionDetail.value?.data?.account,
         addr_post: addrPost.value,
         addr1: addr.value,
         addr2: addrdt.value,
@@ -388,6 +388,10 @@ const fetchAuctionDetail = async () => {
     auctionDetail.value = await getAuctionById(auctionId);  
     isBizChecked.value = auctionDetail.value.data.is_biz;
     openSection.value = auctionDetail.value.data.is_biz ? 'business' : 'general';
+
+    selectedBank.value = auctionDetail.value.data.bank;
+    account.value = auctionDetail.value.data.account;
+
     days.value = getNextAvailableDays(auctionDetail.value.data.choice_at, auctionDetail.value.data.takson_end_at);  
     console.log('Auction Detail:', auctionDetail.value); 
   } catch (error) {
@@ -529,7 +533,7 @@ const toggleView = () => {
       </div>
       <div class="d-flex justify-content-start gap-5 mt-2">
         <p class="mb-0"><span class="me-3">은</span>행</p>
-        <p class="mb-0"><span class="me-2">${auctionDetail.value?.data?.bank ?? '선택 안됨'}</span>|<span class="ms-2">${auctionDetail.value?.data?.account ?? '계좌번호 없음'}</span></p>
+        <p class="mb-0"><span class="me-2">${selectedBank.value ?? '선택 안됨'}</span>|<span class="ms-2">${account.value ?? '계좌번호 없음'}</span></p>
       </div>
       <div class="d-flex justify-content-start gap-5 mt-2">
         <p class="mb-0">고객 연락처</p>
