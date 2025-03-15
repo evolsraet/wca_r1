@@ -71,7 +71,7 @@
                         </div>
                         <div class="info-item">
                             <div  class="phone"></div>
-                            <p>010-1234-1234</p>
+                            <p>{{ user.dealer.phone }}</p>
                         </div>
                         <div class="info-item">
                             <div class="location"></div >
@@ -187,10 +187,10 @@
                                     <p>입찰최저액 : {{ bid.middle_prices?.min ? bid.middle_prices?.min : '-' }}</p> -->
 
                                     <div class="d-flex justify-content-between">
-                                        <span>입찰금액 : {{ bid.bids[0].price }} 원</span>
+                                        <span class="text-danger bold">{{ bid.bids[0].price_value }} 만원</span>
                                         <div>
-                                            <span class="blue-box border-6">최고액 {{ bid.middle_prices?.max ? bid.middle_prices?.max : '-' }} 원</span>
-                                            <span class="gray-box border-6">최저액 {{ bid.middle_prices?.min ? bid.middle_prices?.min : '-' }} 원</span>
+                                            <span class="blue-box border-6">최고액 {{ bid.middle_prices_value?.max ? bid.middle_prices_value?.max : '-' }} 만원</span>
+                                            <span class="gray-box border-6">최저액 {{ bid.middle_prices_value?.min ? bid.middle_prices_value?.min : '-' }} 만원</span>
                                         </div>
                                     </div>
 

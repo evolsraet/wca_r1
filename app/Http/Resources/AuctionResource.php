@@ -51,6 +51,17 @@ class AuctionResource extends JsonResource
                 'max' => $middlePrices->max(),
                 'avg' => round($middlePrices->avg(), 0),
             ];
+
+            // 숫자의 자릿수에 따른 변환
+            $min = $middlePrices->min();
+            $max = $middlePrices->max();
+            $avg = round($middlePrices->avg(), 0);
+            
+            $addArray['middle_prices_value'] = [
+                'min' => strlen((string)$min) >= 5 ? floor($min / 10000) : $min,
+                'max' => strlen((string)$max) >= 5 ? floor($max / 10000) : $max,
+                'avg' => strlen((string)$avg) >= 5 ? floor($avg / 10000) : $avg,
+            ];
         }
         
         else if ($count >= 3) {
@@ -61,12 +72,30 @@ class AuctionResource extends JsonResource
                 'max' => $middlePrices->max(),
                 'avg' => round($middlePrices->avg(), 0),
             ];
+
+            // 숫자의 자릿수에 따른 변환
+            $min = $middlePrices->min();
+            $max = $middlePrices->max();
+            $avg = round($middlePrices->avg(), 0);
+            
+            $addArray['middle_prices_value'] = [
+                'min' => strlen((string)$min) >= 5 ? floor($min / 10000) : $min,
+                'max' => strlen((string)$max) >= 5 ? floor($max / 10000) : $max,
+                'avg' => strlen((string)$avg) >= 5 ? floor($avg / 10000) : $avg,
+            ];
         }
 
         else {
             // 3개 미만일 경우 최대값만 사용
             $addArray['middle_prices'] = [
                 'max' => $prices->max(),
+            ];
+
+            // 숫자의 자릿수에 따른 변환
+            $max = $prices->max();
+            
+            $addArray['middle_prices_value'] = [
+                'max' => strlen((string)$max) >= 5 ? floor($max / 10000) : $max,
             ];
         }
 

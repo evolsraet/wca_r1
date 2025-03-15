@@ -49,6 +49,9 @@ class BidResource extends JsonResource
             || $user->id === $this->user_id
             || $user->id === $auctionUserId);
 
+
+        $parentArray['price_value'] = strlen((string)$parentArray['price']) >= 5 ? floor($parentArray['price'] / 10000) : $parentArray['price'];
+
         if (!$isAuthorized) {
             unset($parentArray['price'], $parentArray['user_id']);
         }
