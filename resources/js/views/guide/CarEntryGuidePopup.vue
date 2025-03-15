@@ -25,6 +25,9 @@
    });
       
    const openAlarmModal06 = () => {
+
+    localStorage.removeItem('carEntryGuidePopup');
+
      const text = `
        <div class="container text-start">
         <div class="bidding-section">
@@ -56,7 +59,9 @@
             // ok 를 하면, 이 창을 띄우는걸 잠시 멈춘다. 
             isPopup.value = false;
             // 로컬스토리지에 저장 
-            localStorage.setItem('carEntryGuidePopup', 'true');
+            if(props.propData){
+                localStorage.setItem('carEntryGuidePopup', 'true');
+            }
          }
        })
        .confirm(text); // 모달 내용 설정
