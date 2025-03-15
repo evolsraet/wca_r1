@@ -3,8 +3,9 @@
     <div class="guide-card pointer" @click.prevent="openAlarmModal06" v-if="props.propData === false" >
        <div class="guide-content ">
            <p class="guide-title">차량출품 조건 및 유의사항</p>
+           <p class="guide-description">차량출품전 내용을 확인하세요</p>
        </div>
-       <img src="../../../img/use_icon4.png" alt="책 아이콘" class="guide-icon" />
+       <img src="../../../img/use_icon1.png" alt="책 아이콘" class="guide-icon" />
    </div>
 </template>
 <script setup>

@@ -1045,38 +1045,96 @@ const handleEnterPress = (id) => {
 
 
 const openAlarmModal = () => {
+  // 년 월일 정보를 현재 날짜로 설정
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = currentDate.getMonth() + 1;
+  const day = currentDate.getDate();
+
+  // 초기 데이터 설정 - 차량 데이터가 있다면 사용
+  const initialCarData = {
+    ownerName: ownerName.value || '',
+    carNumber: carNumber.value || ''
+  };
+
   const text = `
-  <div style="font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; padding: 20px; border: 1px solid #ddd; text-align: left;">
+  <div id="printArea" style="font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; padding: 20px; border: 1px solid #ddd; text-align: left;">
     <h2 style="text-align: center; text-decoration: underline;">위 &nbsp; 임 &nbsp; 장</h2>
     
     <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
         <h3 style="margin-bottom: 10px; color: #333;">수임자 정보</h3>
         <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">성명</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주민등록번호</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주소</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">성명</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 70%;">
+                <input type="text" class="form-control print-input" id="recipient-name" placeholder="성명">
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주민등록번호</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 70%;">
+                <input type="text" class="form-control print-input" id="recipient-id" placeholder="주민등록번호">
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주소</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 70%;">
+                <input type="text" class="form-control print-input" id="recipient-address" placeholder="주소">
+              </td>
+            </tr>
         </table>
 
         <h3 style="margin-bottom: 10px; color: #333; margin-top: 20px;">위임받은 사항</h3>
         <p>자동차(신규, 전입, 말소, 변경, 이전, 근저당 설정, 근저당 말소, 등록증 재교부, 말소사실 증명서 발급 등) 등록(신청)에 관한 사항을 위임합니다.</p>
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; margin-top: 10px;">
-            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">자동차등록번호</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">신규 차대번호</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">자동차등록번호</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 70%;">
+                <input type="text" class="form-control print-input" id="car-number" placeholder="차량번호" value="${initialCarData.carNumber}">
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">신규 차대번호</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 70%;">
+                <input type="text" class="form-control print-input" id="car-vin" placeholder="차대번호">
+              </td>
+            </tr>
         </table>
         <p>첨부서류 : 위임인의 인감증명서</p>
     </div>
 
     <div style="margin-top: 20px; margin-bottom: 20px;">
-      <h3 style="margin-bottom: 10px; color: #333; text-align: center;">201 &nbsp; 년 &nbsp; 월 &nbsp; 일</h3>
+      <h3 style="margin-bottom: 10px; color: #333; text-align: center;">${year}년 ${month}월 ${day}일</h3>
     </div>
     
     <div style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd; border-radius: 5px; background: #f9f9f9;">
         <h3 style="margin-bottom: 10px; color: #333;">위임자 정보</h3>
         <table style="width: 100%; border-collapse: collapse;">
-            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">성명</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%; color: red; font-weight: bold;">(인감날인)</td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주민등록번호</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주소</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
-            <tr><td style="padding: 8px; border: 1px solid #ddd; width: 30%;">연락처</td><td style="padding: 8px; border: 1px solid #ddd; width: 70%;"></td></tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">성명</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 70%; position: relative;">
+                <input type="text" class="form-control print-input" id="delegator-name" placeholder="성명" value="${initialCarData.ownerName}" style="width: calc(100% - 90px);">
+                <span style="color: red; font-weight: bold; position: absolute; right: 8px; top: 50%; transform: translateY(-50%);">(인감날인)</span>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주민등록번호</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 70%;">
+                <input type="text" class="form-control print-input" id="delegator-id" placeholder="주민등록번호">
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">주소</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 70%;">
+                <input type="text" class="form-control print-input" id="delegator-address" placeholder="주소" value="${addr.value} ${addrdt.value}">
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">연락처</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 70%;">
+                <input type="text" class="form-control print-input" id="delegator-phone" placeholder="연락처">
+              </td>
+            </tr>
         </table>
     </div>
     
@@ -1085,17 +1143,99 @@ const openAlarmModal = () => {
         타인의 서명 또는 인장을 도용 등에 의해 위임장을 작성할 경우에는 형법 제231조와 제232조의 규정에 의하여 사문서 위·변조로 5년 이하의 징역 또는 1천만원 이하의 벌금형에 처해질 수 있습니다.
     </div>
   </div>
+
+  <div class="d-flex justify-content-center">
+    <button id="print-button" class="btn btn-primary" style="padding: 10px 20px 10px 20px; margin-top: 20px;">프린트</button>
+  </div>
   `;
 
   wica.ntcn(swal)
     .useHtmlText() // HTML 태그 활성화
     .useClose()
     .addClassNm('intromodal') // 클래스명 설정
-    .addOption({ padding: 20, height:840 }) // swal 옵션 추가
+    .addOption({ padding: 20, height: 840 }) // swal 옵션 추가
     .callback(function (result) {
       // 결과 처리 로직
     })
     .confirm(text); // 모달 내용 설정
+
+  // SweetAlert 모달이 렌더링된 후 프린트 버튼에 이벤트 리스너 추가
+  setTimeout(() => {
+    const printButton = document.getElementById('print-button');
+    if (printButton) {
+      printButton.addEventListener('click', () => {
+        const printArea = document.getElementById('printArea');
+        if (printArea) {
+          printSpecificArea(printArea);
+        }
+      });
+    }
+  }, 300); // 모달이 완전히 렌더링될 시간을 조금 더 길게 줌
+};
+
+// 특정 영역만 프린트하는 함수
+function printSpecificArea(elementToPrint) {
+  // 현재 페이지의 스타일을 저장
+  const originalStyles = document.querySelectorAll('style, link[rel="stylesheet"]');
+  const styles = Array.from(originalStyles).map(style => style.outerHTML).join('');
+  
+  // 입력된 데이터를 수집
+  const inputData = {};
+  const inputs = elementToPrint.querySelectorAll('.print-input');
+  inputs.forEach(input => {
+    inputData[input.id] = input.value;
+  });
+  
+  // 새 창 열기
+  const printWindow = window.open('', '_blank', 'width=800,height=600');
+  
+  if (!printWindow) {
+    alert('팝업이 차단되었습니다. 팝업 차단을 해제해주세요.');
+    return;
+  }
+  
+  // 입력 필드에 값을 채운 HTML 생성
+  let printHTML = elementToPrint.outerHTML;
+  
+  // 입력 필드를 정적 텍스트로 변환
+  Object.keys(inputData).forEach(id => {
+    const value = inputData[id] || '';
+    const inputRegex = new RegExp(`<input[^>]*id="${id}"[^>]*>`, 'g');
+    printHTML = printHTML.replace(inputRegex, `<div style="padding: 8px; min-height: 20px;">${value}</div>`);
+  });
+  
+  // HTML 구조를 문자열로 작성
+  const printContent = `
+    <html>
+      <head>
+        <title>위임장 프린트</title>
+        ${styles}
+        <style>
+          body { margin: 0; padding: 0; }
+          @media print {
+            body { margin: 0; padding: 0; }
+            button { display: none !important; }
+          }
+        </style>
+      </head>
+      <body>
+        ${printHTML}
+      </body>
+    </html>
+  `;
+  
+  printWindow.document.write(printContent);
+  printWindow.document.close();
+  
+  // 스크립트를 별도로 추가
+  printWindow.onload = function() {
+    setTimeout(function() {
+      printWindow.print();
+      setTimeout(function() { 
+        printWindow.close(); 
+      }, 100);
+    }, 300);
+  };
 }
 
 const openModal = (modalName) => {
