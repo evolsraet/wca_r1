@@ -1253,9 +1253,9 @@ const openModal = (modalName) => {
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; background: #f9f9f9; font-weight: bold;">진단희망일</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; background: #f9f9f9; font-weight: bold;">진단지(우편번호)</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px; background: #f9f9f9; font-weight: bold;">진단지(주소)</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px; background: #f9f9f9; font-weight: bold;">전단지(상세주소)</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; background: #f9f9f9; font-weight: bold;">전단지(상세주소)</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; background: #f9f9f9; font-weight: bold;">희망가</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px; background: #f9f9f9; font-weight: bold;">연락처</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 25%; font-size:13px; background: #f9f9f9; font-weight: bold;">연락처</td>
             </tr>
             <tr>
               <td style="padding: 8px; border: 1px solid #ddd; width: 10%; font-size:13px;">일반</td>
@@ -1264,9 +1264,9 @@ const openModal = (modalName) => {
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">03월 13일</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">31122</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">진대전 광역시 서구</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">11번지</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">11번지</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">124000</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">010-1234-5678</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 25%; font-size:13px;">010-1234-5678</td>
             </tr>
             <tr>
               <td style="padding: 8px; border: 1px solid #ddd; width: 10%; font-size:13px;">공매</td>
@@ -1275,9 +1275,9 @@ const openModal = (modalName) => {
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">03월 15일</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">51231</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">대전 광역시 동구</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 30%; font-size:13px;">22번지</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">22번지</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">410000</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 20%; font-size:13px;">010-1234-5678</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 25%; font-size:13px;">010-1234-5678</td>
             </tr>
         </table>
         <br/>
