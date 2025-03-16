@@ -93,6 +93,7 @@ export default {
       .get();
     },
     logout({ commit }) {
+      localStorage.clear();
       commit("SET_USER", {});
       commit("SET_AUTHENTICATED", false);
       router.push({ name: "auth.login" });

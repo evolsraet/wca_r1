@@ -18,15 +18,17 @@
                                     <h1>쉽고 빠른 <span class="bolder">내차팔기,</span></h1>
                                     <h1 class="font-title"><span class="bolder">위카</span>에서 <span class="bolder">높은 가격</span>으로!</h1>
                                     <h5 class="mt-3 normal">자동차 진단 전문가 <span class="bolder">위카모빌리티</span>가 함께합니다.</h5>
-                                    <router-link
+                                    <!-- <router-link
                                         class="btn-sell-car d-flex bc-primary border-none mt-5"
                                         :to="{ path: '/' }"
-                                        >
+                                        > -->
+                                    <a class="btn-sell-car d-flex bc-primary border-none mt-5"href="/carfind-do">
                                     <div>
                                         <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20"></span><span class="size_14">내 차 판매하기</span> 
                                     </div>
                                     <img src="../../../img/Icon-right-wh.png" class="dash-wh" width="10">
-                                    </router-link>
+                                    </a>
+                                    <!-- </router-link> -->
                                 </div>
                                 
                             </div>
@@ -43,15 +45,17 @@
                                     <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">
                                         내 차 판매는, 위카에서
                                     </h1>
-                                    <router-link
+                                    <!-- <router-link
                                         class="btn-sell-car d-flex bc-primary border-none"
                                         :to="{ path: '/' }"
-                                        >
+                                        > -->
+                                    <a class="btn-sell-car d-flex bc-primary border-none"href="/carfind-do">
                                     <div>
                                         <span class="icon-car me-1"><img src="../../../img/icon-small-car.png" width="20"></span><span class="size_14">내 차 판매하기</span> 
                                     </div>
                                     <img src="../../../img/Icon-right-wh.png" class="dash-wh" width="10">
-                                    </router-link>
+                                    </a>
+                                <!-- </router-link> -->
                                 </div>
                             </div>
                         </div>
