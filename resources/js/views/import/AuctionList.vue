@@ -92,9 +92,9 @@
                 <div class="text-secondary opacity-50 d-flex align-items-center flex-column gap-3">
                   <h4>등록된 차가 없어요</h4>
                   <h5>차량 등록 후, 경매를 시작해보세요.</h5>
-                    <router-link :to="{ name: 'auction.index' }" class="px-5 btn btn-outline-secondary btn-lg bc-wh">
-                      입찰하러 가기
-                    </router-link>
+                    <a href="/carfind-do" class="px-5 btn btn-outline-secondary btn-lg bc-wh">
+                      내 차 판매하기
+                    </a>
                   </div>
                 </div>
               </div>
