@@ -813,7 +813,7 @@
                           <h4 class="custom-highlight">{{auctionDetail.data.status === 'wait' ? '딜러 선택하기' : '입찰한 딜러'}}</h4>
                           </div>
                           <p class="text-secondary opacity-50">입찰 금액이 가장 높은 순으로 5명까지만 표시돼요.</p>
-                          <p class="tc-red text-start mt-2">※ 3일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
+                          <p class="tc-red text-start mt-2">※ 2일후 까지 선택된 딜러가 없을시, 경매가 취소 됩니다.</p>
                         </div>
                         <div class="bid-bc p-2">
                           <ul v-for="(bid, index) in sortedTopBids" :key="bid.user_id" class="px-0 inspector_list max_width_900">
