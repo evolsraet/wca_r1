@@ -214,10 +214,12 @@ const getAuctionById = async (id) => {
         auction.value.dealer_name = null;
         if (auction.value.win_bid) {
             const data = await getUser(auction.value.win_bid.user_id);
+            const auctionUserData = await getUser(auction.value.user_id);
 
             const name = data.dealer.name;
             auction.value.dealer_name = name;
             auction.value.dealer = data.dealer;
+            auction.value.user = auctionUserData;
         } else {
             auction.value.dealer_name = null; 
         } 

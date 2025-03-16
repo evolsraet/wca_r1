@@ -9,7 +9,7 @@
             <p class="text-secondary opacity-50">낙찰액</p>
             <h4>{{ amtComma(selectedBid?.price ?? auctionDetail?.data?.final_price ??0) }}</h4>
             <p><span class="fw-medium">{{ userData?.dealer?.name ?? auctionDetail?.data?.dealer_name }}</span>&nbsp;딜러</p>
-            <p class="restar">4.5점</p>
+            <p class="restar">{{ auctionDetail?.data?.win_bid?.points ?? 0 }} 점</p>
           </div>
         </div>
       </div>
@@ -47,7 +47,8 @@
       </div>
       <hr class="custom-hr" />
       <div>
-        <h4 class="mt-4">입금받을 계좌를 알려주세요</h4>
+        <h4 class="mt-4">입금계좌</h4>
+        <p class="text-secondary opacity-50">입금받을 계좌를 수정시 아래 계좌정보를 수정해 주세요.</p>
         <div class="form-group mt-4">
           <label for="bankNumber">은행</label>
           <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly>
@@ -59,7 +60,7 @@
       <hr class="custom-hr" />
       <div>
         <h4 class="mt-4">탁송주소</h4>
-        <p class="text-secondary opacity-50">탁송 주소는 탁송 출발지 배송 주소로 사용됩니다.</p>
+        <p class="text-secondary d-flex justify-content-between"><span class="opacity-50">탁송 주소는 탁송 출발지 배송 주소로 사용됩니다.</span> <span class="text-danger" @click="useCurrentAddress" style="cursor: pointer;">입력주소 사용</span></p>
         <div class="form-group mb-2 input-wrapper">
           <input type="text" @click="editPostCode('daumPostcodeInput')" class="input-dis form-control" v-model="addrPost" placeholder="우편번호" readonly ref="addrPostSelect">
           <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
@@ -182,7 +183,10 @@
 
         <div class="form-group">
           <h4 class="mt-4"><span class="text-danger me-2">*</span>고객 연락처</h4>
-          <p class="text-secondary opacity-50">고객 연락처를 입력해 주세요.</p>
+          <p class="text-secondary d-flex justify-content-between">
+            <span class="opacity-50">고객 연락처를 입력해 주세요.</span>
+            <span class="text-danger" @click="useCurrentTel" style="cursor: pointer;">내 연락처 사용</span>
+          </p>
           <div>
             <input type="text" v-model="customTel1" placeholder="연락처1 (필수)" ref="customTel1Select">
             <input type="text" v-model="customTel2" placeholder="연락처2">
@@ -385,7 +389,8 @@ const confirmSelection = async () => {
 const fetchAuctionDetail = async () => {
   try {
     const auctionId = route.params.id;  
-    auctionDetail.value = await getAuctionById(auctionId);  
+    auctionDetail.value = await getAuctionById(auctionId);
+    // user 정보 추가, 딜러의 포인트 정보 추가   
     isBizChecked.value = auctionDetail.value.data.is_biz;
     openSection.value = auctionDetail.value.data.is_biz ? 'business' : 'general';
 
@@ -692,6 +697,16 @@ const handleFileUploadAuctionOwner = event => {
 const toggleDropdown = (section) => {
   openSection.value = openSection.value === section ? null : section;
 };
+
+const useCurrentAddress = () => {
+  addrPost.value = auctionDetail.value.data.addr_post;
+  addr.value = auctionDetail.value.data.addr1;
+  addrdt.value = auctionDetail.value.data.addr2;
+}
+
+const useCurrentTel = () => {
+  customTel1.value = auctionDetail.value.data.user.phone;
+}
 
 </script>
 
