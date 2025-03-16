@@ -354,7 +354,7 @@ export default {
 
 
 <script setup>
-import { ref, onMounted, nextTick, inject, createApp,computed, reactive  } from 'vue';
+import { ref, onMounted, nextTick, inject, createApp,computed, reactive ,watch } from 'vue';
 import { useStore } from 'vuex';
 import Modal from '@/views/modal/modal.vue';
 import BankModal from '@/views/modal/bank/BankModal.vue';
@@ -1301,6 +1301,47 @@ const openModal = (modalName) => {
   }
 }
 
+const checkDiagDates = (newDate) => {
+  if (!diagFirstAt.value || !diagSecondAt.value) return;
+  
+  // Date 객체로 변환 (날짜 비교를 위해)
+  const firstDate = new Date(diagFirstAt.value);
+  const secondDate = new Date(diagSecondAt.value);
+  
+  // 년/월/일만 비교 (시간 제외)
+  const isSameDay = 
+    firstDate.getFullYear() === secondDate.getFullYear() &&
+    firstDate.getMonth() === secondDate.getMonth() &&
+    firstDate.getDate() === secondDate.getDate();
+  
+  if (isSameDay) {
+    // 경고 메시지 표시
+    wica.ntcn(swal)
+      .icon('W')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+        // 경고 후 두 번째 날짜 초기화
+        diagSecondAt.value = '';
+      })
+      .alert('진단희망일1과 진단희망일2는 다른 날짜를 선택해 주세요.');
+  }
+};
+
+// diagSecondAt이 변경될 때 중복 체크
+watch(diagSecondAt, (newValue) => {
+  if (newValue) {
+    checkDiagDates(newValue);
+  }
+});
+
+// 첫 번째 날짜가 변경되고 두 번째 날짜가 이미 있는 경우도 체크
+watch(diagFirstAt, (newValue) => {
+  if (newValue && diagSecondAt.value) {
+    checkDiagDates(newValue);
+  }
+});
+
 onMounted(() => {
 
   const urlParams = new URLSearchParams(window.location.search);
@@ -1447,6 +1488,10 @@ input[type="datetime-local"] {
   padding: 8px;
   font-size: 16px;
   box-sizing: border-box;
+}
+
+.cmm-review-custom {
+  z-index: 10000 !important;
 }
 
 </style>

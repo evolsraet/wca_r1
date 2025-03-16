@@ -45,7 +45,7 @@ class AuctionStartJob implements ShouldQueue
         ];
 
         if($this->isUser){
-            $data['footerMsg'] = '진단일정 확인 후 연락드리겠습니다.';
+            $data['footerMsg'] = '위카에 평가사들이 유선전화 드리고 진단요청일에 방문할 예정 입니다.';
         }
 
         $sendMessage = NotificationTemplate::basicTemplate($data);
