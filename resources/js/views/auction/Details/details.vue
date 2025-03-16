@@ -2333,6 +2333,10 @@ input[type="checkbox"]{align-self:center;}
 
 @media (max-width:991px) {
   .flex-container .column{width:100%;}
+
+  #app.mainPage > .user-nav-wrap + div {
+    margin-top: 100px !important;
+  }
 }
 
 

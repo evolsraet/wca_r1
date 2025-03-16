@@ -572,6 +572,11 @@ onBeforeUnmount(() => {
     .register-content{
         justify-content: center;
     }
+
+    #app.mainPage > .user-nav-wrap + div {
+      margin-top: 87px !important;
+    }
+
   }
 
 @media (max-width: 991px) {

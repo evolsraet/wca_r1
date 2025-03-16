@@ -522,7 +522,15 @@ function goBackToList() {
     clear: both;
     
 }
+
 ol, ul {
   list-style: revert !important;
 }
+
+@media (max-width: 768px) {
+    #app > div:nth-child(2) {
+        margin-top: 87px !important;
+    }
+}
+
 </style>

@@ -666,6 +666,10 @@ flex-shrink: 0; /* 이미지 크기 고정 */
       --bs-gutter-x: 0rem !important; 
       max-width:none !important;
     }
+
+    #app.mainPage > .user-nav-wrap + div {
+      margin-top: 87px !important;
+    }
 }
 @keyframes slide {
 0% {

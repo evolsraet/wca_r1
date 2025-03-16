@@ -1394,6 +1394,13 @@ onMounted(() => {
       padding-top: 20px !important;
   }
 }
+
+@media (max-width: 768px) {
+  #app.mainPage > .user-nav-wrap + div {
+    margin-top: 100px !important;
+  }
+}
+
 .input-wrapper {
     position: relative;
     display: inline-block;

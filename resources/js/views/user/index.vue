@@ -453,6 +453,11 @@ max-width: 50%;
     flex: 0 0 50%;
     max-width: 50%;
 }
+
+#app.mainPage > .user-nav-wrap + div {
+    margin-top: 87px !important;
+}
+
 }
 
 .card-img-top-ty02 {
