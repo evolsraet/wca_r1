@@ -77,6 +77,7 @@ class AuctionBidStatusJob implements ShouldQueue
 
             $data3 = [
                 'title' => '경매 상태가 선택대기로 변경되었습니다.',
+                'message' => '경매시간이 종료 되었습니다. 입찰고객을 선택해 주세요.',
                 'data' => $this->auction,
                 'status' => '선택대기',
                 'link' => $baseUrl.'/auction/'.$this->auction->unique_number
