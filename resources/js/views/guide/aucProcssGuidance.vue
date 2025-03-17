@@ -63,7 +63,7 @@ const openAlarmModal04 = () => {
                 <div class="step06">
                     <p class="steps">STEP 06</p>
                     <p class="title">매매대금 입금</p>
-                    <p class="sub text-start">탁송기사가<br>이전에 필요한 서류를 받고 확인을 누르면<br>매매대금이 나이스 에스크로<br>계좌에서 개인 계좌로<br>송부됩니다.</p>
+                    <p class="sub text-start">탁송기사가 이전에 필요한 <br>서류를 받고 확인을 누르면<br>매매대금이 나이스 에스크로<br>계좌에서 개인 계좌로<br>송부됩니다.</p>
                 </div>
                 <div class="step07">
                     <p class="steps">STEP 07</p>
