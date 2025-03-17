@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\AuctionController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 // use App\Http\Controllers\PaymentController;
 
+use Laravel\Socialite\Facades\Socialite;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -47,6 +49,22 @@ Route::get('excelDown/{resource}', function ($resource) {
     return abort(404, '컨트롤러가 존재하지 않습니다.');
 })->name('excelDown/');
 
+// 소셜 간편 로그인 라우트
+// 카카오 로그인 리디렉션
+Route::get('auth/kakao', function () {
+    // echo 'test';
+    return Socialite::driver('kakao')->redirect();
+});
+
+// 카카오 로그인 콜백
+Route::get('auth/kakao/callback', function () {
+    $kakaoUser = Socialite::driver('kakao')->user();
+
+    // 사용자 정보 출력 (테스트용)
+    dd($kakaoUser);
+});
+
+
 Route::view('/{any?}', 'main-view')
     ->name('dashboard')
     ->where('any', '.*');
@@ -54,3 +72,4 @@ Route::view('/{any?}', 'main-view')
 
 // Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
 // Route::post('/payment', [PaymentController::class, 'processPayment'])->name('payment.process');
+

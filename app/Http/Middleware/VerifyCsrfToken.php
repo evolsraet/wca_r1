@@ -14,6 +14,7 @@ class VerifyCsrfToken extends Middleware
     protected $except = [
         // 'api/*', 'login','register'
         // 'api/*'
+        'auth/kakao/*',
     ];
 
     public function __construct(\Illuminate\Foundation\Application $app, \Illuminate\Contracts\Encryption\Encrypter $encrypter)
