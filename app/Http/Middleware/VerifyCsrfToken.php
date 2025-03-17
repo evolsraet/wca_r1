@@ -15,6 +15,8 @@ class VerifyCsrfToken extends Middleware
         // 'api/*', 'login','register'
         // 'api/*'
         'auth/kakao/*',
+        'auth/naver/*',
+        'auth/google/*',
     ];
 
     public function __construct(\Illuminate\Foundation\Application $app, \Illuminate\Contracts\Encryption\Encrypter $encrypter)
