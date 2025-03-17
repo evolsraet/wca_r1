@@ -189,9 +189,9 @@
                   <div class="login-v2 mb-3" style="display: none;">
                     <h3 class="my-4 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
                     <ul class="login-v2-area">
-                      <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal">Google</a></li>
-                      <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal">Naver</a></li>
-                      <li><a href="#" class="kakao" title="kakao" @click.prevent="openAlarmModal">Kakao</a></li>
+                      <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal('google')">Google</a></li>
+                      <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal('naver')">Naver</a></li>
+                      <li><a href="#" class="kakao" title="kakao" @click.prevent="openAlarmModal('kakao')">Kakao</a></li>
                     </ul>
                   </div>
                   <!-- 로그인 버튼 -->
@@ -253,9 +253,9 @@
                   <div class="login-v2 my-5">
                     <h3 class="mb-4 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
                     <ul class="login-v2-area">
-                      <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal">Google</a></li>
-                      <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal">Naver</a></li>
-                      <li><a href="#" class="kakao" title="kakao" @click.prevent="openAlarmModal">Kakao</a></li>
+                      <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal('google')">Google</a></li>
+                      <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal('naver')">Naver</a></li>
+                      <li><a href="#" class="kakao" title="kakao" @click.prevent="openAlarmModal('kakao')">Kakao</a></li>
                     </ul>
                   </div>
                   <!-- 로그인 버튼 -->
@@ -369,7 +369,16 @@ const checkScreenWidth = () => {
     isMobileView.value = window.innerWidth <= 640;
   }
 };
-const openAlarmModal = () => {
+const openAlarmModal = (service) => {
+
+  if(service === 'kakao') {
+    window.open('http://localhost/auth/kakao', '_blank');
+  }else if(service === 'naver'){
+    window.open('http://localhost/auth/naver', '_blank');
+  }else if(service === 'google'){
+    window.open('http://localhost/auth/google', '_blank');
+  }else{
+
   const text= `<div class="enroll_box" style="position: relative;">
                   <img src="${carInfo}" alt="자동차 이미지" width="160" height="160">
                   <p class="overlay_text04">해당 서비스는 개발 중 상태입니다.</p>
@@ -382,6 +391,7 @@ const openAlarmModal = () => {
 
     })
     .confirm(text);
+  }
 };
 
 const closeModal = () => {

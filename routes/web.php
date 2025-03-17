@@ -59,16 +59,37 @@ Route::get('auth/kakao', function () {
 // 카카오 로그인 콜백
 Route::get('auth/kakao/callback', function () {
     $kakaoUser = Socialite::driver('kakao')->user();
-
     // 사용자 정보 출력 (테스트용)
     dd($kakaoUser);
+});
+
+
+// 네이버 로그인 리디렉션
+Route::get('auth/naver', function () {
+    return Socialite::driver('naver')->redirect();
+});
+
+// 네이버 로그인 콜백
+Route::get('auth/naver/callback', function () {
+    $naverUser = Socialite::driver('naver')->user();
+    dd($naverUser);
+});
+
+// 구글 로그인 리디렉션
+Route::get('auth/google', function () {
+    return Socialite::driver('google')->redirect();
+});
+
+// 구글 로그인 콜백
+Route::get('auth/google/callback', function () {
+    $googleUser = Socialite::driver('google')->user();
+    dd($googleUser);
 });
 
 
 Route::view('/{any?}', 'main-view')
     ->name('dashboard')
     ->where('any', '.*');
-
 
 // Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
 // Route::post('/payment', [PaymentController::class, 'processPayment'])->name('payment.process');

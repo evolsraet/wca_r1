@@ -31,10 +31,25 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
+    // 카카오 로그인
     'kakao' => [
         'client_id' => env('KAKAO_CLIENT_ID'),
         'client_secret' => env('KAKAO_CLIENT_SECRET'),
         'redirect' => env('KAKAO_REDIRECT_URI'),
+    ],
+
+    // 네이버 로그인 
+    'naver' => [
+        'client_id' => env('NAVER_CLIENT_ID'),  
+        'client_secret' => env('NAVER_CLIENT_SECRET'),  
+        'redirect' => env('NAVER_REDIRECT_URI') 
+    ],
+
+    // 구글 로그인
+    'google' => [
+        'client_id' => env('GOOGLE_CLIENT_ID'),
+        'client_secret' => env('GOOGLE_CLIENT_SECRET'),
+        'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
 ];
