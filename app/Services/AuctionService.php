@@ -25,6 +25,7 @@ use App\Jobs\AuctionAfterFeeDonJob;
 use App\Jobs\AuctionTotalDepositMissJob;
 use App\Models\TaksongStatusTemp;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Http;
 class AuctionService
 {
     use CrudTrait;
@@ -748,6 +749,71 @@ class AuctionService
                 }
             }
         }
+    }
+
+
+    // 진단 결과
+    public function diagnosticResult($result)
+    {
+        $response = Http::asForm()
+            ->post(env('WCA_DIAGNOSTIC_API_URL').'diag_by_car_no', [
+                'auth' => env('WCA_DIAGNOSTIC_API_ID'),
+                'api_key' => env('WCA_DIAGNOSTIC_API_KEY'),
+                'diag_car_no' => $result['car_no']
+            ]);
+
+        $response = json_decode($response, true);
+        return $response;
+    }
+
+
+    // 진단코드 api
+    public function diagnosticCode()
+    {
+        // http 사용 해서 위 코드 수정 
+        $response = Http::asForm()
+            ->post(env('WCA_DIAGNOSTIC_API_URL').'codes', [
+                'auth' => env('WCA_DIAGNOSTIC_API_ID'),
+                'api_key' => env('WCA_DIAGNOSTIC_API_KEY')
+            ]);
+
+        
+        if ($response->failed()) {
+            throw new \Exception('Failed to fetch access token: ' . $response->body());
+        }
+        
+        $response = json_decode($response, true);
+        return $response;
+    }
+
+
+    // 나이스 API (본인인증 토큰생성)
+    public function niceApiToken()
+    {
+        $clientId = env('NICE_CLIENT_ID');
+        $clientSecret = env('NICE_CLIENT_SECRET');
+        
+        // Base64 인코딩
+        $authorization = base64_encode($clientId . ':' . $clientSecret);
+
+        // API 요청
+        $response = Http::asForm()
+            ->withHeaders([
+                'Authorization' => 'Basic ' . $authorization,
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ])
+            ->post('https://svc.niceapi.co.kr:22001/digital/niceid/oauth/oauth/token', [
+                'grant_type' => 'client_credentials',
+                'scope' => 'default',
+            ]);
+
+        // 오류 처리
+        if ($response->failed()) {
+            throw new \Exception('Failed to fetch access token: ' . $response->body());
+        }
+
+        // 토큰 반환
+        return $response->json()['dataBody']['access_token'];
     }
 
 }

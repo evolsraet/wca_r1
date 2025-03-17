@@ -111,3 +111,6 @@ Route::post('payment/result', [PaymentController::class, 'resultPayment']);
 Route::post('payment/result2', [PaymentController::class, 'resultPayment2']);
 Route::post('payment/request', [PaymentController::class, 'requestPayment']);
 Route::post('payment/notify', [PaymentController::class, 'notify']);
+
+Route::post('diag/result', [AuctionController::class, 'diagnosticResult']);
+Route::get('diag/code', [AuctionController::class, 'diagnosticCode']);

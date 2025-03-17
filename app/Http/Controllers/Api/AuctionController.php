@@ -473,4 +473,17 @@ class AuctionController extends Controller
 
     }
 
+
+    public function diagnosticResult(Request $request)
+    {
+        $result = $this->service->diagnosticResult($request);
+        return $result;
+    }
+
+    public function diagnosticCode()
+    {
+        $result = $this->service->diagnosticCode();
+        return $result;
+    }
+
 }

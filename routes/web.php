@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 // use App\Http\Controllers\PaymentController;
 
 use Laravel\Socialite\Facades\Socialite;
+use App\Http\Controllers\NiceApiController;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,6 +86,10 @@ Route::get('auth/google/callback', function () {
     $googleUser = Socialite::driver('google')->user();
     dd($googleUser);
 });
+
+
+
+Route::get('/nice/test-api', [NiceApiController::class, 'testApi']);
 
 
 Route::view('/{any?}', 'main-view')
