@@ -739,6 +739,9 @@
                       <h4>낙찰 완료</h4>
                       <p class="tc-gray mb-3">※ 차량에 문제가 있으신가요?</p>
                       <div>
+
+                        <button class="my-2 btn btn-outline-primary w-100" @click="openDoneModal(auctionId)">경락 확인서</button>
+
                         <button v-if="!isClaimed" class="my-2 btn btn-primary w-100" @click="openClaimInfoModal(auctionId)">클레임 신청</button>
                         <!-- <router-link v-if="!isClaimed"
                           :to="{ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId } }" 
@@ -1455,6 +1458,230 @@ const openClaimInfoModal = (id) => {
     .confirm(text); // 모달 내용 설정
 }
 
+const openDoneModal = (id) => {
+
+  console.log('data!', auctionDetail.value?.data);
+  const detailInfo = auctionDetail.value?.data;
+
+  const created_at = detailInfo.created_at;
+  const created_at_view = created_at.split(' ')[0];
+
+  const car_first_reg_date = detailInfo.car_first_reg_date;
+  const car_first_reg_date_view = car_first_reg_date.split('T')[0];
+
+  // 금액 부분 3자리 콤마 추가 
+  const final_price = detailInfo.final_price;
+  const final_price_str = final_price.toLocaleString('ko-KR');
+
+  const dealer_phone = detailInfo.dealer.phone;
+  const dealer_phone_str = dealer_phone.replace(/(\d{3})(\d{4})(\d{4})/, '$1 - $2 - $3');
+
+  const text = `
+    <div id="printArea" style="font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; padding: 20px; border: 1px solid #ddd; text-align: left;">
+    <h2 style="text-align: center; text-decoration: underline;">경 락 확 인 서</h2>
+    
+    <p class="text-center mt-3">「자동차등록규칙 제33조 2항 [나] 목에 근거하여 자동차경매거래를 증명합니다.』</p>
+
+    <div style="margin-bottom: 20px; padding: 10px; border-radius: 5px;">
+        <h5 style="margin-bottom: 10px; color: #333;">◼︎ 경락 내역</h5>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">출풍사</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">위카옥션(주)</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">상품번호</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.unique_number}</td>
+            </tr>
+
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">경매회차</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;"></td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">경매일</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${created_at_view}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">차명</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_model + ' ' + detailInfo.car_model_sub}</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">차량번호</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_no}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">연식</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_year}</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">최초등록일</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${car_first_reg_date_view}</td>
+            </tr>
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">배기량</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;"></td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">계기판주행</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_km} km</td>
+            </tr>
+        </table>
+
+        <h5 style="margin-bottom: 10px; color: #333; margin-top: 30px;">◼︎ 경락 금액</h5>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px; margin-top: 10px;">
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">경락대금</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 100%;" class="d-flex justify-content-between">
+                <span class="print-input" id="done-price">${final_price_str} 원</span>
+                <span class="text-danger" style="font-size: 12px;">(VAT 포함금액)</span>
+              </td>
+            </tr>
+        </table>
+        <p>※ 위 경락대금에 대한 입금사실을 확인합니다.</p>
+
+        <h5 style="margin-bottom: 10px; color: #333; margin-top: 30px;">◼︎ 매도자 정보</h5>
+        <table style="width: 100%; border-collapse: collapse;">
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">매도자</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.owner_name}</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">주민(법인)번호</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;"></td>
+            </tr>
+
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">주소</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 80%;" colspan="3">
+                (${detailInfo.addr_post}) ${detailInfo.addr1} ${detailInfo.addr2}
+              </td>
+            </tr>
+        </table>
+
+
+        <h5 style="margin-bottom: 10px; color: #333; margin-top: 30px;">◼︎ 경락자 정보</h5>
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; margin-top: 10px;">
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">상호명</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.dealer.company}</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">사업자번호</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;"></td>
+            </tr>
+
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">대표자명</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.dealer.name}</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">연락처</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${dealer_phone_str}</td>
+            </tr>
+
+            <tr>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">주소</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 80%;" colspan="3">
+                (${detailInfo.dealer.company_post}) ${detailInfo.dealer.company_addr1} ${detailInfo.dealer.company_addr2}
+              </td>
+            </tr>
+        </table>
+
+
+        <p>이 문서는 (주)위카옥션의 승인 없이 수정할 수 없습니다.</p>
+        <p>「자동차관리법』 제60조 제1항 및 동법시행규칙 제 126조 제3항의 규정에 의하여 개설된 자동차 경매장</p>
+        <p>※ 상기차량을 경락 받은 매매업자가 상품용으로 이전등록하는 경우 매도인의 인감증영서 대신 본 경락확인서로 대신할 수 있음.</p>
+
+    </div>
+
+    <div style="margin-top: 20px; margin-bottom: 20px;">
+      <h3 style="margin-bottom: 10px; color: #333; text-align: center;">위카옥션(주)</h3>
+    </div>
+
+  </div>
+
+  <div class="d-flex justify-content-center">
+    <button id="print-button" class="btn btn-primary" style="padding: 10px 20px 10px 20px; margin-top: 20px;">프린트</button>
+  </div>
+  `;
+
+  wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20, height:840 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+
+
+    setTimeout(() => {
+      const printButton = document.getElementById('print-button');
+      if (printButton) {
+        printButton.addEventListener('click', () => {
+          const printArea = document.getElementById('printArea');
+          if (printArea) {
+            printSpecificArea(printArea);
+          }
+        });
+      }
+    }, 300); // 모달이 완전히 렌더링될 시간을 조금 더 길게 줌
+    
+}
+
+
+// 특정 영역만 프린트하는 함수
+function printSpecificArea(elementToPrint) {
+  // 현재 페이지의 스타일을 저장
+  const originalStyles = document.querySelectorAll('style, link[rel="stylesheet"]');
+  const styles = Array.from(originalStyles).map(style => style.outerHTML).join('');
+  
+  // 입력된 데이터를 수집
+  const inputData = {};
+  const inputs = elementToPrint.querySelectorAll('.print-input');
+  inputs.forEach(input => {
+    inputData[input.id] = input.value;
+  });
+  
+  // 새 창 열기
+  const printWindow = window.open('', '_blank', 'width=800,height=600');
+  
+  if (!printWindow) {
+    alert('팝업이 차단되었습니다. 팝업 차단을 해제해주세요.');
+    return;
+  }
+  
+  // 입력 필드에 값을 채운 HTML 생성
+  let printHTML = elementToPrint.outerHTML;
+  
+  // 입력 필드를 정적 텍스트로 변환
+  Object.keys(inputData).forEach(id => {
+    const value = inputData[id] || '';
+    const inputRegex = new RegExp(`<input[^>]*id="${id}"[^>]*>`, 'g');
+    printHTML = printHTML.replace(inputRegex, `<div style="padding: 8px; min-height: 20px;">${value}</div>`);
+  });
+  
+  // HTML 구조를 문자열로 작성
+  const printContent = `
+    <html>
+      <head>
+        <title>경락확인서</title>
+        ${styles}
+        <style>
+          body { margin: 0; padding: 0; }
+          @media print {
+            body { margin: 0; padding: 0; }
+            button { display: none !important; }
+          }
+        </style>
+      </head>
+      <body>
+        ${printHTML}
+      </body>
+    </html>
+  `;
+  
+  printWindow.document.write(printContent);
+  printWindow.document.close();
+  
+  // 스크립트를 별도로 추가
+  printWindow.onload = function() {
+    setTimeout(function() {
+      printWindow.print();
+      setTimeout(function() { 
+        printWindow.close(); 
+      }, 100);
+    }, 300);
+  };
+}
+
+
 const toClaim = () => {
   if (!disableClaimButton.value) {
     router.push({ name: 'posts.create.withAuctionId', params: { boardId: 'claim', auctionId: auctionId.value } });
@@ -2130,6 +2357,10 @@ onMounted(async () => {
 
   if(auctionDetail.value?.data?.status === 'ing' && isUser.value){
     startPolling();
+  }
+
+  if(auctionDetail.value?.data?.status == 'done' && isDealer.value){
+    openDoneModal();
   }
 
   if(auctionDetail.value?.data?.status == 'chosen' && isDealer.value){
