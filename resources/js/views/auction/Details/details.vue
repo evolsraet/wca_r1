@@ -308,7 +308,7 @@
               <div v-show="openSection === 'general'" class="dropdown-content mt-0 p-4">
                 <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                   <iframe
-                      src="https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf"
+                      :src="diagPdf"
                       width="100%"
                       height="600px"
                       
@@ -912,6 +912,7 @@ export default {
 </script>
 
 <script setup>
+import diagPdf from '../../../../pdf/diag_result.pdf';
 import iconUp from "../../../../img/Icon-black-up.png";
 import iconDown from "../../../../img/Icon-black-down.png";
 import { ref, computed, onMounted, onUnmounted, watch, watchEffect, onBeforeUnmount , inject,reactive,nextTick} from 'vue';
@@ -1329,7 +1330,7 @@ const openAlarmModal = () => {
     <h5>진단 평가</h5>
     <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <iframe
-            src="https://diag.wecarmobility.co.kr/uploads/result/WI-23-000001_92.pdf"
+            src="${diagPdf}"
             width="100%"
             height="680px"
             
