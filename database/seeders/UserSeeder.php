@@ -59,7 +59,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => '부산유저1',
-                'email' => 'busanuser@demo.com',
+                'email' => 'busanuser@busancar.org',
                 'password' => '123123123',
                 'status' => 'ok',
                 'phone' => '010-1515-5554',
@@ -99,7 +99,7 @@ class UserSeeder extends Seeder
             ],
             [
                 'name' => '부산딜러1',
-                'email' => 'busandealer@demo.com',
+                'email' => 'busandealer@busancar.org',
                 'password' => '123123123',
                 'status' => 'ok',
                 'phone' => '010-1515-5555',
