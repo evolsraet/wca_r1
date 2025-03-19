@@ -940,7 +940,7 @@ import { initReviewSystem } from '@/composables/review';
 import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
 import useLikes from '@/composables/useLikes';
-import { isEqual } from 'date-fns';
+import { constructNow, isEqual } from 'date-fns';
 
 const { getContacts, contacts, pagination } = initAddressBookSystem();
 const { posts, getPosts, deletePost, isLoading, getBoardCategories } = initPostSystem();
@@ -1349,6 +1349,21 @@ const openAlarmModal = () => {
 }
 
 const openClaimInfoModal = (id) => {
+
+  const claim_day = auctionDetail.value?.data.claim_day;
+  const done_at = new Date(auctionDetail.value?.data.done_at);
+
+  const claim_day_date = done_at.getTime() + claim_day * 24 * 60 * 60 * 1000;
+
+  if(claim_day_date < Date.now()){
+
+    wica.ntcn(swal)
+      .title('')
+      .icon('E') //E:error , W:warning , I:info , Q:question
+      .alert('클레임 기간을 지났습니다.');
+
+    return;
+  }
   const text = `<div style="height: 592px; overflow-y: auto;">
     <h3 style="text-align: center;">진단오류 보상 안내</h3>
       <div style="padding: 20px; text-align: left;">
@@ -1456,6 +1471,7 @@ const openClaimInfoModal = (id) => {
       // 결과 처리 로직
     })
     .confirm(text); // 모달 내용 설정
+
 }
 
 const openDoneModal = (id) => {

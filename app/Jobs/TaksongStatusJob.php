@@ -124,8 +124,14 @@ class TaksongStatusJob implements ShouldQueue
                 case 'done':
                     // 배송완료
 
+                    $updateData = [
+                        'status' => 'done',
+                        'is_taksong' => 'done',
+                        'done_at' => now()
+                    ];
+
                     // 딜러가 입금하고 확인하는 과정 필요 일단 임시로 자동으로 경매완료 처리                     
-                    Auction::where('car_no', $result->data[0]->chk_car_no)->update(['status' => 'done', 'is_taksong' => 'done']);
+                    Auction::where('car_no', $result->data[0]->chk_car_no)->update($updateData);
 
                     // 완료 알림 발송
                     AuctionDoneJob::dispatch($user_id, $auction_id, 'user');

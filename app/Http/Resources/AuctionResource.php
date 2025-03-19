@@ -122,6 +122,8 @@ class AuctionResource extends JsonResource
             }
         }
 
+        $addArray['claim_day'] = env('CLAIM_DAY', 0);
+
         // 날짜 필드를 Y-m-d 포맷으로 변환
         // $timestampFields = ['created_at', 'updated_at', 'deleted_at'];
         // foreach ($timestampFields as $field) {
