@@ -186,7 +186,7 @@
                   <!-- 백엔드 오류 메시지 -->
       
                   <!-- 소셜 로그인 섹션 -->
-                  <div class="login-v2 mb-3" style="display: none;">
+                  <div class="login-v2 mb-3" style="">
                     <h3 class="my-4 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
                     <ul class="login-v2-area">
                       <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal('google')">Google</a></li>

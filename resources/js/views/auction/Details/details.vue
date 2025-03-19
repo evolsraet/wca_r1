@@ -701,7 +701,7 @@
                 class="my-4 btn-primary btn w-100"
                 @click="dealerAddrCompetion"
               >
-                    <p>현 주소지 탁송하기</p>
+                    <p>탁송하기</p>
                   </button>
                 </div>
                     <div v-if="showModal" class="modal-overlay p-3">
