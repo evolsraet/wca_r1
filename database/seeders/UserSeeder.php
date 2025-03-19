@@ -63,7 +63,7 @@ class UserSeeder extends Seeder
                 'password' => '123123123',
                 'status' => 'ok',
                 'phone' => '010-1515-5554',
-                'role' => 'dealer',
+                'role' => 'user',
             ],
             [
                 'name' => '데모딜러1',
