@@ -58,6 +58,14 @@ class UserSeeder extends Seeder
                 'role' => 'user',
             ],
             [
+                'name' => '부산유저1',
+                'email' => 'busanuser@demo.com',
+                'password' => '123123123',
+                'status' => 'ok',
+                'phone' => '010-1515-5554',
+                'role' => 'dealer',
+            ],
+            [
                 'name' => '데모딜러1',
                 'email' => 'dealer1@demo.com',
                 'password' => '123123123',
@@ -87,6 +95,14 @@ class UserSeeder extends Seeder
                 'password' => '123123123',
                 'status' => 'ok',
                 'phone' => '010-5555-5554',
+                'role' => 'dealer',
+            ],
+            [
+                'name' => '부산딜러1',
+                'email' => 'busandealer@demo.com',
+                'password' => '123123123',
+                'status' => 'ok',
+                'phone' => '010-1515-5555',
                 'role' => 'dealer',
             ],
         ];
