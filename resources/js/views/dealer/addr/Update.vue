@@ -3,7 +3,7 @@
     <div class="row justify-content-center my-1">
       <div class="col-md-10">
         <hr>
-        <h4 class="pt-2 pb-4">탁송 주소 관리</h4>
+        <h4 class="pt-2 pb-4">배송지 관리</h4>
         <div class="card border-0 shadow-none my-4">
           <div class="card-body">
             <form @submit.prevent="submitForm">
