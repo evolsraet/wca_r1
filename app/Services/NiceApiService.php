@@ -14,9 +14,9 @@ class NiceApiService
 
     public function __construct()
     {
-        $this->clientId = env('NICE_CLIENT_ID');
-        $this->clientSecret = env('NICE_CLIENT_SECRET');
-        $this->productId = env('NICE_PRODUCT_ID');
+        $this->clientId = config('services.niceAuth.NICE_CLIENT_ID');
+        $this->clientSecret = config('services.niceAuth.NICE_CLIENT_SECRET');
+        $this->productId = config('services.niceAuth.NICE_PRODUCT_ID');
     }
 
     /**

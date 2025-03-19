@@ -370,14 +370,14 @@ class AuctionService
     // 카머스 시세확인 인증 API
     public function getCarmerceAuth()
     {
-        $auth = env('CARMERCE_API_AUTH');
-        $password = env('CARMERCE_API_PASSWORD');
+        $auth = config('carmerceApi.CARMERCE_API_AUTH');
+        $password = config('carmerceApi.CARMERCE_API_PASSWORD');
 
         // 시세확인 인증 
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => env('CARMERCE_AUTH_API_URL'),
+            CURLOPT_URL => config('carmerceApi.CARMERCE_AUTH_API_URL'),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -413,7 +413,7 @@ class AuctionService
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
-            CURLOPT_URL => env('CARMERCE_PRICE_API_URL'),
+            CURLOPT_URL => config('carmerceApi.CARMERCE_PRICE_API_URL'),
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_ENCODING => '',
             CURLOPT_MAXREDIRS => 10,
@@ -790,8 +790,8 @@ class AuctionService
     // 나이스 API (본인인증 토큰생성)
     public function niceApiToken()
     {
-        $clientId = env('NICE_CLIENT_ID');
-        $clientSecret = env('NICE_CLIENT_SECRET');
+        $clientId = config('services.niceAuth.NICE_CLIENT_ID');
+        $clientSecret = config('services.niceAuth.NICE_CLIENT_SECRET');
         
         // Base64 인코딩
         $authorization = base64_encode($clientId . ':' . $clientSecret);

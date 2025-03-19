@@ -55,7 +55,7 @@ class TaksongAddJob implements ShouldQueue
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
         CURLOPT_POSTFIELDS => array(
-            'auth' => env('TAKSONG_AUTH'),
+            'auth' => config('taksongApi.TAKSONG_AUTH'),
             'chk_trans_type' => 'RD', // 탁송 유형
             'chk_accepted_at' => $taksong_wish_at, // 탁송 날짜
             'chk_accepted_time_at' => $taksong_wish_at_time, // 탁송 시간
@@ -66,7 +66,7 @@ class TaksongAddJob implements ShouldQueue
             'chk_departure_address' => $data['startAddr'], // 출발지 주소
             'chk_dest_mobile' => $data['destMobile'], // 도착지 전화번호
             'chk_dest_address' => $data['destAddr'], // 도착지 주소
-            'api_key' => env('TAKSONG_API_KEY') // API 키
+            'api_key' => config('taksongApi.TAKSONG_API_KEY') // API 키
         ),
         ));
         

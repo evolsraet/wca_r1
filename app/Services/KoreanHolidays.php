@@ -15,7 +15,7 @@ class KoreanHolidays
 
     public function __construct()
     {
-        $this->apiKey = env('KOR_HOLIDAY_API_KEY', null);
+        $this->apiKey = config('holidays.KOR_HOLIDAY_API_KEY', null);
         if (!$this->apiKey) {
             throw new \Exception('KOR_HOLIDAY_API_KEY is not set');
         }

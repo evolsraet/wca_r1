@@ -51,7 +51,7 @@ class TaksongStatusJob implements ShouldQueue
         CURLOPT_FOLLOWLOCATION => true,
         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
         CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => array('auth' => env('TAKSONG_AUTH'),'chk_id' => $response,'api_key' => env('TAKSONG_API_KEY')),
+        CURLOPT_POSTFIELDS => array('auth' => config('taksongApi.TAKSONG_AUTH'),'chk_id' => $response,'api_key' => config('taksongApi.TAKSONG_API_KEY')),
         ));
 
         $result = curl_exec($curl);

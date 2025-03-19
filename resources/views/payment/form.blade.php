@@ -9,8 +9,8 @@ header("Content-Type:text/html; charset=utf-8;");
 *******************************************************
 */  
 
-$merchantKey = env('NICE_PAY_CLIENT_KEY'); // 상점키
-$MID         = env('NICE_PAY_CLIENT_ID'); // 상점아이디
+$merchantKey = config('nicePay.NICE_PAY_CLIENT_KEY'); // 상점키
+$MID         = config('nicePay.NICE_PAY_CLIENT_ID'); // 상점아이디
 $goodsName   = $auctionName; // 결제상품명
 $price       = $auctionPrice; // 결제상품금액
 // $buyerName   = ""; // 구매자명 

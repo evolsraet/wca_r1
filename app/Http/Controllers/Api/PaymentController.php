@@ -174,7 +174,7 @@ class PaymentController extends Controller
             ****************************************************************************************
             */	
             $ediDate = date("YmdHis");
-            $merchantKey = env('NICE_PAY_CLIENT_KEY'); // 상점키
+            $merchantKey = config('nicePay.NICE_PAY_CLIENT_KEY'); // 상점키
             $signData = bin2hex(hash('sha256', $authToken . $mid . $amt . $ediDate . $merchantKey, true));
 
             try{
@@ -334,12 +334,12 @@ class PaymentController extends Controller
         $ExpTime = date('His', strtotime($data['VbankExpTime']));
 
         // 임시 테스트용 데이터 변형
-        $tid = $this->generateTID(env('NICE_PAY_VIRTUAL_ACCOUNT_CLIENT_ID'));
-        $mid = env('NICE_PAY_VIRTUAL_ACCOUNT_CLIENT_ID'); // 상점 ID
+        $tid = $this->generateTID(config('nicePayV.NICE_PAY_VIRTUAL_ACCOUNT_CLIENT_ID'));
+        $mid = config('nicePayV.NICE_PAY_VIRTUAL_ACCOUNT_CLIENT_ID'); // 상점 ID
         $amt = $data['Amt']; // 상품 가격
         $ediDate = date("YmdHis"); // 전문 생성 일시
         $moid = $data['Moid']; // 가맹점 주문 번호 (유니크해야 함)
-        $merchantKey = env('NICE_PAY_VIRTUAL_ACCOUNT_CLIENT_KEY'); // 상점 키
+        $merchantKey = config('nicePayV.NICE_PAY_VIRTUAL_ACCOUNT_CLIENT_KEY'); // 상점 키
         $vbankBankCode = "004"; // 가상계좌 은행 코드 (예: 기업은행)
         $vbankNum = $VbankNum; // 입금 계좌번호
         $vbankAccountName = $VbankAccountName; // 입금 예금주명

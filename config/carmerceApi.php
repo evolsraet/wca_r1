@@ -1,0 +1,9 @@
+<?php
+
+return [
+    'CARMERCE_AUTH_API_URL' => env('CARMERCE_AUTH_API_URL', null),
+    'CARMERCE_PRICE_API_URL' => env('CARMERCE_PRICE_API_URL', null),
+    'CARMERCE_API_AUTH' => env('CARMERCE_API_AUTH', null),
+    'CARMERCE_API_PASSWORD' => env('CARMERCE_API_PASSWORD', null),
+];
+

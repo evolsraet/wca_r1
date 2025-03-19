@@ -19,11 +19,11 @@ class AligoService
 
     public function __construct()
     {
-        $this->apiKey = env('SMS_APIKEY');
-        $this->userId = env('SMS_USER_ID');
-        $this->admin_mobile = env('SMS_ADMIN_MOBILE');
-        $this->senderkey = env('SMS_SENDERKEY');
-        $this->sms_sender = env('SMS_SENDER');
+        $this->apiKey = config('smskey.SMS_APIKEY');
+        $this->userId = config('smskey.SMS_USER_ID');
+        $this->admin_mobile = config('smskey.SMS_ADMIN_MOBILE');
+        $this->senderkey = config('smskey.SMS_SENDERKEY');
+        $this->sms_sender = config('smskey.SMS_SENDER');
     }
 
     public function send($phone, $tpl_data = null)

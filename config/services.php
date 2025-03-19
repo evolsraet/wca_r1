@@ -52,4 +52,13 @@ return [
         'redirect' => env('GOOGLE_REDIRECT_URI'),
     ],
 
+    // 나이스 본인인증
+    'niceAuth' => [
+        'NICE_CLIENT_ID' => env('NICE_CLIENT_ID'),
+        'NICE_CLIENT_SECRET' => env('NICE_CLIENT_SECRET'),
+        'NICE_PRODUCT_ID' => env('NICE_PRODUCT_ID')
+    ],
+
+    // 나이스 가상계좌
+
 ];
