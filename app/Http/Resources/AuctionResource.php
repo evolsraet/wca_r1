@@ -118,11 +118,11 @@ class AuctionResource extends JsonResource
             }
 
             if (in_array($parentArray['status'], ['chosen'])) {
-                $addArray['takson_end_at'] = $auction->choice_at->addWeekdaysExcludingHolidays(env('TAKSONG_DAY', 0));
+                $addArray['takson_end_at'] = $auction->choice_at->addWeekdaysExcludingHolidays(config('days.taksong_day'));
             }
         }
 
-        $addArray['claim_day'] = env('CLAIM_DAY', 0);
+        $addArray['claim_day'] = config('days.claim_day');
 
         // 날짜 필드를 Y-m-d 포맷으로 변환
         // $timestampFields = ['created_at', 'updated_at', 'deleted_at'];

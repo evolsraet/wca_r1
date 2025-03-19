@@ -116,7 +116,7 @@ class AuctionService
                             if (!$auction->is_reauction && $auction->status == 'wait') {
                                 $auction->status = 'ing';
                                 $auction->is_reauction = true;
-                                $auction->final_at = now()->addDays(env('REAUCTION_DAY'));
+                                $auction->final_at = now()->addDays(config('days.reauction_day'));
 
                                 Log::info('재경매 모드', ['method' => $auction]);
 
@@ -138,7 +138,7 @@ class AuctionService
                             // 진단으로 변경
                             if (!$auction->is_reauction && $auction->status == 'ask') {
                                 $auction->status = 'diag';
-                                $auction->final_at = now()->addDays(env('AUCTION_DAY'));
+                                $auction->final_at = now()->addDays(config('days.auction_day'));
 
 
                                 Log::info('경매 상태 업데이트 진단대기중 모드', ['method' => $auction]);
@@ -287,7 +287,7 @@ class AuctionService
 
                 // 경매진행중 알림
                 if($auction->status == 'ing'){
-                    $auction->final_at = now()->addDays(env('AUCTION_DAY'));
+                    $auction->final_at = now()->addDays(config('days.auction_day'));
                     if(!$auction->bid_id){
                         Log::info('경매 상태 업데이트 경매진행중 모드', ['method' => $auction]);
 
@@ -723,7 +723,7 @@ class AuctionService
             if($auction->final_at){
                 if(Carbon::now() > $auction->final_at){
                     $auction->status = 'wait';
-                    $auction->choice_at = Carbon::now()->addDays(env('CHOICE_DAY'));
+                    $auction->choice_at = Carbon::now()->addDays(config('days.choice_day'));
                     $auction->save();
                     // 알림 보내기
                     AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '','');

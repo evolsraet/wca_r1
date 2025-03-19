@@ -172,7 +172,7 @@ class AuctionFactory extends Factory
         }
 
         if($status === 'ing') {
-            $result['final_at'] = now()->addDays(env('AUCTION_DAY'));
+            $result['final_at'] = now()->addDays(config('days.auction_day'));
         }
 
         if($status === 'done' || $status === 'dlvr') {
