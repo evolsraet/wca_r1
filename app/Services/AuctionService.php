@@ -447,6 +447,14 @@ class AuctionService
         return $result;
     }
 
+
+    private function calculateCheckKey($chkSec, $businessNumber) 
+    {
+        if (!is_numeric($businessNumber) || $businessNumber == 0) {
+            return 0; // 또는 다른 기본값
+        }
+        return (($chkSec % $businessNumber) % 997);
+    }
     // 나이스DNR 차량정보/시세확인 API
     public function getNiceDnr($ownerNm, $vhrNo)
     {
@@ -456,7 +464,8 @@ class AuctionService
         
         $chkSec = date('YmdHis'); // 예: chkSec 값
         $businessNumber = env('NICE_API_BUSINESS_NUMBER'); // 예: 사업자번호
-        $chkKey = (($chkSec % $businessNumber) % 997);
+        $chkKey = $this->calculateCheckKey($chkSec, $businessNumber);
+
 
         curl_setopt_array($curl, array(
             CURLOPT_URL => env('NICE_API_URL').'?

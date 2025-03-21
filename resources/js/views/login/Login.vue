@@ -189,9 +189,18 @@
                   <div class="login-v2 mb-3" style="">
                     <h3 class="my-4 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
                     <ul class="login-v2-area">
-                      <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal('google')">Google</a></li>
-                      <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal('naver')">Naver</a></li>
-                      <li><a href="#" class="kakao" title="kakao" @click.prevent="openAlarmModal('kakao')">Kakao</a></li>
+                      <!-- <li><a href="#" class="google" title="google" @click.prevent="handleSocialLogin('google')">Google</a></li>
+                      <li><a href="#" class="naver" title="naver" @click.prevent="handleSocialLogin('naver')">Naver</a></li>
+                      <li><a href="#" class="kakao" title="kakao" @click.prevent="handleSocialLogin('kakao')">Kakao</a></li> -->
+                      <li>
+                        <a href="/auth/google/redirect" class="google">Google</a>
+                      </li>
+                      <li>
+                        <a href="/auth/naver/redirect" class="naver">Naver</a>
+                      </li>
+                      <li>
+                        <a href="/auth/kakao/redirect" class="kakao">Kakao</a>
+                      </li>
                     </ul>
                   </div>
                   <!-- 로그인 버튼 -->
@@ -253,9 +262,21 @@
                   <div class="login-v2 my-5">
                     <h3 class="mb-4 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
                     <ul class="login-v2-area">
-                      <li><a href="#" class="google" title="google" @click.prevent="openAlarmModal('google')">Google</a></li>
-                      <li><a href="#" class="naver" title="naver" @click.prevent="openAlarmModal('naver')">Naver</a></li>
-                      <li><a href="#" class="kakao" title="kakao" @click.prevent="openAlarmModal('kakao')">Kakao</a></li>
+                      <!-- <li><a href="#" class="google" title="google" @click.prevent="handleSocialLogin('google')">Google</a></li>
+                      <li><a href="#" class="naver" title="naver" @click.prevent="handleSocialLogin('naver')">Naver</a></li>
+                      <li><a href="#" class="kakao" title="kakao" @click.prevent="handleSocialLogin('kakao')">Kakao</a></li> -->
+
+                      <li>
+                        <a href="/auth/google/redirect" class="google">Google</a>
+                      </li>
+                      <li>
+                        <a href="/auth/naver/redirect" class="naver">Naver</a>
+                      </li>
+                      <li>
+                        <a href="/auth/kakao/redirect" class="kakao">Kakao</a>
+                      </li>
+
+
                     </ul>
                   </div>
                   <!-- 로그인 버튼 -->
@@ -292,6 +313,7 @@
 import { Swiper, SwiperSlide } from "swiper/vue";
 import "swiper/swiper-bundle.css";
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import { constructNow } from 'date-fns';
 
 
 export default {
@@ -371,12 +393,8 @@ const checkScreenWidth = () => {
 };
 const openAlarmModal = (service) => {
 
-  if(service === 'kakao') {
-    window.open('http://localhost/auth/kakao', '_blank');
-  }else if(service === 'naver'){
-    window.open('http://localhost/auth/naver', '_blank');
-  }else if(service === 'google'){
-    window.open('http://localhost/auth/google', '_blank');
+  if(service) {
+    store.dispatch('auth/handleSocialLogin', service);
   }else{
 
   const text= `<div class="enroll_box" style="position: relative;">
@@ -407,16 +425,31 @@ const submitLogin = async () => {
   const returnUserData = await store.dispatch('auth/login', loginForm.value);
   if(returnUserData.isError) {
     if(returnUserData.isAlert) {
-      wica.ntcn(swal)
-      .title(returnUserData.msg)
-      .icon('E')
-      .alert('계속 될 경우 관리자에게 문의해주세요.');   
+        wica.ntcn(swal)
+        .title(returnUserData.msg)
+        .icon('E')
+        .alert('계속 될 경우 관리자에게 문의해주세요.')
+        .callback(() => {
+            // 회원가입 필요한 경우
+            if (returnUserData.needRegister) {
+                // 소셜 데이터를 스토어에 저장
+                store.commit('auth/SET_SOCIAL_DATA', returnUserData.social_data);
+                // 회원가입 페이지로 이동
+                router.push({ 
+                    name: 'auth.register',
+                    query: { 
+                        social: true,
+                        email: returnUserData.social_data.email,
+                        name: returnUserData.social_data.name
+                    }
+                });
+            }
+        });   
     } else {
-      //validationErrors.value = returnUserData.rawData.response.data.errors;
-      wica.ntcn(swal)
-      .title(returnUserData.rawData.response.data.message)
-      .icon('E')
-      .alert();   
+        wica.ntcn(swal)
+        .title(returnUserData.rawData.response.data.message)
+        .icon('E')
+        .alert();   
     }
   } else {
     if(returnUserData.isSuccess) {
@@ -459,6 +492,68 @@ const animationClass = computed(() => {
   return loginCardRef.value ? 'enter-active' : '';
 });
 
+const handleSocialLogin = (provider) => {
+  if (processing.value) return;
+  processing.value = true;
+
+  // 팝업이 아닌 현재 창에서 리다이렉트
+  window.location.href = `/auth/${provider}/redirect`;
+};
+
+// 소셜 로그인 콜백 처리
+const handleSocialLoginCallback = async (data) => {
+  try {
+    if(data.isError) {
+      if(data.isAlert) {
+        // console.log('data',data);
+        wica.ntcn(swal)
+          .title(data.msg)
+          .icon('E')
+          .alert('계속 될 경우 관리자에게 문의해주세요.');   
+
+          if(data.needRegister) {
+            router.push({ name: "auth.register", query: {
+              social: true,
+              email: data.social_data.email,
+              name: data.social_data.name
+            }});
+          }
+      }
+    } else {
+      if(data.isSuccess) {
+        wica.ntcn(swal).icon('S').title('로그인 성공').fire();
+
+        let userData = data.data.user;
+        await store.dispatch("auth/getUser");
+        await store.dispatch("auth/getAbilities");
+        await store.dispatch("enums/getData");
+        await store.dispatch("fields/getData");
+        
+        // 페이지 리디렉션 조건
+        const guestClickedAuction = localStorage.getItem('guestClickedAuction');
+        
+        if (userData.roles.includes('admin')) {
+          router.push({ name: "admin.index" });
+        } else if (userData.roles.includes('dealer')) {
+          router.push({ name: "dealer.index" });
+        } else if (guestClickedAuction !== 'true' && userData.roles.includes('user')) {
+          router.push({ name: "user.index" });
+        } else if (guestClickedAuction === 'true' && userData.roles.includes('user')) {
+          router.push({ name: "sell" });
+          localStorage.removeItem('guestClickedAuction');
+        } else {
+          router.push({ name: "home" });
+        }
+      }
+    }
+  } catch (error) {
+    wica.ntcn(swal).icon('E').title('로그인 실패').fire();
+  } finally {
+    processing.value = false;
+  }
+};
+
+// 컴포넌트가 마운트될 때 콜백 데이터 확인
 onMounted(() => {
   updateCarName();
   store.commit('auth/CLEAR_ERROR_MESSAGE'); 
@@ -470,6 +565,13 @@ onMounted(() => {
   });
   window.addEventListener('resize', checkScreenWidth);
   checkScreenWidth();
+
+  // URL에서 소셜 로그인 콜백 데이터 확인
+  const urlParams = new URLSearchParams(window.location.search);
+  const callbackData = urlParams.get('social_callback');
+  if (callbackData) {
+    handleSocialLoginCallback(JSON.parse(decodeURIComponent(callbackData)));
+  }
 });
 
 onBeforeUnmount(() => {

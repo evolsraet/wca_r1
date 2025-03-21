@@ -11,7 +11,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\NiceApiController;
-
+use App\Http\Controllers\Auth\SocialAuthController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -52,42 +52,49 @@ Route::get('excelDown/{resource}', function ($resource) {
 
 // 소셜 간편 로그인 라우트
 // 카카오 로그인 리디렉션
-Route::get('auth/kakao', function () {
-    // echo 'test';
-    return Socialite::driver('kakao')->redirect();
+// Route::get('auth/kakao', function () {
+//     // echo 'test';
+//     return Socialite::driver('kakao')->redirect();
+// });
+
+// // 카카오 로그인 콜백
+// Route::get('auth/kakao/callback', function () {
+//     $kakaoUser = Socialite::driver('kakao')->user();
+//     // 사용자 정보 출력 (테스트용)
+//     dd($kakaoUser);
+// });
+
+
+// // 네이버 로그인 리디렉션
+// Route::get('auth/naver', function () {
+//     return Socialite::driver('naver')->redirect();
+// });
+
+// // 네이버 로그인 콜백
+// Route::get('auth/naver/callback', function () {
+//     $naverUser = Socialite::driver('naver')->user();
+//     dd($naverUser);
+// });
+
+// // 구글 로그인 리디렉션
+// Route::get('auth/google', function () {
+//     return Socialite::driver('google')->redirect();
+// });
+
+// // 구글 로그인 콜백
+// Route::get('auth/google/callback', function () {
+//     $googleUser = Socialite::driver('google')->user();
+//     dd($googleUser);
+// });
+
+
+// Route::get('/auth/{provider}', [SocialAuthController::class, 'redirect'])->name('social.login')->middleware('web');
+// Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback')->middleware('web');
+
+Route::middleware(['web'])->group(function () {
+    Route::get('auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])->name('social.redirect');
+    Route::get('auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback');
 });
-
-// 카카오 로그인 콜백
-Route::get('auth/kakao/callback', function () {
-    $kakaoUser = Socialite::driver('kakao')->user();
-    // 사용자 정보 출력 (테스트용)
-    dd($kakaoUser);
-});
-
-
-// 네이버 로그인 리디렉션
-Route::get('auth/naver', function () {
-    return Socialite::driver('naver')->redirect();
-});
-
-// 네이버 로그인 콜백
-Route::get('auth/naver/callback', function () {
-    $naverUser = Socialite::driver('naver')->user();
-    dd($naverUser);
-});
-
-// 구글 로그인 리디렉션
-Route::get('auth/google', function () {
-    return Socialite::driver('google')->redirect();
-});
-
-// 구글 로그인 콜백
-Route::get('auth/google/callback', function () {
-    $googleUser = Socialite::driver('google')->user();
-    dd($googleUser);
-});
-
-
 
 Route::get('/nice/test-api', [NiceApiController::class, 'testApi']);
 

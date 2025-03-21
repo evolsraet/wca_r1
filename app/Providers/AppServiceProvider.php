@@ -14,6 +14,7 @@ use App\Notifications\Channels\AligoChannel;
 use App\Services\AligoService;
 use Illuminate\Support\Facades\URL;
 use App\Helpers\FormatHelper;
+use App\Services\PriceService;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -157,11 +158,9 @@ class AppServiceProvider extends ServiceProvider
 
 
         // Helper를 전역 함수로 등록
-        if (!function_exists('format_price_to_man')) {
-            function format_price_to_man($price, $showWon = true) {
-                return FormatHelper::formatPriceToMan($price, $showWon);
-            }
-        }
+        \Blade::directive('priceToMan', function ($expression) {
+            return "<?php echo PriceService::formatPriceToMan($expression); ?>";
+        });
 
 
         $this->app->when(AligoChannel::class)

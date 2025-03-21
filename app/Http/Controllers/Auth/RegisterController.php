@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use App\Models\UserSns;
 
 class RegisterController extends Controller
 {
@@ -81,6 +82,22 @@ class RegisterController extends Controller
             if ($role) {
                 $user->assignRole($role);
             }
+
+            // 소셜 로그인 데이터가 세션에 있는 경우 처리
+            if (session()->has('social_user')) {
+                $socialUser = session()->get('social_user');
+                
+                UserSns::create([
+                    'user_id' => $user->id,
+                    'provider' => $socialUser['provider'],
+                    'provider_id' => $socialUser['provider_id'],
+                    'provider_email' => $socialUser['email'],
+                    'provider_data' => json_encode($socialUser['provider_data'])
+                ]);
+
+                session()->forget('social_user');
+            }
+
             return new UserResource($user);
         }
 

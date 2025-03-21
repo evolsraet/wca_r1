@@ -18,7 +18,7 @@ use App\Http\Requests\Auth\RegisterRequest;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Support\Facades\Schema;
-
+use Illuminate\Support\Facades\Log;
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -46,7 +46,11 @@ class AuthenticatedSessionController extends Controller
         //     'debbug' => 'hahahoho',
         // ]], 404);
 
+        Log::info('login',[$request]);
+
         $user = User::where('email', $request->email)->orWhere('phone', $request->email)->first();
+
+        Log::info('userinfo',[$user]);
 
         // 사용자 상태에 따른 로그인 제한 처리
         if ($user->status == 'ask') {

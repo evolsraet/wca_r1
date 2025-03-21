@@ -82,7 +82,13 @@
       <button type="submit" class="mt-3 w-100 btn btn-primary">저장</button>
     </form>
     -->
-      <UserRegisterForm/>
+
+    <div class="d-flex align-items-center">
+      <div class="mov-wide">
+        <UserRegisterForm/>
+      </div>
+    </div>
+
     </div>
     </div>
   </div>
@@ -356,4 +362,21 @@ input[type="password"] {
   padding: 2rem 0.5rem 1rem 0.5rem !important;
 }
 }
+
+@media (min-width: 992px) {
+  .mov-wide {
+      margin: 0 auto;
+      width: 35rem !important;
+      padding-top: 20px !important;
+      position: relative;
+  }
+}
+
+@media (max-width: 992px) {
+  .mov-wide {
+      width: 100% !important;
+  }
+}
+
+
 </style>

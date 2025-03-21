@@ -227,4 +227,9 @@ class User extends Authenticatable implements HasMedia
                 ->height(env('IMAGE_HEIGHT', 300));
         }
     }
+
+    public function socialAccounts()
+    {
+        return $this->hasMany(UserSns::class);
+    }
 }

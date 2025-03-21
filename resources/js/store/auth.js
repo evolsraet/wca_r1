@@ -98,5 +98,42 @@ export default {
       commit("SET_AUTHENTICATED", false);
       router.push({ name: "auth.login" });
     },
+
+    async socialLogin({ commit }, { provider }) {
+      try {
+        const response = await fetch(`/auth/${provider}/redirect`, {
+          method: 'GET',
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            'X-Requested-With': 'XMLHttpRequest'
+          }
+        });
+        
+        const data = await response.json();
+        
+        if (data.isSuccess) {
+          commit('SET_USER', data.data.user);
+          return {
+            isError: false,
+            isSuccess: true,
+            data: data.data
+          };
+        }
+        
+        return {
+          isError: true,
+          isAlert: true,
+          msg: data.msg || '로그인 처리 중 오류가 발생했습니다.'
+        };
+      } catch (error) {
+        return {
+          isError: true,
+          isAlert: true,
+          msg: '로그인 처리 중 오류가 발생했습니다.'
+        };
+      }
+    }
+
   },
 };

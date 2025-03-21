@@ -1002,7 +1002,14 @@
     //await store.dispatch("auth/getUser");
     const urlParams = new URLSearchParams(window.location.search);
     const typeParam = urlParams.get('type');
-    
+    const socialParam = urlParams.get('social');
+    const emailParam = urlParams.get('email');
+    const nameParam = urlParams.get('name');
+    if(socialParam){
+      profile.value.email = emailParam;
+      profile.value.name = nameParam;
+    }
+
     if(typeParam == 'dealer'){
       isDealerApplyCheckSelect.value = false;
       profile.value.isDealerApplyCheck = false;
