@@ -14,6 +14,10 @@ use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Services\MediaService;
 use Maatwebsite\Excel\Facades\Excel;
+use App\Services\CarHistoryService;
+use App\Services\NiceDNRService;
+use App\Services\CarmerceService;
+
 class AuctionController extends Controller
 {
     use CrudControllerTrait;
@@ -99,43 +103,52 @@ class AuctionController extends Controller
         // 캐시 없을 경우, 한달동안 저장
         $resource = Cache::remember($cacheKey, now()->addDays(30), function () use ($request) {
 
-            $auctionService = new AuctionService();
-            $niceDnrResult = $auctionService->getNiceDnr($request->input('owner'), $request->input('no'));
+            // $auctionService = new AuctionService();
+            // $niceDnrResult = $auctionService->getNiceDnr($request->input('owner'), $request->input('no'));
+            
+
+            $NiceDNRService = new NiceDNRService();
+            $niceDnrResult = $NiceDNRService->getNiceDnr($request->input('owner'), $request->input('no'), config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
+
+            $CarmerceService = new CarmerceService();
 
             // 임시 데이터 리턴
             return [
-                // 'owner' => $request->input('owner'),
-                // 'no' => $request->input('no'),
-                // 'model' => $niceDnrResult['carSize']['info']['modelNm'],
-                // 'modelSub' => "LX",
-                // 'grade' => "등급",
-                // 'gradeSub' => "세부등급",
-                // 'year' => "2019",
-                // 'firstRegDate' => "2018-11-01",
-                // 'mission' => "미션",
-                // 'fuel' => "연료",
-                // 'priceNow' => "시세", // 소매 시세가 (나이스DNR 시세확인 API
-                // 'priceNowWhole' => $this->getCarmerceResult(), // 도매 시세가 (카머스 시세확인 API)
                 'owner' => $request->input('owner'),
                 'no' => $request->input('no'),
-                'maker' => $niceDnrResult['carSize']['info']['makerNm'],
-                'model' => $niceDnrResult['carSize']['info']['modelNm'],
-                'modelSub' => $niceDnrResult['carSize']['info']['subGrade'],
-                'grade' => $niceDnrResult['carSize']['info']['grade'],
-                'gradeSub' => $niceDnrResult['carSize']['info']['subGrade'],
-                'year' => $niceDnrResult['carSize']['info']['year'],
-                'firstRegDate' => $niceDnrResult['carSize']['info']['firstRegistrationDate'],
-                'mission' => $niceDnrResult['carSize']['info']['transmission'],
-                'fuel' => $niceDnrResult['carSize']['info']['fuelType'],
-                'priceNow' => $niceDnrResult['carSize']['info']['currentPrice'], // 소매 시세가 (나이스DNR 시세확인 API
-                'priceNowWhole' => $this->getCarmerceResult($niceDnrResult['carSize']['info']), // 도매 시세가 (카머스 시세확인 API)
-                'thumbnail' => $niceDnrResult['carSize']['info']['thumbnail'],
-                'km' => $niceDnrResult['carSize']['info']['km'],
+                'maker' => $niceDnrResult['carSise']['info']['carinfo']['makerNm'],
+                'model' => $niceDnrResult['carSise']['info']['carinfo']['modelNm'],
+                // 'modelSub' => $niceDnrResult['data']['carSize']['info']['subGrade'],
+                // 'grade' => $niceDnrResult['data']['carSize']['info']['grade'],
+                // 'gradeSub' => $niceDnrResult['carSize']['info']['subGrade'],
+                'modelSub' => $niceDnrResult['carSise']['info']['carinfo']['formNm'],
+                'grade' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['gradeNm'],
+                'gradeSub' => '-',
+                'year' => $niceDnrResult['carSise']['info']['carinfo']['prye'],
+                'firstRegDate' => Carbon::parse($niceDnrResult['carParts']['outB0001']['list'][0]['resFirstDate'])->format('Y-m-d'),
+                'engineSize' => number_format($niceDnrResult['carSise']['info']['carinfo']['engineSize']).' cc',
+                'mission' => $niceDnrResult['carSise']['info']['carinfo']['gearBox'],
+                'fuel' => $niceDnrResult['carSise']['info']['carinfo']['fuel'],
+                'priceNow' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['trvlDstncPriceList'][0]['trvlDstncPrice'], // 소매 시세가 (나이스DNR 시세확인 API
+                'priceNowWhole' => $CarmerceService->getCarmerceResult($niceDnrResult['carInfo']), // 도매 시세가 (카머스 시세확인 API)
+                'thumbnail' => $niceDnrResult['carSise']['info']['carinfo']['classModelImg'],
+                'km' => $niceDnrResult['carParts']['outB0001']['list'][0]['resValidDistance'],
+                'tuning' => count($niceDnrResult['carParts']['outB0001']['list'][0]['resContentsList']),
+                'resUseHistYn' => $niceDnrResult['carParts']['outB0001']['list'][0]['resUseHistYn'] === 'Y' ? '사용' : '없음',
             ];
         });
 
 
         return response()->api($resource, $message);
+    }
+
+
+    public function getNiceDnr(Request $request)
+    {
+        $NiceDNRService = new NiceDNRService();
+        $resultData = $NiceDNRService->getNiceDnr($request->input('owner'), $request->input('no'), $request->input('key'));
+        return response()->api($resultData);
+
     }
 
     // 예상가 확인 API
@@ -484,6 +497,53 @@ class AuctionController extends Controller
     {
         $result = $this->service->diagnosticCode();
         return $result;
+    }
+
+
+    public function getCarHistory(Request $request)
+    {
+        // $testCarNumber = '53라9319';
+        // $carHistoryService = new CarHistoryService();
+        // $result = $carHistoryService->getCarHistory($testCarNumber);
+        // return response()->api($result);
+
+        return $this->getCarHistoryMock();
+    }
+
+    public function getCarHistoryMock()
+    {
+        $data = json_decode(file_get_contents(storage_path('mock/car_history_sample.json')), true);
+        
+        // 라벨 붙이기
+        $data['data'] = $this->applyLabels($data);
+        return response()->api($data);
+    }
+
+    private function applyLabels(array $data): array
+    {
+        $codeMap = config('carhistory_codes');
+
+        foreach ($codeMap as $key => $map) {
+            // 1. 단일 필드 처리 (예: 'r103')
+            if (isset($data[$key]) && isset($map[$data[$key]])) {
+                $data[$key . '_label'] = $map[$data[$key]];
+            }
+
+            // 2. 반복 항목 내부 처리 (예: 'r502-01' → 'r502')
+            if (str_contains($key, '-')) {
+                [$groupKey, $subKey] = explode('-', $key);
+
+                if (isset($data[$groupKey]) && is_array($data[$groupKey])) {
+                    foreach ($data[$groupKey] as $i => $item) {
+                        if (isset($item[$key]) && isset($map[$item[$key]])) {
+                            $data[$groupKey][$i][$key . '_label'] = $map[$item[$key]];
+                        }
+                    }
+                }
+            }
+        }
+
+        return $data;
     }
 
 }

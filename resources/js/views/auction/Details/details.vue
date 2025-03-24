@@ -195,11 +195,11 @@
 
               <CarInfoItem label="등급" :value="carDetails.grade" />
               <CarInfoItem label="연료" :value="carDetails.fuel" />
-              <CarInfoItem label="리콜이력" value="-" />
+              <CarInfoItem label="주행거리" :value="carDetails.km + ' m'" />
 
               <div class="detail-row" v-if="carDetails.modelSub || carDetails.gradeSub">
                 <CarInfoItem label="세부모델" :value="carDetails.modelSub" v-if="carDetails.modelSub" />
-                <CarInfoItem label="세부등급" :value="carDetails.gradeSub" v-if="carDetails.gradeSub" />
+                <!-- <CarInfoItem label="세부등급" :value="carDetails.gradeSub" v-if="carDetails.gradeSub" /> -->
               </div>
 
             </div>
@@ -540,8 +540,8 @@
                 <div  @click.stop="">
                   <div>
                     <div class="d-flex">
-                      <p class="tc-gray bold">도매가 <span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now_whole }}</span><span class="tc-primary">만원 </span>
-                        <span class="mx-2">|</span> 소매가<span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now }}</span><span class="tc-primary">만원 </span>
+                      <p class="tc-gray bold">도매가 <span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now_whole / 10000 }}</span><span class="tc-primary">만원 </span>
+                        <span class="mx-2">|</span> 소매가<span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now / 10000 }}</span><span class="tc-primary">만원 </span>
                       </p>
                     </div>
                   </div>
@@ -2179,10 +2179,10 @@ if (!amount.value || isNaN(parseFloat(amount.value))) {
   // alert('유효한 금액을 입력해주세요.');
 } else {
     // 최대값의 값을 만원 단위로 숫자를 바꾼다음 amount와 비교 하여 최대값을 넘어가지 않게 한다. 
-    const maxAmount = auctionDetail.value?.data?.middle_prices?.max * 10000;
-    const minAmount = auctionDetail.value?.data?.middle_prices?.min * 10000;
-    const avgAmount = auctionDetail.value?.data?.middle_prices?.avg * 10000;
-    const carPriceNowWhole = auctionDetail.value.data.car_price_now_whole * 10000;
+    const maxAmount = auctionDetail.value?.data?.middle_prices?.max;
+    const minAmount = auctionDetail.value?.data?.middle_prices?.min;
+    const avgAmount = auctionDetail.value?.data?.middle_prices?.avg;
+    const carPriceNowWhole = auctionDetail.value.data.car_price_now_whole;
 
 
     if(amount.value < carPriceNowWhole * 0.6){
@@ -2313,6 +2313,11 @@ const fetchAuctionDetail = async () => {
     carDetails.value.mission = carData.mission;
     carDetails.value.maker = carData.maker;
     carDetails.value.firstRegDate = carData.firstRegDate;
+    
+    const km = carData.km;
+    const formattedKm = km.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    carDetails.value.km = formattedKm;
+
     if (isUser.value && auctionDetail.value.data.status !== 'done') { 
       // top_bids를 통해 각 bid의 정보를 가져옵니다.
       if (auctionDetail.value.data.top_bids && auctionDetail.value.data.top_bids.length > 0) {

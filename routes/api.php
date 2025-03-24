@@ -114,3 +114,9 @@ Route::post('payment/notify', [PaymentController::class, 'notify']);
 
 Route::post('diag/result', [AuctionController::class, 'diagnosticResult']);
 Route::get('diag/code', [AuctionController::class, 'diagnosticCode']);
+
+Route::get('carHistory', [AuctionController::class, 'getCarHistory']);
+Route::get('carHistoryMock', [AuctionController::class, 'getCarHistoryMock']);
+
+
+Route::get('getNiceDnr', [AuctionController::class, 'getNiceDnr']);

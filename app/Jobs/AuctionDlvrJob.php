@@ -49,7 +49,7 @@ class AuctionDlvrJob implements ShouldQueue
 
         $data = [
             'title' => '모든 탁송정보가 입력되었습니다.',
-            'message' => "아래 기일까지 차량대금을 입력해주세요! 탁송은 '위카탁송' 에서 진행되며 별도의 안내 문자가 발송됩니다. ",
+            'message' => "아래 기일까지 차량대금을 입금해주세요! 탁송은 '위카탁송' 에서 진행되며 별도의 안내 문자가 발송됩니다. ",
             'data' => $this->thisData,
             'status4' => $this->thisData['final_price'],
             'status5' => $this->thisData['bank'].' '.$this->thisData['account'],

@@ -13,15 +13,15 @@
 
                 <CarInfoItem label="제조사" :value="carDetails.maker" />
                 <CarInfoItem label="년식" :value="carDetails.year" />
-                <CarInfoItem label="용도변경이력" value="-" />
+                <CarInfoItem label="용도변경이력" :value="carDetails.resUseHistYn" />
 
                 <CarInfoItem label="모델" :value="carDetails.model" />
-                <CarInfoItem label="배기량" value="2000cc" />
-                <CarInfoItem label="튜닝이력" value="1회" />
+                <CarInfoItem label="배기량" :value="carDetails.engineSize" />
+                <CarInfoItem label="튜닝이력" :value="carDetails.tuning + ' 회'" />
 
                 <CarInfoItem label="등급" :value="carDetails.grade" />
                 <CarInfoItem label="연료" :value="carDetails.fuel" />
-                <CarInfoItem label="리콜이력" value="-" />
+                <!-- <CarInfoItem label="리콜이력" value="-" /> -->
 
                 <div class="detail-row" v-if="carDetails.modelSub || carDetails.gradeSub">
                 <CarInfoItem label="세부모델" :value="carDetails.modelSub" v-if="carDetails.modelSub" />
@@ -42,22 +42,22 @@
                         v-if="!currentPriceRef"
                     >
                         <p class="text-secondary bold-18-font">예상 가격</p>
-                        <span class="tc-primary bold-18-font">만원</span>
+                        <span class="tc-primary bold-18-font">원</span>
                     </div>
 
                     <div class="top-content-style wd-100 mt-4" v-if="currentPriceRef">
                         <p class="text-secondary bold-18-font">예상 가격</p>
-                        <span class="tc-primary bold-18-font">{{ estimatedPrice ? estimatedPrice+' 만원' : '만원' }}</span>
+                        <span class="tc-primary bold-18-font">{{ estimatedPrice ? (estimatedPrice / 10000).toFixed(0) + ' 만원' : '원' }}</span>
                     </div>
                     
                     <div class="top-content-style wd-100 mt-4">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(소매가)</span></p>
-                        <span class="tc-primary bold-18-font">{{ carDetails.priceNow }} 만원</span>
+                        <span class="tc-primary bold-18-font">{{ carDetails.priceNow / 10000 }} 만원</span>
                     </div>
                     <div class="text-end">※ NICE D&R 제공</div>
                     <div class="top-content-style wd-100 mt-4">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(도매가)</span></p>
-                        <span class="tc-primary bold-18-font">{{ carDetails.priceNowWhole }} 만원</span>
+                        <span class="tc-primary bold-18-font">{{ carDetails.priceNowWhole / 10000 }} 만원</span>
                     </div>
                     <div class="text-end">※ 오토허브셀카 제공</div>
                     <p class="mt-2 text-secondary">※ 도매 및 소매 시세는 무사고 차량 표준주행거리(1년 15000Km)를 기준으로 제시된 금액 입니다.</p>
@@ -200,7 +200,7 @@ const openPriceModal = () => {
     const modal = document.getElementById('priceModal');
     if (modal) {
         document.getElementById('priceDisplay').textContent =
-            currentEstimatedPrice ? `${currentEstimatedPrice}원` : '데이터 없음';
+            currentEstimatedPrice ? `${(currentEstimatedPrice / 10000).toFixed(0)} 만원` : '데이터 없음';
         modal.style.display = 'block';
         // estimatedPrice.value = currentEstimatedPrice;
     }
@@ -233,7 +233,7 @@ const ExpectationPrice = () => {
                <div class="form-group">
                     <label style="color: #000; display: block; font-weight: bold; margin-bottom: 5px;">주행거리</label>
                     <div class="d-flex align-items-center">
-                        <input type="text" placeholder="키로수" name="mileage" class="mileage_input" value="" style="margin-right: 10px;"> Km                        
+                        <input type="text" placeholder="키로수" name="mileage" class="mileage_input" value="`+carDetails.value.km+`" style="margin-right: 10px;"> Km                        
                     </div>
                     <div class="error mileage-error" style="color: red;"></div>
                 </div>
@@ -524,11 +524,13 @@ const checkExpectedPriceClick = async () => {
 
 const showCurrentPriceModal = (estimatedPrice) => {
     const price = estimatedPrice || '알 수 없음'; // 예상 가격 기본값 처리
+
+    const formattedPrice = (price / 10000).toFixed(0);
     const text = `
     <div style="padding: 20px; text-align: center; border-radius: 10px;">
          <div class="top-content-style wd-100 my-4">
             <p class="text-secondary bold-18-font">예상 가격</p>
-            <span class="tc-primary bold-18-font">${price} 만원</span>
+            <span class="tc-primary bold-18-font">${formattedPrice} 만원</span>
         </div>
         <p style="font-size: 14px; color: #888;">예상 가격은 현재 차량 정보를 기준으로 산정된 값입니다.</p>
     </div>

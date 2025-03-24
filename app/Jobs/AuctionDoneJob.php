@@ -99,7 +99,7 @@ class AuctionDoneJob implements ShouldQueue
                     'status10' => $auction->final_price, // 최종 경매가
                     'status11' => $auction->total_fee ? $auction->total_fee : '20000', // 총 입금액 (수수료. 진단비를 자동으로 계산 하는 부분 만들어서 연동 )
                     'status12' => $auction->success_fee ? $auction->success_fee : '20000', // 수수료 
-                    'status13' => $auction->diag_fee ? $auction->diag_fee : '20000', // 진단비
+                    // 'status13' => $auction->diag_fee ? $auction->diag_fee : '20000', // 진단비
                     'status14' => $account['data']['VbankNum'], // 계좌번호 (가상계좌번호 발급)
                     'status15' => $account['data']['VbankAccountName'], // 예금주
                     'status16' => $VbankExpDateTrans.'('.$VbankExpTimeTrans.')', // 입금기한

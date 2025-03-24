@@ -455,6 +455,7 @@ class AuctionService
         }
         return (($chkSec % $businessNumber) % 997);
     }
+
     // 나이스DNR 차량정보/시세확인 API
     public function getNiceDnr($ownerNm, $vhrNo)
     {
@@ -672,7 +673,7 @@ class AuctionService
             'residualRate' => $residualRate,
             'basePrice' => $basePrice,
             'mileageDepreciation' => $mileageDepreciation,
-            'estimatedPrice' => $estimatedPrice,
+            'estimatedPrice' => $estimatedPrice * 10000,
             'estimatedPriceInTenThousandWon' => $estimatedPriceInTenThousandWon
         ];
     }

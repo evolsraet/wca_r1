@@ -175,7 +175,7 @@ TODO:
                                                             {{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + ' [ '+ auction.car_no +' ]' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}
                                                         </p>
                                                         <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span></p>
-                                                        <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
+                                                        <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + ' ' + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                         <div class="d-flex">
                                                             <h5 class="card-title">
                                                                 <span v-if="auction.auction_type !== 0" style="margin-right: 5px;"><span class="red-box border-6">공매</span></span>
@@ -275,7 +275,7 @@ TODO:
                                             <div class="card-body">
                                                 <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
                                                 <p class="tc-gray mt-0"> {{ auction.car_year ? auction.car_year : '2020' }} 년 |<span class="mx-1">{{ auction.car_km ? auction.car_km : '2.4' }}km</span></p>
-                                                <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
+                                                <p class="tc-gray mt-0">{{ auction.car_maker ? auction.car_maker + ' ' + auction.car_model : '현대 소나타' }} ({{ auction.car_grade ? auction.car_grade : 'DN8' }})</p>
                                                 <div class="d-flex">
                                                     <h5 class="card-title"><span class="blue-box border-6">{{ isAccident(auction.is_accident) }}</span></h5>
                                                     <h5 v-if="auction.hope_price !== null"><span class="gray-box border-6">재경매</span></h5>

@@ -59,6 +59,14 @@ return [
         'NICE_PRODUCT_ID' => env('NICE_PRODUCT_ID')
     ],
 
+    // 차량 이력 API
+    'carHistory' => [
+        'join_code' => env('CARHISTORY_JOIN_CODE'),
+        'encrypt_key' => env('CARHISTORY_ENCRYPT_KEY'),
+        'member_id' => env('CARHISTORY_MEMBER_ID'),
+        'api_url' => env('CARHISTORY_API_URL'),
+    ],
+
     // 나이스 가상계좌
 
 ];
