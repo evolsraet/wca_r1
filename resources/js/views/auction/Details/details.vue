@@ -183,19 +183,21 @@
 
               <CarInfoItem label="차량번호" :value="carDetails.no" />
               <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" />
+              <CarInfoItem label="주행거리" :value="carDetails.km + ' km'" />
+
               <CarInfoItem label="미션" :value="carDetails.mission" />
 
               <CarInfoItem label="제조사" :value="carDetails.maker" />
               <CarInfoItem label="년식" :value="carDetails.year" />
-              <CarInfoItem label="용도변경이력" value="-" />
+              <CarInfoItem label="용도변경" :value="carDetails.resUseHistYn" />
 
               <CarInfoItem label="모델" :value="carDetails.model" />
-              <CarInfoItem label="배기량" value="2000cc" />
-              <CarInfoItem label="튜닝이력" value="1회" />
+              <CarInfoItem label="배기량" :value="carDetails.engineSize" />
+              <CarInfoItem label="튜닝이력" :value="carDetails.tuning + ' 회'" />
 
               <CarInfoItem label="등급" :value="carDetails.grade" />
               <CarInfoItem label="연료" :value="carDetails.fuel" />
-              <CarInfoItem label="주행거리" :value="carDetails.km + ' m'" />
+              
 
               <div class="detail-row" v-if="carDetails.modelSub || carDetails.gradeSub">
                 <CarInfoItem label="세부모델" :value="carDetails.modelSub" v-if="carDetails.modelSub" />
@@ -2313,6 +2315,9 @@ const fetchAuctionDetail = async () => {
     carDetails.value.mission = carData.mission;
     carDetails.value.maker = carData.maker;
     carDetails.value.firstRegDate = carData.firstRegDate;
+    carDetails.value.engineSize = carData.engineSize;
+    carDetails.value.tuning = carData.tuning;
+    carDetails.value.resUseHistYn = carData.resUseHistYn;
     
     const km = carData.km;
     const formattedKm = km.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
