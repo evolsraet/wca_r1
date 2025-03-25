@@ -351,15 +351,28 @@
                   <div class="p-4 rounded text-body-emphasis bg-body-secondary">
                     <ul class="mt-0 machine-inform-title">
                       <li class="text-secondary opacity-50">용도 변경이력</li>
-                      <li class="info-num">-</li>
+                      <li class="info-num">
+                        {{ niceDnrHistory.resUseHistYn === 'Y' ? '용도이력 / ' : '용도이력 없음 / ' }}
+                        {{ niceDnrHistory.resUseHistBiz === 'Y' ? '사업자 / ' : '사업자 없음 / ' }}
+                        {{ niceDnrHistory.resUseHistRent === 'Y' ? '렌트 / ' : '렌트 없음 / ' }}
+                        {{ niceDnrHistory.resUseHistGov === 'Y' ? '공공기관' : '공공기관 없음' }}
+                      </li>
                     </ul>
                     <ul class="mt-0 machine-inform-title">
                       <li class="text-secondary opacity-50">소유자 변경</li>
-                      <li class="info-num">1</li>
+                      <li class="info-num" v-if="niceDnrHistory.userChangeCount > 0">
+                        {{ niceDnrHistory.userChangeCount }} 회
+                      </li>
+                      <li class="info-num" v-else>
+                        -
+                      </li>
                     </ul>
                     <ul class="mt-0 machine-inform-title">
                       <li class="text-secondary opacity-50">압류/저당</li>
-                      <li class="info-num">-</li>
+                      <li class="info-num">
+                        {{ niceDnrHistory.seizCt > 1 ? '압류 '+niceDnrHistory.seizCt + '건 / ' : '압류 0건 / ' }}
+                        {{ niceDnrHistory.mortCt > 1 ? '저당 '+niceDnrHistory.mortCt + '건' : '저당 0건' }}
+                      </li>
                     </ul>
                     <ul class="mt-0 mb-0 machine-inform-title">
                       <li class="text-secondary opacity-50">특수사고 이력</li>
@@ -1080,7 +1093,7 @@ const scrollButtonStyle = ref({ display: 'none' });
 const showReauctionView = ref(false);
 
 const auctionDetail = ref(null);
-const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress, isAccident } = useAuctions();
+const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress, isAccident, getNiceDnrHistory } = useAuctions();
 const { submitBid, cancelBid,getBidById } = useBids();
 const carDetails = ref({});
 const highestBid = ref(0);
@@ -1088,6 +1101,8 @@ const lowestBid = ref(0);
 const fileUserSignData = ref({});
 const currentPage = ref(1);
 const openSection = ref('general');
+
+const niceDnrHistory = ref({});
 
 const sortedTopBids = computed(() => {
   console.log('sortedTopBids??', auctionDetail.value);
@@ -2381,6 +2396,10 @@ onMounted(async () => {
   };
 
   await getAuctions();
+
+  const getNiceDnrHistoryData = await getNiceDnrHistory(auctionDetail.value.data.owner_name, auctionDetail.value.data.car_no);
+  console.log('niceDnrHistory',getNiceDnrHistoryData);
+  niceDnrHistory.value = getNiceDnrHistoryData.data;
 
   if(auctionDetail.value?.data?.status === 'ing' && isUser.value){
     startPolling();

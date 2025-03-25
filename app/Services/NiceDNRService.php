@@ -114,5 +114,53 @@ class NiceDNRService
         return (($chkSec % $businessNumber) % 997);
     }
 
+
+    public function getNiceDnrHistory($ownerNm, $vhrNo)
+    {
+
+        $dbData = NiceDNRData::where('ownerNm', $ownerNm)
+            ->where('vhrNo', $vhrNo)
+            ->first();
+
+        if ($dbData) {
+            $resContentsList = $dbData->data['carParts']['outB0001']['list'][0]['resContentsList'];
+            $resContentsList = array_filter($resContentsList, function($item) {
+                return $item['resContentsCtg'] == '명의이전등록';
+            });
+            $userChangeCount = count($resContentsList);
+
+             // // data > carParts > outB0001 > list > resUseHistYn // 
+            $resUseHistYn = $dbData->data['carParts']['outB0001']['list'][0]['resUseHistYn'] ?? 0; // 용도이력
+            $resUseHistBiz = $dbData->data['carParts']['outB0001']['list'][0]['resUseHistBiz'] ?? 0; // 사업자
+            $resUseHistRent = $dbData->data['carParts']['outB0001']['list'][0]['resUseHistRent'] ?? 0; // 렌트
+            $resUseHistGov = $dbData->data['carParts']['outB0001']['list'][0]['resUseHistGov'] ?? 0; // 공공기관
+
+            
+
+            $mortCt = $dbData->data['carParts']['outB0001']['list'][0]['mortCt'] ?? 0; // 저당
+            $seizCt = $dbData->data['carParts']['outB0001']['list'][0]['seizCt'] ?? 0; // 압류
+
+            // dd($resUseHistYn, $resUseHistBiz, $resUseHistRent, $resUseHistGov, $mortCt, $seizCt);
+
+            return [
+                'userChangeCount' => $userChangeCount,
+                'resUseHistYn' => $resUseHistYn,
+                'resUseHistBiz' => $resUseHistBiz,
+                'resUseHistRent' => $resUseHistRent,
+                'resUseHistGov' => $resUseHistGov,
+                'mortCt' => $mortCt,
+                'seizCt' => $seizCt
+            ];
+
+        }else{
+            return [
+                'error' => 'No data',
+                'count' => 0
+            ];
+        }
+
+        // return $dbData;
+    }
+
     
 }

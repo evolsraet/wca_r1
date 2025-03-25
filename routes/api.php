@@ -120,3 +120,4 @@ Route::get('carHistoryMock', [AuctionController::class, 'getCarHistoryMock']);
 
 
 Route::get('getNiceDnr', [AuctionController::class, 'getNiceDnr']);
+Route::get('getNiceDnrHistory', [AuctionController::class, 'getNiceDnrHistory']);

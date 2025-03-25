@@ -1139,6 +1139,20 @@ const isAccident = (id) => {
     .post();
   }
 
+
+  const getNiceDnrHistory = async (ownerNm, vhrNo) => {
+    return wicac.conn()
+    .url(`/api/getNiceDnrHistory`)
+    .param({
+        "owner":ownerNm, 
+        "no":vhrNo
+    })
+    .callback(function (result) {
+      return result;
+    })
+    .get();
+  }
+
     return {
         getAuctionsByDealerLike,
         adminGetAuctions,
@@ -1180,7 +1194,8 @@ const isAccident = (id) => {
         isAccident,
         sellCheckInputForm,
         getIngAuctions,
-        checkAuctionEntryPublic
+        checkAuctionEntryPublic,
+        getNiceDnrHistory
     };
     
 }

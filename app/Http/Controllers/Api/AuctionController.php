@@ -496,6 +496,13 @@ class AuctionController extends Controller
 
     }
 
+    public function getNiceDnrHistory(Request $request)
+    {
+        $NiceDNRService = new NiceDNRService();
+        $niceDnrResult = $NiceDNRService->getNiceDnrHistory($request->input('owner'), $request->input('no'));
+        return response()->api($niceDnrResult);
+    }
+
 
     public function diagnosticResult(Request $request)
     {
