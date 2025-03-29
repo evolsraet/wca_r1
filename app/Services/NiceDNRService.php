@@ -74,23 +74,26 @@ class NiceDNRService
 
             $responseData = $response->json();
 
-            $responseData['carInfo'] = [
-                'resFirstDate' => $responseData['carParts']['outB0001']['list'][0]['resFirstDate'],
-                'classModelNm' => $responseData['carSise']['info']['carinfo']['classModelNm'],
-                'yearType' => $responseData['carSise']['info']['carinfo']['yearType'],
-                'km' => $responseData['carParts']['outB0001']['list'][0]['resValidDistance'],
-            ];
+            if($responseData){
+                $responseData['carInfo'] = [
+                    'resFirstDate' => $responseData['carParts']['outB0001']['list'][0]['resFirstDate'],
+                    'classModelNm' => $responseData['carSise']['info']['carinfo']['classModelNm'],
+                    'yearType' => $responseData['carSise']['info']['carinfo']['yearType'],
+                    'km' => $responseData['carParts']['outB0001']['list'][0]['resValidDistance'],
+                ];
 
-            // API 응답 데이터를 DB에 저장
-            NiceDNRData::create([
-                'ownerNm'  => $ownerNm,
-                'vhrNo'    => $vhrNo,
-                'isCached' => 'true',
-                'data'     => $responseData
-            ]);
+                // API 응답 데이터를 DB에 저장
+                NiceDNRData::create([
+                    'ownerNm'  => $ownerNm,
+                    'vhrNo'    => $vhrNo,
+                    'isCached' => 'true',
+                    'data'     => $responseData
+                ]);
 
-            // API 응답 데이터를 캐시에도 저장
-            Cache::put($cacheKey, $responseData, 60 * 60 * 24 * 30);
+                // API 응답 데이터를 캐시에도 저장
+                Cache::put($cacheKey, $responseData, 60 * 60 * 24 * 30);
+
+            }
 
             return $responseData;
 
@@ -100,7 +103,10 @@ class NiceDNRService
                 'vhrNo' => $vhrNo
             ]);
 
-            throw $e;
+            return [
+                'error' => 'No data',
+                'count' => 0
+            ];
         }
     }
 
@@ -129,18 +135,13 @@ class NiceDNRService
             });
             $userChangeCount = count($resContentsList);
 
-             // // data > carParts > outB0001 > list > resUseHistYn // 
             $resUseHistYn = $dbData->data['carParts']['outB0001']['list'][0]['resUseHistYn'] ?? 0; // 용도이력
             $resUseHistBiz = $dbData->data['carParts']['outB0001']['list'][0]['resUseHistBiz'] ?? 0; // 사업자
             $resUseHistRent = $dbData->data['carParts']['outB0001']['list'][0]['resUseHistRent'] ?? 0; // 렌트
             $resUseHistGov = $dbData->data['carParts']['outB0001']['list'][0]['resUseHistGov'] ?? 0; // 공공기관
 
-            
-
             $mortCt = $dbData->data['carParts']['outB0001']['list'][0]['mortCt'] ?? 0; // 저당
             $seizCt = $dbData->data['carParts']['outB0001']['list'][0]['seizCt'] ?? 0; // 압류
-
-            // dd($resUseHistYn, $resUseHistBiz, $resUseHistRent, $resUseHistGov, $mortCt, $seizCt);
 
             return [
                 'userChangeCount' => $userChangeCount,

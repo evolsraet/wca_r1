@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\AddressbookController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\PaymentController;
-
+use App\Http\Controllers\BusinessController;
 
 // Route::post('forgetPassword', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 // Route::post('resetPassword', [ResetPasswordController::class, 'reset'])->name('password.reset');
@@ -117,7 +117,11 @@ Route::get('diag/code', [AuctionController::class, 'diagnosticCode']);
 
 Route::get('carHistory', [AuctionController::class, 'getCarHistory']);
 Route::get('carHistoryMock', [AuctionController::class, 'getCarHistoryMock']);
-
+Route::get('carHistoryCrash', [AuctionController::class, 'getCarHistoryCrash']);
 
 Route::get('getNiceDnr', [AuctionController::class, 'getNiceDnr']);
 Route::get('getNiceDnrHistory', [AuctionController::class, 'getNiceDnrHistory']);
+
+Route::get('check-business', [BusinessController::class, 'check']);
+Route::get('get-access-token', [BusinessController::class, 'getAccessToken']);
+

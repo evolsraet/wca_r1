@@ -195,7 +195,7 @@
         <div class="form-group dealer-check fw-bolder pb-1">
           <p for="dealer">법인 / 사업자차량</p>
           <div class="check_box">
-            <input type="checkbox" id="ch2" v-model="isBizChecked" class="form-control">
+            <input type="checkbox" id="ch2" v-model="isBizChecked" class="form-control" @change="checkBusiness">
             <label for="ch2"></label>
           </div>
         </div>
@@ -365,7 +365,7 @@ import carObjects from '../../../../../resources/img/modal/car-objects-blur.png'
 
 const { openPostcode, closePostcode } = cmmn();
 const { wica } = cmmn();
-const { createAuction, validationErrors, checkAuctionEntryPublic } = useAuctions();
+const { createAuction, validationErrors, checkAuctionEntryPublic, checkBusinessStatus } = useAuctions();
 const store = useStore();
 const swal = inject('$swal');
 
@@ -1328,6 +1328,58 @@ const checkDiagDates = (newDate) => {
   }
 };
 
+const checkBusiness = async () => {
+  const businessNumber = carNumber.value;
+
+  if(isBizChecked.value){
+    
+    const text = `
+    <div>
+      <h2>사업자 등록번호 확인</h2>
+      <p>사업자 등록번호를 입력해주세요.</p>
+      <div>
+        <input type="text" id="businessNumber" class="form-control">
+      </div>
+      <div>
+        <button class="btn btn-primary" id="Business-button">확인</button>
+      </div>
+    </div>
+    `;
+
+    wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20, height:840, width: 300 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+
+
+    setTimeout(() => {
+
+      const checkBusinessButton = document.getElementById('Business-button');
+      //if (checkBusinessButton) {
+        checkBusinessButton.addEventListener('click', () => {
+          const businessNumber = document.getElementById('businessNumber').value;
+          console.log(businessNumber);
+          if (businessNumber) {
+            const result = checkBusinessStatus(businessNumber);
+            console.log(businessNumber);
+            // await checkBusinessStatus(checkBusinessEvent);
+          }
+        });
+    // }
+
+    }, 500);
+
+  }
+
+  // const result = await checkBusinessStatus(businessNumber);
+  // console.log(result);
+}
+
 // diagSecondAt이 변경될 때 중복 체크
 watch(diagSecondAt, (newValue) => {
   if (newValue) {
@@ -1499,6 +1551,11 @@ input[type="datetime-local"] {
 
 .cmm-review-custom {
   z-index: 10000 !important;
+}
+
+.intromodal {
+  width: 300px !important;
+  /* z-index: 10000 !important; */
 }
 
 </style>

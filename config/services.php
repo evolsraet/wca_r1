@@ -67,6 +67,15 @@ return [
         'api_url' => env('CARHISTORY_API_URL'),
     ],
 
+    // 코드에프 API
+    'codef' => [
+        'client_id' => env('CODEF_CLIENT_ID'),
+        'client_secret' => env('CODEF_CLIENT_SECRET'),
+        'api_url' => env('CODEF_API_URL'),
+        'public_key' => env('CODEF_PUBLIC_KEY'),
+        'oauth_url' => env('CODEF_OAUTH_URL'),
+    ],
+
     // 나이스 가상계좌
 
 ];

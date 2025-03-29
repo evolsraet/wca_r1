@@ -71,6 +71,8 @@ class AuctionController extends Controller
      */
     public function carInfo(Request $request)
     {
+        $NiceDNRService = new NiceDNRService();
+
         $request->validate([
             'owner' => 'required',
             'no' => 'required',
@@ -98,6 +100,16 @@ class AuctionController extends Controller
             Cache::put($cacheKey . "forceRefresh", 'true', now()->endOfDay());
         } elseif ($request->input('forceRefresh') && Cache::has($cacheKey . "forceRefresh")) {
             $message = '갱신은 하루 1회만 가능합니다.';
+        }
+
+        $niceDnrResult = $NiceDNRService->getNiceDnr($request->input('owner'), $request->input('no'), config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
+            
+        if(isset($niceDnrResult['count']) && $niceDnrResult['count'] == 0){
+            $data = [
+                'status' => 'is_not_count',
+                'message' => '차량 정보가 없습니다.',
+            ];
+            return response()->api($data, '차량 정보가 없습니다.', 400);
         }
 
         // 캐시 없을 경우, 한달동안 저장
@@ -519,12 +531,21 @@ class AuctionController extends Controller
 
     public function getCarHistory(Request $request)
     {
-        // $testCarNumber = '53라9319';
-        // $carHistoryService = new CarHistoryService();
-        // $result = $carHistoryService->getCarHistory($testCarNumber);
-        // return response()->api($result);
+        $testCarNumber = '08오5060';
+        $carHistoryService = new CarHistoryService();
+        $result = $carHistoryService->getCarHistory($testCarNumber);
+        return response()->api($result);
 
-        return $this->getCarHistoryMock();
+        // return $this->getCarHistoryMock();
+    }
+
+    public function getCarHistoryCrash(Request $request)
+    {
+        $testCarNumber = '08오5060';
+        $carHistoryService = new CarHistoryService();
+        // $result = $carHistoryService->getCarHistoryCrash($request->input('car_no'));
+        $result = $carHistoryService->getCarHistoryCrash($testCarNumber);
+        return response()->api($result);
     }
 
     public function getCarHistoryMock()

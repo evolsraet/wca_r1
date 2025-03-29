@@ -376,29 +376,35 @@
                     </ul>
                     <ul class="mt-0 mb-0 machine-inform-title">
                       <li class="text-secondary opacity-50">특수사고 이력</li>
-                      <li class="info-num">전손 0 침수 0 도난 0</li>
+                      <li class="info-num">
+                        전손 {{carHistoryCrash?.special_crash?.basic_length+'건'}}  / 
+                        침수 {{carHistoryCrash?.special_crash?.partial_length+'건'}}  / 
+                        도난 {{carHistoryCrash?.special_crash?.theft_length+'건'}}
+                      </li>
                     </ul>
                   </div>
                   <div class="flex-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
                     <div class="column" style="overflow-x: auto;">
-                      <h5 class="mt-5">내차피해 (<span class="tc-red">1</span>건)</h5>
+                      <h5 class="mt-5">내차피해 (<span class="tc-red">{{ carHistoryCrash?.self_length }}</span>건)</h5>
                       <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
                         <div class="tbl_basic">
                           <table style="min-width: 600px;">
-                            <tbody>
+                            <thead>
                               <tr>
                                 <th>일시</th>
                                 <th>부품</th>
                                 <th>공임</th>
-                                <th>조회</th>
-                                <th>날짜</th>
+                                <th>도장</th>
+                                <th>비용</th>
                               </tr>
-                              <tr>
-                                <td>2024-03-22</td>
-                                <td>12,000</td>
-                                <td>10,000</td>
-                                <td>7</td>
-                                <td>2022-05-01</td>
+                            </thead>
+                            <tbody>
+                              <tr v-for="item in carHistoryCrash?.self" :key="item.id">
+                                <td>{{ item.crashDate }}</td>
+                                <td>{{ item.part + '원' }}</td>
+                                <td>{{ item.labor + '원' }}</td>
+                                <td>{{ item.paint + '원' }}</td>
+                                <td>{{ item.cost + '원' }}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -407,22 +413,28 @@
                     </div>
                     
                     <div class="column" style="overflow-x: auto;">
-                      <h5 class="mt-5">타차피해 (<span class="tc-red">1</span>건)</h5>
+                      <h5 class="mt-5">타차피해 (<span class="tc-red">{{ carHistoryCrash?.other_length }}</span>건)</h5>
                       <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
                         <div class="tbl_basic">
                           <table style="min-width: 600px;">
-                            <tbody>
+                            <thead>
                               <tr>
                                 <th>일시</th>
                                 <th>부품</th>
                                 <th>공임</th>
-                                <th>조회</th>
-                                <th>날짜</th>
+                                <th>도장</th>
+                                <th>비용</th>
                               </tr>
-                              <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
-                              <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
-                              <tr><td>2024-03-22</td><td>12,000</td><td>10,000</td><td>7</td><td>2022-05-01</td></tr>
-                            </tbody>
+                            </thead>
+                            <tbody>
+                              <tr v-for="item in carHistoryCrash?.other" :key="item.id">
+                                <td>{{ item.crashDate }}</td>
+                                <td>{{ item.part + '원' }}</td>
+                                <td>{{ item.labor + '원' }}</td>
+                                <td>{{ item.paint + '원' }}</td>
+                                <td>{{ item.cost + '원' }}</td>
+                              </tr>
+                             </tbody>
                           </table>
                         </div>
                       </div>
@@ -438,7 +450,7 @@
                   </div>
                   <ul class="machine-inform-title">
                     <li class="text-secondary opacity-50">거래지역</li>
-                    <li class="info-num">경기>성남시 중원구</li>
+                    <li class="info-num">{{ auctionLocation }}</li>
                   </ul>
                   <ul class="machine-inform-title">
                     <li class="text-secondary opacity-50">기타이력</li>
@@ -446,7 +458,7 @@
                   </ul>
                   <ul class="machine-inform-title">
                     <li class="text-secondary opacity-50">차량명의</li>
-                    <li class="info-num">개인</li>
+                    <li class="info-num">{{ carHistoryCrash?.car_use }}</li>
                   </ul>
                 </div>
 
@@ -1093,7 +1105,7 @@ const scrollButtonStyle = ref({ display: 'none' });
 const showReauctionView = ref(false);
 
 const auctionDetail = ref(null);
-const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress, isAccident, getNiceDnrHistory } = useAuctions();
+const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress, isAccident, getNiceDnrHistory, getCarHistoryCrash } = useAuctions();
 const { submitBid, cancelBid,getBidById } = useBids();
 const carDetails = ref({});
 const highestBid = ref(0);
@@ -1101,8 +1113,9 @@ const lowestBid = ref(0);
 const fileUserSignData = ref({});
 const currentPage = ref(1);
 const openSection = ref('general');
-
+const carHistoryCrash = ref({});
 const niceDnrHistory = ref({});
+const auctionLocation = ref({});
 
 const sortedTopBids = computed(() => {
   console.log('sortedTopBids??', auctionDetail.value);
@@ -2396,10 +2409,19 @@ onMounted(async () => {
   };
 
   await getAuctions();
+  const carHistoryCrashData = await getCarHistoryCrash(auctionDetail.value.data.car_no);
+  carHistoryCrash.value = carHistoryCrashData.data;
+  console.log('carHistoryCrash',carHistoryCrash.value);
 
   const getNiceDnrHistoryData = await getNiceDnrHistory(auctionDetail.value.data.owner_name, auctionDetail.value.data.car_no);
   console.log('niceDnrHistory',getNiceDnrHistoryData);
   niceDnrHistory.value = getNiceDnrHistoryData.data;
+
+  const auctionLocationData = auctionDetail.value.data.addr1;
+  // 주소 정보를 대전 > 중구 > 대흥동 으로 변환
+  console.log('auctionLocationData',auctionLocationData);
+  auctionLocation.value = auctionLocationData.split(' ').slice(0, 3).join(' > ');
+  console.log('auctionLocation',auctionLocation.value);
 
   if(auctionDetail.value?.data?.status === 'ing' && isUser.value){
     startPolling();

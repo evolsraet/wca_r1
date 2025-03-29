@@ -11,20 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('nice_dnr_datas', function (Blueprint $table) {
+
+        // $table->string('car_no'); 에 대한 인덱스 추가
+        Schema::create('nice_carhistorys', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-            $table->string('ownerNm');
-            $table->string('vhrNo');
-            $table->string('isCached');
+            $table->string('car_no');
+            $table->date('first_regdate');
             $table->json('data');
+            $table->timestamps();
         });
 
-        Schema::table('nice_dnr_datas', function (Blueprint $table) {
-            $table->index('vhrNo');
-            $table->index('ownerNm');
+        Schema::table('nice_carhistorys', function (Blueprint $table) {
+            $table->index('car_no');
         });
-
     }
 
     /**
@@ -32,6 +31,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('nice_dnr_datas');
+        Schema::dropIfExists('nice_carhistorys');
     }
 };

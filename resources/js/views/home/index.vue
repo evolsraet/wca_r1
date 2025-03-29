@@ -434,6 +434,11 @@ const submitCarInfoIsOk = () => {
       return false;
     }
 
+    if(response.data.status == 'is_not_count'){
+      wica.ntcn(swal).icon('E').title('차량 정보가 없습니다.').fire();
+      return false;
+    }
+
     if(response.isError) {
       wica.ntcn(swal).icon('E').title('필수 입력정보가 필요합니다.').fire();
     } else {

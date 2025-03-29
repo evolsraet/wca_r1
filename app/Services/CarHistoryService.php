@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
-
+use App\Models\NiceCarHistory;
 class CarHistoryService
 {
     public function getCarHistory(string $carNumber)
@@ -16,7 +16,21 @@ class CarHistoryService
         // 세션에서 먼저 확인
         if (Session::has($sessionKey)) {
             Log::info("[CarHistory] 캐시된 데이터 사용 - 차량번호: {$carNumber}");
-            return Session::get($sessionKey);
+            
+            $data = Session::get($sessionKey);
+            $data['is_session'] = true;
+
+            return $data;
+        }
+
+        // 데이터베이스에서 확인
+        $carHistory = NiceCarHistory::where('car_no', $carNumber)->first();
+        if ($carHistory) {
+            Log::info("[CarHistory] 데이터베이스에서 데이터 사용 - 차량번호: {$carNumber}");
+
+            $data['is_database'] = true;
+
+            return $carHistory->data;
         }
 
         // 파라미터 준비
@@ -43,6 +57,13 @@ class CarHistoryService
                 // 세션에 저장
                 Session::put($sessionKey, $data);
                 Session::put($sessionKey . '_fetched_at', now());
+
+                // 데이터베이스에 저장 
+                NiceCarHistory::create([
+                    'car_no' => $carNumber,
+                    'first_regdate' => $data['r105'],
+                    'data' => $data
+                ]);
 
                 return $data;
             }
@@ -76,5 +97,117 @@ class CarHistoryService
         );
 
         return base64_encode($cipherText);
+    }
+
+
+    public function getCarHistoryCrash($carNumber)
+    {
+
+        // $carHistory = NiceCarHistory::where('car_no', $carNumber)->first();
+
+        $carHistory['data'] = json_decode(file_get_contents(storage_path('mock/car_history_sample.json')), true);
+
+        // dd($carHistory);
+
+        if ($carHistory) {
+            Log::info("[CarHistory] 데이터베이스에서 데이터 사용 - 차량번호: {$carNumber}");
+
+
+            $data = $carHistory['data'];
+
+            // dd($data);
+
+            // data > r502 for / r502-01 가 1,2 면 내차피해 리스트, 3 이면 타차피해 리스트 
+            $r502 = $data['r502'];
+            $crashList = [];
+            foreach ($r502 as $key => $value) {
+                // 내차피해
+                if ($value['r502-01'] == 1 || $value['r502-01'] == 2) {
+
+                    $value_array = [
+                        'group' => $value['r502-01'],
+                        'crashDate' => date('Y-m-d', strtotime($value['r502-02'])),
+                        'part' => number_format($value['r502-06']),
+                        'labor' => number_format($value['r502-07']),
+                        'paint' => number_format($value['r502-08']),
+                        'cost' => number_format($value['r502-15']),
+                    ];
+
+                    $crashList['self'][] = $value_array;
+                    $crashList['self_length'] = count($crashList['self']);
+                }
+
+                // 타차피해
+                if ($value['r502-01'] == 3) {
+
+                    $value_array = [
+                        'group' => $value['r502-01'],
+                        'crashDate' => date('Y-m-d', strtotime($value['r502-02'])),
+                        'part' => number_format($value['r502-06']),
+                        'labor' => number_format($value['r502-07']),
+                        'paint' => number_format($value['r502-08']),
+                        'cost' => number_format($value['r502-15']),
+                    ];
+
+                    $crashList['other'][] = $value_array; // 타차피해 리스트
+                    $crashList['other_length'] = count($crashList['other']);
+                } 
+
+            }
+
+
+            $r406_01 = $data['r406-01'];
+            if ($r406_01 !== "") {
+                foreach ($r406_01 as $key => $value) {
+                    $crashList['special_crash']['basic'][] = $value;
+                }
+            }
+            $crashList['special_crash']['basic_length'] = $data['r405'];
+
+            $r408 = $data['r408-01'];
+            if ($r408 !== "") {
+                foreach ($r408 as $key => $value) {
+                    $crashList['special_crash']['partial'][] = $value;
+                }
+            }
+            $crashList['special_crash']['partial_length'] = $data['r407'];
+
+            $r410 = $data['r410-01'];
+            if ($r410 !== "") {
+                foreach ($r410 as $key => $value) {
+                    $crashList['special_crash']['theft'][] = $value;
+                }
+            }
+            $crashList['special_crash']['theft_length'] = $data['r409'];
+
+
+            // 차량용도
+            $r103 = $data['r103'];
+            switch ($r103) {
+                case 1:
+                    $crashList['car_use'] = '관용';
+                    break;
+                case 2:
+                    $crashList['car_use'] = '자가용';
+                    break;
+                case 3:
+                    $crashList['car_use'] = '영업용';
+                    break;
+                case 4:
+                    $crashList['car_use'] = '개인택시';
+                    break;
+                default:
+                    $crashList['car_use'] = '미분류';
+                    break;
+            }
+
+            return $crashList;
+        }
+
+
+        // return [
+        //     'carNumber' => '53라9319',
+        //     'carHistory' => '53라9319',
+        // ];
     }
 }

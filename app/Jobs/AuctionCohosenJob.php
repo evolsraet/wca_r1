@@ -100,6 +100,8 @@ class AuctionCohosenJob implements ShouldQueue
                 'data' => $auction
             ];
 
+            /* 탁송정보와 필요서류 준비 (구매자 사업등록증 확인요망)  …. 정보 추가  */
+
             $sendMessage1 = NotificationTemplate::basicTemplate($data1);
 
             $user = User::find($auction->user_id);

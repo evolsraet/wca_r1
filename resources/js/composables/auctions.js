@@ -1153,6 +1153,31 @@ const isAccident = (id) => {
     .get();
   }
 
+
+  const checkBusinessStatus = async (businessNumber) => {
+    return wicac.conn()
+    .url(`/api/check-business`)
+    .param({
+        "businessNumber":businessNumber
+    })
+    .callback(function (result) {
+      return result;
+    })
+    .post();
+  }
+
+  const getCarHistoryCrash = async (carNumber) => {
+    return wicac.conn()
+    .url(`/api/carHistoryCrash`)
+    .param({
+        "car_no":carNumber
+    })
+    .callback(function (result) {
+      return result;
+    })
+    .get();
+  }
+
     return {
         getAuctionsByDealerLike,
         adminGetAuctions,
@@ -1195,7 +1220,9 @@ const isAccident = (id) => {
         sellCheckInputForm,
         getIngAuctions,
         checkAuctionEntryPublic,
-        getNiceDnrHistory
+        getNiceDnrHistory,
+        checkBusinessStatus,
+        getCarHistoryCrash
     };
     
 }
