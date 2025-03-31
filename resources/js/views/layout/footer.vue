@@ -8,7 +8,8 @@
           <p>경기도 용인시 기흥구 중부대로 242 동 W117호</p>
           <p>대표전화번호:  1544-2165 이메일 WECAR@WECR-M.CO.KR</p>
         </p>
-        <img src="../../../img/footerlogo.png" width="100" class="mt-2">
+        <!-- <img src="../../../img/footerlogo.png" width="100" class="mt-2"> -->
+        <img src="../../../img/busan_wecar_logo_footer.png" width="100" class="mt-2">
       </div>
       <div class="right">
         <p class="mb-4 right">

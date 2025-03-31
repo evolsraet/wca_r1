@@ -2,7 +2,7 @@
     <div class="pb-5 intocontent">
         <div class="section section01" :class="{ animated: animate, hidden: !animate }">
             <p class="small-text">내차팔때 고민이시죠?</p>
-            <p class="title mb-5">위카옥션의 내차팔기 서비스</p>
+            <p class="title mb-5">부산위카옥션의 내차팔기 서비스</p>
             <div class="chat-box">
                 <img src="../../../img/intro-01.png" alt="카카오톡 채팅" class="chat-img">
             </div>
@@ -29,7 +29,7 @@
         <div class="section section03" :class="{ animated: animate, hidden: !animate }">
             <img src="../../../img/intro-06.png" alt="배경" class="bk-section">
             <div class="content">
-                <p class="title">내차팔기 이젠 위카옥션에 의뢰하세요</p>
+                <p class="title">내차팔기 이젠 부산위카옥션에 의뢰하세요</p>
                 <p>이제 안심하고 내차를 높은 가격으로 판매할 수 있습니다</p>
             </div>
         </div>

@@ -14,7 +14,7 @@
                             <img src="../../../img/main_banner02.png" class="styled-img" alt="배너 이미지" />
                             <div class="content d-flex">
                                 <div>
-                                    <img src="../../../img/logo.png" width="100" class="mb-3">
+                                    <img src="../../../img/busan_wecar_logo.png" width="100" class="mb-3">
                                     <h1>쉽고 빠른 <span class="bolder">내차팔기,</span></h1>
                                     <h1 class="font-title"><span class="bolder">위카</span>에서 <span class="bolder">높은 가격</span>으로!</h1>
                                     <h5 class="mt-3 normal">자동차 진단 전문가 <span class="bolder">위카모빌리티</span>가 함께합니다.</h5>
@@ -39,7 +39,7 @@
                             <img src="../../../img/main_p2.png" class="styled-img" alt="배너 이미지 2" />
                             <div class="content d-flex text-start">
                                 <div>
-                                    <img src="../../../img/logo.png" width="100" class="mb-3">
+                                    <img src="../../../img/busan_wecar_logo.png" width="100" class="mb-3">
                                     <h3>TRANSFORMING USED CAR!</h3>
                                     <h3 class="bold">WECARMOBILITY</h3>
                                     <h1 class="fw-bolder mb-4 mt-3 lh-base animated-text">

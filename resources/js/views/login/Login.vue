@@ -151,7 +151,7 @@
         <!--<p class="text-secondary opacity-50 font-sub-title"><span class="mx-2">{{ emoji }}</span>요새 인기있는 매물은 "{{ carName }}" 이에요</p>-->
       </div>
       <div class="ps-3"> 
-        <img src="../../../img/logo.png" width="110" class="mb-3 mobile-css">
+        <img src="../../../img/busan_wecar_logo.png" width="110" class="mb-3 mobile-css">
         <div class="tc-wh mobile-css" v-if="!user?.name">
           <!-- <p class="size_18 ps-2">저는 딜러에요! <router-link :to="{ path: '/register?type=dealer' }" class="ms-3 tc-wh underline">딜러회원가입</router-link></p> -->
           <p class="size_18 ps-2">저는 딜러에요! <a href='/register?type=dealer' class="ms-3 tc-wh underline">딜러회원가입</a></p>
