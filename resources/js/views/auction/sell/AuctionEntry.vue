@@ -31,7 +31,7 @@
           <div class="owner-certificat" @click="confirmEditIfDisabled">
             <input type="text" id="owner-name" v-model="ownerName" placeholder="홍길동" :disabled="isVerified">
             <!-- <button type="button" class="btn border certification" @click.stop="verifyOwner" :disabled="isVerified">본인인증</button> -->
-            <SelfAuthModal :propData="showSelfAuthModal" :ownerName="ownerName" v-model:isBusinessOwner="isBusinessOwner" v-model:isAuth="isAuth" @click.stop="verifyOwner" :disabled="isVerified" />
+            <SelfAuthModal :propData="showSelfAuthModal" :ownerName="ownerName" v-model:isBusinessOwner="isBusinessOwner" v-model:isAuth="isAuth" @click.stop="verifyOwner" :disabled="isAuth" />
           </div>
           <div class="text-danger mt-2">※ 차량 소유자 확인을 위해 본인 인증 버튼을 클릭해주세요.</div>
         </div>
@@ -446,6 +446,7 @@ const accountOwnerRef = ref(null);
 const showSelfAuthModal = ref(false);
 const isBusinessOwner = ref(false);
 const isAuth = ref(false);
+const isAgree = ref(false);
 // 체크박스 변경 시 호출되는 함수
 const updateCarConditionValue = () => {
   // 모든 체크된 체크박스 선택
@@ -494,6 +495,11 @@ const isWeekend = (dateString) => {
 
 const auctionEntry = async () => {
 
+  if(isAuth.value){
+    isVerified.value = true;
+    isAgree.value = '1';
+  }
+
   const auctionData = {
     auction_type: auctionType.value,
     owner_name: ownerName.value,
@@ -526,16 +532,12 @@ const auctionEntry = async () => {
     car_km: carKm.value,
     car_condition: carCondition.value,
     car_status: carStatus.value,
-    is_business_owner: isBusinessOwner.value
+    is_business_owner: isBusinessOwner.value,
+    is_agree: isAgree.value
   };
-
-  if(isAuth.value){
-    isVerified.value = true;
-  }
 
   if(isVerified.value){
     
-
     // 지역번호 확인
     if(selectedRegion.value === ''){
       focusAndAlert(regionSelect, '지역번호를 선택해 주세요.');

@@ -233,32 +233,8 @@ class CodefService
             return response()->json(['code' => 'CF-00003', 'message' => '추가인증 파라미터(twoWayInfo)가 필요합니다.']);
         }
 
-        // $accessToken = $this->getAccessToken();
-        // 4. API 요청
-        // $headers = [
-        //     'Content-Type'  => 'application/json',
-        //     'client_id'     => $this->clientId,
-        //     'client_secret' => $this->clientSecret,
-        // ];
-
-
-        // $response = Http::withHeaders([
-        //     'Authorization' => 'Bearer ' . $accessToken,
-        //     'Accept' => 'application/json',
-        //     'Content-Type' => 'application/json'
-        // ])->post($url, $decodedBody);
-
-
         $result = $this->execute($this->businessCheckApi, 1, $parameterMap);
-
-        // $response = Http::withHeaders($headers)->post($this->apiUrl.$productUrl, $parameterMap);
-
         Log::info('requestCertification?:', [$result]);
-
-        // 5. 결과 반환
-        // if ($result['code'] === 'CF-00000') {
-        //     return $result;
-        // }
 
         if ($result) {
             return $result;

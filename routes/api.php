@@ -123,5 +123,5 @@ Route::get('getNiceDnr', [AuctionController::class, 'getNiceDnr']);
 Route::get('getNiceDnrHistory', [AuctionController::class, 'getNiceDnrHistory']);
 
 Route::post('check-business', [BusinessController::class, 'check']);
-Route::get('get-access-token', [BusinessController::class, 'getAccessToken']);
+// Route::get('get-access-token', [BusinessController::class, 'getAccessToken']);
 

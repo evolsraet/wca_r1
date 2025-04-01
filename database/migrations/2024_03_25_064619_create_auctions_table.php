@@ -34,6 +34,7 @@ class CreateAuctionsTable extends Migration
             $table->boolean('is_biz')->default(0)->comment('법인/사업자차량');
             $table->boolean('is_accident')->default(0)->comment('사고차량');
             $table->boolean('is_business_owner')->default(0)->comment('사업자 소유자 여부');
+            $table->boolean('is_agree')->default(0)->comment('개인사업자등록상태 조회 고지사항 동의여부');
             $table->timestamp('diag_first_at')->nullable()->comment('진단희망 날짜및시간1');
             $table->timestamp('diag_second_at')->nullable()->comment('진단희망 날짜및시간2');
 
