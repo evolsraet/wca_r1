@@ -30,10 +30,12 @@
           <label for="owner-name"><span class="text-danger me-2">*</span>소유자</label>
           <div class="owner-certificat" @click="confirmEditIfDisabled">
             <input type="text" id="owner-name" v-model="ownerName" placeholder="홍길동" :disabled="isVerified">
-            <button class="btn border certification" @click.stop="verifyOwner" :disabled="isVerified">본인인증</button>
+            <!-- <button type="button" class="btn border certification" @click.stop="verifyOwner" :disabled="isVerified">본인인증</button> -->
+            <SelfAuthModal :propData="showSelfAuthModal" :ownerName="ownerName" v-model:isBusinessOwner="isBusinessOwner" v-model:isAuth="isAuth" @click.stop="verifyOwner" :disabled="isVerified" />
           </div>
           <div class="text-danger mt-2">※ 차량 소유자 확인을 위해 본인 인증 버튼을 클릭해주세요.</div>
         </div>
+
         <!-- 차량 번호 입력 -->
         <div class="form-group" v-if="auctionType !== '1'">
           <label for="carNumber"><span class="text-danger me-2">*</span>차량 번호</label>
@@ -195,7 +197,7 @@
         <div class="form-group dealer-check fw-bolder pb-1">
           <p for="dealer">법인 / 사업자차량</p>
           <div class="check_box">
-            <input type="checkbox" id="ch2" v-model="isBizChecked" class="form-control" @change="checkBusiness">
+            <input type="checkbox" id="ch2" v-model="isBizChecked" class="form-control">
             <label for="ch2"></label>
           </div>
         </div>
@@ -362,6 +364,7 @@ import useAuctions from '@/composables/auctions';
 import { regions, updateDistricts } from '@/hooks/selectBOX.js';
 import { cmmn } from '@/hooks/cmmn';
 import carObjects from '../../../../../resources/img/modal/car-objects-blur.png';
+import SelfAuthModal from '@/views/modal/auction/selfAuth.vue';
 
 const { openPostcode, closePostcode } = cmmn();
 const { wica } = cmmn();
@@ -440,6 +443,9 @@ const companyNameRef = ref(null);
 const accountOwner = ref('');
 const accountOwnerRef = ref(null);
 
+const showSelfAuthModal = ref(false);
+const isBusinessOwner = ref(false);
+const isAuth = ref(false);
 // 체크박스 변경 시 호출되는 함수
 const updateCarConditionValue = () => {
   // 모든 체크된 체크박스 선택
@@ -520,7 +526,12 @@ const auctionEntry = async () => {
     car_km: carKm.value,
     car_condition: carCondition.value,
     car_status: carStatus.value,
+    is_business_owner: isBusinessOwner.value
   };
+
+  if(isAuth.value){
+    isVerified.value = true;
+  }
 
   if(isVerified.value){
     
@@ -827,14 +838,60 @@ const verifyOwner = () => {
     })
     .alert('소유자 이름을 입력해 주세요.');
   } else {
-    wica.ntcn(swal)
-    .icon('I')
-    .addClassNm('cmm-review-custom')
-    .addOption({ padding: 20})
-    .callback(function(result) {
-    })
-    .alert('본인인증되었습니다.');
-    isVerified.value = true;
+    // wica.ntcn(swal)
+    // .icon('I')
+    // .addClassNm('cmm-review-custom')
+    // .addOption({ padding: 20})
+    // .callback(function(result) {
+    // })
+    // .alert('본인인증되었습니다.');
+    // isVerified.value = true;
+
+    showSelfAuthModal.value = true;
+
+    console.log('showSelfAuthModal',showSelfAuthModal.value);
+
+    // const text = `
+    // <div>
+    //   <h2>소유자 정보 확인</h2>
+    //   <p>소유자 정보를 입력해주세요.</p>
+    //   <div>
+    //     <input type="text" id="ownerName" class="form-control">
+    //   </div>
+    //   <div>
+    //     <button class="btn btn-primary" id="Business-button">확인</button>
+    //   </div>
+    // </div>
+    // `;
+
+    // wica.ntcn(swal)
+    // .useHtmlText() // HTML 태그 활성화
+    // .useClose()
+    // .addClassNm('intromodal') // 클래스명 설정
+    // .addOption({ padding: 20, height:840, width: 300 }) // swal 옵션 추가
+    // .callback(function (result) {
+    //   // 결과 처리 로직
+    // })
+    // .confirm(text); // 모달 내용 설정
+
+
+    // setTimeout(() => {
+
+    //   const checkBusinessButton = document.getElementById('Business-button');
+    //   //if (checkBusinessButton) {
+    //     checkBusinessButton.addEventListener('click', () => {
+    //       const businessNumber = document.getElementById('businessNumber').value;
+    //       console.log(businessNumber);
+    //       if (businessNumber) {
+    //         const result = checkBusinessStatus(businessNumber);
+    //         console.log(businessNumber);
+    //         // await checkBusinessStatus(checkBusinessEvent);
+    //       }
+    //     });
+    // // }
+
+    // }, 500);
+
   }
 };
 
@@ -1327,58 +1384,6 @@ const checkDiagDates = (newDate) => {
       .alert('진단희망일1과 진단희망일2는 다른 날짜를 선택해 주세요.');
   }
 };
-
-const checkBusiness = async () => {
-  const businessNumber = carNumber.value;
-
-  if(isBizChecked.value){
-    
-    const text = `
-    <div>
-      <h2>사업자 등록번호 확인</h2>
-      <p>사업자 등록번호를 입력해주세요.</p>
-      <div>
-        <input type="text" id="businessNumber" class="form-control">
-      </div>
-      <div>
-        <button class="btn btn-primary" id="Business-button">확인</button>
-      </div>
-    </div>
-    `;
-
-    wica.ntcn(swal)
-    .useHtmlText() // HTML 태그 활성화
-    .useClose()
-    .addClassNm('intromodal') // 클래스명 설정
-    .addOption({ padding: 20, height:840, width: 300 }) // swal 옵션 추가
-    .callback(function (result) {
-      // 결과 처리 로직
-    })
-    .confirm(text); // 모달 내용 설정
-
-
-    setTimeout(() => {
-
-      const checkBusinessButton = document.getElementById('Business-button');
-      //if (checkBusinessButton) {
-        checkBusinessButton.addEventListener('click', () => {
-          const businessNumber = document.getElementById('businessNumber').value;
-          console.log(businessNumber);
-          if (businessNumber) {
-            const result = checkBusinessStatus(businessNumber);
-            console.log(businessNumber);
-            // await checkBusinessStatus(checkBusinessEvent);
-          }
-        });
-    // }
-
-    }, 500);
-
-  }
-
-  // const result = await checkBusinessStatus(businessNumber);
-  // console.log(result);
-}
 
 // diagSecondAt이 변경될 때 중복 체크
 watch(diagSecondAt, (newValue) => {

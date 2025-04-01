@@ -138,7 +138,7 @@ class AuctionController extends Controller
                 'gradeSub' => '-',
                 'year' => $niceDnrResult['carSise']['info']['carinfo']['prye'],
                 'firstRegDate' => Carbon::parse($niceDnrResult['carParts']['outB0001']['list'][0]['resFirstDate'])->format('Y-m-d'),
-                'engineSize' => number_format($niceDnrResult['carSise']['info']['carinfo']['engineSize']).' cc',
+                'engineSize' => $niceDnrResult['carSise']['info']['carinfo']['engineSize'].' cc',
                 'mission' => $niceDnrResult['carSise']['info']['carinfo']['gearBox'],
                 'fuel' => $niceDnrResult['carSise']['info']['carinfo']['fuel'],
                 'priceNow' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['trvlDstncPriceList'][0]['trvlDstncPrice'], // 소매 시세가 (나이스DNR 시세확인 API

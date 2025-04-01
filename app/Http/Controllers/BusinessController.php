@@ -29,9 +29,15 @@ class BusinessController extends Controller
         //     'usePurposes' => '사업자여부',
         // ];
 
-        $data = '2281702211';
+        $data = $request->all();
 
-        $result = $this->codefService->checkBusinessStatus($data);
+        if($data['twoWayAuth'] === true){
+            unset($data['twoWayAuth']);
+            $result = $this->codefService->twoWayAuth($data);
+        }else{
+            unset($data['twoWayAuth']);
+            $result = $this->codefService->checkBusinessStatus($data);
+        }
 
         return response()->json($result);
     }

@@ -122,6 +122,6 @@ Route::get('carHistoryCrash', [AuctionController::class, 'getCarHistoryCrash']);
 Route::get('getNiceDnr', [AuctionController::class, 'getNiceDnr']);
 Route::get('getNiceDnrHistory', [AuctionController::class, 'getNiceDnrHistory']);
 
-Route::get('check-business', [BusinessController::class, 'check']);
+Route::post('check-business', [BusinessController::class, 'check']);
 Route::get('get-access-token', [BusinessController::class, 'getAccessToken']);
 

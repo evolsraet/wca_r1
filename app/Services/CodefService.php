@@ -12,51 +12,196 @@ class CodefService
     protected $apiUrl;
     protected $authUrl;
     protected $publicKey;
+    protected $businessCheckApi;
+    const REPEAT_COUNT = 3;
     public function __construct()
     {
         $this->clientId = config('services.codef.client_id');
+        // $this->clientId = "ef27cfaa-10c1-4470-adac-60ba476273f9";
         $this->clientSecret = config('services.codef.client_secret');
+        // $this->clientSecret = "83160c33-9045-4915-86d8-809473cdf5c3";
         $this->apiUrl = config('services.codef.api_url');
         $this->authUrl = config('services.codef.oauth_url');
         $this->publicKey = config('services.codef.public_key');
+        $this->businessCheckApi = 'v1/kr/public/nt/etc-yearend-tax/individual-business';
     }
 
     public function getAccessToken()
     {
+        $accessToken = $this->getToken($this->clientId, $this->clientSecret);
+        return $accessToken;
+    }
 
-        if (Cache::has('codef_access_token')) {
-            return Cache::get('codef_access_token');
+    public function checkBusinessStatus($data)
+    {
+
+        $payload = [
+            "organization" => "0004", // 고정값
+            "id" => "",
+            "startDate" => date('Ymd'),// 인증일자
+            "usePurposes" => "본인인증 및 개인사업자 여부 확인", // 사용용도
+            "identity" => $data['identity'], // 주민번호
+            "birthDate" => "", // 생년월일
+            "loginType" => "5", // 로그인 타입 5. 간편인증
+            "loginTypeLevel" => $data['loginTypeLevel'], // 로그인 타입 레벨 1:카카오톡, 2:페이코, 3:삼성패스, 4:KB모바일, 5:통신사(PASS), 6:네이버, 7:신한인증서, 8:토스, 9:뱅크샐러드 
+            "telecom" => $data['telecom'], // 통신사 0:SKT(SKT알뜰폰), 1:KT(KT알뜰폰), 2:LGU+(LGU+알뜰폰)
+            "phoneNo" => $data['phoneNo'], // 휴대폰번호
+            "loginIdentity" => $data['loginIdentity'], // 생년월일
+            "userName" => $data['userName'], // 이름
+            // "identityEncYn" => "Y",
+            // "birthDateEncYn" => $data['loginIdentity']
+        ];
+
+        $result = $this->execute($this->businessCheckApi, 1, $payload);
+
+        Log::info('checkBusinessStatus', $result);
+
+        return $result;
+    }
+
+    public function twoWayAuth($data){
+        $payload = [
+            "organization" => "0004", // 고정값
+            "id" => "",
+            "startDate" => date('Ymd'),// 인증일자
+            "usePurposes" => "본인인증 및 개인사업자 여부 확인", // 사용용도
+            "identity" => $data['identity'], // 주민번호
+            "birthDate" => "", // 생년월일
+            "loginType" => "5", // 로그인 타입 5. 간편인증
+            "loginTypeLevel" => $data['loginTypeLevel'], // 로그인 타입 레벨 1:카카오톡, 2:페이코, 3:삼성패스, 4:KB모바일, 5:통신사(PASS), 6:네이버, 7:신한인증서, 8:토스, 9:뱅크샐러드 
+            "telecom" => $data['telecom'], // 통신사 0:SKT(SKT알뜰폰), 1:KT(KT알뜰폰), 2:LGU+(LGU+알뜰폰)
+            "phoneNo" => $data['phoneNo'], // 휴대폰번호
+            "loginIdentity" => $data['loginIdentity'], // 생년월일
+            "userName" => $data['userName'], // 이름
+            "simpleAuth" => "1", // 고정값
+            "is2Way" => true,
+            "twoWayInfo" => [
+                "jti" => $data['jti'],
+                "twoWayTimestamp" => $data['twoWayTimestamp'],
+                "jobIndex" => $data['jobIndex'],
+                "threadIndex" => $data['threadIndex']
+            ]
+        ];  
+
+        $result = $this->requestCertification($this->businessCheckApi, $payload);
+
+        Log::info('twoWayAuth', [$result]);
+
+        return $result;
+    }
+
+
+    public static function execute(string $urlPath, int $serviceType, array $bodyMap): array
+    {
+        // 1. Domain, clientId, clientSecret 설정
+        switch ($serviceType) {
+            case 2:
+                $domain = config('codef.api_domain');
+                $clientId = config('codef.client_id');
+                $clientSecret = config('codef.client_secret');
+                break;
+            case 1:
+                $domain = config('services.codef.api_url');
+                $clientId = config('services.codef.client_id');
+                $clientSecret = config('services.codef.client_secret');
+                break;
+            default:
+                $domain = config('services.codef.api_url');
+                $clientId = 'ef27cfaa-10c1-4470-adac-60ba476273f9';
+                $clientSecret = '83160c33-9045-4915-86d8-809473cdf5c3';
         }
 
+        // 2. 토큰 확인 및 발급
+        $accessToken = self::getToken($clientId, $clientSecret);
+
+        // 3. Body 문자열 인코딩
+        $bodyString = urlencode(json_encode($bodyMap, JSON_UNESCAPED_UNICODE));
+
+        // 4. API 호출
+        $responseMap = self::requestProduct($domain . $urlPath, $accessToken, $bodyString);
+
+        if (isset($responseMap['result']['code']) && $responseMap['result']['code'] === 'CF-00401') {
+            // 액세스 토큰 만료 시 재발급
+            Cache::forget('codef_token_' . $clientId);
+            $accessToken = self::getToken($clientId, $clientSecret);
+            $responseMap = self::requestProduct($domain . $urlPath, $accessToken, $bodyString);
+        } elseif (isset($responseMap['result']['code']) && $responseMap['result']['code'] === 'CF-00403') {
+            return [
+                'code' => 'UNAUTHORIZED',
+                'message' => 'Access denied'
+            ];
+        }
+
+        return $responseMap;
+    }
+
+    private static function requestProduct(string $url, string $accessToken, string $encodedBody): array
+    {
         try {
-            // Base64 인코딩된 인증 정보 생성
-            $authString = base64_encode($this->clientId . ':' . $this->clientSecret);
-            $authHeader = "Basic " . $authString;
+            $decodedBody = json_decode(urldecode($encodedBody), true);
 
-            // 요청 바디 설정
-            $params = 'grant_type=client_credentials&scope=read';
-
-            // HTTP 요청 (cURL 대신 Laravel HTTP 클라이언트 사용)
             $response = Http::withHeaders([
-                'Authorization' => $authHeader,
-                'Content-Type' => 'application/x-www-form-urlencoded',
-            ])->withBody($params, 'application/x-www-form-urlencoded')
-              ->post($this->authUrl);
+                'Authorization' => 'Bearer ' . $accessToken,
+                'Accept' => 'application/json',
+                'Content-Type' => 'application/json'
+            ])->post($url, $decodedBody);
 
-            // 응답 확인
-            if ($response->successful()) {
-                $tokenData = $response->json();
+            $raw = $response->body();
 
-                // 토큰 캐싱 (만료 60초 전 제거)
-                Cache::put('codef_access_token', $tokenData['access_token'], now()->addSeconds($tokenData['expires_in'] - 60));
+            $decoded = urldecode($raw);
+            $json = json_decode($decoded, true);
 
-                return $tokenData['access_token'];
+            return $json;
+
+
+        } catch (\Exception $e) {
+            return [
+                'error' => 'LIBRARY_SENDER_ERROR',
+                'message' => $e->getMessage()
+            ];
+        }
+    }
+
+    private static function getToken(string $clientId, string $clientSecret): ?string
+    {
+        $cacheKey = 'codef_token_' . $clientId;
+        $accessToken = Cache::get($cacheKey);
+
+        if (!$accessToken || !self::checkToken($accessToken)) {
+            $i = 0;
+            while ($i < self::REPEAT_COUNT) {
+                $tokenMap = self::publishToken($clientId, $clientSecret);
+
+                if ($tokenMap && isset($tokenMap['access_token'])) {
+                    $accessToken = $tokenMap['access_token'];
+                    Cache::put($cacheKey, $accessToken, now()->addMinutes(55));
+                    break;
+                }
+
+                usleep(20000); // 20ms 대기
+                $i++;
             }
+        }
 
-            \Log::error('Codef Token Request Failed', [
-                'status' => $response->status(),
-                'body' => $response->body(),
+        return $accessToken;
+    }
+
+    private static function publishToken(string $clientId, string $clientSecret): ?array
+    {
+        try {
+            $auth = base64_encode($clientId . ':' . $clientSecret);
+
+            $response = Http::withHeaders([
+                'Authorization' => 'Basic ' . $auth,
+                'Content-Type' => 'application/x-www-form-urlencoded'
+            ])->asForm()->post(config('services.codef.oauth_url'), [
+                'grant_type' => 'client_credentials',
+                'scope' => 'read'
             ]);
+
+            if ($response->successful()) {
+                return $response->json();
+            }
 
             return null;
         } catch (\Exception $e) {
@@ -64,64 +209,67 @@ class CodefService
         }
     }
 
-    public function checkBusinessStatus($businessNumbers)
+    private static function checkToken(string $accessToken): bool
     {
-        $accessToken = $this->getAccessToken();
+        // 유효성 검사 로직 단순화. 실제로는 JWT 디코딩해서 exp 확인 가능
+        return true; // 혹은 토큰 만료시간 확인 로직 추가
+    }
 
-        $startDate = date('Ymd');
-        $businessNumbers = "7558102354";
 
-        $payload = [
-            "organization" => "0004",
-            "loginType" => "5",
-            "loginTypeLevel" => "1",
-            "userName" => "김성완",
-            "loginIdentity" => "8704261686018",
-            "telecom" => "2",
-            "phoneNo" => "01028020327",
-            "id" => "",
-            "startDate" => $startDate,
-            "usePurposes" => "사업자여부",
-            "identity" => $businessNumbers,
-            "birthDate" => "",
-            "identityEncYn" => "Y"
-        ];
+    public function requestCertification(string $productUrl, array $parameterMap, string $serviceType = 'sandbox')
+    {
+        // 1. 필수 항목 체크
+        if (!$this->clientId || !$this->clientSecret) {
+            return response()->json(['code' => 'CF-00001', 'message' => '클라이언트 정보가 누락되었습니다.']);
+        }
 
-        // rsa 암호화 
-        $password = $this->rsaEncrypt("Dhksl1524!!");
+        // 2. 퍼블릭 키 체크
+        if (!$this->publicKey) {
+            return response()->json(['code' => 'CF-00002', 'message' => '퍼블릭 키가 누락되었습니다.']);
+        }
 
-        $payload = [
-            "organization" => "0001",
-            "userName" => "김성완",
-            "identity" => "8704261686018",
-            "loginTypeLevel" => "1",
-            "phoneNo" => "01028020327",
-            "loginType" => "5",
-            "telecom" => "2"
-        ];
+        // 3. 추가인증 파라미터 확인 (예: twoWayInfo)
+        if (empty($parameterMap['twoWayInfo'])) {
+            return response()->json(['code' => 'CF-00003', 'message' => '추가인증 파라미터(twoWayInfo)가 필요합니다.']);
+        }
 
-        // dd($payload);
-        // dd($this->apiUrl);
+        // $accessToken = $this->getAccessToken();
+        // 4. API 요청
+        // $headers = [
+        //     'Content-Type'  => 'application/json',
+        //     'client_id'     => $this->clientId,
+        //     'client_secret' => $this->clientSecret,
+        // ];
 
-        $response = Http::asForm()
-        ->withHeaders([
-            'Authorization' => 'Bearer '.$accessToken,
-            'Content-Type'  => 'application/x-www-form-urlencoded',
-        ])
-        ->post('https://development.codef.io/v1/kr/public/ef/driver-license/detail', $payload);
+
+        // $response = Http::withHeaders([
+        //     'Authorization' => 'Bearer ' . $accessToken,
+        //     'Accept' => 'application/json',
+        //     'Content-Type' => 'application/json'
+        // ])->post($url, $decodedBody);
+
+
+        $result = $this->execute($this->businessCheckApi, 1, $parameterMap);
+
+        // $response = Http::withHeaders($headers)->post($this->apiUrl.$productUrl, $parameterMap);
+
+        Log::info('requestCertification?:', [$result]);
+
+        // 5. 결과 반환
+        // if ($result['code'] === 'CF-00000') {
+        //     return $result;
+        // }
+
+        if ($result) {
+            return $result;
+        }
 
         return response()->json([
-            'status' => $response->status(),
-            'body' => $response->json()
-        ]);
+            'code'    => 'CF-99999',
+            'message' => '요청 실패',
+            'error'   => $result['error'],
+        ], $result['status']);
     }
 
-
-    public function rsaEncrypt($data)
-    {
-        $publicKey = openssl_pkey_get_public(file_get_contents(storage_path('app/codef_public_key.pem')));
-        openssl_public_encrypt($data, $encrypted, $publicKey, OPENSSL_PKCS1_PADDING);
-        return base64_encode($encrypted);
-    }
 
 }

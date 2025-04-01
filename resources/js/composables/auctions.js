@@ -366,7 +366,8 @@ const AuctionCarInfo = async (carInfoForm) => {
             car_thumbnail: auctionData.auction.car_thumbnail,
             car_km: auctionData.auction.car_km,
             car_status: auctionData.auction.car_status,
-            car_condition: auctionData.auction.car_condition
+            car_condition: auctionData.auction.car_condition,
+            is_business_owner: auctionData.auction.is_business_owner
         }
     }
 
@@ -1154,12 +1155,10 @@ const isAccident = (id) => {
   }
 
 
-  const checkBusinessStatus = async (businessNumber) => {
+  const checkBusinessStatus = async (data) => {
     return wicac.conn()
     .url(`/api/check-business`)
-    .param({
-        "businessNumber":businessNumber
-    })
+    .param(data)
     .callback(function (result) {
       return result;
     })

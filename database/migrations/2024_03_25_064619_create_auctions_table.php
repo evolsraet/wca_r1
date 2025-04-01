@@ -33,6 +33,7 @@ class CreateAuctionsTable extends Migration
             $table->string('is_taksong')->nullable()->comment('탁송상태');
             $table->boolean('is_biz')->default(0)->comment('법인/사업자차량');
             $table->boolean('is_accident')->default(0)->comment('사고차량');
+            $table->boolean('is_business_owner')->default(0)->comment('사업자 소유자 여부');
             $table->timestamp('diag_first_at')->nullable()->comment('진단희망 날짜및시간1');
             $table->timestamp('diag_second_at')->nullable()->comment('진단희망 날짜및시간2');
 
