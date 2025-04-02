@@ -83,7 +83,7 @@ class CodefService
             ]
         ];  
 
-        $result = $this->requestCertification($this->businessCheckApi, $payload);
+        $result = $this->requestCertification($this->businessCheckApi, $payload, $data['carNumber']);
 
         Log::info('twoWayAuth', [$result]);
 
@@ -216,7 +216,7 @@ class CodefService
     }
 
 
-    public function requestCertification(string $productUrl, array $parameterMap, string $serviceType = 'sandbox')
+    public function requestCertification(string $productUrl, array $parameterMap, string $carNumber)
     {
         // 1. 필수 항목 체크
         if (!$this->clientId || !$this->clientSecret) {
@@ -233,10 +233,28 @@ class CodefService
             return response()->json(['code' => 'CF-00003', 'message' => '추가인증 파라미터(twoWayInfo)가 필요합니다.']);
         }
 
+        Log::info('requestCertification_parameterMap?:', [$parameterMap, $carNumber]);
+
         $result = $this->execute($this->businessCheckApi, 1, $parameterMap);
         Log::info('requestCertification?:', [$result]);
 
         if ($result) {
+            
+            
+
+            if($result['result']['code'] === 'CF-00000'){
+                
+                $resData = [
+                    'userName' => $parameterMap['userName'],
+                    'carNumber' => $carNumber,
+                    'isBusinessOwner' => $result['data']['resIndividualBusinessYN'] === 'Y' ? 1 : 0,
+                    'isAuth' => true
+                ];
+
+                $cacheKey = 'codef_car_number_' . $carNumber;
+                Cache::put($cacheKey, $resData, now()->addDay());
+            }
+
             return $result;
         }
 
@@ -246,6 +264,20 @@ class CodefService
             'error'   => $result['error'],
         ], $result['status']);
     }
+
+
+    public function getCertificationData(string $carNumber){
+        $cacheKey = 'codef_car_number_' . $carNumber;
+        $resData = Cache::get($cacheKey);
+        return $resData;
+    }
+
+    public function getCertificationClearData(string $carNumber){
+        $cacheKey = 'codef_car_number_' . $carNumber;
+        Cache::forget($cacheKey);
+    }
+
+    // 이름과 차량정보 기준으로 세션에 저장 여부 확인해서 데이터 가져오기 
 
 
 }

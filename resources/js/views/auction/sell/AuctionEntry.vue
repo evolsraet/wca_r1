@@ -31,7 +31,7 @@
           <div class="owner-certificat" @click="confirmEditIfDisabled">
             <input type="text" id="owner-name" v-model="ownerName" placeholder="홍길동" :disabled="isVerified">
             <!-- <button type="button" class="btn border certification" @click.stop="verifyOwner" :disabled="isVerified">본인인증</button> -->
-            <SelfAuthModal :propData="showSelfAuthModal" :ownerName="ownerName" v-model:isBusinessOwner="isBusinessOwner" v-model:isAuth="isAuth" @click.stop="verifyOwner" :disabled="isAuth" />
+            <SelfAuthModal id="selfAuth" :propData="showSelfAuthModal" :carNumber="carNumber" :ownerName="ownerName" v-model:isBusinessOwner="isBusinessOwner" v-model:isAuth="isAuth" @click.stop="verifyOwner" :disabled="isAuth" />
           </div>
           <div class="text-danger mt-2">※ 차량 소유자 확인을 위해 본인 인증 버튼을 클릭해주세요.</div>
         </div>
@@ -368,7 +368,7 @@ import SelfAuthModal from '@/views/modal/auction/selfAuth.vue';
 
 const { openPostcode, closePostcode } = cmmn();
 const { wica } = cmmn();
-const { createAuction, validationErrors, checkAuctionEntryPublic, checkBusinessStatus } = useAuctions();
+const { createAuction, validationErrors, checkAuctionEntryPublic, checkBusinessStatus, getCertificationData } = useAuctions();
 const store = useStore();
 const swal = inject('$swal');
 
@@ -636,7 +636,7 @@ const auctionEntry = async () => {
     .icon('E')
     .callback(function(result) {
         //console.log(result);
-    }).alert('본인인증 후에 이용 가능한 서비스입니다.');
+    }).alert('소유자인중 후에 이용 가능한 서비스입니다.');
 
   }
 };
@@ -1442,6 +1442,25 @@ onMounted(() => {
     carCondition.value = localStorage.getItem('mileage');
 
   }
+
+  getCertificationData(carNumber.value).then(res => {
+    console.log('?res:',res);
+    const data = res.data;
+
+    console.log('?data:',data);
+
+    if(data.isAuth === true){
+      // 인증여부 확인하기  
+      if(data.isBusinessOwner === 1){
+        isBusinessOwner.value = true;        
+      }
+
+      isAuth.value = true;
+      isVerified.value = true;
+    }
+    
+  });
+
 });
 
 </script>

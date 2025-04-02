@@ -48,4 +48,21 @@ class BusinessController extends Controller
         $accessToken = $this->codefService->getAccessToken();
         return response()->json(['accessToken' => $accessToken]);
     }
+
+    public function getCertificationData(Request $request)
+    {
+        $carNumber = $request->carNumber;
+        $rawData = $this->codefService->getCertificationData($carNumber);
+        
+        return response()->json([
+            'data' => $rawData
+        ]);
+    }
+
+    public function clearCertificationData(Request $request)
+    {
+        $carNumber = $request->carNumber;
+        $this->codefService->getCertificationClearData($carNumber);
+        return response()->json(['message' => '인증 데이터가 삭제되었습니다.']);
+    }
 }

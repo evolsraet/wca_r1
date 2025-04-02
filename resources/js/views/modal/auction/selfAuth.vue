@@ -22,6 +22,10 @@
         ownerName: {
             type: String,
             default: ''
+        },
+        carNumber: {
+            type: String,
+            default: ''
         }
     });
 
@@ -278,7 +282,8 @@
                         twoWayTimestamp: resultData.twoWayTimestamp,
                         jobIndex: resultData.jobIndex,
                         threadIndex: resultData.threadIndex,
-                        twoWayAuth: true
+                        twoWayAuth: true,
+                        carNumber: props.carNumber
                     }
 
                     checkBusinessStatus(data).then(result => {

@@ -124,4 +124,5 @@ Route::get('getNiceDnrHistory', [AuctionController::class, 'getNiceDnrHistory'])
 
 Route::post('check-business', [BusinessController::class, 'check']);
 // Route::get('get-access-token', [BusinessController::class, 'getAccessToken']);
-
+Route::post('get-certification-data', [BusinessController::class, 'getCertificationData']);
+Route::post('clear-certification-data', [BusinessController::class, 'clearCertificationData']);
