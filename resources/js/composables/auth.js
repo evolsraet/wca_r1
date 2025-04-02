@@ -299,6 +299,19 @@ export default function useAuth() {
         if (processing.value) return;
 
         processing.value = true;
+        const carNumber = localStorage.getItem('carNumber');
+
+        if(carNumber){
+            wicac.conn()
+            .url(`/api/clear-certification-data`)
+            .param({
+                "carNumber":carNumber
+            })
+            .callback(function (result) {
+                console.log('clearCertificationData',result);
+            })
+            .post();
+        }
 
         wicac.conn()
         .url(`/logout`) //호출 URL

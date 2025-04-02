@@ -1190,6 +1190,18 @@ const isAccident = (id) => {
     .post();
   }
 
+  const clearCertificationData = async (carNumber) => {
+    return wicac.conn()
+    .url(`/api/clear-certification-data`)
+    .param({
+        "carNumber":carNumber
+    })
+    .callback(function (result) {
+      return result;
+    })
+    .post();
+  }
+
     return {
         getAuctionsByDealerLike,
         adminGetAuctions,
@@ -1235,7 +1247,8 @@ const isAccident = (id) => {
         getNiceDnrHistory,
         checkBusinessStatus,
         getCarHistoryCrash,
-        getCertificationData
+        getCertificationData,
+        clearCertificationData
     };
     
 }

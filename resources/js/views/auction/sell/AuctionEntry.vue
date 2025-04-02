@@ -20,7 +20,7 @@
 
         <div class="form-group" v-if="auctionType === '1'">
           <label for="owner-name"><span class="text-danger me-2">*</span>회사명</label>
-          <div class="owner-certificat" @click="confirmEditIfDisabled">
+          <div class="owner-certificat" @click="confirmEditIfDisabled(carNumber)">
             <input type="text" id="owner-name" v-model="companyName" placeholder="회사명" :disabled="isVerified" ref="companyNameRef">
           </div>
         </div>
@@ -28,7 +28,7 @@
         <!-- 소유자 입력 -->
         <div class="form-group" v-if="auctionType !== '1'">
           <label for="owner-name"><span class="text-danger me-2">*</span>소유자</label>
-          <div class="owner-certificat" @click="confirmEditIfDisabled">
+          <div class="owner-certificat" @click="confirmEditIfDisabled(carNumber)">
             <input type="text" id="owner-name" v-model="ownerName" placeholder="홍길동" :disabled="isVerified">
             <!-- <button type="button" class="btn border certification" @click.stop="verifyOwner" :disabled="isVerified">본인인증</button> -->
             <SelfAuthModal id="selfAuth" :propData="showSelfAuthModal" :carNumber="carNumber" :ownerName="ownerName" v-model:isBusinessOwner="isBusinessOwner" v-model:isAuth="isAuth" @click.stop="verifyOwner" :disabled="isAuth" />
@@ -368,7 +368,7 @@ import SelfAuthModal from '@/views/modal/auction/selfAuth.vue';
 
 const { openPostcode, closePostcode } = cmmn();
 const { wica } = cmmn();
-const { createAuction, validationErrors, checkAuctionEntryPublic, checkBusinessStatus, getCertificationData } = useAuctions();
+const { createAuction, validationErrors, checkAuctionEntryPublic, checkBusinessStatus, getCertificationData, clearCertificationData } = useAuctions();
 const store = useStore();
 const swal = inject('$swal');
 
@@ -897,15 +897,35 @@ const verifyOwner = () => {
   }
 };
 
-const confirmEditIfDisabled = () => {
+const confirmEditIfDisabled = (carNumber) => {
+  console.log('carNumber',carNumber);
   if (isVerified.value) {
       wica.ntcn(swal)
       .icon('W')
+      .param({
+        carNumber: carNumber
+      })
       .addClassNm('cmm-review-custom')
       .addOption({ padding: 20})
       .callback(function(result) {
         if(result.isOk){
+          console.log('result',result.rawData.carNumber);
           isVerified.value = false;
+          isBusinessOwner.value = false;
+          isAuth.value = false;
+
+          // 인증 캐시정보 초기화 
+          clearCertificationData(result.rawData.carNumber).then(res => {
+            console.log('clearCertificationData',res);
+            wica.ntcn(swal)
+            .icon('S')
+            .addClassNm('cmm-review-custom')
+            .addOption({ padding: 20})
+            .callback(function(result) {
+            })
+            .alert('인증 정보가 초기화되었습니다.');
+          });
+          
         }
       })
     .alert('소유자 정보를 수정하시겠습니까?');

@@ -275,6 +275,7 @@ class CodefService
     public function getCertificationClearData(string $carNumber){
         $cacheKey = 'codef_car_number_' . $carNumber;
         Cache::forget($cacheKey);
+        return true;
     }
 
     // 이름과 차량정보 기준으로 세션에 저장 여부 확인해서 데이터 가져오기 
