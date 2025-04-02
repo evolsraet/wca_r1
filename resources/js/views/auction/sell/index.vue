@@ -47,7 +47,7 @@
 
                     <div class="top-content-style wd-100 mt-4" v-if="currentPriceRef">
                         <p class="text-secondary bold-18-font">예상 가격</p>
-                        <span class="tc-primary bold-18-font">{{ estimatedPrice ? (estimatedPrice / 10000).toFixed(0) + ' 만원' : '원' }}</span>
+                        <span class="tc-primary bold-18-font">{{ estimatedPrice ? estimatedPrice + ' 만원' : '원' }}</span>
                     </div>
                     
                     <div class="top-content-style wd-100 mt-4">
@@ -448,6 +448,8 @@ const checkExpectedPriceClick = async () => {
     const viewChange = document.querySelector('input[name="viewChange"]').value;
     const viewBreak = document.querySelector('input[name="viewBreak"]').value;
 
+    const initialPrice = carDetails.value.initialPrice;
+
     // console.log(currentPrice);
 
     const data = {
@@ -462,7 +464,8 @@ const checkExpectedPriceClick = async () => {
         maker,
         viewPaint,
         viewChange,
-        viewBreak
+        viewBreak,
+        initialPrice
     };
 
     try {
@@ -525,7 +528,8 @@ const checkExpectedPriceClick = async () => {
 const showCurrentPriceModal = (estimatedPrice) => {
     const price = estimatedPrice || '알 수 없음'; // 예상 가격 기본값 처리
 
-    const formattedPrice = (price / 10000).toFixed(0);
+    // const formattedPrice = (price / 10000).toFixed(0);
+    const formattedPrice = price;
     const text = `
     <div style="padding: 20px; text-align: center; border-radius: 10px;">
          <div class="top-content-style wd-100 my-4">

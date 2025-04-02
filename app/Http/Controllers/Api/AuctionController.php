@@ -147,6 +147,7 @@ class AuctionController extends Controller
                 'km' => $niceDnrResult['carParts']['outB0001']['list'][0]['resValidDistance'],
                 'tuning' => count($niceDnrResult['carParts']['outB0001']['list'][0]['resContentsList']),
                 'resUseHistYn' => $niceDnrResult['carParts']['outB0001']['list'][0]['resUseHistYn'] === 'Y' ? '사용' : '없음',
+                'initialPrice' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['price'],
             ];
         });
 
@@ -179,6 +180,7 @@ class AuctionController extends Controller
             'viewPaint' => 'required', // 외부 손상여부
             'viewChange' => 'required', // 외부 교체여부
             'viewBreak' => 'required', // 외부 부분 손상여부
+            'initialPrice' => 'required', // 차량 초기 가격
         ]);
 
         $mileage = $request->input('mileage');
@@ -203,6 +205,8 @@ class AuctionController extends Controller
         $firstRegYear = $firstRegDate->format('Y'); // 최초등록년도
         $firstRegMonth = $firstRegDate->format('m'); // 최초등록월
 
+        $initialPrice = $request->input('initialPrice'); // 차량 초기 가격
+
         // $nowYear = 2025;
         // $nowMonth = 1;
         // $firstRegYear = 2019;
@@ -211,7 +215,7 @@ class AuctionController extends Controller
 
         Log::info('예상가 확인 호출', ['현재년도' => $nowYear, '현재 월' => $nowMonth, '최초등록년도' => $firstRegYear, '최초등록월' => $firstRegMonth, 'mileage' => $mileage]);
 
-        $initialPrice = $currentPrice; // 차량 초기 가격 3천만 원
+        // $initialPrice = $currentPrice; // 차량 초기 가격 3천만 원
 
         $result = $auctionService->calculateCarPrice($nowYear, $nowMonth, $firstRegYear, $firstRegMonth, $mileage, $initialPrice);
         
@@ -220,24 +224,24 @@ class AuctionController extends Controller
         // 사고이력 
         switch($accident){
             case '교환':
-                $resultPrice -= 500000;
+                $resultPrice -= 500000; // 50만원
                 break;
             case '판금 사고':
-                $resultPrice -= 150000;
+                $resultPrice -= 150000; // 15만원
                 break;
             case '전손이력':
-                $resultPrice *= 0.5;
+                $resultPrice *= 0.5; // 50% 감가
                 break;
         }
 
         // 키갯수
-        if($keyCount > 2){
-            $resultPrice -= 300000;
+        if($keyCount < 2){
+            $resultPrice -= 300000; // 30만원
         }
 
         // 휠스크래치   
         if($wheelScratch > 0){
-            $resultPrice -= 150000;
+            $resultPrice -= 150000; // 15만원
         }
 
         // 타이어 
@@ -247,22 +251,22 @@ class AuctionController extends Controller
 
         // 타이어 교체 
         if($tireStatusReplaced > 0){
-            $resultPrice -= 300000;
+            $resultPrice -= 300000; // 30만원
         }
 
         // 외부 손상
         if($viewPaint > 0){
-            $resultPrice -= 100000;
+            $resultPrice -= 100000; // 10만원
         }
 
         // 외부 교체    
         if($viewChange > 0){
-            $resultPrice -= 300000;
+            $resultPrice -= 300000; // 30만원
         }
 
         // 외부 부분 손상
         if($viewBreak > 0){
-            $resultPrice -= 100000;
+            $resultPrice -= 100000; // 10만원
         }
         
         
