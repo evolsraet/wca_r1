@@ -984,6 +984,7 @@ const highlightPriceElement = () => {
     height: 150px !important;
 }
 .none-complete-ty03{
+ display: none;
  height: 130px !important;
 }
 }
