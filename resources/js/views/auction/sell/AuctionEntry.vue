@@ -320,6 +320,7 @@ import iconUp from "../../../../img/Icon-black-up.png";
 import iconDown from "../../../../img/Icon-black-down.png";
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
+import { Korean } from 'flatpickr/dist/l10n/ko.js'
 export default {
   data() {
     return {
@@ -336,6 +337,7 @@ export default {
   },
   mounted() {
     flatpickr("#datetimeInput", {
+      locale: Korean,
       enableTime: true,
       dateFormat: "Y-m-d H:i",
       // minDate: "today",
