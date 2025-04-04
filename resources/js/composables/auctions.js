@@ -53,6 +53,7 @@ export default function useAuctions() {
             [`${column}`,`${direction}`]
         ])
         .page(`${page}`)
+        .pageLimit(12)
         .search(search_title)
         .callback(function(result) {
             auctionsData.value = result.data;
@@ -74,6 +75,7 @@ export default function useAuctions() {
             .url(`/api/auctions`)
             .search(search_title)
             .with(['bids', 'likes'])
+            .pageLimit(12)
             .whereOr('auctions.status','ing,wait')
         if(page == "all"){
             request = request.pageLimit(10000);
@@ -94,6 +96,7 @@ export default function useAuctions() {
             .search(search_title)
             .with(['likes'])
             .page(`${page}`)
+            .pageLimit(12)
         if(userId != null){
             request = request.whereOr('likes.user_id',`${userId}`);
         } 
@@ -128,6 +131,7 @@ export default function useAuctions() {
                 'reviews',
             ])
             .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
+            .pageLimit(12)
             .callback(function(result) {
                 auctionsData.value = result.data;
                 pagination.value = result.rawData.data.meta;
@@ -210,6 +214,7 @@ const getAuctionById = async (id) => {
     .url(`/api/auctions/${id}`) //호출 URL
     .with(['bids','reviews','likes'])
     //.page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
+    .pageLimit(12)
     .callback(async function(result) {
         auction.value = result.data;
         auction.value.dealer_name = null;
@@ -823,7 +828,7 @@ const getDoneAuctions = async (bidsNumList,page) => {
         .with([
             'bids',
         ])
-        .pageLimit(10)
+        .pageLimit(12)
         .page(`${page}`)
         .callback(function(result) {
             if(result.isSuccess){
@@ -855,7 +860,7 @@ const getIngAuctions = async (bidsNumList,page) => {
         .with([
             'bids',
         ])
-        .pageLimit(10)
+        .pageLimit(12)
         .page(`${page}`)
         .callback(function(result) {
             if(result.isSuccess){
