@@ -143,6 +143,7 @@ export default function useAuctions() {
             .with(['bids','likes'])
             .search(search_text)
             .where(apiList) 
+            .pageLimit(12)
             .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
             .callback(function(result) {
 

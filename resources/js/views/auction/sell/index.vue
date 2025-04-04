@@ -967,7 +967,7 @@ const highlightPriceElement = () => {
     height: 300px;
 }
 .none-complete-ty03{
-    height: 150px;
+    height: 125px;
 }
 @media (max-width: 1335px){
 .mov-wide {
