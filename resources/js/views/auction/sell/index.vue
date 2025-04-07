@@ -122,7 +122,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="flex items-center justify-end mb-2 mt-3">
+                        <div class="flex items-center justify-end mb-2 mt-3 sticky-bottom">
                             <button class="btn btn-primary w-100 bolder" @click="applyAuction">경매 신청하기</button>
                         </div>
                     </div>
@@ -229,7 +229,7 @@ const ExpectationPrice = () => {
                 <h5 class="bolder mt-3">내 차, 예상가격을 확인합니다</h5>
                 <p class="mb-3">보다 정확한 가격 산정을 위해 아래 사항을 확인해 주세요.</p>
             </div>
-            <div class="text-start tc-gray">
+            <div class="text-start tc-gray" style="height: calc(100vh - (env(safe-area-inset-bottom) + 200px));">
                <div class="form-group">
                     <label style="color: #000; display: block; font-weight: bold; margin-bottom: 5px;">주행거리</label>
                     <div class="d-flex align-items-center">
@@ -322,7 +322,7 @@ const ExpectationPrice = () => {
                     <div class="error viewBreak-error" style="color: red;"></div>
                 </div>
 
-                <button id="customSubmitButton" class="btn btn-primary mt-3 w-100">예상 가격 확인</button>
+                <button id="customSubmitButton" class="btn btn-primary mt-3 w-100 sticky-bottom">예상 가격 확인</button>
             </div>
         </div>
     `;
@@ -331,7 +331,7 @@ const ExpectationPrice = () => {
         .useHtmlText()
         .addClassNm('search-event')
         .useClose()
-        .addOption({ padding: 20 })
+        .addOption({ padding: 15 })
         .confirm(text);
     setTimeout(() => {
 

@@ -37,7 +37,7 @@
 
       const text = `
         <h5 class="text-start mb-3">소유자 인증</h5>
-        <div class="sellInfo my-3 p-4 mb-4" style="position: relative; height: 700px; text-align: left;">
+        <div class="sellInfo my-3 p-4 mb-4" style="position: relative; height: calc(100vh - (env(safe-area-inset-bottom) + 250px)); text-align: left;">
             <div class="auction-guid-popup-container">
 
                 <div class="form-group mt-1" style="font-size: 17px; background:#f9f9f9; padding: 10px 15px; border-radius: 10px;">

@@ -306,10 +306,10 @@
         </div>
       </transition>
         </div> -->
-          <div class="px-2 mb-3 flex items-center justify-end mt-5" v-if="auctionType !== '1'">
+          <div class="px-2 mb-3 flex items-center justify-end mt-5 sticky-bottom pb-2" v-if="auctionType !== '1'">
             <button type="submit" class="btn primary-btn normal-16-font w-100" @click="auctionEntry()" >경매 신청하기</button>
           </div>
-          <div class="px-2 mb-3 flex items-center justify-end mt-5" v-if="auctionType === '1'">
+          <div class="px-2 mb-3 flex items-center justify-end mt-5 sticky-bottom pb-2" v-if="auctionType === '1'">
             <button type="submit" class="btn primary-btn normal-16-font w-100" @click="auctionEntryPublic()" >공매 신청하기</button>
           </div>
           <Modal v-if="showAuctionModal" @close="handleAuctionClose" />

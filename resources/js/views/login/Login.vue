@@ -93,7 +93,7 @@
         </div>
           <div class="my-5 app-specific-size">
             <div class="video-container d-sm-flex mb-5">
-              <video autoplay loop muted >
+              <video autoplay loop muted playsinline preload="auto">
                 <source src="../../../img/video/mainvideo02.mp4" type="video/mp4"  width="80">
               </video>
             </div>
@@ -165,7 +165,7 @@
               <form @submit.prevent="submitLogin">
                 <div class="">
                   <div class="video-container d-sm-flex mb-5">
-                        <video autoplay loop muted>
+                        <video autoplay loop muted playsinline preload="auto">
                           <source src="../../../img/video/mainvideo02.mp4" type="video/mp4">
                         </video>
                       </div>
@@ -248,9 +248,7 @@
                   </div>
                   <!-- 비밀번호 입력 -->
                   <div class="mb-4">
-                    <label for="password" class="form-label">
-                      {{ $t("password") }}
-                    </label>
+                    <label for="password" class="form-label">{{ $t("password") }}</label>
                     <input v-model="loginForm.password" id="password" type="password" class="form-control border-0 border-bottom" required autocomplete="current-password" placeholder="비밀번호를 입력해주세요.">
                     <div v-for="message in validationErrors?.password">
                         {{ message }}
@@ -259,13 +257,10 @@
                   <!-- 백엔드 오류 메시지 -->
   
                   <!-- 소셜 로그인 섹션 -->
-                  <div class="login-v2 my-5">
-                    <h3 class="mb-4 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
+                  <div class="login-v2 my-2">
+                    <h3 class="mb-2 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
                     <ul class="login-v2-area">
-                      <!-- <li><a href="#" class="google" title="google" @click.prevent="handleSocialLogin('google')">Google</a></li>
-                      <li><a href="#" class="naver" title="naver" @click.prevent="handleSocialLogin('naver')">Naver</a></li>
-                      <li><a href="#" class="kakao" title="kakao" @click.prevent="handleSocialLogin('kakao')">Kakao</a></li> -->
-
+                      
                       <li>
                         <a href="/auth/google/redirect" class="google">Google</a>
                       </li>
@@ -280,7 +275,7 @@
                     </ul>
                   </div>
                   <!-- 로그인 버튼 -->
-                  <div class="flex items-center justify-end my-4">
+                  <div class="flex items-center justify-end my-4 pb-2 sticky-bottom">
                     <button class="btn btn-primary w-100" :class="{ 'opacity-25': processing }" :disabled="processing">
                       로그인
                     </button>

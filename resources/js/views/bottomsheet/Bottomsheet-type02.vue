@@ -1,7 +1,10 @@
 <template>
   <div ref="sheet" class="sheet container" :class="{ 'head': showHead, 'half': showBottomSheet, 'dragging': isDragging }">
     <header class="handle-head" @mousedown="startDrag" @touchstart="startDrag" @click="toggleSheet">
-      <span class="handle"></span>
+      <span class="handle">
+        <div class="mdi mdi-chevron-up" v-if="!showBottomSheet"></div>
+        <div class="mdi mdi-chevron-down" v-else></div>
+      </span>
     </header>
     <div class="content p-3" ref="content" :class="{ 'no-scroll': showHead }" @mousedown.stop @touchstart.stop>
       <slot></slot>
@@ -192,6 +195,7 @@ onBeforeUnmount(() => {
   transition: height 0.3s ease-in-out, transform 0.3s ease-in-out;
   overflow: hidden;
   box-shadow:0 0px 6px rgba(0, 0, 0, 0.1);
+  /* z-index: 1010; */
 }
 .sheet.head {
   height: 30px;
@@ -208,11 +212,22 @@ onBeforeUnmount(() => {
 
 .handle {
   display: block;
-  height: 7px;
+  /* height: 7px; */
   width: 42px;
-  border-radius: 4px;
-  background: rgba(0, 0, 0, 0.1);
+  /* border-radius: 4px; */
+  /* background: rgba(0, 0, 0, 0.1); */
   margin: 0 auto;
+}
+
+.handle div {
+  height: 7px;
+  width: 40px;
+  color: rgba(0, 0, 0, 0.2);
+  font-size: 40px;
+  font-weight: 700;
+  text-align: center;
+  position: absolute;
+  top: -16px;
 }
 
 .handle-head {

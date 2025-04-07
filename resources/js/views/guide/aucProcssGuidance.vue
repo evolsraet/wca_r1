@@ -31,7 +31,7 @@ import pannel04 from '../../../../resources/img/pannel04.png';
 const openAlarmModal04 = () => {
   const text = `
     <h5 class="text-start mb-3">경매 진행 순서 안내</h5>
-    <div class="sellInfo my-3 p-4 mb-4" style="position: relative;">
+    <div class="sellInfo my-3 p-4 mb-4" style="position: relative; height: calc(100vh - (env(safe-area-inset-bottom) + 250px));">
         <div class="auction-guid-popup-container">
             <img src="${imgInfo}" alt="Auction Detail" class="auction-detail-img">
             <div class="auction-guid-popup">
@@ -95,9 +95,9 @@ const openAlarmModal04 = () => {
     .callback(function (result) {
       // 결과 처리 로직
       if(props.propData === true){
-        //if (result.isOk) {
+        if (result.isOk) {
             router.push({ path: '/selldt2' }); 
-        //}
+        }
       }
     })
     .confirm(text); // 모달 내용 설정

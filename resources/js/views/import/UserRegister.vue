@@ -22,7 +22,7 @@
           <input type="text" v-model="user.updated_at" id="updated_at" class="input-dis form-control" readonly/>
         </div>
         <div class="form-group">
-          <label for="name"><span class="text-danger">*</span>이름</label>
+          <label for="name"><span class="text-danger">*</span> 이름</label>
           <input type="text" v-model="profile.name" id="name" class="form-control" placeholder="이름"/>
           <div v-if="registerURL || adminCreateURL || adminEditURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.name">
@@ -31,11 +31,11 @@
           </div>
         </div>
         <div v-if="userEditURL || adminEditURL" class="form-group">
-          <label for="name"><span class="text-danger">*</span>전화번호</label>
+          <label for="name"><span class="text-danger">*</span> 전화번호</label>
           <input type="text" id="phone" v-model="profile.phone" class="input-dis form-control" readonly/>
         </div>
         <div v-if="registerURL || adminCreateURL" class="form-group">
-          <label for="name"><span class="text-danger">*</span>전화번호</label>
+          <label for="name"><span class="text-danger">*</span> 전화번호</label>
           <input type="text" id="phone" v-model="profile.phone" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
           <div v-if="registerURL || adminCreateURL || adminEditURL" class="text-danger mt-1">
             <div v-for="message in validationErrors?.phone">
@@ -57,7 +57,7 @@
           <input type="text" v-model="profile.email" id="email" class="input-dis form-control" readonly/>
         </div>
         <div v-if="registerURL || adminCreateURL" class="form-group">
-          <label for="email"><span class="text-danger">*</span>비밀번호</label>
+          <label for="email"><span class="text-danger">*</span> 비밀번호</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password" id="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합"/>
           <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.password">
@@ -75,7 +75,7 @@
           </div>
         </div>
         <div v-if="userEditURL || registerURL || adminCreateURL" class="form-group">
-          <label for="email"><span class="text-danger" v-if="adminCreateURL || registerURL">*</span>비밀번호 확인</label>
+          <label for="email"><span class="text-danger" v-if="adminCreateURL || registerURL">*</span> 비밀번호 확인</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password_confirmation" id="password_confirmation" class="form-control" placeholder="비밀번호를 다시 입력해주세요"/>
           <div v-if="registerURL || adminCreateURL || userEditURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.password_confirmation">
@@ -161,42 +161,42 @@
                 </div>
           </div>
           <div class="form-group">
-            <label for="dealerName"><span class="text-danger">*</span>딜러 이름</label>
+            <label for="dealerName"><span class="text-danger">*</span> 딜러 이름</label>
             <input type="text" v-model="profile.dealer_name" id="dealerName" class="form-control" placeholder="이름"/>
             <div v-for="message in validationErrors?.name" class="text-danger mt-1">
                   {{ message }}
             </div>
           </div>
           <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
-            <label for="name"><span class="text-danger">*</span>연락처</label>
+            <label for="name"><span class="text-danger">*</span> 연락처</label>
             <input type="text" id="phone" v-model="profile.dealerContact" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
             <div v-for="message in validationErrors?.phone" class="text-danger mt-1">
                   {{ message }}
             </div>
           </div>
           <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
-              <label for="dealerBirthDate"><span class="text-danger">*</span>생년월일</label>
+              <label for="dealerBirthDate"><span class="text-danger">*</span> 생년월일</label>
               <input type="date" id="dealerBirthDate" v-model="profile.dealerBirthDate" placeholder="1990-12-30">
               <div v-for="message in validationErrors?.birthday" class="text-danger mt-1">
                   {{ message }}
             </div>
           </div>
           <div class="form-group">
-            <label for="dealer"><span class="text-danger">*</span>소속상사</label>
+            <label for="dealer"><span class="text-danger">*</span> 소속상사</label>
             <input type="text" v-model="profile.company" class="form-control" placeholder="상사명(상사 정식 명칭)"/>
             <div v-for="message in validationErrors?.company" class="text-danger mt-1">
                   {{ message }}
             </div>
           </div>
           <div class="form-group">
-            <label for="dealer"><span class="text-danger">*</span>소속상사 직책</label>
+            <label for="dealer"><span class="text-danger">*</span> 소속상사 직책</label>
             <input type="text" v-model="profile.dealerCompanyDuty" class="form-control" placeholder="사원"/>
             <div v-for="message in validationErrors?.company_duty" class="text-danger mt-1">
                   {{ message }}
             </div>
           </div>
           <div class="form-group">
-            <label for="dealer"><span class="text-danger">*</span>소속상사 주소 </label>
+            <label for="dealer"><span class="text-danger">*</span> 소속상사 주소 </label>
             <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_post" class="input-dis form-control" placeholder="우편번호" readonly/>
             <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
             <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
@@ -230,7 +230,7 @@
             <input type="text" v-model="profile.receive_addr2" class="form-control" placeholder="상세주소"/>
           </div>
           <div class="form-group">
-            <label for="dealer"><span class="text-danger">*</span>소개</label>
+            <label for="dealer"><span class="text-danger">*</span> 소개</label>
             <textarea type="text" v-model="profile.introduce" class="custom-textarea mt-2" placeholder="소개를 입력해주세요."></textarea>
             <div v-for="message in validationErrors?.introduce" class="text-danger mt-1">
                   {{ message }}
@@ -322,7 +322,7 @@
         <div v-if="userEditURL">
           <button type="submit" class="mt-3 w-100 btn btn-primary">저장</button>
         </div>
-        <div v-if="registerURL">
+        <div v-if="registerURL" class="sticky-bottom pb-2">
           <button type="submit" class="mt-3 w-100 btn btn-primary">약관 동의 및 회원가입</button>
         </div>
         <div v-if="adminEditURL" class="mt-4">
@@ -349,6 +349,35 @@
   </template>
   
  
+  <script>
+  import flatpickr from "flatpickr";
+  import "flatpickr/dist/flatpickr.min.css";
+  import { Korean } from 'flatpickr/dist/l10n/ko.js'
+  export default {
+    data() {
+      return {
+      };
+    },
+    methods: {
+    },
+    mounted() {
+      flatpickr("#dealerBirthDate", {
+        locale: Korean,
+        //enableTime: true,
+        dateFormat: "Y-m-d",
+        // minDate: "today",
+        minDate: new Date(),
+        disable: [
+          function (date) {
+            // 주말 비활성화
+            return date.getDay() === 0 || date.getDay() === 6;
+          },
+        ],
+      });
+    },
+  };
+  </script>
+
   <script setup>
   import { ref, onMounted ,computed , inject,createApp ,h } from 'vue';
   import { useStore } from 'vuex';
@@ -1255,5 +1284,43 @@
 .info-popup ul li {
   margin-bottom: 10px !important;
 }
+
+
+.flatpickr-calendar {
+  font-family: "Arial", sans-serif;
+}
+
+.flatpickr-time .flatpickr-time-separator {
+  color: #7a3535;
+}
+input[type="date"]::-webkit-datetime-edit { 
+    color: #aaa; /* 비활성화된 입력에 회색 스타일 적용 */
+  }
+.flatpickr-day.flatpickr-disabled {
+  cursor: not-allowed;
+  color: rgba(57, 57, 57, 0.3);
+  background: transparent;
+  border-color: transparent;
+}
+/* 비활성화된 날짜 */
+.flatpickr-day.flatpickr-disabled {
+  cursor: not-allowed;
+  color: #d3d3d3;
+  background-color: #f9f9f9;
+}
+
+/* 활성화된 날짜 */
+.flatpickr-day {
+  cursor: pointer;
+  color: #333333;
+}
+
+input[type="date"] {
+  width: 100%;
+  padding: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
+
   </style>
   

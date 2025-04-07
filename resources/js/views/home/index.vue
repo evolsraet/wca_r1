@@ -102,7 +102,7 @@
       </div>
         <div class="my-5 app-specific-size">
           <div class="video-container d-sm-flex mb-">
-            <video autoplay loop muted >
+            <video autoplay loop muted playsinline preload="auto">
               <source src="../../../img/video/mainvideo02.mp4" type="video/mp4"  width="80">
             </video>
           </div>
@@ -201,7 +201,7 @@
               </div>
               <div class="row mt-4">
                 <img src="../../../img/wecar_.png" alt="자동차 이미지" style="margin: auto !important; width: 130px !important;">
-                <div class="col-12 d-flex flex-column mt-4">
+                <div class="col-12 d-flex flex-column mt-4 sticky-bottom">
                   <div class="d-flex justify-content-end my-2 flex-column">
                     <button class="btn btn-primary" :class="{ 'opacity-25': processing }" :disabled="processing">내 차 조회</button>
                   </div>
@@ -241,7 +241,7 @@
             <div class="row mb-4 mt-4">
               <div class="col-12">
                   <div class="video-container d-sm-flex mb-5">
-                    <video autoplay loop muted>
+                    <video autoplay loop muted playsinline preload="auto">
                       <source src="../../../img/video/mainvideo02.mp4" type="video/mp4">
                     </video>
                   </div>

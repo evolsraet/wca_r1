@@ -67,7 +67,7 @@ export default {
 
     } else {
       this.showHead = true;
-      this.sheetHeight = 10;
+      this.sheetHeight = 20;
     }
   },
   beforeDestroy() {
