@@ -7,9 +7,9 @@
         <button v-if="isDetailPage && isUser" @click="goBack" class="btn btn-back back-btn-icon"></button>
         <button v-else-if="isDetailPage && isDealer" @click="goBack" class="btn btn-back wh-btn-icon"></button>
         <!-- <p v-if="isDetailPage && isMobile">123</p>-->
-        <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand-dealer ms-3"></router-link>
+        <router-link v-else-if="isDealer" to="/dealer" class="navbar-brand-dealer logo-container ms-3"></router-link>
         <router-link v-else-if="!isDetailPage && isUser" to="/user" class="navbar-brand logo-container"></router-link>
-        <router-link v-else to="/" class="navbar-brand"></router-link>
+        <router-link v-else to="/" class="navbar-brand logo-container"></router-link>
         <p v-if="isDetailPage02" class="web-style fs-5 fw-bolder custom-letter-spacing">{{ carDetailsNo }}</p>
         <div class="collapse navbar-collapse navbar-collshow" id="navbarSupportedContent">
           <div v-if="isDealer" class="navbar-nav nav-style">
