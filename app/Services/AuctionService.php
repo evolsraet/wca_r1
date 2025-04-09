@@ -624,21 +624,147 @@ class AuctionService
         return $response;
     }
 
-    // 예상가 계산
-    public function calculateCarPrice($currentYear, $currentMonth, $regYear, $regMonth, $currentMileage, $initialPrice, $mileageStandard = 1250) {
-        // 1. 사용 월수 계산
-        $monthsUsed = ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth);
+
+
+    // public function calculateCarPrice($currentYear, $currentMonth, $regYear, $regMonth, $currentMileage, $initialPrice, $mileageStandard = 1250) {
+    //     // 1. 사용 월수 계산
+    //     $monthsUsed = ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth);
     
-        // 2. 표준 주행거리 계산 (월별 주행거리 기준)
+    //     // 2. 표준 주행거리 계산 (월별 주행거리 기준)
+    //     $standardMileage = $monthsUsed * $mileageStandard;
+    
+    //     // 3. 주행거리 차이 계산
+    //     $mileageDifference = $standardMileage - $currentMileage;
+
+    
+    //     // 4. 잔가율 결정
+    //     $yearsUsed = floor($monthsUsed / 12);
+    //     $residualRate = 0;
+    //     if ($yearsUsed <= 1) {
+    //         $residualRate = 0.518;
+    //     } elseif ($yearsUsed <= 4) {
+    //         $residualRate = 0.417;
+    //     } elseif ($yearsUsed == 5) {
+    //         $residualRate = 0.368;
+    //     } elseif ($yearsUsed == 6) {
+    //         $residualRate = 0.311;
+    //     } elseif ($yearsUsed >= 7) {
+    //         $residualRate = 0.262;
+    //     }
+    
+    //     // 5. 기본 감가 가격 계산
+    //     $basePrice = $initialPrice * $residualRate;
+    
+    //     // 6. 주행 거리 감가 계산 (1km당 200원 가정)
+    //     $depreciationPerKm = 200;
+    //     // $mileageDepreciation = abs($mileageDifference) * $depreciationPerKm * $mileageDifferenceEffect;
+
+
+    //     $mileageDepreciation = min(0, $mileageDifference * $depreciationPerKm);
+    //     // $mileageDepreciation = $mileageDifference * $residualRate;
+    
+    //     // 7. 최종 예상 가격 계산
+    //     $estimatedPrice = $basePrice + $mileageDepreciation;
+
+    //     $estimatedPriceInTenThousandWon = $estimatedPrice / 10000;
+
+        
+    //     // 결과 반환
+    //     return [
+    //         'susic' => $susic,
+    //         'monthsUsed' => $monthsUsed,
+    //         'standardMileage' => $standardMileage,
+    //         'mileageDifference' => $mileageDifference,
+    //         'residualRate' => $residualRate,
+    //         'basePrice' => $basePrice,
+    //         'mileageDepreciation' => $mileageDepreciation,
+    //         'estimatedPrice' => $estimatedPrice,
+    //         'estimatedPriceInTenThousandWon' => $estimatedPriceInTenThousandWon
+    //     ];
+    // }
+
+    // 예상가 계산
+    // public function calculateCarPrice($currentYear, $currentMonth, $regYear, $regMonth, $currentMileage, $initialPrice, $mileageStandard = 1250) {
+    //     // 1. 사용 월수 계산
+    //     $monthsUsed = ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth);
+    
+    //     // 2. 표준 주행거리 계산 (월별 주행거리 기준)
+    //     $standardMileage = $monthsUsed * $mileageStandard;
+    
+    //     // 3. 주행거리 차이 계산
+    //     $mileageDifference = $standardMileage - $currentMileage;
+
+    
+    //     // 4. 잔가율 결정
+    //     $yearsUsed = floor($monthsUsed / 12);
+    //     $residualRate = 0;
+    //     if ($yearsUsed <= 1) {
+    //         $residualRate = 0.518;
+    //     } elseif ($yearsUsed <= 4) {
+    //         $residualRate = 0.417;
+    //     } elseif ($yearsUsed == 5) {
+    //         $residualRate = 0.368;
+    //     } elseif ($yearsUsed == 6) {
+    //         $residualRate = 0.311;
+    //     } elseif ($yearsUsed >= 7) {
+    //         $residualRate = 0.262;
+    //     }
+    
+    //     // 5. 기본 감가 가격 계산
+    //     $basePrice = $initialPrice * $residualRate;
+    
+    //     // 6. 주행 거리 감가 계산 (1km당 200원 가정)
+    //     $depreciationPerKm = 200;
+    //     // $mileageDepreciation = abs($mileageDifference) * $depreciationPerKm * $mileageDifferenceEffect;
+
+
+    //     $mileageDepreciation = min(0, $mileageDifference * $depreciationPerKm);
+    //     // $mileageDepreciation = $mileageDifference * $residualRate;
+    
+    //     // 7. 최종 예상 가격 계산
+    //     $estimatedPrice = $basePrice + $mileageDepreciation;
+
+    //     $estimatedPriceInTenThousandWon = $estimatedPrice / 10000;
+
+        
+    //     // 결과 반환
+    //     return [
+    //         'susic' => $susic,
+    //         'monthsUsed' => $monthsUsed,
+    //         'standardMileage' => $standardMileage,
+    //         'mileageDifference' => $mileageDifference,
+    //         'residualRate' => $residualRate,
+    //         'basePrice' => $basePrice,
+    //         'mileageDepreciation' => $mileageDepreciation,
+    //         'estimatedPrice' => $estimatedPrice,
+    //         'estimatedPriceInTenThousandWon' => $estimatedPriceInTenThousandWon
+    //     ];
+    // }
+
+
+    public function calculateCarPrice(
+        $currentYear,
+        $currentMonth,
+        $regYear,
+        $regMonth,
+        $currentMileage,
+        $initialPrice,
+        $mileageStandard = 1250
+    ) {
+        // 1. 사용 개월 수 계산
+        $monthsUsed = ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth);
+        $monthsUsed = max(0, $monthsUsed);
+    
+        // 2. 표준 주행거리 계산
         $standardMileage = $monthsUsed * $mileageStandard;
     
         // 3. 주행거리 차이 계산
         $mileageDifference = $standardMileage - $currentMileage;
-
     
-        // 4. 잔가율 결정
+        // 4. 연식 계산
         $yearsUsed = floor($monthsUsed / 12);
-        $residualRate = 0;
+    
+        // 5. 잔가율 결정 (연식 기반)
         if ($yearsUsed <= 1) {
             $residualRate = 0.518;
         } elseif ($yearsUsed <= 4) {
@@ -647,36 +773,76 @@ class AuctionService
             $residualRate = 0.368;
         } elseif ($yearsUsed == 6) {
             $residualRate = 0.311;
-        } elseif ($yearsUsed >= 7) {
+        } else {
             $residualRate = 0.262;
         }
     
-        // 5. 기본 감가 가격 계산
+        // 6. 기준 시세 계산
         $basePrice = $initialPrice * $residualRate;
     
-        // 6. 주행 거리 감가 계산 (1km당 200원 가정)
-        $depreciationPerKm = 200;
-        // $mileageDepreciation = abs($mileageDifference) * $depreciationPerKm * $mileageDifferenceEffect;
-
-
-        $mileageDepreciation = min(0, $mileageDifference * $depreciationPerKm);
-        // $mileageDepreciation = $mileageDifference * $residualRate;
+        // 7. 감가 또는 가산 계산
+        $mileageAdjustment = $mileageDifference * $residualRate;
     
-        // 7. 최종 예상 가격 계산
-        $estimatedPrice = $basePrice + $mileageDepreciation;
-
-        $estimatedPriceInTenThousandWon = $estimatedPrice / 10000;
+        // 8. 최종 예상 가격
+        $estimatedPrice = $basePrice + $mileageAdjustment;
+        $estimatedPriceInTenThousandWon = round($estimatedPrice / 10000, 1);
     
-        // 결과 반환
+        // 9. 계산 과정 수식 정리
+        $calculationSteps = [
+            '사용개월 계산식' => "({$currentYear} - {$regYear}) * 12 + ({$currentMonth} - {$regMonth}) = {$monthsUsed}",
+            '표준주행거리 계산식' => "{$monthsUsed} * {$mileageStandard} = {$standardMileage}",
+            '주행거리 차이 계산식' => "{$standardMileage} - {$currentMileage} = {$mileageDifference}",
+            '연식 계산식' => "floor({$monthsUsed} / 12) = {$yearsUsed}",
+            '기준 시세 계산식' => "{$initialPrice} * {$residualRate} = " . round($basePrice),
+        ];
+
+        $susic = '
+        [1] 사용 개월 수 계산
+        → 사용개월 = (현재년도 - 등록년도) × 12 + (현재월 - 등록월)
+
+        [2] 표준 주행거리 계산
+        → 표준주행거리 = 사용개월 × 1,250km
+
+        [3] 주행거리 차이 계산
+        → 주행거리차이 = 표준주행거리 - 실제주행거리
+        - 양수: 평균보다 덜 탐 → 가산 요인
+        - 음수: 평균보다 더 탐 → 감가 요인
+
+        [4] 차량 연식 계산
+        → 연식 = 사용개월 ÷ 12 (소수점 버림)
+
+        [5] 잔가율 결정 (연식 기준)
+        → 연식 ≤ 1년     → 잔가율 0.518  
+        → 연식 ≤ 4년     → 잔가율 0.417  
+        → 연식 = 5년     → 잔가율 0.368  
+        → 연식 = 6년     → 잔가율 0.311  
+        → 연식 ≥ 7년     → 잔가율 0.262
+
+        [6] 기준 시세 계산
+        → 기준시세 = 차량초기가격 × 잔가율
+
+        [7] 주행거리 감가 또는 가산 계산
+        → 감가/가산액 = 주행거리차이 × 잔가율
+
+        [8] 최종 예상 시세 계산
+        → 예상가 = 기준시세 + 감가/가산액
+
+        [9] 만 원 단위로 변환 (소수점 1자리 반올림)
+        → 예상가_만원 = round(예상가 ÷ 10,000, 1)
+        ';
+    
+        // 10. 결과 반환
         return [
+            'susic' => $susic,
             'monthsUsed' => $monthsUsed,
             'standardMileage' => $standardMileage,
             'mileageDifference' => $mileageDifference,
             'residualRate' => $residualRate,
-            'basePrice' => $basePrice,
-            'mileageDepreciation' => $mileageDepreciation,
-            'estimatedPrice' => $estimatedPrice,
-            'estimatedPriceInTenThousandWon' => $estimatedPriceInTenThousandWon
+            'basePrice' => round($basePrice),
+            'mileageDepreciation' => round($mileageAdjustment),
+            'estimatedPrice' => round($estimatedPrice),
+            'estimatedPriceInTenThousandWon' => $estimatedPriceInTenThousandWon,
+            'calculationSteps' => $calculationSteps
         ];
     }
 

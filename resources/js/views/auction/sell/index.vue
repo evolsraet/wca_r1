@@ -488,7 +488,7 @@ const checkExpectedPriceClick = async () => {
             }, 100);
 
             // 예상 가격 모달 즉시 표시
-            showCurrentPriceModal(result.data.estimatedPrice);
+            showCurrentPriceModal(result.data);
 
             // alert(result.data.estimatedPrice);
 
@@ -500,7 +500,7 @@ const checkExpectedPriceClick = async () => {
             if (currentPriceBtn) {
                 currentPriceBtn.style.display = 'inline-block'; 
                 currentPriceBtn.addEventListener('click', () => {
-                    showCurrentPriceModal(result.data.estimatedPrice); // 버튼 클릭 시 모달 다시 표시
+                    showCurrentPriceModal(result.data); // 버튼 클릭 시 모달 다시 표시
                 });
             }
             const estimatePriceBtn = document.querySelector('.expectedPrice');
@@ -525,10 +525,26 @@ const checkExpectedPriceClick = async () => {
     }
 };
 
-const showCurrentPriceModal = (estimatedPrice) => {
-    const price = estimatedPrice || '알 수 없음'; // 예상 가격 기본값 처리
-
+const showCurrentPriceModal = (data) => {
+    console.log('data??',data);
+    const price = data.estimatedPrice || '알 수 없음'; // 예상 가격 기본값 처리
+    const susicContent = data.susic.replace(/\n/g, '<br>'); // 예상 가격 기본값 처리
+    const calculationSteps = data.calculationSteps; // 예상 가격 기본값 처리
     // const formattedPrice = (price / 10000).toFixed(0);
+
+    console.log('calculationSteps??',calculationSteps);
+    // 이거 어떻개 출력해야하지?
+    
+    // HTML로 구성
+    let html = `<h5 style="margin-top: 10px;">계산 과정</h5><ul style="padding-left: 0px; margin-left: 0px;">`;
+
+    for (const [title, expression] of Object.entries(calculationSteps)) {
+    html += `<li><strong>${title}</strong>: ${expression}</li>`;
+    }
+
+    html += `</ul>`;
+
+
     const formattedPrice = price;
     const text = `
     <div style="padding: 20px; text-align: center; border-radius: 10px;">
@@ -537,6 +553,11 @@ const showCurrentPriceModal = (estimatedPrice) => {
             <span class="tc-primary bold-18-font">${formattedPrice} 만원</span>
         </div>
         <p style="font-size: 14px; color: #888;">예상 가격은 현재 차량 정보를 기준으로 산정된 값입니다.</p>
+        <p class="tc-bold" id="susic" style="cursor: pointer;">[ 예상 가격 계산 과정 ]</p>
+        <div style="font-size: 14px; color: #888; text-align: left; display: none;" id="susic-content">
+            ${susicContent}
+            ${html}
+        </div>
     </div>
 `;
     wica.ntcn(swal)
@@ -563,6 +584,17 @@ const showCurrentPriceModal = (estimatedPrice) => {
             }
         })
         .confirm(text);
+
+    setTimeout(() => {
+        const susic = document.querySelector('#susic');
+
+        susic.addEventListener('click', () => {
+            const susicContent = document.querySelector('#susic-content');
+            susicContent.style.display = 'block';
+        });
+        
+    }, 100);
+
 };
 
 
