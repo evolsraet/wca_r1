@@ -51,6 +51,8 @@ class CarmerceService
             'startDriveKm' => $currentData['km'],
             'endDriveKm' => '',
         ]);
+
+        Log::info('카머스 시세 조회 결과', ['result' => $response->json()]);
         
         return $response->json();
     }   

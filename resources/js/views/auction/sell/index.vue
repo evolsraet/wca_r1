@@ -448,7 +448,7 @@ const checkExpectedPriceClick = async () => {
     const viewChange = document.querySelector('input[name="viewChange"]').value;
     const viewBreak = document.querySelector('input[name="viewBreak"]').value;
 
-    const initialPrice = carDetails.value.initialPrice;
+    const initialPrice = carDetails.value.priceNowWhole;
 
     // console.log(currentPrice);
 

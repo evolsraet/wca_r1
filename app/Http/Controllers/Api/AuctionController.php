@@ -217,7 +217,13 @@ class AuctionController extends Controller
 
         // $initialPrice = $currentPrice; // 차량 초기 가격 3천만 원
 
-        $result = $auctionService->calculateCarPrice($nowYear, $nowMonth, $firstRegYear, $firstRegMonth, $mileage, $initialPrice);
+        $result = $auctionService->calculateCarPrice(
+            $nowYear, 
+            $nowMonth, 
+            $firstRegYear, 
+            $firstRegMonth, 
+            $mileage, 
+            $initialPrice);
         
         $resultPrice = $result['estimatedPrice'];
 
@@ -235,7 +241,7 @@ class AuctionController extends Controller
         }
 
         // 키갯수
-        if($keyCount < 2){
+        if($keyCount >= 2){
             $resultPrice -= 300000; // 30만원
         }
 
@@ -412,6 +418,17 @@ class AuctionController extends Controller
 
         return $roundedPrice;
     }
+
+
+
+    public function getCarPrice(Request $request)
+    {
+        $CarmerceService = new CarmerceService();
+        $result = $CarmerceService->getCarmerceResult($request->all());
+
+        return response()->api($result);
+    }
+
 
     public function AllIngCount(Request $request)
     {

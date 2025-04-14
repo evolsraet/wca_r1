@@ -754,98 +754,95 @@ class AuctionService
         $regMonth,
         $currentMileage,
         $initialPrice,
-        $mileageStandard = 1250
+        $isImported = false, // 수입차 여부
+        $isVan = false        // 승합차 여부
     ) {
         // 1. 사용 개월 수 계산
-        $monthsUsed = ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth);
-        $monthsUsed = max(0, $monthsUsed);
+        $monthsUsed = max(0, ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth));
     
-        // 2. 표준 주행거리 계산
-        $standardMileage = $monthsUsed * $mileageStandard;
+        // 2. 표준 주행거리 계산 (승합차: 2500, 승용차: 1250)
+        $mileageStandardUnit = $isVan ? 2500 : 1250;
+        $standardMileage = $monthsUsed * $mileageStandardUnit;
     
-        // 3. 주행거리 차이 계산
-        $mileageDifference = $standardMileage - $currentMileage;
+        // 3. 주행거리 차이 계산 (절댓값 처리)
+        $mileageDifference = abs($standardMileage - $currentMileage);
     
         // 4. 연식 계산
-        $yearsUsed = floor($monthsUsed / 12);
+        $yearsUsed = $currentYear - $regYear;
     
-        // 5. 잔가율 결정 (연식 기반)
-        if ($yearsUsed <= 1) {
-            $residualRate = 0.518;
-        } elseif ($yearsUsed <= 4) {
-            $residualRate = 0.417;
-        } elseif ($yearsUsed == 5) {
-            $residualRate = 0.368;
-        } elseif ($yearsUsed == 6) {
-            $residualRate = 0.311;
+        // 5. 잔가율 테이블 설정
+        $residualRateTable = $isImported
+            ? [0=>0.85,1=>0.76,2=>0.67,3=>0.58,4=>0.49,5=>0.40,6=>0.31,7=>0.26,8=>0.21,9=>0.16]
+            : [0=>0.95,1=>0.85,2=>0.77,3=>0.69,4=>0.61,5=>0.53,6=>0.45,7=>0.37,8=>0.29,9=>0.21];
+    
+        $defaultRate = 0.16;
+        $residualRate = $residualRateTable[$yearsUsed] ?? $defaultRate;
+        $prevResidualRate = $residualRateTable[$yearsUsed - 1] ?? $defaultRate;
+    
+        // 6. 주행거리 감가 계산 (잔가율 변화가 없으면 단순 방식, 있으면 복합 수식)
+        // if (($residualRate === $prevResidualRate)) {
+        //     $mileageAdjustment = ($prevResidualRate - $residualRate) * $initialPrice / 20 * ($mileageDifference / 1000) * $residualRate;            
+        // } else {
+        //     $mileageAdjustment = ($residualRate / 20) * ($mileageDifference / 1000) * $initialPrice;
+        // }
+
+        if($yearsUsed >= 11){
+            $mileageAdjustment = ($residualRate / 20) * ($mileageDifference / 1000) * $initialPrice;
         } else {
-            $residualRate = 0.262;
+            $mmdo = abs(number_format($residualRate - $prevResidualRate, 3, '.', ''));
+            $mileageAdjustment = ($mmdo) * ($residualRate / 20) * ($mileageDifference / 1000) * $initialPrice;
         }
+
+
+        $mileageAdjustment = abs($residualRate * $initialPrice + $mileageAdjustment);
     
-        // 6. 기준 시세 계산
+        // 7. 기준 시세 계산
         $basePrice = $initialPrice * $residualRate;
     
-        // 7. 감가 또는 가산 계산
-        $mileageAdjustment = $mileageDifference * $residualRate;
-    
-        // 8. 최종 예상 가격
-        $estimatedPrice = $basePrice + $mileageAdjustment;
+        // 8. 최종 예상 가격 계산 (음수 방지)
+        $estimatedPrice = max(0, $mileageAdjustment);
         $estimatedPriceInTenThousandWon = round($estimatedPrice / 10000, 1);
     
-        // 9. 계산 과정 수식 정리
+
+        if($yearsUsed >= 11){
+            $mileageAdjustmentView = "(".$residualRate." / 20) * (".$mileageDifference." / 1000) * ".$initialPrice."=".$mileageAdjustment;
+        } else {
+            $mmdo = abs(number_format($residualRate - $prevResidualRate, 3, '.', ''));
+            $mileageAdjustmentView = "(".$mmdo.") * (".$residualRate." / 20) * (".$mileageDifference." / 1000) * ".$initialPrice."=".$mileageAdjustment;
+        }
+
+        // 9. 계산 설명 정리
         $calculationSteps = [
             '사용개월 계산식' => "({$currentYear} - {$regYear}) * 12 + ({$currentMonth} - {$regMonth}) = {$monthsUsed}",
-            '표준주행거리 계산식' => "{$monthsUsed} * {$mileageStandard} = {$standardMileage}",
-            '주행거리 차이 계산식' => "{$standardMileage} - {$currentMileage} = {$mileageDifference}",
+            '표준주행거리 계산식' => "{$monthsUsed} * {$mileageStandardUnit} = {$standardMileage}",
+            '주행거리 차이 계산식' => "|{$standardMileage} - {$currentMileage}| = {$mileageDifference}",
             '연식 계산식' => "floor({$monthsUsed} / 12) = {$yearsUsed}",
-            '기준 시세 계산식' => "{$initialPrice} * {$residualRate} = " . round($basePrice),
+            '잔가율' => $residualRate,
+            '이전년도 잔가율' => $prevResidualRate,
+            '잔가율 차이' => abs(number_format($residualRate - $prevResidualRate, 3, '.', '')),
+            '예상가 계산식' => "{$mileageAdjustmentView}",
         ];
-
-        $susic = '
-        [1] 사용 개월 수 계산
-        → 사용개월 = (현재년도 - 등록년도) × 12 + (현재월 - 등록월)
-
-        [2] 표준 주행거리 계산
-        → 표준주행거리 = 사용개월 × 1,250km
-
-        [3] 주행거리 차이 계산
-        → 주행거리차이 = 표준주행거리 - 실제주행거리
-        - 양수: 평균보다 덜 탐 → 가산 요인
-        - 음수: 평균보다 더 탐 → 감가 요인
-
-        [4] 차량 연식 계산
-        → 연식 = 사용개월 ÷ 12 (소수점 버림)
-
-        [5] 잔가율 결정 (연식 기준)
-        → 연식 ≤ 1년     → 잔가율 0.518  
-        → 연식 ≤ 4년     → 잔가율 0.417  
-        → 연식 = 5년     → 잔가율 0.368  
-        → 연식 = 6년     → 잔가율 0.311  
-        → 연식 ≥ 7년     → 잔가율 0.262
-
-        [6] 기준 시세 계산
-        → 기준시세 = 차량초기가격 × 잔가율
-
-        [7] 주행거리 감가 또는 가산 계산
-        → 감가/가산액 = 주행거리차이 × 잔가율
-
-        [8] 최종 예상 시세 계산
-        → 예상가 = 기준시세 + 감가/가산액
-
-        [9] 만 원 단위로 변환 (소수점 1자리 반올림)
-        → 예상가_만원 = round(예상가 ÷ 10,000, 1)
-        ';
     
-        // 10. 결과 반환
+        // 10. 수식 설명 문자열
+        $susic = ""
+        . "[1] 사용개월 = (현재년도 - 등록년도) × 12 + (현재월 - 등록월)\n"
+        . "[2] 표준주행거리 = 사용개월 × {$mileageStandardUnit}km (" . ($isVan ? '승합차' : '승용차') . ")\n"
+        . "[3] 주행거리차이 = |표준주행거리 - 실제주행거리|\n"
+        . "[4] 연식 = 사용개월 ÷ 12 (소수점 버림)\n"
+        . "[5] 잔가율 = 연식 기준 테이블 참조 (" . ($isImported ? '수입차' : '국산차') . ")\n"
+        . "[6] 예상가 = 기준시세 + 감가/가산 (최소 0 이상)\n"
+        . "[7] 만원 단위 = round(예상가 ÷ 10,000, 1)";
+    
         return [
             'susic' => $susic,
             'monthsUsed' => $monthsUsed,
             'standardMileage' => $standardMileage,
             'mileageDifference' => $mileageDifference,
             'residualRate' => $residualRate,
+            'prevResidualRate' => $prevResidualRate,
             'basePrice' => round($basePrice),
             'mileageDepreciation' => round($mileageAdjustment),
-            'estimatedPrice' => round($estimatedPrice),
+            'estimatedPrice' => round($mileageAdjustment),
             'estimatedPriceInTenThousandWon' => $estimatedPriceInTenThousandWon,
             'calculationSteps' => $calculationSteps
         ];
