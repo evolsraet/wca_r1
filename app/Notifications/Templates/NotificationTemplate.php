@@ -75,7 +75,16 @@ class NotificationTemplate
         isset($data['linkTitle']) ? $linkTitle = $data['linkTitle'] : $linkTitle = '바로가기';
 
         isset($data['message']) ? $message = $data['message'] : $message = '';
-
+        isset($data['message_1']) ? $message_1 = $data['message_1'] : $message_1 = '';
+        isset($data['message_2']) ? $message_2 = $data['message_2'] : $message_2 = '';
+        isset($data['message_3']) ? $message_3 = $data['message_3'] : $message_3 = '';
+        isset($data['message_4']) ? $message_4 = $data['message_4'] : $message_4 = '';
+        isset($data['message_5']) ? $message_5 = $data['message_5'] : $message_5 = '';
+        isset($data['message_6']) ? $message_6 = $data['message_6'] : $message_6 = '';
+        isset($data['message_7']) ? $message_7 = $data['message_7'] : $message_7 = '';
+        isset($data['message_8']) ? $message_8 = $data['message_8'] : $message_8 = '';
+        isset($data['message_9']) ? $message_9 = $data['message_9'] : $message_9 = '';
+        isset($data['message_10']) ? $message_10 = $data['message_10'] : $message_10 = '';
         // 기본 차량 정보 
         $message1 = 'ㅁ 차량 : '.$resultData->car_maker.' '.$resultData->car_model.' '.$resultData->car_model_sub;
         $message2 = 'ㅁ 소유주 : '.$resultData->owner_name;
@@ -108,6 +117,16 @@ class NotificationTemplate
         $sendMessage = [
             'title' => $data['title'],
             'message' => $message,
+            'message_1' => $message_1,
+            'message_2' => $message_2,
+            'message_3' => $message_3,
+            'message_4' => $message_4,
+            'message_5' => $message_5,
+            'message_6' => $message_6,
+            'message_7' => $message_7,
+            'message_8' => $message_8,
+            'message_9' => $message_9,
+            'message_10' => $message_10,
             'message1' => $message1,
             'message2' => $message2,
             'message3' => $message3,

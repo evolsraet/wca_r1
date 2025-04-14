@@ -203,6 +203,8 @@ class AuctionService
 
                             Log::info('유저가 경매를 선택 했을때1 ', ['method' => $auction]);
 
+                            
+
                             break;
 
                         // case 'ing':
@@ -242,10 +244,10 @@ class AuctionService
 
                         if($auction->bids){
                             Log::info('경매 상태 업데이트 입찰선택 모드 입찰자 알림' . $auction->bids->first()->user_id, ['method' => '']);
-                            AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+                            // AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
                         }
     
-                        // AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user'); s
+                        AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
                     }
 
                     
@@ -298,10 +300,13 @@ class AuctionService
 
 
                 if($auction->status == 'chosen'){
-                    Log::info('유저가 경매를 선택 했을때2', ['method' => $auction]);
+                    Log::info('유저가 경매를 선택 했을때211', ['method' => $auction, 'requestMode' => request()->mode]);
 
                     // AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');    
-                    AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+                    if(!request()->mode){
+                        AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+                    }
+
                 }
 
 

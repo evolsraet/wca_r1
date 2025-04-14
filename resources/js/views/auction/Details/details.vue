@@ -139,9 +139,9 @@
                     <div v-if="auctionDetail.data.status === 'chosen' && isDealer">
                       <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
                     </div>
-                    <div v-if="auctionDetail.data.status === 'chosen' && isUser">
+                    <div v-if="auctionDetail.data.status === 'dlvr' && isUser">
                       <div v-if="auctionDetail.data.top_bids[0]?.dealerInfo?.biz_check">
-                        <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">구매자 사업자등록증</p>
+                        <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">매수자 사업자등록증</p>
                       </div>
                     </div>
                </div>
@@ -562,7 +562,7 @@
           <!--
             딜러 : 바텀 시트 
           -->
-          <div v-if="auctionDetail.data.status !== 'done' && auctionDetail.data.status !== 'dlvr' && auctionDetail.data.status !== 'chosen'  &&  isDealer" class="sheet-content sticky-top">
+          <div v-if="auctionDetail.data.status !== 'done' && auctionDetail.data.status !== 'dlvr' && auctionDetail.data.status !== 'chosen'  &&  isDealer" class="sheet-content sticky-top" style="z-index:1012 !important">
             <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
                 <div  @click.stop="">
                   <div>
@@ -630,7 +630,7 @@
               </div>
             </BottomSheet02>
           </div>
-          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid" style="height: 581px !important;">
+          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid" style="height: auto !important; z-index: 1100 !important;">
              <div class="d-flex justify-content-between align-items-baseline">
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
@@ -638,6 +638,148 @@
               <p class="text-secondary ">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1 fw-bold">{{auctionDetail.data.final_price}}</span></p>
               <p class="text-secondary ">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p>
               <p class="text-secondary ">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.taksong_wish_at}}</span></p>
+              <p class="text-secondary ">장&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 소 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.addr1}}</span></p>
+            </div>
+
+            <div v-if="isUser">
+              <div class="d-flex justify-content-between align-items-baseline mt-4">
+                <h4 class="custom-highlight">탁송 전, 준비해 주세요</h4>
+              </div>
+              <div>
+                <!-- <p class="text-secondary ">차에 있는 짐 빼기</p> -->
+                
+                <div class="dropdown border-bottom">
+                  <button
+                    class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
+                    @click="toggleDropdown('general1')"
+                  >
+                  <span>1. 차에 있는 짐 빼기</span>
+                    <img
+                      :src="openSection === 'general1' ? iconUp : iconDown"
+                      alt="Dropdown Icon"
+                      class="dropdown-icon"
+                      width="14"
+                    />
+                  </button>
+                  <transition name="slide">
+                  <div v-show="openSection === 'general1'" class="dropdown-content mt-0 p-4" style="border-radius: 15px;">
+
+                    <h4 class="text-secondary mt-3 mb-3 text-center">자주 분실하는 물건이에요!</h4>
+
+                      <div class="d-flex justify-content-between align-items-center find-icons mt-3">
+                        <div class="text-secondary">
+                          <img :src="find_icon_01"/><br/>
+                          선글라스
+                        </div>
+                        <div class="text-secondary">
+                          <img :src="find_icon_02"/><br/>
+                          하이패스
+                        </div>
+                        <div class="text-secondary">
+                          <img :src="find_icon_03"/><br/>
+                          키링
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-center find-icons mt-3">
+                        <div class="text-secondary">
+                          <img :src="find_icon_04"/><br/>
+                          캐롯 플러그
+                        </div>
+                        <div class="text-secondary">
+                          <img :src="find_icon_05"/><br/>
+                          블랙박스 SD칩
+                        </div>
+                        <div class="text-secondary">
+                          <img :src="find_icon_06"/><br/>
+                          USB
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-center find-icons mt-3">
+                        <div class="text-secondary">
+                          <img :src="find_icon_07"/><br/>
+                          아파트 출입증
+                        </div>
+                        <div class="text-secondary">
+                          <img :src="find_icon_08"/><br/>
+                          주차 연락처
+                        </div>
+                        <div class="text-secondary">
+                          <img :src="find_icon_09"/><br/>
+                          수납함 내 물품
+                        </div>
+                      </div>
+
+                  </div>
+                  </transition>
+                </div>
+
+
+                <div class="dropdown border-bottom">
+                  <button
+                    class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
+                    @click="toggleDropdown('general2')"
+                  >
+                  <span>2. 필수서류 준비하기</span>
+                    <img
+                      :src="openSection === 'general2' ? iconUp : iconDown"
+                      alt="Dropdown Icon"
+                      class="dropdown-icon"
+                      width="14"
+                    />
+                  </button>
+                  <transition name="slide">
+                  <div v-show="openSection === 'general2'" class="dropdown-content mt-0 p-4" style="border-radius: 15px;">
+                      탁송기사님 도착 전까지, 아래 2가지 서류를 준비해주세요.
+
+                  </div>
+                  </transition>
+                </div>
+
+
+              </div>
+
+              <div class="d-flex justify-content-between align-items-baseline mt-4">
+                <h4 class="custom-highlight">매수자 정보</h4>
+              </div>
+
+              <div class="dropdown-content" style="border-radius: 15px;">
+                <div class="text-start">
+                  <p class=""><span class="title-sub">성&nbsp;&nbsp;&nbsp;&nbsp; 명 (법인명)</span> : <span class="ms-1 fw-bold">{{auctionDetail.data.dealer.company ? auctionDetail.data.dealer.company : auctionDetail.data.dealer.name}}</span></p>
+                  <p class=""><span class="title-sub">주민(법인) 번호</span> :<span class="ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p>
+                  <p class=""><span class="title-sub">주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 소</span> : <span class="ms-1 fw-bold">{{auctionDetail.data.dealer.company_addr1 +' '+ auctionDetail.data.dealer.company_addr2}}</span></p>
+                </div>
+              </div>
+
+
+              <div class="d-flex justify-content-between align-items-baseline mt-4">
+                <h4 class="custom-highlight">자주묻는 질문</h4>
+              </div>
+
+              <div class="dropdown border-bottom">
+                <button
+                  class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
+                  @click="toggleDropdown('general3')"
+                >
+                <span>본인서명사실확인서(매도용 인감증명서) 전자 발급 가능한가요?</span>
+                  <img
+                    :src="openSection === 'general3' ? iconUp : iconDown"
+                    alt="Dropdown Icon"
+                    class="dropdown-icon"
+                    width="14"
+                  />
+                </button>
+                <transition name="slide">
+                <div v-show="openSection === 'general3'" class="dropdown-content mt-0 p-4" style="border-radius: 15px;">
+                  아닙니다.<br/>
+                  전자 발급 서류는 사용할 수 없습니다.<br/>
+                  자동차 매도용은 <span class="tc-red">주민센터 방문</span>하여 발급받은 원본만 가능합니다.<br/>
+                  주민센터 직원분에게 매수자 인적사항을 보여주시고, 그대로 기재 후 발급 받아주세요.
+                </div>
+                </transition>
+              </div>
+
+
+
             </div>
 
             <div v-if="auctionDetail.data.is_taksong === 'ing'">
@@ -805,7 +947,7 @@
                               <div>
                                 <h4 class="text-start process mb-5 mt-4">입찰 금액을 입력해주세요</h4>
                                 <div class="input-container mt-5">
-                                  <input type="text" class="styled-input" :placeholder="`${avgAmount}`" v-model="amount" @input="updateKoreanAmount">
+                                  <input type="number" class="styled-input" :placeholder="`${avgAmount}`" v-model="amount" @input="updateKoreanAmount">
                                 </div>
                                 <p class="d-flex justify-content-end fw-bolder fs-4 text-primary p-2">{{ koreanAmount }}</p>
                                 <button type="button" class="tc-wh btn btn-primary w-100 my-4" @click="submitAuctionBid">입찰 완료</button>
@@ -969,6 +1111,17 @@ import BottomSheet02 from '@/views/bottomsheet/Bottomsheet-type02.vue';
 import BottomSheet03 from '@/views/bottomsheet/Bottomsheet-type03.vue';
 import useLikes from '@/composables/useLikes';
 import { constructNow, isEqual } from 'date-fns';
+
+import find_icon_01 from '../../../../../resources/img/find-icons/find-icon-01.svg';
+import find_icon_02 from '../../../../../resources/img/find-icons/find-icon-02.svg';
+import find_icon_03 from '../../../../../resources/img/find-icons/find-icon-03.svg';
+import find_icon_04 from '../../../../../resources/img/find-icons/find-icon-04.svg';
+import find_icon_05 from '../../../../../resources/img/find-icons/find-icon-05.svg';
+import find_icon_06 from '../../../../../resources/img/find-icons/find-icon-06.svg';
+import find_icon_07 from '../../../../../resources/img/find-icons/find-icon-07.svg';
+import find_icon_08 from '../../../../../resources/img/find-icons/find-icon-08.svg';
+import find_icon_09 from '../../../../../resources/img/find-icons/find-icon-09.svg';
+
 
 const { getContacts, contacts, pagination } = initAddressBookSystem();
 const { posts, getPosts, deletePost, isLoading, getBoardCategories } = initPostSystem();
@@ -1767,7 +1920,7 @@ const openDealerLicenseModal = () => {
   const fileName = auctionDetail.value.data.top_bids[0].dealerfile.files.file_user_biz[0].file_name;
   const dealerLicenseUrl = '../media/' + fileId +'/' + fileName;
   const text = `
-    <h5>구매자 사업자등록증</h5>
+    <h5>매수자 사업자등록증</h5>
     <div id="dealer-license-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
         <iframe
             src="${dealerLicenseUrl}" 
@@ -2397,6 +2550,9 @@ let timer;
 const currentTime = ref(new Date());
 onMounted(async () => {
   await fetchAuctionDetail();
+
+  console.log('auctionDetail//',auctionDetail.value.data);
+
   document.title = auctionDetail.value.data.car_model +' '+ auctionDetail.value.data.car_model_sub +' - 위카옥션';
   timer = setInterval(() => {
     currentTime.value = new Date();
@@ -2681,5 +2837,19 @@ input[type="checkbox"]{align-self:center;}
   opacity: 1;
 }
 
+.find-icons div{
+  width: 33%;
+  text-align:center;
+  font-size: 13px;
+}
+
+.find-icons div img{
+  width: 32%;
+  height: 32%;
+}
+
+.title-sub {
+  width: 200px !important;
+}
 
 </style>

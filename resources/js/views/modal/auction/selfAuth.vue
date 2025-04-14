@@ -356,16 +356,20 @@
 
         const text = `
         <h5 class="text-start mb-3">소유자 인증</h5>
-        <div class="sellInfo my-3 p-4 mb-4" style="position: relative; height: 300px; text-align: left;">
+        <div class="sellInfo my-3 p-4 mb-4" style="position: relative; height: 340px; text-align: left;">
             
             <div class="none-info">
                 <div class="complete-car">
                     <div class="card my-auction">
-                        <div class="none-complete-ty03" style="height: 260px;">
-                            <span class="text-secondary text-center fs-5">간편인증 완료후 하단의 확인버튼 을 클릭 해 주세요.</span>
+                        <div class="none-complete-ty03" style="height: 240px;">
+                            <span class="text-secondary text-center fs-5">간편인증 완료후 하단의 인증완료 버튼을 클릭 해 주세요.</span>
                         </div>
                     </div>
                 </div>
+            </div>
+            
+            <div class="form-group mt-3 sticky-bottom">
+                <button id="submitButton" class="btn btn-primary mt-3 w-100">인증완료</button>
             </div>
 
         </div>`;
@@ -373,10 +377,18 @@
         wica.ntcn(swal)
             .useHtmlText() // HTML 태그 활성화
             .useClose()
-            .addClassNm('primary-check') // 클래스명 설정
+            .addClassNm('search-event') // 클래스명 설정
             .addOption({ padding: 20 }) // swal 옵션 추가
             .callback(function (result) {
-                if(result.isOk){
+                // if(result.isOk){
+                // }
+            })
+            .confirm(text, setData); // setData를 두 번째 인자로 전달
+
+            setTimeout(() => {
+                const submitButton = document.getElementById('submitButton');
+                submitButton.addEventListener('click', (event) => {
+                    
 
                     const data = {
                         loginTypeLevel: setData.loginTypeLevel,
@@ -409,16 +421,9 @@
                         }
 
                     });
-                }
-            })
-            .confirm(text, setData); // setData를 두 번째 인자로 전달
 
-        // setTimeout(() => {
-        //     const AuthSubmitButton = document.getElementById('AuthSubmitButton');
-        //     AuthSubmitButton.addEventListener('click', (event) => {
-                
-        //     });
-        // }, 1000);
+                });
+            }, 1000);
 
     }
 
