@@ -9,6 +9,9 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use App\Notifications\UserResetPasswordNotification;
 use App\Notifications\AligoNotification;
+use App\Notifications\AuctionsNotification;
+use App\Notifications\Templates\NotificationTemplate;
+
 class UserResetPasswordLinkJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -31,16 +34,19 @@ class UserResetPasswordLinkJob implements ShouldQueue
     public function handle(): void
     {
         // 이메일 전송
-        $this->user->notify(new UserResetPasswordNotification($this->data));
+
+        $notificationTemplate = NotificationTemplate::getTemplate('UserResetPasswordNotification', $this->data, ['mail']);
+        $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail']));
+        // $this->user->notify(new UserResetPasswordNotification($this->data));
 
         // 알리고 알림톡 전송
-        $this->user->notify(new AligoNotification([
-            'tpl_data' => [
-                'tpl_code' => env('SMS_TPL_CODE'),
-                'receiver_1' => $this->user->phone,
-                'subject_1' => '비밀번호 재설정 링크 발송',
-                'message_1' => "안녕하세요. 위카옥션에 비밀번호 재설정 링크를 발송합니다.",
-            ],
-        ]));
+        // $this->user->notify(new AligoNotification([
+        //     'tpl_data' => [
+        //         'tpl_code' => env('SMS_TPL_CODE'),
+        //         'receiver_1' => $this->user->phone,
+        //         'subject_1' => '비밀번호 재설정 링크 발송',
+        //         'message_1' => "안녕하세요. 위카옥션에 비밀번호 재설정 링크를 발송합니다.",
+        //     ],
+        // ]));
     }
 }

@@ -52,12 +52,22 @@ class MediaService
         return $count;
     }
 
-    public function uploadFile($file, Auction $auction)
+    public function uploadFile($file, Auction $auction, $collection_name = null)
     {
         // 파일 업로드 로직
-        $media = $auction->addMedia($file)
-                         ->toMediaCollection('file_auction_owner');
+        if ($collection_name === null) {
+            $media = $auction->addMedia($file)
+                             ->toMediaCollection('file_auction_owner');
+        } else {
+            $media = $auction->addMedia($file)
+                             ->toMediaCollection($collection_name);
+        }
+        return $media;
+    }
 
+    public function getMedia(Auction $auction, $collection_name)
+    {
+        $media = $auction->getMedia($collection_name);
         return $media;
     }
 }

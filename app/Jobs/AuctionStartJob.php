@@ -11,7 +11,8 @@ use Illuminate\Support\Facades\Log;
 use App\Notifications\AuctionStartNotification;
 use App\Notifications\AligoNotification;
 use App\Notifications\Templates\NotificationTemplate;
-
+use App\Notifications\AuctionsNotification;
+use App\Models\Auction;
 class AuctionStartJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -25,7 +26,7 @@ class AuctionStartJob implements ShouldQueue
     protected $isUser;
     public function __construct($auction, $user, $data, $isUser = false)
     {
-        $this->auction = $auction;
+        $this->auction = Auction::find($auction);
         $this->user = $user;
         $this->data = $data;
         $this->isUser = $isUser;
@@ -37,34 +38,10 @@ class AuctionStartJob implements ShouldQueue
     public function handle(): void
     {
 
-        $title = '경매 등록신청이 완료 되었습니다.';
+        $data = json_decode($this->data);
 
-        $data = [
-            'title' => $title,
-            'data' => json_decode($this->data)
-        ];
-
-        if($this->isUser){
-            $data['footerMsg'] = '위카에 평가사들이 유선전화 드리고 진단요청일에 방문할 예정 입니다.';
-        }
-
-        $sendMessage = NotificationTemplate::basicTemplate($data);
-
-        // Log::info('AuctionStartJob_sendMessage', ['sendMessage' => $sendMessage]);
-
-        //이메일 전송
-        // Log::info('AuctionStartJob', ['auction' => $this->auction, 'user' => $this->user]);
-        $this->user->notify(new AuctionStartNotification($this->auction, $this->user, data: $sendMessage));
-
-        // 알리고 알림톡 전송 
-        // $this->user->notify(new AligoNotification([
-        //     'tpl_data' => [
-        //         'tpl_code' => env('SMS_TPL_CODE'),
-        //         'receiver_1' => $this->user->phone,
-        //         'subject_1' => $sendMessage['title'],
-        //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'].'<br>'.$sendMessage['message3'].'<br><br>'.$sendMessage['footerMsg'],
-        //     ],
-        // ]));
+        $notificationTemplate = NotificationTemplate::getTemplate('AuctionStartJob', $data, ['mail']);
+        $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
 
     }
 }

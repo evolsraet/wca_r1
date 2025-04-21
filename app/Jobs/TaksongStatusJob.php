@@ -14,6 +14,8 @@ use App\Jobs\AuctionDoneJob;
 use App\Jobs\AuctionCancelJob;
 use App\Models\Bid;
 use App\Models\User;
+use App\Jobs\TaksongNameChangeJob;
+
 class TaksongStatusJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -26,7 +28,7 @@ class TaksongStatusJob implements ShouldQueue
     public function __construct($response)
     {
         $this->response = $response;
-        $this->endPoint = 'https://check-dev.wecarmobility.co.kr/api/outside/check/taksong_status';
+        $this->endPoint = config('taksongApi.TAKSONG_API_STATUS_URL');
     }
 
     /**
@@ -34,11 +36,13 @@ class TaksongStatusJob implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->taksongStatus($this->response);
+        $this->taksongStatus(response: $this->response);
     }
 
     protected function taksongStatus($response)
     {
+
+        Log::info('탁송처리 API 호출2222', ['request' => $response]);
 
         $curl = curl_init();
 
@@ -56,12 +60,14 @@ class TaksongStatusJob implements ShouldQueue
 
         $result = curl_exec($curl);
 
+        Log::info('탁송처리 API 호출1111', ['request' => $result]);
+
         if($result){
             $result = json_decode($result);
         
             // 탁송 상태 업데이트
             $status = $result->data[0]->chk_status;
-            TaksongStatusTemp::where('chk_id', $response)->update(['chk_status' => $status]);
+
     
             $auction = Auction::where('car_no', $result->data[0]->chk_car_no)->get();
             $bid = Bid::where('id', $auction->implode('bid_id'))->get();
@@ -85,6 +91,8 @@ class TaksongStatusJob implements ShouldQueue
                     // 배차일때, 탁송정보 받아서 저장 그리고 데이터 저장 매물정보에 표시 
                     Auction::where('car_no', $result->data[0]->chk_car_no)
                         ->update(['is_taksong' => 'start']);
+
+                    TaksongStatusTemp::where('chk_id', $response)->update(['chk_status' => 'start']);
 
                     break;
 
@@ -119,23 +127,39 @@ class TaksongStatusJob implements ShouldQueue
                     Auction::where('car_no', $result->data[0]->chk_car_no)
                         ->update($updateData);
 
+                    TaksongStatusTemp::where('chk_id', $response)->update(['chk_status' => 'ing']);
+
                     break;  
 
                 case 'done':
                     // 배송완료
 
-                    $updateData = [
-                        'status' => 'done',
-                        'is_taksong' => 'done',
-                        'done_at' => now()
-                    ];
+                    $taksongStatus = TaksongStatusTemp::where('chk_id', $result->data[0]->chk_id)->get();
+                    
+                    Log::info('taksongStatus', ['taksongStatus' => $taksongStatus]);
 
-                    // 딜러가 입금하고 확인하는 과정 필요 일단 임시로 자동으로 경매완료 처리                     
-                    Auction::where('car_no', $result->data[0]->chk_car_no)->update($updateData);
+                    foreach($taksongStatus as $item){
+                        if($item->chk_status === 'ing'){
 
-                    // 완료 알림 발송
-                    AuctionDoneJob::dispatch($user_id, $auction_id, 'user');
-                    AuctionDoneJob::dispatch($bid_user_id, $auction_id, 'dealer');
+                            $updateData = [
+                                'status' => 'dlvr',
+                                'is_taksong' => 'done',
+                                'done_at' => now()
+                            ];
+    
+                            // 딜러가 입금하고 확인하는 과정 필요 일단 임시로 자동으로 경매완료 처리                     
+                            Auction::where('car_no', $result->data[0]->chk_car_no)->update($updateData);
+    
+    
+                            // 명의이전 안내 요청
+                            TaksongNameChangeJob::dispatch($user_id, $auction_id, 'user');
+                            TaksongNameChangeJob::dispatch($bid_user_id, $auction_id, 'dealer');
+    
+                            TaksongStatusTemp::where('chk_id', $response)->update(['chk_status' => 'requested']);  
+
+                        }
+                    }
+
 
                     break;
 
@@ -149,10 +173,13 @@ class TaksongStatusJob implements ShouldQueue
                     AuctionCancelJob::dispatch($user_id, $auction_id);
                     AuctionCancelJob::dispatch($bid_user_id, $auction_id);
 
+                    TaksongStatusTemp::where('chk_id', $response)->update(['chk_status' => 'cancel']);
+
+
                     break;
             }
 
-            
+
             Log::info('탁송처리 API 호출', ['request' => $result]);
         }
         

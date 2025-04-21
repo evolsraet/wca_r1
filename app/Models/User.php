@@ -20,6 +20,8 @@ use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use App\Notifications\AuctionsNotification;
+use App\Notifications\Templates\NotificationTemplate;
 
 class User extends Authenticatable implements HasMedia
 {
@@ -166,7 +168,10 @@ class User extends Authenticatable implements HasMedia
 
     public function sendPasswordResetNotification($token)
     {
-        $this->notify(new UserResetPasswordNotification($token));
+
+        $notificationTemplate = NotificationTemplate::getTemplate('UserResetPasswordNotification', $token, ['mail']);
+        $this->notify(new AuctionsNotification($this, $notificationTemplate, ['mail']));
+        // $this->notify(new UserResetPasswordNotification($token));
     }
 
     public function dealer()

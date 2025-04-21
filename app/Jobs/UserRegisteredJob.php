@@ -12,6 +12,7 @@ use App\Notifications\AligoNotification;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\Templates\NotificationTemplate;
 use App\Models\User;
+use App\Notifications\AuctionsNotification;
 
 class UserRegisteredJob implements ShouldQueue
 {
@@ -38,26 +39,29 @@ class UserRegisteredJob implements ShouldQueue
         $item = $this->item;
         $name = $item->name;
 
+        // dd($item);
+
+        $data = [
+            'user' => $item,
+            'name' => $name,
+            'title' => '회원가입 알림',
+            'message' => '회원가입 알림',
+        ];
+
         // 회원가입 메시지 템플릿
-        $sendMessage = NotificationTemplate::welcomeTemplate($name);
+        $notificationTemplate = NotificationTemplate::getTemplate('welcome', $item, ['mail']);
+
 
         // 운영자 회원에게 알림 보내기 추가 / id 가 1, 2 인 회원에게 알림 보내기
         $adminUsers = User::whereIn('id', [1, 2])->get();
         foreach ($adminUsers as $adminUser) {
-            $adminUser->notify(new WelcomeNotification($this->item, $sendMessage));
+            // $adminUser->notify(new WelcomeNotification($this->item, $sendMessage));
+            $adminUser->notify(new AuctionsNotification($this->item, $notificationTemplate, ['mail']));
+            
         }
-
         // 이메일 전송
-        $this->item->notify(new WelcomeNotification($this->item, $sendMessage));
+        // $this->item->notify(new WelcomeNotification($this->item, $sendMessage));
+        $this->item->notify(new AuctionsNotification($this->item, $notificationTemplate, ['mail']));
 
-        // 알리고 알림톡 전송 ( tpl_code 부여하여 적용 필요 )
-        // $this->item->notify(new AligoNotification([
-        //     'tpl_data' => [
-        //         'tpl_code' => env('SMS_TPL_CODE'),
-        //         'receiver_1' => $this->item->phone,
-        //         'subject_1' => $sendMessage['title'],
-        //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'],
-        //     ],
-        // ]));
     }
 }

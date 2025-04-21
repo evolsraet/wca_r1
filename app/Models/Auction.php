@@ -64,8 +64,11 @@ class Auction extends Model implements HasMedia
         'file_auction_owner'  => '매도자관련서류',
         'file_auction_car_license'  => '자동차등록증',
         'file_auction_company_license'  => '사업자등록증',
+        'file_auction_name_change'  => '명의이전서류',
     ];
-    public $files_one = [];
+    public $files_one = [
+        'file_auction_name_change'  => '명의이전서류',
+    ];
 
     // 검색어로 검색가능한 경우
     public $searchable = [

@@ -25,7 +25,7 @@ class TaksongAddJob implements ShouldQueue
     public function __construct($response, $data)
     {
         $this->response = $response;
-        $this->endPoint = 'https://check-dev.wecarmobility.co.kr/api/outside/check/taksong_add';
+        $this->endPoint = config('taksongApi.TAKSONG_API_URL');
         $this->data = $data;
     }
 
@@ -71,6 +71,8 @@ class TaksongAddJob implements ShouldQueue
         ));
         
         $result = curl_exec($curl);
+
+        Log::info('탁송처리 API 확인.', ['api_result' => $result]);
         
         curl_close($curl);
 

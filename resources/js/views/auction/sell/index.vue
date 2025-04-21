@@ -52,12 +52,12 @@
                     
                     <div class="top-content-style wd-100 mt-4">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(소매가)</span></p>
-                        <span class="tc-primary bold-18-font">{{ carDetails.priceNow / 10000 }} 만원</span>
+                        <span class="tc-primary bold-18-font">{{ carDetails.priceNow ? carDetails.priceNow / 10000 : '' }} 만원</span>
                     </div>
                     <div class="text-end">※ NICE D&R 제공</div>
                     <div class="top-content-style wd-100 mt-4">
                         <p class="text-secondary bold-18-font">현재 시세 <span class="normal-14-font">(도매가)</span></p>
-                        <span class="tc-primary bold-18-font">{{ carDetails.priceNowWhole / 10000 }} 만원</span>
+                        <span class="tc-primary bold-18-font">{{ carDetails.priceNowWhole ? carDetails.priceNowWhole / 10000 : '' }} 만원</span>
                     </div>
                     <div class="text-end">※ 오토허브셀카 제공</div>
                     <p class="mt-2 text-secondary">※ 도매 및 소매 시세는 무사고 차량 표준주행거리(1년 15000Km)를 기준으로 제시된 금액 입니다.</p>

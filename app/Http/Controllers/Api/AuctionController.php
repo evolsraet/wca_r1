@@ -17,7 +17,11 @@ use Maatwebsite\Excel\Facades\Excel;
 use App\Services\CarHistoryService;
 use App\Services\NiceDNRService;
 use App\Services\CarmerceService;
-
+use App\Services\NameChangeService;
+use App\Jobs\TaksongNameChangeFileUploadJob;
+use App\Notifications\AuctionsNotification;
+use App\Notifications\Templates\NotificationTemplate;
+use App\Jobs\AuctionsTestJob;
 class AuctionController extends Controller
 {
     use CrudControllerTrait;
@@ -275,105 +279,6 @@ class AuctionController extends Controller
             $resultPrice -= 100000; // 10만원
         }
         
-        
-        /***
-        # 표준주행거리 계산 ( 25(현재년도) - 이차량의 최초등록일 연도  ) 
-        - 차량 등록일 연도 - 현재월 
-
-        # 년도((현재년도) - 이차량의 최초등록일 연도) * 12 + (차량 등록일 연도 - 현재월 ) * 1.25 * 1000 // 표준주행거리 
-        # 표준주행거리 - 현재주행거리 
-
-        # 감가 계산 
-
-        # 잔가율 
-        - 1~년 0.518 
-        - 4~년 0.417 
-        - 5~년 0.368 
-        - 6~년 0.311
-        - 7~년 0.262 
-
-        # 주행거리 계산식
-        (표준주행거리 - 현재주행거리) * 잔가율 
-
-        # 판단가 20만원 
-        
-        # 감가로직 * 
-
-        # 판단감가 1판당 20만원 
-
-        // 전손이력 (10% 감가 )
-        // 교환(20),판금(), 사고 ()
-
-        수리이력 / 교환 (50만원)
-        수리이력 / 판금 (15만원)
-
-        // 선루프, 어라운드 뷰, 크루즈 컨트롤 (30만원)
-        // 사고발생 건수 제외 
-
-        #  이 감가 기준은 일반적인 감가 기준이며, 실제 평가 금액과는 차이가 있을 수 있습니다. 
-
-        사고 - > 과거 사고이력 
-        교환 -> 외판손상 (15)
-
-        옵션부분 제거 
-
-        // 주행거리 계산 
-        // 사고 -> 과거 사고이력
-        수리이력 / 교환 (50만원)
-        수리이력 / 판금 (15만원)
-
-        전손이력 -> 감가 20% 
-        - 침수 제거 
-
-        사고 발생 건수 부분 지우고, "수리 필요" 추가 
-
-        키갯수 30만원 (두개 기준)
-        휠스크래치 10만원
-        
-        타이어
-        정상 > 15만원 (상태불량일 경우)
-        교환 > 15만원
-
-        외판 스크레치 제거 
-
-
-        [1] 사용 개월 수 계산
-        → 사용개월 = (현재년도 - 등록년도) × 12 + (현재월 - 등록월)
-
-        [2] 표준 주행거리 계산
-        → 표준주행거리 = 사용개월 × 1,250km
-
-        [3] 주행거리 차이 계산
-        → 주행거리차이 = 표준주행거리 - 실제주행거리
-        - 양수: 평균보다 덜 탐 → 가산 요인
-        - 음수: 평균보다 더 탐 → 감가 요인
-
-        [4] 차량 연식 계산
-        → 연식 = 사용개월 ÷ 12 (소수점 버림)
-
-        [5] 잔가율 결정 (연식 기준)
-        → 연식 ≤ 1년     → 잔가율 0.518  
-        → 연식 ≤ 4년     → 잔가율 0.417  
-        → 연식 = 5년     → 잔가율 0.368  
-        → 연식 = 6년     → 잔가율 0.311  
-        → 연식 ≥ 7년     → 잔가율 0.262
-
-        [6] 기준 시세 계산
-        → 기준시세 = 차량초기가격 × 잔가율
-
-        [7] 주행거리 감가 또는 가산 계산
-        → 감가/가산액 = 주행거리차이 × 잔가율
-
-        [8] 최종 예상 시세 계산
-        → 예상가 = 기준시세 + 감가/가산액
-
-        [9] 만 원 단위로 변환 (소수점 1자리 반올림)
-        → 예상가_만원 = round(예상가 ÷ 10,000, 1)
-
-        
-        **/
-        
-
         $resultc['사용 월수'] = $result['monthsUsed'] . "개월\n";
         $resultc['표준 주행거리'] = number_format($result['standardMileage']) . "km\n";
         $resultc['주행거리 차이'] = number_format($result['mileageDifference']) . "km\n";
@@ -638,6 +543,81 @@ class AuctionController extends Controller
         }
 
         return $data;
+    }
+
+    public function nameChange(Request $request)
+    {
+        // $nameChangeService = new NameChangeService();
+        // $nameChangeService->nameChange();
+        // return response()->api($nameChangeService);
+
+        $nameChangeService = new NameChangeService();
+        $result = $nameChangeService->getAuction(101);
+        return response()->api($result);
+    }
+
+    public function nameChangeStatus(Request $request)
+    {
+
+        $auctionId = $request->input('auction_id');
+
+        $nameChangeService = new NameChangeService();
+        $result = $nameChangeService->getAuction($auctionId);
+        return response()->api($result);
+    }
+
+
+    public function nameChangeFileUpload(Request $request, Auction $auction)
+    {
+        if ($request->hasFile('nameChange_file')) {
+            $file = $request->file('nameChange_file');
+            $mediaService = new MediaService();
+            $media = $mediaService->uploadFile($file, $auction, 'file_auction_name_change');
+            // Log::info('nameChangeFileUpload??', ['auction' => $auction]);         
+            if($media){
+                $auctionId = $auction->id;
+                // 파일업로드가 완료 되었으면, 유저에게 알림 전송 
+                TaksongNameChangeFileUploadJob::dispatch($auction->user_id, $auctionId); // 고객
+
+                return response()->api(['success' => true, 'media' => $media]);
+            }
+
+            return response()->json(['success' => false, 'message' => '파일이 전송되지 않았습니다.'], 400);
+        } else {
+            return response()->json(['success' => false, 'message' => '파일이 전송되지 않았습니다.'], 400);
+        }
+    }
+
+    public function nameChangeStatusAll()
+    {
+        $nameChangeService = new NameChangeService();
+        // $nameChangeService->changeAuctionStatusAll();
+        $nameChangeService->processCompletedNameChangeAuctions();
+    }
+
+
+    public function processCompletedNameChangeAuctions()
+    {
+        $nameChangeService = new NameChangeService();
+        $nameChangeService->processCompletedNameChangeAuctions();
+    }
+
+    public function testAuctionsNotification(){
+        $user = User::find(1);
+        $data = [
+            'user' => $user,
+            'name' => '홍길동',
+            'status' => 'ok',
+            'title' => '경매 이름 변경 알림',
+            'message' => '경매 이름이 변경되었습니다.',
+        ];
+        
+        // $notificationTemplate = NotificationTemplate::getTemplate('userStatus', $data, ['mail']);
+        // $auctionsNotification = new AuctionsNotification($user, $notificationTemplate, ['mail']);
+        $result = AuctionsTestJob::dispatch($user, $data, ['mail']);
+
+
+        return response()->api($result);
     }
 
 }

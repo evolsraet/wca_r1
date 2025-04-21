@@ -1208,6 +1208,31 @@ const isAccident = (id) => {
     .post();
   }
 
+  const nameChangeStatus = async (auctionId) => {
+    return wicac.conn()
+    .url(`/api/name-change-status`)
+    .param({
+        "auction_id":auctionId
+    })
+    .callback(function (result) {
+      return result;
+    })
+    .get();
+  }
+
+  const nameChangeFileUpload = async (auctionId, file) => {
+    return wicac.conn()
+    .url(`/api/auctions/${auctionId}/name-change-file-upload`)
+    .param({
+        "nameChange_file":file
+    })
+    .multipart()
+    .callback(function (result) {
+      return result;
+    })
+    .post();
+  }
+
     return {
         getAuctionsByDealerLike,
         adminGetAuctions,
@@ -1254,7 +1279,9 @@ const isAccident = (id) => {
         checkBusinessStatus,
         getCarHistoryCrash,
         getCertificationData,
-        clearCertificationData
+        clearCertificationData,
+        nameChangeStatus,
+        nameChangeFileUpload
     };
     
 }

@@ -139,10 +139,13 @@
                     <div v-if="auctionDetail.data.status === 'chosen' && isDealer">
                       <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
                     </div>
-                    <div v-if="auctionDetail.data.status === 'dlvr' && isUser">
+                    <div v-if="auctionDetail.data.status === 'dlvr' && isUser" class="mt-4">
                       <div v-if="auctionDetail.data.top_bids[0]?.dealerInfo?.biz_check">
                         <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">매수자 사업자등록증</p>
                       </div>
+                    </div>
+                    <div v-if="auctionDetail.data.status === 'dlvr' && isUser" class="mt-4">
+                      <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openNameChangeModal">명의이전 등록증</p>
                     </div>
                </div>
 
@@ -501,7 +504,19 @@
                   이 거래는 이미 후기를 작성하셨습니다.
               </button>
               </div>
+
+              <div class="mt-3">
+                <!-- <div class="d-flex justify-content-between align-items-baseline mt-4">
+                  <h4 class="custom-highlight">명의이전 서류 확인</h4>
+                </div> -->
+                <button class="btn btn-outline-primary w-100 mt-2" @click="openNameChangeModal">명의이전 서류 확인</button>
+                <!-- <div class="text-start text-secondary opacity-50 mt-2" v-if="fileAuctionCompanyLicenseName">명의이전 서류: <a :href="fileAuctionCompanyLicenseUrl" target="_blank">{{ fileAuctionCompanyLicenseName }}</a></div> -->
+              </div>
+              
             </BottomSheet02>
+
+            
+
           </div>
           <div v-if="isUser && auctionDetail.data.status === 'cancel'" class="sheet-content sticky-top">
             <BottomSheet02>
@@ -562,7 +577,7 @@
           <!--
             딜러 : 바텀 시트 
           -->
-          <div v-if="auctionDetail.data.status !== 'done' && auctionDetail.data.status !== 'dlvr' && auctionDetail.data.status !== 'chosen'  &&  isDealer" class="sheet-content sticky-top" style="z-index:1012 !important">
+          <div v-if="auctionDetail.data.status !== 'done' && auctionDetail.data.status !== 'dlvr' && auctionDetail.data.status !== 'chosen'  &&  isDealer" class="sheet-content sticky-top">
             <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
                 <div  @click.stop="">
                   <div>
@@ -630,7 +645,7 @@
               </div>
             </BottomSheet02>
           </div>
-          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid" style="height: auto !important; z-index: 1100 !important;">
+          <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid">
              <div class="d-flex justify-content-between align-items-baseline">
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
@@ -639,6 +654,57 @@
               <p class="text-secondary ">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p>
               <p class="text-secondary ">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.taksong_wish_at}}</span></p>
               <p class="text-secondary ">장&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 소 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.addr1}}</span></p>
+            </div>
+            
+            <div v-if="isDealer">
+
+              
+              <!-- <div class="steps-container mb-3">
+                <div class="step completed">
+                  <div class="label completed">STEP01</div>
+                  <div class="label label-style text-secondary opacity-50">입찰 중</div>
+                </div>
+                <div class="line completed"></div>
+                <div class="step completing">
+                  <div class="label completing">STEP02</div>
+                  <div class="label label-style tc-gray completing-text">딜러 선택</div>
+                </div>
+                <div class="line"></div>
+                <div class="step">
+                  <div class="label">STEP03</div>
+                  <div class="label label-style02 text-secondary opacity-50">완료</div>
+                </div>
+              </div> -->
+
+              <div v-if="nameChangeStatusData == 'requested'">
+
+                <div class="d-flex justify-content-between align-items-baseline mt-4">
+                  <h4 class="custom-highlight">명의이전 서류첨부</h4>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-baseline">
+                  명의이전 서류를 준비 하여 파일을 첨부 해 주세요.
+                </div>
+
+
+                <div class="form-group mt-3">
+                  <!-- <label for="memo"><span class="text-danger me-2">*</span>명의이전 서류</label> -->
+                  <input type="file" @change="handleFileUploadCompanyLicense" ref="fileInputRefCompanyLicense" style="display:none" >
+                  <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCompanyLicense" ref="fileInputRefCompanyLicenseBtn">
+                    파일 첨부
+                  </button>
+                  <div class="text-start text-secondary opacity-50 mt-2" v-if="fileAuctionCompanyLicenseName">명의이전 서류: <a :href="fileAuctionCompanyLicenseUrl" target="_blank">{{ fileAuctionCompanyLicenseName }}</a></div>
+
+                  <button type="button" class="btn btn-primary w-100 mt-3" @click="requestedFileUpload" :disabled="fileAuctionCompanyLicenseName !== ''">첨부하기</button>
+
+                </div>
+
+                <div>
+                  
+                </div>
+
+              </div>
+
             </div>
 
             <div v-if="isUser">
@@ -729,8 +795,21 @@
                   </button>
                   <transition name="slide">
                   <div v-show="openSection === 'general2'" class="dropdown-content mt-0 p-4" style="border-radius: 15px;">
-                      탁송기사님 도착 전까지, 아래 2가지 서류를 준비해주세요.
-
+                      <div class="font-size-14 font-weight-bold">탁송기사님 도착 전까지, <br/>아래 2가지 서류를 준비해주세요.</div>
+                      <div class="d-flex justify-content-between mt-3">
+                        <div style="width: 45%;">
+                          <img :src="car_licence_icon" alt="car_licence_icon" class="me-2">
+                          <div class="text-center mt-2">
+                            자동차등록증 원본
+                          </div>
+                        </div>
+                        <div style="width: 45%;">
+                          <img :src="auth_licence_icon" alt="auth_licence_icon" class="me-2">
+                          <div class="text-center mt-2">
+                            자동차매도용 <span class="color-red">본인서명사실확인서</span> 또는 인감증명서 (매수자 인적사항 기재)
+                          </div>
+                        </div>
+                      </div>
                   </div>
                   </transition>
                 </div>
@@ -745,8 +824,8 @@
               <div class="dropdown-content" style="border-radius: 15px;">
                 <div class="text-start">
                   <p class=""><span class="title-sub">성&nbsp;&nbsp;&nbsp;&nbsp; 명 (법인명)</span> : <span class="ms-1 fw-bold">{{auctionDetail.data.dealer.company ? auctionDetail.data.dealer.company : auctionDetail.data.dealer.name}}</span></p>
-                  <p class=""><span class="title-sub">주민(법인) 번호</span> :<span class="ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p>
-                  <p class=""><span class="title-sub">주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 소</span> : <span class="ms-1 fw-bold">{{auctionDetail.data.dealer.company_addr1 +' '+ auctionDetail.data.dealer.company_addr2}}</span></p>
+                  <!-- <p class=""><span class="title-sub">주민(법인) 번호</span> :<span class="ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p> -->
+                  <p class=""><span class="title-sub">주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 소</span> : <span class="ms-1 fw-bold">{{auctionDetail.data.dealer.company_addr1 +' '+ auctionDetail.data.dealer.company_addr2}}</span></p>
                 </div>
               </div>
 
@@ -781,6 +860,7 @@
 
 
             </div>
+            
 
             <div v-if="auctionDetail.data.is_taksong === 'ing'">
 
@@ -1122,6 +1202,9 @@ import find_icon_07 from '../../../../../resources/img/find-icons/find-icon-07.s
 import find_icon_08 from '../../../../../resources/img/find-icons/find-icon-08.svg';
 import find_icon_09 from '../../../../../resources/img/find-icons/find-icon-09.svg';
 
+import car_licence_icon from '../../../../../resources/img/find-icons/car_licence_icon.png';
+import auth_licence_icon from '../../../../../resources/img/find-icons/auth_licence_icon.png';
+
 
 const { getContacts, contacts, pagination } = initAddressBookSystem();
 const { posts, getPosts, deletePost, isLoading, getBoardCategories } = initPostSystem();
@@ -1158,6 +1241,12 @@ const fileOwnerUrl = ref('');
 const fileSignUrl =ref('');
 
 const destAddrBtn = ref(true);
+
+const fileAuctionCompanyLicenseName = ref(''); // 추가: 파일 이름 저장 변수
+const fileInputRefCompanyLicenseBtn = ref(null);
+const fileInputRefCompanyLicense = ref(null);
+const fileAuctionCompanyLicenseUrl = ref('');
+
 
 const avgAmount = computed(() => {
   return auctionDetail.value.data.middle_prices.max ? 
@@ -1258,7 +1347,7 @@ const scrollButtonStyle = ref({ display: 'none' });
 const showReauctionView = ref(false);
 
 const auctionDetail = ref(null);
-const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress, isAccident, getNiceDnrHistory, getCarHistoryCrash } = useAuctions();
+const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress, isAccident, getNiceDnrHistory, getCarHistoryCrash, nameChangeStatus, nameChangeFileUpload } = useAuctions();
 const { submitBid, cancelBid,getBidById } = useBids();
 const carDetails = ref({});
 const highestBid = ref(0);
@@ -1269,6 +1358,8 @@ const openSection = ref('general');
 const carHistoryCrash = ref({});
 const niceDnrHistory = ref({});
 const auctionLocation = ref({});
+
+const nameChangeStatusData = ref('');
 
 const sortedTopBids = computed(() => {
   console.log('sortedTopBids??', auctionDetail.value);
@@ -1943,6 +2034,32 @@ const openDealerLicenseModal = () => {
 }
 
 
+const openNameChangeModal = () => {
+  const nameChangeUrl = fileAuctionCompanyLicenseUrl.value;
+  const text = `
+    <h5>명의이전 등록증</h5>
+    <div id="name-change-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <iframe
+            src="${nameChangeUrl}" 
+            width="100%"
+            height="600px"
+            
+        ></iframe>
+    </div>
+  `;
+
+  wica.ntcn(swal) 
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20, height:700 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+
+}
+
 /*[사용자] 재경매 - 현재 날짜에서 D-3 일 후 라고 가정함.*/ 
 function getThreeDaysFromNow() {
   const currentDate = new Date();
@@ -2394,6 +2511,16 @@ if (!amount.value || isNaN(parseFloat(amount.value))) {
 }
 
 
+const triggerFileUploadCompanyLicense = () => {
+  if (fileInputRefCompanyLicense.value) {
+    fileInputRefCompanyLicense.value.click();
+  } else {
+    console.error('파일을 찾을 수 없습니다.');
+  }
+};
+
+
+
 const handleImmediateAuctionEnd = async (userId, price) => {
   const id = route.params.id;
   const data = {
@@ -2541,6 +2668,41 @@ const fetchBidsInfo = async (topBids) => {
   }
 };
 
+const requestedFileUpload = async () => {
+  const file = fileInputRefCompanyLicense.value.files[0];
+  
+  console.log('file',file);
+
+  // 파일 업로드 하면서 유저에게 알림으로 전달!
+  
+  if (file) {
+    
+    const result = await nameChangeFileUpload(auctionDetail.value.data.id, file);
+    fileAuctionCompanyLicenseName.value = result.data.media.name;
+
+    if(result.data.media.name){
+      wica.ntcn(swal)
+      .icon('I')
+      .addClassNm('cmm-review-custom')
+      .addOption({ padding: 20})
+      .callback(function(result) {
+      })
+      .alert('명의이전 등록증이 업로드 되었습니다.');
+    }
+
+  }else{
+    wica.ntcn(swal)
+    .icon('W')
+    .addClassNm('cmm-review-custom')
+    .addOption({ padding: 20})
+    .callback(function(result) {
+    })
+    .alert('파일을 첨부해 주세요.');
+
+    return;
+  }
+  
+}
 
 // 일정 간격으로 데이터를 갱신하는 함수
 const startPolling = () => {
@@ -2552,6 +2714,17 @@ onMounted(async () => {
   await fetchAuctionDetail();
 
   console.log('auctionDetail//',auctionDetail.value.data);
+
+  const nameChangeStatusValue = await nameChangeStatus(auctionDetail.value.data.id);
+  // console.log('nameChangeStatusData',nameChangeStatusValue.data[0].chk_status);
+
+  nameChangeStatusData.value = nameChangeStatusValue.data[0].chk_status;
+
+  // 명의이전서류 파일 이름 설정
+  if(auctionDetail.value.data.files.file_auction_name_change){
+    fileAuctionCompanyLicenseName.value = auctionDetail.value.data.files?.file_auction_name_change[0]?.name ? auctionDetail.value.data.files.file_auction_name_change[0].name : '';
+    fileAuctionCompanyLicenseUrl.value = auctionDetail.value.data.files?.file_auction_name_change[0]?.original_url ? auctionDetail.value.data.files.file_auction_name_change[0].original_url : '';
+  }
 
   document.title = auctionDetail.value.data.car_model +' '+ auctionDetail.value.data.car_model_sub +' - 위카옥션';
   timer = setInterval(() => {
@@ -2779,7 +2952,15 @@ input[type="checkbox"]{align-self:center;}
 .card-img-top-ty02{border-top-left-radius:6px;border-top-right-radius:6px;}
 .flex-column .card-img-top-ty02{border-top-left-radius:0px!important;border-bottom-left-radius:0px!important;border-top-right-radius:6px;border-top-left-radius:6px!important;}
 .img_box img{width:100%;height:100%;object-fit:cover;}
-.sheet.half{max-height:none!important;height:calc(fit-content + env(safe-area-inset-bottom))!important;}
+/* .sheet.half{max-height:none!important;height:calc(fit-content + env(safe-area-inset-bottom))!important;} */
+
+@media screen and (min-width: 768px) {
+  .sheet.half{
+    max-height:none!important;
+    height:auto!important;
+  }
+}
+
 .scrollable-content{max-height:300px;overflow-y:auto;}
 .sticky-top{position:sticky;top:71px;z-index:1020;height:100px;}
 .sheet-content-wrap{width:100%!important;}
@@ -2850,6 +3031,25 @@ input[type="checkbox"]{align-self:center;}
 
 .title-sub {
   width: 200px !important;
+}
+
+.color-red {
+  color:red;
+}
+
+
+.dlvr-sheet{
+  height: auto !important;
+}
+/* 
+@media screen and (max-width: 768px) {
+  .dlvr-sheet{
+    height: calc(100vh - env(safe-area-inset-bottom)px - 200px) !important;
+  }
+} */
+
+.circle {
+  border:none;
 }
 
 </style>

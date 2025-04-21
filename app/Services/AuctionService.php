@@ -26,6 +26,9 @@ use App\Jobs\AuctionTotalDepositMissJob;
 use App\Models\TaksongStatusTemp;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
+use App\Notifications\AuctionsNotification;
+use App\Notifications\Templates\NotificationTemplate;
+
 class AuctionService
 {
     use CrudTrait;
@@ -124,6 +127,8 @@ class AuctionService
                                 foreach($bids as $bid){
                                     Log::info('재경매 모드 입찰자 알림', ['mode' => 'reauction','method' => $bid->user_id]);
                                     AuctionBidStatusJob::dispatch($bid->user_id, 'reauction', $auction->id, $bid->user_id,'');
+                                                                    
+
                                 }
                                 AuctionBidStatusJob::dispatch($auction->user_id, 'reauction', $auction->id, $bid->user_id,'');
 
@@ -207,6 +212,21 @@ class AuctionService
 
                             break;
 
+                        case 'requested':
+                            // 요청으로 변경
+                            Log::info('경매 상태 업데이트 요청 모드', ['method' => $auction]);
+                            break;
+
+                        case 'uploaded':
+                            // 업로드로 변경
+                            Log::info('경매 상태 업데이트 업로드 모드', ['method' => $auction]);
+                            break;
+
+                        case 'confirmed':
+                            // 확정으로 변경
+                            Log::info('경매 상태 업데이트 확정 모드', ['method' => $auction]);
+                            break;
+
                         // case 'ing':
                         //     $auction->final_at = now()->addDays(env('AUCTION_DAY'));
                             
@@ -236,8 +256,8 @@ class AuctionService
                     if($auction->is_deposit == 'totalDeposit'){
                         Log::info('경매 상태 업데이트 입금완료 모드', ['method' => $auction]);
                         // 고객 / 딜러 에게 알림 
-                        AuctionTotalDepositJob::dispatch($auction->user_id, $auction);
-                        AuctionTotalDepositJob::dispatch($bids->user_id, $auction);
+                        AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
+                        AuctionTotalDepositJob::dispatch($bids->user_id, $auction, 'dealer');
 
                     }else {
                         Log::info('경매 상태 업데이트 입찰선택 모드', ['method' => $auction]);
@@ -462,291 +482,173 @@ class AuctionService
     }
 
     // 나이스DNR 차량정보/시세확인 API
-    public function getNiceDnr($ownerNm, $vhrNo)
-    {
-        $curl = curl_init();
+    // public function getNiceDnr($ownerNm, $vhrNo)
+    // {
+    //     $curl = curl_init();
 
-        Log::info('나이스DNR 차량정보/시세확인 API 호출 시작', ['ownerNm' => $ownerNm, 'vhrNo' => $vhrNo]);
+    //     Log::info('나이스DNR 차량정보/시세확인 API 호출 시작', ['ownerNm' => $ownerNm, 'vhrNo' => $vhrNo]);
         
-        $chkSec = date('YmdHis'); // 예: chkSec 값
-        $businessNumber = env('NICE_API_BUSINESS_NUMBER'); // 예: 사업자번호
-        $chkKey = $this->calculateCheckKey($chkSec, $businessNumber);
+    //     $chkSec = date('YmdHis'); // 예: chkSec 값
+    //     $businessNumber = env('NICE_API_BUSINESS_NUMBER'); // 예: 사업자번호
+    //     $chkKey = $this->calculateCheckKey($chkSec, $businessNumber);
 
 
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => env('NICE_API_URL').'?
-            apiKey='.env('NICE_API_APIKEY').'&
-            chkSec='.$chkSec.'&
-            chkKey='.$chkKey.'&
-            loginId='.env('NICE_API_LOGIN_ID').'&
-            kindOf='.env('NICE_API_KIND_OF').'&
-            ownerNm='.$ownerNm.'&
-            vhrNo='.$vhrNo,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-        ));
+    //     curl_setopt_array($curl, array(
+    //         CURLOPT_URL => env('NICE_API_URL').'?
+    //         apiKey='.env('NICE_API_APIKEY').'&
+    //         chkSec='.$chkSec.'&
+    //         chkKey='.$chkKey.'&
+    //         loginId='.env('NICE_API_LOGIN_ID').'&
+    //         kindOf='.env('NICE_API_KIND_OF').'&
+    //         ownerNm='.$ownerNm.'&
+    //         vhrNo='.$vhrNo,
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_ENCODING => '',
+    //         CURLOPT_MAXREDIRS => 10,
+    //         CURLOPT_TIMEOUT => 0,
+    //         CURLOPT_FOLLOWLOCATION => true,
+    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+    //         CURLOPT_CUSTOMREQUEST => 'GET',
+    //     ));
 
-        $response = curl_exec($curl);
-        $response = json_decode($response, true);
+    //     $response = curl_exec($curl);
+    //     $response = json_decode($response, true);
 
-        Log::info('나이스DNR 차량정보/시세확인 API 호출 결과', ['result' => $response]);
+    //     Log::info('나이스DNR 차량정보/시세확인 API 호출 결과', ['result' => $response]);
         
-        // 샘플 데이터
-        $tmpCars = [
-            [
-                "makerId" => "001",
-                "makerNm" => "현대",
-                "classModelld" => "101",
-                "classModelNm" => "쏘나타",
-                "modelld" => "301",
-                "modelNm" => "더 뉴 쏘나타",
-                "carName" => "현대 더 뉴 쏘나타 가솔린 2000cc 프리미엄",
-                "year" => "2022",
-                "detailedModel" => "더 뉴 쏘나타 프리미엄",
-                "grade" => "프리미엄",
-                "subGrade" => "프리미엄 플러스",
-                "firstRegistrationDate" => "2022-03-15",
-                "engineCapacity" => "2000cc",
-                "fuelType" => "가솔린",
-                "transmission" => "자동",
-                "useChangeHistory" => "없음",
-                "tuningHistory" => "0회",
-                "recallHistory" => "없음",
-                "currentPrice" => 1800, // 시세 숫자만 입력
-                "km" => "2.4",
-                "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2022%2F05%2Fhyundai-motor-company-sonata-discontinued-01.jpg?q=75&w=800&cbr=1&fit=max"
-            ],
-            [
-                "makerId" => "002",
-                "makerNm" => "기아",
-                "classModelld" => "102",
-                "classModelNm" => "스포티지",
-                "modelld" => "302",
-                "modelNm" => "더 뉴 스포티지",
-                "carName" => "기아 더 뉴 스포티지 디젤 2000cc 노블레스",
-                "year" => "2021",
-                "detailedModel" => "더 뉴 스포티지 노블레스",
-                "grade" => "노블레스",
-                "subGrade" => "노블레스 스페셜",
-                "firstRegistrationDate" => "2021-08-10",
-                "engineCapacity" => "2000cc",
-                "fuelType" => "디젤",
-                "transmission" => "자동",
-                "useChangeHistory" => "없음",
-                "tuningHistory" => "1회",
-                "recallHistory" => "없음",
-                "currentPrice" => 2000, // 시세 숫자만 입력,
-                "km" => "3.6",
-                "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2021%2F07%2FKia-release-new-sportage-suv-model-design-price-spec-info-twtw.jpg?w=960&cbr=1&q=90&fit=max"
-            ],
-            [
-                "makerId" => "003",
-                "makerNm" => "르노코리아",
-                "classModelld" => "103",
-                "classModelNm" => "SM6",
-                "modelld" => "303",
-                "modelNm" => "SM6",
-                "carName" => "르노코리아 SM6 가솔린 1600cc LE",
-                "year" => "2020",
-                "detailedModel" => "SM6 LE",
-                "grade" => "LE",
-                "subGrade" => "LE 프리미엄",
-                "firstRegistrationDate" => "2020-11-25",
-                "engineCapacity" => "1600cc",
-                "fuelType" => "가솔린",
-                "transmission" => "자동",
-                "useChangeHistory" => "1회",
-                "tuningHistory" => "0회",
-                "recallHistory" => "1회",
-                "currentPrice" => 1200, // 시세 숫자만 입력,
-                "km" => "1.5",
-                "thumbnail" => "https://file.carisyou.com/upload/2020/07/15/EDITOR_202007150443005100.jpg"
-            ],
-            [
-                "makerId" => "004",
-                "makerNm" => "쌍용",
-                "classModelld" => "104",
-                "classModelNm" => "코란도",
-                "modelld" => "304",
-                "modelNm" => "코란도",
-                "carName" => "쌍용 코란도 디젤 2200cc 어드벤처",
-                "year" => "2019",
-                "detailedModel" => "코란도 어드벤처",
-                "grade" => "어드벤처",
-                "subGrade" => "어드벤처 플러스",
-                "firstRegistrationDate" => "2019-06-30",
-                "engineCapacity" => "2200cc",
-                "fuelType" => "디젤",
-                "transmission" => "자동",
-                "useChangeHistory" => "2회",
-                "tuningHistory" => "1회",
-                "recallHistory" => "없음",
-                "currentPrice" => 1000, // 시세 숫자만 입력,
-                "km" => "3.2",
-                "thumbnail" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqgDnOXZPCRL7PDb1Kln4-MPxmAfWa8zzSZA&s"
-            ],
-            [
-                "makerId" => "005",
-                "makerNm" => "제네시스",
-                "classModelld" => "105",
-                "classModelNm" => "G80",
-                "modelld" => "305",
-                "modelNm" => "G80",
-                "carName" => "제네시스 G80 가솔린 3300cc AWD",
-                "year" => "2023",
-                "detailedModel" => "G80 AWD 프리미엄",
-                "grade" => "프리미엄",
-                "subGrade" => "프리미엄 럭셔리",
-                "firstRegistrationDate" => "2023-02-15",
-                "engineCapacity" => "3300cc",
-                "fuelType" => "가솔린",
-                "transmission" => "자동",
-                "useChangeHistory" => "없음",
-                "tuningHistory" => "0회",
-                "recallHistory" => "없음",
-                "currentPrice" => 4500, // 시세 숫자만 입력,
-                "km" => "2.6",
-                "thumbnail" => "https://cdn.motorgraph.com/news/photo/202211/30950_97376_454.jpg"
-            ]
-        ];
-
-
-        $response = array(
-            "carSize" => array(
-                "info" => $tmpCars[array_rand($tmpCars)]
-            ),
-            "resultCode" => "0000",
-            "resultMsg" => "성공"
-        ); 
-
-        curl_close($curl);
-
-        return $response;
-    }
-
-
-
-    // public function calculateCarPrice($currentYear, $currentMonth, $regYear, $regMonth, $currentMileage, $initialPrice, $mileageStandard = 1250) {
-    //     // 1. 사용 월수 계산
-    //     $monthsUsed = ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth);
-    
-    //     // 2. 표준 주행거리 계산 (월별 주행거리 기준)
-    //     $standardMileage = $monthsUsed * $mileageStandard;
-    
-    //     // 3. 주행거리 차이 계산
-    //     $mileageDifference = $standardMileage - $currentMileage;
-
-    
-    //     // 4. 잔가율 결정
-    //     $yearsUsed = floor($monthsUsed / 12);
-    //     $residualRate = 0;
-    //     if ($yearsUsed <= 1) {
-    //         $residualRate = 0.518;
-    //     } elseif ($yearsUsed <= 4) {
-    //         $residualRate = 0.417;
-    //     } elseif ($yearsUsed == 5) {
-    //         $residualRate = 0.368;
-    //     } elseif ($yearsUsed == 6) {
-    //         $residualRate = 0.311;
-    //     } elseif ($yearsUsed >= 7) {
-    //         $residualRate = 0.262;
-    //     }
-    
-    //     // 5. 기본 감가 가격 계산
-    //     $basePrice = $initialPrice * $residualRate;
-    
-    //     // 6. 주행 거리 감가 계산 (1km당 200원 가정)
-    //     $depreciationPerKm = 200;
-    //     // $mileageDepreciation = abs($mileageDifference) * $depreciationPerKm * $mileageDifferenceEffect;
-
-
-    //     $mileageDepreciation = min(0, $mileageDifference * $depreciationPerKm);
-    //     // $mileageDepreciation = $mileageDifference * $residualRate;
-    
-    //     // 7. 최종 예상 가격 계산
-    //     $estimatedPrice = $basePrice + $mileageDepreciation;
-
-    //     $estimatedPriceInTenThousandWon = $estimatedPrice / 10000;
-
-        
-    //     // 결과 반환
-    //     return [
-    //         'susic' => $susic,
-    //         'monthsUsed' => $monthsUsed,
-    //         'standardMileage' => $standardMileage,
-    //         'mileageDifference' => $mileageDifference,
-    //         'residualRate' => $residualRate,
-    //         'basePrice' => $basePrice,
-    //         'mileageDepreciation' => $mileageDepreciation,
-    //         'estimatedPrice' => $estimatedPrice,
-    //         'estimatedPriceInTenThousandWon' => $estimatedPriceInTenThousandWon
+    //     // 샘플 데이터
+    //     $tmpCars = [
+    //         [
+    //             "makerId" => "001",
+    //             "makerNm" => "현대",
+    //             "classModelld" => "101",
+    //             "classModelNm" => "쏘나타",
+    //             "modelld" => "301",
+    //             "modelNm" => "더 뉴 쏘나타",
+    //             "carName" => "현대 더 뉴 쏘나타 가솔린 2000cc 프리미엄",
+    //             "year" => "2022",
+    //             "detailedModel" => "더 뉴 쏘나타 프리미엄",
+    //             "grade" => "프리미엄",
+    //             "subGrade" => "프리미엄 플러스",
+    //             "firstRegistrationDate" => "2022-03-15",
+    //             "engineCapacity" => "2000cc",
+    //             "fuelType" => "가솔린",
+    //             "transmission" => "자동",
+    //             "useChangeHistory" => "없음",
+    //             "tuningHistory" => "0회",
+    //             "recallHistory" => "없음",
+    //             "currentPrice" => 1800, // 시세 숫자만 입력
+    //             "km" => "2.4",
+    //             "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2022%2F05%2Fhyundai-motor-company-sonata-discontinued-01.jpg?q=75&w=800&cbr=1&fit=max"
+    //         ],
+    //         [
+    //             "makerId" => "002",
+    //             "makerNm" => "기아",
+    //             "classModelld" => "102",
+    //             "classModelNm" => "스포티지",
+    //             "modelld" => "302",
+    //             "modelNm" => "더 뉴 스포티지",
+    //             "carName" => "기아 더 뉴 스포티지 디젤 2000cc 노블레스",
+    //             "year" => "2021",
+    //             "detailedModel" => "더 뉴 스포티지 노블레스",
+    //             "grade" => "노블레스",
+    //             "subGrade" => "노블레스 스페셜",
+    //             "firstRegistrationDate" => "2021-08-10",
+    //             "engineCapacity" => "2000cc",
+    //             "fuelType" => "디젤",
+    //             "transmission" => "자동",
+    //             "useChangeHistory" => "없음",
+    //             "tuningHistory" => "1회",
+    //             "recallHistory" => "없음",
+    //             "currentPrice" => 2000, // 시세 숫자만 입력,
+    //             "km" => "3.6",
+    //             "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2021%2F07%2FKia-release-new-sportage-suv-model-design-price-spec-info-twtw.jpg?w=960&cbr=1&q=90&fit=max"
+    //         ],
+    //         [
+    //             "makerId" => "003",
+    //             "makerNm" => "르노코리아",
+    //             "classModelld" => "103",
+    //             "classModelNm" => "SM6",
+    //             "modelld" => "303",
+    //             "modelNm" => "SM6",
+    //             "carName" => "르노코리아 SM6 가솔린 1600cc LE",
+    //             "year" => "2020",
+    //             "detailedModel" => "SM6 LE",
+    //             "grade" => "LE",
+    //             "subGrade" => "LE 프리미엄",
+    //             "firstRegistrationDate" => "2020-11-25",
+    //             "engineCapacity" => "1600cc",
+    //             "fuelType" => "가솔린",
+    //             "transmission" => "자동",
+    //             "useChangeHistory" => "1회",
+    //             "tuningHistory" => "0회",
+    //             "recallHistory" => "1회",
+    //             "currentPrice" => 1200, // 시세 숫자만 입력,
+    //             "km" => "1.5",
+    //             "thumbnail" => "https://file.carisyou.com/upload/2020/07/15/EDITOR_202007150443005100.jpg"
+    //         ],
+    //         [
+    //             "makerId" => "004",
+    //             "makerNm" => "쌍용",
+    //             "classModelld" => "104",
+    //             "classModelNm" => "코란도",
+    //             "modelld" => "304",
+    //             "modelNm" => "코란도",
+    //             "carName" => "쌍용 코란도 디젤 2200cc 어드벤처",
+    //             "year" => "2019",
+    //             "detailedModel" => "코란도 어드벤처",
+    //             "grade" => "어드벤처",
+    //             "subGrade" => "어드벤처 플러스",
+    //             "firstRegistrationDate" => "2019-06-30",
+    //             "engineCapacity" => "2200cc",
+    //             "fuelType" => "디젤",
+    //             "transmission" => "자동",
+    //             "useChangeHistory" => "2회",
+    //             "tuningHistory" => "1회",
+    //             "recallHistory" => "없음",
+    //             "currentPrice" => 1000, // 시세 숫자만 입력,
+    //             "km" => "3.2",
+    //             "thumbnail" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqgDnOXZPCRL7PDb1Kln4-MPxmAfWa8zzSZA&s"
+    //         ],
+    //         [
+    //             "makerId" => "005",
+    //             "makerNm" => "제네시스",
+    //             "classModelld" => "105",
+    //             "classModelNm" => "G80",
+    //             "modelld" => "305",
+    //             "modelNm" => "G80",
+    //             "carName" => "제네시스 G80 가솔린 3300cc AWD",
+    //             "year" => "2023",
+    //             "detailedModel" => "G80 AWD 프리미엄",
+    //             "grade" => "프리미엄",
+    //             "subGrade" => "프리미엄 럭셔리",
+    //             "firstRegistrationDate" => "2023-02-15",
+    //             "engineCapacity" => "3300cc",
+    //             "fuelType" => "가솔린",
+    //             "transmission" => "자동",
+    //             "useChangeHistory" => "없음",
+    //             "tuningHistory" => "0회",
+    //             "recallHistory" => "없음",
+    //             "currentPrice" => 4500, // 시세 숫자만 입력,
+    //             "km" => "2.6",
+    //             "thumbnail" => "https://cdn.motorgraph.com/news/photo/202211/30950_97376_454.jpg"
+    //         ]
     //     ];
+
+
+    //     $response = array(
+    //         "carSize" => array(
+    //             "info" => $tmpCars[array_rand($tmpCars)]
+    //         ),
+    //         "resultCode" => "0000",
+    //         "resultMsg" => "성공"
+    //     ); 
+
+    //     curl_close($curl);
+
+    //     return $response;
     // }
-
-    // 예상가 계산
-    // public function calculateCarPrice($currentYear, $currentMonth, $regYear, $regMonth, $currentMileage, $initialPrice, $mileageStandard = 1250) {
-    //     // 1. 사용 월수 계산
-    //     $monthsUsed = ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth);
     
-    //     // 2. 표준 주행거리 계산 (월별 주행거리 기준)
-    //     $standardMileage = $monthsUsed * $mileageStandard;
-    
-    //     // 3. 주행거리 차이 계산
-    //     $mileageDifference = $standardMileage - $currentMileage;
-
-    
-    //     // 4. 잔가율 결정
-    //     $yearsUsed = floor($monthsUsed / 12);
-    //     $residualRate = 0;
-    //     if ($yearsUsed <= 1) {
-    //         $residualRate = 0.518;
-    //     } elseif ($yearsUsed <= 4) {
-    //         $residualRate = 0.417;
-    //     } elseif ($yearsUsed == 5) {
-    //         $residualRate = 0.368;
-    //     } elseif ($yearsUsed == 6) {
-    //         $residualRate = 0.311;
-    //     } elseif ($yearsUsed >= 7) {
-    //         $residualRate = 0.262;
-    //     }
-    
-    //     // 5. 기본 감가 가격 계산
-    //     $basePrice = $initialPrice * $residualRate;
-    
-    //     // 6. 주행 거리 감가 계산 (1km당 200원 가정)
-    //     $depreciationPerKm = 200;
-    //     // $mileageDepreciation = abs($mileageDifference) * $depreciationPerKm * $mileageDifferenceEffect;
-
-
-    //     $mileageDepreciation = min(0, $mileageDifference * $depreciationPerKm);
-    //     // $mileageDepreciation = $mileageDifference * $residualRate;
-    
-    //     // 7. 최종 예상 가격 계산
-    //     $estimatedPrice = $basePrice + $mileageDepreciation;
-
-    //     $estimatedPriceInTenThousandWon = $estimatedPrice / 10000;
-
-        
-    //     // 결과 반환
-    //     return [
-    //         'susic' => $susic,
-    //         'monthsUsed' => $monthsUsed,
-    //         'standardMileage' => $standardMileage,
-    //         'mileageDifference' => $mileageDifference,
-    //         'residualRate' => $residualRate,
-    //         'basePrice' => $basePrice,
-    //         'mileageDepreciation' => $mileageDepreciation,
-    //         'estimatedPrice' => $estimatedPrice,
-    //         'estimatedPriceInTenThousandWon' => $estimatedPriceInTenThousandWon
-    //     ];
-    // }
-
-
     public function calculateCarPrice(
         $currentYear,
         $currentMonth,
@@ -905,6 +807,9 @@ class AuctionService
                     $auction->status = 'wait';
                     $auction->choice_at = Carbon::now()->addDays(config('days.choice_day'));
                     $auction->save();
+
+                    Log::info('경매시간 만료시 선택대기로 변경', $auction);
+
                     // 알림 보내기
                     AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '','');
                 }

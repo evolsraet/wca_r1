@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class AuctionTotalDepositNotification extends Notification
+class TaksongNameChangeFileUploadNotification extends Notification
 {
     use Queueable;
 
@@ -16,7 +16,6 @@ class AuctionTotalDepositNotification extends Notification
      */
     public $user;
     public $sendMessage;
-
     public function __construct($user, $sendMessage)
     {
         $this->user = $user;
@@ -42,11 +41,6 @@ class AuctionTotalDepositNotification extends Notification
                     ->subject($this->sendMessage['title'])
                     ->line($this->sendMessage['title'])
                     ->line($this->sendMessage['message'])
-                    ->line($this->sendMessage['message1'])
-                    ->line($this->sendMessage['message2'])
-                    ->line($this->sendMessage['message3'])
-                    ->line($this->sendMessage['message10'])
-                    ->line($this->sendMessage['message11'])
                     ->when(($this->sendMessage['link']['url'] !== "/"), function ($mailMessage) {
                         return $mailMessage->action($this->sendMessage['link']['text'], $this->sendMessage['link']['url']);
                     });

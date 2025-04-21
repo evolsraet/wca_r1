@@ -11,6 +11,7 @@ use App\Notifications\UaerDealerStatusNotification;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\AligoNotification;
 use App\Notifications\Templates\NotificationTemplate;
+use App\Notifications\AuctionsNotification;
 
 class UaerDealerStatusJob implements ShouldQueue
 {
@@ -37,24 +38,8 @@ class UaerDealerStatusJob implements ShouldQueue
             'status' => $this->status,
         ];
 
-        $sendMessage = NotificationTemplate::userStatusTemplate($data);
-
-        // Log::info('딜러 승인 결과 알림', ['sendMessage' => $sendMessage]);
-
-        // 이메일 전송
-        $this->user->notify(new UaerDealerStatusNotification($this->user, $sendMessage));
-
-
-
-        // 알림톡 전송 ( tpl_code 부여하여 적용 필요 )
-        // $this->user->notify(new AligoNotification([
-        //     'tpl_data' => [
-        //         'tpl_code' => env('SMS_TPL_CODE'),
-        //         'receiver_1' => $this->user->phone,
-        //         'subject_1' => $sendMessage['title'],
-        //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'].'<br>'.$sendMessage['message3'],
-        //     ]
-        // ]));
+        $notificationTemplate = NotificationTemplate::getTemplate('userStatus', $data, ['mail']);
+        $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail']));
 
     }
 }

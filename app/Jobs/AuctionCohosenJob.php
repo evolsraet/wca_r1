@@ -14,6 +14,8 @@ use App\Notifications\AligoNotification;
 use App\Models\Auction;
 use Carbon\Carbon;
 use App\Notifications\Templates\NotificationTemplate;
+use App\Notifications\AuctionsNotification;
+
 class AuctionCohosenJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -41,82 +43,25 @@ class AuctionCohosenJob implements ShouldQueue
         $auction = Auction::find($this->auction);
 
         if($auction->bid_id){
-            $data = [
-                'title' => '딜러님의 입찰이 선택되었습니다.',
-                'message' => '금액을 다시 한번 확인하시고, 탁송정보를 입력해주세요! 미입력시 경매 절차가 진행되지않아요 😅',
-                'data' => $auction,
-                'status4' => $auction->final_price,
-                'link' => $baseUrl.'/auction/'.$auction->unique_number
-            ];
-    
-            $sendMessage = NotificationTemplate::basicTemplate($data);
+
+            $notificationTemplate = NotificationTemplate::getTemplate('AuctionCohosenJobDealer', $auction, ['mail']);
+            $user = User::find($this->user);
+            $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
+
     
             Log::info('경매 선택 알림', ['status' => $auction, 'mode' => $this->mode, 'user' => $this->user]);
             
-            // 이메일 전송
-            $user = User::find($this->user);
-            $user->notify(new AuctionCohosenNotification($user, $this->auction, $this->mode, $sendMessage));
-            
-
-            // 알리고 알림톡 알림
-            // $user->notify(new AligoNotification([
-            //     'tpl_data' => [
-            //         'tpl_code' => env('SMS_TPL_CODE'),
-            //         'receiver_1' => $this->user->phone,
-            //         'subject_1' =>  $sendMessage['title'],
-            //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'].'<br>'.$sendMessage['message3'].'<br>'.$sendMessage['message7'].'<br><br>바로가기'.$baseUrl.'/auction/'.$this->auction->id,
-            //     ]
-            // ]));
 
         }else{
 
-            $data = [
-                'title' => '딜러님의 입찰이 선택되었습니다.',
-                'data' => $auction,
-                'link' => $baseUrl.'/auction/'.$auction->unique_number
-            ];
-    
-            $sendMessage = NotificationTemplate::basicTemplate($data);
-            
-            // 이메일 전송
+            $notificationTemplate = NotificationTemplate::getTemplate('AuctionCohosenJobUser1', $auction, ['mail']);
             $user = User::find($this->user);
-            $user->notify(new AuctionCohosenNotification($user, $this->auction, $this->mode, $sendMessage));
+            $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
 
 
-            // 알리고 알림톡 알림
-            // $user->notify(new AligoNotification([
-            //     'tpl_data' => [
-            //         'tpl_code' => env('SMS_TPL_CODE'),
-            //         'receiver_1' => $this->user->phone,
-            //         'subject_1' =>  $sendMessage['title'],
-            //         'message_1' => $sendMessage['message1'].'<br>'.$sendMessage['message2'].'<br>'.$sendMessage['message3'].'<br>'.$sendMessage['message7'].'<br><br>바로가기'.$baseUrl.'/auction/'.$this->auction->id,
-            //     ]
-            // ]));
-
-            // 고객 알림 
-            $data1 = [
-                'title' => '고객님의 차량이 낙찰되었고, 현재 탁송을 준비 중이에요',
-                'message' => '탁송정보를 입력해주세요! 미입력시 경매 절차가 진행되지않아요 😅',
-                'data' => $auction
-            ];
-
-            /* 탁송정보와 필요서류 준비 (구매자 사업등록증 확인요망)  …. 정보 추가  */
-
-            $sendMessage1 = NotificationTemplate::basicTemplate($data1);
-
+            $notificationTemplate = NotificationTemplate::getTemplate('AuctionCohosenJobUser2', $auction, ['mail']);
             $user = User::find($auction->user_id);
-            $user->notify(new AuctionCohosenNotification($user, $this->auction, $this->mode, $sendMessage1));
-
-
-            // 알리고 알림톡 알림
-            // $user->notify(new AligoNotification([
-            //     'tpl_data' => [
-            //         'tpl_code' => env('SMS_TPL_CODE'),
-            //         'receiver_1' => $this->user->phone,
-            //         'subject_1' =>  $sendMessage['title'],
-            //         'message_1' => $sendMessage1['message1'].'<br>'.$sendMessage1['message2'].'<br>'.$sendMessage1['message3'].'<br>'.$sendMessage1['message7'].'<br><br>바로가기'.$baseUrl.'/auction/'.$this->auction->id,
-            //     ]
-            // ]));
+            $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
 
         }
 

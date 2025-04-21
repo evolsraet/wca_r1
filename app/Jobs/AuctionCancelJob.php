@@ -13,6 +13,8 @@ use App\Notifications\AligoNotification;
 use Illuminate\Support\Facades\Log;
 use App\Models\Auction;
 use App\Notifications\Templates\NotificationTemplate;
+use App\Notifications\AuctionsNotification;
+
 class AuctionCancelJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -38,17 +40,10 @@ class AuctionCancelJob implements ShouldQueue
         $user = User::find($this->user);
         $auction = Auction::find($this->auction);
 
-        $data = [
-            'title' => '경매가 취소되었습니다.',
-            'data' => Auction::find($this->auction),
-            'status' => '취소',
-            'link' => $baseUrl.'/auction/'.$auction->unique_number
-        ];
 
-        $sendMessage = NotificationTemplate::basicTemplate($data);
+        $notificationTemplate = NotificationTemplate::getTemplate('AuctionCancelJob', $auction, ['mail']);
+        $user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
 
-        // 이메일전송 
-        $user->notify(new AuctionCancelNotification($sendMessage));
 
         // 알림톡 전송
         // $user->notify(new AligoNotification([

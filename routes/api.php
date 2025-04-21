@@ -128,3 +128,13 @@ Route::post('get-certification-data', [BusinessController::class, 'getCertificat
 Route::post('clear-certification-data', [BusinessController::class, 'clearCertificationData']);
 
 Route::get('get-car-price', [AuctionController::class, 'getCarPrice']);
+
+Route::get('name-change', [AuctionController::class, 'nameChange']);
+Route::get('name-change-status', [AuctionController::class, 'nameChangeStatus']);
+Route::post('name-change-file-upload', [AuctionController::class, 'nameChangeFileUpload']);
+Route::post('/auctions/{auction}/name-change-file-upload', [AuctionController::class, 'nameChangeFileUpload']);
+Route::get('name-change-status-all', [AuctionController::class, 'nameChangeStatusAll']);
+Route::get('name-change-status-all-test', [AuctionController::class, 'processCompletedNameChangeAuctions']);
+// Route::get('name-change-status-all-test', [AuctionController::class, 'nameChangeStatusAll']);
+
+Route::get('test-auctions-notification', [AuctionController::class, 'testAuctionsNotification']);

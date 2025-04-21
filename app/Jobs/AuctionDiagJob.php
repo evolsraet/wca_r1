@@ -12,7 +12,7 @@ use App\Notifications\AuctionDiagNotification;
 use App\Notifications\AligoNotification;
 use App\Notifications\Templates\NotificationTemplate;
 use Illuminate\Support\Facades\Log;
-
+use App\Notifications\AuctionsNotification;
 class AuctionDiagJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -36,16 +36,19 @@ class AuctionDiagJob implements ShouldQueue
 
         $user = User::find($this->user);
 
-        $data['title'] = '경매 상태가 변경되었습니다.';
-        $data['data'] = $this->data;
-        $data['status'] = '진단대기';
+        // $data['title'] = '경매 상태가 변경되었습니다.';
+        // $data['data'] = $this->data;
+        // $data['status'] = '진단대기';
 
-        $sendMessage = NotificationTemplate::basicTemplate($data);
+        // $sendMessage = NotificationTemplate::basicTemplate($data);
 
         // Log::info('AuctionDiagJob_sendMessage2', ['sendMessage' => $sendMessage]);
 
         // 이메일 전송 
-        $user->notify(new AuctionDiagNotification($user, $sendMessage));
+        // $user->notify(new AuctionDiagNotification($user, $sendMessage));
+
+        $notificationTemplate = NotificationTemplate::getTemplate('AuctionDiagJob', $this->data, ['mail']);
+        $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
 
         // 알리고 알림톡 전송 
         // $user->notify(new AligoNotification([
