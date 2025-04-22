@@ -529,20 +529,20 @@ const toggleView = () => {
     <h5 class="tc-red fs-6">&#8251; 매도용 인감증명서를 준비해주세요</h5>
     <div class="summary-box d-flex flex-column p-3 mt-3">
       <div class="d-flex justify-content-start gap-5 mt-2">
-        <p class="mb-0">탁송일</p>
+        <p class="mb-0" style="width: 100px; text-align: left;">탁송일</p>
         <p class="mb-0"><span>${yearLabel.value} </span>&nbsp;${monthLabel.value} ${selectedDateLabel.value} ${selectedTime.value}</p>
       </div>
       <div class="d-flex justify-content-start gap-5 mt-2">
-        <p class="mb-0">탁송주소</p>
-        <p class="mb-0"><span>${addrPost.value}</span>|<span>${addr.value}</span>|<span>${addrdt.value}</span></p>
+        <p class="mb-0" style="width: 100px; text-align: left;">탁송주소</p>
+        <p class="mb-0"><span>${addrPost.value}</span> | <span>${addr.value}</span> | <span>${addrdt.value}</span></p>
       </div>
       <div class="d-flex justify-content-start gap-5 mt-2">
-        <p class="mb-0"><span class="me-3">은</span>행</p>
-        <p class="mb-0"><span class="me-2">${selectedBank.value ?? '선택 안됨'}</span>|<span class="ms-2">${account.value ?? '계좌번호 없음'}</span></p>
+        <p class="mb-0" style="width: 100px; text-align: left;">은행</p>
+        <p class="mb-0"><span class="me-2">${selectedBank.value ?? '선택 안됨'}</span> | <span class="ms-2">${account.value ?? '계좌번호 없음'}</span></p>
       </div>
       <div class="d-flex justify-content-start gap-5 mt-2">
-        <p class="mb-0">고객 연락처</p>
-        <p class="mb-0"><span>${customTel1.value}</span>|<span>${customTel2.value}</span></p>
+        <p class="mb-0" style="width: 100px; text-align: left;">고객 연락처</p>
+        <p class="mb-0"><span>${customTel1.value}</span> | <span>${customTel2.value}</span></p>
       </div>
     </div>
     <p class="text-secondary opacity-75 text-center mt-3">취소와 변경이 어려우니 유의해 주세요.</p>

@@ -80,7 +80,7 @@
                     </div>
                     <div class="layout-container02 mt-5">
                         <div class="p-2">
-                            <div class="tbl_basic container p-4">
+                            <div class="tbl_basic container p-1">
                                 <div class="d-flex align-items-start justify-content-between">
                                     <h3 class="review-title mb-5">공지사항</h3>
                                     <router-link :to="{name:'posts.index' , params: {boardId: 'notice'}}" class="btn-apply mt-0 p-0">전체보기</router-link>
@@ -334,6 +334,12 @@ const fetchPosts = async () => {
           isMobileView.value = window.innerWidth <= 991;
       }
   };
+
+  const handleRowClick = (postId) => {
+    console.log("postId",postId);
+    // router.push({ path: 'board/notice/edit/'+postId +'?navigatedThroughHandleRowClick=true'});
+    // router.push({ name: 'posts.edit', params: { id: postId } });
+  }
   
   onMounted(async() => {
     await getBoardCategories(); // 카테고리 로드

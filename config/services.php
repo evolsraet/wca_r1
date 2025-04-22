@@ -76,6 +76,12 @@ return [
         'oauth_url' => env('CODEF_OAUTH_URL'),
     ],
 
-    // 나이스 가상계좌
+
+    // 진단 API
+    'diagnostic' => [
+        'api_url' => env('WCA_DIAGNOSTIC_API_URL'),
+        'api_id' => env('WCA_DIAGNOSTIC_API_ID'),
+        'api_key' => env('WCA_DIAGNOSTIC_API_KEY'),
+    ],
 
 ];

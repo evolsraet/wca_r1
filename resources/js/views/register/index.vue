@@ -29,7 +29,7 @@
                         <source src="../../../img/video/register_vi.mp4" type="video/mp4">
                     </video>
                 </div>
-                <div class="card-section my-3">
+                <div class="card-section my-3" :style="isMobileView ? 'margin-top: 50px !important;' : ''">
                     <div class="card p-3">
                         <div class="card-body">
                             <div class="registration-container">
@@ -54,6 +54,8 @@ import {
 import useAuth from '@/composables/auth';
 import { cmmn } from '@/hooks/cmmn';
 import UserRegisterForm from "@/views/import/UserRegister.vue";
+
+const isMobileView = ref(window.innerWidth <= 640);
 /**
 const { openPostcode , closePostcode} = cmmn();
 

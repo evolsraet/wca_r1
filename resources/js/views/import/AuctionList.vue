@@ -74,7 +74,7 @@
           </div>
 
           
-          <router-link v-if="isUser" :to="{ name: 'home' }" class="bid-bc p-3">
+          <router-link v-if="isUser" :to="{ name: 'carfind' }" class="bid-bc p-3">
             <ul class="px-0 inspector_list max_width_900">
               <li class="m-auto">
                 <div class="hovercolo">

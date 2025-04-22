@@ -7,7 +7,7 @@
         <form>
             <div class="container mov-wide" v-for="review in reviewsData" :key="review">
                     <div class="left-container">
-                        <div class="container-img">
+                        <div class="container-img mt-3">
                             <div class="left-img">
                                 <div v-if ="!isMobileView" class="d-flex flex-row">
                                     <!-- <div class="w-50">
@@ -22,7 +22,7 @@
                                     </div>
                                 </div>
                                 <div v-if = "isMobileView">
-                                    <div class="card-img-top-ty02">
+                                    <div>
                                         <img :src="review.auction.car_thumbnail" alt="Car">
                                     </div>
                                 </div>

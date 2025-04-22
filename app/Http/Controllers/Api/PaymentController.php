@@ -370,7 +370,7 @@ class PaymentController extends Controller
         ];
 
         // CURL 요청
-        $url = "https://webapi.nicepay.co.kr/webapi/bulk_vacct_regist.jsp";
+        $url = config('nicePayV.NICE_PAY_VIRTUAL_ACCOUNT_URL');
         $ch = curl_init($url);
 
         curl_setopt($ch, CURLOPT_POST, true);

@@ -221,7 +221,7 @@ class NotificationTemplate
                 .'비밀번호 재설정 링크 : '.url('/resetPasswordLogin/'.$data);
 
                 $link = [
-                    "url" => url('/'),
+                    "url" => url('/resetPasswordLogin/'.$data),
                     "text" => '바로가기'
                 ];
 

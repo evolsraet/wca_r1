@@ -482,172 +482,172 @@ class AuctionService
     }
 
     // 나이스DNR 차량정보/시세확인 API
-    // public function getNiceDnr($ownerNm, $vhrNo)
-    // {
-    //     $curl = curl_init();
+    public function getNiceDnr($ownerNm, $vhrNo)
+    {
+        $curl = curl_init();
 
-    //     Log::info('나이스DNR 차량정보/시세확인 API 호출 시작', ['ownerNm' => $ownerNm, 'vhrNo' => $vhrNo]);
+        Log::info('나이스DNR 차량정보/시세확인 API 호출 시작', ['ownerNm' => $ownerNm, 'vhrNo' => $vhrNo]);
         
-    //     $chkSec = date('YmdHis'); // 예: chkSec 값
-    //     $businessNumber = env('NICE_API_BUSINESS_NUMBER'); // 예: 사업자번호
-    //     $chkKey = $this->calculateCheckKey($chkSec, $businessNumber);
+        $chkSec = date('YmdHis'); // 예: chkSec 값
+        $businessNumber = env('NICE_API_BUSINESS_NUMBER'); // 예: 사업자번호
+        $chkKey = $this->calculateCheckKey($chkSec, $businessNumber);
 
 
-    //     curl_setopt_array($curl, array(
-    //         CURLOPT_URL => env('NICE_API_URL').'?
-    //         apiKey='.env('NICE_API_APIKEY').'&
-    //         chkSec='.$chkSec.'&
-    //         chkKey='.$chkKey.'&
-    //         loginId='.env('NICE_API_LOGIN_ID').'&
-    //         kindOf='.env('NICE_API_KIND_OF').'&
-    //         ownerNm='.$ownerNm.'&
-    //         vhrNo='.$vhrNo,
-    //         CURLOPT_RETURNTRANSFER => true,
-    //         CURLOPT_ENCODING => '',
-    //         CURLOPT_MAXREDIRS => 10,
-    //         CURLOPT_TIMEOUT => 0,
-    //         CURLOPT_FOLLOWLOCATION => true,
-    //         CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-    //         CURLOPT_CUSTOMREQUEST => 'GET',
-    //     ));
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => env('NICE_API_URL').'?
+            apiKey='.env('NICE_API_APIKEY').'&
+            chkSec='.$chkSec.'&
+            chkKey='.$chkKey.'&
+            loginId='.env('NICE_API_LOGIN_ID').'&
+            kindOf='.env('NICE_API_KIND_OF').'&
+            ownerNm='.$ownerNm.'&
+            vhrNo='.$vhrNo,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+        ));
 
-    //     $response = curl_exec($curl);
-    //     $response = json_decode($response, true);
+        $response = curl_exec($curl);
+        $response = json_decode($response, true);
 
-    //     Log::info('나이스DNR 차량정보/시세확인 API 호출 결과', ['result' => $response]);
+        Log::info('나이스DNR 차량정보/시세확인 API 호출 결과', ['result' => $response]);
         
-    //     // 샘플 데이터
-    //     $tmpCars = [
-    //         [
-    //             "makerId" => "001",
-    //             "makerNm" => "현대",
-    //             "classModelld" => "101",
-    //             "classModelNm" => "쏘나타",
-    //             "modelld" => "301",
-    //             "modelNm" => "더 뉴 쏘나타",
-    //             "carName" => "현대 더 뉴 쏘나타 가솔린 2000cc 프리미엄",
-    //             "year" => "2022",
-    //             "detailedModel" => "더 뉴 쏘나타 프리미엄",
-    //             "grade" => "프리미엄",
-    //             "subGrade" => "프리미엄 플러스",
-    //             "firstRegistrationDate" => "2022-03-15",
-    //             "engineCapacity" => "2000cc",
-    //             "fuelType" => "가솔린",
-    //             "transmission" => "자동",
-    //             "useChangeHistory" => "없음",
-    //             "tuningHistory" => "0회",
-    //             "recallHistory" => "없음",
-    //             "currentPrice" => 1800, // 시세 숫자만 입력
-    //             "km" => "2.4",
-    //             "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2022%2F05%2Fhyundai-motor-company-sonata-discontinued-01.jpg?q=75&w=800&cbr=1&fit=max"
-    //         ],
-    //         [
-    //             "makerId" => "002",
-    //             "makerNm" => "기아",
-    //             "classModelld" => "102",
-    //             "classModelNm" => "스포티지",
-    //             "modelld" => "302",
-    //             "modelNm" => "더 뉴 스포티지",
-    //             "carName" => "기아 더 뉴 스포티지 디젤 2000cc 노블레스",
-    //             "year" => "2021",
-    //             "detailedModel" => "더 뉴 스포티지 노블레스",
-    //             "grade" => "노블레스",
-    //             "subGrade" => "노블레스 스페셜",
-    //             "firstRegistrationDate" => "2021-08-10",
-    //             "engineCapacity" => "2000cc",
-    //             "fuelType" => "디젤",
-    //             "transmission" => "자동",
-    //             "useChangeHistory" => "없음",
-    //             "tuningHistory" => "1회",
-    //             "recallHistory" => "없음",
-    //             "currentPrice" => 2000, // 시세 숫자만 입력,
-    //             "km" => "3.6",
-    //             "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2021%2F07%2FKia-release-new-sportage-suv-model-design-price-spec-info-twtw.jpg?w=960&cbr=1&q=90&fit=max"
-    //         ],
-    //         [
-    //             "makerId" => "003",
-    //             "makerNm" => "르노코리아",
-    //             "classModelld" => "103",
-    //             "classModelNm" => "SM6",
-    //             "modelld" => "303",
-    //             "modelNm" => "SM6",
-    //             "carName" => "르노코리아 SM6 가솔린 1600cc LE",
-    //             "year" => "2020",
-    //             "detailedModel" => "SM6 LE",
-    //             "grade" => "LE",
-    //             "subGrade" => "LE 프리미엄",
-    //             "firstRegistrationDate" => "2020-11-25",
-    //             "engineCapacity" => "1600cc",
-    //             "fuelType" => "가솔린",
-    //             "transmission" => "자동",
-    //             "useChangeHistory" => "1회",
-    //             "tuningHistory" => "0회",
-    //             "recallHistory" => "1회",
-    //             "currentPrice" => 1200, // 시세 숫자만 입력,
-    //             "km" => "1.5",
-    //             "thumbnail" => "https://file.carisyou.com/upload/2020/07/15/EDITOR_202007150443005100.jpg"
-    //         ],
-    //         [
-    //             "makerId" => "004",
-    //             "makerNm" => "쌍용",
-    //             "classModelld" => "104",
-    //             "classModelNm" => "코란도",
-    //             "modelld" => "304",
-    //             "modelNm" => "코란도",
-    //             "carName" => "쌍용 코란도 디젤 2200cc 어드벤처",
-    //             "year" => "2019",
-    //             "detailedModel" => "코란도 어드벤처",
-    //             "grade" => "어드벤처",
-    //             "subGrade" => "어드벤처 플러스",
-    //             "firstRegistrationDate" => "2019-06-30",
-    //             "engineCapacity" => "2200cc",
-    //             "fuelType" => "디젤",
-    //             "transmission" => "자동",
-    //             "useChangeHistory" => "2회",
-    //             "tuningHistory" => "1회",
-    //             "recallHistory" => "없음",
-    //             "currentPrice" => 1000, // 시세 숫자만 입력,
-    //             "km" => "3.2",
-    //             "thumbnail" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqgDnOXZPCRL7PDb1Kln4-MPxmAfWa8zzSZA&s"
-    //         ],
-    //         [
-    //             "makerId" => "005",
-    //             "makerNm" => "제네시스",
-    //             "classModelld" => "105",
-    //             "classModelNm" => "G80",
-    //             "modelld" => "305",
-    //             "modelNm" => "G80",
-    //             "carName" => "제네시스 G80 가솔린 3300cc AWD",
-    //             "year" => "2023",
-    //             "detailedModel" => "G80 AWD 프리미엄",
-    //             "grade" => "프리미엄",
-    //             "subGrade" => "프리미엄 럭셔리",
-    //             "firstRegistrationDate" => "2023-02-15",
-    //             "engineCapacity" => "3300cc",
-    //             "fuelType" => "가솔린",
-    //             "transmission" => "자동",
-    //             "useChangeHistory" => "없음",
-    //             "tuningHistory" => "0회",
-    //             "recallHistory" => "없음",
-    //             "currentPrice" => 4500, // 시세 숫자만 입력,
-    //             "km" => "2.6",
-    //             "thumbnail" => "https://cdn.motorgraph.com/news/photo/202211/30950_97376_454.jpg"
-    //         ]
-    //     ];
+        // 샘플 데이터
+        $tmpCars = [
+            [
+                "makerId" => "001",
+                "makerNm" => "현대",
+                "classModelld" => "101",
+                "classModelNm" => "쏘나타",
+                "modelld" => "301",
+                "modelNm" => "더 뉴 쏘나타",
+                "carName" => "현대 더 뉴 쏘나타 가솔린 2000cc 프리미엄",
+                "year" => "2022",
+                "detailedModel" => "더 뉴 쏘나타 프리미엄",
+                "grade" => "프리미엄",
+                "subGrade" => "프리미엄 플러스",
+                "firstRegistrationDate" => "2022-03-15",
+                "engineCapacity" => "2000cc",
+                "fuelType" => "가솔린",
+                "transmission" => "자동",
+                "useChangeHistory" => "없음",
+                "tuningHistory" => "0회",
+                "recallHistory" => "없음",
+                "currentPrice" => 1800, // 시세 숫자만 입력
+                "km" => "2.4",
+                "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2022%2F05%2Fhyundai-motor-company-sonata-discontinued-01.jpg?q=75&w=800&cbr=1&fit=max"
+            ],
+            [
+                "makerId" => "002",
+                "makerNm" => "기아",
+                "classModelld" => "102",
+                "classModelNm" => "스포티지",
+                "modelld" => "302",
+                "modelNm" => "더 뉴 스포티지",
+                "carName" => "기아 더 뉴 스포티지 디젤 2000cc 노블레스",
+                "year" => "2021",
+                "detailedModel" => "더 뉴 스포티지 노블레스",
+                "grade" => "노블레스",
+                "subGrade" => "노블레스 스페셜",
+                "firstRegistrationDate" => "2021-08-10",
+                "engineCapacity" => "2000cc",
+                "fuelType" => "디젤",
+                "transmission" => "자동",
+                "useChangeHistory" => "없음",
+                "tuningHistory" => "1회",
+                "recallHistory" => "없음",
+                "currentPrice" => 2000, // 시세 숫자만 입력,
+                "km" => "3.6",
+                "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2021%2F07%2FKia-release-new-sportage-suv-model-design-price-spec-info-twtw.jpg?w=960&cbr=1&q=90&fit=max"
+            ],
+            [
+                "makerId" => "003",
+                "makerNm" => "르노코리아",
+                "classModelld" => "103",
+                "classModelNm" => "SM6",
+                "modelld" => "303",
+                "modelNm" => "SM6",
+                "carName" => "르노코리아 SM6 가솔린 1600cc LE",
+                "year" => "2020",
+                "detailedModel" => "SM6 LE",
+                "grade" => "LE",
+                "subGrade" => "LE 프리미엄",
+                "firstRegistrationDate" => "2020-11-25",
+                "engineCapacity" => "1600cc",
+                "fuelType" => "가솔린",
+                "transmission" => "자동",
+                "useChangeHistory" => "1회",
+                "tuningHistory" => "0회",
+                "recallHistory" => "1회",
+                "currentPrice" => 1200, // 시세 숫자만 입력,
+                "km" => "1.5",
+                "thumbnail" => "https://file.carisyou.com/upload/2020/07/15/EDITOR_202007150443005100.jpg"
+            ],
+            [
+                "makerId" => "004",
+                "makerNm" => "쌍용",
+                "classModelld" => "104",
+                "classModelNm" => "코란도",
+                "modelld" => "304",
+                "modelNm" => "코란도",
+                "carName" => "쌍용 코란도 디젤 2200cc 어드벤처",
+                "year" => "2019",
+                "detailedModel" => "코란도 어드벤처",
+                "grade" => "어드벤처",
+                "subGrade" => "어드벤처 플러스",
+                "firstRegistrationDate" => "2019-06-30",
+                "engineCapacity" => "2200cc",
+                "fuelType" => "디젤",
+                "transmission" => "자동",
+                "useChangeHistory" => "2회",
+                "tuningHistory" => "1회",
+                "recallHistory" => "없음",
+                "currentPrice" => 1000, // 시세 숫자만 입력,
+                "km" => "3.2",
+                "thumbnail" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqgDnOXZPCRL7PDb1Kln4-MPxmAfWa8zzSZA&s"
+            ],
+            [
+                "makerId" => "005",
+                "makerNm" => "제네시스",
+                "classModelld" => "105",
+                "classModelNm" => "G80",
+                "modelld" => "305",
+                "modelNm" => "G80",
+                "carName" => "제네시스 G80 가솔린 3300cc AWD",
+                "year" => "2023",
+                "detailedModel" => "G80 AWD 프리미엄",
+                "grade" => "프리미엄",
+                "subGrade" => "프리미엄 럭셔리",
+                "firstRegistrationDate" => "2023-02-15",
+                "engineCapacity" => "3300cc",
+                "fuelType" => "가솔린",
+                "transmission" => "자동",
+                "useChangeHistory" => "없음",
+                "tuningHistory" => "0회",
+                "recallHistory" => "없음",
+                "currentPrice" => 4500, // 시세 숫자만 입력,
+                "km" => "2.6",
+                "thumbnail" => "https://cdn.motorgraph.com/news/photo/202211/30950_97376_454.jpg"
+            ]
+        ];
 
 
-    //     $response = array(
-    //         "carSize" => array(
-    //             "info" => $tmpCars[array_rand($tmpCars)]
-    //         ),
-    //         "resultCode" => "0000",
-    //         "resultMsg" => "성공"
-    //     ); 
+        $response = array(
+            "carSize" => array(
+                "info" => $tmpCars[array_rand($tmpCars)]
+            ),
+            "resultCode" => "0000",
+            "resultMsg" => "성공"
+        ); 
 
-    //     curl_close($curl);
+        curl_close($curl);
 
-    //     return $response;
-    // }
+        return $response;
+    }
     
     public function calculateCarPrice(
         $currentYear,
@@ -841,10 +841,10 @@ class AuctionService
     public function diagnosticResult($result)
     {
         $response = Http::asForm()
-            ->post(env('WCA_DIAGNOSTIC_API_URL').'diag_by_car_no', [
-                'auth' => env('WCA_DIAGNOSTIC_API_ID'),
-                'api_key' => env('WCA_DIAGNOSTIC_API_KEY'),
-                'diag_car_no' => $result['car_no']
+            ->post(config('services.diagnostic.api_url').'diag_by_car_no', [
+                'auth' => config('services.diagnostic.api_id'),
+                'api_key' => config('services.diagnostic.api_key'),
+                'diag_car_no' => $result['diag_car_no']
             ]);
 
         $response = json_decode($response, true);
@@ -857,9 +857,9 @@ class AuctionService
     {
         // http 사용 해서 위 코드 수정 
         $response = Http::asForm()
-            ->post(env('WCA_DIAGNOSTIC_API_URL').'codes', [
-                'auth' => env('WCA_DIAGNOSTIC_API_ID'),
-                'api_key' => env('WCA_DIAGNOSTIC_API_KEY')
+            ->post(config('services.diagnostic.api_url').'codes', [
+                'auth' => config('services.diagnostic.api_id'),
+                'api_key' => config('services.diagnostic.api_key')
             ]);
 
         

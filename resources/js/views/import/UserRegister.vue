@@ -119,6 +119,9 @@
                   <label for="ch4">네,딜러에요!</label>
               </div>
           </div>
+
+          <!-- <DealerCheckEvent :mode="check1" /> -->
+
           <p class="text-secondary opacity-50">딜러라면 추가 정보 입력이 필요해요</p>
           <a @click="openModal('privacy')" class="icon-link mt-5 mb-3">
               <img src="../../../img/Icon-file.png" class="ms-2" alt="회원약관 및 개인정보 처리방침">위카모빌리티 회원약관 및 개인정보처리 방침
@@ -130,6 +133,12 @@
               <img src="../../../img/Icon-file.png" class="ms-2" alt="온라인자동차경매장 규약">온라인자동차경매장 규약
             </a>
 
+            <a @click="isDealerCheckEvent2" class="icon-link mt-3">
+              <img src="../../../img/Icon-file.png" class="ms-2" alt="주민등록번호(법인등록번호)고지사항">주민등록번호(법인등록번호) 수집 동의
+            </a>
+
+            <!-- <DealerPersonalNumber :mode="check2" /> -->
+
             <div class="form-group dealer-check" style="margin-top: 20px;">
                 <label for="dealer">온라인자동차경매장 규약</label>
                 <div class="check_box">
@@ -138,7 +147,17 @@
                 </div>
             </div>
 
+
+            <div class="form-group dealer-check" style="margin-top: 20px;">
+                <label for="dealer">주민등록번호(법인등록번호) 수집 동의</label>
+                <div class="check_box">
+                    <input type="checkbox" id="ch5" v-model="profile.isDealerApplyCheck" class="form-control" ref="isDealerApplyCheckSelect">
+                    <label for="ch5">동의</label>
+                </div>
+            </div>
+
           </div>
+
 
         </div>
         <div v-if="isDealer || profile.isDealer">
@@ -386,6 +405,8 @@
   import { cmmn } from '@/hooks/cmmn';
   import useUsers from "@/composables/users";
   import LawGid from '@/views/modal/LawGid.vue';
+  import DealerCheckEvent from '@/views/guide/DealerCheckEvent.vue';
+  import DealerPersonalNumber from '@/views/guide/DealerPersonalNumber.vue';
   const closeModal = () => {
     isModalOpen.value = false;
   };
@@ -628,7 +649,8 @@
   const isDealerCheckEvent = () => {
 
     if (profile.value.isDealer) {
-    const text = `<div style="height: 500px; overflow-y: auto; text-align: left;" class="info-popup">
+    const text = `<div style="height: auto; overflow-y: scroll !important; text-align: left;" class="info-popup">
+      <div style="height:auto !important">
         <h4 style="color: #333; margin-bottom:10px; text-align: center;">온라인자동차경매장 규약</h4>
 
         <h4 style="color: #555; margin-bottom:10px;">제 1장 총칙</h4>
@@ -998,13 +1020,15 @@
           <li style="padding-bottom:5px;">- 3,000만원 이하: 35만원</li>
           <li style="padding-bottom:5px;">- 2,000만원 이상: 40만원</li>
         </ul>
+        </div>
       </div>
     `;
 
     wica.ntcn(swal)
       .useHtmlText() // HTML 태그 활성화
       .useClose()
-      .addClassNm('intromodal') // 클래스명 설정
+      .addClassNm('intro-modal') // 클래스명 설정
+      .addClassNm('intromodal-popup') // 클래스명 설정
       .addOption({ padding: 20, height:840 }) // swal 옵션 추가
       .callback(function (result) {
         // 결과 처리 로직
@@ -1321,6 +1345,19 @@ input[type="date"] {
   font-size: 16px;
   box-sizing: border-box;
 }
+
+#dealerBirthDate {
+    height: 42px;
+}
+
+/* @media screen and (min-width: 768px) {
+  .intromodal-popup-popup{
+    width: 500px !important;
+    height: 500px !important;
+  }  
+} */
+
+
 
   </style>
   

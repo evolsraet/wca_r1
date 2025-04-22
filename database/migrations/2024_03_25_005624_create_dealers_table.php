@@ -21,6 +21,8 @@ return new class extends Migration
             $table->string('phone')->comment('연락처');
             $table->date('birthday')->comment('생년월일');
             $table->string('biz_check')->comment('사업자등록증 확인');
+            $table->string('is_personal_info_check')->comment('개인정보수집 확인');
+            $table->string('is_personal_number')->comment('주민(법인)번호');
             $table->string('company')->comment('소속상사');
             $table->string('company_duty')->comment('직책');
             $table->string('company_post')->comment('우편번호');

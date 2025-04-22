@@ -614,10 +614,10 @@ class AuctionController extends Controller
         
         // $notificationTemplate = NotificationTemplate::getTemplate('userStatus', $data, ['mail']);
         // $auctionsNotification = new AuctionsNotification($user, $notificationTemplate, ['mail']);
-        $result = AuctionsTestJob::dispatch($user, $data, ['mail']);
+        AuctionsTestJob::dispatch($user, $data, ['mail']);
 
 
-        return response()->api($result);
+        // return response()->api($result);
     }
 
 }

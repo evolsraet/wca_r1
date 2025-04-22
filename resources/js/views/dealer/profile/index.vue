@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" style="margin-top: 90px !important;">
         <div class="regiest-content">
             <!-- 딜러 프로필 요약 정보 -->
             <div class="banner-top mt-3">

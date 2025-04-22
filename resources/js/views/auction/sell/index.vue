@@ -33,7 +33,7 @@
                 <CarEntryGuidePopup :propData="true" />
             </template>
                 </div>
-                <BottomSheet02 class="mt-5" initial="half" :dismissable="true">
+                <BottomSheet02 class="mt-5" initial="half" :dismissable="true" :class="isMobileView ? 'mobile_view' : ''">
                     <div 
                         class="top-content-style wd-100" 
                         @click="ExpectationPrice" 
@@ -169,6 +169,8 @@ const carEntryMode = ref('sell');
 const estimatedPrice = ref(null);
 const priceElement = ref(null);
 const currentPriceRef = ref(false);
+
+const isMobileView = ref(window.innerWidth <= 640);
 
 const openModal = () => {
     //showModal.value = true;
@@ -331,7 +333,7 @@ const ExpectationPrice = () => {
         .useHtmlText()
         .addClassNm('search-event')
         .useClose()
-        .addOption({ padding: 15 })
+        .addOption({ padding: 15, zIndex: 1210 })
         .confirm(text);
     setTimeout(() => {
 
@@ -1117,6 +1119,11 @@ const highlightPriceElement = () => {
     .container-xxl, .container-xl, .container-lg, .container-md, .container-sm, .container {
         max-width: 1073px;
     }
+}
+
+.mobile_view {
+  margin-top: 50px !important;
+  z-index: 1040 !important;
 }
 
 </style>
