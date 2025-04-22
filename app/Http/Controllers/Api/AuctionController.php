@@ -24,7 +24,7 @@ use App\Notifications\Templates\NotificationTemplate;
 use App\Jobs\AuctionsTestJob;
 use App\Jobs\TaksongAddJob;
 use App\Services\TaksongService;
-
+use App\Services\ApiRequestService;
 class AuctionController extends Controller
 {
     use CrudControllerTrait;
@@ -691,7 +691,7 @@ class AuctionController extends Controller
             'destAddr' => '충남 계룡',
         ];
 
-        $taksongService = new TaksongService();
+        $taksongService = new TaksongService(app(ApiRequestService::class));
         $result = $taksongService->addTaksong($data);
         return response()->api($result);
     }

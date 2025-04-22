@@ -1,12 +1,13 @@
 <?php 
+use App\Services\ConfigService;
 
 return [
-    'NICE_DNR_API_URL' => env('NICE_API_URL', null),
-    'NICE_DNR_API_KEY' => env('NICE_API_APIKEY', null),
-    'NICE_DNR_API_LOGIN_ID' => env('NICE_API_LOGIN_ID', null),
-    'NICE_DNR_API_KIND_OF' => env('NICE_API_KIND_OF', null),
-    'NICE_DNR_API_BUSINESS_NUMBER' => env('NICE_API_BUSINESS_NUMBER', null),
-    'NICE_DNR_API_ENDPOINT_KEY' => env('NICE_API_ENDPOINT_KEY', null),
+    'NICE_DNR_API_URL' => ConfigService::safeEnv('NICE_API_URL', 'niceDnr config api_url'),
+    'NICE_DNR_API_KEY' => ConfigService::safeEnv('NICE_API_APIKEY', 'niceDnr config api_key'),
+    'NICE_DNR_API_LOGIN_ID' => ConfigService::safeEnv('NICE_API_LOGIN_ID', 'niceDnr config login_id'),
+    'NICE_DNR_API_KIND_OF' => ConfigService::safeEnv('NICE_API_KIND_OF', 'niceDnr config kind_of'),
+    'NICE_DNR_API_BUSINESS_NUMBER' => ConfigService::safeEnv('NICE_API_BUSINESS_NUMBER', 'niceDnr config business_number'),
+    'NICE_DNR_API_ENDPOINT_KEY' => ConfigService::safeEnv('NICE_API_ENDPOINT_KEY', 'niceDnr config endpoint_key'),
 ];
 
 

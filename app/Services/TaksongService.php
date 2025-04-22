@@ -2,19 +2,26 @@
 
 namespace App\Services;
 
-use Illuminate\Support\Facades\Http;
+use App\Services\ApiRequestService;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
 
 class TaksongService
 {
+    protected $api;
     protected $taksongApiUrl;
     protected $taksongApiKey;
     protected $taksongApiAuth;
 
-    public function __construct()
+    public function __construct(ApiRequestService $api)
     {
+        $this->api = $api;
+
+        Log::info('TaksongService 생성자 호출됨', [
+            'api_is_instance' => $api instanceof \App\Services\ApiRequestService
+        ]);
+        
         $this->taksongApiUrl = config('taksongApi.TAKSONG_API_URL');
         $this->taksongApiKey = config('taksongApi.TAKSONG_API_KEY');
         $this->taksongApiAuth = config('taksongApi.TAKSONG_AUTH');
@@ -22,16 +29,13 @@ class TaksongService
 
     public function addTaksong(array $data)
     {
-
-        Log::info('탁송 api', [
+        Log::info('탁송 API 설정 확인', [
             'api_url' => $this->taksongApiUrl,
             'api_key' => $this->taksongApiKey,
             'api_auth' => $this->taksongApiAuth
         ]);
 
-        // 탁송 희망 시간 지정 (임시)
         $data['taksongWishAt'] = $data['taksongWishAt'] ?? '2025-04-22 10:00:00';
-
         $taksongDate = Carbon::parse($data['taksongWishAt'])->format('Y-m-d');
         $taksongTime = Carbon::parse($data['taksongWishAt'])->format('H:i');
 
@@ -65,44 +69,13 @@ class TaksongService
             'api_key' => '123123123'
         ];
 
-        Log::info('탁송처리 API 요청', [
-            'url' => $this->taksongApiUrl,
-            'payload' => $testSendData
-        ]);
+        // 실제 요청
+        $result = $this->api->sendPost($this->taksongApiUrl, $testSendData, 'TaksongService');
 
-        try {
-            $response = Http::asForm()
-                ->timeout(10)
-                ->withHeaders([
-                    // 필요한 경우 쿠키나 헤더 추가 가능
-                ])
-                ->post($this->taksongApiUrl, $testSendData);
-
-            if (!$response->successful()) {
-                Log::error('탁송처리 API 실패 - HTTP 오류', [
-                    'status' => $response->status(),
-                    'body' => $response->body()
-                ]);
-                throw new Exception("API 요청 실패: HTTP " . $response->status());
-            }
-
-            $result = $response->json();
-
-            if (!$result || !is_array($result)) {
-                Log::error('탁송처리 API 실패 - JSON 파싱 오류', ['body' => $response->body()]);
-                throw new Exception('API 응답 파싱 실패');
-            }
-
-            Log::info('탁송처리 API 성공 응답', ['result' => $result]);
-            return $result;
-
-        } catch (Exception $e) {
-            Log::critical('탁송처리 API 예외 발생', [
-                'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
-
-            throw new Exception('탁송처리 중 오류가 발생했습니다. 다시 시도해주세요.');
+        if (!$result) {
+            throw new Exception('탁송처리 API 요청 실패: 응답 없음');
         }
+
+        return $result;
     }
 }

@@ -15,6 +15,8 @@ use App\Services\AligoService;
 use Illuminate\Support\Facades\URL;
 use App\Helpers\FormatHelper;
 use App\Services\PriceService;
+use App\Services\ApiRequestService;
+
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -29,6 +31,10 @@ class AppServiceProvider extends ServiceProvider
         //     $configArray = $app['config']->all();
         //     return new \App\Extends\ConfigSetLog($configArray);
         // });
+
+        $this->app->singleton(ApiRequestService::class, function ($app) {
+            return new ApiRequestService();
+        });
     }
 
     /**

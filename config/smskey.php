@@ -1,10 +1,11 @@
 <?php
+use App\Services\ConfigService;
 
 return [
-    'SMS_APIKEY' => env('SMS_APIKEY', null),
-    'SMS_USER_ID' => env('SMS_USER_ID', null),
-    'SMS_ADMIN_MOBILE' => env('SMS_ADMIN_MOBILE', null),
-    'SMS_SENDERKEY' => env('SMS_SENDERKEY', null),
-    'SMS_SENDER' => env('SMS_SENDER', null),
-    'SMS_TPL_CODE' => env('SMS_TPL_CODE', null),
+    'SMS_APIKEY' => ConfigService::safeEnv('SMS_APIKEY', 'SMS_APIKEY'),
+    'SMS_USER_ID' => ConfigService::safeEnv('SMS_USER_ID', 'SMS_USER_ID'),
+    'SMS_ADMIN_MOBILE' => ConfigService::safeEnv('SMS_ADMIN_MOBILE', 'SMS_ADMIN_MOBILE'),
+    'SMS_SENDERKEY' => ConfigService::safeEnv('SMS_SENDERKEY', 'SMS_SENDERKEY'),
+    'SMS_SENDER' => ConfigService::safeEnv('SMS_SENDER', 'SMS_SENDER'),
+    'SMS_TPL_CODE' => ConfigService::safeEnv('SMS_TPL_CODE', 'SMS_TPL_CODE'),
 ];
