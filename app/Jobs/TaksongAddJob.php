@@ -75,11 +75,11 @@ class TaksongAddJob implements ShouldQueue
         
         $result = curl_exec($curl);
 
-        Log::info('탁송처리 API 확인!', ['api_result' => $result, 'sendData' => $sendData]);
+        Log::info('탁송처리 API 호출', ['api_result' => $result, 'sendData' => $sendData]);
         
         curl_close($curl);
 
-        Log::info('탁송처리 API 호출..', ['result' => $result, 'data' => $data]);
+        // Log::info('탁송처리 API 호출..', ['result' => $result, 'data' => $data]);
 
         // die();
         $resultData = json_decode($result);
@@ -91,17 +91,21 @@ class TaksongAddJob implements ShouldQueue
                 $taksongStatusTemp->chk_id = $resultData['data']['chk_id'];
                 $taksongStatusTemp->chk_status = $resultData['data']['chk_status'];
                 $taksongStatusTemp->save();
+
+                Log::info('탁송처리 API 호출 완료', ['result' => $resultData]);
             }else{
+
+                Log::error('탁송처리 API 호출 실패', ['result' => 'data에 값이 없습니다.']);
                 return response()->api(['result' => 'false']);
             }
 
         }else{
-
+            Log::error('탁송처리 API 호출 실패', ['result' => $data]);
             return response()->api(['result' => 'false']);
 
         }
 
-        Log::info('탁송처리 API 호출?', ['result' => $data]);
+        Log::info('탁송처리 API 호출 완료', ['result' => $data]);
         // Log::info('탁송처리 API 호출', ['response' => $response]);
         //AuctionDlvrJob::dispatch($data['userId'], $data, $response, 'user'); // 사용자 알림
         //AuctionDlvrJob::dispatch($data['bidUserId'], $data, $response, 'dealer'); // 입찰자 알림
