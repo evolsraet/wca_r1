@@ -3,7 +3,7 @@
 namespace App\Services;
 
 // use App\Models\ApiErrorLog;
-use Illuminate\Support\Facades\Log;
+// use Illuminate\Support\Facades\Log;
 use Exception;
 
 class ConfigService
@@ -20,10 +20,12 @@ class ConfigService
             return $value;
 
         } catch (Exception $e) {
-            Log::error("[$context] config/env 로딩 실패", [
-                'key' => $key,
-                'message' => $e->getMessage(),
-            ]);
+            // Log::error("[$context] config/env 로딩 실패", [
+            //     'key' => $key,
+            //     'message' => $e->getMessage(),
+            // ]);
+
+            error_log("[{$context}] [ENV] {$key} is missing");
 
             // ApiErrorLog::create([
             //     'job_name' => $context,
