@@ -1,27 +1,29 @@
 <?php
-
 namespace App\Jobs;
 
+use App\Services\ApiRequestService;
+use App\Models\ApiErrorLog;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
-use Carbon\Carbon;
+use Illuminate\Support\Facades\Notification;
 use App\Jobs\AuctionDlvrJob;
 use App\Models\TaksongStatusTemp;
+use App\Notifications\JobSuccessNotification;
+use Carbon\Carbon;
+use Exception;
 
 class TaksongAddJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /**
-     * Create a new job instance.
-     */
     protected $response;
     protected $endPoint;
     protected $data;
+
     public function __construct($response, $data)
     {
         $this->response = $response;
@@ -29,88 +31,81 @@ class TaksongAddJob implements ShouldQueue
         $this->data = $data;
     }
 
-    /**
-     * Execute the job.
-     */
-    public function handle(): void
+    public function handle(ApiRequestService $api): void
     {
-        $this->taksongAdd($this->response, $this->data);
-    }
+        try {
+            $taksong_wish_at = Carbon::parse($this->data['taksongWishAt'])->format('Y-m-d');
+            $taksong_wish_at_time = Carbon::parse($this->data['taksongWishAt'])->format('H:i');
 
-    protected function taksongAdd($response, $data)
-    {
-        $curl = curl_init();
+            $sendData = [
+                'auth' => config('taksongApi.TAKSONG_AUTH'),
+                'chk_trans_type' => 'RD',
+                'chk_accepted_at' => $taksong_wish_at,
+                'chk_accepted_time_at' => $taksong_wish_at_time,
+                'chk_car_no' => $this->data['carNo'],
+                'chk_car_model' => $this->data['carModel'],
+                'chk_want_insure' => '0',
+                'chk_departure_mobile' => $this->data['mobile'],
+                'chk_departure_address' => $this->data['startAddr'],
+                'chk_dest_mobile' => $this->data['destMobile'],
+                'chk_dest_address' => $this->data['destAddr'],
+                'api_key' => config('taksongApi.TAKSONG_API_KEY')
+            ];
 
-        $taksong_wish_at = Carbon::parse($data['taksongWishAt'])->format('Y-m-d');
-        $taksong_wish_at_time = Carbon::parse($data['taksongWishAt'])->format('H:i');
-        
+            Log::info('[TaksongAddJob] API 호출 시도', ['url' => $this->endPoint, 'payload' => $sendData]);
 
-        $sendData = [
-            'auth' => config(key: 'taksongApi.TAKSONG_AUTH'),
-            'chk_trans_type' => 'RD', // 탁송 유형
-            'chk_accepted_at' => $taksong_wish_at, // 탁송 날짜
-            'chk_accepted_time_at' => $taksong_wish_at_time, // 탁송 시간
-            'chk_car_no' => $data['carNo'], // 차량번호
-            'chk_car_model' => $data['carModel'], // 차량모델
-            'chk_want_insure' => '0', // 보험 여부
-            'chk_departure_mobile' => $data['mobile'], // 출발지 전화번호
-            'chk_departure_address' => $data['startAddr'], // 출발지 주소
-            'chk_dest_mobile' => $data['destMobile'], // 도착지 전화번호
-            'chk_dest_address' => $data['destAddr'], // 도착지 주소
-            'api_key' => config('taksongApi.TAKSONG_API_KEY') // API 키
-        ];
+            $result = $api->sendPost($this->endPoint, $sendData, 'TaksongAddJob');
 
-        curl_setopt_array($curl, array(
-        CURLOPT_URL => $this->endPoint,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => '',
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_TIMEOUT => 0,
-        CURLOPT_FOLLOWLOCATION => true,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => 'POST',
-        CURLOPT_POSTFIELDS => $sendData,
-        ));
-        
-        $result = curl_exec($curl);
-
-        Log::info('탁송처리 API 호출', ['api_result' => $result, 'sendData' => $sendData]);
-        
-        curl_close($curl);
-
-        // Log::info('탁송처리 API 호출..', ['result' => $result, 'data' => $data]);
-
-        if( !is_string($result) )
-            throw new \Exception('탁송처리 API 에러');
-
-        // die();
-        $resultData = json_decode($result);
-        if(is_array($resultData)){
-
-            if($resultData['data'] !== null){
-                $taksongStatusTemp = new TaksongStatusTemp();
-                $taksongStatusTemp->auction_id = $data['id'];
-                $taksongStatusTemp->chk_id = $resultData['data']['chk_id'];
-                $taksongStatusTemp->chk_status = $resultData['data']['chk_status'];
-                $taksongStatusTemp->save();
-
-                Log::info('탁송처리 API 호출 완료', ['result' => $resultData]);
-            }else{
-
-                Log::error('탁송처리 API 호출 실패', ['result' => 'data에 값이 없습니다.']);
-                return response()->api(['result' => 'false']);
+            if (!$result || !isset($result['data'])) {
+                throw new Exception('탁송처리 API 응답 오류');
             }
 
-        }else{
-            Log::error('탁송처리 API 호출 실패', ['result' => $data]);
-            return response()->api(['result' => 'false']);
+            $taksongStatusTemp = new TaksongStatusTemp();
+            $taksongStatusTemp->auction_id = $this->data['id'];
+            $taksongStatusTemp->chk_id = $result['data']['chk_id'] ?? null;
+            $taksongStatusTemp->chk_status = $result['data']['chk_status'] ?? null;
+            $taksongStatusTemp->save();
 
+            Log::info('[TaksongAddJob] API 호출 성공', ['result' => $result]);
+
+            try {
+
+                AuctionDlvrJob::dispatch($this->data['userId'], $this->data, $this->response, 'user');
+                AuctionDlvrJob::dispatch($this->data['bidUserId'], $this->data, $this->response, 'dealer');
+
+                // Notification::route('mail', 'admin@example.com')
+                //     ->notify(new JobSuccessNotification($result));
+                Log::info('[TaksongAddJob] 알림 전송 완료');
+            } catch (Exception $e) {
+                Log::error('[TaksongAddJob] 알림 실패', ['message' => $e->getMessage()]);
+                ApiErrorLog::create([
+                    'job_name' => static::class,
+                    'method' => 'NOTIFY',
+                    'url' => null,
+                    'payload' => $this->data,
+                    'response_body' => null,
+                    'error_message' => $e->getMessage(),
+                    'trace' => $e->getTraceAsString(),
+                ]);
+            }
+
+            
+
+        } catch (Exception $e) {
+            Log::critical('[TaksongAddJob] 처리 실패', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            ApiErrorLog::create([
+                'job_name' => static::class,
+                'method' => 'POST',
+                'url' => $this->endPoint,
+                'payload' => $this->data,
+                'response_body' => null,
+                'error_message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString(),
+            ]);
         }
-
-        // Log::info('탁송처리 API 호출 완료', ['result' => $data]);
-        // Log::info('탁송처리 API 호출', ['response' => $response]);
-        //AuctionDlvrJob::dispatch($data['userId'], $data, $response, 'user'); // 사용자 알림
-        //AuctionDlvrJob::dispatch($data['bidUserId'], $data, $response, 'dealer'); // 입찰자 알림
-
     }
 }

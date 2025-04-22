@@ -6,6 +6,11 @@ use App\Services\ApiRequestService;
 use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use Exception;
+use App\Models\Auction;
+use App\Models\Bid;
+use App\Models\TaksongStatusTemp;
+use App\Jobs\TaksongNameChangeJob;
+use App\Jobs\AuctionCancelJob;
 
 class TaksongService
 {
@@ -17,11 +22,6 @@ class TaksongService
     public function __construct(ApiRequestService $api)
     {
         $this->api = $api;
-
-        Log::info('TaksongService 생성자 호출됨', [
-            'api_is_instance' => $api instanceof \App\Services\ApiRequestService
-        ]);
-        
         $this->taksongApiUrl = config('taksongApi.TAKSONG_API_URL');
         $this->taksongApiKey = config('taksongApi.TAKSONG_API_KEY');
         $this->taksongApiAuth = config('taksongApi.TAKSONG_AUTH');
@@ -39,38 +39,23 @@ class TaksongService
         $taksongDate = Carbon::parse($data['taksongWishAt'])->format('Y-m-d');
         $taksongTime = Carbon::parse($data['taksongWishAt'])->format('H:i');
 
-        // $sendData = [
-        //     'auth' => $this->taksongApiAuth,
-        //     'chk_trans_type' => 'RD',
-        //     'chk_accepted_at' => $taksongDate,
-        //     'chk_accepted_time_at' => $taksongTime,
-        //     'chk_car_no' => $data['carNo'],
-        //     'chk_car_model' => $data['carModel'],
-        //     'chk_want_insure' => '0',
-        //     'chk_departure_mobile' => $data['mobile'],
-        //     'chk_departure_address' => $data['startAddr'],
-        //     'chk_dest_mobile' => $data['destMobile'],
-        //     'chk_dest_address' => $data['destAddr'],
-        //     'api_key' => $this->taksongApiKey,
-        // ];
-
-        $testSendData = [
-            'auth' => 'wcadev',
+        $sendData = [
+            'auth' => $this->taksongApiAuth,
             'chk_trans_type' => 'RD',
-            'chk_accepted_at' => '2024-01-01a',
-            'chk_accepted_time_at' => '11:30',
-            'chk_car_no' => '24API12343',
-            'chk_car_model' => '개발모델',
+            'chk_accepted_at' => $taksongDate,
+            'chk_accepted_time_at' => $taksongTime,
+            'chk_car_no' => $data['carNo'],
+            'chk_car_model' => $data['carModel'],
             'chk_want_insure' => '0',
-            'chk_departure_mobile' => '010-3425-8175',
-            'chk_departure_address' => '대전 유성',
-            'chk_dest_mobile' => '01034258175',
-            'chk_dest_address' => '충남 계룡',
-            'api_key' => '123123123'
+            'chk_departure_mobile' => $data['mobile'],
+            'chk_departure_address' => $data['startAddr'],
+            'chk_dest_mobile' => $data['destMobile'],
+            'chk_dest_address' => $data['destAddr'],
+            'api_key' => $this->taksongApiKey,
         ];
 
         // 실제 요청
-        $result = $this->api->sendPost($this->taksongApiUrl, $testSendData, 'TaksongService');
+        $result = $this->api->sendPost($this->taksongApiUrl, $sendData, 'TaksongService');
 
         if (!$result) {
             throw new Exception('탁송처리 API 요청 실패: 응답 없음');
@@ -78,4 +63,77 @@ class TaksongService
 
         return $result;
     }
+
+
+    public function processStatus(array $data): void
+    {
+        $status = $data['chk_status'] ?? null;
+        $carNo = $data['chk_car_no'] ?? null;
+
+        $auction = Auction::where('car_no', $carNo)->firstOrFail();
+        $bid = Bid::find($auction->bid_id);
+        $user_id = $auction->user_id;
+        $bid_user_id = $bid?->user_id;
+        $auction_id = $auction->id;
+
+        Auction::where('id', $auction_id)->update(['status' => 'dlvr']);
+
+        switch ($status) {
+            case 'start':
+                Auction::where('car_no', $carNo)->update(['is_taksong' => 'start']);
+                TaksongStatusTemp::where('chk_id', $data['chk_id'])->update(['chk_status' => 'start']);
+                break;
+
+            case 'ing':
+                $updateData = [
+                    'taksong_courier_fee' => $data['chk_courier_fee'] ?? null,
+                    'taksong_courier_name' => $data['chk_courier_name'] ?? null,
+                    'taksong_courier_mobile' => $data['chk_courier_mobile'] ?? null,
+                    'taksong_departure_address' => $data['chk_departure_address'] ?? null,
+                    'taksong_departure_mobile' => $data['chk_departure_mobile'] ?? null,
+                    'taksong_dest_address' => $data['chk_dest_address'] ?? null,
+                    'taksong_dest_mobile' => $data['chk_dest_mobile'] ?? null,
+                    'taksong_departure_at' => $data['chk_departure_at'] ?? null,
+                    'taksong_dest_at' => $data['chk_dest_at'] ?? null,
+                    'is_taksong' => 'ing'
+                ];
+
+                Auction::where('car_no', $carNo)->update($updateData);
+                TaksongStatusTemp::where('chk_id', $data['chk_id'])->update(['chk_status' => 'ing']);
+                break;
+
+            case 'done':
+                $taksongStatus = TaksongStatusTemp::where('chk_id', $data['chk_id'])->get();
+
+                foreach ($taksongStatus as $item) {
+                    if ($item->chk_status === 'ing') {
+                        $updateData = [
+                            'status' => 'dlvr',
+                            'is_taksong' => 'done',
+                            'done_at' => now()
+                        ];
+
+                        Auction::where('car_no', $carNo)->update($updateData);
+
+                        TaksongNameChangeJob::dispatch($user_id, $auction_id, 'user');
+                        TaksongNameChangeJob::dispatch($bid_user_id, $auction_id, 'dealer');
+
+                        TaksongStatusTemp::where('chk_id', $data['chk_id'])->update(['chk_status' => 'requested']);
+                    }
+                }
+                break;
+
+            case 'cancel':
+                Auction::where('car_no', $carNo)->update(['status' => 'cancel']);
+
+                AuctionCancelJob::dispatch($user_id, $auction_id);
+                AuctionCancelJob::dispatch($bid_user_id, $auction_id);
+
+                TaksongStatusTemp::where('chk_id', $data['chk_id'])->update(['chk_status' => 'cancel']);
+                break;
+        }
+
+        Log::info('[TaksongService] 탁송 상태 처리 완료', ['status' => $status, 'car_no' => $carNo]);
+    }
+
 }

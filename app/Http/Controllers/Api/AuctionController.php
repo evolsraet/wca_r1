@@ -689,6 +689,7 @@ class AuctionController extends Controller
             'taksongWishAt' => '2025-04-22 11:30',
             'startAddr' => '대전 유성',
             'destAddr' => '충남 계룡',
+            'id' => '100',
         ];
 
         $taksongService = new TaksongService(app(ApiRequestService::class));
