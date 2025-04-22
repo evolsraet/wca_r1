@@ -1,20 +1,8 @@
 <template>
-  <div>
-    <h1>개인정보처리방침</h1>
-  </div>
-
   <div class="my-5 container auction-content" style="margin-top: 6rem !important;">
-    <div class="px-2 d-flex justify-content-between">
-        <div>
-            <h5>개인정보처리방침</h5>
-        </div>
-        <div>
-            <h5>개인정보처리방침</h5>
-        </div>
-    </div>
-  </div>
-
-  
+    <h3 class="mb-5">{{ privacyPolicy.title }}</h3>
+    <div v-html="privacyPolicy.content"></div>
+  </div>  
 </template>
 
 
@@ -27,4 +15,12 @@ export default {
     }
   }
 }
+</script>
+
+<script setup>
+import { ref } from 'vue';
+import privacyPolicyData from '@/composables/privacyPolicyData.js';
+
+const privacyPolicy = ref(privacyPolicyData);
+
 </script>
