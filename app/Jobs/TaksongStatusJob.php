@@ -42,7 +42,7 @@ class TaksongStatusJob implements ShouldQueue
     protected function taksongStatus($response)
     {
 
-        Log::info('탁송처리 API 호출2222', ['request' => $response]);
+        // Log::info('탁송처리 API 호출2222', ['request' => $response]);
 
         $curl = curl_init();
 
@@ -60,7 +60,7 @@ class TaksongStatusJob implements ShouldQueue
 
         $result = curl_exec($curl);
 
-        Log::info('탁송처리 API 호출1111', ['request' => $result]);
+        // Log::info('탁송처리 API 호출1111', ['request' => $result]);
 
         if($result){
             $result = json_decode($result);
@@ -180,7 +180,7 @@ class TaksongStatusJob implements ShouldQueue
             }
 
 
-            Log::info('탁송처리 API 호출', ['request' => $result]);
+            // Log::info('탁송처리 API 호출', ['request' => $result]);
         }
         
 

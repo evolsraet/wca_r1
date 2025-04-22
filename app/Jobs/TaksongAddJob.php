@@ -105,7 +105,7 @@ class TaksongAddJob implements ShouldQueue
 
         }
 
-        Log::info('탁송처리 API 호출 완료', ['result' => $data]);
+        // Log::info('탁송처리 API 호출 완료', ['result' => $data]);
         // Log::info('탁송처리 API 호출', ['response' => $response]);
         //AuctionDlvrJob::dispatch($data['userId'], $data, $response, 'user'); // 사용자 알림
         //AuctionDlvrJob::dispatch($data['bidUserId'], $data, $response, 'dealer'); // 입찰자 알림
