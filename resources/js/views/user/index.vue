@@ -336,9 +336,7 @@ const fetchPosts = async () => {
   };
 
   const handleRowClick = (postId) => {
-    console.log("postId",postId);
-    // router.push({ path: 'board/notice/edit/'+postId +'?navigatedThroughHandleRowClick=true'});
-    // router.push({ name: 'posts.edit', params: { id: postId } });
+    router.push({ name: 'posts.edit', params: { boardId: boardId.value, id: postId }, query: { navigatedThroughHandleRowClick: true } });
   }
   
   onMounted(async() => {
