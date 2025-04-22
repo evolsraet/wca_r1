@@ -16,20 +16,20 @@ return [
     */
 
     'mailgun' => [
-        'domain' => ConfigService::safeEnv('MAILGUN_DOMAIN', 'mailgun config domain'),
-        'secret' => ConfigService::safeEnv('MAILGUN_SECRET', 'mailgun config secret'),
-        'endpoint' => ConfigService::safeEnv('MAILGUN_ENDPOINT', 'api.mailgun.net', 'api.mailgun.net'),
+        'domain' => env('MAILGUN_DOMAIN'),
+        'secret' => env('MAILGUN_SECRET'),
+        'endpoint' => env('MAILGUN_ENDPOINT', 'api.mailgun.net'),
         'scheme' => 'https',
     ],
 
     'postmark' => [
-        'token' => ConfigService::safeEnv('POSTMARK_TOKEN', 'postmark config token'),
+        'token' => env('POSTMARK_TOKEN'),
     ],
 
     'ses' => [
-        'key' => ConfigService::safeEnv('AWS_ACCESS_KEY_ID', 'ses config key'),
-        'secret' => ConfigService::safeEnv('AWS_SECRET_ACCESS_KEY', 'ses config secret'),
-        'region' => ConfigService::safeEnv('AWS_DEFAULT_REGION', 'ses config region', 'us-east-1'),
+        'key' => env('AWS_ACCESS_KEY_ID'),
+        'secret' => env('AWS_SECRET_ACCESS_KEY'),
+        'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
     // 카카오 로그인
