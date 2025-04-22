@@ -82,12 +82,24 @@ class TaksongAddJob implements ShouldQueue
         Log::info('탁송처리 API 호출..', ['result' => $result, 'data' => $data]);
 
         // die();
-        $result = json_decode($result);
-        $taksongStatusTemp = new TaksongStatusTemp();
-        $taksongStatusTemp->auction_id = $data['id'];
-        $taksongStatusTemp->chk_id = $result->data->chk_id;
-        $taksongStatusTemp->chk_status = $result->data->chk_status;
-        $taksongStatusTemp->save();
+        $resultData = json_decode($result);
+        if(is_array($resultData)){
+
+            if($resultData['data'] !== null){
+                $taksongStatusTemp = new TaksongStatusTemp();
+                $taksongStatusTemp->auction_id = $data['id'];
+                $taksongStatusTemp->chk_id = $resultData['data']['chk_id'];
+                $taksongStatusTemp->chk_status = $resultData['data']['chk_status'];
+                $taksongStatusTemp->save();
+            }else{
+                return response()->api(['result' => 'false']);
+            }
+
+        }else{
+
+            return response()->api(['result' => 'false']);
+
+        }
 
         Log::info('탁송처리 API 호출?', ['result' => $data]);
         // Log::info('탁송처리 API 호출', ['response' => $response]);
