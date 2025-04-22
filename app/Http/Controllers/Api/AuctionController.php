@@ -22,6 +22,8 @@ use App\Jobs\TaksongNameChangeFileUploadJob;
 use App\Notifications\AuctionsNotification;
 use App\Notifications\Templates\NotificationTemplate;
 use App\Jobs\AuctionsTestJob;
+use App\Jobs\TaksongAddJob;
+
 class AuctionController extends Controller
 {
     use CrudControllerTrait;
@@ -618,6 +620,35 @@ class AuctionController extends Controller
 
 
         // return response()->api($result);
+    }
+
+
+
+    public function testTaksongAddJob(Request $request){
+
+        $auction = Auction::where('id', $request->id)->where('status', 'chosen')->first();
+        $data = [
+            'carNo' => $request->input('carNo'),
+            'carModel' => $request->input('carModel'),
+            'mobile' => $request->input('mobile'),
+            'destMobile' => $request->input('destMobile'),
+        ];
+
+        $data['id'] = $request->id;
+        $data['carNo'] = $auction->car_no; // 차량번호  
+        $data['carModel'] = '개발모델'; // 차량모델
+        $data['mobile'] = User::find($auction->user_id)->phone; // 출발지 전화번호
+        $data['destMobile'] = User::find($auction->bids[0]->user_id)->phone; // 출발지 전화번호
+        $data['startAddr'] = $auction->addr1 . ' ' . $auction->addr2; // 주소
+        $data['destAddr'] = $auction->dest_addr1 . ' ' . $auction->dest_addr2; // 주소
+        $data['userId'] = $auction->user_id; // 사용자 아이디
+        $data['bidUserId'] = $auction->bids[0]->user_id; // 입찰자 아이디
+        $data['userEmail'] = User::find($auction->user_id)->email; // 사용자 이메일
+        $data['bidUserEmail'] = User::find($auction->bids[0]->user_id)->email; // 입찰자 이메일
+        $data['taksongWishAt'] = $auction->taksong_wish_at; // 탁송 날짜
+
+        TaksongAddJob::dispatch($auction, $data);
+
     }
 
 }

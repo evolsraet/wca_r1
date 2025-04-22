@@ -324,6 +324,17 @@ export default [
                     },
                 ]
             },
+            {
+                path: '/terms',
+                name: 'terms',
+                component: () => import('../views/auction/terms.vue'),
+            },
+            {
+                path: '/privacy',
+                name: 'privacy',
+                component: () => import('../views/auction/privacy.vue'),
+            },
+                
         ]
     },
     {
