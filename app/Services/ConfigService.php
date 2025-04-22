@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Models\ApiErrorLog;
+// use App\Models\ApiErrorLog;
 use Illuminate\Support\Facades\Log;
 use Exception;
 
@@ -25,15 +25,15 @@ class ConfigService
                 'message' => $e->getMessage(),
             ]);
 
-            ApiErrorLog::create([
-                'job_name' => $context,
-                'method' => 'ENV',
-                'url' => null,
-                'payload' => ['env_key' => $key],
-                'response_body' => null,
-                'error_message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString(),
-            ]);
+            // ApiErrorLog::create([
+            //     'job_name' => $context,
+            //     'method' => 'ENV',
+            //     'url' => null,
+            //     'payload' => ['env_key' => $key],
+            //     'response_body' => null,
+            //     'error_message' => $e->getMessage(),
+            //     'trace' => $e->getTraceAsString(),
+            // ]);
 
             // throw 해서 앱 중단되도록 할 수도 있음, 아니면 fallback return
             throw $e;
