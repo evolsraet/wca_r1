@@ -23,6 +23,7 @@ use App\Notifications\AuctionsNotification;
 use App\Notifications\Templates\NotificationTemplate;
 use App\Jobs\AuctionsTestJob;
 use App\Jobs\TaksongAddJob;
+use App\Services\TaksongService;
 
 class AuctionController extends Controller
 {
@@ -676,6 +677,23 @@ class AuctionController extends Controller
 
         TaksongAddJob::dispatch($sendData, $data);
 
+    }
+
+    public function testTaksongService(Request $request){
+
+        $data = [
+            'carNo' => '24API12343',
+            'carModel' => '개발모델',
+            'mobile' => '010-3425-8175',
+            'destMobile' => '01034258175',
+            'taksongWishAt' => '2025-04-22 11:30',
+            'startAddr' => '대전 유성',
+            'destAddr' => '충남 계룡',
+        ];
+
+        $taksongService = new TaksongService();
+        $result = $taksongService->addTaksong($data);
+        return response()->api($result);
     }
 
 }

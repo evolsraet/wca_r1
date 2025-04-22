@@ -39,7 +39,6 @@ class TaksongAddJob implements ShouldQueue
 
     protected function taksongAdd($response, $data)
     {
-
         $curl = curl_init();
 
         $taksong_wish_at = Carbon::parse($data['taksongWishAt'])->format('Y-m-d');
@@ -80,6 +79,9 @@ class TaksongAddJob implements ShouldQueue
         curl_close($curl);
 
         // Log::info('탁송처리 API 호출..', ['result' => $result, 'data' => $data]);
+
+        if( !is_string($result) )
+            throw new \Exception('탁송처리 API 에러');
 
         // die();
         $resultData = json_decode($result);

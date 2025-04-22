@@ -139,3 +139,6 @@ Route::get('name-change-status-all-test', [AuctionController::class, 'processCom
 
 Route::get('test-auctions-notification', [AuctionController::class, 'testAuctionsNotification']);
 Route::get('test-taksong-add-job', [AuctionController::class, 'testTaksongAddJob']);
+
+Route::get('test-taksong-service', [AuctionController::class, 'testTaksongService']);
+
