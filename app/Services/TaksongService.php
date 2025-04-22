@@ -22,6 +22,13 @@ class TaksongService
 
     public function addTaksong(array $data)
     {
+
+        Log::info('탁송 api', [
+            'api_url' => $this->taksongApiUrl,
+            'api_key' => $this->taksongApiKey,
+            'api_auth' => $this->taksongApiAuth
+        ]);
+
         // 탁송 희망 시간 지정 (임시)
         $data['taksongWishAt'] = $data['taksongWishAt'] ?? '2025-04-22 10:00:00';
 
