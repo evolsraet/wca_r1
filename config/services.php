@@ -57,7 +57,7 @@ return [
     'niceAuth' => [
         'NICE_CLIENT_ID' => ConfigService::safeEnv('NICE_CLIENT_ID', 'niceAuth config client_id'),
         'NICE_CLIENT_SECRET' => ConfigService::safeEnv('NICE_CLIENT_SECRET', 'niceAuth config client_secret'),
-        'NICE_PRODUCT_ID' => ConfigService::safeEnv('NICE_PRODUCT_ID', 'niceAuth config product_id')
+        // 'NICE_PRODUCT_ID' => ConfigService::safeEnv('NICE_PRODUCT_ID', 'niceAuth config product_id')
     ],
 
     // 차량 이력 API
