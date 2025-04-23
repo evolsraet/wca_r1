@@ -803,7 +803,7 @@ class AuctionService
         Log::info('auctionFinalAtUpdate');
         $auctions = Auction::where('status', 'ing')
                         ->where('final_at', '!=', null)
-                        ->where('final_at', '<', Carbon::now())
+                        ->where('final_at', '<', Carbon::now()->format('Y-m-d H:i:s'))
                         ->get();
 
         Log::info('auctionFinalAtUpdate auctions', [$auctions]);
