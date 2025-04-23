@@ -330,7 +330,7 @@ export default {
   // console.log('route',route.path);
   
   const swal = inject('$swal');
-  const { wica , wicaLabel } = cmmn();
+  const { wica , wicaLabel, loadingSpinner } = cmmn();
   const carName = ref('');
   const carNoInput = ref(null)
   const emoji = ref('');

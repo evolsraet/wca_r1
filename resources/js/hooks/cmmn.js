@@ -1585,6 +1585,29 @@ export function cmmn() {
     };
     //End of updateAuctionTimes
 
+
+    const loadingSpinner = (status = false) => {
+        
+        let spinner = document.getElementById('global-spinner');
+
+        if (status) {
+            if (!spinner) {
+            spinner = document.createElement('div');
+            spinner.id = 'global-spinner';
+            spinner.innerHTML = `
+                <div class="spinner-border text-light" role="status">
+                <span class="visually-hidden">Loading...</span>
+                </div>
+            `;
+            spinner.classList.add('loadingSpinner');
+            document.body.appendChild(spinner);
+            }
+        } else {
+            spinner?.remove(); // 이게 가장 안전하고 깔끔해!
+        }
+
+    };
+
     return {
       numberToKoreanUnit,
       formatCurrency,
@@ -1601,5 +1624,6 @@ export function cmmn() {
       wicas,
       wicaData,
       calculateTimeLeft,
+      loadingSpinner
     }
   }

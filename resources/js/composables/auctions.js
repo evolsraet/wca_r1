@@ -24,7 +24,7 @@ export default function useAuctions() {
         no: "",
         forceRefresh: "" 
     });
-    const { wicac , wica } = cmmn();
+    const { wicac , wica, loadingSpinner } = cmmn();
 
 
     const adminGetAuctions = async (
@@ -254,7 +254,7 @@ const getStatusLabel = (status) => {
 // carinfo detail 정보를 가져오고 스토리지 저장 
 const submitCarInfo = async () => {
     if (processing.value) return;  // 이미 처리중이면 다시 처리하지 않음
-
+    loadingSpinner(true);
     processing.value = false;
     validationErrors.value = {};
 
@@ -266,9 +266,11 @@ const submitCarInfo = async () => {
     .param(carInfoForm)
     .callback(function(result) {
         if(result.isError){
+            loadingSpinner(false);
             validationErrors.value = result.rawData.response.data.errors;         
             return result;
         }else{
+            loadingSpinner(false);
             localStorage.setItem('carDetails', JSON.stringify(result.data));  // 데이터를 로컬 스토리지에 저장
             return result;
         }
@@ -340,6 +342,7 @@ const AuctionCarInfo = async (carInfoForm) => {
   const createAuction = async (auctionData) => {
     if (processing.value) return;
     processing.value = true;
+    loadingSpinner(true);
     validationErrors.value = {};
 
     let payload = {
@@ -402,9 +405,11 @@ const AuctionCarInfo = async (carInfoForm) => {
             validationErrors.value = result.rawData.response.data.errors;
             //fileUserOwnerDeleteById(userData.id);
             processing.value = false;
+            loadingSpinner(false);
             throw new Error;          
         } else {
             processing.value = false;
+            loadingSpinner(false);
             const resultData = {
                 unique_number: result.data.unique_number,
                 isSuccess: result.isSuccess
@@ -665,6 +670,7 @@ const chosenDealer = async (id, data) => {
 const updateAuctionStatus = async (id, status) => {
     if (isLoading.value) return;
     
+    loadingSpinner(true);
     isLoading.value = true;
     validationErrors.value = {};
 
@@ -697,6 +703,7 @@ const updateAuctionStatus = async (id, status) => {
        }else{
         console.log(result.msg);
        }
+       loadingSpinner(false);
        return isResult;
     })
     .put();
@@ -887,6 +894,7 @@ const getIngAuctions = async (bidsNumList,page) => {
 const setTacksong = async (id, data) => {
 
     try {
+        loadingSpinner(true);
         const result2 = await wicac.conn()
         .url(`/api/auctions/${id}`)
         .param(data)
@@ -894,6 +902,7 @@ const setTacksong = async (id, data) => {
   
       if (result2.isSuccess) {
         console.log('Auction request sent successfully:', result2);
+        loadingSpinner(false);
         location.reload(); // Reload the page on success
       } else {
         console.error('Auction request failed:', result2);
@@ -902,10 +911,11 @@ const setTacksong = async (id, data) => {
           .useHtmlText()
           .icon('E') 
           .alert('관리자에게 문의해주세요.');
-
+        loadingSpinner(false);
       }
     } catch (error) {
       console.error('Error during API request:', error);
+      loadingSpinner(false);
     }
   };
 
@@ -923,11 +933,15 @@ const setdestddress = async (id,addrInfo) => {
     .title('현 주소지로 탁송신청하시겠습니까?') // 알림 제목
     .icon('Q') //E:error , W:warning , I:info , Q:question
     .callback(async function(result) {
+
+        loadingSpinner(true);
+
         if(result.isOk){
             wicac.conn()
             .url(`/api/auctions/${id}`)
             .param(data)
             .callback(function(result2) {
+                loadingSpinner(false);
                 if(result2.isSuccess){
                     wica.ntcn(swal)
                     .icon('I') //E:error , W:warning , I:info , Q:question
@@ -1163,10 +1177,14 @@ const isAccident = (id) => {
 
 
   const checkBusinessStatus = async (data) => {
+
+    loadingSpinner(true);
+
     return wicac.conn()
     .url(`/api/check-business`)
     .param(data)
     .callback(function (result) {
+      loadingSpinner(false);
       return result;
     })
     .post();

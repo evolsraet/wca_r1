@@ -646,6 +646,13 @@
             </BottomSheet02>
           </div>
           <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid">
+
+            <div class="mb-3">
+              <!-- <button class="border-6 btn-fileupload my-4 shadow02 text-secondary opacity-50" @click="AttachedInform">딜러 첨부파일</button> -->
+              <button v-if="auctionDetail.data.taksong_wish_at === null && isUser" @click="showModal2" class="btn btn-primary w-100">탁송일 입력하기</button>
+              <!--<button class="border-6 btn-fileupload my-4 shadow02"><a :href=fileSignUrl download class="text-secondary opacity-50">매도용 인감증명서 다운로드</a></button>-->
+            </div>
+
              <div class="d-flex justify-content-between align-items-baseline">
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
@@ -878,11 +885,7 @@
               </div>
             </div>
 
-            <div>
-              <!-- <button class="border-6 btn-fileupload my-4 shadow02 text-secondary opacity-50" @click="AttachedInform">딜러 첨부파일</button> -->
-              <button v-if="auctionDetail.data.taksong_wish_at === null && isUser" @click="showModal2" class="btn btn-primary w-100">탁송일 입력하기</button>
-              <!--<button class="border-6 btn-fileupload my-4 shadow02"><a :href=fileSignUrl download class="text-secondary opacity-50">매도용 인감증명서 다운로드</a></button>-->
-            </div>
+            
             <div v-if="fileOwnerUrl">
               <button class="border-6 btn-fileupload my-2 shadow02"><a :href=fileOwnerUrl download class="text-secondary opacity-50">매도자관련서류 다운로드</a></button>
             </div>
@@ -1358,6 +1361,7 @@ const openSection = ref('general');
 const carHistoryCrash = ref({});
 const niceDnrHistory = ref({});
 const auctionLocation = ref({});
+const unique_number = ref('');
 
 const nameChangeStatusData = ref('');
 
@@ -2141,10 +2145,18 @@ const closeModal = () => {
 const handleConfirmDelete = async () => {
   try {
     const Auctioncancel = await updateAuctionStatus(selectedAuctionId.value, 'cancel');
-    console.log(Auctioncancel);
-    if (Auctioncancel.isError) {
+    console.log('ddddd',Auctioncancel);
+    if (Auctioncancel === false) {
       // 에러 처리 로직
       console.error("Auction cancellation error");
+
+      // wica.ntcn(swal)
+      // .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
+      // .icon('I') //E:error , W:warning , I:info , Q:question
+      // .alert('경매가 취소되었습니다.');
+
+      window.location.href = '/auction/'+unique_number.value;
+
     } else {
       const text = `<div class="enroll_box" style="position: relative;">
                    <img src="${drift}" alt="자동차 이미지" width="160" height="160">
@@ -2713,12 +2725,14 @@ const currentTime = ref(new Date());
 onMounted(async () => {
   await fetchAuctionDetail();
 
-  console.log('auctionDetail//',auctionDetail.value.data);
+  const auctionDetailData = auctionDetail.value.data;
 
+  console.log('auctionDetail//',auctionDetail.value.data);
+  unique_number.value = auctionDetail.value.data.unique_number;
   const nameChangeStatusValue = await nameChangeStatus(auctionDetail.value.data.id);
   // console.log('nameChangeStatusData',nameChangeStatusValue.data[0].chk_status);
 
-  nameChangeStatusData.value = nameChangeStatusValue.data[0].chk_status;
+  nameChangeStatusData.value = nameChangeStatusValue.data[0]?.chk_status ? nameChangeStatusValue.data[0].chk_status : '';
 
   // 명의이전서류 파일 이름 설정
   if(auctionDetail.value.data.files.file_auction_name_change){
@@ -2752,15 +2766,18 @@ onMounted(async () => {
   auctionLocation.value = auctionLocationData.split(' ').slice(0, 3).join(' > ');
   console.log('auctionLocation',auctionLocation.value);
 
-  if(auctionDetail.value?.data?.status === 'ing' && isUser.value){
+  if(auctionDetailData.status === 'ing' && isUser.value){
     startPolling();
   }
 
-  if(auctionDetail.value?.data?.status == 'done' && isDealer.value){
+  if(auctionDetailData.status == 'done' && isDealer.value){
     openDoneModal();
   }
 
-  if(auctionDetail.value?.data?.status == 'chosen' && isDealer.value){
+  if(auctionDetailData.status == 'chosen' && isDealer.value){
+
+    console.log('auctionDetail.??1',auctionDetail.value.data);
+
     if(auctionDetail.value.data.dest_addr_post){
       destAddrBtn.value = false;
       selectedAuction.value = {
