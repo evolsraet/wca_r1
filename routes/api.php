@@ -112,8 +112,10 @@ Route::post('payment/result2', [PaymentController::class, 'resultPayment2']);
 Route::post('payment/request', [PaymentController::class, 'requestPayment']);
 Route::post('payment/notify', [PaymentController::class, 'notify']);
 
-Route::post('diag/result', [AuctionController::class, 'diagnosticResult']);
+Route::get('diagRequest', [AuctionController::class, 'diagnostic']);
+Route::get('diag/result', [AuctionController::class, 'diagnostic']);
 Route::get('diag/code', [AuctionController::class, 'diagnosticCode']);
+
 
 Route::get('carHistory', [AuctionController::class, 'getCarHistory']);
 Route::get('carHistoryMock', [AuctionController::class, 'getCarHistoryMock']);
@@ -138,7 +140,6 @@ Route::get('name-change-status-all-test', [AuctionController::class, 'processCom
 // Route::get('name-change-status-all-test', [AuctionController::class, 'nameChangeStatusAll']);
 
 Route::get('test-auctions-notification', [AuctionController::class, 'testAuctionsNotification']);
-Route::get('test-taksong-add-job', [AuctionController::class, 'testTaksongAddJob']);
 
-Route::get('test-taksong-service', [AuctionController::class, 'testTaksongService']);
+// Route::get('test-taksong-service', [AuctionController::class, 'testTaksongService']);
 

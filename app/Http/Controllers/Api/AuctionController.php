@@ -480,10 +480,18 @@ class AuctionController extends Controller
     }
 
 
-    public function diagnosticResult(Request $request)
+    public function diagnostic(Request $request)
     {
+
         $result = $this->service->diagnosticResult($request);
-        return $result;
+        return response()->api($result);
+    }
+
+    public function diagnosticRequest()
+    {
+
+        die('dd');
+
     }
 
     public function diagnosticCode()
@@ -625,76 +633,22 @@ class AuctionController extends Controller
 
 
 
-    public function testTaksongAddJob(Request $request){
+    // public function testTaksongService(Request $request){
 
-        $auction = Auction::where('status', 'chosen')->first();
-        $data = [
-            'carNo' => '24API12343',
-            'carModel' => '개발모델',
-            'mobile' => '010-3425-8175',
-            'destMobile' => '01034258175',
-            'taksongWishAt' => '2025-04-22 11:30',
-            'startAddr' => '대전 유성',
-            'destAddr' => '충남 계룡',
-            'id' => $auction->id,
-            'userId' => $auction->user_id,
-            'bidUserId' => 4,
-            'car_maker' => '현대',
-            'car_model' => '소나타',
-            'car_model_sub' => '현대 소나타',
-            'owner_name' => '홍길동',
-        ];
+    //     $data = [
+    //         'carNo' => '24API12343',
+    //         'carModel' => '개발모델',
+    //         'mobile' => '010-3425-8175',
+    //         'destMobile' => '01034258175',
+    //         'taksongWishAt' => '2025-04-22 11:30',
+    //         'startAddr' => '대전 유성',
+    //         'destAddr' => '충남 계룡',
+    //         'id' => '100',
+    //     ];
 
-        // $data['id'] = $auction->id;
-        // $data['carNo'] = $auction->car_no; // 차량번호  
-        // $data['carModel'] = '개발모델'; // 차량모델
-        // $data['mobile'] = User::find($auction->user_id)->phone; // 출발지 전화번호
-        // $data['destMobile'] = User::find($auction->bids[0]->user_id)->phone; // 출발지 전화번호
-        // $data['startAddr'] = $auction->addr1 . ' ' . $auction->addr2; // 주소
-        // $data['destAddr'] = $auction->dest_addr1 . ' ' . $auction->dest_addr2; // 주소
-        // $data['userId'] = $auction->user_id; // 사용자 아이디
-        // $data['bidUserId'] = $auction->bids[0]->user_id; // 입찰자 아이디
-        // $data['userEmail'] = User::find($auction->user_id)->email; // 사용자 이메일
-        // $data['bidUserEmail'] = User::find($auction->bids[0]->user_id)->email; // 입찰자 이메일
-        // $data['taksongWishAt'] = $auction->taksong_wish_at; // 탁송 날짜
-
-
-        $sendData = [
-        "auth" => "wcadev",
-        "chk_trans_type" => "RD",
-        "chk_accepted_at" => "2024-01-01a",
-        "chk_accepted_time_at" => "11:30",
-        "chk_car_no" => "24API12343",
-        "chk_car_model" => "개발모델",
-        "chk_want_insure" => "0",
-        "chk_departure_mobile" => "010-3425-8175",
-        "chk_departure_address" => "대전 유성",
-        "chk_dest_mobile" => "01034258175",
-        "chk_dest_address" => "충남 계룡",
-        "api_key" => "123123123"
-        ];
-
-
-        TaksongAddJob::dispatch($sendData, $data);
-
-    }
-
-    public function testTaksongService(Request $request){
-
-        $data = [
-            'carNo' => '24API12343',
-            'carModel' => '개발모델',
-            'mobile' => '010-3425-8175',
-            'destMobile' => '01034258175',
-            'taksongWishAt' => '2025-04-22 11:30',
-            'startAddr' => '대전 유성',
-            'destAddr' => '충남 계룡',
-            'id' => '100',
-        ];
-
-        $taksongService = new TaksongService(app(ApiRequestService::class));
-        $result = $taksongService->addTaksong($data);
-        return response()->api($result);
-    }
+    //     $taksongService = new TaksongService(app(ApiRequestService::class));
+    //     $result = $taksongService->addTaksong($data);
+    //     return response()->api($result);
+    // }
 
 }

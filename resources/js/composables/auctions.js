@@ -1251,6 +1251,21 @@ const isAccident = (id) => {
     .post();
   }
 
+  const diagnostic = async (carNumber) => {
+    
+    loadingSpinner(true);
+
+    return wicac.conn()
+    .url(`/api/diagRequest?diag_car_no=${carNumber}`)
+    .callback(function (result) {
+      loadingSpinner(false);
+
+
+      return result;
+    })
+    .get();
+  }
+
     return {
         getAuctionsByDealerLike,
         adminGetAuctions,
@@ -1299,7 +1314,8 @@ const isAccident = (id) => {
         getCertificationData,
         clearCertificationData,
         nameChangeStatus,
-        nameChangeFileUpload
+        nameChangeFileUpload,
+        diagnostic
     };
     
 }

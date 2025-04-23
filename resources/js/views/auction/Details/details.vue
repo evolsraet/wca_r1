@@ -213,7 +213,10 @@
             <ul class="machine-inform-title">
               <li class="text-secondary opacity-50">옵션정보</li>
             </ul>
-            <div class="option-icons">
+
+            <div v-html="diagnosticOptionViewObject"></div>
+            
+            <!-- <div class="option-icons">
               <div class="option-row">
                 <div class="option-icon">
                   <div class="icon smart-key-ac"></div>
@@ -266,18 +269,32 @@
                   <p>전동 사이드미러</p>
                 </div>
               </div>
-              <!-- <div class="option-row">
-              </div> -->
-              <!-- <div class="option-row">
-              </div> -->
+            </div> -->
             </div>
-            <ul class="machine-inform-title">
-              <li class="text-secondary opacity-50">추가옵션</li>
-              <li class="info-num">-</li>
-            </ul>
-            </div>
+            
           </div>
           
+
+          <div class="dropdown border-bottom">
+            <button
+              class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
+              @click="toggleDropdown('general_1')"
+            >
+              추가옵션
+              <img
+                :src="openSection === 'general_1' ? iconUp : iconDown"
+                alt="Dropdown Icon"
+                class="dropdown-icon"
+                width="14"
+              />
+            </button>
+            <transition name="slide">
+            <div v-show="openSection === 'general_1'" class="dropdown-content mt-0 p-4">
+              <div v-html="diagnosticResult.diag_base_option" id="diag_base_option" class="html-table-wrapper">
+              </div>
+            </div>
+            </transition>
+          </div>
 
 
           <div class="mb-3" v-if="auctionDetail.data.status !== 'diag' && auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'cancel'">
@@ -313,7 +330,7 @@
               <div v-show="openSection === 'general'" class="dropdown-content mt-0 p-4">
                 <div id="diagnostic-evaluation-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
                   <iframe
-                      :src="diagPdf"
+                      :src="diagnosticExtra.url_pdf"
                       width="100%"
                       height="600px"
                       
@@ -449,7 +466,7 @@
                   </div>
                   <h5 class="mt-5">평가자 의견</h5>
                   <div class="form-group">
-                    <textarea class="form-control text-box process" readonly style="resize: none;">{{ auctionDetail.data.memo_digician || "평가자의 의견이 아직 없습니다." }}</textarea>
+                    <textarea class="form-control text-box process" readonly style="resize: none;">{{ diagnosticResult.diag_opinion || "평가자의 의견이 아직 없습니다." }}</textarea>
                   </div>
                   <ul class="machine-inform-title">
                     <li class="text-secondary opacity-50">거래지역</li>
@@ -1350,7 +1367,7 @@ const scrollButtonStyle = ref({ display: 'none' });
 const showReauctionView = ref(false);
 
 const auctionDetail = ref(null);
-const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress, isAccident, getNiceDnrHistory, getCarHistoryCrash, nameChangeStatus, nameChangeFileUpload } = useAuctions();
+const { AuctionCarInfo, getAuctions, auctionsData, AuctionReauction, chosenDealer, getAuctionById, updateAuctionStatus, setdestddress, isAccident, getNiceDnrHistory, getCarHistoryCrash, nameChangeStatus, nameChangeFileUpload, diagnostic } = useAuctions();
 const { submitBid, cancelBid,getBidById } = useBids();
 const carDetails = ref({});
 const highestBid = ref(0);
@@ -1364,6 +1381,11 @@ const auctionLocation = ref({});
 const unique_number = ref('');
 
 const nameChangeStatusData = ref('');
+
+const diagnosticResult = ref({});
+const diagnosticExtra = ref({});
+const diagnosticOptions = ref({});
+const diagnosticOptionView = ref({});
 
 const sortedTopBids = computed(() => {
   console.log('sortedTopBids??', auctionDetail.value);
@@ -2716,6 +2738,38 @@ const requestedFileUpload = async () => {
   
 }
 
+
+const diagnosticOptionViewObject = computed(() => {
+  const items = diagnosticOptionView.value;
+  const groupedHtml = [];
+
+  for (let i = 0; i < items.length; i += 6) {
+    const group = items.slice(i, i + 6);
+
+    const rowHtml = group.map(item => `
+      <div class="option-icon">
+        <div class="icon smart-key${item.is_ok ? '-ac' : ''}"></div>
+        <p>${item.name}</p>
+      </div>
+    `);
+
+    // 부족한 칸만큼 빈 option-icon 채우기
+    const emptySlots = 6 - group.length;
+    for (let j = 0; j < emptySlots; j++) {
+      rowHtml.push(`<div class="option-icon" style="width: 70px;"></div>`);
+    }
+
+    groupedHtml.push(`
+      <div class="option-row">
+        ${rowHtml.join('\n')}
+      </div>
+    `);
+  }
+
+  return groupedHtml.join('\n');
+});
+
+
 // 일정 간격으로 데이터를 갱신하는 함수
 const startPolling = () => {
   pollingInterval = setInterval(fetchAuctionDetail, 60000);
@@ -2793,6 +2847,19 @@ onMounted(async () => {
       }
     }
   }
+
+
+  const diagnosticData = await diagnostic(auctionDetail.value.data.car_no);
+  console.log('!!diagnosticData',diagnosticData);
+
+  diagnosticResult.value = diagnosticData.data.data ? diagnosticData.data.data : {};
+  diagnosticExtra.value = diagnosticData.data.extra ? diagnosticData.data.extra : {};
+  diagnosticOptions.value = diagnosticData.data.options ? diagnosticData.data.options : {};
+
+  diagnosticOptionView.value = diagnosticData.data.diag_option_view;
+
+
+  diagnosticOptionViewObject();
 
   window.addEventListener('scroll', checkScroll);
 
@@ -3067,6 +3134,15 @@ input[type="checkbox"]{align-self:center;}
 
 .circle {
   border:none;
+}
+
+#diag_base_option table tr th:first-child{
+  width: 50px !important;
+}
+
+.html-table-wrapper table {
+  font-size: 16px !important;
+  border: 1px solid #ddd;
 }
 
 </style>

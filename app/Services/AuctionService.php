@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use App\Notifications\AuctionsNotification;
 use App\Notifications\Templates\NotificationTemplate;
+use App\Services\ApiRequestService;
 
 class AuctionService
 {
@@ -840,15 +841,52 @@ class AuctionService
     // 진단 결과
     public function diagnosticResult($result)
     {
-        $response = Http::asForm()
-            ->post(config('services.diagnostic.api_url').'diag_by_car_no', [
+        $apiRequestService = new ApiRequestService();
+        $response = $apiRequestService->sendPost(config('services.diagnostic.api_url').'diag_by_car_no', [
                 'auth' => config('services.diagnostic.api_id'),
                 'api_key' => config('services.diagnostic.api_key'),
                 'diag_car_no' => $result['diag_car_no']
-            ]);
+            ], '진단 결과');
 
-        $response = json_decode($response, true);
-        return $response;
+
+        if($response['status'] === 'ok'){
+            $diagnosticCode = $this->diagnosticCode();
+
+            if($diagnosticCode['status'] === 'ok'){
+                $diagnosticCodeOptions = $diagnosticCode['data']['option'];
+                $response['diag_option_view_test'] = $response['data']['diag_option'];
+                $response['diag_option_view'] = [];
+
+                // foreach 문 안에 키값 포함  
+                foreach($diagnosticCodeOptions as $key => $diagnosticCodeOption){
+
+                    if($diagnosticCodeOption){
+
+                        if(isset($response['data']['diag_option'][$key])){
+
+                            if($response['data']['diag_option'][$key] === '없음' || $response['data']['diag_option'][$key] === 0){
+                                $response['diag_option_view'][] = [
+                                    'id' => $key,
+                                    'name' => $diagnosticCodeOption['name'],
+                                    'is_ok' => false
+                                ];
+                            }else{
+                                $response['diag_option_view'][] = [
+                                    'id' => $key,
+                                    'name' => $diagnosticCodeOption['name'],
+                                    'is_ok' => true
+                                ];
+                            }
+                        }
+                    }
+
+                }
+            }
+
+            return $response;
+        } else {
+            return response()->api([], '진단 결과를 가져오는 중 오류가 발생했습니다.', 500);
+        }
     }
 
 
