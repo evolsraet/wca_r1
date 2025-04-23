@@ -800,21 +800,24 @@ class AuctionService
     // 경매시간 만료시 선택대기로 변경
     public function auctionFinalAtUpdate()
     {
-        $auction = Auction::where('status', 'ing')->get();
-        foreach($auction as $auction){
+        Log::info('auctionFinalAtUpdate');
+        $auctions = Auction::where('status', 'ing')
+                        ->where('final_at', '!=', null)
+                        ->where('final_at', '<', Carbon::now())
+                        ->get();
+
+        Log::info('auctionFinalAtUpdate auctions', [$auctions]);
+
+        foreach($auctions as $auction){
             // 현재시간 final_at 시간 비교해서 현재 시간이 더 클 경우 상태 변경 
-            if($auction->final_at){
-                if(Carbon::now() > $auction->final_at){
-                    $auction->status = 'wait';
-                    $auction->choice_at = Carbon::now()->addDays(config('days.choice_day'));
-                    $auction->save();
+            $auction->status = 'wait';
+            $auction->choice_at = Carbon::now()->addDays(config('days.choice_day'));
+            $auction->save();
 
-                    Log::info('경매시간 만료시 선택대기로 변경', $auction);
+            Log::info("경매시간 만료시 선택대기로 변경 {$auction->id}");
 
-                    // 알림 보내기
-                    AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '','');
-                }
-            }
+            // 알림 보내기
+            AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '','');
 
         }
     }

@@ -2,16 +2,18 @@
 
 namespace App\Console;
 
+use App\Models\User;
+use App\Models\Auction;
+use App\Jobs\AuctionDoneJob;
+use App\Jobs\TaksongStatusJob;
+use App\Services\MediaService;
+use App\Services\AuctionService;
+use App\Models\TaksongStatusTemp;
+use App\Services\NameChangeService;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-use App\Jobs\TaksongStatusJob;
-use App\Models\TaksongStatusTemp;
-use App\Services\AuctionService;
-use App\Services\NameChangeService;
-use App\Models\Auction;
-use App\Services\MediaService;
-use App\Jobs\AuctionDoneJob;
-use Illuminate\Support\Facades\Log;
 
 class Kernel extends ConsoleKernel
 {
@@ -21,8 +23,13 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
+    
     protected function schedule(Schedule $schedule)
     {
+        $admin = User::where('id', 1)->first();
+        Auth::login($admin); // 명시적으로 시스템 유저를 로그인                
+
+        Log::info('Kernel schedule start : user : ' . auth()->user()->name);
 
         $schedule->call(function() {
             // 탁송 상태 확인
@@ -51,10 +58,8 @@ class Kernel extends ConsoleKernel
 
  // 경매 종료 시간 만료시 선택대기로 변경     
         $schedule->call(function() {
-
             $auctionService = new AuctionService();
             $auctionService->auctionFinalAtUpdate();
-
         })->everyMinute();
 
 

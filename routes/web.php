@@ -3,15 +3,16 @@
 use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
+use App\Services\AuctionService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\AuctionController;
-use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use Laravel\Socialite\Facades\Socialite;
 // use App\Http\Controllers\PaymentController;
 
-use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\NiceApiController;
+use App\Http\Controllers\Api\AuctionController;
 use App\Http\Controllers\Auth\SocialAuthController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,6 +23,12 @@ use App\Http\Controllers\Auth\SocialAuthController;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::get('/test22', function () {
+    // return 'test';
+    $auctionService = new AuctionService();
+    $auctionService->auctionFinalAtUpdate();
+});
 
 Route::post('login', [AuthenticatedSessionController::class, 'login']);
 // Route::post('register', [AuthenticatedSessionController::class, 'register']);
@@ -102,6 +109,8 @@ Route::get('/nice/test-api', [NiceApiController::class, 'testApi']);
 Route::view('/{any?}', 'main-view')
     ->name('dashboard')
     ->where('any', '.*');
+
+
 
 // Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
 // Route::post('/payment', [PaymentController::class, 'processPayment'])->name('payment.process');
