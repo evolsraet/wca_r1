@@ -238,7 +238,7 @@ class NotificationTemplate
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
                 .'ㅁ 딜러 : '.$data->dealer->company.' '.$data->dealer->name.' \n'
-                .'ㅁ 입찰가 : '.FormatHelper::formatPriceToMan(number_format($data->price)).'원 \n'
+                .'ㅁ 입찰가 : '.FormatHelper::formatPriceToMan(number_format($data->price)).' \n'
                 .'';
 
                 $link = [
@@ -432,10 +432,10 @@ class NotificationTemplate
                 $randomSuffix = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 3);
                 $bidCode = $randomPrefix.$data->bid_id.$randomSuffix;
 
-                $title = '모든 탁송정보가 입력되었습니다.';
+                $title = '차량대금을 입금해주세요.';
 
                 $message = 
-                '모든 탁송정보가 입력되었습니다. \n'
+                '차량대금을 입금해주세요. \n'
                 ."아래 기일까지 차량대금을 입금해주세요! 탁송은 '위카탁송' 에서 진행되며 별도의 안내 문자가 발송됩니다 \n"
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -462,7 +462,7 @@ class NotificationTemplate
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
-                ."ㅁ 낙찰가 : ".FormatHelper::formatPriceToMan(number_format($data->final_price))."원 \n";
+                ."ㅁ 낙찰가 : ".FormatHelper::formatPriceToMan(number_format($data->final_price))." \n";
 
                 $link = [
                     "url" => url('/view-do/'.$data->unique_number),
@@ -634,7 +634,7 @@ class NotificationTemplate
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
-                ."ㅁ 입찰가 : ".FormatHelper::formatPriceToMan(number_format($data->final_price))."원 \n"
+                ."ㅁ 입찰가 : ".FormatHelper::formatPriceToMan(number_format($data->final_price))." \n"
                 ."ㅁ 계좌번호 : ".$data->bank." ".$data->account." \n"
                 ."ㅁ 입금기일 : ".$data->taksong_wish_at." \n";
 

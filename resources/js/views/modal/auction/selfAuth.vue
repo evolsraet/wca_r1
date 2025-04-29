@@ -45,9 +45,10 @@
        
     const selfAuthModal = () => {
 
+    // todo:소유자 인증 부분 레이아웃 수정 작업 
       const text = `
         <h5 class="text-start mb-3">소유자 인증</h5>
-        <div class="sellInfo my-3 p-4 mb-4 auth-modal" style="position: relative; text-align: left;">
+        <div class="sellInfo my-3 p-4 mb-4 auth-modal" style="position: relative; text-align: left; height: 570px;">
             <div class="auction-guid-popup-container">
 
                 <div class="form-group mt-1" id="agreeElement" style="font-size: 17px; background:#f9f9f9; padding: 10px 15px; border-radius: 10px;">
@@ -56,8 +57,8 @@
                     <p class="small mt-2">또한 조회대상자의 주민등록번호를 이용하여 사업자등록 여부를 조회한다는 동의를 받아 그 근거를 보관하고 있어야 합니다.</p>
                     <p class="small mt-2">- 위와 같은 동의를 거치지 않고 주민등록번호를 이용하여 사업자등록 여부를 조회하는 것은 <span class="text-danger">개인정보보호법 제 72조에 따라 3년 이하의 징역 또는 3천만원 이하의 벌금</span>에 처할 수 있습니다.</p>
                     <p class="small mt-2">- 정부주체<span class="text-danger">(주민등록번호 소유자)</span>의 손해배상청구 소송의 대상이 될 수 있습니다.</p>
-                    <p class="small mt-2 text-danger">* 소유자의 사업자여부 확인을 위해 주민번호 & 휴대폰번호를 사용하며 합니다. 주민등록번호는 이후 명의이전등록 정보를 위해 보관됩니다.</p>
-                    <div class="form-check mt-3">
+                    <p class="small mt-2 text-danger">* 소유자의 사업자여부 확인을 위해 주민번호 & 휴대폰번호를 사용하며 합니다. 주민등록번호는 이후 명의이전등록, 경락확인서 정보를 위해 보관됩니다.</p>
+                    <div class="form-check mt-3" style="margin-top: 10px;">
                         <input class="form-check-input" type="checkbox" id="agree" name="agree" value="1">
                         <label class="form-check-label" for="agree"style="padding-top:5px;">위 내용에 <strong>동의합니다.</strong></label>
                     </div>
@@ -413,11 +414,15 @@
                         // resIndividualBusinessYN / 개인사업자 여부 확인 / N/Y
                             emit('update:isBusinessOwner', businessStatus.resIndividualBusinessYN === 'Y' ? 1 : 0);
                             emit('update:isAuth', true);
+                            emit('update:personal_id_number', setData.identity);
                             wica.ntcn(swal)
                             .alert('소유자 인증이 완료 되었습니다.'); 
                         }else{
-                            wica.ntcn(swal)
-                            .alert('소유자 인증에 실패 하였습니다.'); 
+
+                            alert('소유자 인증에 실패 하였습니다.');
+
+                            // wica.ntcn(swal)
+                            // .alert('소유자 인증에 실패 하였습니다.'); 
                         }
 
                     });

@@ -52,7 +52,14 @@
 
                 <div class="card my-auction">
                   <div>
-                    <div class="mb-3 px-0" v-if="auctionDetail.data.status === 'ask' || auctionDetail.data.status === 'diag'">
+                    <div class="mb-3 px-0" v-if="auctionDetail.data.status === 'ask'">
+                      <div class="diag-img">
+                        <p class="diag-text tc-gray mb-4">{{ wicaLabel.title() }}이 진단대기 상태에요</p>
+                        <span v-if="auctionDetail.data.status === 'diag'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
+                        <span v-if="auctionDetail.data.status === 'ask'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
+                      </div>
+                    </div>
+                    <div v-else-if="auctionDetail.data.status === 'diag'">
                       <div class="diag-img">
                         <p class="diag-text tc-gray mb-4">{{ wicaLabel.title() }}이 꼼꼼하게 진단 중이에요</p>
                         <span v-if="auctionDetail.data.status === 'diag'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
@@ -184,27 +191,27 @@
             <h4 class="mb-4">차량 정보</h4>
             <div class="car-info-grid">
 
-              <CarInfoItem label="차량번호" :value="carDetails.no" />
-              <CarInfoItem label="최초등록일" :value="carDetails.firstRegDate" />
-              <CarInfoItem label="주행거리" :value="carDetails.km + ' km'" />
+              <CarInfoItem label="차량번호" :value="diagnosticResult.diag_car_no ? diagnosticResult.diag_car_no : '-'" />
+              <CarInfoItem label="최초등록일" :value="diagnosticResult.diag_registred_date ? diagnosticResult.diag_registred_date :'-'" />
+              <CarInfoItem label="주행거리" :value="diagnosticResult.diag_distance ? diagnosticResult.diag_distance + ' km' : '-'" />
 
-              <CarInfoItem label="미션" :value="carDetails.mission" />
+              <CarInfoItem label="미션" :value="diagnosticResult.diag_mission ? diagnosticResult.diag_mission : '-'" />
 
-              <CarInfoItem label="제조사" :value="carDetails.maker" />
-              <CarInfoItem label="년식" :value="carDetails.year" />
-              <CarInfoItem label="용도변경" :value="carDetails.resUseHistYn" />
+              <CarInfoItem label="제조사" :value="diagnosticResult.diag_company ? diagnosticResult.diag_company : '-'" />
+              <CarInfoItem label="년식" :value="diagnosticResult.diag_year ? diagnosticResult.diag_year : '-'" />
+              <CarInfoItem label="용도변경" :value="diagnosticResult.diag_history_use ? diagnosticResult.diag_history_use : '-'" />
 
-              <CarInfoItem label="모델" :value="carDetails.model" />
-              <CarInfoItem label="배기량" :value="carDetails.engineSize" />
-              <CarInfoItem label="튜닝이력" :value="carDetails.tuning + ' 회'" />
+              <CarInfoItem label="모델" :value="diagnosticResult.diag_model ? diagnosticResult.diag_model : '-'" />
+              <CarInfoItem label="배기량" :value="diagnosticResult.diag_displacement ? diagnosticResult.diag_displacement +' cc' : '-'" />
+              <CarInfoItem label="튜닝이력" :value="diagnosticResult.diag_history_tuning ? diagnosticResult.diag_history_tuning  : '-'" />
 
-              <CarInfoItem label="등급" :value="carDetails.grade" />
-              <CarInfoItem label="연료" :value="carDetails.fuel" />
+              <CarInfoItem label="등급" :value="diagnosticResult.diag_grade ? diagnosticResult.diag_grade : '-'" />
+              <CarInfoItem label="연료" :value="diagnosticResult.diag_fuel ? diagnosticResult.diag_fuel : '-'" />
               
 
               <div class="detail-row" v-if="carDetails.modelSub || carDetails.gradeSub">
-                <CarInfoItem label="세부모델" :value="carDetails.modelSub" v-if="carDetails.modelSub" />
-                <!-- <CarInfoItem label="세부등급" :value="carDetails.gradeSub" v-if="carDetails.gradeSub" /> -->
+                <CarInfoItem label="세부모델" :value="diagnosticResult.diag_submodel ? diagnosticResult.diag_submodel : '-'" v-if="carDetails.modelSub" />
+                <CarInfoItem label="세부등급" :value="diagnosticResult.diag_subgrade ? diagnosticResult.diag_subgrade : '-'" v-if="carDetails.gradeSub" />
               </div>
 
             </div>
@@ -390,22 +397,22 @@
                     <ul class="mt-0 machine-inform-title">
                       <li class="text-secondary opacity-50">압류/저당</li>
                       <li class="info-num">
-                        {{ niceDnrHistory.seizCt > 1 ? '압류 '+niceDnrHistory.seizCt + '건 / ' : '압류 0건 / ' }}
-                        {{ niceDnrHistory.mortCt > 1 ? '저당 '+niceDnrHistory.mortCt + '건' : '저당 0건' }}
+                        {{ niceDnrHistory.seizCt > 1 ? '압류 '+niceDnrHistory.seizCt? niceDnrHistory.seizCt : 0 + '건 / ' : '압류 0건 / ' }}
+                        {{ niceDnrHistory.mortCt > 1 ? '저당 '+niceDnrHistory.mortCt? niceDnrHistory.mortCt : 0 + '건' : '저당 0건' }}
                       </li>
                     </ul>
                     <ul class="mt-0 mb-0 machine-inform-title">
                       <li class="text-secondary opacity-50">특수사고 이력</li>
                       <li class="info-num">
-                        전손 {{carHistoryCrash?.special_crash?.basic_length+'건'}}  / 
-                        침수 {{carHistoryCrash?.special_crash?.partial_length+'건'}}  / 
-                        도난 {{carHistoryCrash?.special_crash?.theft_length+'건'}}
+                        전손 {{carHistoryCrash?.special_crash?.basic_length? carHistoryCrash?.special_crash?.basic_length + '건' : '0건'}}  / 
+                        침수 {{carHistoryCrash?.special_crash?.partial_length? carHistoryCrash?.special_crash?.partial_length + '건' : '0건'}}  / 
+                        도난 {{carHistoryCrash?.special_crash?.theft_length? carHistoryCrash?.special_crash?.theft_length + '건' : '0건'}}
                       </li>
                     </ul>
                   </div>
                   <div class="flex-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
                     <div class="column" style="overflow-x: auto;">
-                      <h5 class="mt-5">내차피해 (<span class="tc-red">{{ carHistoryCrash?.self_length }}</span>건)</h5>
+                      <h5 class="mt-5">내차피해 (<span class="tc-red">{{ carHistoryCrash?.self_length? carHistoryCrash?.self_length : 0 }}</span>건)</h5>
                       <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
                         <div class="tbl_basic">
                           <table style="min-width: 600px;">
@@ -420,11 +427,11 @@
                             </thead>
                             <tbody>
                               <tr v-for="item in carHistoryCrash?.self" :key="item.id">
-                                <td>{{ item.crashDate }}</td>
-                                <td>{{ item.part + '원' }}</td>
-                                <td>{{ item.labor + '원' }}</td>
-                                <td>{{ item.paint + '원' }}</td>
-                                <td>{{ item.cost + '원' }}</td>
+                                <td>{{ item.crashDate? item.crashDate : '-' }}</td>
+                                <td>{{ item.part? item.part + '원' : '-' }}</td>
+                                <td>{{ item.labor? item.labor + '원' : '-' }}</td>
+                                <td>{{ item.paint? item.paint + '원' : '-' }}</td>
+                                <td>{{ item.cost? item.cost + '원' : '-' }}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -433,7 +440,7 @@
                     </div>
                     
                     <div class="column" style="overflow-x: auto;">
-                      <h5 class="mt-5">타차피해 (<span class="tc-red">{{ carHistoryCrash?.other_length }}</span>건)</h5>
+                      <h5 class="mt-5">타차피해 (<span class="tc-red">{{ carHistoryCrash?.other_length? carHistoryCrash?.other_length : 0 }}</span>건)</h5>
                       <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
                         <div class="tbl_basic">
                           <table style="min-width: 600px;">
@@ -448,11 +455,11 @@
                             </thead>
                             <tbody>
                               <tr v-for="item in carHistoryCrash?.other" :key="item.id">
-                                <td>{{ item.crashDate }}</td>
-                                <td>{{ item.part + '원' }}</td>
-                                <td>{{ item.labor + '원' }}</td>
-                                <td>{{ item.paint + '원' }}</td>
-                                <td>{{ item.cost + '원' }}</td>
+                                <td>{{ item.crashDate? item.crashDate : '-' }}</td>
+                                <td>{{ item.part? item.part + '원' : '-' }}</td>
+                                <td>{{ item.labor? item.labor + '원' : '-' }}</td>
+                                <td>{{ item.paint? item.paint + '원' : '-' }}</td>
+                                <td>{{ item.cost? item.cost + '원' : '-' }}</td>
                               </tr>
                              </tbody>
                           </table>
@@ -848,7 +855,7 @@
               <div class="dropdown-content" style="border-radius: 15px;">
                 <div class="text-start">
                   <p class=""><span class="title-sub">성&nbsp;&nbsp;&nbsp;&nbsp; 명 (법인명)</span> : <span class="ms-1 fw-bold">{{auctionDetail.data.dealer.company ? auctionDetail.data.dealer.company : auctionDetail.data.dealer.name}}</span></p>
-                  <!-- <p class=""><span class="title-sub">주민(법인) 번호</span> :<span class="ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p> -->
+                  <p class=""><span class="title-sub">주민(법인) 번호</span> :<span class="ms-1 fw-bold">{{auctionDetail.data.dealer.corporation_registration_number}}</span></p>
                   <p class=""><span class="title-sub">주&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 소</span> : <span class="ms-1 fw-bold">{{auctionDetail.data.dealer.company_addr1 +' '+ auctionDetail.data.dealer.company_addr2}}</span></p>
                 </div>
               </div>
@@ -1162,7 +1169,7 @@ export default {
     return {
       steps: [
         { status: "ask", label: "STEP1", text: "신청완료" },
-        { status: "diag", label: "STEP2", text: "진단대기" },
+        { status: "diag", label: "STEP2", text: "진단중" },
         { status: "ing", label: "STEP3", text: "경매진행" },
         { status: "chosen", label: "STEP4", text: "선택완료" },
         { status: "dlvr", label: "STEP5", text: "탁송중" },
@@ -1853,7 +1860,7 @@ const openDoneModal = (id) => {
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">매도자</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.owner_name}</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">주민(법인)번호</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;"></td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.personal_id_number}</td>
             </tr>
 
             <tr>
@@ -1871,7 +1878,7 @@ const openDoneModal = (id) => {
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">상호명</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.dealer.company}</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">사업자번호</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;"></td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.dealer.business_registration_number}</td>
             </tr>
 
             <tr>
@@ -2849,7 +2856,7 @@ onMounted(async () => {
   }
 
 
-  const diagnosticData = await diagnostic(auctionDetail.value.data.car_no);
+  const diagnosticData = await diagnostic(auctionDetail.value.data.unique_number);
   console.log('!!diagnosticData',diagnosticData);
 
   diagnosticResult.value = diagnosticData.data.data ? diagnosticData.data.data : {};

@@ -137,6 +137,14 @@
               <img src="../../../img/Icon-file.png" class="ms-2" alt="주민등록번호(법인등록번호)고지사항">주민등록번호(법인등록번호) 수집 동의
             </a>
 
+            <a @click="isDealerCheckEvent3" class="icon-link mt-3">
+              <img src="../../../img/Icon-file.png" class="ms-2" alt="자동차관리사업등록번호 고지사항">자동차관리사업등록번호 수집 동의
+            </a>
+
+            <a @click="isDealerCheckEvent4" class="icon-link mt-3">
+              <img src="../../../img/Icon-file.png" class="ms-2" alt="사업자정보">사업자정보 수집 동의
+            </a>
+
             <!-- <DealerPersonalNumber :mode="check2" /> -->
 
             <div class="form-group dealer-check" style="margin-top: 20px;">
@@ -151,8 +159,24 @@
             <div class="form-group dealer-check" style="margin-top: 20px;">
                 <label for="dealer">주민등록번호(법인등록번호) 수집 동의</label>
                 <div class="check_box">
-                    <input type="checkbox" id="ch5" v-model="profile.isDealerApplyCheck" class="form-control" ref="isDealerApplyCheckSelect">
-                    <label for="ch5">동의</label>
+                    <input type="checkbox" id="ch6" v-model="profile.isDealerApplyCheck1" class="form-control" ref="isDealerApplyCheckSelect1">
+                    <label for="ch6">동의</label>
+                </div>
+            </div>
+
+            <div class="form-group dealer-check" style="margin-top: 20px;">
+                <label for="dealer">자동차관리사업등록번호 수집 동의</label>
+                <div class="check_box">
+                    <input type="checkbox" id="ch7" v-model="profile.isDealerApplyCheck2" class="form-control" ref="isDealerApplyCheckSelect2">
+                    <label for="ch7">동의</label>
+                </div>
+            </div>
+
+            <div class="form-group dealer-check" style="margin-top: 20px;">
+                <label for="dealer">사업자정보 수집 동의</label>
+                <div class="check_box">
+                    <input type="checkbox" id="ch8" v-model="profile.isDealerApplyCheck3" class="form-control" ref="isDealerApplyCheckSelect3">
+                    <label for="ch8">동의</label>
                 </div>
             </div>
 
@@ -200,6 +224,31 @@
                   {{ message }}
             </div>
           </div>
+
+          <div class="form-group">
+            <label for="dealer"><span class="text-danger">*</span> 자동차관리사업등록번호</label>
+            <input type="text" v-model="profile.car_management_business_registration_number" class="form-control" placeholder="자동차관리사업등록번호"/>
+            <div v-for="message in validationErrors?.car_management_business_registration_number" class="text-danger mt-1">
+                  {{ message }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="dealer"><span class="text-danger">*</span> 사업자번호</label>
+            <input type="text" v-model="profile.business_registration_number" class="form-control" placeholder="사업자번호"/>
+            <div v-for="message in validationErrors?.business_registration_number" class="text-danger mt-1">
+                  {{ message }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="dealer"><span class="text-danger">*</span> 주민등록번호 또는 법인번호</label>
+            <input type="text" v-model="profile.corporation_registration_number" class="form-control" placeholder="주민등록번호 또는 법인번호"/>
+            <div v-for="message in validationErrors?.corporation_registration_number" class="text-danger mt-1">
+                  {{ message }}
+            </div>
+          </div>
+
           <div class="form-group">
             <label for="dealer"><span class="text-danger">*</span> 소속상사</label>
             <input type="text" v-model="profile.company" class="form-control" placeholder="상사명(상사 정식 명칭)"/>
@@ -432,7 +481,9 @@
   const swal = inject('$swal');
 
   const isDealerApplyCheckSelect = ref(null);
-
+  const isDealerApplyCheckSelect1 = ref(null);
+  const isDealerApplyCheckSelect2 = ref(null);
+  const isDealerApplyCheckSelect3 = ref(null);
   const profile = ref({
     name: '',
     email: '',
@@ -443,6 +494,9 @@
     dealerBirthDate:'',
     dealerContact: '',
     company: '',
+    car_management_business_registration_number: '',
+    business_registration_number: '',
+    corporation_registration_number: '',
     dealerCompanyDuty:'',
     company_post : '',
     company_addr1 : '',
@@ -622,6 +676,9 @@
         profile.value.receive_addr2 = user.value.dealer.receive_addr2;
         profile.value.introduce = user.value.dealer.introduce;
         profile.value.dealerCompanyDuty = user.value.dealer.company_duty;
+        profile.value.car_management_business_registration_number = user.value.dealer.car_management_business_registration_number;
+        profile.value.business_registration_number = user.value.dealer.business_registration_number;
+        profile.value.corporation_registration_number = user.value.dealer.corporation_registration_number;
       }
       if (user.value.files) {
         fileExstCheck(user.value);
@@ -1028,7 +1085,7 @@
       .useHtmlText() // HTML 태그 활성화
       .useClose()
       .addClassNm('intro-modal') // 클래스명 설정
-      .addClassNm('intromodal-popup') // 클래스명 설정
+      // .addClassNm('intromodal-popup') // 클래스명 설정
       .addOption({ padding: 20, height:840 }) // swal 옵션 추가
       .callback(function (result) {
         // 결과 처리 로직
@@ -1109,7 +1166,7 @@
       .useHtmlText() // HTML 태그 활성화
       .useClose()
       .addClassNm('intro-modal') // 클래스명 설정
-      .addClassNm('intromodal-popup') // 클래스명 설정
+      // .addClassNm('intromodal-popup') // 클래스명 설정
       .addOption({ padding: 20, height:840 }) // swal 옵션 추가
       .callback(function (result) {
         // 결과 처리 로직
@@ -1117,6 +1174,125 @@
       .confirm(text); // 모달 내용 설정
     }
 
+  });
+
+
+  const isDealerCheckEvent3 = (() => {
+
+    if (profile.value.isDealer) {
+      const text = `<div style="height: 500px; overflow-y: auto; text-align: left;" class="info-popup">
+        <h4 style="color: #333; margin-bottom:10px;">자동차관리사업등록번호 수집 및 이용 동의</h4>
+
+        <p style="font-size:16px; padding-left:20px; text-align: left;">자동차관리사업 등록번호는 자동차관리사업을 하기 위해 시장, 군수, 구청장에게 등록할 때 부여받는 번호입니다. 이 번호는 자동차관리법 및 관련 시행규칙에 따라 관리됩니다. 예를 들어, 자동차매매업을 하려면 자동차관리사업 등록을 해야 하며, 이때 등록번호를 부여받게 됩니다.</p>
+
+        <h5 style="color: #555; margin-bottom:10px; margin-top:10px;">자동차관리법</h5>
+        <ul>
+            <li style="padding-bottom:5px;">자동차관리사업 등록의 기준 및 절차 등에 대해 규정합니다</li>
+        </ul>
+
+        <h5 style="color: #555; margin-bottom:10px;">자동차관리법 시행령</h5>
+        <ul>
+            <li style="padding-bottom:5px;">자동차관리사업 등록 관련 사항을 구체적으로 규정합니다.</li>
+        </ul>
+
+        <h5 style="color: #555; margin-bottom:10px;">자동차관리법 시행규칙</h5>
+        <ul>
+            <li style="padding-bottom:5px;">자동차관리사업 등록 시 필요한 서류, 시설 기준 등 구체적인 사항을 규정합니다</li>
+        </ul>
+
+        <h5 style="color: #555; margin-bottom:10px;">시·도 조례</h5>
+        <ul>
+            <li style="padding-bottom:5px;">자동차관리사업 등록 기준 및 절차에 대해 시·도 차원에서 추가적으로 규정할 수 있습니다.</li>
+        </ul>
+
+
+        <h4>자동차관리사업 등록번호의 활용</h4>
+
+        <h5 style="color: #555; margin-bottom:10px;">자동차관리사업자 확인</h5>
+        <ul>
+            <li style="padding-bottom:5px;">등록번호는 자동차관리사업자가 자동차관련 사업을 적법하게 영위하고 있는지 확인하는 수단으로 활용됩니다.</li>
+        </ul>
+
+        <h5 style="color: #555; margin-bottom:10px;">자동차 관련 정보 관리</h5>
+        <p style="font-size:16px; padding-left:20px;">등록번호는 자동차의 소유자, 차량 정보 등을 체계적으로 관리하는 데 사용됩니다.</p>
+        
+        <h5 style="color: #555; margin-bottom:10px;">세금 및 과태료 징수</h5>
+        <p style="font-size:16px; padding-left:20px;">자동차관리사업과 관련된 세금 및 과태료 징수에 활용됩니다.</p>
+
+        <h5 style="color: #555; margin-bottom:10px; margin-top:20px;">자동차관리사업 등록절차</h5>
+        <ul>
+            <li style="padding-bottom:5px;"><strong>사업자등록</strong> <br/>자동차관리사업을 하려는 자는 사업자등록증을 발급받아야 합니다.</li>
+            <li style="padding-bottom:5px;"><strong>등록신청</strong> <br/>자동차관리사업 등록을 신청할 때 필요한 서류를 갖춰 시장, 군수, 구청장에게 신청합니다.</li>
+            <li style="padding-bottom:5px;"><strong>등록번호 부여</strong> <br/>신청 후 등록기준에 적합한 경우 등록번호가 부여됩니다.</li>
+        </ul>
+      </div>
+    `;
+
+        wica.ntcn(swal)
+      .useHtmlText() // HTML 태그 활성화
+      .useClose()
+      .addClassNm('intro-modal') // 클래스명 설정
+      // .addClassNm('intromodal-popup') // 클래스명 설정
+      .addOption({ padding: 20, height:840 }) // swal 옵션 추가
+      .callback(function (result) {
+        // 결과 처리 로직
+      })
+      .confirm(text); // 모달 내용 설정
+    }
+  });
+
+
+  const isDealerCheckEvent4 = (() => {
+    const text = `<div style="height: 500px; overflow-y: auto; text-align: left;" class="info-popup">
+      <h4 style="color: #333; margin-bottom:10px;">사업자정보 수집 및 이용 동의</h4>
+
+        <h5 style="color: #555; margin-bottom:10px; margin-top:10px;">수집하는 항목</h5>
+        <ul>
+            <li style="padding-bottom:5px;">- 사업자등록번호</li>
+            <li style="padding-bottom:5px;">- 사업자명(회사명)</li>
+            <li style="padding-bottom:5px;">- 대표자명</li>
+            <li style="padding-bottom:5px;">- 사업장 주소</li>
+            <li style="padding-bottom:5px;">- 사업자등록증 사본 (필요 시)</li>
+        </ul>
+
+        <h5 style="color: #555; margin-bottom:10px; margin-top:10px;">수집 및 이용 목적</h5>
+        <ul>
+            <li style="padding-bottom:5px;">- 회원 식별 및 사업자 인증 절차 진행</li>
+            <li style="padding-bottom:5px;">- 세금계산서 발행 및 법적 의무 이행</li>
+            <li style="padding-bottom:5px;">- 부정이용 방지 및 서비스 이용 이력 관리</li>
+            <li style="padding-bottom:5px;">- 매도용 자동차 정보 수집 및 관리</li>
+        </ul>
+
+        <h5 style="color: #555; margin-bottom:10px; margin-top:10px;">보유 및 이용 기간</h5>
+        <ul>
+            <li style="padding-bottom:5px;">- 서비스 이용 기간 동안 보유</li>
+            <li style="padding-bottom:5px;">- 탈퇴 시 즉시 파기하되, 관련 법령(전자상거래법, 국세기본법 등)에 따라 일정 기간 보존할 수 있음 (5년)</li>
+        </ul>
+
+        <h5 style="color: #555; margin-bottom:10px; margin-top:10px;">동의 거부 권리 및 불이익</h5>
+        <ul>
+            <li style="padding-bottom:5px;">- 이용자는 사업자정보 수집 및 이용에 대해 동의를 거부할 수 있습니다.</li>
+            <li style="padding-bottom:5px;">- 다만, 동의 거부 시 회원 가입 또는 일부 서비스 이용이 제한될 수 있습니다.</li>
+        </ul>
+
+        <h5 style="color: #555; margin-bottom:10px; margin-top:10px;">관련 법령</h5>
+        <ul>
+            <li style="padding-bottom:5px;">- 개인정보보호법</li>
+            <li style="padding-bottom:5px;">- 전자상거래 등에서의 소비자보호에 관한 법률</li>
+            <li style="padding-bottom:5px;">- 국세기본법 등</li>
+        </ul>
+
+    </div>
+    `;
+
+    wica.ntcn(swal)
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intro-modal') // 클래스명 설정
+    .addOption({ padding: 20, height:840 }) // swal 옵션 추가
+    .callback(function (result) {
+    })
+    .confirm(text); // 모달 내용 설정
   });
 
 
@@ -1146,6 +1322,12 @@
     if(typeParam == 'dealer'){
       isDealerApplyCheckSelect.value = false;
       profile.value.isDealerApplyCheck = false;
+      isDealerApplyCheckSelect1.value = false;
+      profile.value.isDealerApplyCheck1 = false;
+      isDealerApplyCheckSelect2.value = false;
+      profile.value.isDealerApplyCheck2 = false;
+      isDealerApplyCheckSelect3.value = false;
+      profile.value.isDealerApplyCheck3 = false;
       profile.value.isDealer = true;
     }
 
@@ -1183,9 +1365,52 @@
           .alert('온라인자동차경매장 규약 내용을 읽어보시고 체크해주세요.');
           return;
         }
+
+        if(!profile.value.isDealerApplyCheck1){
+          isDealerApplyCheckSelect1.value.focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('주민등록번호 또는 법인번호 수집 동의 내용을 읽어보시고 체크해주세요.');
+          return;
+        }
+
+        if(!profile.value.isDealerApplyCheck2){
+          isDealerApplyCheckSelect2.value.focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('자동차관리사업등록번호 수집 동의 내용을 읽어보시고 체크해주세요.');
+          return;
+        }
+
+        if(!profile.value.isDealerApplyCheck3){
+          isDealerApplyCheckSelect3.value.focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('사업자정보 수집 동의 내용을 읽어보시고 체크해주세요.');
+          return;
+        }
+
+
       }
 
       setRegisterUser(profile.value);
+
+
     }else if(route.path.includes('/admin/users/edit/')){
       console.log('isPenalty',isPenalty.value);
       updateUser(profile.value,userId.value, profile.status);

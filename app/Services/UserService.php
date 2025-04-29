@@ -114,6 +114,9 @@ class UserService
                     'file_user_biz_name' => 'required',
                     'file_user_cert_name' => 'required',
                     'file_user_sign_name' => 'required',
+                    'car_management_business_registration_number' => 'required',
+                    'business_registration_number' => 'required',
+                    'corporation_registration_number' => 'required',
                 ]);
                 // 유효성 검사 실패 시
                 if ($validator->fails()) {

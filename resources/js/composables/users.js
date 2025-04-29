@@ -147,6 +147,9 @@ export default function useUsers() {
                 receive_post: editForm.receive_post,
                 receive_addr1: editForm.receive_addr1,
                 receive_addr2: editForm.receive_addr2,
+                car_management_business_registration_number: editForm.car_management_business_registration_number,
+                business_registration_number: editForm.business_registration_number,
+                corporation_registration_number: editForm.corporation_registration_number,
             }
         };
         
@@ -406,6 +409,9 @@ export default function useUsers() {
                 file_user_biz_name: profileData.file_user_biz_name,
                 file_user_cert_name: profileData.file_user_cert_name,
                 file_user_sign_name: profileData.file_user_sign_name,
+                car_management_business_registration_number: profileData.car_management_business_registration_number,
+                business_registration_number: profileData.business_registration_number,
+                corporation_registration_number: profileData.corporation_registration_number,
             }
             payload.user.role = 'dealer'; 
             payload.user.status = 'ask';

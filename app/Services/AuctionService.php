@@ -100,7 +100,7 @@ class AuctionService
                             $data = [];
                             $data['id'] = $auction->id;
                             $data['carNo'] = $auction->car_no; // 차량번호  
-                            $data['carModel'] = '개발모델'; // 차량모델
+                            $data['carModel'] = $auction->car_model; // 차량모델
                             $data['mobile'] = User::find($auction->user_id)->phone; // 출발지 전화번호
                             $data['destMobile'] = User::find($auction->bids[0]->user_id)->phone; // 출발지 전화번호
                             $data['startAddr'] = $auction->addr1 . ' ' . $auction->addr2; // 주소
@@ -802,7 +802,7 @@ class AuctionService
     {
         Log::info('auctionFinalAtUpdate');
         $auctions = Auction::where('status', 'ing')
-                        ->where('final_at', '!=', null)
+                        ->whereNotNull('final_at')
                         ->where('final_at', '<', Carbon::now()->format('Y-m-d H:i:s'))
                         ->get();
 
@@ -814,7 +814,7 @@ class AuctionService
             $auction->choice_at = Carbon::now()->addDays(config('days.choice_day'));
             $auction->save();
 
-            Log::info("경매시간 만료시 선택대기로 변경 {$auction->id}");
+            Log::info("경매시간 만료시 선택대기로 변경 {$auction->id}", [$auction]);
 
             // 알림 보내기
             AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '','');

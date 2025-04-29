@@ -139,6 +139,9 @@ return [
         'company_post' => '우편번호',
         'company_addr1' => '회사주소1',
         'company_addr2' => '회사주소2',
+        'car_management_business_registration_number' => '자동차관리사업등록번호',
+        'business_registration_number' => '사업자번호',
+        'corporation_registration_number' => '주민등록번호 또는 법인번호',
         'introduce' => '소개',
     ],
 ];

@@ -56,6 +56,7 @@ class Auction extends Model implements HasMedia
         'car_km' => 'string',
         'customTel1' => 'string',
         'customTel2' => 'string',
+        'personal_id_number' => 'string',
     ];
 
     // 업로드 가능한 파일들
