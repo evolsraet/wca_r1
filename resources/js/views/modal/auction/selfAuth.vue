@@ -6,6 +6,7 @@
     import { cmmn } from '@/hooks/cmmn';
     import { useRouter } from 'vue-router';
     import useAuctions from '@/composables/auctions';
+    import { useStore } from 'vuex';
     // import imgInfo from'../../../img/auction-detil.png';
     import imgKakao from '../../../../../resources/img/auths/kakao_auth_logo.png';
     import imgPass from '../../../../../resources/img/auths/pass_auth_logo.png';
@@ -21,6 +22,8 @@
     const { wicas , wica , updateAuctionTimes , calculateTimeLeft } = cmmn();
 
     const { checkBusinessStatus } = useAuctions();
+    const store = useStore();
+    const user = computed(() => store.getters['auth/user']);
 
     const swal = inject('$swal');
     const router = useRouter();
@@ -179,7 +182,7 @@
                     </div>
                     <div class="form-group mt-3" id="phoneNoElement" >
                         <label class="mb-2"><span class="text-danger me-2">*</span> 휴대폰번호</label>
-                        <input type="number" id="phoneNo" class="form-control" placeholder="ex) 01012345678" style="width: 100%; padding: 12px;">
+                        <input type="number" id="phoneNo" class="form-control" placeholder="ex) 01012345678" value="`+user.value?.phone+`" style="width: 100%; padding: 12px;">
                     </div>
                     <div class="form-group mt-3" id="userNameElement" >
                         <label class="mb-2"><span class="text-danger me-2">*</span> 소유자 이름</label>
@@ -438,6 +441,8 @@
         .alert('필수입력하고 인증을 진행해주세요.');  
 
     }
+
+    console.log('user??',user.value);
 
     </script>
     

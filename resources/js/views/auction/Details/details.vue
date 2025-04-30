@@ -304,6 +304,27 @@
           </div>
 
 
+          <div class="dropdown border-bottom">
+            <button
+              class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
+              @click="toggleDropdown('general_2')"
+            >
+              기타옵션
+              <img
+                :src="openSection === 'general_2' ? iconUp : iconDown"
+                alt="Dropdown Icon"
+                class="dropdown-icon"
+                width="14"
+              />
+            </button>
+            <transition name="slide">
+              <div v-show="openSection === 'general_2'" class="dropdown-content mt-0 p-4">
+                {{ diagnosticResult.diag_add_option }}
+              </div>
+            </transition>
+          </div>
+
+
           <div class="mb-3" v-if="auctionDetail.data.status !== 'diag' && auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'cancel'">
             <!-- <p v-if="!showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 숨기기</p> -->
             <!-- <p v-if="showPdf" class="ac-evaluation mt-4 btn-fileupload-red btn-shadow" @click.prevent="openAlarmModal">위카 진단평가 확인하기</p> -->

@@ -945,7 +945,13 @@ class AuctionService
 
     public function diagnosticCheck()
     {
-        $auction = Auction::where('status', 'diag')->whereNull('diag_id')->whereNull('diag_check_at')->get();
+        $auction = Auction::where(function ($query) {
+            $query->where('status', 'diag')
+                  ->orWhere('status', 'ask');
+        })
+        ->whereNull('diag_id')
+        ->whereNull('diag_check_at')
+        ->get();
         $validResults = [];
 
         foreach ($auction as $item) {
