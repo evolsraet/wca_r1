@@ -942,4 +942,52 @@ class AuctionService
         return $response->json()['dataBody']['access_token'];
     }
 
+
+    public function diagnosticCheck()
+    {
+        $auction = Auction::where('status', 'diag')->whereNull('diag_id')->whereNull('diag_check_at')->get();
+        $validResults = [];
+
+        foreach ($auction as $item) {
+            $sendData = [
+                'diag_car_no' => $item->unique_number,
+            ];
+        
+            $result = $this->diagnosticResult($sendData);
+            $resultArray = is_array($result) ? $result : json_decode(json_encode($result), true);
+        
+            if (isset($resultArray['status']) && $resultArray['status'] === 'ok') {
+
+                $isCheck = $resultArray['data']['diag_status'];
+                $isDoneAt = $resultArray['data']['diag_done_at'];
+
+                Log::info('[진단상태확인] : '.$item->unique_number, ['result' => $resultArray]);
+                $validResults[] = $resultArray;
+
+                // 진단이 완료된 경우
+                if($isCheck === 'done' && $isDoneAt){
+                    // diag_outer_id
+                    // auction의 unique_number와 일치하는지 확인
+                    $auction = Auction::where('unique_number', $resultArray['data']['diag_outer_id'])->first();
+                    if($auction){
+                        $auction->status = 'ing';
+                        // $auction->diag_id = $resultArray['data']['diag_slug'];
+                        $auction->diag_check_at = $isDoneAt;
+                        $auction->final_at = now()->addDays(config('days.auction_day'));
+                        $auction->save();
+
+                        // $bid = Bid::where('auction_id', $auction->id)->first();
+                        AuctionBidStatusJob::dispatch($auction->user_id, 'ing', $auction->id, '','');
+
+                        Log::info('[진단상태 확인완료] : '.$item->unique_number, ['result' => $resultArray]);
+                    }
+
+                }
+                
+            }
+        }
+
+        return $validResults;
+    }
+
 }

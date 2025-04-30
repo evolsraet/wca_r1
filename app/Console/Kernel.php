@@ -13,6 +13,8 @@ use App\Services\NameChangeService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Console\Scheduling\Schedule;
+use App\Jobs\AuctionBidStatusJob;
+use App\Http\Controllers\Api\AuctionController;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -32,6 +34,11 @@ class Kernel extends ConsoleKernel
         Log::info('Kernel schedule start : user : ' . auth()->user()->name);
 
         $schedule->call(function() {
+
+            // 경매 상태 변경 확인
+            $auctionService = new AuctionService();
+            $auctionService->diagnosticCheck();
+
             // 탁송 상태 확인
             $taksongStatusTemp = TaksongStatusTemp::where('chk_status', '!=', 'done')->get();
             if($taksongStatusTemp){

@@ -179,7 +179,7 @@
                     </div>
                     <div class="form-group mt-3" id="phoneNoElement" >
                         <label class="mb-2"><span class="text-danger me-2">*</span> 휴대폰번호</label>
-                        <input type="number" id="phoneNo" class="form-control" placeholder="ex) 01012345678" style="width: 100%;">
+                        <input type="number" id="phoneNo" class="form-control" placeholder="ex) 01012345678" style="width: 100%; padding: 12px;">
                     </div>
                     <div class="form-group mt-3" id="userNameElement" >
                         <label class="mb-2"><span class="text-danger me-2">*</span> 소유자 이름</label>
@@ -187,7 +187,7 @@
                     </div>
                     <div class="form-group mt-3" id="identityElement" >
                         <label class="mb-2"><span class="text-danger me-2">*</span> 주민번호</label>
-                        <input type="password" id="identity" class="form-control" placeholder="ex) 9034561234567" style="width: 100%;">
+                        <input type="password" id="identity" class="form-control" placeholder="ex) 9034561234567" style="width: 100%; padding: 12px;">
                     </div>            
                 
                 </div>

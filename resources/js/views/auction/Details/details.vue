@@ -1169,7 +1169,7 @@ export default {
     return {
       steps: [
         { status: "ask", label: "STEP1", text: "신청완료" },
-        { status: "diag", label: "STEP2", text: "진단중" },
+        { status: "diag", label: "STEP2", text: "진단대기" },
         { status: "ing", label: "STEP3", text: "경매진행" },
         { status: "chosen", label: "STEP4", text: "선택완료" },
         { status: "dlvr", label: "STEP5", text: "탁송중" },

@@ -248,6 +248,25 @@ class NotificationTemplate
 
                 break;
 
+
+            case 'AuctionBidStatusJobIng':
+
+                $title = '경매 상태가 변경되었습니다.';
+
+                $message = 
+                '경매 상태가 변경되었습니다. \n'
+                .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
+                .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                .'ㅁ 차량번호 : '.$data->car_no.' \n'
+                .'ㅁ 상태 : 경매진행';
+
+                $link = [
+                    "url" => url('/auction/'.$data->unique_number),
+                    "text" => '바로가기'
+                ];
+
+                break;
+
             // 경매 상태가 선택대기로 변경되었습니다.
             case 'AuctionBidStatusJobWait':
 

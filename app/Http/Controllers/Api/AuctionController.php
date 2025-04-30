@@ -25,6 +25,8 @@ use App\Jobs\AuctionsTestJob;
 use App\Jobs\TaksongAddJob;
 use App\Services\TaksongService;
 use App\Services\ApiRequestService;
+use App\Jobs\AuctionBidStatusJob;
+use App\Models\Bid;
 class AuctionController extends Controller
 {
     use CrudControllerTrait;
@@ -492,6 +494,14 @@ class AuctionController extends Controller
 
         die('dd');
 
+    }
+
+    public function diagnosticCheck(): mixed
+    {
+        $auctionService = new AuctionService();
+        $validResults = $auctionService->diagnosticCheck();
+
+        return response()->api($validResults);
     }
 
     public function diagnosticCode()
