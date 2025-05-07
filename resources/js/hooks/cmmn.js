@@ -2,7 +2,8 @@ import { ref, computed, onMounted, reactive, onUnmounted , inject } from 'vue';
 
 export function cmmn() {
     const numberToKoreanUnit = (input) =>  {
-        const units = ["", "만", "억", "조", "경"];
+        // const units = ["", "만", "억", "조", "경"];
+        const units = ["만", "억", "조", "경"]; // 만원단위 부터 시작 
         input = parseInt(input.replace(/[^0-9]/g, "")); 
         if (isNaN(input)) return "";
         

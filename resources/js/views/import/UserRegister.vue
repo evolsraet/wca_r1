@@ -44,7 +44,7 @@
           </div>
         </div>
         <div v-if="registerURL || adminCreateURL" class="form-group">
-          <label for="email">이메일</label>
+          <label for="email"><span class="text-danger">*</span> 이메일</label>
           <input type="text" v-model="profile.email" id="email" class="form-control" placeholder="example@demo.com"/>
           <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
               <div v-for="message in validationErrors?.email">

@@ -157,6 +157,7 @@ class AuctionController extends Controller
                 'tuning' => count($niceDnrResult['carParts']['outB0001']['list'][0]['resContentsList']),
                 'resUseHistYn' => $niceDnrResult['carParts']['outB0001']['list'][0]['resUseHistYn'] === 'Y' ? '사용' : '없음',
                 'initialPrice' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['price'],
+                'engineType' => $niceDnrResult['carSise']['info']['carinfo']['engineType']
             ];
         });
 

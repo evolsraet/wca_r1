@@ -124,7 +124,7 @@
             <input type="text" id="car_condition" v-model="carKm" readonly placeholder="키로수">
           </div>
 
-          <textarea type="text" id="memo" v-model="memo" placeholder="ex) 외관손상, 차량내부손상, 사고유무등 &#13;&#10;주의) 주요결함 미고지시 추후 환불등 불이익이 있을수 있습니다." rows="2" ref="memoSelect"></textarea>
+          <textarea type="text" id="memo" v-model="memo" placeholder="ex) 외관손상, 차량내부손상, 사고유무등 &#13;&#10;주의) 주요결함 미고지시 추후 환불등 불이익이 있을수 있습니다. &#13;&#10;최근 정비이력 등 이슈나 내차를 뽐내주세요" rows="2" ref="memoSelect" style="height: 100px;"></textarea>
         </div>
 
         <!-- 은행 선택 -->
@@ -375,7 +375,8 @@ const store = useStore();
 const swal = inject('$swal');
 
 const ownerName = ref(''); // 소유자 이름
-const isVerified = ref(false); // 본인 인증 상태
+// const isVerified = ref(false); // 본인 인증 상태
+const isVerified = ref(true); // 본인 인증 상태
 const carNumber = ref(''); // 차량 번호
 const finalAt = ref(''); // 경매 종료 시간
 const selectedRegion = ref(''); // 선택된 지역

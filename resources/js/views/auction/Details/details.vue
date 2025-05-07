@@ -82,8 +82,66 @@
                       </div>
                       <div class="gap-1" :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
                       <div v-if="!isMobileView" class="d-flex flex-row gap-1 img-container">
-                        <div v-if="auctionDetail.data.car_thumbnail" class="img-wrapper">
-                          <img :src="auctionDetail.data.car_thumbnail" alt="Car Image">
+
+
+                        <div v-if="auctionDetail.data.car_thumbnails" class="img-wrapper">
+                            <!-- <img :src="thumbnail" alt="Car Image" v-for="thumbnail in auctionDetail.data.car_thumbnails" :key="thumbnail"> -->
+
+
+                            <div id="carThumbnail" class="carousel slide">
+                              <div class="carousel-inner">
+                                <div class="carousel-item" v-for="(thumbnail, index) in auctionDetail.data.car_thumbnails" :key="index" :class="{'active': index === 0}">
+                                  <img :src="thumbnail" alt="Car Image">
+                                </div>
+                              </div>
+                              <button class="carousel-control-prev" type="button" data-bs-target="#carThumbnail" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                              </button>
+                              <button class="carousel-control-next" type="button" data-bs-target="#carThumbnail" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                              </button>
+                            </div>
+
+                            <!-- <div class="inSlideContent">
+
+                            <swiper
+                          :modules="[Navigation, Pagination, Autoplay]"
+                          :slides-per-view="1"
+                          :loop="true"
+                          :pagination="{
+                              clickable: true,
+                              el: '.swiper-pagination',
+                              type: 'custom',
+                              renderCustom: renderCustomPagination
+                          }"
+                          :autoplay="{ delay: 5000 }"
+                          :speed="1000"
+                          @slideChangeTransitionStart="resetProgressBar"
+                          class="swiper-container"
+                          >
+                            <swiper-slide v-for="thumbnail in auctionDetail.data.car_thumbnails" :key="thumbnail">
+                                <div class="slide-content">
+                                    <img :src="thumbnail" alt="Car Image">
+                                    <div class="content d-flex">
+                                        <div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </swiper-slide>
+
+
+                            <div class="swiper-pagination mb-3">
+                                <div class="progress-bar">
+                                    <div class="progress"></div>
+                                </div>
+                            </div>
+
+                          </swiper>
+
+                          </div> -->
+
                         </div>
                         <div v-else>
                           <div class="w-50">
@@ -96,10 +154,28 @@
                         </div>
                       </div>
                       <div v-if="isMobileView">
-                        <div v-if="auctionDetail.data.car_thumbnail" class="d-flex flex-row gap-1 img-container">
-                          <div v-if="auctionDetail.data.car_thumbnail" class="img-wrapper">
-                          <img :src="auctionDetail.data.car_thumbnail" alt="Car Image">
-                        </div>
+                        <div v-if="auctionDetail.data.car_thumbnails" class="d-flex flex-row gap-1 img-container">
+                          <!-- <div v-if="auctionDetail.data.car_thumbnails" class="img-wrapper">
+                            <img :src="auctionDetail.data.car_thumbnails[0]" alt="Car Image">
+                          </div> -->
+
+
+                          <div id="carThumbnail" class="carousel slide">
+                            <div class="carousel-inner">
+                              <div class="carousel-item" v-for="(thumbnail, index) in auctionDetail.data.car_thumbnails" :key="index" :class="{'active': index === 0}">
+                                <img :src="thumbnail" alt="Car Image">
+                              </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carThumbnail" data-bs-slide="prev">
+                              <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carThumbnail" data-bs-slide="next">
+                              <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                              <span class="visually-hidden">Next</span>
+                            </button>
+                          </div>
+
                         </div>
                         <div v-else>
                           <div class="card-img-top-ty02"></div>
@@ -191,6 +267,7 @@
             <h4 class="mb-4">차량 정보</h4>
             <div class="car-info-grid">
 
+              <CarInfoItem label="차대번호" :value="diagnosticResult.diag_car_id ? diagnosticResult.diag_car_id : '-' " />
               <CarInfoItem label="차량번호" :value="diagnosticResult.diag_car_no ? diagnosticResult.diag_car_no : '-'" />
               <CarInfoItem label="최초등록일" :value="diagnosticResult.diag_registred_date ? diagnosticResult.diag_registred_date :'-'" />
               <CarInfoItem label="주행거리" :value="diagnosticResult.diag_distance ? diagnosticResult.diag_distance + ' km' : '-'" />
@@ -203,9 +280,9 @@
 
               <CarInfoItem label="모델" :value="diagnosticResult.diag_model ? diagnosticResult.diag_model : '-'" />
               <CarInfoItem label="배기량" :value="diagnosticResult.diag_displacement ? diagnosticResult.diag_displacement +' cc' : '-'" />
-              <CarInfoItem label="튜닝이력" :value="diagnosticResult.diag_history_tuning ? diagnosticResult.diag_history_tuning  : '-'" />
+              <!-- <CarInfoItem label="튜닝이력" :value="diagnosticResult.diag_history_tuning ? diagnosticResult.diag_history_tuning  : '-'" /> -->
 
-              <CarInfoItem label="등급" :value="diagnosticResult.diag_grade ? diagnosticResult.diag_grade : '-'" />
+              <!-- <CarInfoItem label="등급" :value="diagnosticResult.diag_grade ? diagnosticResult.diag_grade : '-'" /> -->
               <CarInfoItem label="연료" :value="diagnosticResult.diag_fuel ? diagnosticResult.diag_fuel : '-'" />
               
 
@@ -280,6 +357,13 @@
             </div>
             
           </div>
+
+
+          <div>
+            <div class="mt-4 mb-4">
+              <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDiagResultModal">위카 진단평가 확인하기</p>
+            </div>
+          </div>
           
 
           <div class="dropdown border-bottom">
@@ -341,7 +425,7 @@
             </div>
             </div> -->
 
-            <div class="dropdown border-bottom">
+            <!-- <div class="dropdown border-bottom">
               <button
                 class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
                 @click="toggleDropdown('general')"
@@ -366,7 +450,7 @@
                 </div>
               </div>
               </transition>
-            </div>
+            </div> -->
 
 
           </div>
@@ -431,8 +515,8 @@
                       </li>
                     </ul>
                   </div>
-                  <div class="flex-container" style="display: flex; flex-wrap: wrap; gap: 20px;">
-                    <div class="column" style="overflow-x: auto;">
+                  <div class="flex-container" style="">
+                    <div class="column" style="overflow-x: auto; width:100%;">
                       <h5 class="mt-5">내차피해 (<span class="tc-red">{{ carHistoryCrash?.self_length? carHistoryCrash?.self_length : 0 }}</span>건)</h5>
                       <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
                         <div class="tbl_basic">
@@ -460,7 +544,7 @@
                       </div>
                     </div>
                     
-                    <div class="column" style="overflow-x: auto;">
+                    <div class="column" style="overflow-x: auto; width:100%;">
                       <h5 class="mt-5">타차피해 (<span class="tc-red">{{ carHistoryCrash?.other_length? carHistoryCrash?.other_length : 0 }}</span>건)</h5>
                       <div class="o_table_mobile" style="overflow-x: auto; white-space: nowrap;">
                         <div class="tbl_basic">
@@ -626,11 +710,33 @@
             <BottomSheet02 initial="half" :dismissable="true" v-if="!succesbid && !auctionDetail.data.bids.some(bid => bid.user_id === user.id) && auctionDetail && auctionDetail.data.status === 'ing' && auctionDetail.data.hope_price == null && !bidSession">
                 <div  @click.stop="">
                   <div>
-                    <div class="d-flex">
-                      <p class="tc-gray bold">도매가 <span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now_whole / 10000 }}</span><span class="tc-primary">만원 </span>
-                        <span class="mx-2">|</span> 소매가<span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now / 10000 }}</span><span class="tc-primary">만원 </span>
+                    <!-- <div class="d-flex">
+                      <p class="tc-gray bold">
+                        도매가 <span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now_whole / 10000 }}</span><span class="tc-primary">만원 </span>
+                        <span class="mx-2">|</span> 
+                        소매가<span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now / 10000 }}</span><span class="tc-primary">만원 </span>
                       </p>
+                    </div> -->
+                    <div class="d-flex">
+                      <div class="tc-gray">
+                        <!-- 도매가 : 오토허브셀카 제공 / 소매가 : NICE D&R 제공 -->
+                        <div>도매가 <span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now_whole / 10000 }}</span><span class="tc-primary">만원 </span></div>
+                        <!-- <div>※ 오토허브셀카 제공</div> -->
+                      </div>
+                      <div style="width:10px;"> </div>
+                      <div class="tc-gray">
+                        <div>소매가<span class="tc-primary size_26 mx-2">{{ auctionDetail.data.car_price_now / 10000 }}</span><span class="tc-primary">만원 </span></div>
+                        <!-- <div>※ NICE D&R 제공</div> -->
+                      </div>
                     </div>
+
+                    <div class="d-flex mt-4">
+                      <div style="text-align:left;">
+                        ※ 도매가 오토허브셀카 제공 <br/>
+                        ※ 소매가 NICE D&R 제공
+                      </div>
+                    </div>
+
                   </div>
                   <hr/>
                   <p class="text-center tc-red my-2">현재  {{ auctionDetail.data.bids_count }}명이 입찰했어요.</p>
@@ -702,7 +808,7 @@
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
             <div class="text-start mt-2">
-              <p class="text-secondary ">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1 fw-bold">{{auctionDetail.data.final_price}}</span></p>
+              <p class="text-secondary ">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1 fw-bold">{{auctionDetail.data.final_price / 10000}} 만원</span></p>
               <p class="text-secondary ">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p>
               <p class="text-secondary ">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.taksong_wish_at}}</span></p>
               <p class="text-secondary ">장&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 소 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.addr1}}</span></p>
@@ -1185,6 +1291,11 @@
                     </div>
         </template>
 <script>
+
+import { Swiper, SwiperSlide } from "swiper/vue";
+import "swiper/swiper-bundle.css";
+import { Navigation, Pagination, Autoplay } from "swiper/modules";
+
 export default {
   data() {
     return {
@@ -1200,11 +1311,40 @@ export default {
       }
     };
   },
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
   methods: {
     getStatusIndex(status) {
       return this.steps.findIndex((step) => step.status === status);
-    }
-  }
+    },
+
+    renderCustomPagination(swiper, current, total) {
+      return `
+        <span class="pagination-number">${current}</span>
+        <div class="progress-bar">
+          <div class="progress"></div>
+        </div>
+        <span class="pagination-number">${total}</span>
+      `;
+    },
+    // 진행 바 리셋
+    resetProgressBar() {
+      const progress = document.querySelector('.progress');
+      if (progress) {
+        progress.style.width = '0%';
+        setTimeout(() => {
+          progress.style.transition = 'width 5s linear';
+          progress.style.width = '100%';
+        }, 50);
+      }
+    },
+
+  },
+  mounted() {
+    this.resetProgressBar();
+  },
 };
 </script>
 
@@ -2114,6 +2254,34 @@ const openNameChangeModal = () => {
 
 }
 
+
+const openDiagResultModal = () => {
+  const nameChangeUrl = diagnosticExtra.value.url_pdf;
+  const text = `
+    <h5>위카 진단평가</h5>
+    <div id="name-change-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        <iframe
+            src="${nameChangeUrl}" 
+            width="100%"
+            height="600px"
+            
+        ></iframe>
+    </div>
+  `;
+
+  wica.ntcn(swal) 
+    .useHtmlText() // HTML 태그 활성화
+    .useClose()
+    .addClassNm('intromodal') // 클래스명 설정
+    .addOption({ padding: 20, height:700 }) // swal 옵션 추가
+    .callback(function (result) {
+      // 결과 처리 로직
+    })
+    .confirm(text); // 모달 내용 설정
+
+} 
+
+
 /*[사용자] 재경매 - 현재 날짜에서 D-3 일 후 라고 가정함.*/ 
 function getThreeDaysFromNow() {
   const currentDate = new Date();
@@ -2193,43 +2361,67 @@ const closeModal = () => {
 
 /* 경매 취소 행동부분 */ 
 const handleConfirmDelete = async () => {
-  try {
-    const Auctioncancel = await updateAuctionStatus(selectedAuctionId.value, 'cancel');
-    console.log('ddddd',Auctioncancel);
-    if (Auctioncancel === false) {
-      // 에러 처리 로직
-      console.error("Auction cancellation error");
 
-      // wica.ntcn(swal)
-      // .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
-      // .icon('I') //E:error , W:warning , I:info , Q:question
-      // .alert('경매가 취소되었습니다.');
-
-      window.location.href = '/auction/'+unique_number.value;
-
-    } else {
-      const text = `<div class="enroll_box" style="position: relative;">
-                   <img src="${drift}" alt="자동차 이미지" width="160" height="160">
-                   <p class="overlay_text04">경매가 취소되었습니다.</p>
-                   </div>`;
-      if (Auctioncancel.isSuccess) {
-        await new Promise((resolve, reject) => {
-          wica.ntcn(swal)
-            .useHtmlText() // HTML 태그 인 경우 활성화
-            .labelCancel()
-            .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
-            .addOption({ padding: 20, height: 265 }) // swal 기타 옵션 추가
-            .callback(function (result) {
-              window.location.href = '/auction';
-
-              })
-            .confirm(text);
-        });
-      } 
+  wica.ntcn(swal)
+  .addOption({
+    input: 'text',
+    inputPlaceholder: '취소',
+    inputValidator: (value) => {
+      return value === '취소' ? undefined : '정확히 "취소"라고 입력해야 합니다.';
     }
-  } catch (error) {
-    console.error(error);
-  }
+  })
+  .callback( async(rst) => {
+    if (rst.isOk) {
+      // 여기서 입력값도 활용 가능: rst.rawData?.inputValue
+      console.log('취소 처리 진행');
+      // 실제 취소 로직 실행
+
+      try {
+      const Auctioncancel = await updateAuctionStatus(selectedAuctionId.value, 'cancel');
+      console.log('ddddd',Auctioncancel);
+      if (Auctioncancel === false) {
+        // 에러 처리 로직
+        console.error("Auction cancellation error");
+
+        // wica.ntcn(swal)
+        // .addClassNm('cmm-review-custom') // 클래스명 변경시 기입, 기본 클래스명 : wica-salert
+        // .icon('I') //E:error , W:warning , I:info , Q:question
+        // .alert('경매가 취소되었습니다.');
+
+        window.location.href = '/auction/'+unique_number.value;
+
+      } else {
+        const text = `<div class="enroll_box" style="position: relative;">
+                    <img src="${drift}" alt="자동차 이미지" width="160" height="160">
+                    <p class="overlay_text04">경매가 취소되었습니다.</p>
+                    </div>`;
+        if (Auctioncancel.isSuccess) {
+          await new Promise((resolve, reject) => {
+            wica.ntcn(swal)
+              .useHtmlText() // HTML 태그 인 경우 활성화
+              .labelCancel()
+              .addClassNm('primary-check') // 클래스명 변경, 기본 클래스명: wica-salert
+              .addOption({ padding: 20, height: 265 }) // swal 기타 옵션 추가
+              .callback(function (result) {
+                window.location.href = '/auction';
+
+                })
+              .confirm(text);
+          });
+        } 
+      }
+    } catch (error) {
+      console.error(error);
+    }
+
+
+    }
+  })
+  .confirm('취소 하시려면 "취소"를 입력 후 확인을 누르면 취소 됩니다.');
+  // alert('취소 하시려면 "취소"를 입력 하세요.');
+  return false;
+
+  
 };
 
 const AttachedInform = () => {
@@ -3171,6 +3363,25 @@ input[type="checkbox"]{align-self:center;}
 .html-table-wrapper table {
   font-size: 16px !important;
   border: 1px solid #ddd;
+}
+
+.inSlideContent {
+  width:650px;
+}
+
+@media screen and (max-width:990px) {
+  .inSlideContent {
+    width:100%;
+  }
+}
+
+.carThumbnail img {
+  height: 100%;
+}
+
+.carousel-inner {
+  height: 100% !important;
+  max-height: 100% !important;
 }
 
 </style>

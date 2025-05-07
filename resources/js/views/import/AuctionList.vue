@@ -32,7 +32,7 @@
                       <div>
                         <div class="d-flex gap-4 align-items-center">
                           <div class="img_box">
-                            <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2">
+                            <img :src="auction.car_thumbnails ? auction.car_thumbnails[0] : auction.car_thumbnail" alt="차량 사진" class="mb-2">
                           </div>
                           <h5 class="text-nowrap mb-0 fs-4 font-size">{{ auction.car_no }}</h5>
                           <p :class="getStatusClass(auction.status)" class="ml-auto">
@@ -51,7 +51,7 @@
                         <div class="d-flex gap-4 align-items-center app-d-flex">
                           <div class="col-auto d-flex flex-column align-items-center">
                           <div class=" img_box">
-                            <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2">
+                            <img :src="auction.car_thumbnails ? auction.car_thumbnails[0] : auction.car_thumbnail" alt="차량 사진" class="mb-2">
                           </div>
                           <h5 class="mt-2 mb-0">{{ auction.car_no }}</h5>
                         </div>

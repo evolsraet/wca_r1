@@ -132,6 +132,10 @@ class AuctionResource extends JsonResource
         //     }
         // }
 
+
+        $addArray['car_thumbnails'] = json_decode($auction->car_thumbnail, true);
+
+
         $this->withFiles($parentArray, $addArray);
 
         // 날짜 필드를 Y-m-d 포맷으로 변환 (맨 마지막)
