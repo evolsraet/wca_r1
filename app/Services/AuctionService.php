@@ -801,10 +801,7 @@ class AuctionService
     public function auctionFinalAtUpdate()
     {
         Log::info('auctionFinalAtUpdate');
-        $auctions = Auction::where('status', 'ing')
-                        ->where('final_at', '!=', null)
-                        ->where('final_at', '<', Carbon::now()->format('Y-m-d H:i:s'))
-                        ->get();
+        $auctions = Auction::select('id', 'user_id', 'status', 'final_at', 'choice_at')->where('status', 'ing')->where('final_at', '!=', null)->whereNotNull('final_at')->where('final_at', '<', Carbon::now()->format('Y-m-d H:i:s'))->get();
 
         Log::info('auctionFinalAtUpdate auctions', [$auctions]);
 
