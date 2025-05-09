@@ -71,25 +71,25 @@ class NameChangeService
                           ->where('is_taksong', 'done')
                           ->get();
 
-        Log::info('processCompletedNameChangeAuctions', ['auctions' => $auctions]);
+        Log::info('[명의변경 완료] processCompletedNameChangeAuctions', ['auctions' => $auctions]);
 
-        foreach ($auctions as $auction) {
+        foreach ($auctions as $item) {
             // 2. media 테이블에서 model_id가 경매의 id와 일치하고, collection_name이 'file_auction_name_change'인 미디어가 있는지 확인
             $mediaService = new MediaService();
-            $media = $mediaService->getMedia($auction, 'file_auction_name_change')->first();
+            $media = $mediaService->getMedia($item, 'file_auction_name_change')->first();
 
             // 3. 미디어가 있고, 해당 미디어가 현재 경매에 속한 경우에만 처리
-            if ($media && $media->model_id === $auction->id) {
+            if (($media && $media->model_id) === $item->id) {
                 // 4. 상태를 done으로 변경
                 // Log::info('NameChangeServiceID', ['auction_id' => $auction->id]);
-                Auction::where('id', $auction->id)->update(['status' => 'done']);
+                Auction::where('id', $item->id)->update(['status' => 'done']);
 
                 // 5. 푸시 알림 전송
-                $dealer = Bid::find($auction->bid_id);
-                AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
-                AuctionDoneJob::dispatch($dealer->user_id, $auction->id, 'dealer');
+                $dealer = Bid::find($item->bid_id);
+                AuctionDoneJob::dispatch($item->user_id, $item->id, 'user');
+                AuctionDoneJob::dispatch($dealer->user_id, $item->id, 'dealer');
 
-                TaksongStatusTemp::where('auction_id', $auction->id)->update(['chk_status' => 'done']);
+                TaksongStatusTemp::where('auction_id', $item->id)->update(['chk_status' => 'done']);
 
             }
         }

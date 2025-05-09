@@ -70,8 +70,8 @@ class TaksongAddJob implements ShouldQueue
 
             try {
 
-                AuctionDlvrJob::dispatch($this->data['userId'], $this->data, $this->response, 'user');
-                AuctionDlvrJob::dispatch($this->data['bidUserId'], $this->data, $this->response, 'dealer');
+                AuctionDlvrJob::dispatch($this->data['user_id'], $this->data, $this->response, 'user');
+                AuctionDlvrJob::dispatch($this->data['bid_user_id'], $this->data, $this->response, 'dealer');
 
                 // Notification::route('mail', 'admin@example.com')
                 //     ->notify(new JobSuccessNotification($result));

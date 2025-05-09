@@ -242,7 +242,7 @@ class NotificationTemplate
                 .'';
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -261,7 +261,7 @@ class NotificationTemplate
                 .'ㅁ 상태 : 경매진행';
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -281,7 +281,7 @@ class NotificationTemplate
                 .'ㅁ 상태 : 선택대기';
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -300,7 +300,7 @@ class NotificationTemplate
                 .'ㅁ 상태 : 취소';
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -319,7 +319,7 @@ class NotificationTemplate
                 .'ㅁ 상태 : 재경매';
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -337,7 +337,7 @@ class NotificationTemplate
                 .'ㅁ 상태 : 취소';
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -356,7 +356,7 @@ class NotificationTemplate
                 .'ㅁ 입찰가 : '.FormatHelper::formatPriceToMan(number_format($data->final_price));
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -374,7 +374,7 @@ class NotificationTemplate
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -392,7 +392,7 @@ class NotificationTemplate
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -411,7 +411,7 @@ class NotificationTemplate
 
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -436,7 +436,7 @@ class NotificationTemplate
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -444,8 +444,36 @@ class NotificationTemplate
 
 
             case 'AuctionDlvrJobDealer':
+                
+                $weekdays = [
+                    'Monday'    => '월요일',
+                    'Tuesday'   => '화요일',
+                    'Wednesday' => '수요일',
+                    'Thursday'  => '목요일',
+                    'Friday'    => '금요일',
+                    'Saturday'  => '토요일',
+                    'Sunday'    => '일요일',
+                ];
+                
+                $carbonDate = Carbon::parse($data->taksong_wish_at);
+                $weekdayEng = $carbonDate->format('l'); // Monday, Tuesday 등
+                $weekdayKor = $weekdays[$weekdayEng] ?? $weekdayEng;
+                
+                $now = Carbon::now();
 
-                $formattedDate = Carbon::parse($data->taksong_wish_at)->format('Y-m-d(D) H시');
+                // 시간 차이 (절댓값 X, 미래면 음수일 수 있음)
+                $diffInHours = $carbonDate->diffInHours($now, false); // false: 음수 허용
+
+                // 차이 문자열 포맷
+                if ($diffInHours < 0) {
+                    $diffText = '(탁송 '.abs($diffInHours).'시간 전)';
+                } elseif ($diffInHours > 0) {
+                    $diffText = '(탁송 '.$diffInHours.'시간 후)';
+                } else {
+                    $diffText = '(탁송 현재)';
+                }
+
+                $formattedDate = $carbonDate->format('Y-m-d') . "({$weekdayKor}) " . $carbonDate->format('H시'). "${diffText}";
 
                 $randomPrefix = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8);
                 $randomSuffix = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 3);
@@ -455,7 +483,7 @@ class NotificationTemplate
 
                 $message = 
                 '차량대금을 입금해주세요. \n'
-                ."아래 기일까지 차량대금을 입금해주세요! 탁송은 '위카탁송' 에서 진행되며 별도의 안내 문자가 발송됩니다 \n"
+                ."아래 기일까지 차량대금을 입금해주세요! 탁송은 '".config('app.name')."' 에서 진행되며 별도의 안내 문자가 발송됩니다 \n"
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
@@ -484,7 +512,7 @@ class NotificationTemplate
                 ."ㅁ 낙찰가 : ".FormatHelper::formatPriceToMan(number_format($data->final_price))." \n";
 
                 $link = [
-                    "url" => url('/view-do/'.$data->unique_number),
+                    "url" => url('/view-do/'.$data->hashid),
                     "text" => '후기 남기기'
                 ];
 
@@ -554,7 +582,7 @@ class NotificationTemplate
                 ;  
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -572,7 +600,7 @@ class NotificationTemplate
                 .config('app.name')."에 평가사들이 유선전화 드리고 진단요청일에 방문할 예정 입니다. \n";
 
                 // $link = [
-                //     "url" => url('/auction/'.$data->unique_number),
+                //     "url" => url('/auction/'.$data->hashid),
                 //     "text" => '바로가기'
                 // ];
 
@@ -589,7 +617,7 @@ class NotificationTemplate
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '바로가기'
                 ];
 
@@ -614,7 +642,7 @@ class NotificationTemplate
                 ."ㅁ 탁송출발지 : ".$data->addr_post." ".$data->addr1." ".$data->addr2." \n";
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '자주묻는 질문'
                 ];
 
@@ -636,7 +664,7 @@ class NotificationTemplate
                 ."ㅁ 탁송출발지 : ".$data->addr_post." ".$data->addr1." ".$data->addr2." \n";
 
                 // $link = [
-                //     "url" => url('/auction/'.$data->unique_number),
+                //     "url" => url('/auction/'.$data->hashid),
                 //     "text" => '바로가기'
                 // ];
 
@@ -658,7 +686,7 @@ class NotificationTemplate
                 ."ㅁ 입금기일 : ".$data->taksong_wish_at." \n";
 
                 // $link = [
-                //     "url" => url('/auction/'.$data->unique_number),
+                //     "url" => url('/auction/'.$data->hashid),
                 //     "text" => '바로가기'
                 // ];
 
@@ -677,7 +705,7 @@ class NotificationTemplate
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '명의이전 등록증 확인'
                 ];
 
@@ -699,7 +727,7 @@ class NotificationTemplate
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
                 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '자주묻는 질문'
                 ];
 
@@ -721,7 +749,7 @@ class NotificationTemplate
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
                 
                 $link = [
-                    "url" => url('/auction/'.$data->unique_number),
+                    "url" => url('/auction/'.$data->hashid),
                     "text" => '자주묻는 질문'
                 ];
 

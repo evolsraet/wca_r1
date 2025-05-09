@@ -56,7 +56,8 @@ class AuctionBidStatusJob implements ShouldQueue
                 'data' => $this->auction,
                 'status3' => $dealer['dealer']['company'].' - '.$dealer['dealer']['name'],
                 'status4' => $this->price,
-                'link' => $baseUrl.'/auction/'.$this->auction->unique_number
+                // 'link' => $baseUrl.'/auction/'.$this->auction->unique_number
+                'link' => $baseUrl.'/auction/'.$this->auction->hashid
             ];
 
             $this->auction['dealer'] = $dealer;

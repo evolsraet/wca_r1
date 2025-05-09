@@ -444,7 +444,7 @@ const companyName = ref('');
 const companyNameRef = ref(null);
 const accountOwner = ref('');
 const accountOwnerRef = ref(null);
-
+const carEngineType = ref('');
 const showSelfAuthModal = ref(false);
 const isBusinessOwner = ref(false);
 const isAuth = ref(false);
@@ -536,7 +536,8 @@ const auctionEntry = async () => {
     car_status: carStatus.value,
     is_business_owner: isBusinessOwner.value,
     is_agree: isAgree.value,
-    personal_id_number: personal_id_number.value
+    personal_id_number: personal_id_number.value,
+    car_engine_type: carEngineType.value
   };
 
   if(isVerified.value){
@@ -590,6 +591,7 @@ const auctionEntry = async () => {
         fileInputRefCarLicenseBtn.value.click();
       }
 
+      // 팝업 띄우고 파일선택 버튼 하나 만들어서 그 버튼 클릭 하면, 파일선택 할 수 있도록 수정 필요 
       wica.ntcn(swal)
       .icon('W')
       .addClassNm('cmm-review-custom')
@@ -602,7 +604,8 @@ const auctionEntry = async () => {
     
     try {
       const result = await createAuction({ auction: auctionData });
-      const uniqueNumber = result.unique_number;
+      // const uniqueNumber = result.unique_number;
+      const uniqueNumber = result.hashid;
       if(result.isSuccess){
           const textOk = `<div class="enroll_box" style="position: relative;">
                     <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
@@ -639,7 +642,7 @@ const auctionEntry = async () => {
     .icon('E')
     .callback(function(result) {
         //console.log(result);
-    }).alert('소유자인중 후에 이용 가능한 서비스입니다.');
+    }).alert('소유자인증 후에 이용 가능한 서비스입니다.');
 
   }
 };
@@ -929,9 +932,17 @@ const confirmEditIfDisabled = (carNumber) => {
             .alert('인증 정보가 초기화되었습니다.');
           });
           
+        }else{
+          wica.ntcn(swal)
+            .icon('S')
+            .addClassNm('cmm-review-custom')
+            .addOption({ padding: 20})
+            .callback(function(result) {
+            })
+            .alert('인증 정보가 초기화가 취소되었습니다.');
         }
       })
-    .alert('소유자 정보를 수정하시겠습니까?');
+    .confirm('소유자 정보를 수정하시겠습니까?');
   }
 };
 
@@ -1462,6 +1473,7 @@ onMounted(() => {
     carPriceNowWhole.value = carDetails.priceNowWhole;
     carThumbnail.value = carDetails.thumbnail;
     carKm.value = carDetails.km;
+    carEngineType.value = carDetails.engineType;
 
   }
 

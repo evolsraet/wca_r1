@@ -385,11 +385,16 @@ export default function useUsers() {
                 name: profileData.name,
                 email: profileData.email,
                 phone: profileData.phone,
-                password: profileData.password,
-                password_confirmation: profileData.password_confirmation,
+                socialLogin: profileData.socialLogin,
                 role: 'user',
             }
         };
+
+        if (profileData.socialLogin !== 'true') {
+            payload.user.password = profileData.password;
+            payload.user.password_confirmation = profileData.password_confirmation;
+        }
+
         if (profileData.isDealer) {
             payload.dealer ={
                 name: profileData.dealer_name,
@@ -416,6 +421,7 @@ export default function useUsers() {
             payload.user.role = 'dealer'; 
             payload.user.status = 'ask';
         } else {
+            payload.dealer = false;
             payload.user.role = 'user';
         } 
         console.log("전체 데이터:" , payload.user.role);

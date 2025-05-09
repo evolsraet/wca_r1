@@ -133,8 +133,7 @@ class AuctionController extends Controller
 
             $CarmerceService = new CarmerceService();
 
-            // 임시 데이터 리턴
-            return [
+            $result = [
                 'owner' => $request->input('owner'),
                 'no' => $request->input('no'),
                 'maker' => $niceDnrResult['carSise']['info']['carinfo']['makerNm'],
@@ -159,6 +158,11 @@ class AuctionController extends Controller
                 'initialPrice' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['price'],
                 'engineType' => $niceDnrResult['carSise']['info']['carinfo']['engineType']
             ];
+
+            Log::info('[차량정보 확인]', ['result' => $result]);
+
+            // 임시 데이터 리턴
+            return $result;
         });
 
 

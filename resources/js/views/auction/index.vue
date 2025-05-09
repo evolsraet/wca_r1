@@ -932,7 +932,8 @@ const auctionEntryPublic = () => {
 
 function navigateToDetail(auction) { 
     //console.log("디테일 :", auction.id);
-    router.push({ name: 'AuctionDetail', params: { id: auction.unique_number } });
+    // router.push({ name: 'AuctionDetail', params: { id: auction.unique_number } });
+    router.push({ name: 'AuctionDetail', params: { id: auction.hashid } });
 }
 
 function getAuctionStyle(auction) { 

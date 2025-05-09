@@ -31,6 +31,7 @@
         "js-cookie": "^3.0.5",
         "laravel-vue-pagination": "^4.1.1",
         "nouislider": "^15.8.1",
+        "photoswipe": "^5.4.4",
         "sweetalert2": "^11.11.1",
         "swiper": "^11.1.15",
         "vee-validate": "^4.11.7",

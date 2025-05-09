@@ -12,6 +12,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Vinkla\Hashids\Facades\Hashids;
+
 
 class Auction extends Model implements HasMedia
 {
@@ -175,4 +177,11 @@ class Auction extends Model implements HasMedia
 
         return $number;
     }
+
+    // 해시된 ID 속성 추가
+    public function getHashidAttribute()
+    {
+        return Hashids::encode($this->id);
+    }
+    
 }

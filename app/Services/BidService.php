@@ -32,7 +32,13 @@ class BidService
             // 관리자 외 딜러는 본인것만
             if (auth()->user()->hasPermissionTo('act.admin')) {
             } elseif (auth()->user()->hasPermissionTo('act.dealer')) {
-                $result->where('user_id', auth()->user()->id);
+                // $result->where('user_id', auth()->user()->id)->where('status','!=', 'done');
+                $result
+                ->where('user_id', auth()->user()->id)
+                ->where(function ($query) {
+                    $query->where('status', '!=', 'done')
+                        ->orWhereNull('status');
+                });
             } else {
                 // 유저는 본인의 auction 인것만
                 // $userId = auth()->user()->id;

@@ -9,6 +9,7 @@ use App\Http\Resources\BidResource;
 use Illuminate\Support\Facades\Log;
 use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Vinkla\Hashids\Facades\Hashids;
 
 class AuctionResource extends JsonResource
 {
@@ -134,6 +135,8 @@ class AuctionResource extends JsonResource
 
 
         $addArray['car_thumbnails'] = json_decode($auction->car_thumbnail, true);
+
+        $addArray['hashid'] = Hashids::encode($auction->id);
 
 
         $this->withFiles($parentArray, $addArray);

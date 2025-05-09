@@ -30,6 +30,7 @@ use App\Notifications\AuctionsNotification;
 use App\Notifications\Templates\NotificationTemplate;
 use App\Services\ApiRequestService;
 use Illuminate\Support\Str;
+use Vinkla\Hashids\Facades\Hashids;
 class AuctionService
 {
     use CrudTrait;
@@ -112,6 +113,7 @@ class AuctionService
                             $data['taksong_wish_at'] = $auction->taksong_wish_at; // 탁송 날짜
 
                             // 탁송 처리
+                            Log::info('[탁송 처리] 딜러정보 모드', ['method' => $data]);
                             TaksongAddJob::dispatch($auction, $data);
 
                             break;
@@ -956,7 +958,7 @@ class AuctionService
 
         foreach ($auction as $item) {
             $sendData = [
-                'diag_car_no' => $item->unique_number,
+                'diag_car_no' => $item->car_no,
             ];
         
             $result = $this->diagnosticResult($sendData);
@@ -967,14 +969,17 @@ class AuctionService
                 $isCheck = $resultArray['data']['diag_status'];
                 $isDoneAt = $resultArray['data']['diag_done_at'];
 
-                Log::info('[진단상태확인] : '.$item->unique_number, ['result' => $resultArray]);
+                Log::info('[진단상태확인] : '.$item->id, ['result' => $resultArray]);
                 $validResults[] = $resultArray;
 
                 // 진단이 완료된 경우
                 if($isCheck === 'done' && $isDoneAt){
                     // diag_outer_id
                     // auction의 unique_number와 일치하는지 확인
-                    $auction = Auction::where('unique_number', $resultArray['data']['diag_outer_id'])->first();
+
+                    $hashid = Hashids::decode($resultArray['data']['diag_outer_id']);
+
+                    $auction = Auction::where('id', $hashid)->first();
                     if($auction){
 
                         // $resultArray['data']['file_**'] 파일첨부 확인하여 썸네일 저정 
@@ -1005,7 +1010,7 @@ class AuctionService
                         // $bid = Bid::where('auction_id', $auction->id)->first();
                         AuctionBidStatusJob::dispatch($auction->user_id, 'ing', $auction->id, '','');
 
-                        Log::info('[진단상태 확인완료] : '.$item->unique_number, ['result' => $resultArray]);
+                        Log::info('[진단상태 확인완료] : '.$item->id, ['result' => $resultArray]);
                     }
 
                 }

@@ -1,5 +1,8 @@
 <template>
       <form @submit.prevent="handleSubmitBtn">
+        <div>
+          <input type="hidden" v-model="profile.socialLogin" id="socialLogin" class="form-control" placeholder="소셜구분"/>
+        </div>
         <div v-if="userEditURL" class="form-group profile-content">
           <div class="img-form">
           <div class="edit-photo-container" @click="triggerFileInput">
@@ -56,7 +59,7 @@
           <label for="email">이메일</label>
           <input type="text" v-model="profile.email" id="email" class="input-dis form-control" readonly/>
         </div>
-        <div v-if="registerURL || adminCreateURL" class="form-group">
+        <div v-if="(registerURL || adminCreateURL) && profile.socialLogin !== 'true'" class="form-group">
           <label for="email"><span class="text-danger">*</span> 비밀번호</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password" id="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합"/>
           <div v-if="registerURL || adminCreateURL" class="text-danger mt-1">
@@ -65,7 +68,7 @@
               </div>
           </div>
         </div>
-        <div v-if="userEditURL" class="form-group">
+        <div v-if="userEditURL && profile.socialLogin !== 'true'" class="form-group">
           <label for="email">변경 비밀번호</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password" id="password" class="form-control" placeholder="6~8자리 숫자,영어,특수문자 혼합"/>
           <div v-if="userEditURL" class="text-danger mt-1">
@@ -74,7 +77,7 @@
               </div>
           </div>
         </div>
-        <div v-if="userEditURL || registerURL || adminCreateURL" class="form-group">
+        <div v-if="(userEditURL || registerURL || adminCreateURL) && profile.socialLogin !== 'true'" class="form-group">
           <label for="email"><span class="text-danger" v-if="adminCreateURL || registerURL">*</span> 비밀번호 확인</label>
           <input autocomplete="one-time-code" type="password" v-model="profile.password_confirmation" id="password_confirmation" class="form-control" placeholder="비밀번호를 다시 입력해주세요"/>
           <div v-if="registerURL || adminCreateURL || userEditURL" class="text-danger mt-1">
@@ -517,6 +520,7 @@
     status:'',
     role:'',
     biz_check: '0',
+    socialLogin:route.query.social ? route.query.social : false,
     //디비외
     photoImgChg : false,
     photoUUID : '',
@@ -1349,6 +1353,8 @@
 
   function handleSubmitBtn(){
     if(route.path == '/edit-profile'){
+      // profile.value socialLogin 제거
+      delete profile.value.socialLogin;
       updateProfile(profile,userId.value);
     }else if(route.path == '/register'){
 
@@ -1413,8 +1419,10 @@
 
     }else if(route.path.includes('/admin/users/edit/')){
       console.log('isPenalty',isPenalty.value);
+      delete profile.value.socialLogin;
       updateUser(profile.value,userId.value, profile.status);
     }else if(route.path.includes('/admin/users/create')){
+      delete profile.value.socialLogin;
       adminStoreUser(profile.value);
     }
   }

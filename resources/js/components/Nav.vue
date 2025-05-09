@@ -82,7 +82,7 @@
                     </div>
                   </router-link>
                   -->
-                  <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mt-0" @click="toggleNavbar">
+                  <!-- <router-link :to="{ name: 'dealer.bidList'}" class="menu-item mt-0" @click="toggleNavbar">
                     <div class="sd-menu">
                       <div class="icon icon-nav-car"></div>
                     </div>
@@ -90,7 +90,7 @@
                       <span class="menu-text process">과거 낙찰 이력</span>
                       <span class="text-secondary opacity-50 font-1">경매 완료 매물</span>                       
                     </div>
-                  </router-link>
+                  </router-link> -->
                   <router-link :to="{ name: 'posts.index', params: { boardId: 'claim' } }" class="menu-item process mt-0" @click="toggleNavbar">
                     <div class="sd-menu">
                       <div class="icon icon-document"></div>
@@ -317,9 +317,9 @@
               <router-link :to="{ name: 'dealer.bids'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">선택 완료 차량</router-link>
             </li>
             -->
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <router-link :to="{ name: 'dealer.bidList'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">과거 낙찰 이력</router-link>
-            </li>
+            </li> -->
             <li class="nav-item">
               <router-link :to="{ name: 'posts.index', params: { boardId: 'notice' } }" class="nav-link tc-wh mx-3" exact-active-class="active-link">공지사항</router-link>
             </li>

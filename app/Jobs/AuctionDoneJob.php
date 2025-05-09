@@ -15,6 +15,7 @@ use App\Notifications\Templates\NotificationTemplate;
 use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Support\Facades\Log;
 use App\Notifications\AuctionsNotification;
+use App\Models\Bid;
 class AuctionDoneJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -40,6 +41,8 @@ class AuctionDoneJob implements ShouldQueue
         $baseUrl = config('app.url');
         $auction = Auction::find($this->auction);
 
+        Log::info('[경매완료] auction_id: ' . $auction->id, ['auction' => $this->auction, 'user' => $this->user, 'mode' => $this->mode]);
+
         switch($this->mode){
             case 'user':
 
@@ -57,6 +60,10 @@ class AuctionDoneJob implements ShouldQueue
 
             break;
         }
+
+        $bid = Bid::where('auction_id', $this->auction->id)->where('user_id', $this->user->id)->first();
+        $bid->status = 'done';
+        $bid->save();
 
         
     }

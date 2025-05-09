@@ -26,16 +26,18 @@ class FormatHelper
         $numPrice = (float) preg_replace('/[^0-9]/', '', $price);
         
         // 만 단위로 변환
-        $man = $numPrice / 10000;
+        // $man = $numPrice / 10000;
         
-        // 1만원 미만일 경우
-        if ($man < 1) {
-            return number_format($numPrice) . ($showWon ? '원' : '');
-        }
+        // // 1만원 미만일 경우
+        // if ($man < 1) {
+        //     return number_format($numPrice) . ($showWon ? '원' : '');
+        // }
         
-        // 만 단위로 포맷팅
-        $formatted = number_format($man, $man < 10 ? 2 : 0);
+        // // 만 단위로 포맷팅
+        // $formatted = number_format($man, $man < 10 ? 2 : 0);
         
-        return $formatted . '만' . ($showWon ? '원' : '');
+        // return $formatted . '만' . ($showWon ? '원' : '');
+
+        return $numPrice . '만원';
     }
 }

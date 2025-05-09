@@ -109,6 +109,9 @@ export default function useAuctions() {
     }
 
     const getAuctions = async (page = 1, isReviews = false , status = 'all', search_text='') => {
+
+        loadingSpinner(true);
+
         const apiList = [];
         if(status != 'all'){
             apiList.push(`auctions.status:${status}`)
@@ -135,6 +138,9 @@ export default function useAuctions() {
             .callback(function(result) {
                 auctionsData.value = result.data;
                 pagination.value = result.rawData.data.meta;
+
+                loadingSpinner(false);
+
             })
     
             .get();
@@ -155,6 +161,9 @@ export default function useAuctions() {
 
                 auctionsData.value = result.data;
                 pagination.value = result.rawData.data.meta;
+
+                loadingSpinner(false);
+
             })
             //.log()
             .get();
@@ -377,7 +386,8 @@ const AuctionCarInfo = async (carInfoForm) => {
             car_status: auctionData.auction.car_status,
             is_business_owner: auctionData.auction.is_business_owner,
             is_agree: auctionData.auction.is_agree,
-            personal_id_number: auctionData.auction.personal_id_number
+            personal_id_number: auctionData.auction.personal_id_number,
+            car_engine_type: auctionData.auction.car_engine_type
         }
     }
 
@@ -411,7 +421,8 @@ const AuctionCarInfo = async (carInfoForm) => {
             processing.value = false;
             loadingSpinner(false);
             const resultData = {
-                unique_number: result.data.unique_number,
+                // unique_number: result.data.unique_number,
+                hashid: result.data.hashid,
                 isSuccess: result.isSuccess
             };
             return resultData;

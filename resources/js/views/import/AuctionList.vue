@@ -102,13 +102,13 @@
                 <div class="car-info-section">
                   <div class="car-info">
                     <img src="../../../img/favorite-car-icon02.png" alt="경매장 아이콘" width="110px" />
-                    <p class="car-count">{{ ingCount }} 대</p>
+                    <p class="car-count">{{ ingCount ? ingCount : 0 }} 대</p>
                     <p class="car-label">경매장</p>
                   </div>
                   <div class="divider-line"></div>
                   <div class="car-info">
                     <img src="../../../img/favorite-car-icon.png" alt="관심차 아이콘" width="105px"/>
-                    <p class="car-count">{{ likeCount }} 대</p>
+                    <p class="car-count">{{ likeCount ? likeCount : 0 }} 대</p>
                     <p class="car-label">관심차</p>
                   </div>
                 </div>
@@ -158,7 +158,8 @@ const ingCount = ref(0);
 
 
 function navigateToDetail(auction) {
-  router.push({ name: 'AuctionDetail', params: { id: auction.unique_number } });
+  // router.push({ name: 'AuctionDetail', params: { id: auction.unique_number } });
+  router.push({ name: 'AuctionDetail', params: { id: auction.hashid } });
 }
 
 const checkScreenWidth = () => {

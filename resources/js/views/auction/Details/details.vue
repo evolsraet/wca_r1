@@ -81,7 +81,7 @@
                         <label class="heart-toggle" :for="'favorite-' + auctionDetail.data.id" @click.stop></label>
                       </div>
                       <div class="gap-1" :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
-                      <div v-if="!isMobileView" class="d-flex flex-row gap-1 img-container">
+                      <div v-if="!isMobileView" class="d-flex flex-row gap-1 img-container" :style="auctionDetail.data.car_thumbnails ? '' : 'height:320px'">
 
 
                         <div v-if="auctionDetail.data.car_thumbnails" class="img-wrapper">
@@ -90,7 +90,7 @@
 
                             <div id="carThumbnail" class="carousel slide">
                               <div class="carousel-inner">
-                                <div class="carousel-item" v-for="(thumbnail, index) in auctionDetail.data.car_thumbnails" :key="index" :class="{'active': index === 0}">
+                                <div class="carousel-item" v-for="(thumbnail, index) in auctionDetail.data.car_thumbnails" :key="index" :class="{'active': index === 0}" @click.prevent="openGallery(index)">
                                   <img :src="thumbnail" alt="Car Image">
                                 </div>
                               </div>
@@ -104,48 +104,13 @@
                               </button>
                             </div>
 
-                            <!-- <div class="inSlideContent">
-
-                            <swiper
-                          :modules="[Navigation, Pagination, Autoplay]"
-                          :slides-per-view="1"
-                          :loop="true"
-                          :pagination="{
-                              clickable: true,
-                              el: '.swiper-pagination',
-                              type: 'custom',
-                              renderCustom: renderCustomPagination
-                          }"
-                          :autoplay="{ delay: 5000 }"
-                          :speed="1000"
-                          @slideChangeTransitionStart="resetProgressBar"
-                          class="swiper-container"
-                          >
-                            <swiper-slide v-for="thumbnail in auctionDetail.data.car_thumbnails" :key="thumbnail">
-                                <div class="slide-content">
-                                    <img :src="thumbnail" alt="Car Image">
-                                    <div class="content d-flex">
-                                        <div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </swiper-slide>
-
-
-                            <div class="swiper-pagination mb-3">
-                                <div class="progress-bar">
-                                    <div class="progress"></div>
-                                </div>
-                            </div>
-
-                          </swiper>
-
-                          </div> -->
-
                         </div>
-                        <div v-else>
+                        <div id="no-image" class="d-flex" v-else>
                           <div class="w-50">
-                            <div class="card-img-top-ty02"></div>
+                            <div class="card-img-top-ty02">
+                              
+                              <!-- <img src="../../../../img/no-image.png" alt="Car Image"> -->
+                            </div>
                           </div>
                           <div class="w-50 d-flex flex-column gap-1">
                             <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
@@ -177,7 +142,7 @@
                           </div>
 
                         </div>
-                        <div v-else>
+                        <div id="no-image" class="d-flex" v-else>
                           <div class="card-img-top-ty02"></div>
                         </div>
                       </div>
@@ -234,31 +199,6 @@
 
 
                
-
-                
-                  <!--   <template v-if="auctionDetail.data.hope_price !== null">
-                    <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
-                      <p>현재 희망가</p>
-                        <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
-                      </div>
-                    </template>
-                    <template v-else>
-                      <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
-                        <p>현재 최고 입찰액</p>
-                        <p class="icon-coins">{{ amtComma(heightPrice)}}</p>
-                      </div>
-                    </template>-->
-                    
-                    <!--TODO: bid가 1명이라도 있을때 알림뜨기-->
-
-                <!-- <div v-if="isDealer && auctionDetail.data.status === 'ing'" class="p-3">
-                    <div v-if="auctionDetail.data.hope_price !== null">
-                      <div class="bold-18-font modal-bid d-flex p-3 justify-content-between blinking">
-                        <p>현재 희망가</p>
-                        <p class="icon-coins">{{ amtComma(auctionDetail.data.hope_price) }}</p>
-                      </div>
-                    </div>
-                  </div>-->
                 </div>
               </div>
             </div>
@@ -272,6 +212,7 @@
               <CarInfoItem label="최초등록일" :value="diagnosticResult.diag_registred_date ? diagnosticResult.diag_registred_date :'-'" />
               <CarInfoItem label="주행거리" :value="diagnosticResult.diag_distance ? diagnosticResult.diag_distance + ' km' : '-'" />
 
+              <CarInfoItem label="엔진형식" :value="diagnosticResult.diag_car_id ? carDetails.engineType : '-'" />
               <CarInfoItem label="미션" :value="diagnosticResult.diag_mission ? diagnosticResult.diag_mission : '-'" />
 
               <CarInfoItem label="제조사" :value="diagnosticResult.diag_company ? diagnosticResult.diag_company : '-'" />
@@ -300,60 +241,6 @@
 
             <div v-html="diagnosticOptionViewObject"></div>
             
-            <!-- <div class="option-icons">
-              <div class="option-row">
-                <div class="option-icon">
-                  <div class="icon smart-key-ac"></div>
-                  <p>스마트키</p>
-                </div>
-                <div class="option-icon">
-                  <div class="icon navigation-ac"></div>
-                  <p>네비게이션</p>
-                </div>
-                <div class="option-icon">
-                  <div class="icon rear-camera-ac"></div>
-                  <p>후방카메라</p>
-                </div>
-                <div class="option-icon">
-                  <div class="icon sunroof"></div>
-                  <p>선루프</p>
-                </div>
-                <div class="option-icon">
-                  <div class="icon headlamp-ac"></div>
-                  <p>헤드램프</p>
-                </div>
-                <div class="option-icon">
-                  <div class="icon auto-aircon-ac"></div>
-                  <p>자동에어컨</p>
-                </div>
-              </div>
-              <div class="option-row">                
-                <div class="option-icon">
-                  <div class="icon electric-seat-ac"></div>
-                  <p>전동</p>
-                </div>
-                <div class="option-icon">
-                  <div class="icon family"></div>
-                  <p>가죽</p>
-                </div>
-                <div class="option-icon">
-                  <div class="icon heated-seat-ac"></div>
-                  <p>열선</p>
-                </div>
-                <div class="option-icon">
-                  <div class="icon ventilated-seat"></div>
-                  <p>통풍</p>
-                </div>
-                <div class="option-icon">
-                  <div class="icon parking-sensor"></div>
-                  <p>주차 감지 센서</p>
-                </div>
-                <div class="option-icon">
-                  <div class="icon electric-side-mirror-ac"></div>
-                  <p>전동 사이드미러</p>
-                </div>
-              </div>
-            </div> -->
             </div>
             
           </div>
@@ -808,10 +695,27 @@
               <h4 class="custom-highlight">탁송 신청 정보</h4>
             </div>
             <div class="text-start mt-2">
-              <p class="text-secondary ">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1 fw-bold">{{auctionDetail.data.final_price / 10000}} 만원</span></p>
+              <p class="text-secondary ">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1 fw-bold">{{auctionDetail.data.final_price}} 만원</span></p>
               <p class="text-secondary ">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p>
               <p class="text-secondary ">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.taksong_wish_at}}</span></p>
               <p class="text-secondary ">장&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 소 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.addr1}}</span></p>
+            </div>
+
+
+            <div v-if="auctionDetail.data.is_taksong === 'ing'">
+
+              <div class="d-flex justify-content-between align-items-baseline pt-4">
+                <h4 class="custom-highlight">탁송 상태 정보</h4>
+              </div>
+
+              <div class="text-start mt-2">
+              <p class="text-secondary ">상태 :<span class="tc-red ms-1 fw-bold">배송중</span></p>
+              <p class="text-secondary ">탁송 기사 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_courier_name}} / {{auctionDetail.data.taksong_courier_mobile}}</span></p>
+              <p class="text-secondary ">출발 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_departure_address}}</span></p>
+              <p class="text-secondary ">도착 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_dest_address}}</span></p>
+              <p class="text-secondary ">출발 시간 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_departure_at}}</span></p>
+              <!-- <p class="text-secondary ">탁송 도착 시간 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_dest_at}}</span></p> -->
+              </div>
             </div>
             
             <div v-if="isDealer">
@@ -1020,21 +924,7 @@
             </div>
             
 
-            <div v-if="auctionDetail.data.is_taksong === 'ing'">
-
-              <div class="d-flex justify-content-between align-items-baseline pt-4">
-                <h4 class="custom-highlight">탁송 상태 정보</h4>
-              </div>
-              
-              <div class="text-start mt-2">
-              <p class="text-secondary ">상태 :<span class="tc-red ms-1 fw-bold">배송중</span></p>
-              <p class="text-secondary ">탁송 기사 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_courier_name}} / {{auctionDetail.data.taksong_courier_mobile}}</span></p>
-              <p class="text-secondary ">출발 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_departure_address}}</span></p>
-              <p class="text-secondary ">도착 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_dest_address}}</span></p>
-              <p class="text-secondary ">출발 시간 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_departure_at}}</span></p>
-              <!-- <p class="text-secondary ">탁송 도착 시간 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_dest_at}}</span></p> -->
-              </div>
-            </div>
+            
 
             
             <div v-if="fileOwnerUrl">
@@ -1305,7 +1195,8 @@ export default {
         { status: "ing", label: "STEP3", text: "경매진행" },
         { status: "chosen", label: "STEP4", text: "선택완료" },
         { status: "dlvr", label: "STEP5", text: "탁송중" },
-        { status: "done", label: "STEP6", text: "경매완료" }
+        { status: "dlvrDone", label: "STEP6", text: "탁송완료" },
+        { status: "done", label: "STEP7", text: "경매완료" }
       ],
       auctionDetail: {
       }
@@ -1393,6 +1284,9 @@ import find_icon_09 from '../../../../../resources/img/find-icons/find-icon-09.s
 import car_licence_icon from '../../../../../resources/img/find-icons/car_licence_icon.png';
 import auth_licence_icon from '../../../../../resources/img/find-icons/auth_licence_icon.png';
 
+import PhotoSwipeLightbox from 'photoswipe/lightbox'; // 슬라이드 이미지 라이트 PhotoSwipe
+import 'photoswipe/style.css';
+
 
 const { getContacts, contacts, pagination } = initAddressBookSystem();
 const { posts, getPosts, deletePost, isLoading, getBoardCategories } = initPostSystem();
@@ -1435,11 +1329,23 @@ const fileInputRefCompanyLicenseBtn = ref(null);
 const fileInputRefCompanyLicense = ref(null);
 const fileAuctionCompanyLicenseUrl = ref('');
 
+const photoSwipeImages = ref(null);
+
 
 const avgAmount = computed(() => {
-  return auctionDetail.value.data.middle_prices.max ? 
-      '평균 '+auctionDetail.value?.data?.middle_prices?.avg * 10000 + '원' :
-      '0';
+
+  let resutlPay = 0;
+
+  console.log('auctionDetail.value.data',auctionDetail.value.data);
+
+  if(auctionDetail.value.data.middle_prices.max){
+    console.log('auctionDetail.value.data.middle_prices.avg',auctionDetail.value.data.middle_prices.avg);
+    if(auctionDetail.value.data.middle_prices.avg){
+      resutlPay = auctionDetail.value.data.middle_prices.avg
+    }
+  }
+
+  return '평균 '+resutlPay+ '원';
 });
 
 const swal = inject('$swal');
@@ -1554,6 +1460,8 @@ const diagnosticResult = ref({});
 const diagnosticExtra = ref({});
 const diagnosticOptions = ref({});
 const diagnosticOptionView = ref({});
+
+let lightbox;
 
 const sortedTopBids = computed(() => {
   console.log('sortedTopBids??', auctionDetail.value);
@@ -1974,7 +1882,7 @@ const openDoneModal = (id) => {
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">출풍사</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">위카옥션(주)</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">상품번호</td>
-              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.unique_number}</td>
+              <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.id}</td>
             </tr>
 
             <tr>
@@ -2177,15 +2085,25 @@ const openCarLicenseModal = () => {
   const fileId = auctionDetail.value.data.files.file_auction_car_license[0].id;
   const fileName = auctionDetail.value.data.files.file_auction_car_license[0].file_name;
   const carLicenseUrl = '../media/' + fileId +'/' + fileName;
-  const text = `
-    <h5>자동차등록증</h5>
-    <div id="car-license-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <iframe
+
+  let carLicenseHtml = '';
+
+  if(carLicenseUrl){
+    carLicenseHtml = `<iframe
             src="${carLicenseUrl}" 
             width="100%"
             height="600px"
             
-        ></iframe>
+        ></iframe>`;
+  }else{
+    carLicenseHtml = '<div style="text-align: center; padding: 20px;">자동차등록증이 없습니다.</div>';
+  }
+
+
+  const text = `
+    <h5>자동차등록증</h5>
+    <div id="car-license-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        ${carLicenseHtml}
     </div>
   `;
 
@@ -2203,16 +2121,30 @@ const openCarLicenseModal = () => {
 const openDealerLicenseModal = () => {
   const fileId = auctionDetail.value.data.top_bids[0].dealerfile.files.file_user_biz[0].id;
   const fileName = auctionDetail.value.data.top_bids[0].dealerfile.files.file_user_biz[0].file_name;
-  const dealerLicenseUrl = '../media/' + fileId +'/' + fileName;
-  const text = `
-    <h5>매수자 사업자등록증</h5>
-    <div id="dealer-license-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <iframe
+
+  let dealerLicenseUrl = '';
+  if(fileId && fileName){
+    dealerLicenseUrl = '../media/' + fileId +'/' + fileName;
+  }
+
+  let dealerLicenseHtml = '';
+
+  if(dealerLicenseUrl){
+    dealerLicenseHtml = `<iframe
             src="${dealerLicenseUrl}" 
             width="100%"
             height="600px"
             
-        ></iframe>
+        ></iframe>`;
+  }else{
+    dealerLicenseHtml = '<div style="text-align: center; padding: 20px;">사업자등록증이 없습니다.</div>';
+  }
+
+
+  const text = `
+    <h5>매수자 사업자등록증</h5>
+    <div id="dealer-license-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        ${dealerLicenseHtml}
     </div>
   `;
 
@@ -2230,15 +2162,24 @@ const openDealerLicenseModal = () => {
 
 const openNameChangeModal = () => {
   const nameChangeUrl = fileAuctionCompanyLicenseUrl.value;
-  const text = `
-    <h5>명의이전 등록증</h5>
-    <div id="name-change-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <iframe
+
+  let nameChangeHtml = '';
+
+  if(nameChangeUrl){
+    nameChangeHtml = `<iframe
             src="${nameChangeUrl}" 
             width="100%"
             height="600px"
             
-        ></iframe>
+        ></iframe>`;
+  }else{
+    nameChangeHtml = '<div style="text-align: center; padding: 20px;">명의이전 등록증이 없습니다.</div>';
+  }
+
+  const text = `
+    <h5>명의이전 등록증</h5>
+    <div id="name-change-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        ${nameChangeHtml}
     </div>
   `;
 
@@ -2257,15 +2198,24 @@ const openNameChangeModal = () => {
 
 const openDiagResultModal = () => {
   const nameChangeUrl = diagnosticExtra.value.url_pdf;
-  const text = `
-    <h5>위카 진단평가</h5>
-    <div id="name-change-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-        <iframe
+
+  let addPDF = '';
+
+  if(nameChangeUrl){
+    addPDF = `<iframe
             src="${nameChangeUrl}" 
             width="100%"
             height="600px"
             
-        ></iframe>
+        ></iframe>`;
+  }else{
+    addPDF = '<div style="text-align: center; padding: 20px;">본사검수가 진행 되지 않아서 위카 진단평가 결과가 아직 없습니다.</div>';
+  }
+
+  const text = `
+    <h5>위카 진단평가</h5>
+    <div id="name-change-modal" style="padding-top: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+        ${addPDF}
     </div>
   `;
 
@@ -2733,28 +2683,34 @@ if (!amount.value || isNaN(parseFloat(amount.value))) {
   // alert('유효한 금액을 입력해주세요.');
 } else {
     // 최대값의 값을 만원 단위로 숫자를 바꾼다음 amount와 비교 하여 최대값을 넘어가지 않게 한다. 
-    const maxAmount = auctionDetail.value?.data?.middle_prices?.max;
-    const minAmount = auctionDetail.value?.data?.middle_prices?.min;
-    const avgAmount = auctionDetail.value?.data?.middle_prices?.avg;
-    const carPriceNowWhole = auctionDetail.value.data.car_price_now_whole;
+    const maxAmount = auctionDetail.value?.data?.middle_prices?.max / 10000;
+    const minAmount = auctionDetail.value?.data?.middle_prices?.min / 10000;
+    const avgAmount = auctionDetail.value?.data?.middle_prices?.avg / 10000;
+    const carPriceNowWhole = auctionDetail.value.data.car_price_now_whole / 10000;
 
+    const amountValue = amount.value;
 
-    if(amount.value < carPriceNowWhole * 0.6){
+    console.log('amountValue',amountValue);
+    console.log('carPriceNowWhole',carPriceNowWhole);
+    console.log('minAmount',minAmount);
+    console.log('maxAmount',maxAmount);
+
+    if(amountValue < carPriceNowWhole * 0.6){
       wica.ntcn(swal).icon('S').title('도매가보다 60%가 낮은 금액은 입찰이 불가능합니다.').fire();
       return;
     }
 
     if(auctionDetail.value?.data?.bids_count < 3){
-      if(amount.value < minAmount){
+      if(amountValue < minAmount){
         wica.ntcn(swal).icon('S').title('경매 최소 금액을 넘어갑니다.').fire();
         return;
       }
     }else{
-      if(amount.value > maxAmount){
+      if(amountValue > maxAmount){
         wica.ntcn(swal).icon('S').title('경매 최대 금액을 넘어갑니다.').fire();
         return;
       }
-      if(amount.value < minAmount){
+      if(amountValue < minAmount){
         wica.ntcn(swal).icon('S').title('경매 최소 금액을 넘어갑니다.').fire();
         return;
       }
@@ -2837,7 +2793,11 @@ const errorMessage = ref('');
 const scsbid = ref({});
 
 const fetchAuctionDetail = async () => {
-  const auctionId = parseInt(route.params.id);
+  // const auctionId = parseInt(route.params.id);
+  const auctionId = route.params.id;
+
+  console.log('auctionId',auctionId);
+
   try {
     auctionDetail.value = await getAuctionById(auctionId);
     fetchPosts();
@@ -2867,6 +2827,9 @@ const fetchAuctionDetail = async () => {
     };
     const carInfoResponse = await AuctionCarInfo(carInfoForm);
     const carData = carInfoResponse.data;
+
+    console.log('carData',carData);
+
     carDetails.value.no = carData.no;
     carDetails.value.model = carData.model;
     carDetails.value.modelSub = carData.modelSub;
@@ -2880,7 +2843,7 @@ const fetchAuctionDetail = async () => {
     carDetails.value.engineSize = carData.engineSize;
     carDetails.value.tuning = carData.tuning;
     carDetails.value.resUseHistYn = carData.resUseHistYn;
-    
+    carDetails.value.engineType = carData.engineType;
     const km = carData.km;
     const formattedKm = km.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     carDetails.value.km = formattedKm;
@@ -2990,6 +2953,10 @@ const diagnosticOptionViewObject = computed(() => {
 });
 
 
+function openGallery(index) {
+  lightbox?.loadAndOpen(index)
+}
+
 // 일정 간격으로 데이터를 갱신하는 함수
 const startPolling = () => {
   pollingInterval = setInterval(fetchAuctionDetail, 60000);
@@ -3002,7 +2969,8 @@ onMounted(async () => {
   const auctionDetailData = auctionDetail.value.data;
 
   console.log('auctionDetail//',auctionDetail.value.data);
-  unique_number.value = auctionDetail.value.data.unique_number;
+  // unique_number.value = auctionDetail.value.data.unique_number;
+  unique_number.value = auctionDetail.value.data.hashid;
   const nameChangeStatusValue = await nameChangeStatus(auctionDetail.value.data.id);
   // console.log('nameChangeStatusData',nameChangeStatusValue.data[0].chk_status);
 
@@ -3069,7 +3037,8 @@ onMounted(async () => {
   }
 
 
-  const diagnosticData = await diagnostic(auctionDetail.value.data.unique_number);
+  // const diagnosticData = await diagnostic(auctionDetail.value.data.unique_number);
+  const diagnosticData = await diagnostic(auctionDetail.value.data.hashid);
   console.log('!!diagnosticData',diagnosticData);
 
   diagnosticResult.value = diagnosticData.data.data ? diagnosticData.data.data : {};
@@ -3077,6 +3046,35 @@ onMounted(async () => {
   diagnosticOptions.value = diagnosticData.data.options ? diagnosticData.data.options : {};
 
   diagnosticOptionView.value = diagnosticData.data.diag_option_view;
+
+
+  if(auctionDetail.value.data.car_thumbnails){
+
+
+    console.log('auctionDetail.value.data.car_thumbnails',auctionDetail.value.data.car_thumbnails);
+
+    photoSwipeImages.value = auctionDetail.value.data.car_thumbnails.map(file => ({
+      src: file,
+      w: 800,
+      h: 600
+    }));
+  }
+
+  console.log('photoSwipeImages',photoSwipeImages.value);
+
+
+  lightbox = new PhotoSwipeLightbox({
+    gallery: '#carThumbnail',
+    children: '.carousel-item',
+    pswpModule: () => import('photoswipe'),
+    bgOpacity: 0.8,
+  });
+
+  lightbox.on('itemData', (e) => {
+    e.itemData = photoSwipeImages.value[e.index]
+  })
+
+  lightbox.init();
 
 
   diagnosticOptionViewObject();
@@ -3090,6 +3088,13 @@ onMounted(async () => {
   }
   window.addEventListener('resize', checkScreenWidth);
     checkScreenWidth();
+
+
+  // 로그아웃 되었으면
+  if(user.value.id == null){
+    router.push({ name: 'auth.login'});
+    // window.location.href = '/login';
+  }
   
 
   /*if (auctionDetail.value.data.status === 'done' && isDealer.value) {
@@ -3157,38 +3162,59 @@ const timeLeft = computed(() => {
 });
 
 const handleCancelBid = async () => {
-  try {
-    const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id && !bid.deleted_at);
-    if (myBid) {
-      const result = await cancelBid(myBid.id);
-      if (result.success) {
-        myBid.deleted_at = new Date().toISOString();
-        await fetchAuctionDetail();
-        amount.value = '';
-        //succesbid.value = false;
-        koreanAmount.value = '원';
-        swal.fire({
-          title: '',
-          icon: 'info',
-          text: '입찰이 취소되었습니다.',
-          showConfirmButton: true
-        }).then(() => {
-          window.location.reload();
-        });
-
-      } else {
-        wica.ntcn(swal)
-        .title('')
-        .icon('E') //E:error , W:warning , I:info , Q:question
-        .alert('입찰 취소에 실패하였습니다.');
-      }
-    } else {
-      alert('입찰 내역이 없습니다.');
+  
+  // 입찰 취소시 취소 입력하여 취소 하기 추가 
+  wica.ntcn(swal)
+  .addOption({
+    input: 'text',
+    inputPlaceholder: '취소',
+    inputValidator: (value) => {
+      return value === '취소' ? undefined : '정확히 "취소"라고 입력해야 합니다.';
     }
-  } catch (error) {
-    console.error('Error canceling bid:', error);
-    alert('입찰 취소에 실패했습니다.');
-  }
+  })
+  .callback( async(rst) => {
+    if (rst.isOk) {
+
+      try {
+        const myBid = auctionDetail.value?.data?.bids?.find(bid => bid.user_id === user.value.id && !bid.deleted_at);
+        if (myBid) {
+          const result = await cancelBid(myBid.id);
+          if (result.success) {
+            myBid.deleted_at = new Date().toISOString();
+            await fetchAuctionDetail();
+            amount.value = '';
+            //succesbid.value = false;
+            koreanAmount.value = '원';
+            swal.fire({
+              title: '',
+              icon: 'info',
+              text: '입찰이 취소되었습니다.',
+              showConfirmButton: true
+            }).then(() => {
+              window.location.reload();
+            });
+
+          } else {
+            wica.ntcn(swal)
+            .title('')
+            .icon('E') //E:error , W:warning , I:info , Q:question
+            .alert('입찰 취소에 실패하였습니다.');
+          }
+        } else {
+          alert('입찰 내역이 없습니다.');
+        }
+      } catch (error) {
+        console.error('Error canceling bid:', error);
+        alert('입찰 취소에 실패했습니다.');
+      }
+      
+    }
+  })
+  .confirm('취소 하시려면 "취소"를 입력 후 확인을 누르면 취소 됩니다.');
+  // alert('취소 하시려면 "취소"를 입력 하세요.');
+  return false;
+  
+
 };
 
 const dealerAddrCompetion = async () => {
@@ -3235,6 +3261,10 @@ input[type="checkbox"]{align-self:center;}
 .card-style{padding-top:1.5rem;padding-right:1.5rem;padding-left:1.5rem;}
 .blinking{animation:blink 1.5s linear infinite;}
 
+#no-image {
+  width:100%;
+}
+
 @keyframes blink{50%{opacity:0.5;}}
 
 .styled-input{border:none;outline:none;flex-grow:1;font-size:16px;padding-left:30px;color:#333;background-color:transparent;width:100%;direction:rtl;background-image:url('../../../../img/icon-won.png');background-repeat:no-repeat;background-size:20px 20px;background-position:left 0px center;}
@@ -3250,7 +3280,7 @@ input[type="checkbox"]{align-self:center;}
 
 @media (max-width:500px) {.container{--bs-gutter-x:0rem;}}
 
-.img-container{width:100%;height:400px;display:flex;justify-content:center;align-items:center;overflow:hidden;}
+.img-container{width:100%;height:480px;display:flex;justify-content:center;align-items:center;overflow:hidden;}
 .img-wrapper{width:100%;height:100%;position:relative;overflow:hidden;border-radius:10px;}
 .img-wrapper img{width:100%;height:100%;object-fit:cover;}
 .card-img-top-ty02{border-top-left-radius:6px;border-top-right-radius:6px;}
@@ -3382,6 +3412,11 @@ input[type="checkbox"]{align-self:center;}
 .carousel-inner {
   height: 100% !important;
   max-height: 100% !important;
+}
+
+.pswp__img{
+  width: 90% !important;
+  /* height: 100% !important; */
 }
 
 </style>
