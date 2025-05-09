@@ -29,7 +29,8 @@ use Illuminate\Support\Facades\Http;
 use App\Notifications\AuctionsNotification;
 use App\Notifications\Templates\NotificationTemplate;
 use App\Services\ApiRequestService;
-
+use Illuminate\Support\Str;
+use Vinkla\Hashids\Facades\Hashids;
 class AuctionService
 {
     use CrudTrait;
@@ -99,19 +100,20 @@ class AuctionService
                             // Log::info('딜러정보 모드', ['method' => $auction]);
                             $data = [];
                             $data['id'] = $auction->id;
-                            $data['carNo'] = $auction->car_no; // 차량번호  
-                            $data['carModel'] = '개발모델'; // 차량모델
+                            $data['car_no'] = $auction->car_no; // 차량번호  
+                            $data['car_model'] = $auction->car_model; // 차량모델
                             $data['mobile'] = User::find($auction->user_id)->phone; // 출발지 전화번호
-                            $data['destMobile'] = User::find($auction->bids[0]->user_id)->phone; // 출발지 전화번호
-                            $data['startAddr'] = $auction->addr1 . ' ' . $auction->addr2; // 주소
-                            $data['destAddr'] = $auction->dest_addr1 . ' ' . $auction->dest_addr2; // 주소
-                            $data['userId'] = $auction->user_id; // 사용자 아이디
-                            $data['bidUserId'] = $auction->bids[0]->user_id; // 입찰자 아이디
-                            $data['userEmail'] = User::find($auction->user_id)->email; // 사용자 이메일
-                            $data['bidUserEmail'] = User::find($auction->bids[0]->user_id)->email; // 입찰자 이메일
-                            $data['taksongWishAt'] = $auction->taksong_wish_at; // 탁송 날짜
+                            $data['dest_mobile'] = User::find($auction->bids[0]->user_id)->phone; // 출발지 전화번호
+                            $data['start_addr'] = $auction->addr1 . ' ' . $auction->addr2; // 주소
+                            $data['dest_addr'] = $auction->dest_addr1 . ' ' . $auction->dest_addr2; // 주소
+                            $data['user_id'] = $auction->user_id; // 사용자 아이디
+                            $data['bid_user_id'] = $auction->bids[0]->user_id; // 입찰자 아이디
+                            $data['user_email'] = User::find($auction->user_id)->email; // 사용자 이메일
+                            $data['bid_user_email'] = User::find($auction->bids[0]->user_id)->email; // 입찰자 이메일
+                            $data['taksong_wish_at'] = $auction->taksong_wish_at; // 탁송 날짜
 
                             // 탁송 처리
+                            Log::info('[탁송 처리] 딜러정보 모드', ['method' => $data]);
                             TaksongAddJob::dispatch($auction, $data);
 
                             break;
@@ -801,7 +803,10 @@ class AuctionService
     public function auctionFinalAtUpdate()
     {
         Log::info('auctionFinalAtUpdate');
-        $auctions = Auction::select('id', 'user_id', 'status', 'final_at', 'choice_at')->where('status', 'ing')->where('final_at', '!=', null)->whereNotNull('final_at')->where('final_at', '<', Carbon::now()->format('Y-m-d H:i:s'))->get();
+        $auctions = Auction::where('status', 'ing')
+                        ->whereNotNull('final_at')
+                        ->where('final_at', '<', Carbon::now()->format('Y-m-d H:i:s'))
+                        ->get();
 
         Log::info('auctionFinalAtUpdate auctions', [$auctions]);
 
@@ -811,7 +816,7 @@ class AuctionService
             $auction->choice_at = Carbon::now()->addDays(config('days.choice_day'));
             $auction->save();
 
-            Log::info("경매시간 만료시 선택대기로 변경 {$auction->id}");
+            Log::info("경매시간 만료시 선택대기로 변경 {$auction->id}", [$auction]);
 
             // 알림 보내기
             AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '','');
@@ -937,6 +942,83 @@ class AuctionService
 
         // 토큰 반환
         return $response->json()['dataBody']['access_token'];
+    }
+
+
+    public function diagnosticCheck()
+    {
+        $auction = Auction::where(function ($query) {
+            $query->where('status', 'diag')
+                  ->orWhere('status', 'ask');
+        })
+        ->whereNull('diag_id')
+        ->whereNull('diag_check_at')
+        ->get();
+        $validResults = [];
+
+        foreach ($auction as $item) {
+            $sendData = [
+                'diag_car_no' => $item->car_no,
+            ];
+        
+            $result = $this->diagnosticResult($sendData);
+            $resultArray = is_array($result) ? $result : json_decode(json_encode($result), true);
+        
+            if (isset($resultArray['status']) && $resultArray['status'] === 'ok') {
+
+                $isCheck = $resultArray['data']['diag_status'];
+                $isDoneAt = $resultArray['data']['diag_done_at'];
+
+                Log::info('[진단상태확인] : '.$item->id, ['result' => $resultArray]);
+                $validResults[] = $resultArray;
+
+                // 진단이 완료된 경우
+                if($isCheck === 'done' && $isDoneAt){
+                    // diag_outer_id
+                    // auction의 unique_number와 일치하는지 확인
+
+                    $hashid = Hashids::decode($resultArray['data']['diag_outer_id']);
+
+                    $auction = Auction::where('id', $hashid)->first();
+                    if($auction){
+
+                        // $resultArray['data']['file_**'] 파일첨부 확인하여 썸네일 저정 
+                        $files = [];
+                        $data = $resultArray['data'];
+
+                        // file_ 로 시작하는 모든 키만 수집
+                        foreach ($data as $key => $value) {
+                            if (Str::startsWith($key, 'file_') && is_array($value)) {
+                                foreach ($value as $file) {
+                                    if (isset($file['web_path'])) {
+                                        // config('services.diagnostic.api_url') 에서 /api/auth/diag/ 제거
+                                        $files[] = str_replace('/api/auth/diag/', '', config('services.diagnostic.api_url')).'/'.$file['web_path'];
+                                    }
+                                }
+                            }
+                        }
+                        
+
+                        $auction->status = 'ing';
+                        // $auction->diag_id = $resultArray['data']['diag_slug'];
+                        $auction->diag_check_at = $isDoneAt;
+                        $auction->is_accident = 1;
+                        $auction->car_thumbnail = json_encode($files, JSON_UNESCAPED_UNICODE);
+                        $auction->final_at = now()->addDays(config('days.auction_day'));
+                        $auction->save();
+
+                        // $bid = Bid::where('auction_id', $auction->id)->first();
+                        AuctionBidStatusJob::dispatch($auction->user_id, 'ing', $auction->id, '','');
+
+                        Log::info('[진단상태 확인완료] : '.$item->id, ['result' => $resultArray]);
+                    }
+
+                }
+                
+            }
+        }
+
+        return $validResults;
     }
 
 }

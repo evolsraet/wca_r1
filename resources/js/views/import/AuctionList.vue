@@ -32,7 +32,7 @@
                       <div>
                         <div class="d-flex gap-4 align-items-center">
                           <div class="img_box">
-                            <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2">
+                            <img :src="auction.car_thumbnails ? auction.car_thumbnails[0] : auction.car_thumbnail" alt="차량 사진" class="mb-2">
                           </div>
                           <h5 class="text-nowrap mb-0 fs-4 font-size">{{ auction.car_no }}</h5>
                           <p :class="getStatusClass(auction.status)" class="ml-auto">
@@ -51,7 +51,7 @@
                         <div class="d-flex gap-4 align-items-center app-d-flex">
                           <div class="col-auto d-flex flex-column align-items-center">
                           <div class=" img_box">
-                            <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2">
+                            <img :src="auction.car_thumbnails ? auction.car_thumbnails[0] : auction.car_thumbnail" alt="차량 사진" class="mb-2">
                           </div>
                           <h5 class="mt-2 mb-0">{{ auction.car_no }}</h5>
                         </div>
@@ -102,13 +102,13 @@
                 <div class="car-info-section">
                   <div class="car-info">
                     <img src="../../../img/favorite-car-icon02.png" alt="경매장 아이콘" width="110px" />
-                    <p class="car-count">{{ ingCount }} 대</p>
+                    <p class="car-count">{{ ingCount ? ingCount : 0 }} 대</p>
                     <p class="car-label">경매장</p>
                   </div>
                   <div class="divider-line"></div>
                   <div class="car-info">
                     <img src="../../../img/favorite-car-icon.png" alt="관심차 아이콘" width="105px"/>
-                    <p class="car-count">{{ likeCount }} 대</p>
+                    <p class="car-count">{{ likeCount ? likeCount : 0 }} 대</p>
                     <p class="car-label">관심차</p>
                   </div>
                 </div>
@@ -158,7 +158,8 @@ const ingCount = ref(0);
 
 
 function navigateToDetail(auction) {
-  router.push({ name: 'AuctionDetail', params: { id: auction.unique_number } });
+  // router.push({ name: 'AuctionDetail', params: { id: auction.unique_number } });
+  router.push({ name: 'AuctionDetail', params: { id: auction.hashid } });
 }
 
 const checkScreenWidth = () => {

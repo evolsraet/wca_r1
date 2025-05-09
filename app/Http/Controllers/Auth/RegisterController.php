@@ -11,7 +11,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use App\Models\UserSns;
-
+use Illuminate\Support\Str;
 class RegisterController extends Controller
 {
     /*
@@ -52,12 +52,25 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
-        return Validator::make($data, [
+        // return Validator::make($data, [
+        //     'name' => ['required', 'string', 'max:255'],
+        //     'phone' => ['required', 'string', 'unique:users'],
+        //     'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users'],
+        //     'password' => ['required', 'string', 'min:8', 'confirmed'],
+        // ]);
+
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'unique:users'],
             'email' => ['nullable', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
+        ];
+    
+        if ($data['socialLogin'] !== 'true') {
+            $rules['password'] = ['required', 'string', 'min:8', 'confirmed'];
+        }
+    
+        return Validator::make($data, $rules);
+        
     }
 
     /**
@@ -72,11 +85,23 @@ class RegisterController extends Controller
             ? Role::find($data['role_id'])
             : Role::where('name', 'user')->first();
 
+        if ($data['socialLogin'] === 'true') {
+            $userDataPassword = Hash::make(Str::random(32));
+        }else{
+            $userDataPassword = Hash::make($data['password']);
+        }
+
         $userData = [
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => $userDataPassword,
         ];
+
+        // dd($userData);
+
+        if ($data['socialLogin'] === 'true') {
+            $userData['socialLogin'] = $data['socialLogin'];
+        }
 
         if ($user = User::create($userData)) {
             if ($role) {

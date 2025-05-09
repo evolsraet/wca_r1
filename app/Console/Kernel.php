@@ -13,6 +13,8 @@ use App\Services\NameChangeService;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Console\Scheduling\Schedule;
+use App\Jobs\AuctionBidStatusJob;
+use App\Http\Controllers\Api\AuctionController;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 
 class Kernel extends ConsoleKernel
@@ -32,6 +34,16 @@ class Kernel extends ConsoleKernel
         Log::info('Kernel schedule start : user : ' . auth()->user()->name);
 
         $schedule->call(function() {
+
+            // 경매 상태 변경 확인
+            $auctionService = new AuctionService();
+            $auctionService->diagnosticCheck();
+            
+        })->everyMinute();
+
+
+        $schedule->call(function() {
+
             // 탁송 상태 확인
             $taksongStatusTemp = TaksongStatusTemp::where('chk_status', '!=', 'done')->get();
             if($taksongStatusTemp){
@@ -40,23 +52,9 @@ class Kernel extends ConsoleKernel
                 }
             }
 
-            // 차량대금 입금 확인 
-            $auctionService = new AuctionService();
-            $auctionService->auctionTotalDepositMiss();
-
-
-            // 경매 종료 시간 만료시 선택대기 2일동안 아무 내용 없으면 자동으로 취소 처리 
-            $auctionService->auctionCancel();
-
-            // 명의이전 까지 완료된 매물 상태변경
-            $nameChangeService = new NameChangeService();
-            // $nameChangeService->changeAuctionStatusAll();
-            $nameChangeService->processCompletedNameChangeAuctions();
-
-            
         })->everyMinute();
 
- // 경매 종료 시간 만료시 선택대기로 변경     
+         // 경매 종료 시간 만료시 선택대기로 변경     
         $schedule->call(function() {
             $auctionService = new AuctionService();
             $auctionService->auctionFinalAtUpdate();
@@ -64,8 +62,20 @@ class Kernel extends ConsoleKernel
 
 
         $schedule->call(function() {
+            // 명의이전 까지 완료된 매물 상태변경
+            $nameChangeService = new NameChangeService();
+            // $nameChangeService->changeAuctionStatusAll();
+            $nameChangeService->processCompletedNameChangeAuctions();
+        })->everyMinute();
 
-            
+
+        $schedule->call(function() {
+
+            // 차량대금 입금 확인 
+            $auctionService = new AuctionService();
+            $auctionService->auctionTotalDepositMiss();
+            // 경매 종료 시간 만료시 선택대기 2일동안 아무 내용 없으면 자동으로 취소 처리 
+            $auctionService->auctionCancel();
 
         })->hourly();
 

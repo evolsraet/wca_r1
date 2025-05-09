@@ -34,21 +34,21 @@ class TaksongAddJob implements ShouldQueue
     public function handle(ApiRequestService $api): void
     {
         try {
-            $taksong_wish_at = Carbon::parse($this->data['taksongWishAt'])->format('Y-m-d');
-            $taksong_wish_at_time = Carbon::parse($this->data['taksongWishAt'])->format('H:i');
+            $taksong_wish_at = Carbon::parse($this->data['taksong_wish_at'])->format('Y-m-d');
+            $taksong_wish_at_time = Carbon::parse($this->data['taksong_wish_at'])->format('H:i');
 
             $sendData = [
                 'auth' => config('taksongApi.TAKSONG_AUTH'),
                 'chk_trans_type' => 'RD',
                 'chk_accepted_at' => $taksong_wish_at,
                 'chk_accepted_time_at' => $taksong_wish_at_time,
-                'chk_car_no' => $this->data['carNo'],
-                'chk_car_model' => $this->data['carModel'],
+                'chk_car_no' => $this->data['car_no'],
+                'chk_car_model' => $this->data['car_model'],
                 'chk_want_insure' => '0',
                 'chk_departure_mobile' => $this->data['mobile'],
-                'chk_departure_address' => $this->data['startAddr'],
-                'chk_dest_mobile' => $this->data['destMobile'],
-                'chk_dest_address' => $this->data['destAddr'],
+                'chk_departure_address' => $this->data['start_addr'],
+                'chk_dest_mobile' => $this->data['dest_mobile'],
+                'chk_dest_address' => $this->data['dest_addr'],
                 'api_key' => config('taksongApi.TAKSONG_API_KEY')
             ];
 
@@ -70,8 +70,8 @@ class TaksongAddJob implements ShouldQueue
 
             try {
 
-                AuctionDlvrJob::dispatch($this->data['userId'], $this->data, $this->response, 'user');
-                AuctionDlvrJob::dispatch($this->data['bidUserId'], $this->data, $this->response, 'dealer');
+                AuctionDlvrJob::dispatch($this->data['user_id'], $this->data, $this->response, 'user');
+                AuctionDlvrJob::dispatch($this->data['bid_user_id'], $this->data, $this->response, 'dealer');
 
                 // Notification::route('mail', 'admin@example.com')
                 //     ->notify(new JobSuccessNotification($result));

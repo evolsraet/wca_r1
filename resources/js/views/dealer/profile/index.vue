@@ -3,7 +3,7 @@
         <div class="regiest-content">
             <!-- 딜러 프로필 요약 정보 -->
             <div class="banner-top mt-3">
-                <div class="top-info gap-1 align-items-center">현재 진행중인 경매<p class="tc-primary">{{ bidsCountByUser[user.dealer.user_id] || 0 }} </p> 건</div>
+                <div class="top-info gap-1 align-items-center">현재 진행중인 경매<p class="tc-primary">{{ bidsCountByUser[user.dealer.user_id] ? bidsCountByUser[user.dealer.user_id] : 0 }} </p> 건</div>
                 <div class="d-flex justify-content-end">
                     <a href="/addr" class="btn btn-outline-primary mb-3 me-3">배송지 관리</a>
                     <a href="/edit-profile" class="btn btn-outline-primary mb-3">내 정보수정</a>
@@ -22,12 +22,12 @@
                     <div class="activity-info bold-18-font mt-5">
                         
                         <router-link :to="{ name: 'auction.index', state: { currentTab: 'interInfo' }}" class="item">
-                        <p><span class="tc-primary slide-up mb-0" ref="item1">{{ myLikeCount }}</span> <span>건</span></p>
+                        <p><span class="tc-primary slide-up mb-0" ref="item1">{{ myLikeCount ? myLikeCount : 0 }}</span> <span>건</span></p>
                         <p class="interest-icon text-secondary opacity-50 normal-16-font mb-0">관심</p>
                         </router-link>
                         
                         <router-link :to="{ name: 'auction.index' , state: { currentTab: 'myBidInfo',status: 'bid' }}" class="item">
-                        <p><span class="tc-primary mb-0" ref="item2">{{ myBidCount }}</span> <span>건</span></p>
+                        <p><span class="tc-primary mb-0" ref="item2">{{ myBidCount ? myBidCount : 0 }}</span> <span>건</span></p>
                         <p class="bid-icon text-secondary opacity-50 normal-16-font mb-0">입찰</p>
                         </router-link>
                         
@@ -174,8 +174,13 @@
                         <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="(bid, index) in auctionsIngData" :key="bid.id" @click="navigateToDetail(bid)" :style="getAuctionStyle(bid)">
                             <div class="card my-auction">
                                 <div class="card-img-top-placeholder grayscale_img">
-                                    <img v-if="bid.car_thumbnail" :src="bid.car_thumbnail">
-                                    <img v-else src="../../../../img/car_example.png">
+                                    <div v-if="bid.car_thumbnail">
+                                        <img v-if="bid.car_thumbnails" :src="bid.car_thumbnails[0]">
+                                        <img v-else="bid.car_thumbnail" :src="bid.car_thumbnail">
+                                    </div>
+                                    <div v-else>
+                                        <img  src="../../../../img/car_example.png">
+                                    </div>
                                 </div>
                                 <span v-if="bid.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                 <div class="card-body">

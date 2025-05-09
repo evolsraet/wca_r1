@@ -118,7 +118,8 @@
                                 </div>
                             </td>
                             <td class="px-6 py-4 text-sm">
-                                {{ auction.unique_number }}
+                                <!-- {{ auction.unique_number }} -->
+                                {{ auction.id }}
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 {{ auction.car_no }}
@@ -153,9 +154,16 @@
                             </td>
 
                             <td class="px-6 py-4 text-sm">
-                                <router-link
+                                <!-- <router-link
                                     :to="{ 
                                         name: 'auction.approve', params: { id: auction.unique_number } 
+                                    }"
+                                    class="ms-2 fs-6 badge edit"
+                                    >수정
+                                </router-link> -->
+                                <router-link
+                                    :to="{ 
+                                        name: 'auction.approve', params: { id: auction.hashid } 
                                     }"
                                     class="ms-2 fs-6 badge edit"
                                     >수정

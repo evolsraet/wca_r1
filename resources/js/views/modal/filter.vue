@@ -72,6 +72,14 @@ export default {
       cargoSpecial:true,
     },
       categories: {
+        '경매 이력': [
+          { name: '재경매차', selected: false },
+          { name: '내 입찰 차', selected: false }
+        ],
+        '리스 렌트': [
+          { name: '2WD', selected: false },
+          { name: '4WD', selected: false }
+        ],
         '국산차': [
           { name: '현대', selected: false },
           { name: '기아', selected: false },
@@ -139,18 +147,10 @@ export default {
           { name: '전기', selected: false },
           { name: '기타', selected: false }
         ],
-        '경매 이력': [
-          { name: '재경매차', selected: false },
-          { name: '내 입찰 차', selected: false }
-        ],
         '판매방식': [
           { name: '일반', selected: false },
           { name: '렌트', selected: false },
           { name: '리스', selected: false },
-        ],
-        '리스 렌트': [
-          { name: '2WD', selected: false },
-          { name: '4WD', selected: false }
         ],
       },
       selectedStartYear: null,

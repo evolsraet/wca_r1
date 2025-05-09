@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Validator;
 use App\Jobs\UserRegisteredJob;
 use App\Jobs\UaerDealerStatusJob;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserService
 {
@@ -62,14 +64,29 @@ class UserService
             $requestData['model'] = new User;  // $result는 모델 인스턴스를 가리킵니다.
 
             // beforeData() 이전에 발리데이트 해야함
+
+            if ($data['socialLogin'] !== 'true') {
+                $requestData['password'] = ['required', 'string', 'min:8', 'confirmed'];
+            }
+
             $validatedData = validator($requestData, [
                 'name' => 'required|max:255',
-                'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                 'phone' => ['required', 'string', 'unique:users'],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
+                // 'password' => ['required', 'string', 'min:8', 'confirmed'],
             ])->validate();
 
             $data = $this->beforeData($data);
+
+
+
+            if($data['socialLogin'] === 'true'){
+                $data['password'] = Hash::make(Str::random(32));
+            }
+
+            // dd($data);
+
+            unset($data['socialLogin']);
 
             // 유효성 검사 실패 시
             // if ($validator->fails()) {
@@ -84,6 +101,8 @@ class UserService
             if ($data['role'] == 'user') {
                 $data['status'] = 'ok';
             }
+
+            // dd($data);
 
             // dd([gettype($data), $data, $request->file()]);
             $item = User::create($data);
@@ -114,6 +133,9 @@ class UserService
                     'file_user_biz_name' => 'required',
                     'file_user_cert_name' => 'required',
                     'file_user_sign_name' => 'required',
+                    'car_management_business_registration_number' => 'required',
+                    'business_registration_number' => 'required',
+                    'corporation_registration_number' => 'required',
                 ]);
                 // 유효성 검사 실패 시
                 if ($validator->fails()) {
@@ -205,17 +227,26 @@ class UserService
                         UaerDealerStatusJob::dispatch($user, 'reject');
                     }
                 }
-                
+
+
+                $validatedData = validator($data, [
+                    'name' => 'sometimes|required|max:255',
+                    'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users'],
+                    'phone' => 'sometimes|required',
+                    'password' => ['sometimes', 'required', 'string', 'min:8', 'confirmed'],
+                ])->validate();
+
+                unset($data['password_confirmation']);
 
                 $item->update($data);
             }
 
-            $validatedData = validator($data, [
-                'name' => 'sometimes|required|max:255',
-                'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users'],
-                'phone' => 'sometimes|required',
-                'password' => ['sometimes', 'required', 'string', 'min:8', 'confirmed'],
-            ])->validate();
+            // $validatedData = validator($data, [
+            //     'name' => 'sometimes|required|max:255',
+            //     'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users'],
+            //     'phone' => 'sometimes|required',
+            //     'password' => ['sometimes', 'required', 'string', 'min:8', 'confirmed'],
+            // ])->validate();
 
             $data = $this->beforeData($data);
             $data['dealer'] = $this->checkJson($request->input('dealer'));

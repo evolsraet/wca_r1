@@ -419,11 +419,13 @@ const submitLogin = async () => {
 
   const returnUserData = await store.dispatch('auth/login', loginForm.value);
   if(returnUserData.isError) {
+
+    console.log('returnUserData', returnUserData);
+
     if(returnUserData.isAlert) {
         wica.ntcn(swal)
         .title(returnUserData.msg)
         .icon('E')
-        .alert('계속 될 경우 관리자에게 문의해주세요.')
         .callback(() => {
             // 회원가입 필요한 경우
             if (returnUserData.needRegister) {
@@ -438,8 +440,13 @@ const submitLogin = async () => {
                         name: returnUserData.social_data.name
                     }
                 });
+            }else{
+                router.push({ 
+                    name: 'auth.register'
+                });
             }
-        });   
+        })
+        .alert('회원가입후 이용해 주세요.');   
     } else {
         wica.ntcn(swal)
         .title(returnUserData.rawData.response.data.message)

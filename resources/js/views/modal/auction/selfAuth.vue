@@ -6,6 +6,7 @@
     import { cmmn } from '@/hooks/cmmn';
     import { useRouter } from 'vue-router';
     import useAuctions from '@/composables/auctions';
+    import { useStore } from 'vuex';
     // import imgInfo from'../../../img/auction-detil.png';
     import imgKakao from '../../../../../resources/img/auths/kakao_auth_logo.png';
     import imgPass from '../../../../../resources/img/auths/pass_auth_logo.png';
@@ -21,6 +22,8 @@
     const { wicas , wica , updateAuctionTimes , calculateTimeLeft } = cmmn();
 
     const { checkBusinessStatus } = useAuctions();
+    const store = useStore();
+    const user = computed(() => store.getters['auth/user']);
 
     const swal = inject('$swal');
     const router = useRouter();
@@ -45,9 +48,10 @@
        
     const selfAuthModal = () => {
 
+    // todo:소유자 인증 부분 레이아웃 수정 작업 
       const text = `
         <h5 class="text-start mb-3">소유자 인증</h5>
-        <div class="sellInfo my-3 p-4 mb-4 auth-modal" style="position: relative; text-align: left;">
+        <div class="sellInfo my-3 p-4 mb-4 auth-modal" style="position: relative; text-align: left; height: 570px;">
             <div class="auction-guid-popup-container">
 
                 <div class="form-group mt-1" id="agreeElement" style="font-size: 17px; background:#f9f9f9; padding: 10px 15px; border-radius: 10px;">
@@ -56,8 +60,8 @@
                     <p class="small mt-2">또한 조회대상자의 주민등록번호를 이용하여 사업자등록 여부를 조회한다는 동의를 받아 그 근거를 보관하고 있어야 합니다.</p>
                     <p class="small mt-2">- 위와 같은 동의를 거치지 않고 주민등록번호를 이용하여 사업자등록 여부를 조회하는 것은 <span class="text-danger">개인정보보호법 제 72조에 따라 3년 이하의 징역 또는 3천만원 이하의 벌금</span>에 처할 수 있습니다.</p>
                     <p class="small mt-2">- 정부주체<span class="text-danger">(주민등록번호 소유자)</span>의 손해배상청구 소송의 대상이 될 수 있습니다.</p>
-                    <p class="small mt-2 text-danger">* 소유자의 사업자여부 확인을 위해 주민번호 & 휴대폰번호를 사용하며 합니다. 주민등록번호는 이후 명의이전등록 정보를 위해 보관됩니다.</p>
-                    <div class="form-check mt-3">
+                    <p class="small mt-2 text-danger">* 소유자의 사업자여부 확인을 위해 주민번호 & 휴대폰번호를 사용하며 합니다. 주민등록번호는 이후 명의이전등록, 경락확인서 정보를 위해 보관됩니다.</p>
+                    <div class="form-check mt-3" style="margin-top: 10px;">
                         <input class="form-check-input" type="checkbox" id="agree" name="agree" value="1">
                         <label class="form-check-label" for="agree"style="padding-top:5px;">위 내용에 <strong>동의합니다.</strong></label>
                     </div>
@@ -178,7 +182,7 @@
                     </div>
                     <div class="form-group mt-3" id="phoneNoElement" >
                         <label class="mb-2"><span class="text-danger me-2">*</span> 휴대폰번호</label>
-                        <input type="number" id="phoneNo" class="form-control" placeholder="ex) 01012345678" style="width: 100%;">
+                        <input type="number" id="phoneNo" class="form-control" placeholder="ex) 01012345678" value="`+user.value?.phone+`" style="width: 100%; padding: 12px;">
                     </div>
                     <div class="form-group mt-3" id="userNameElement" >
                         <label class="mb-2"><span class="text-danger me-2">*</span> 소유자 이름</label>
@@ -186,7 +190,7 @@
                     </div>
                     <div class="form-group mt-3" id="identityElement" >
                         <label class="mb-2"><span class="text-danger me-2">*</span> 주민번호</label>
-                        <input type="password" id="identity" class="form-control" placeholder="ex) 9034561234567" style="width: 100%;">
+                        <input type="password" id="identity" class="form-control" placeholder="ex) 9034561234567" style="width: 100%; padding: 12px;">
                     </div>            
                 
                 </div>
@@ -413,11 +417,15 @@
                         // resIndividualBusinessYN / 개인사업자 여부 확인 / N/Y
                             emit('update:isBusinessOwner', businessStatus.resIndividualBusinessYN === 'Y' ? 1 : 0);
                             emit('update:isAuth', true);
+                            emit('update:personal_id_number', setData.identity);
                             wica.ntcn(swal)
                             .alert('소유자 인증이 완료 되었습니다.'); 
                         }else{
-                            wica.ntcn(swal)
-                            .alert('소유자 인증에 실패 하였습니다.'); 
+
+                            alert('소유자 인증에 실패 하였습니다.');
+
+                            // wica.ntcn(swal)
+                            // .alert('소유자 인증에 실패 하였습니다.'); 
                         }
 
                     });
@@ -433,6 +441,8 @@
         .alert('필수입력하고 인증을 진행해주세요.');  
 
     }
+
+    console.log('user??',user.value);
 
     </script>
     

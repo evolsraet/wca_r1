@@ -131,8 +131,8 @@ TODO:
                                                         </div>
                                                     </div>
                                                     <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
-                                                        <div v-if="auction.car_thumbnail">
-                                                            <img :src="auction.car_thumbnail" alt="Car Image">
+                                                        <div v-if="auction.car_thumbnails">
+                                                            <img :src="auction.car_thumbnails[0]" alt="Car Image">
                                                         </div>
                                                         <div v-else>
                                                             <img src="../../../img/car_example.png">
@@ -236,8 +236,8 @@ TODO:
                                                 </div>
                                             </div>
                                             <div v-else="auction.status !== 'ask' || auction.status !== 'diag'" :class="{ 'grayscale_img': auction.status === 'done' || auction.status === 'cancel' ||(isDealer && auction.status === 'chosen') }" class="card-img-top-placeholder">
-                                                <div v-if="auction.car_thumbnail">
-                                                    <img :src="auction.car_thumbnail" alt="Car Image">
+                                                <div v-if="auction.car_thumbnails">
+                                                    <img :src="auction.car_thumbnails[0]" alt="Car Image">
                                                 </div>
                                                 <div v-else>
                                                     <img src="../../../img/car_example.png">
@@ -331,7 +331,7 @@ TODO:
                                 
                                     <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="auction in filteredDone" :key="auction.id" @click="navigateToDetail(auction)" :style="getAuctionStyle(auction)">
                                         <div class="card my-auction">
-                                            <div class="card-img-top-placeholder grayscale_img"><img :src="auction.car_thumbnail"></div>
+                                            <div class="card-img-top-placeholder grayscale_img"><img :src="auction.car_thumbnails[0]"></div>
                                             <span v-if="auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                             <div class="card-body">
                                                 <p class="card-title fw-bolder">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</p>
@@ -384,8 +384,8 @@ TODO:
                                                 </div>
                                             </div>
                                             <div v-else="bid.status !== 'ask' || bid.status !== 'diag'" :class="{ 'grayscale_img': bid.status === 'done' || bid.status === 'cancel' ||(isDealer && bid.status === 'chosen') }" class="card-img-top-placeholder">
-                                                <div v-if="bid.car_thumbnail">
-                                                    <img :src="bid.car_thumbnail" alt="Car Image">
+                                                <div v-if="bid.car_thumbnails">
+                                                    <img :src="bid.car_thumbnails[0]" alt="Car Image">
                                                 </div>
                                                 <div v-else>
                                                     <img src="../../../img/car_example.png">
@@ -469,8 +469,8 @@ TODO:
                                                     </div>
                                                 </div>
                                                 <div v-else="scsBid.status !== 'ask' || scsBid.status !== 'diag'" :class="{ 'grayscale_img': scsBid.status === 'done' || scsBid.status === 'cancel' ||(isDealer && scsBid.status === 'chosen') }" class="card-img-top-placeholder">
-                                                    <div v-if="scsBid.car_thumbnail">
-                                                        <img :src="scsBid.car_thumbnail" alt="Car Image">
+                                                    <div v-if="scsBid.car_thumbnails">
+                                                        <img :src="scsBid.car_thumbnails[0]" alt="Car Image">
                                                     </div>
                                                     <div v-else>
                                                         <img src="../../../img/car_example.png">
@@ -932,7 +932,8 @@ const auctionEntryPublic = () => {
 
 function navigateToDetail(auction) { 
     //console.log("디테일 :", auction.id);
-    router.push({ name: 'AuctionDetail', params: { id: auction.unique_number } });
+    // router.push({ name: 'AuctionDetail', params: { id: auction.unique_number } });
+    router.push({ name: 'AuctionDetail', params: { id: auction.hashid } });
 }
 
 function getAuctionStyle(auction) { 

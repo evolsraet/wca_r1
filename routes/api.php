@@ -143,3 +143,4 @@ Route::get('test-auctions-notification', [AuctionController::class, 'testAuction
 
 // Route::get('test-taksong-service', [AuctionController::class, 'testTaksongService']);
 
+Route::get('diagnostic-check', [AuctionController::class, 'diagnosticCheck']);

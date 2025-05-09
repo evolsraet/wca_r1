@@ -25,6 +25,8 @@ use App\Jobs\AuctionsTestJob;
 use App\Jobs\TaksongAddJob;
 use App\Services\TaksongService;
 use App\Services\ApiRequestService;
+use App\Jobs\AuctionBidStatusJob;
+use App\Models\Bid;
 class AuctionController extends Controller
 {
     use CrudControllerTrait;
@@ -131,8 +133,7 @@ class AuctionController extends Controller
 
             $CarmerceService = new CarmerceService();
 
-            // 임시 데이터 리턴
-            return [
+            $result = [
                 'owner' => $request->input('owner'),
                 'no' => $request->input('no'),
                 'maker' => $niceDnrResult['carSise']['info']['carinfo']['makerNm'],
@@ -155,7 +156,13 @@ class AuctionController extends Controller
                 'tuning' => count($niceDnrResult['carParts']['outB0001']['list'][0]['resContentsList']),
                 'resUseHistYn' => $niceDnrResult['carParts']['outB0001']['list'][0]['resUseHistYn'] === 'Y' ? '사용' : '없음',
                 'initialPrice' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['price'],
+                'engineType' => $niceDnrResult['carSise']['info']['carinfo']['engineType']
             ];
+
+            Log::info('[차량정보 확인]', ['result' => $result]);
+
+            // 임시 데이터 리턴
+            return $result;
         });
 
 
@@ -492,6 +499,14 @@ class AuctionController extends Controller
 
         die('dd');
 
+    }
+
+    public function diagnosticCheck(): mixed
+    {
+        $auctionService = new AuctionService();
+        $validResults = $auctionService->diagnosticCheck();
+
+        return response()->api($validResults);
     }
 
     public function diagnosticCode()

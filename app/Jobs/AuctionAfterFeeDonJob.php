@@ -11,7 +11,7 @@ use App\Notifications\Templates\NotificationTemplate;
 use App\Models\User;
 use App\Notifications\AuctionAfterFeeDonNotification;
 use App\Notifications\AuctionsNotification;
-
+use App\Models\Bid;
 class AuctionAfterFeeDonJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -60,6 +60,10 @@ class AuctionAfterFeeDonJob implements ShouldQueue
         $user = User::find($this->user);
         $this->user->notify(new AuctionsNotification($user, $notificationTemplate6, ['mail']));
 
+
+        $bid = Bid::where('auction_id', $this->auction->id)->where('user_id', $this->user->id)->first();
+        $bid->status = 'done';
+        $bid->save();
 
     }
 }

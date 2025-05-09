@@ -31,7 +31,7 @@
           <div class="owner-certificat" @click="confirmEditIfDisabled(carNumber)">
             <input type="text" id="owner-name" v-model="ownerName" placeholder="홍길동" :disabled="isVerified">
             <!-- <button type="button" class="btn border certification" @click.stop="verifyOwner" :disabled="isVerified">본인인증</button> -->
-            <SelfAuthModal id="selfAuth" :propData="showSelfAuthModal" :carNumber="carNumber" :ownerName="ownerName" v-model:isBusinessOwner="isBusinessOwner" v-model:isAuth="isAuth" @click.stop="verifyOwner" :disabled="isAuth" />
+            <SelfAuthModal id="selfAuth" :propData="showSelfAuthModal" :carNumber="carNumber" :ownerName="ownerName" v-model:isBusinessOwner="isBusinessOwner" v-model:isAuth="isAuth" v-model:personal_id_number="personal_id_number" @click.stop="verifyOwner" :disabled="isAuth" />
           </div>
           <div class="text-danger mt-2">※ 차량 소유자 확인을 위해 본인 인증 버튼을 클릭해주세요.</div>
         </div>
@@ -121,10 +121,10 @@
           </div>
 
           <div class="mt-1">
-            <input type="text" id="car_condition" v-model="carCondition" placeholder="키로수">
+            <input type="text" id="car_condition" v-model="carKm" readonly placeholder="키로수">
           </div>
 
-          <textarea type="text" id="memo" v-model="memo" placeholder="ex) 외관손상, 차량내부손상, 사고유무등 &#13;&#10;주의) 주요결함 미고지시 추후 환불등 불이익이 있을수 있습니다." rows="2" ref="memoSelect"></textarea>
+          <textarea type="text" id="memo" v-model="memo" placeholder="ex) 외관손상, 차량내부손상, 사고유무등 &#13;&#10;주의) 주요결함 미고지시 추후 환불등 불이익이 있을수 있습니다. &#13;&#10;최근 정비이력 등 이슈나 내차를 뽐내주세요" rows="2" ref="memoSelect" style="height: 100px;"></textarea>
         </div>
 
         <!-- 은행 선택 -->
@@ -375,7 +375,8 @@ const store = useStore();
 const swal = inject('$swal');
 
 const ownerName = ref(''); // 소유자 이름
-const isVerified = ref(false); // 본인 인증 상태
+// const isVerified = ref(false); // 본인 인증 상태
+const isVerified = ref(true); // 본인 인증 상태
 const carNumber = ref(''); // 차량 번호
 const finalAt = ref(''); // 경매 종료 시간
 const selectedRegion = ref(''); // 선택된 지역
@@ -384,7 +385,6 @@ const addr = ref(''); // 주소
 const addrdt = ref(''); // 상세 주소
 const account = ref(''); // 계좌 번호
 const selectedTab = ref('bank'); // 선택된 탭
-const carCondition = ref(''); // 차량 상태
 const memo = ref(''); // 메모
 const uploadedFileName = ref(''); // 업로드된 파일 이름
 const showDetails = ref(false); // 은행 선택 모달 표시 여부
@@ -444,11 +444,12 @@ const companyName = ref('');
 const companyNameRef = ref(null);
 const accountOwner = ref('');
 const accountOwnerRef = ref(null);
-
+const carEngineType = ref('');
 const showSelfAuthModal = ref(false);
 const isBusinessOwner = ref(false);
 const isAuth = ref(false);
 const isAgree = ref(false);
+const personal_id_number = ref('');
 // 체크박스 변경 시 호출되는 함수
 const updateCarConditionValue = () => {
   // 모든 체크된 체크박스 선택
@@ -532,10 +533,11 @@ const auctionEntry = async () => {
     car_price_now_whole: carPriceNowWhole.value,
     car_thumbnail: carThumbnail.value,
     car_km: carKm.value,
-    car_condition: carCondition.value,
     car_status: carStatus.value,
     is_business_owner: isBusinessOwner.value,
-    is_agree: isAgree.value
+    is_agree: isAgree.value,
+    personal_id_number: personal_id_number.value,
+    car_engine_type: carEngineType.value
   };
 
   if(isVerified.value){
@@ -589,6 +591,7 @@ const auctionEntry = async () => {
         fileInputRefCarLicenseBtn.value.click();
       }
 
+      // 팝업 띄우고 파일선택 버튼 하나 만들어서 그 버튼 클릭 하면, 파일선택 할 수 있도록 수정 필요 
       wica.ntcn(swal)
       .icon('W')
       .addClassNm('cmm-review-custom')
@@ -601,7 +604,8 @@ const auctionEntry = async () => {
     
     try {
       const result = await createAuction({ auction: auctionData });
-      const uniqueNumber = result.unique_number;
+      // const uniqueNumber = result.unique_number;
+      const uniqueNumber = result.hashid;
       if(result.isSuccess){
           const textOk = `<div class="enroll_box" style="position: relative;">
                     <img src="${carObjects}" alt="자동차 이미지" width="160" height="160">
@@ -638,7 +642,7 @@ const auctionEntry = async () => {
     .icon('E')
     .callback(function(result) {
         //console.log(result);
-    }).alert('소유자인중 후에 이용 가능한 서비스입니다.');
+    }).alert('소유자인증 후에 이용 가능한 서비스입니다.');
 
   }
 };
@@ -928,9 +932,17 @@ const confirmEditIfDisabled = (carNumber) => {
             .alert('인증 정보가 초기화되었습니다.');
           });
           
+        }else{
+          wica.ntcn(swal)
+            .icon('S')
+            .addClassNm('cmm-review-custom')
+            .addOption({ padding: 20})
+            .callback(function(result) {
+            })
+            .alert('인증 정보가 초기화가 취소되었습니다.');
         }
       })
-    .alert('소유자 정보를 수정하시겠습니까?');
+    .confirm('소유자 정보를 수정하시겠습니까?');
   }
 };
 
@@ -1461,7 +1473,7 @@ onMounted(() => {
     carPriceNowWhole.value = carDetails.priceNowWhole;
     carThumbnail.value = carDetails.thumbnail;
     carKm.value = carDetails.km;
-    carCondition.value = localStorage.getItem('mileage');
+    carEngineType.value = carDetails.engineType;
 
   }
 

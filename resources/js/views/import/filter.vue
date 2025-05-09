@@ -5,8 +5,41 @@
     <div class="proceeding"></div>
     
           <div class="sub-side">
+
+
+            <!-- <div class=" mt-4">
+                <h5 class="tc-primary">경매 이력</h5>
+                <div class="mt-4 pb-3 bd-gray">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="manufacturer" id="hyundai" value="hyundai" checked>
+                        <label class="form-check-label" for="hyundai">재경매차</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
+                        <label class="form-check-label" for="kia">내 입찰 차</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class=" mt-4">
+                <h5 class="tc-primary">구동방식</h5>
+                <div class="row mt-4 pb-3">
+                    <div class="col-5">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="manufacturer" id="hyundai" value="hyundai" checked>
+                            <label class="form-check-label" for="hyundai">2WD</label>
+                        </div>
+                    </div>
+                    <div class="col-5">
+                        <div class="form-check">
+                            <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
+                            <label class="form-check-label" for="kia">4WD</label>
+                        </div>
+                    </div>
+                </div>
+            </div> -->
           <!-- 국산차 드롭다운 -->
-          <div>
+          <div class="mt-4">
               <div class="dropdown-section slide-gray my-1" @click="toggleDropdown('domestic')">
                   <h5 class="tc-primary line-heigh-0">국산차</h5>
                   <span class="dropdown-icon">
@@ -319,19 +352,7 @@
                               </div>
                           </div>
                       </div>
-                      <div class=" mt-4">
-                          <h5 class="tc-primary">경매 이력</h5>
-                          <div class="mt-4 pb-3 bd-gray">
-                              <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="manufacturer" id="hyundai" value="hyundai" checked>
-                                  <label class="form-check-label" for="hyundai">재경매차</label>
-                              </div>
-                              <div class="form-check">
-                                  <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                  <label class="form-check-label" for="kia">내 입찰 차</label>
-                              </div>
-                          </div>
-                      </div>
+                      
                       <div class="mt-4">
                           <h5 class="tc-primary">리스렌트</h5>
                           <div class="mt-4 pb-3 bd-gray">
@@ -349,23 +370,7 @@
                               </div>
                           </div>
                       </div>
-                      <div class=" mt-4">
-                          <h5 class="tc-primary">구동방식</h5>
-                          <div class="row mt-4 pb-3">
-                              <div class="col-5">
-                                  <div class="form-check">
-                                      <input class="form-check-input" type="radio" name="manufacturer" id="hyundai" value="hyundai" checked>
-                                      <label class="form-check-label" for="hyundai">2WD</label>
-                                  </div>
-                              </div>
-                              <div class="col-5">
-                                  <div class="form-check">
-                                      <input class="form-check-input" type="radio" name="manufacturer" id="kia" value="kia">
-                                      <label class="form-check-label" for="kia">4WD</label>
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
+                      
                   </div>
               </div>
           </div>

@@ -39,6 +39,7 @@ class User extends Authenticatable implements HasMedia
         // 'email',
         // 'password',
         // 'status',
+        // 'password_confirmation'
     ];
 
     protected $guarded = [];

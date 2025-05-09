@@ -52,6 +52,9 @@ class AuthenticatedSessionController extends Controller
 
         Log::info('userinfo',[$user]);
 
+        if(!$user){
+            throw new \Exception('등록된 회원이 아닙니다.');
+        }
         // 사용자 상태에 따른 로그인 제한 처리
         if ($user->status == 'ask') {
             throw new \Exception('심사중인 회원입니다.');

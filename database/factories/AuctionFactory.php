@@ -164,6 +164,7 @@ class AuctionFactory extends Factory
             'car_price_now_whole' => '0',
             'car_km' => $car['km'],
             'car_thumbnail' => $car['thumbnail'],
+            'personal_id_number' => $this->faker->bothify('#############'),
         ];
 
         if ($status === 'chosen') {

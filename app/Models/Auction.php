@@ -12,6 +12,8 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Vinkla\Hashids\Facades\Hashids;
+
 
 class Auction extends Model implements HasMedia
 {
@@ -56,6 +58,7 @@ class Auction extends Model implements HasMedia
         'car_km' => 'string',
         'customTel1' => 'string',
         'customTel2' => 'string',
+        'personal_id_number' => 'string',
     ];
 
     // 업로드 가능한 파일들
@@ -174,4 +177,11 @@ class Auction extends Model implements HasMedia
 
         return $number;
     }
+
+    // 해시된 ID 속성 추가
+    public function getHashidAttribute()
+    {
+        return Hashids::encode($this->id);
+    }
+    
 }
