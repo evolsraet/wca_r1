@@ -1050,6 +1050,13 @@
                   </BottomSheet02>
                 </div>
               </div>
+
+
+              <!-- <div v-else class="container">
+                <div style="padding: 120px; border-radius: 10px;">
+                  <h4>경매가 선택된 매물 입니다. </h4>
+                </div>
+              </div> -->
           
                      <!--  바텀 시트 show or black-->
                      <button class="animCircle scroll-button floating" :style="scrollButtonStyle" v-show="scrollButtonVisible"></button>
@@ -1175,6 +1182,9 @@
                       </BottomSheet03>-->
                       <modal v-if="reauctionModal" :isVisible="reauctionModal" />
                       </div>
+
+                      
+
                     </div>
                     <div>
                         <consignment v-if="connectDealerModal" :bid="selectedBid" :userData="userInfo"  :fileSignData = "registerForm" @close="handleModalClose" @confirm="handleDealerConfirm" />
@@ -1281,6 +1291,55 @@ import find_icon_07 from '../../../../../resources/img/find-icons/find-icon-07.s
 import find_icon_08 from '../../../../../resources/img/find-icons/find-icon-08.svg';
 import find_icon_09 from '../../../../../resources/img/find-icons/find-icon-09.svg';
 
+import option_icon_01 from '../../../../../resources/img/options/option-01.svg';
+import option_icon_01_active from '../../../../../resources/img/options/option-01-ac.svg';
+import option_icon_02 from '../../../../../resources/img/options/option-02.svg';
+import option_icon_02_active from '../../../../../resources/img/options/option-02-ac.svg';
+import option_icon_03 from '../../../../../resources/img/options/option-03.svg';
+import option_icon_03_active from '../../../../../resources/img/options/option-03-ac.svg';
+import option_icon_04 from '../../../../../resources/img/options/option-04.svg';
+import option_icon_04_active from '../../../../../resources/img/options/option-04-ac.svg';
+import option_icon_05 from '../../../../../resources/img/options/option-05.svg';
+import option_icon_05_active from '../../../../../resources/img/options/option-05-ac.svg';
+import option_icon_06 from '../../../../../resources/img/options/option-06.svg';
+import option_icon_06_active from '../../../../../resources/img/options/option-06-ac.svg';
+import option_icon_07 from '../../../../../resources/img/options/option-07.svg';
+import option_icon_07_active from '../../../../../resources/img/options/option-07-ac.svg';
+import option_icon_08 from '../../../../../resources/img/options/option-08.svg';
+import option_icon_08_active from '../../../../../resources/img/options/option-08-ac.svg';
+import option_icon_09 from '../../../../../resources/img/options/option-09.svg';
+import option_icon_09_active from '../../../../../resources/img/options/option-09-ac.svg';
+import option_icon_10 from '../../../../../resources/img/options/option-10.svg';
+import option_icon_10_active from '../../../../../resources/img/options/option-10-ac.svg';
+import option_icon_11 from '../../../../../resources/img/options/option-11.svg';
+import option_icon_11_active from '../../../../../resources/img/options/option-11-ac.svg';
+import option_icon_12 from '../../../../../resources/img/options/option-12.svg';
+import option_icon_12_active from '../../../../../resources/img/options/option-12-ac.svg';
+import option_icon_13 from '../../../../../resources/img/options/option-13.svg';
+import option_icon_13_active from '../../../../../resources/img/options/option-13-ac.svg';
+import option_icon_14 from '../../../../../resources/img/options/option-14.svg';
+import option_icon_14_active from '../../../../../resources/img/options/option-14-ac.svg';
+import option_icon_15 from '../../../../../resources/img/options/option-15.svg';
+import option_icon_15_active from '../../../../../resources/img/options/option-15-ac.svg';
+import option_icon_16 from '../../../../../resources/img/options/option-16.svg';
+import option_icon_16_active from '../../../../../resources/img/options/option-16-ac.svg';
+import option_icon_17 from '../../../../../resources/img/options/option-17.svg';
+import option_icon_17_active from '../../../../../resources/img/options/option-17-ac.svg';
+import option_icon_18 from '../../../../../resources/img/options/option-18.svg';
+import option_icon_18_active from '../../../../../resources/img/options/option-18-ac.svg';
+import option_icon_19 from '../../../../../resources/img/options/option-19.svg';
+import option_icon_19_active from '../../../../../resources/img/options/option-19-ac.svg';
+import option_icon_71 from '../../../../../resources/img/options/option-71.svg';
+import option_icon_71_active from '../../../../../resources/img/options/option-71-ac.svg';
+import option_icon_86 from '../../../../../resources/img/options/option-86.svg';
+import option_icon_86_active from '../../../../../resources/img/options/option-86-ac.svg';
+import option_icon_88 from '../../../../../resources/img/options/option-88.svg';
+import option_icon_88_active from '../../../../../resources/img/options/option-88-ac.svg';
+import option_icon_92 from '../../../../../resources/img/options/option-92.svg';
+import option_icon_92_active from '../../../../../resources/img/options/option-92-ac.svg';
+import option_icon_93 from '../../../../../resources/img/options/option-93.svg';
+import option_icon_93_active from '../../../../../resources/img/options/option-93-ac.svg';
+
 import car_licence_icon from '../../../../../resources/img/find-icons/car_licence_icon.png';
 import auth_licence_icon from '../../../../../resources/img/find-icons/auth_licence_icon.png';
 
@@ -1331,7 +1390,6 @@ const fileAuctionCompanyLicenseUrl = ref('');
 
 const photoSwipeImages = ref(null);
 
-
 const avgAmount = computed(() => {
 
   let resutlPay = 0;
@@ -1339,7 +1397,8 @@ const avgAmount = computed(() => {
   console.log('auctionDetail.value.data',auctionDetail.value.data);
 
   if(auctionDetail.value.data.middle_prices.max){
-    console.log('auctionDetail.value.data.middle_prices.avg',auctionDetail.value.data.middle_prices.avg);
+    // console.log('auctionDetail.value.data.middle_prices.avg',auctionDetail.value.data);
+    resutlPay = auctionDetail.value.data.middle_prices.max
     if(auctionDetail.value.data.middle_prices.avg){
       resutlPay = auctionDetail.value.data.middle_prices.avg
     }
@@ -2119,9 +2178,13 @@ const openCarLicenseModal = () => {
 }
 
 const openDealerLicenseModal = () => {
-  const fileId = auctionDetail.value.data.top_bids[0].dealerfile.files.file_user_biz[0].id;
-  const fileName = auctionDetail.value.data.top_bids[0].dealerfile.files.file_user_biz[0].file_name;
 
+  console.log('auctionDetail.value.data.top_bids',auctionDetail.value);
+  const winBid = auctionDetail.value.data.win_bid.id;
+
+  const fileId = auctionDetail.value.data.top_bids.filter(bid => bid.id === winBid)[0].dealerfile.files.file_user_biz[0].id;
+  const fileName = auctionDetail.value.data.top_bids.filter(bid => bid.id === winBid)[0].dealerfile.files.file_user_biz[0].file_name;
+  
   let dealerLicenseUrl = '';
   if(fileId && fileName){
     dealerLicenseUrl = '../media/' + fileId +'/' + fileName;
@@ -2137,7 +2200,7 @@ const openDealerLicenseModal = () => {
             
         ></iframe>`;
   }else{
-    dealerLicenseHtml = '<div style="text-align: center; padding: 20px;">사업자등록증이 없습니다.</div>';
+    dealerLicenseHtml = '<div style="text-align: center; padding: 20px;">사업자등록증이 아직 등록되지 않았습니다.</div>';
   }
 
 
@@ -2173,7 +2236,7 @@ const openNameChangeModal = () => {
             
         ></iframe>`;
   }else{
-    nameChangeHtml = '<div style="text-align: center; padding: 20px;">명의이전 등록증이 없습니다.</div>';
+    nameChangeHtml = '<div style="text-align: center; padding: 20px;">명의이전 등록증이 아직 등록되지 않았습니다.</div>';
   }
 
   const text = `
@@ -2926,15 +2989,49 @@ const diagnosticOptionViewObject = computed(() => {
   const items = diagnosticOptionView.value;
   const groupedHtml = [];
 
+  const optionIcons = {
+    1: { id: 1, active: option_icon_01_active, normal: option_icon_01 },
+    2: { id: 2, active: option_icon_02_active, normal: option_icon_02 },
+    3: { id: 3, active: option_icon_03_active, normal: option_icon_03 },
+    4: { id: 4, active: option_icon_04_active, normal: option_icon_04 },
+    5: { id: 5, active: option_icon_05_active, normal: option_icon_05 },
+    6: { id: 6, active: option_icon_06_active, normal: option_icon_06 },
+    7: { id: 7, active: option_icon_07_active, normal: option_icon_07 },
+    8: { id: 8, active: option_icon_08_active, normal: option_icon_08 },
+    9: { id: 9, active: option_icon_09_active, normal: option_icon_09 },
+    10: { id: 10, active: option_icon_10_active, normal: option_icon_10 },
+    11: { id: 11, active: option_icon_11_active, normal: option_icon_11 },
+    12: { id: 12, active: option_icon_12_active, normal: option_icon_12 },
+    13: { id: 13, active: option_icon_13_active, normal: option_icon_13 },
+    14: { id: 14, active: option_icon_14_active, normal: option_icon_14 },
+    15: { id: 15, active: option_icon_15_active, normal: option_icon_15 },
+    16: { id: 16, active: option_icon_16_active, normal: option_icon_16 },
+    17: { id: 17, active: option_icon_17_active, normal: option_icon_17 },
+    18: { id: 18, active: option_icon_18_active, normal: option_icon_18 },
+    19: { id: 19, active: option_icon_19_active, normal: option_icon_19 },
+    71: { id: 71, active: option_icon_71_active, normal: option_icon_71 },
+    86: { id: 86, active: option_icon_86_active, normal: option_icon_86 },
+    88: { id: 88, active: option_icon_88_active, normal: option_icon_88 },
+    92: { id: 92, active: option_icon_92_active, normal: option_icon_92 },
+    93: { id: 93, active: option_icon_93_active, normal: option_icon_93 },
+  };
+
   for (let i = 0; i < items.length; i += 6) {
     const group = items.slice(i, i + 6);
 
-    const rowHtml = group.map(item => `
-      <div class="option-icon">
-        <div class="icon smart-key${item.is_ok ? '-ac' : ''}"></div>
-        <p>${item.name}</p>
-      </div>
-    `);
+    const rowHtml = group.map(item => {
+      const icon = optionIcons[item.id];
+      const activeIcon = icon ? icon.active : option_icon_01_active;
+      const normalIcon = icon ? icon.normal : option_icon_01;
+      return `
+        <div class="option-icon">
+          <div class="icon">
+            <img src="${item.is_ok ? activeIcon : normalIcon}" alt="smart-key">
+          </div>
+          <p style="font-size: 10px !important;">${item.name}</p>
+        </div>
+      `;
+    });
 
     // 부족한 칸만큼 빈 option-icon 채우기
     const emptySlots = 6 - group.length;
@@ -3077,7 +3174,7 @@ onMounted(async () => {
   lightbox.init();
 
 
-  diagnosticOptionViewObject();
+  // diagnosticOptionViewObject();
 
   window.addEventListener('scroll', checkScroll);
 
@@ -3418,5 +3515,10 @@ input[type="checkbox"]{align-self:center;}
   width: 90% !important;
   /* height: 100% !important; */
 }
+
+.option-icon p{
+  font-size: 10px !important;
+}
+
 
 </style>
