@@ -1291,30 +1291,30 @@
   import find_icon_08 from '../../../../../resources/img/find-icons/find-icon-08.svg';
   import find_icon_09 from '../../../../../resources/img/find-icons/find-icon-09.svg';
 
-  import option_icon_01_svg from '../../../../../resources/img/options/option-01-combined.svg?raw';
-  import option_icon_02_svg from '../../../../../resources/img/options/option-02-combined.svg?raw';
-  import option_icon_03_svg from '../../../../../resources/img/options/option-03-combined.svg?raw';
-  import option_icon_04_svg from '../../../../../resources/img/options/option-04-combined.svg?raw';
-  import option_icon_05_svg from '../../../../../resources/img/options/option-05-combined.svg?raw';
-  import option_icon_06_svg from '../../../../../resources/img/options/option-06-combined.svg?raw';
-  import option_icon_07_svg from '../../../../../resources/img/options/option-07-combined.svg?raw';
-  import option_icon_08_svg from '../../../../../resources/img/options/option-08-combined.svg?raw';
-  import option_icon_09_svg from '../../../../../resources/img/options/option-09-combined.svg?raw';
-  import option_icon_10_svg from '../../../../../resources/img/options/option-10-combined.svg?raw';
-  import option_icon_11_svg from '../../../../../resources/img/options/option-11-combined.svg?raw';
-  import option_icon_12_svg from '../../../../../resources/img/options/option-12-combined.svg?raw';
-  import option_icon_13_svg from '../../../../../resources/img/options/option-13-combined.svg?raw';
-  import option_icon_14_svg from '../../../../../resources/img/options/option-14-combined.svg?raw';
-  import option_icon_15_svg from '../../../../../resources/img/options/option-15-combined.svg?raw';
-  import option_icon_16_svg from '../../../../../resources/img/options/option-16-combined.svg?raw';
-  import option_icon_17_svg from '../../../../../resources/img/options/option-17-combined.svg?raw';
-  import option_icon_18_svg from '../../../../../resources/img/options/option-18-combined.svg?raw';
-  import option_icon_19_svg from '../../../../../resources/img/options/option-19-combined.svg?raw';
-  import option_icon_71_svg from '../../../../../resources/img/options/option-71-combined.svg?raw';
-  import option_icon_86_svg from '../../../../../resources/img/options/option-86-combined.svg?raw';
-  import option_icon_88_svg from '../../../../../resources/img/options/option-88-combined.svg?raw';
-  import option_icon_92_svg from '../../../../../resources/img/options/option-92-combined.svg?raw';
-  import option_icon_93_svg from '../../../../../resources/img/options/option-93-combined.svg?raw';
+  import option_icon_01_svg from '../../../../../resources/img/options/option-icon-01.svg?raw';
+  import option_icon_02_svg from '../../../../../resources/img/options/option-icon-02.svg?raw';
+  import option_icon_03_svg from '../../../../../resources/img/options/option-icon-03.svg?raw';
+  import option_icon_04_svg from '../../../../../resources/img/options/option-icon-04.svg?raw';
+  import option_icon_05_svg from '../../../../../resources/img/options/option-icon-05.svg?raw';
+  import option_icon_06_svg from '../../../../../resources/img/options/option-icon-06.svg?raw';
+  import option_icon_07_svg from '../../../../../resources/img/options/option-icon-07.svg?raw';
+  import option_icon_08_svg from '../../../../../resources/img/options/option-icon-08.svg?raw';
+  import option_icon_09_svg from '../../../../../resources/img/options/option-icon-09.svg?raw';
+  import option_icon_10_svg from '../../../../../resources/img/options/option-icon-10.svg?raw';
+  import option_icon_11_svg from '../../../../../resources/img/options/option-icon-11.svg?raw';
+  import option_icon_12_svg from '../../../../../resources/img/options/option-icon-12.svg?raw';
+  import option_icon_13_svg from '../../../../../resources/img/options/option-icon-13.svg?raw';
+  import option_icon_14_svg from '../../../../../resources/img/options/option-icon-14.svg?raw';
+  import option_icon_15_svg from '../../../../../resources/img/options/option-icon-15.svg?raw';
+  import option_icon_16_svg from '../../../../../resources/img/options/option-icon-16.svg?raw';
+  import option_icon_17_svg from '../../../../../resources/img/options/option-icon-17.svg?raw';
+  import option_icon_18_svg from '../../../../../resources/img/options/option-icon-18.svg?raw';
+  import option_icon_19_svg from '../../../../../resources/img/options/option-icon-19.svg?raw';
+  import option_icon_71_svg from '../../../../../resources/img/options/option-icon-71.svg?raw';
+  import option_icon_86_svg from '../../../../../resources/img/options/option-icon-86.svg?raw';
+  import option_icon_88_svg from '../../../../../resources/img/options/option-icon-88.svg?raw';
+  import option_icon_92_svg from '../../../../../resources/img/options/option-icon-92.svg?raw';
+  import option_icon_93_svg from '../../../../../resources/img/options/option-icon-93.svg?raw';
   
   import car_licence_icon from '../../../../../resources/img/find-icons/car_licence_icon.png';
   import auth_licence_icon from '../../../../../resources/img/find-icons/auth_licence_icon.png';
@@ -3000,16 +3000,13 @@
         const svg = icon ? icon.svg : null;
 
         if (svg) {
-            const onDisplay = item.is_ok ? 'inline' : 'none';
-            const offDisplay = item.is_ok ? 'none' : 'inline';
+            const onDisplay = item.is_ok ? '#da3138' : '#bbbbbb';
 
-            const renderedSvg = svg
-            .replace('id="onState" style="display:none"', `id="onState" style="display:${onDisplay}"`)
-            .replace('id="offState" style="display:inline"', `id="offState" style="display:${offDisplay}"`);
+            const renderedSvg = svg.replace(/#000000/g, onDisplay);
 
             return `
             <div class="option-icon">
-                <div class="icon" style="width: 30px;">
+                <div class="icon" style="width: 34px;">
                 ${renderedSvg}
                 </div>
                 <p style="font-size: 10px !important;">${item.name}</p>
@@ -3513,13 +3510,5 @@
   .option-icon p{
     font-size: 10px !important;
   }
-  
-
-  .icon-shape {
-    fill: #d9d8da; /* 또는 원하는 색상 */
-    }
-  /* .option-icon.on .icon-shape {
-   fill: #d95858 !important;
-  } */
   
   </style>
