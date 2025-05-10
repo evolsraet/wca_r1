@@ -166,14 +166,16 @@ class Auction extends Model implements HasMedia
         $maxNumber = 9999;
         $minNumber = 1000;
 
-        do {
-            $number = rand($minNumber, $maxNumber);
-            if (self::where('unique_number', $number)->exists()) {
-                // 모든 숫자가 사용된 경우, 범위를 확장
-                $minNumber = $maxNumber + 1;
-                $maxNumber = $minNumber * 10 - 1;
-            }
-        } while (self::where('unique_number', $number)->exists());
+        // do {
+        //     $number = rand($minNumber, $maxNumber);
+        //     if (self::where('unique_number', $number)->exists()) {
+        //         // 모든 숫자가 사용된 경우, 범위를 확장
+        //         $minNumber = $maxNumber + 1;
+        //         $maxNumber = $minNumber * 10 - 1;
+        //     }
+        // } while (self::where('unique_number', $number)->exists());
+
+        $number = rand($minNumber, $maxNumber);
 
         return $number;
     }
