@@ -17,7 +17,8 @@
                             <div class="p-2 card my-auction"> 
                                     <div class="card-img-top-placeholder">
                                         <div v-if="auction.car_thumbnail">
-                                            <img :src="auction.car_thumbnail" alt="Car Image">
+                                            <!-- <img :src="auction.car_thumbnail" alt="Car Image"> -->
+                                            <img :src="auction.car_thumbnails ? auction.car_thumbnails[0] : auction.car_thumbnail" alt="차량 사진">
                                         </div>
                                         <div v-else>
                                             <img src="../../../img/car_example.png">
