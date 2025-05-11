@@ -2770,7 +2770,19 @@
     }
   };
   
-  
+  const handleFileUploadCompanyLicense = (event) => {
+    const file = event.target.files[0];
+
+    if(file){
+      wica.ntcn(swal)
+      .addClassNm('cmm-review-custom')
+      .icon('I')
+      .title(`파일이 선택되었습니다. 첨부하기를 클릭해 주세요.`)
+      .alert();
+
+    }
+
+  }
   
   const handleImmediateAuctionEnd = async (userId, price) => {
     const id = route.params.id;
