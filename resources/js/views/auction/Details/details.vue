@@ -1,6 +1,6 @@
 <template>
     <div class="container-fluid" v-if="auctionDetail">
-      <div v-if="isDealer || !chosendlvr && !auctionChosn && !showReauctionView && (auctionDetail.data.status !== 'wait' && isUser)" class="container">
+      <div v-if="isDealer || !chosendlvr && !auctionChosn && !showReauctionView && ((auctionDetail.data.status !== 'wait') && isUser)" class="container">
         <div class="web-content-style02">
           <div class="container p-1">
             <div>
@@ -15,15 +15,15 @@
                         <div 
                           class="step"
                           :class="{
-                            'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
-                            'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
+                            'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.is_taksong === 'done' ? (auctionDetail.data.status === 'done' ? 'done' : 'dlvrDone'): auctionDetail.data.status),
+                            'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.is_taksong === 'done' ? (auctionDetail.data.status === 'done' ? 'done' : 'dlvrDone'): auctionDetail.data.status)
                           }"
                         >
                           <div 
                             class="label"
                             :class="{
-                              'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.status),
-                              'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.status)
+                              'completed': getStatusIndex(step.status) < getStatusIndex(auctionDetail.data.is_taksong === 'done' ? (auctionDetail.data.status === 'done' ? 'done' : 'dlvrDone'): auctionDetail.data.status),
+                              'completing': getStatusIndex(step.status) === getStatusIndex(auctionDetail.data.is_taksong === 'done' ? (auctionDetail.data.status === 'done' ? 'done' : 'dlvrDone'): auctionDetail.data.status)
                             }"
                           >
                             {{ step.label }}
@@ -31,8 +31,8 @@
                           <div 
                             class="label label-style02"
                             :class="{
-                              'completing-text': getStatusIndex(step.status) <= getStatusIndex(auctionDetail.data.status),
-                              'text-secondary opacity-50': getStatusIndex(step.status) > getStatusIndex(auctionDetail.data.status)
+                              'completing-text': getStatusIndex(step.status) <= getStatusIndex(auctionDetail.data.is_taksong === 'done' ? (auctionDetail.data.status === 'done' ? 'done' : 'dlvrDone'): auctionDetail.data.status),
+                              'text-secondary opacity-50': getStatusIndex(step.status) > getStatusIndex(auctionDetail.data.is_taksong === 'done' ? (auctionDetail.data.status === 'done' ? 'done' : 'dlvrDone'): auctionDetail.data.status)
                             }"
                           >
                             {{ step.text }}
@@ -43,7 +43,7 @@
                         <div 
                           v-if="index < steps.length - 1" 
                           class="line" 
-                          :class="{ 'completed': getStatusIndex(steps[index + 1].status) <= getStatusIndex(auctionDetail.data.status) }"
+                          :class="{ 'completed': getStatusIndex(steps[index + 1].status) <= getStatusIndex(auctionDetail.data.is_taksong === 'done' ? (auctionDetail.data.status === 'done' ? 'done' : 'dlvrDone'): auctionDetail.data.status) }"
                         ></div>
                       </template>
                     </div>
@@ -71,7 +71,7 @@
                           <img src="../../../../img/Icon-clock-wh.png" alt="Clock Icon" class="icon-clock">
                           <span v-if="timeLeft.days != '0'">{{ timeLeft.days }}일 &nbsp;</span>{{ timeLeft.hours }} : {{ timeLeft.minutes }} : {{ timeLeft.seconds }}
                         </span>
-                        <span v-if="auctionDetail.data.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
+                        <span v-if="auctionDetail.data.status === 'dlvr'" class="mx-2 auction-done bg-info">{{ auctionDetail.data.is_taksong === 'done' ? '탁송완료' : wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
                         <span v-if="auctionDetail.data.status === 'done'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
                         <span v-if="auctionDetail.data.status === 'cancel'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
                         <span v-if="auctionDetail.data.status === 'chosen'" class="mx-2 auction-done">{{ wicas.enum(store).toLabel(auctionDetail.data.status).auctions() }}</span>
@@ -148,7 +148,7 @@
                         </div>
                       </div>
   
-                        <h4 v-if="auctionDetail.data.status === 'done' || auctionDetail.data.status === 'chosen' || auctionDetail.data.status === 'dlvr'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
+                        <h4 v-if="auctionDetail.data.status === 'done' || auctionDetail.data.status === 'chosen' || auctionDetail.data.status === 'dlvr' || auctionDetail.data.status === 'dlvrDone'" class="wait-selection">낙찰가 {{ amtComma(auctionDetail.data.final_price) }}</h4>
                         <div class="mt-2 pb-1 d-flex gap-3 justify-content-between me-1">
                           <div></div>
                           <div class="d-flex gap-3 justify-content-end align-items-center mb-1">
@@ -171,7 +171,7 @@
                         <h5 v-if="auctionDetail.data.is_reauction !== 0"><span class="gray-box border-6">재경매</span></h5>
                         <h5 v-if="auctionDetail.data.is_biz !== 0"><span class="red-box-type03 border-6">법인 / 사업자</span></h5>
                       </div>
-                     <div v-if="auctionDetail.data.status ==='chosen' || auctionDetail.data.status ==='dlvr' && scsbid">
+                     <div v-if="auctionDetail.data.status ==='chosen' || auctionDetail.data.status ==='dlvr' || auctionDetail.data.status ==='dlvrDone' && scsbid">
                        <!-- <hr>
                         <h4>탁송 신청 정보</h4>
                         <div class="fw-medium ">
@@ -187,12 +187,12 @@
                       <div v-if="auctionDetail.data.status === 'chosen' && isDealer">
                         <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
                       </div>
-                      <div v-if="auctionDetail.data.status === 'dlvr' && isUser" class="mt-4">
+                      <div v-if="auctionDetail.data.status === 'dlvr' || auctionDetail.data.status === 'dlvrDone' && isUser" class="mt-4">
                         <div v-if="auctionDetail.data.top_bids[0]?.dealerInfo?.biz_check">
                           <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">매수자 사업자등록증</p>
                         </div>
                       </div>
-                      <div v-if="auctionDetail.data.status === 'dlvr' && isUser" class="mt-4">
+                      <div v-if="auctionDetail.data.status === 'dlvr' || auctionDetail.data.status === 'dlvrDone' && isUser" class="mt-4">
                         <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openNameChangeModal">명의이전 등록증</p>
                       </div>
                  </div>
@@ -683,7 +683,7 @@
                 </div>
               </BottomSheet02>
             </div>
-            <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen') && scsbid">
+            <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen' || auctionDetail.data.status == 'dlvrDone') && scsbid">
   
               <div class="mb-3">
                 <!-- <button class="border-6 btn-fileupload my-4 shadow02 text-secondary opacity-50" @click="AttachedInform">딜러 첨부파일</button> -->
@@ -702,14 +702,16 @@
               </div>
   
   
-              <div v-if="auctionDetail.data.is_taksong === 'ing'">
+              <div v-if="auctionDetail.data.is_taksong === 'ing' || auctionDetail.data.is_taksong === 'done'">
   
                 <div class="d-flex justify-content-between align-items-baseline pt-4">
                   <h4 class="custom-highlight">탁송 상태 정보</h4>
                 </div>
   
                 <div class="text-start mt-2">
-                <p class="text-secondary ">상태 :<span class="tc-red ms-1 fw-bold">배송중</span></p>
+                <p class="text-secondary ">상태 :<span class="tc-red ms-1 fw-bold">
+                  {{auctionDetail.data.is_taksong === 'ing' ? '탁송중' : '탁송완료'}}
+                </span></p>
                 <p class="text-secondary ">탁송 기사 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_courier_name}} / {{auctionDetail.data.taksong_courier_mobile}}</span></p>
                 <p class="text-secondary ">출발 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_departure_address}}</span></p>
                 <p class="text-secondary ">도착 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_dest_address}}</span></p>
@@ -738,7 +740,7 @@
                   </div>
                 </div> -->
   
-                <div v-if="nameChangeStatusData == 'requested'">
+                <div v-if="auctionDetail.data.is_taksong == 'done'">
   
                   <div class="d-flex justify-content-between align-items-baseline mt-4">
                     <h4 class="custom-highlight">명의이전 서류첨부</h4>
@@ -2935,16 +2937,27 @@
       
       const result = await nameChangeFileUpload(auctionDetail.value.data.id, file);
       fileAuctionCompanyLicenseName.value = result.data.media.name;
-  
-      if(result.data.media.name){
-        wica.ntcn(swal)
-        .icon('I')
-        .addClassNm('cmm-review-custom')
-        .addOption({ padding: 20})
-        .callback(function(result) {
-        })
-        .alert('명의이전 등록증이 업로드 되었습니다.');
+
+      if(result.data.media){
+        // 새로고침 
+        window.location.reload();
+        // router.push({ name: 'AuctionDetail', params: { id: auctionDetail.value.data.id } });
       }
+      
+      //router.push({ name: 'AuctionDetail', params: { id: auctionDetail.value.data.id } });
+
+      // if(result.data){
+      //     wica.ntcn(swal)
+      //     .icon('I')
+      //     .addClassNm('cmm-review-custom')
+      //     .addOption({ padding: 20})
+      //     .callback(function(result) {
+            
+      //       router.push({ name: 'auction.details', params: { id: auctionDetail.value.data.id } });
+          
+      //     })
+      //     .alert('명의이전 등록증이 업로드 되었습니다.');
+      // }
   
     }else{
       wica.ntcn(swal)
@@ -3067,7 +3080,7 @@
     const nameChangeStatusValue = await nameChangeStatus(auctionDetail.value.data.id);
     // console.log('nameChangeStatusData',nameChangeStatusValue.data[0].chk_status);
   
-    nameChangeStatusData.value = nameChangeStatusValue.data[0]?.chk_status ? nameChangeStatusValue.data[0].chk_status : '';
+    nameChangeStatusData.value = nameChangeStatusValue.data[0]?.status ? nameChangeStatusValue.data[0].status : '';
   
     // 명의이전서류 파일 이름 설정
     if(auctionDetail.value.data.files.file_auction_name_change){

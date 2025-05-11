@@ -505,7 +505,7 @@ class NotificationTemplate
 
                 $message = 
                 '고객님의 차량 경매가 완료되었습니다. \n'
-                .config('app.name').'을 이용해주셔서 감사합니다. 후기를 남겨주세요! \n'
+                .config('app.name').'을 이용해주셔서 감사합니다. 이전등록증을 확인하실 수 있어요! 후기를 남겨주세요! \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
@@ -521,7 +521,7 @@ class NotificationTemplate
             case 'AuctionDoneJobDealer':
 
                 $dealer = User::find($data->user_id);
-                $auction_id = $data->auction;
+                $auction_id = $data->auction_id;
                 $randomPrefix = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 8);
                 $randomSuffix = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 3);
                 $moid = $randomPrefix . $auction_id . $randomSuffix; // 앞에8자리 랜덤 + bid_id + 뒤에 랜덤 3자리 조합 

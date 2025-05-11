@@ -41,10 +41,12 @@ class AuctionDoneJob implements ShouldQueue
         $baseUrl = config('app.url');
         $auction = Auction::find($this->auction);
 
-        Log::info('[경매완료] auction_id: ' . $auction->id, ['auction' => $this->auction, 'user' => $this->user, 'mode' => $this->mode]);
+        
 
         switch($this->mode){
             case 'user':
+
+                Log::info('[경매완료] auction_id: ' . $auction->id .'/'. $this->mode, ['auction' => $this->auction, 'user' => $this->user, 'mode' => $this->mode]);
 
                 $notificationTemplate = NotificationTemplate::getTemplate('AuctionDoneJobUser', $auction, ['mail']);
                 $user = User::find($this->user);
@@ -54,6 +56,8 @@ class AuctionDoneJob implements ShouldQueue
 
             case 'dealer':
 
+                Log::info('[경매완료] auction_id: ' . $auction->id .'/'. $this->mode, ['auction' => $this->auction, 'user' => $this->user, 'mode' => $this->mode]);
+
                 $notificationTemplate = NotificationTemplate::getTemplate('AuctionDoneJobDealer', $auction, ['mail']);
                 $user = User::find($this->user);
                 $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
@@ -61,9 +65,9 @@ class AuctionDoneJob implements ShouldQueue
             break;
         }
 
-        $bid = Bid::where('auction_id', $this->auction->id)->where('user_id', $this->user->id)->first();
-        $bid->status = 'done';
-        $bid->save();
+        // $bid = Bid::where('auction_id', $this->auction->id)->where('user_id', $this->user->id)->first();
+        // $bid->status = 'done';
+        // $bid->save();
 
         
     }

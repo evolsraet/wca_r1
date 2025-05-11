@@ -23,7 +23,7 @@ use App\Jobs\AuctionTotalAfterFeeJob;
 use App\Models\Auction;
 use App\Jobs\AuctionAfterFeeDonJob;
 use App\Jobs\AuctionTotalDepositMissJob;
-use App\Models\TaksongStatusTemp;
+// use App\Models\TaksongStatusTemp;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Http;
 use App\Notifications\AuctionsNotification;
@@ -767,11 +767,14 @@ class AuctionService
 
     public function auctionTotalDepositMiss()
     {
-        // 탁송 상태 확인
-        $taksongStatusTemp = TaksongStatusTemp::where('chk_status', 'ask')->get();
-        if($taksongStatusTemp){
+        // 탁송 상태 확인 이 부분도 제거 필요 
+        // $taksongStatusTemp = TaksongStatusTemp::where('chk_status', 'ask')->get();
 
-            foreach($taksongStatusTemp as $bid){
+        $auctions = Auction::where('status', 'dlvr')->where('is_taksong', 'ask')->get();
+
+        if($auctions){
+
+            foreach($auctions as $bid){
                 if(isset($bid->auction_id)){
 
                     $auction = Auction::find($bid->auction_id);

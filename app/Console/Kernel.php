@@ -44,11 +44,19 @@ class Kernel extends ConsoleKernel
 
         $schedule->call(function() {
 
-            // 탁송 상태 확인
-            $taksongStatusTemp = TaksongStatusTemp::where('chk_status', '!=', 'done')->get();
-            if($taksongStatusTemp){
-                foreach($taksongStatusTemp as $taksongStatus){
-                    TaksongStatusJob::dispatch($taksongStatus->chk_id);
+            // 탁송 상태 확인 이 부분도 제거 필요 
+            // $taksongStatusTemp = TaksongStatusTemp::where('chk_status', '!=', 'done')->get();
+            // if($taksongStatusTemp){
+            //     foreach($taksongStatusTemp as $taksongStatus){
+            //         TaksongStatusJob::dispatch($taksongStatus->chk_id);
+            //     }
+            // }
+
+            $auction = Auction::where('status', 'dlvr')->whereNotNull('is_taksong')->get();
+            if($auction){
+                foreach($auction as $auctionStatus){
+                    Log::info('[kernel TaksongStatusJob]', ['auction' => $auctionStatus]);
+                    TaksongStatusJob::dispatch($auctionStatus->taksong_id);
                 }
             }
 
@@ -61,12 +69,12 @@ class Kernel extends ConsoleKernel
         })->everyMinute();
 
 
-        $schedule->call(function() {
-            // 명의이전 까지 완료된 매물 상태변경
-            $nameChangeService = new NameChangeService();
-            // $nameChangeService->changeAuctionStatusAll();
-            $nameChangeService->processCompletedNameChangeAuctions();
-        })->everyMinute();
+        // $schedule->call(function() {
+        //     // 명의이전 까지 완료된 매물 상태변경
+        //     $nameChangeService = new NameChangeService();
+        //     // $nameChangeService->changeAuctionStatusAll();
+        //     $nameChangeService->processCompletedNameChangeAuctions();
+        // })->everyMinute();
 
 
         $schedule->call(function() {
