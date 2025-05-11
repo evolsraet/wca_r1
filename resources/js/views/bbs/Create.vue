@@ -12,7 +12,8 @@
                             <div class="left-img">
                                 <div v-if ="!isMobileView" >
                                     <div v-if="auction.car_thumbnail" class="image-container">
-                                      <img :src="auction.car_thumbnail" alt="Car Image">
+                                      <!-- <img :src="auction.car_thumbnail" alt="Car Image"> -->
+                                      <img :src="auction.car_thumbnails ? auction.car_thumbnails[0] : auction.car_thumbnail" alt="차량 사진">
                                     </div>
                                     <div v-else>
                                         <div class="w-50">
