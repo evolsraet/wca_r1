@@ -110,7 +110,7 @@ export default function useAuctions() {
 
     const getAuctions = async (page = 1, isReviews = false , status = 'all', search_text='') => {
 
-        loadingSpinner(true);
+        // loadingSpinner(true);
 
         const apiList = [];
         if(status != 'all'){
@@ -139,7 +139,7 @@ export default function useAuctions() {
                 auctionsData.value = result.data;
                 pagination.value = result.rawData.data.meta;
 
-                loadingSpinner(false);
+                // loadingSpinner(false);
 
             })
     
@@ -162,7 +162,7 @@ export default function useAuctions() {
                 auctionsData.value = result.data;
                 pagination.value = result.rawData.data.meta;
 
-                loadingSpinner(false);
+                // loadingSpinner(false);
 
             })
             //.log()
