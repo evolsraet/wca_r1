@@ -19,8 +19,10 @@ class NameChangeService
 
     public function getAuction($auction_id)
     {
-        $taksongStatus = TaksongStatusTemp::where('auction_id', $auction_id)->get();
-        return $taksongStatus;
+        // 이 부분도 대채코드 필요 
+        // $taksongStatus = TaksongStatusTemp::where('auction_id', $auction_id)->get();
+        $auction = Auction::find($auction_id);
+        return $auction;
     }
 
     // 명의이전 완료된 매물 중 파일 업로드 되지 않은 매물 찾아서 상태 변경
@@ -66,9 +68,10 @@ class NameChangeService
     // 명의변경 완료된 경매 중 파일이 업로드된 경매만 처리
     public function processCompletedNameChangeAuctions()
     {
-        // 1. status가 dlvr이고 is_taksong이 done인 경매 조회
+        // 1. status가 dlvr 이고 is_taksong이 done인 경매 조회
         $auctions = Auction::where('status', 'dlvr')
                           ->where('is_taksong', 'done')
+                          ->where('has_uploaded_name_change_file', true)
                           ->get();
 
         Log::info('[명의변경 완료] processCompletedNameChangeAuctions', ['auctions' => $auctions]);
@@ -76,10 +79,13 @@ class NameChangeService
         foreach ($auctions as $item) {
             // 2. media 테이블에서 model_id가 경매의 id와 일치하고, collection_name이 'file_auction_name_change'인 미디어가 있는지 확인
             $mediaService = new MediaService();
-            $media = $mediaService->getMedia($item, 'file_auction_name_change')->first();
+
+            Log::info('[명의변경 완료 확인] processCompletedNameChangeAuctions', ['item' => $item]);
+
+            // $media = $mediaService->getMedia($item, 'file_auction_name_change')->first();
 
             // 3. 미디어가 있고, 해당 미디어가 현재 경매에 속한 경우에만 처리
-            if (($media && $media->model_id) === $item->id) {
+            // if (($media && $media->model_id) === $item->id) {
                 // 4. 상태를 done으로 변경
                 // Log::info('NameChangeServiceID', ['auction_id' => $auction->id]);
                 Auction::where('id', $item->id)->update(['status' => 'done']);
@@ -89,9 +95,10 @@ class NameChangeService
                 AuctionDoneJob::dispatch($item->user_id, $item->id, 'user');
                 AuctionDoneJob::dispatch($dealer->user_id, $item->id, 'dealer');
 
-                TaksongStatusTemp::where('auction_id', $item->id)->update(['chk_status' => 'done']);
+                // 이 부분도 제거 대채코드 필요 
+                // TaksongStatusTemp::where('auction_id', $item->id)->update(['chk_status' => 'done']);
 
-            }
+            // }
         }
     }
 

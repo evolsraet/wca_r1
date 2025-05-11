@@ -11,11 +11,11 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Notification;
 use App\Jobs\AuctionDlvrJob;
-use App\Models\TaksongStatusTemp;
+// use App\Models\TaksongStatusTemp;
 use App\Notifications\JobSuccessNotification;
 use Carbon\Carbon;
 use Exception;
-
+use App\Models\Auction;
 class TaksongAddJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -60,11 +60,20 @@ class TaksongAddJob implements ShouldQueue
                 throw new Exception('탁송처리 API 응답 오류');
             }
 
-            $taksongStatusTemp = new TaksongStatusTemp();
-            $taksongStatusTemp->auction_id = $this->data['id'];
-            $taksongStatusTemp->chk_id = $result['data']['chk_id'] ?? null;
-            $taksongStatusTemp->chk_status = $result['data']['chk_status'] ?? null;
-            $taksongStatusTemp->save();
+            // 이 부분 제거 필요 
+            // $taksongStatusTemp = new TaksongStatusTemp();
+            // $taksongStatusTemp->auction_id = $this->data['id'];
+            // $taksongStatusTemp->chk_id = $result['data']['chk_id'] ?? null;
+            // $taksongStatusTemp->chk_status = $result['data']['chk_status'] ?? null;
+            // $taksongStatusTemp->save();
+
+            if(isset($result['data'])){
+                $auction = Auction::find($this->data['id']);
+                $auction->status = 'dlvr';
+                $auction->is_taksong = 'ask';
+                $auction->taksong_id = $result['data']['chk_id'] ?? null;
+                $auction->update();
+            }
 
             Log::info('[TaksongAddJob] API 호출 성공', ['result' => $result]);
 

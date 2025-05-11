@@ -27,6 +27,7 @@ use App\Services\TaksongService;
 use App\Services\ApiRequestService;
 use App\Jobs\AuctionBidStatusJob;
 use App\Models\Bid;
+use App\Jobs\AuctionDoneJob;
 class AuctionController extends Controller
 {
     use CrudControllerTrait;
@@ -603,7 +604,19 @@ class AuctionController extends Controller
             if($media){
                 $auctionId = $auction->id;
                 // 파일업로드가 완료 되었으면, 유저에게 알림 전송 
-                TaksongNameChangeFileUploadJob::dispatch($auction->user_id, $auctionId); // 고객
+                $fileUploadJob = TaksongNameChangeFileUploadJob::dispatch($auction->user_id, $auctionId); // 고객
+
+                if($fileUploadJob){
+                    //AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
+                    $dealer = Bid::find($auction->bid_id);
+                    AuctionDoneJob::dispatch($dealer->user_id, $auction->id, 'dealer');
+                    Log::info('[경매완료 상태] ', ['auction' => $auction, 'dealer' => $dealer]);
+
+
+                    $auction->status = 'done';
+                    $auction->has_uploaded_name_change_file = true;
+                    $auction->save();
+                }
 
                 return response()->api(['success' => true, 'media' => $media]);
             }
