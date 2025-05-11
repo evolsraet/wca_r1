@@ -3004,9 +3004,14 @@
 
             const renderedSvg = svg.replace(/#000000/g, onDisplay);
 
+            let imgSize = 'style="width:34px;"';
+            if(item.id == 19 || item.id == 17 || item.id == 18){
+              imgSize = 'style="width:43px;"';
+            }
+
             return `
             <div class="option-icon">
-                <div class="icon" style="width: 34px;">
+                <div class="icon" ${imgSize}>
                 ${renderedSvg}
                 </div>
                 <p style="font-size: 10px !important;">${item.name}</p>
