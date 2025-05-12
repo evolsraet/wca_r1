@@ -375,8 +375,8 @@ const store = useStore();
 const swal = inject('$swal');
 
 const ownerName = ref(''); // 소유자 이름
-// const isVerified = ref(false); // 본인 인증 상태
-const isVerified = ref(true); // 본인 인증 상태
+const isVerified = ref(false); // 본인 인증 상태
+// const isVerified = ref(true); // 본인 인증 상태
 const carNumber = ref(''); // 차량 번호
 const finalAt = ref(''); // 경매 종료 시간
 const selectedRegion = ref(''); // 선택된 지역

@@ -82,8 +82,6 @@ class TaksongService
             case 'start':
                 Auction::where('car_no', $carNo)->update(['is_taksong' => 'start']);
 
-                // 이 부분도 제거 
-                // TaksongStatusTemp::where('chk_id', $data['chk_id'])->update(['chk_status' => 'start']);
                 break;
 
             case 'ing':
@@ -102,32 +100,9 @@ class TaksongService
 
                 Auction::where('car_no', $carNo)->update($updateData);
 
-                // 이 부분도 제거 
-                // TaksongStatusTemp::where('chk_id', $data['chk_id'])->update(['chk_status' => 'ing']);
                 break;
 
             case 'done':
-                // 이 부분도 제거  대채 방법 코드 변경 필요 
-                // $taksongStatus = TaksongStatusTemp::where('chk_id', $data['chk_id'])->get();
-
-                // foreach ($taksongStatus as $item) {
-                //     if ($item->chk_status === 'ing') {
-                //         $updateData = [
-                //             'status' => 'dlvr',
-                //             'is_taksong' => 'done',
-                //             'done_at' => now()
-                //         ];
-
-                //         Auction::where('car_no', $carNo)->update($updateData);
-
-                //         // 명의이전 등록 관련 메시지 전달 
-                //         TaksongNameChangeJob::dispatch($user_id, $auction_id, 'user');
-                //         TaksongNameChangeJob::dispatch($bid_user_id, $auction_id, 'dealer');
-
-                //         // 이 부분도 제거 
-                //         // TaksongStatusTemp::where('chk_id', $data['chk_id'])->update(['chk_status' => 'requested']);
-                //     }
-                // }
 
                 Log::info('[TaksongService] 탁송 상태 처리 완료 확인', ['status' => $status, 'car_no' => $carNo]);
 
@@ -153,8 +128,6 @@ class TaksongService
                 AuctionCancelJob::dispatch($user_id, $auction_id);
                 AuctionCancelJob::dispatch($bid_user_id, $auction_id);
 
-                // 이 부분도 제거 
-                // TaksongStatusTemp::where('chk_id', $data['chk_id'])->update(['chk_status' => 'cancel']);
                 break;
         }
 
