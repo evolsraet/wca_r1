@@ -376,7 +376,7 @@ const getIngAuctionsByBidsNum = async(AuctionsNumList) =>{
 }
 
 function navigateToDetail(auction) {
-    router.push({ name: 'AuctionDetail', params: { id: auction.id } });
+    router.push({ name: 'AuctionDetail', params: { id: auction.hashid } });
 }
 
 function getAuctionStyle(auction) { 
