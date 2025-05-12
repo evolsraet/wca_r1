@@ -1,5 +1,5 @@
 <template>
-    <div class="container-fluid" v-if="auctionDetail">
+    <div class="container-fluid" v-if="auctionDetail" :style="{'padding-top': isDealer && isMobileView ? '70px' : '10px'}">
       <div v-if="isDealer || !chosendlvr && !auctionChosn && !showReauctionView && ((auctionDetail.data.status !== 'wait') && isUser)" class="container">
         <div class="web-content-style02">
           <div class="container p-1">
@@ -246,14 +246,14 @@
             </div>
   
   
-            <div>
+            <div v-if="auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'diag'">
               <div class="mt-4 mb-4">
                 <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDiagResultModal">위카 진단평가 확인하기</p>
               </div>
             </div>
             
   
-            <div class="dropdown border-bottom">
+            <div class="dropdown border-bottom" v-if="auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'diag'">
               <button
                 class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
                 @click="toggleDropdown('general_1')"
@@ -275,7 +275,7 @@
             </div>
   
   
-            <div class="dropdown border-bottom">
+            <div class="dropdown border-bottom" v-if="auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'diag'">
               <button
                 class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
                 @click="toggleDropdown('general_2')"
@@ -346,7 +346,7 @@
   
   
   
-            <div class="dropdown border-bottom" v-if="auctionDetail.data.status !== 'ask'">
+            <div class="dropdown border-bottom" v-if="auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'diag'">
                 <button
                   class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
                   @click="toggleDropdown('carinfo')"
@@ -1921,7 +1921,7 @@
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">출풍사</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">위카옥션(주)</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">상품번호</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.id ? detailInfo.id : '-'}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.hashid ? detailInfo.hashid : '-'}</td>
               </tr>
   
               <tr>
@@ -1955,7 +1955,7 @@
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">경락대금</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 100%;" class="d-flex justify-content-between">
-                  <span class="print-input" id="done-price">${final_price_str ? final_price_str : '-'} 원</span>
+                  <span class="print-input" id="done-price">${final_price_str ? final_price_str : '-'} 만원</span>
                   <span class="text-danger" style="font-size: 12px;">(VAT 포함금액)</span>
                 </td>
               </tr>
@@ -3547,6 +3547,12 @@
   
   .option-icon p{
     font-size: 10px !important;
+  }
+
+  @media screen and (max-width:1400px) {
+    .img-container img{
+      height: 460px !important;
+    }
   }
   
   </style>

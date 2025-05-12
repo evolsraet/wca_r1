@@ -490,7 +490,6 @@ class AuctionController extends Controller
 
     public function diagnostic(Request $request)
     {
-
         $result = $this->service->diagnosticResult($request);
         return response()->api($result);
     }

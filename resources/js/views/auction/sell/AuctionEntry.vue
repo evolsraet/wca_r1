@@ -542,12 +542,6 @@ const auctionEntry = async () => {
 
   if(isVerified.value){
     
-    // 지역번호 확인
-    if(selectedRegion.value === ''){
-      focusAndAlert(regionSelect, '지역번호를 선택해 주세요.');
-      return;
-    }
-
     // 우편번호 확인
     if(addrPost.value === ''){
       focusAndAlert(addrPostSelect, '우편번호를 입력해 주세요.');
@@ -557,6 +551,12 @@ const auctionEntry = async () => {
     // 살세주소 확인
     if(addrdt.value === ''){
       focusAndAlert(addrdtSelect, '상세주소를 입력해 주세요.');
+      return;
+    }
+
+    // 지역번호 확인
+    if(selectedRegion.value === ''){
+      focusAndAlert(regionSelect, '지역번호를 선택해 주세요.');
       return;
     }
 

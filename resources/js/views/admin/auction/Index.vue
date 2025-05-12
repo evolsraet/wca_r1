@@ -68,6 +68,10 @@
                                 매물번호
                             </th>
 
+                            <th class="px-6 py-3 bg-gray-50 justify-content-center">
+                                고객사코드
+                            </th>
+
                             <th class="px-6 py-3 bg-gray-50 text-left">
                                 <div class="flex flex-row items-center justify-content-center justify-between cursor-pointer" @click="updateOrdering('car_no')">
                                     <div class="leading-4 font-medium text-gray-500 uppercase tracking-wider" :class="{ 'font-bold text-blue-600': orderColumn === 'car_no' }">
@@ -120,6 +124,9 @@
                             <td class="px-6 py-4 text-sm">
                                 <!-- {{ auction.unique_number }} -->
                                 {{ auction.id }}
+                            </td>
+                            <td class="px-6 py-4 text-sm">
+                                {{ auction.hashid }}
                             </td>
                             <td class="px-6 py-4 text-sm">
                                 {{ auction.car_no }}

@@ -190,7 +190,7 @@
                     </div>
                     <div class="form-group mt-3" id="identityElement" >
                         <label class="mb-2"><span class="text-danger me-2">*</span> 주민번호</label>
-                        <input type="password" id="identity" class="form-control" placeholder="ex) 9034561234567" style="width: 100%; padding: 12px;">
+                        <input type="number" id="identity" class="form-control" placeholder="ex) 9034561234567" style="width: 100%; padding: 12px;">
                     </div>            
                 
                 </div>

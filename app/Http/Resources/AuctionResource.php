@@ -35,6 +35,9 @@ class AuctionResource extends JsonResource
         // 관계 리소스로 리턴
         $this->relationResource($request, $parentArray);
 
+        $addArray['hashid'] = Hashids::encode($auction->id);
+
+
         $addArray['bids_count'] = Bid::where('auction_id', $auction->id)->count();
 
         // Bid 의 price 의 값이 auction_id 를 기준으로 중간 3개 값을 찾아서 최소값과 최대값 그리고 평균값을 구함 
@@ -136,7 +139,6 @@ class AuctionResource extends JsonResource
 
         $addArray['car_thumbnails'] = json_decode($auction->car_thumbnail, true);
 
-        $addArray['hashid'] = Hashids::encode($auction->id);
 
 
         $this->withFiles($parentArray, $addArray);

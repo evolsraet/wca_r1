@@ -756,6 +756,25 @@ class NotificationTemplate
                 break;
 
 
+            case 'DiagnosisErrorJob':
+
+                $title = $data->car_no.' 차량 진단 결과 오류';
+
+                $message = 
+                $data->car_no.' 차량 진단 결과 오류가 발생했습니다. \n'
+                .'진단에서 고객사코드가 정확히 입력되었는지 확인 해주세요. \n'
+                .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
+                .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                .'ㅁ 차량번호 : '.$data->car_no.' \n';
+                
+                // $link = [
+                //     "url" => url('/auction/'.$data->hashid),
+                //     "text" => '자주묻는 질문'
+                // ];
+
+                break;
+
+
 
             case 'basic':
 

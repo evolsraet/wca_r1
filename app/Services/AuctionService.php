@@ -856,8 +856,7 @@ class AuctionService
                 'diag_car_no' => $result['diag_car_no']
             ], '진단 결과');
 
-
-        if($response['status'] === 'ok'){
+        if($response['status'] === 'ok' && isset($response['extra']['url_pdf']) && $response['extra']['url_pdf']){
             $diagnosticCode = $this->diagnosticCode();
 
             if($diagnosticCode['status'] === 'ok'){
@@ -893,7 +892,15 @@ class AuctionService
 
             return $response;
         } else {
-            return response()->api([], '진단 결과를 가져오는 중 오류가 발생했습니다.', 500);
+
+            Log::info('진단 결과 오류 / 본사검수 확인 필요', [$response]);
+
+            return [
+                'status' => 'error',
+                'message' => '진단 결과를 가져오는 중 오류가 발생했습니다. 진단에서 본사검수가 되었는지 확인 하세요.',
+                'code' => 500,
+                'data' => [],
+            ];
         }
     }
 
@@ -950,10 +957,7 @@ class AuctionService
 
     public function diagnosticCheck()
     {
-        $auction = Auction::where(function ($query) {
-            $query->where('status', 'diag')
-                  ->orWhere('status', 'ask');
-        })
+        $auction = Auction::where('status', 'diag')
         ->whereNull('diag_id')
         ->whereNull('diag_check_at')
         ->get();
@@ -967,7 +971,7 @@ class AuctionService
             $result = $this->diagnosticResult($sendData);
             $resultArray = is_array($result) ? $result : json_decode(json_encode($result), true);
         
-            if (isset($resultArray['status']) && $resultArray['status'] === 'ok') {
+            if (isset($resultArray['status']) && $resultArray['status'] === 'ok' && $resultArray['extra']['url_pdf'] !== false) {
 
                 $isCheck = $resultArray['data']['diag_status'];
                 $isDoneAt = $resultArray['data']['diag_done_at'];
@@ -1014,6 +1018,12 @@ class AuctionService
                         AuctionBidStatusJob::dispatch($auction->user_id, 'ing', $auction->id, '','');
 
                         Log::info('[진단상태 확인완료] : '.$item->id, ['result' => $resultArray]);
+                    }else{
+
+                        // 고객사 코드오류 알림전달
+                        // 알림 전달 내용 추가 필요 
+
+                        Log::info('[진단상태 확인] : '.$item->id.' / 고객사코드 오류', ['result' => $resultArray]);
                     }
 
                 }

@@ -11,7 +11,7 @@
       </div>
       <div class="dropdown">
         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          테스트메뉴
+          기타메뉴
         </button>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="#" @click="diagAuction('ing')">경매진행</a></li>
@@ -107,6 +107,12 @@
                       </select>
                       <p class="opacity-50 text-red">*신청완료 -> 진단대기 -> 경매진행 순서로 진단대기를 거쳐야 경매마감일자가 나옵니다. </p>
                     </div>
+
+                    <div class="card-body">
+                      <p class="text-secondary opacity-50">고객사코드</p>
+                      <input v-model="auction.hashid" type="text" id="hashid" placeholder="고객사코드" class="form-control"/>
+                    </div>
+
                     <div class="card-body">
                       <p class="text-secondary opacity-50">은행</p>
                       <input v-model="auction.bank" type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" class="input-dis form-control" readonly>
@@ -651,6 +657,7 @@ const auction = reactive({
   diag_first_at:'',
   diag_second_at:'',
   car_thumbnail:'',
+  hashid:''
 });
 
 const route = useRoute();
@@ -1012,6 +1019,7 @@ onMounted(async () => {
     auction.addr1 = data.addr1;
     auction.addr2 = data.addr2;
     auction.customTel1 = data.customTel1;
+    auction.hashid = data.hashid;
     // auction.diag_first_at = data.diag_first_at;
     if(data.diag_first_at){
       const formattedValue = data.diag_first_at.replace(" ", "T").substring(0, 16);  // 형식 변환
