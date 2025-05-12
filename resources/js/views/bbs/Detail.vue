@@ -18,12 +18,12 @@
                                         <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
                                     </div> -->
                                     <div class="card-img-top-ty02">
-                                        <img :src="review.auction.car_thumbnail" alt="Car">
+                                        <img :src="review.auction.car_thumbnails ? review.auction.car_thumbnails[0] : review.auction.car_thumbnail" alt="Car">
                                     </div>
                                 </div>
                                 <div v-if = "isMobileView">
                                     <div>
-                                        <img :src="review.auction.car_thumbnail" alt="Car">
+                                        <img :src="review.auction.car_thumbnails ? review.auction.car_thumbnails[0] : review.auction.car_thumbnail" alt="Car">
                                     </div>
                                 </div>
                             </div>
@@ -236,6 +236,16 @@ onBeforeUnmount(() => {
             }
             .header{
                 pointer-events: none; 
+            }
+
+            .card-img-top-ty02{
+                width: 100%;
+                height: 100% !important;
+                object-fit: cover;
+            }
+
+            .left-img img {
+                height: 450px !important;
             }
         }
 </style>

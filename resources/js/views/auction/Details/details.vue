@@ -188,7 +188,7 @@
                         <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
                       </div>
                       <div v-if="auctionDetail.data.status === 'dlvr' || auctionDetail.data.status === 'dlvrDone' && isUser" class="mt-4">
-                        <div v-if="auctionDetail.data.top_bids[0]?.dealerInfo?.biz_check">
+                        <div v-if="biz_check != 0">
                           <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">매수자 사업자등록증</p>
                         </div>
                       </div>
@@ -1365,6 +1365,8 @@
   const fileInputRefCompanyLicenseBtn = ref(null);
   const fileInputRefCompanyLicense = ref(null);
   const fileAuctionCompanyLicenseUrl = ref('');
+
+  const biz_check = ref(false);
   
   const photoSwipeImages = ref(null);
   
@@ -3085,6 +3087,12 @@
     await fetchAuctionDetail();
   
     const auctionDetailData = auctionDetail.value.data;
+
+    // auctionDetail.data.top_bids[0]?.dealerInfo?.biz_check
+
+    biz_check.value = auctionDetailData.top_bids.filter(bid => bid.id === auctionDetailData.win_bid.id)[0]?.dealerInfo?.biz_check;
+    console.log('biz_check',biz_check.value);
+
   
     console.log('auctionDetail//',auctionDetail.value.data);
     // unique_number.value = auctionDetail.value.data.unique_number;
@@ -3398,7 +3406,7 @@
   
   @media (max-width:500px) {.container{--bs-gutter-x:0rem;}}
   
-  .img-container{width:100%;height:480px;display:flex;justify-content:center;align-items:center;overflow:hidden;}
+  .img-container{width:100%;height:458px;display:flex;justify-content:center;align-items:center;overflow:hidden;}
   .img-wrapper{width:100%;height:100%;position:relative;overflow:hidden;border-radius:10px;}
   .img-wrapper img{width:100%;height:100%;object-fit:cover;}
   .card-img-top-ty02{border-top-left-radius:6px;border-top-right-radius:6px;}

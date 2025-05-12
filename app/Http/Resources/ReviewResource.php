@@ -25,6 +25,9 @@ class ReviewResource extends JsonResource
             'auction' => $this->auction,
         ];
 
+        $addArray['auction']['car_thumbnails'] = json_decode($this->auction->car_thumbnail, true);
+
+
         // 관계 리소스로 리턴
         $this->relationResource($request, $parentArray);
 

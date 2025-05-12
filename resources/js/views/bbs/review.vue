@@ -73,7 +73,8 @@
                                     <p class="review-date">{{ splitDate(review.updated_at) }} ({{ getDayOfWeek(review.updated_at) }})</p>
                                     <div class="card-img-top-placeholder mt-2">
                                         <div v-if="review.auction.car_thumbnail">
-                                            <img :src="review.auction.car_thumbnail" alt="Car Image">
+                                            <!-- <img :src="review.auction.car_thumbnail" alt="Car Image"> -->
+                                            <img :src="review.auction.car_thumbnails ? review.auction.car_thumbnails[0] : review.auction.car_thumbnail" alt="차량 사진">
                                         </div>
                                         <div v-else>
                                             <img src="../../../img/car_example.png">
@@ -91,9 +92,9 @@
                                     <h5 class="card-title">{{ review.auction.car_model ? review.auction.car_model +' '+ review.auction.car_model_sub +' '+ review.auction.car_fuel + '('+ review.auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</h5>
                                     <p>{{ review.auction.car_year ? review.auction.car_year : '2020' }}년 | {{ review.auction.car_km ? review.auction.car_km : '2.4' }}km | {{ isAccident(review.auction.is_accident) }}</p>
                                     <div class="d-flex justify-content-between">
-                                        <div>
+                                        <!-- <div>
                                             <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
-                                        </div>
+                                        </div> -->
                                         <!--<p class="tc-primary">{{ amtComma(review.auction.win_bid.price) }}</p>-->
                                     </div>
 

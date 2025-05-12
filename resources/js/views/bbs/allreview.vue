@@ -28,7 +28,7 @@
           <div class="col-md-4 mb-4 pointer" v-if="reviewsData.length > 0" v-for="(card, index) in cards" :key="index">
             <div class="cardtype02" @click="navigateToDetail(card.id)">
               <h5 class="text-start process">{{ card.title }}</h5>
-                <img :src="card.thumbnail" alt="Car">
+                <img :src="card.car_thumbnails ? card.car_thumbnails[0] : card.thumbnail" alt="Car">
               <div class="content p-0">
                 <div class="mov-sort d-flex flex-lg-row-reverse align-items-start justify-content-between">
                 <span class="date text-secondary opacity-50">{{ splitDate(card.date) }}</span>
@@ -123,6 +123,7 @@ const inputCardsValue = () => {
     rating: review.star,
     date: review.created_at,
     text: review.content,
+    car_thumbnails: review.auction.car_thumbnails,
   }));
 }
 
@@ -142,7 +143,7 @@ async function loadPage(page) { // 페이지 로드
 
 onMounted(async () => {
   await loadPage(1);
-  console.log(reviewsData);
+  console.log('reviewsData',reviewsData);
   inputCardsValue();
 });
 
