@@ -1919,32 +1919,32 @@
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">출풍사</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">위카옥션(주)</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">상품번호</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.id}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.id ? detailInfo.id : '-'}</td>
               </tr>
   
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">경매회차</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 30%;"></td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">경매일</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${created_at_view}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${created_at_view ? created_at_view : '-'}</td>
               </tr>
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">차명</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_model + ' ' + detailInfo.car_model_sub}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_model ? detailInfo.car_model : '-'} ${detailInfo.car_model_sub ? detailInfo.car_model_sub : '-'}</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">차량번호</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_no}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_no ? detailInfo.car_no : '-'}</td>
               </tr>
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">연식</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_year}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_year ? detailInfo.car_year : '-'}</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">최초등록일</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${car_first_reg_date_view}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${car_first_reg_date_view ? car_first_reg_date_view : '-'}</td>
               </tr>
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">배기량</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 30%;"></td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">계기판주행</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_km} km</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_km ? detailInfo.car_km + ' km' : '-'}</td>
               </tr>
           </table>
   
@@ -1953,7 +1953,7 @@
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">경락대금</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 100%;" class="d-flex justify-content-between">
-                  <span class="print-input" id="done-price">${final_price_str} 원</span>
+                  <span class="print-input" id="done-price">${final_price_str ? final_price_str : '-'} 원</span>
                   <span class="text-danger" style="font-size: 12px;">(VAT 포함금액)</span>
                 </td>
               </tr>
@@ -1964,9 +1964,9 @@
           <table style="width: 100%; border-collapse: collapse;">
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">매도자</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.owner_name}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.owner_name ? detailInfo.owner_name : '-'}</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">주민(법인)번호</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.personal_id_number}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.personal_id_number ? detailInfo.personal_id_number : '-'}</td>
               </tr>
   
               <tr>
@@ -1982,16 +1982,16 @@
           <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; margin-top: 10px;">
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">상호명</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.dealer.company}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.dealer.company ? detailInfo.dealer.company : '-'}</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">사업자번호</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.dealer.business_registration_number}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.dealer.business_registration_number ? detailInfo.dealer.business_registration_number : '-'}</td>
               </tr>
   
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">대표자명</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.dealer.name}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.dealer.name ? detailInfo.dealer.name : '-'}</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">연락처</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${dealer_phone_str}</td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.dealer.phone ? detailInfo.dealer.phone : '-'}</td>
               </tr>
   
               <tr>
