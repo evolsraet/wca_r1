@@ -66,15 +66,19 @@ class UserService
             // beforeData() 이전에 발리데이트 해야함
 
             if ($data['socialLogin'] !== 'true') {
-                $requestData['password'] = ['required', 'string', 'min:8', 'confirmed'];
+                $validatedData = validator($requestData, [
+                    'name' => 'required|max:255',
+                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                    'phone' => ['required', 'string', 'unique:users'],
+                    'password' => ['required', 'string', 'min:8', 'confirmed'],
+                ])->validate();
+            }else{
+                $validatedData = validator($requestData, [
+                    'name' => 'required|max:255',
+                    'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                    'phone' => ['required', 'string', 'unique:users'],
+                ])->validate();
             }
-
-            $validatedData = validator($requestData, [
-                'name' => 'required|max:255',
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'phone' => ['required', 'string', 'unique:users'],
-                // 'password' => ['required', 'string', 'min:8', 'confirmed'],
-            ])->validate();
 
             $data = $this->beforeData($data);
 
@@ -108,7 +112,9 @@ class UserService
             $item = User::create($data);
 
             // 회원가입 알림 발송
-            UserRegisteredJob::dispatch($item);
+            if($data['role'] == 'user' && $item){
+                UserRegisteredJob::dispatch($item);
+            }
 
             // 하위 모델
             if ($data['role'] == 'dealer') {
@@ -147,7 +153,12 @@ class UserService
                 unset($dealerData['file_user_cert_name']);
                 unset($dealerData['file_user_sign_name']);
 
-                $item->dealer()->create($dealerData);
+                $dealer = $item->dealer()->create($dealerData);
+
+                // 회원가입 알림 발송
+                if($dealer){
+                    UserRegisteredJob::dispatch($item);
+                }
             }
 
             $model = new User;
