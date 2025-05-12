@@ -112,8 +112,13 @@
                         <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="(bid, index) in auctionsDoneData" :key="bid.id" @click="navigateToDetail(bid)" :style="getAuctionStyle(bid)">
                             <div class="card my-auction">
                                 <div class="card-img-top-placeholder grayscale_img">
-                                    <img v-if="bid.car_thumbnail" :src="bid.car_thumbnail">
-                                    <img v-else src="../../../../img/car_example.png">
+                                    <div v-if="bid.car_thumbnail">
+                                        <img v-if="bid.car_thumbnails" :src="bid.car_thumbnails[0]">
+                                        <img v-else="bid.car_thumbnail" :src="bid.car_thumbnail">
+                                    </div>
+                                    <div v-else>
+                                        <img  src="../../../../img/car_example.png">
+                                    </div>
                                 </div>
                                 <span v-if="bid.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                 <div class="card-body">
