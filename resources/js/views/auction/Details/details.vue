@@ -105,17 +105,17 @@
                               </div>
   
                           </div>
-                          <div id="no-image" class="d-flex" v-else>
+                          <div v-else id="no-image" class="d-flex">
                             <div class="w-50">
                               <div class="card-img-top-ty02">
-                                
+                                <img :src="auctionDetail.data.car_thumbnail" alt="Car Image">
                                 <!-- <img src="../../../../img/no-image.png" alt="Car Image"> -->
                               </div>
                             </div>
-                            <div class="w-50 d-flex flex-column gap-1">
+                            <!-- <div class="w-50 d-flex flex-column gap-1">
                               <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
                               <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
-                            </div>
+                            </div> -->
                           </div>
                         </div>
                         <div v-if="isMobileView">
@@ -207,34 +207,34 @@
               <h4 class="mb-4">차량 정보</h4>
               <div class="car-info-grid">
   
-                <CarInfoItem label="차대번호" :value="diagnosticResult.diag_car_id ? diagnosticResult.diag_car_id : '-' " />
-                <CarInfoItem label="차량번호" :value="diagnosticResult.diag_car_no ? diagnosticResult.diag_car_no : '-'" />
-                <CarInfoItem label="최초등록일" :value="diagnosticResult.diag_registred_date ? diagnosticResult.diag_registred_date :'-'" />
-                <CarInfoItem label="주행거리" :value="diagnosticResult.diag_distance ? diagnosticResult.diag_distance + ' km' : '-'" />
+                <CarInfoItem label="차대번호" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_car_id ? diagnosticResult.diag_car_id : '-'  : '-'" />
+                <CarInfoItem label="차량번호" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_car_no ? diagnosticResult.diag_car_no : '-' : '-' " />
+                <CarInfoItem label="최초등록일" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_registred_date ? diagnosticResult.diag_registred_date :'-' : '-' " />
+                <CarInfoItem label="주행거리" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_distance ? diagnosticResult.diag_distance + ' km' : '-' : '-' " />
   
-                <CarInfoItem label="엔진형식" :value="diagnosticResult.diag_car_id ? carDetails.engineType : '-'" />
-                <CarInfoItem label="미션" :value="diagnosticResult.diag_mission ? diagnosticResult.diag_mission : '-'" />
+                <CarInfoItem label="엔진형식" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_car_id ? carDetails.engineType : '-' : '-' " />
+                <CarInfoItem label="미션" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_mission ? diagnosticResult.diag_mission : '-' : '-' " />
   
-                <CarInfoItem label="제조사" :value="diagnosticResult.diag_company ? diagnosticResult.diag_company : '-'" />
-                <CarInfoItem label="년식" :value="diagnosticResult.diag_year ? diagnosticResult.diag_year : '-'" />
-                <CarInfoItem label="용도변경" :value="diagnosticResult.diag_history_use ? diagnosticResult.diag_history_use : '-'" />
+                <CarInfoItem label="제조사" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_company ? diagnosticResult.diag_company : '-' : '-' " />
+                <CarInfoItem label="년식" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_year ? diagnosticResult.diag_year : '-' : '-' " />
+                <CarInfoItem label="용도변경" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_history_use ? diagnosticResult.diag_history_use : '-' : '-' " />
   
-                <CarInfoItem label="모델" :value="diagnosticResult.diag_model ? diagnosticResult.diag_model : '-'" />
-                <CarInfoItem label="배기량" :value="diagnosticResult.diag_displacement ? diagnosticResult.diag_displacement +' cc' : '-'" />
+                <CarInfoItem label="모델" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_model ? diagnosticResult.diag_model : '-' : '-' " />
+                <CarInfoItem label="배기량" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_displacement ? diagnosticResult.diag_displacement +' cc' : '-' : '-' " />
                 <!-- <CarInfoItem label="튜닝이력" :value="diagnosticResult.diag_history_tuning ? diagnosticResult.diag_history_tuning  : '-'" /> -->
   
                 <!-- <CarInfoItem label="등급" :value="diagnosticResult.diag_grade ? diagnosticResult.diag_grade : '-'" /> -->
-                <CarInfoItem label="연료" :value="diagnosticResult.diag_fuel ? diagnosticResult.diag_fuel : '-'" />
+                <CarInfoItem label="연료" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_fuel ? diagnosticResult.diag_fuel : '-' : '-' " />
                 
   
                 <div class="detail-row" v-if="carDetails.modelSub || carDetails.gradeSub">
-                  <CarInfoItem label="세부모델" :value="diagnosticResult.diag_submodel ? diagnosticResult.diag_submodel : '-'" v-if="carDetails.modelSub" />
-                  <CarInfoItem label="세부등급" :value="diagnosticResult.diag_subgrade ? diagnosticResult.diag_subgrade : '-'" v-if="carDetails.gradeSub" />
+                  <CarInfoItem label="세부모델" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_submodel ? diagnosticResult.diag_submodel : '-' : '-' " v-if="carDetails.modelSub" />
+                  <CarInfoItem label="세부등급" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_subgrade ? diagnosticResult.diag_subgrade : '-' : '-' " v-if="carDetails.gradeSub" />
                 </div>
   
               </div>
   
-              <div v-if="auctionDetail.data.status !== 'ask' || auctionDetail.data.status !== 'diag'">
+              <div v-if="auctionDetail.data.status !== 'diag'">
                 <ul class="machine-inform-title">
                   <li class="text-secondary opacity-50">옵션정보</li>
                 </ul>

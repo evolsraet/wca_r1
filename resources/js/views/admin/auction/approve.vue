@@ -17,6 +17,7 @@
           <li><a class="dropdown-item" href="#" @click="diagAuction('ing')">경매진행</a></li>
           <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalDeposit')">입금완료</a></li>
           <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalAfterFee')">수수료 입금완료</a></li>
+          <li><a class="dropdown-item" href="#" >진단상태확인</a></li>
         </ul>
       </div>
     </div>
@@ -57,7 +58,12 @@
                           <span class="label">최종 수정일자</span>
                           <span class="value">{{ updated_at }}</span>
                           <input type="hidden" v-model="updated_at" id="updated_at">
-                      </div>                      
+                      </div>           
+                      <div class="item">
+                        <span class="label">진단상태</span>
+                        <span class="value">{{ auction.hashid }}</span>
+                        <input type="hidden" v-model="auction.hashid" id="hashid">
+                      </div>           
                    </div>
               </div>
 

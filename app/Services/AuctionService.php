@@ -895,6 +895,9 @@ class AuctionService
 
             Log::info('진단 결과 오류 / 본사검수 확인 필요', [$response]);
 
+            // $apiRequestService = new ApiRequestService();
+            // $apiRequestService->logErrorToDb('alert', config('services.diagnostic.api_url').'diag_by_car_no', [], [], '진단 결과 / 본사검수 확인 필요');
+
             return [
                 'status' => 'error',
                 'message' => '진단 결과를 가져오는 중 오류가 발생했습니다. 진단에서 본사검수가 되었는지 확인 하세요.',
@@ -1022,6 +1025,10 @@ class AuctionService
 
                         // 고객사 코드오류 알림전달
                         // 알림 전달 내용 추가 필요 
+
+                        //
+                        // $apiRequestService = new ApiRequestService();
+                        // $apiRequestService->logErrorToDb('alert', config('services.diagnostic.api_url').'diag_by_car_no', [], [], '진단 확인 / 고객사코드 오류');
 
                         Log::info('[진단상태 확인] : '.$item->id.' / 고객사코드 오류', ['result' => $resultArray]);
                     }

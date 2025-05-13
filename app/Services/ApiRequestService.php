@@ -67,7 +67,7 @@ class ApiRequestService
         }
     }
 
-    protected function logErrorToDb(string $method, string $url, array $payload, ?string $responseBody, string $context, Exception $e = null)
+    public function logErrorToDb(string $method, string $url, array $payload, ?string $responseBody, string $context, Exception $e = null)
     {
         try {
             ApiErrorLog::create([
