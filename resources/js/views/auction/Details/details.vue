@@ -234,12 +234,12 @@
   
               </div>
   
-              <div v-if="auctionDetail.data.status !== 'ask'">
-              <ul class="machine-inform-title">
-                <li class="text-secondary opacity-50">옵션정보</li>
-              </ul>
-  
-              <div v-html="diagnosticOptionViewObject"></div>
+              <div v-if="auctionDetail.data.status !== 'ask' || auctionDetail.data.status !== 'diag'">
+                <ul class="machine-inform-title">
+                  <li class="text-secondary opacity-50">옵션정보</li>
+                </ul>
+    
+                <div v-html="diagnosticOptionViewObject"></div>
               
               </div>
               
