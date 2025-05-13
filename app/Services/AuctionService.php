@@ -856,41 +856,57 @@ class AuctionService
                 'diag_car_no' => $result['diag_car_no']
             ], '진단 결과');
 
-        if($response['status'] === 'ok' && isset($response['extra']['url_pdf']) && $response['extra']['url_pdf']){
+        if($response['status'] === 'ok'){
             $diagnosticCode = $this->diagnosticCode();
 
-            if($diagnosticCode['status'] === 'ok'){
-                $diagnosticCodeOptions = $diagnosticCode['data']['option'];
-                $response['diag_option_view_test'] = $response['data']['diag_option'];
-                $response['diag_option_view'] = [];
 
-                // foreach 문 안에 키값 포함  
-                foreach($diagnosticCodeOptions as $key => $diagnosticCodeOption){
+            if(isset($response['data']['diag_is_confirmed']) && $response['data']['diag_is_confirmed'] === 1){
 
-                    if($diagnosticCodeOption){
-
-                        if(isset($response['data']['diag_option'][$key])){
-
-                            if($response['data']['diag_option'][$key] === '없음' || $response['data']['diag_option'][$key] === 0){
-                                $response['diag_option_view'][] = [
-                                    'id' => $key,
-                                    'name' => $diagnosticCodeOption['name'],
-                                    'is_ok' => false
-                                ];
-                            }else{
-                                $response['diag_option_view'][] = [
-                                    'id' => $key,
-                                    'name' => $diagnosticCodeOption['name'],
-                                    'is_ok' => true
-                                ];
+                if($diagnosticCode['status'] === 'ok'){
+                    $diagnosticCodeOptions = $diagnosticCode['data']['option'];
+                    $response['diag_option_view_test'] = $response['data']['diag_option'];
+                    $response['diag_option_view'] = [];
+    
+                    // foreach 문 안에 키값 포함  
+                    foreach($diagnosticCodeOptions as $key => $diagnosticCodeOption){
+    
+                        if($diagnosticCodeOption){
+    
+                            if(isset($response['data']['diag_option'][$key])){
+    
+                                if($response['data']['diag_option'][$key] === '없음' || $response['data']['diag_option'][$key] === 0){
+                                    $response['diag_option_view'][] = [
+                                        'id' => $key,
+                                        'name' => $diagnosticCodeOption['name'],
+                                        'is_ok' => false
+                                    ];
+                                }else{
+                                    $response['diag_option_view'][] = [
+                                        'id' => $key,
+                                        'name' => $diagnosticCodeOption['name'],
+                                        'is_ok' => true
+                                    ];
+                                }
                             }
                         }
+    
                     }
-
                 }
+
+                return $response;
+
+            }else{
+
+                return [
+                    'status' => 'error',
+                    'message' => '진단에서 본사검수가 되지 않았습니다.',
+                    'code' => 500,
+                    'data' => [],
+                ];
+
             }
 
-            return $response;
+            
         } else {
 
             Log::info('진단 결과 오류 / 본사검수 확인 필요', [$response]);
@@ -900,7 +916,7 @@ class AuctionService
 
             return [
                 'status' => 'error',
-                'message' => '진단 결과를 가져오는 중 오류가 발생했습니다. 진단에서 본사검수가 되었는지 확인 하세요.',
+                'message' => '진단에서 등록이 안되었습니다.',
                 'code' => 500,
                 'data' => [],
             ];
@@ -974,7 +990,7 @@ class AuctionService
             $result = $this->diagnosticResult($sendData);
             $resultArray = is_array($result) ? $result : json_decode(json_encode($result), true);
         
-            if (isset($resultArray['status']) && $resultArray['status'] === 'ok' && $resultArray['extra']['url_pdf'] !== false) {
+            if (isset($resultArray['status']) && $resultArray['status'] === 'ok' && $resultArray['data']['diag_is_confirmed'] !== 1) {
 
                 $isCheck = $resultArray['data']['diag_status'];
                 $isDoneAt = $resultArray['data']['diag_done_at'];

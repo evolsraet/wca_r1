@@ -17,7 +17,7 @@
           <li><a class="dropdown-item" href="#" @click="diagAuction('ing')">경매진행</a></li>
           <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalDeposit')">입금완료</a></li>
           <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalAfterFee')">수수료 입금완료</a></li>
-          <li><a class="dropdown-item" href="#" >진단상태확인</a></li>
+          <li><a class="dropdown-item" href="#" @click="DiagnosticAuctionCheck(auction.hashid)">진단상태확인</a></li>
         </ul>
       </div>
     </div>
@@ -61,8 +61,8 @@
                       </div>           
                       <div class="item">
                         <span class="label">진단상태</span>
-                        <span class="value">{{ auction.hashid }}</span>
-                        <input type="hidden" v-model="auction.hashid" id="hashid">
+                        <span class="value">{{ diagInfo.diag_error_msg ? diagInfo.diag_error_msg : diagInfo.diag_status }}</span>
+                        <!-- <input type="hidden" v-model="diagInfo.diag_error_msg" id="diag_error_msg"> -->
                       </div>           
                    </div>
               </div>
@@ -666,9 +666,11 @@ const auction = reactive({
   hashid:''
 });
 
+const diagInfo = ref('');
+
 const route = useRoute();
 const router = useRouter();
-const { getAuctionById, updateAuctionStatus, isLoading, updateAuction, updateAuctionIsDeposit } = useAuctions();
+const { getAuctionById, updateAuctionStatus, isLoading, updateAuction, updateAuctionIsDeposit, diagnostic } = useAuctions();
 const auctionId = route.params.id; 
 const auctionDetails = ref(null);
 const isVisible = ref(false);
@@ -1001,7 +1003,6 @@ function triggerFileUploadCarLicense() {
   }
 }
 
-
 onMounted(async () => {
   statusLabel = wicas.enum(store).auctions();
   window.addEventListener('resize', checkScreenWidth);
@@ -1087,7 +1088,45 @@ onMounted(async () => {
       finalPriceFeeKorean.value = amtComma(data.final_price);
     }
   });
+
+  DiagnosticAuctionCheck(auction.hashid);
+
 });
+
+
+// 진단상태 확인 
+const DiagnosticAuctionCheck = (hashid) => {
+
+  const id = hashid;
+
+  diagnostic(id).then((res) => {
+    if(res){
+      console.log('res', res);
+
+      const data = 
+        {
+          'diag_car_no': res.data.data.diag_car_no,
+          'diag_status': res.data.data.diag_status == 'done' ? '진단완료' : '-',
+          'diag_done_at': res.data.data.diag_done_at,
+          'diag_outer_id': res.data.data.diag_outer_id,
+          'diag_check_at': res.data.data.diag_check_at,
+          // 본사검수확인 
+          'diag_is_confirmed': res.data.diag_is_confirmed,
+          'diag_error_msg': res.data.status === 'error' ? res.data.message : ''
+        }
+      ;
+
+      diagInfo.value = data;
+
+
+      console.log('data!!', diagInfo.value);
+
+    }else{
+      console.log('조회실패');
+    }
+  });
+}
+
 
 function editPostCodeReceive(elementName) {
   openPostcode(elementName)
