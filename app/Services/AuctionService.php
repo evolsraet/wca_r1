@@ -990,7 +990,7 @@ class AuctionService
             $result = $this->diagnosticResult($sendData);
             $resultArray = is_array($result) ? $result : json_decode(json_encode($result), true);
         
-            if (isset($resultArray['status']) && $resultArray['status'] === 'ok' && $resultArray['data']['diag_is_confirmed'] !== 1) {
+            if (isset($resultArray['status']) && $resultArray['status'] === 'ok' && $resultArray['data']['diag_is_confirmed'] == 1) {
 
                 $isCheck = $resultArray['data']['diag_status'];
                 $isDoneAt = $resultArray['data']['diag_done_at'];
