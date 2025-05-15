@@ -149,10 +149,6 @@ class AuctionService
                 throw new \Exception('진단이 완료되지 않았습니다.', 500);
             }
 
-            if (empty($auction->bid_id)) {
-                throw new \Exception('입찰자가 없습니다.', 500);
-            }
-
             AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '', '');
         }
 
