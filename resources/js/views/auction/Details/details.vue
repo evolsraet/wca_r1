@@ -701,7 +701,7 @@
               </div>
   
   
-              <div v-if="auctionDetail.data.is_taksong === 'ask' || auctionDetail.data.is_taksong === 'ing' || auctionDetail.data.is_taksong === 'done'">
+              <div v-if="auctionDetail.data.is_taksong === 'ask' || auctionDetail.data.is_taksong === 'start' || auctionDetail.data.is_taksong === 'ing' || auctionDetail.data.is_taksong === 'done'">
   
                 <div class="d-flex justify-content-between align-items-baseline pt-4">
                   <h4 class="custom-highlight">탁송 상태 정보</h4>
