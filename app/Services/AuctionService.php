@@ -332,19 +332,7 @@ class AuctionService
 
     private function notifyDone($auction, $bids)
     {
-        // if ($auction->is_deposit == 'totalAfterFee') {
-        //     AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
-        // } else {
-        //     AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
-        //     AuctionDoneJob::dispatch($bids->user_id, $auction->id, 'dealer');
-        // }
-
-        $auction->status = 'done';
-        $auction->save();
-
-        AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
-        AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
-
+        
     }
 
     private function notifyChosen($auction, $bids)
