@@ -159,7 +159,7 @@ return [
 
         Watchers\LogWatcher::class => [
             'enabled' => env('TELESCOPE_LOG_WATCHER', true),
-            'level' => 'info',
+            'level' => env('LOG_LEVEL', 'info'),
             'ignore_exceptions' => false,
         ],
 

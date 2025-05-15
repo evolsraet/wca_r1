@@ -108,6 +108,12 @@ class UserController extends Controller
     public function test(Request $request)
     {
 
+        $apiRequestService = new \App\Services\ApiRequestService();
+        $result = $apiRequestService->sendRequest('POST', 'https://check-dev.wecarmobility.co.kr/api/outside/check/taksong_add', ['key' => 'value']);
+    
+        return response()->api(null, "테스트 결과." . json_encode($result, JSON_PRETTY_PRINT), 'ok', 200);
+        dd($result);
+
         // $auctionService = new AuctionService();
         // $auctionService->auctionAfterFeeDone();
 

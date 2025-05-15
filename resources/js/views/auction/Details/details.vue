@@ -188,7 +188,7 @@
                         <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
                       </div>
                       <div v-if="auctionDetail.data.status === 'dlvr' || auctionDetail.data.status === 'dlvrDone' && isUser" class="mt-4">
-                        <div v-if="biz_check != 0">
+                        <div>
                           <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">매수자 사업자등록증</p>
                         </div>
                       </div>
@@ -268,7 +268,7 @@
               </button>
               <transition name="slide">
               <div v-show="openSection === 'general_1'" class="dropdown-content mt-0 p-4">
-                <div v-html="diagnosticResult.diag_base_option" id="diag_base_option" class="html-table-wrapper">
+                <div v-html="diagnosticResult.diag_base_option ? diagnosticResult.diag_base_option : '내용이 없습니다.'" id="diag_base_option" class="html-table-wrapper">
                 </div>
               </div>
               </transition>
@@ -290,7 +290,7 @@
               </button>
               <transition name="slide">
                 <div v-show="openSection === 'general_2'" class="dropdown-content mt-0 p-4">
-                  {{ diagnosticResult.diag_add_option }}
+                  {{ diagnosticResult.diag_add_option? diagnosticResult.diag_add_option : '내용이 없습니다.' }}
                 </div>
               </transition>
             </div>
@@ -346,7 +346,7 @@
   
   
   
-            <div class="dropdown border-bottom" v-if="auctionDetail.data.status !== 'ask' && auctionDetail.data.status !== 'diag'">
+            <div class="dropdown border-bottom" v-if="auctionDetail.data.status !== 'ask'">
                 <button
                   class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
                   @click="toggleDropdown('carinfo')"
@@ -2535,6 +2535,7 @@
   const handleClick = (bid, event, index) => {
     
     if(auctionDetail.value.data.status !== 'wait'){
+      // TODO: 알림을 toast 으로 나오도록 수정 
       wica.ntcn(swal).icon('S').title('경매가 진행중이므로 현재 딜러 선택을 할 수 없습니다.').fire();
       return;
     }
@@ -3090,8 +3091,8 @@
 
     // auctionDetail.data.top_bids[0]?.dealerInfo?.biz_check
 
-    biz_check.value = auctionDetailData.top_bids.filter(bid => bid.id === auctionDetailData.win_bid.id)[0]?.dealerInfo?.biz_check;
-    console.log('biz_check',biz_check.value);
+    // biz_check.value = auctionDetailData.top_bids.filter(bid => bid.id === auctionDetailData.win_bid.id)[0]?.dealerInfo?.biz_check;
+    // console.log('biz_check',biz_check.value);
 
   
     console.log('auctionDetail//',auctionDetail.value.data);

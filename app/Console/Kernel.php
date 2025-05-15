@@ -16,7 +16,9 @@ use Illuminate\Console\Scheduling\Schedule;
 use App\Jobs\AuctionBidStatusJob;
 use App\Http\Controllers\Api\AuctionController;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
-
+use App\Services\DiagService;
+use App\Services\ApiRequestService;
+use App\Services\OwnershipService;
 class Kernel extends ConsoleKernel
 {
     /**
@@ -31,14 +33,18 @@ class Kernel extends ConsoleKernel
         $admin = User::where('id', 1)->first();
         Auth::login($admin); // 명시적으로 시스템 유저를 로그인                
 
-        Log::info('Kernel schedule start : user : ' . auth()->user()->name);
+        // Log::info('Kernel schedule start : user : ' . auth()->user()->name);
 
         $schedule->call(function() {
 
             // 경매 상태 변경 확인
-            $auctionService = new AuctionService();
-            $auctionService->diagnosticCheck();
+            // $auctionService = new AuctionService();
+            // $auctionService->diagnosticCheck();
             
+            $diagService = new DiagService(new ApiRequestService());
+            $diagService->diagnosticCheck();
+            
+
         })->everyMinute();
 
 
@@ -55,7 +61,7 @@ class Kernel extends ConsoleKernel
             $auction = Auction::where('status', 'dlvr')->whereNotNull('is_taksong')->get();
             if($auction){
                 foreach($auction as $auctionStatus){
-                    Log::info('[kernel TaksongStatusJob]', ['auction' => $auctionStatus]);
+                    Log::info('[kernel 탁송 상태 확인]', ['auction' => $auctionStatus]);
                     TaksongStatusJob::dispatch($auctionStatus->taksong_id);
                 }
             }
@@ -92,6 +98,14 @@ class Kernel extends ConsoleKernel
             $auctionService = new AuctionService();
             $auctionService->auctionAfterFeeDone();
         })->dailyAt('00:00');
+
+
+        $schedule->call(function() {
+            $ownershipService = new OwnershipService(new ApiRequestService());
+            $ownershipService->sendOwnershipAlertsAuto();
+        })->dailyAt('00:00');
+
+        $schedule->command('ownership:check')->hourly(); // 명의이전 확인 한시간 간격 / hourly
 
     }
 

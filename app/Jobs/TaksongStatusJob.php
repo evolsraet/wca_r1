@@ -36,20 +36,21 @@ class TaksongStatusJob implements ShouldQueue
                 'api_key' => config('taksongApi.TAKSONG_API_KEY')
             ];
 
-            Log::info('[TaksongStatusJob] API 호출', ['url' => $this->endPoint, 'payload' => $payload]);
+            Log::info("[탁송 job / chk_id : {$this->response}] API 호출", ['url' => $this->endPoint, 'payload' => $payload]);
 
-            $result = $api->sendPost($this->endPoint, $payload, 'TaksongStatusJob');
+            $result = $api->sendRequest('POST', $this->endPoint, $payload, "탁송 / chk_id : {$this->response}");
 
             if (!$result || !isset($result['data'][0])) {
+                Log::error("[탁송 job / chk_id : {$this->response}] API 응답 오류 또는 데이터 없음", ['response' => $result]);
                 throw new Exception('API 응답 오류 또는 데이터 없음');
             }
 
-            Log::info('[TaksongStatusJob] API 응답', ['response' => $result]);
+            Log::info("[탁송 job / chk_id : {$this->response}] API 응답", ['response' => $result]);
 
             $taksongService->processStatus($result['data'][0]);
 
         } catch (Exception $e) {
-            Log::critical('[TaksongStatusJob] 예외 발생', [
+            Log::critical("[탁송 job / chk_id : {$this->response}] 예외 발생", [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);

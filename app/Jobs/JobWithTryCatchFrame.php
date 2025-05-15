@@ -34,7 +34,8 @@ class ExampleJob implements ShouldQueue
                 'payload' => $this->payload
             ]);
 
-            $response = $apiRequestService->sendPost(
+            $response = $apiRequestService->sendRequest(
+                'POST',
                 $this->apiUrl,
                 $this->payload,
                 'ExampleJob'

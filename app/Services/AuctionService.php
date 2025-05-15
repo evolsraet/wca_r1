@@ -50,295 +50,306 @@ class AuctionService
         }
     }
 
-    // 요청 중간 처리: 결과 필터링 및 데이터 검증
-    protected function middleProcess($method, $request, $auction, $id = null)
+    public function middleProcess($method, $request, $auction, $id = null)
     {
-        // Log::info('경매 상태 업데이트 모드?', ['method' => $method]);
-
-        // $user = User::find($auction->user_id);
-
         switch ($method) {
             case 'index':
             case 'show':
                 $this->filterResultsBasedOnRole($auction);
                 break;
+
             case 'store':
-                // 본인인증 검증 추가
                 $this->validateAndSetAuctionData($request, $auction);
                 break;
-            case 'update':
 
+            case 'update':
                 Log::info('경매 상태 업데이트 모드??', ['method' => $auction, 'mode' => $request->mode]);
 
-                // 상태변경
-                // request()->mode 가 있을 경우 그대로 두고, 없으면서 $acution->status 가 변경됬을 경우 그 request()->mode 에 $acution->status 대입
-                if (!request()->has('mode') && $auction->isDirty('status')) {
-                    request()->merge(['mode' => $request->status]);
-                }
-
+                $this->prepareMode($request, $auction);
                 $this->modifyOnlyMe($auction, request()->mode == 'dealerInfo');
 
-                // TODO: 딜러정보가 탁송 입력되고, 고객 탁송필요 정보가 모두 입력되면 dlvr 로 변경해야한다
-
-                // 모드별 분기
                 if (request()->has('mode')) {
-                    switch (request()->mode) {
-                        case 'dealerInfo':
-                            // 허용된 필드 목록
-                            $allowedFields = ['dest_addr_post', 'dest_addr1', 'dest_addr2'];
-
-                            // 변경된 속성만 가져오기
-                            $dirtyAttributes = $auction->getDirty();
-
-                            // 허용되지 않은 필드만 원래 값으로 되돌림
-                            foreach ($dirtyAttributes as $key => $value) {
-                                if (!in_array($key, $allowedFields)) {
-                                    $auction->$key = $auction->getOriginal($key);
-                                }
-                            }
-
-                            // Log::info('딜러정보 모드', ['method' => $auction]);
-                            $data = [];
-                            $data['id'] = $auction->id;
-                            $data['car_no'] = $auction->car_no; // 차량번호  
-                            $data['car_model'] = $auction->car_model; // 차량모델
-                            $data['mobile'] = User::find($auction->user_id)->phone; // 출발지 전화번호
-                            $data['dest_mobile'] = User::find($auction->bids[0]->user_id)->phone; // 출발지 전화번호
-                            $data['start_addr'] = $auction->addr1 . ' ' . $auction->addr2; // 주소
-                            $data['dest_addr'] = $auction->dest_addr1 . ' ' . $auction->dest_addr2; // 주소
-                            $data['user_id'] = $auction->user_id; // 사용자 아이디
-                            $data['bid_user_id'] = $auction->bids[0]->user_id; // 입찰자 아이디
-                            $data['user_email'] = User::find($auction->user_id)->email; // 사용자 이메일
-                            $data['bid_user_email'] = User::find($auction->bids[0]->user_id)->email; // 입찰자 이메일
-                            $data['taksong_wish_at'] = $auction->taksong_wish_at; // 탁송 날짜
-
-                            // 탁송 처리
-                            Log::info('[탁송 처리] 딜러정보 모드', ['method' => $data]);
-                            TaksongAddJob::dispatch($auction, $data);
-
-                            break;
-                        case 'reauction':
-                            // 재경매 : 옥션변수가 오고, 재옥션 상태가 아니고, auction->status 가 wait 일 경우,  상태변경
-                            if (!$auction->is_reauction && $auction->status == 'wait') {
-                                $auction->status = 'ing';
-                                $auction->is_reauction = true;
-                                $auction->final_at = now()->addDays(config('days.reauction_day'));
-
-                                Log::info('재경매 모드', ['method' => $auction]);
-
-                                $bids = Bid::where('auction_id', $auction->id)->get();
-                                foreach($bids as $bid){
-                                    Log::info('재경매 모드 입찰자 알림', ['mode' => 'reauction','method' => $bid->user_id]);
-                                    AuctionBidStatusJob::dispatch($bid->user_id, 'reauction', $auction->id, $bid->user_id,'');
-                                                                    
-
-                                }
-                                AuctionBidStatusJob::dispatch($auction->user_id, 'reauction', $auction->id, $bid->user_id,'');
-
-
-
-                            } else {
-                                throw new \Exception('재경매변경 가능상태가 아닙니다.');
-                            }
-                            break;
-
-                        case 'diag':
-                            // 진단으로 변경
-                            if (!$auction->is_reauction && $auction->status == 'ask') {
-                                $auction->status = 'diag';
-                                $auction->final_at = now()->addDays(config('days.auction_day'));
-
-
-                                Log::info('경매 상태 업데이트 진단대기중 모드', ['method' => $auction]);
-
-                                AuctionDiagJob::dispatch($auction->user_id, $auction);
-
-                            } else {
-                                throw new \Exception('진단변경 가능상태가 아닙니다.');
-                            }
-                            break;
-
-                        case 'dlvr':
-                            // 배송으로 변경
-                            if ($auction->status == 'chosen') {
-                                $auction->status = 'dlvr';
-                            } else {
-                                throw new \Exception('배송변경 가능상태가 아닙니다.');
-                            }
-                            break;
-
-                        case 'done':
-                            // 완료으로 변경
-                            if (in_array($auction->status, ['dlvr', 'chosen'])) {
-                                $auction->status = 'done';
-
-
-                                Log::info('경매 상태 업데이트 경매완료 모드', ['method' => $auction]);
-
-                                $bids = Bid::find($auction->bid_id);
-
-                                AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
-                                AuctionDoneJob::dispatch($bids->user_id, $auction->id, 'dealer');
-
-
-                            } else {
-                                throw new \Exception('배송변경 가능상태가 아닙니다.');
-                            }
-                            break;
-
-                        case 'cancel':
-                            // 취소으로 변경
-                            if (!in_array($auction->status, ['done', 'dlvr'])) {
-                                $auction->status = 'cancel';
-
-
-                                Log::info('경매 상태 업데이트 취소 모드', ['method' => $auction]);
-                                AuctionCancelJob::dispatch($auction->user_id, $auction->id);
-
-                                $bids = Bid::where('id', $auction->id)->get();
-                                foreach($bids as $bid){
-                                    // Log::info('경매 취소 모드 입찰자 알림', ['method' => $bid->user_id]);
-                                    AuctionCancelJob::dispatch($bid->user_id, $auction->id);
-                                }
-
-                            } else {
-                                throw new \Exception('취소변경 가능상태가 아닙니다.');
-                            }
-                            break; 
-
-                        case 'chosen':
-                            // $auction->status = 'chosen';
-
-                            Log::info('유저가 경매를 선택 했을때1 ', ['method' => $auction]);
-
-                            
-
-                            break;
-
-                        case 'requested':
-                            // 요청으로 변경
-                            Log::info('경매 상태 업데이트 요청 모드', ['method' => $auction]);
-                            break;
-
-                        case 'uploaded':
-                            // 업로드로 변경
-                            Log::info('경매 상태 업데이트 업로드 모드', ['method' => $auction]);
-                            break;
-
-                        case 'confirmed':
-                            // 확정으로 변경
-                            Log::info('경매 상태 업데이트 확정 모드', ['method' => $auction]);
-                            break;
-
-                        // case 'ing':
-                        //     $auction->final_at = now()->addDays(env('AUCTION_DAY'));
-                            
-                        //     break;
-                    }
+                    $this->handleMode($request->mode, $auction);
                 }
 
-                $bids = Bid::find($auction->bid_id);
-
-                // 취소시 알림
-                if($auction->status == 'cancel'){
-
-                    Log::info('경매 상태 업데이트 취소 모드', ['method' => $auction]);
-                    AuctionCancelJob::dispatch($auction->user_id, $auction->id);
-
-                    $bids = Bid::where('auction_id', $auction->id)->get();
-                    foreach($bids as $bid){
-                        // Log::info('경매 취소 모드 입찰자 알림', ['method' => $bid->user_id]);
-                        AuctionCancelJob::dispatch($bid->user_id, $auction->id);
-                    }
-                }   
-
-                // 입찰자에게 알림
-                if($auction->status == 'dlvr'){
-
-
-                    if($auction->is_deposit == 'totalDeposit'){
-                        Log::info('경매 상태 업데이트 입금완료 모드', ['method' => $auction]);
-                        // 고객 / 딜러 에게 알림 
-                        AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
-                        AuctionTotalDepositJob::dispatch($bids->user_id, $auction, 'dealer');
-
-                    }else {
-                        Log::info('경매 상태 업데이트 입찰선택 모드', ['method' => $auction]);
-
-                        if($auction->bids){
-                            Log::info('경매 상태 업데이트 입찰선택 모드 입찰자 알림' . $auction->bids->first()->user_id, ['method' => '']);
-                            // AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
-                        }
-    
-                        AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
-                    }
-
-                    
-                }   
-
-                // 입찰자에게 알림
-                if($auction->status == 'wait'){
-                    Log::info('경매 상태 업데이트 선택대기 모드1', ['method' => $auction]);
-
-                    AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '', '');
-                }
-                
-                // 경매완료시 전체 입찰자에게 알림
-                if($auction->status == 'done'){
-                    
-                    if($auction->is_deposit == 'totalAfterFee'){
-
-                        Log::info('경매 상태 업데이트 수수료 입금완료 모드', ['method' => $auction]);
-                        // 딜러에게 알림 
-                        AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
-
-                    }else{
-                        Log::info('경매 상태 업데이트 경매완료 모드', ['method' => $auction]);
-
-                        $bids = Bid::find($auction->bid_id);
-    
-                        AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
-                        AuctionDoneJob::dispatch($bids->user_id, $auction->id, 'dealer');
-                    }
-
-                }
-
-                // 진단대기중 알림 
-                if($auction->status == 'diag'){
-                    Log::info('경매 상태 업데이트 진단대기중 모드', ['method' => $auction]);
-
-                    AuctionDiagJob::dispatch($auction->user_id, $auction);
-                }
-
-                // 경매진행중 알림
-                if($auction->status == 'ing'){
-                    $auction->final_at = now()->addDays(config('days.auction_day'));
-                    if(!$auction->bid_id){
-                        Log::info('경매 상태 업데이트 경매진행중 모드', ['method' => $auction]);
-
-                        AuctionIngJob::dispatch($auction->user_id, $auction->id, $auction->final_at);
-
-                    }
-                }
-
-
-                if($auction->status == 'chosen'){
-                    Log::info('유저가 경매를 선택 했을때211', ['method' => $auction, 'requestMode' => request()->mode]);
-
-                    // AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');    
-                    if(!request()->mode){
-                        AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
-                    }
-
-                }
-
-
+                $this->postUpdateProcess($auction);
                 break;
+
             case 'destroy':
                 $this->modifyOnlyMe($auction);
                 break;
         }
     }
+
+    private function prepareMode($request, $auction)
+    {
+        if (!request()->has('mode') && $auction->isDirty('status')) {
+            request()->merge(['mode' => $request->status]);
+        }
+    }
+
+    private function handleMode($mode, $auction)
+    {
+        switch ($mode) {
+            case 'dealerInfo':
+                $this->processDealerInfo($auction);
+                break;
+
+            case 'reauction':
+                $this->processReauction($auction);
+                break;
+
+            case 'diag':
+                $this->processDiag($auction);
+                break;
+
+            case 'dlvr':
+                $this->processDlvr($auction);
+                break;
+
+            case 'done':
+                $this->processDone($auction);
+                break;
+
+            case 'cancel':
+                $this->processCancel($auction);
+                break;
+
+            case 'chosen':
+            case 'requested':
+            case 'uploaded':
+            case 'confirmed':
+                Log::info("경매 상태 업데이트 {$mode} 모드", ['method' => $auction]);
+                break;
+        }
+    }
+
+    private function postUpdateProcess($auction)
+    {
+        $bids = Bid::find($auction->bid_id);
+
+        if ($auction->status == 'cancel') {
+            if (empty($auction->diag_check_at)) {
+                throw new \Exception('진단이 완료되지 않았습니다.', 500);
+            }
+            $this->notifyCancel($auction);
+        }
+
+        if ($auction->status == 'dlvr') {
+
+            if (empty($auction->is_taksong)) {
+                throw new \Exception('탁송 여부가 선택되지 않았습니다.', 500);
+            }
+
+            $this->notifyDlvr($auction, $bids);
+        }
+
+        if ($auction->status == 'wait') {
+            if (empty($auction->diag_check_at)) {
+                throw new \Exception('진단이 완료되지 않았습니다.', 500);
+            }
+
+            if (empty($auction->bid_id)) {
+                throw new \Exception('입찰자가 없습니다.', 500);
+            }
+
+            AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '', '');
+        }
+
+        if ($auction->status == 'done') {
+            if (empty($auction->diag_check_at)) {
+                throw new \Exception('진단이 완료되지 않았습니다.', 500);
+            }
+
+            if (empty($auction->is_taksong)) {
+                throw new \Exception('탁송 여부가 선택되지 않았습니다.', 500);
+            }
+
+
+            if($auction->is_taksong == 'done'){
+                $this->notifyDone($auction, $bids);
+            }else{
+                throw new \Exception('탁송 상태가 완료되지 않았습니다.', 500);
+            }
+
+        }
+
+        if ($auction->status == 'diag') {
+            AuctionDiagJob::dispatch($auction->user_id, $auction);
+        }
+
+        if ($auction->status == 'ing') {
+            if (empty($auction->diag_check_at)) {
+                throw new \Exception('진단이 완료되지 않았습니다.', 500);
+            }
+            $this->processIng($auction);
+        }
+
+        if ($auction->status == 'chosen') {
+            if (empty($auction->diag_check_at)) {
+                throw new \Exception('진단이 완료되지 않았습니다.', 500);
+            }
+
+            if (empty($auction->bid_id)) {
+                throw new \Exception('입찰자가 없습니다.', 500);
+            }
+
+            $this->notifyChosen($auction, $bids);
+        }
+    }
+
+    // ===== 각 세부 처리 함수들 =====
+
+    private function processDealerInfo($auction)
+    {
+        $allowedFields = ['dest_addr_post', 'dest_addr1', 'dest_addr2'];
+        $dirtyAttributes = $auction->getDirty();
+
+        foreach ($dirtyAttributes as $key => $value) {
+            if (!in_array($key, $allowedFields)) {
+                $auction->$key = $auction->getOriginal($key);
+            }
+        }
+
+        $data = [
+            'id' => $auction->id,
+            'car_no' => $auction->car_no,
+            'car_model' => $auction->car_model,
+            'mobile' => User::find($auction->user_id)->phone,
+            'dest_mobile' => User::find($auction->bids[0]->user_id)->phone,
+            'start_addr' => $auction->addr1 . ' ' . $auction->addr2,
+            'dest_addr' => $auction->dest_addr1 . ' ' . $auction->dest_addr2,
+            'user_id' => $auction->user_id,
+            'bid_user_id' => $auction->bids[0]->user_id,
+            'user_email' => User::find($auction->user_id)->email,
+            'bid_user_email' => User::find($auction->bids[0]->user_id)->email,
+            'taksong_wish_at' => $auction->taksong_wish_at,
+        ];
+
+        Log::info('[탁송 처리] 딜러정보 모드', ['method' => $data]);
+        TaksongAddJob::dispatch($auction, $data);
+    }
+
+    private function processReauction($auction)
+    {
+        if (!$auction->is_reauction && $auction->status == 'wait') {
+            $auction->status = 'ing';
+            $auction->is_reauction = true;
+            $auction->final_at = now()->addDays(config('days.reauction_day'));
+
+            Log::info('재경매 모드', ['method' => $auction]);
+
+            $bids = Bid::where('auction_id', $auction->id)->get();
+            foreach ($bids as $bid) {
+                AuctionBidStatusJob::dispatch($bid->user_id, 'reauction', $auction->id, $bid->user_id, '');
+            }
+            AuctionBidStatusJob::dispatch($auction->user_id, 'reauction', $auction->id, $bids->first()->user_id ?? null, '');
+        } else {
+            throw new \Exception('재경매변경 가능상태가 아닙니다.');
+        }
+    }
+
+    private function processDiag($auction)
+    {
+        if (!$auction->is_reauction && $auction->status == 'ask') {
+            $auction->status = 'diag';
+            $auction->final_at = now()->addDays(config('days.auction_day'));
+
+            Log::info('경매 상태 업데이트 진단대기중 모드', ['method' => $auction]);
+            AuctionDiagJob::dispatch($auction->user_id, $auction);
+        } else {
+            throw new \Exception('진단변경 가능상태가 아닙니다.');
+        }
+    }
+
+    private function processDlvr($auction)
+    {
+        if ($auction->status == 'chosen') {
+            $auction->status = 'dlvr';
+        } else {
+            throw new \Exception('배송변경 가능상태가 아닙니다.');
+        }
+    }
+
+    private function processDone($auction)
+    {
+        // if (empty($auction->diag_check_at)) {
+        //     throw new \Exception('진단이 완료되지 않았습니다. 상태 변경 불가.', 422);
+        // }
+
+        if (in_array($auction->status, ['dlvr', 'chosen'])) {
+            $auction->status = 'done';
+            Log::info('경매 상태 업데이트 경매완료 모드', ['method' => $auction]);
+        } else {
+            throw new \Exception('배송변경 가능상태가 아닙니다.');
+        }
+    }
+
+    private function processCancel($auction)
+    {
+        if (!in_array($auction->status, ['done', 'dlvr'])) {
+            $auction->status = 'cancel';
+            Log::info('경매 상태 업데이트 취소 모드', ['method' => $auction]);
+        } else {
+            throw new \Exception('취소변경 가능상태가 아닙니다.');
+        }
+    }
+
+    private function processIng($auction)
+    {
+        // if (empty($auction->diag_check_at)) {
+        //     throw new \Exception('진단이 완료되지 않았습니다. 상태 변경 불가.', 422);
+        // }
+
+        $auction->final_at = now()->addDays(config('days.auction_day'));
+
+        if (!$auction->bid_id) {
+            Log::info('경매 상태 업데이트 경매진행중 모드', ['method' => $auction]);
+            AuctionIngJob::dispatch($auction->user_id, $auction->id, $auction->final_at);
+        }
+    }
+
+    private function notifyCancel($auction)
+    {
+        AuctionCancelJob::dispatch($auction->user_id, $auction->id);
+
+        $bids = Bid::where('auction_id', $auction->id)->get();
+        foreach ($bids as $bid) {
+            AuctionCancelJob::dispatch($bid->user_id, $auction->id);
+        }
+    }
+
+    private function notifyDlvr($auction, $bids)
+    {
+        if ($auction->is_deposit == 'totalDeposit') {
+            AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
+            AuctionTotalDepositJob::dispatch($bids->user_id, $auction, 'dealer');
+        } else {
+            if ($auction->bids) {
+                AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+            }
+            AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
+        }
+    }
+
+    private function notifyDone($auction, $bids)
+    {
+        if ($auction->is_deposit == 'totalAfterFee') {
+            AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
+        } else {
+            AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
+            AuctionDoneJob::dispatch($bids->user_id, $auction->id, 'dealer');
+        }
+    }
+
+    private function notifyChosen($auction, $bids)
+    {
+        if (!request()->mode) {
+            AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+        }
+    }
+
+
 
     // 요청 후 처리: 조회수 증가
     protected function afterProcess($method, $request, $auction, $id = null)
@@ -484,174 +495,7 @@ class AuctionService
         return (($chkSec % $businessNumber) % 997);
     }
 
-    // 나이스DNR 차량정보/시세확인 API
-    public function getNiceDnr($ownerNm, $vhrNo)
-    {
-        $curl = curl_init();
 
-        Log::info('나이스DNR 차량정보/시세확인 API 호출 시작', ['ownerNm' => $ownerNm, 'vhrNo' => $vhrNo]);
-        
-        $chkSec = date('YmdHis'); // 예: chkSec 값
-        $businessNumber = env('NICE_API_BUSINESS_NUMBER'); // 예: 사업자번호
-        $chkKey = $this->calculateCheckKey($chkSec, $businessNumber);
-
-
-        curl_setopt_array($curl, array(
-            CURLOPT_URL => env('NICE_API_URL').'?
-            apiKey='.env('NICE_API_APIKEY').'&
-            chkSec='.$chkSec.'&
-            chkKey='.$chkKey.'&
-            loginId='.env('NICE_API_LOGIN_ID').'&
-            kindOf='.env('NICE_API_KIND_OF').'&
-            ownerNm='.$ownerNm.'&
-            vhrNo='.$vhrNo,
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_ENCODING => '',
-            CURLOPT_MAXREDIRS => 10,
-            CURLOPT_TIMEOUT => 0,
-            CURLOPT_FOLLOWLOCATION => true,
-            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-            CURLOPT_CUSTOMREQUEST => 'GET',
-        ));
-
-        $response = curl_exec($curl);
-        $response = json_decode($response, true);
-
-        Log::info('나이스DNR 차량정보/시세확인 API 호출 결과', ['result' => $response]);
-        
-        // 샘플 데이터
-        $tmpCars = [
-            [
-                "makerId" => "001",
-                "makerNm" => "현대",
-                "classModelld" => "101",
-                "classModelNm" => "쏘나타",
-                "modelld" => "301",
-                "modelNm" => "더 뉴 쏘나타",
-                "carName" => "현대 더 뉴 쏘나타 가솔린 2000cc 프리미엄",
-                "year" => "2022",
-                "detailedModel" => "더 뉴 쏘나타 프리미엄",
-                "grade" => "프리미엄",
-                "subGrade" => "프리미엄 플러스",
-                "firstRegistrationDate" => "2022-03-15",
-                "engineCapacity" => "2000cc",
-                "fuelType" => "가솔린",
-                "transmission" => "자동",
-                "useChangeHistory" => "없음",
-                "tuningHistory" => "0회",
-                "recallHistory" => "없음",
-                "currentPrice" => 1800, // 시세 숫자만 입력
-                "km" => "2.4",
-                "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2022%2F05%2Fhyundai-motor-company-sonata-discontinued-01.jpg?q=75&w=800&cbr=1&fit=max"
-            ],
-            [
-                "makerId" => "002",
-                "makerNm" => "기아",
-                "classModelld" => "102",
-                "classModelNm" => "스포티지",
-                "modelld" => "302",
-                "modelNm" => "더 뉴 스포티지",
-                "carName" => "기아 더 뉴 스포티지 디젤 2000cc 노블레스",
-                "year" => "2021",
-                "detailedModel" => "더 뉴 스포티지 노블레스",
-                "grade" => "노블레스",
-                "subGrade" => "노블레스 스페셜",
-                "firstRegistrationDate" => "2021-08-10",
-                "engineCapacity" => "2000cc",
-                "fuelType" => "디젤",
-                "transmission" => "자동",
-                "useChangeHistory" => "없음",
-                "tuningHistory" => "1회",
-                "recallHistory" => "없음",
-                "currentPrice" => 2000, // 시세 숫자만 입력,
-                "km" => "3.6",
-                "thumbnail" => "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2021%2F07%2FKia-release-new-sportage-suv-model-design-price-spec-info-twtw.jpg?w=960&cbr=1&q=90&fit=max"
-            ],
-            [
-                "makerId" => "003",
-                "makerNm" => "르노코리아",
-                "classModelld" => "103",
-                "classModelNm" => "SM6",
-                "modelld" => "303",
-                "modelNm" => "SM6",
-                "carName" => "르노코리아 SM6 가솔린 1600cc LE",
-                "year" => "2020",
-                "detailedModel" => "SM6 LE",
-                "grade" => "LE",
-                "subGrade" => "LE 프리미엄",
-                "firstRegistrationDate" => "2020-11-25",
-                "engineCapacity" => "1600cc",
-                "fuelType" => "가솔린",
-                "transmission" => "자동",
-                "useChangeHistory" => "1회",
-                "tuningHistory" => "0회",
-                "recallHistory" => "1회",
-                "currentPrice" => 1200, // 시세 숫자만 입력,
-                "km" => "1.5",
-                "thumbnail" => "https://file.carisyou.com/upload/2020/07/15/EDITOR_202007150443005100.jpg"
-            ],
-            [
-                "makerId" => "004",
-                "makerNm" => "쌍용",
-                "classModelld" => "104",
-                "classModelNm" => "코란도",
-                "modelld" => "304",
-                "modelNm" => "코란도",
-                "carName" => "쌍용 코란도 디젤 2200cc 어드벤처",
-                "year" => "2019",
-                "detailedModel" => "코란도 어드벤처",
-                "grade" => "어드벤처",
-                "subGrade" => "어드벤처 플러스",
-                "firstRegistrationDate" => "2019-06-30",
-                "engineCapacity" => "2200cc",
-                "fuelType" => "디젤",
-                "transmission" => "자동",
-                "useChangeHistory" => "2회",
-                "tuningHistory" => "1회",
-                "recallHistory" => "없음",
-                "currentPrice" => 1000, // 시세 숫자만 입력,
-                "km" => "3.2",
-                "thumbnail" => "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqgDnOXZPCRL7PDb1Kln4-MPxmAfWa8zzSZA&s"
-            ],
-            [
-                "makerId" => "005",
-                "makerNm" => "제네시스",
-                "classModelld" => "105",
-                "classModelNm" => "G80",
-                "modelld" => "305",
-                "modelNm" => "G80",
-                "carName" => "제네시스 G80 가솔린 3300cc AWD",
-                "year" => "2023",
-                "detailedModel" => "G80 AWD 프리미엄",
-                "grade" => "프리미엄",
-                "subGrade" => "프리미엄 럭셔리",
-                "firstRegistrationDate" => "2023-02-15",
-                "engineCapacity" => "3300cc",
-                "fuelType" => "가솔린",
-                "transmission" => "자동",
-                "useChangeHistory" => "없음",
-                "tuningHistory" => "0회",
-                "recallHistory" => "없음",
-                "currentPrice" => 4500, // 시세 숫자만 입력,
-                "km" => "2.6",
-                "thumbnail" => "https://cdn.motorgraph.com/news/photo/202211/30950_97376_454.jpg"
-            ]
-        ];
-
-
-        $response = array(
-            "carSize" => array(
-                "info" => $tmpCars[array_rand($tmpCars)]
-            ),
-            "resultCode" => "0000",
-            "resultMsg" => "성공"
-        ); 
-
-        curl_close($curl);
-
-        return $response;
-    }
-    
     public function calculateCarPrice(
         $currentYear,
         $currentMonth,
@@ -805,13 +649,12 @@ class AuctionService
     // 경매시간 만료시 선택대기로 변경
     public function auctionFinalAtUpdate()
     {
-        Log::info('auctionFinalAtUpdate');
         $auctions = Auction::where('status', 'ing')
                         ->whereNotNull('final_at')
                         ->where('final_at', '<', Carbon::now()->format('Y-m-d H:i:s'))
                         ->get();
 
-        Log::info('auctionFinalAtUpdate auctions', [$auctions]);
+        Log::info('경매시간만료 확인', [$auctions]);
 
         foreach($auctions as $auction){
             // 현재시간 final_at 시간 비교해서 현재 시간이 더 클 경우 상태 변경 
@@ -846,104 +689,6 @@ class AuctionService
     }
 
 
-    // 진단 결과
-    public function diagnosticResult($result)
-    {
-        $apiRequestService = new ApiRequestService();
-        $response = $apiRequestService->sendPost(config('services.diagnostic.api_url').'diag_by_car_no', [
-                'auth' => config('services.diagnostic.api_id'),
-                'api_key' => config('services.diagnostic.api_key'),
-                'diag_car_no' => $result['diag_car_no']
-            ], '진단 결과');
-
-        if($response['status'] === 'ok'){
-            $diagnosticCode = $this->diagnosticCode();
-
-
-            if(isset($response['data']['diag_is_confirmed']) && $response['data']['diag_is_confirmed'] === 1){
-
-                if($diagnosticCode['status'] === 'ok'){
-                    $diagnosticCodeOptions = $diagnosticCode['data']['option'];
-                    $response['diag_option_view_test'] = $response['data']['diag_option'];
-                    $response['diag_option_view'] = [];
-    
-                    // foreach 문 안에 키값 포함  
-                    foreach($diagnosticCodeOptions as $key => $diagnosticCodeOption){
-    
-                        if($diagnosticCodeOption){
-    
-                            if(isset($response['data']['diag_option'][$key])){
-    
-                                if($response['data']['diag_option'][$key] === '없음' || $response['data']['diag_option'][$key] === 0){
-                                    $response['diag_option_view'][] = [
-                                        'id' => $key,
-                                        'name' => $diagnosticCodeOption['name'],
-                                        'is_ok' => false
-                                    ];
-                                }else{
-                                    $response['diag_option_view'][] = [
-                                        'id' => $key,
-                                        'name' => $diagnosticCodeOption['name'],
-                                        'is_ok' => true
-                                    ];
-                                }
-                            }
-                        }
-    
-                    }
-                }
-
-                return $response;
-
-            }else{
-
-                return [
-                    'status' => 'error',
-                    'message' => '진단에서 본사검수가 되지 않았습니다.',
-                    'code' => 500,
-                    'data' => [],
-                ];
-
-            }
-
-            
-        } else {
-
-            Log::info('진단 결과 오류 / 본사검수 확인 필요', [$response]);
-
-            // $apiRequestService = new ApiRequestService();
-            // $apiRequestService->logErrorToDb('alert', config('services.diagnostic.api_url').'diag_by_car_no', [], [], '진단 결과 / 본사검수 확인 필요');
-
-            return [
-                'status' => 'error',
-                'message' => '진단에서 등록이 안되었습니다.',
-                'code' => 500,
-                'data' => [],
-            ];
-        }
-    }
-
-
-    // 진단코드 api
-    public function diagnosticCode()
-    {
-        // http 사용 해서 위 코드 수정 
-        $response = Http::asForm()
-            ->post(config('services.diagnostic.api_url').'codes', [
-                'auth' => config('services.diagnostic.api_id'),
-                'api_key' => config('services.diagnostic.api_key')
-            ]);
-
-        
-        if ($response->failed()) {
-            throw new \Exception('Failed to fetch access token: ' . $response->body());
-        }
-        
-        $response = json_decode($response, true);
-        return $response;
-    }
-
-
     // 나이스 API (본인인증 토큰생성)
     public function niceApiToken()
     {
@@ -971,90 +716,6 @@ class AuctionService
 
         // 토큰 반환
         return $response->json()['dataBody']['access_token'];
-    }
-
-
-    public function diagnosticCheck()
-    {
-        $auction = Auction::where('status', 'diag')
-        ->whereNull('diag_id')
-        ->whereNull('diag_check_at')
-        ->get();
-        $validResults = [];
-
-        foreach ($auction as $item) {
-            $sendData = [
-                'diag_car_no' => $item->car_no,
-            ];
-        
-            $result = $this->diagnosticResult($sendData);
-            $resultArray = is_array($result) ? $result : json_decode(json_encode($result), true);
-        
-            if (isset($resultArray['status']) && $resultArray['status'] === 'ok' && $resultArray['data']['diag_is_confirmed'] == 1) {
-
-                $isCheck = $resultArray['data']['diag_status'];
-                $isDoneAt = $resultArray['data']['diag_done_at'];
-
-                Log::info('[진단상태확인] : '.$item->id, ['result' => $resultArray]);
-                $validResults[] = $resultArray;
-
-                // 진단이 완료된 경우
-                if($isCheck === 'done' && $isDoneAt){
-                    // diag_outer_id
-                    // auction의 unique_number와 일치하는지 확인
-
-                    $hashid = Hashids::decode($resultArray['data']['diag_outer_id']);
-
-                    $auction = Auction::where('id', $hashid)->first();
-                    if($auction){
-
-                        // $resultArray['data']['file_**'] 파일첨부 확인하여 썸네일 저정 
-                        $files = [];
-                        $data = $resultArray['data'];
-
-                        // file_ 로 시작하는 모든 키만 수집
-                        foreach ($data as $key => $value) {
-                            if (Str::startsWith($key, 'file_') && is_array($value)) {
-                                foreach ($value as $file) {
-                                    if (isset($file['web_path'])) {
-                                        // config('services.diagnostic.api_url') 에서 /api/auth/diag/ 제거
-                                        $files[] = str_replace('/api/auth/diag/', '', config('services.diagnostic.api_url')).'/'.$file['web_path'];
-                                    }
-                                }
-                            }
-                        }
-                        
-
-                        $auction->status = 'ing';
-                        // $auction->diag_id = $resultArray['data']['diag_slug'];
-                        $auction->diag_check_at = $isDoneAt;
-                        $auction->is_accident = 1;
-                        $auction->car_thumbnail = json_encode($files, JSON_UNESCAPED_UNICODE);
-                        $auction->final_at = now()->addDays(config('days.auction_day'));
-                        $auction->save();
-
-                        // $bid = Bid::where('auction_id', $auction->id)->first();
-                        AuctionBidStatusJob::dispatch($auction->user_id, 'ing', $auction->id, '','');
-
-                        Log::info('[진단상태 확인완료] : '.$item->id, ['result' => $resultArray]);
-                    }else{
-
-                        // 고객사 코드오류 알림전달
-                        // 알림 전달 내용 추가 필요 
-
-                        //
-                        // $apiRequestService = new ApiRequestService();
-                        // $apiRequestService->logErrorToDb('alert', config('services.diagnostic.api_url').'diag_by_car_no', [], [], '진단 확인 / 고객사코드 오류');
-
-                        Log::info('[진단상태 확인] : '.$item->id.' / 고객사코드 오류', ['result' => $resultArray]);
-                    }
-
-                }
-                
-            }
-        }
-
-        return $validResults;
     }
 
 }

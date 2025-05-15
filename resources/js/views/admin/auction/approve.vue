@@ -14,9 +14,11 @@
           기타메뉴
         </button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item" href="#" @click="diagAuction('ing')">경매진행</a></li>
-          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalDeposit')">입금완료</a></li>
+          <li><a class="dropdown-item" href="#" @click="updateAuction(auctionId, {'status': 'ing'})">경매진행</a></li>
+          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalDeposit')">차량대금 입금완료</a></li>
+          <li><a class="dropdown-item" href="#" @click="checkNameChangeDealerEvent(auction.hashid)">명의이전 알림(딜러)</a></li>
           <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalAfterFee')">수수료 입금완료</a></li>
+          <li><a class="dropdown-item" href="#" @click="checkNameChangeStatusEvent(auction.hashid)">명의이전신청 확인</a></li>
           <li><a class="dropdown-item" href="#" @click="DiagnosticAuctionCheck(auction.hashid)">진단상태확인</a></li>
         </ul>
       </div>
@@ -670,7 +672,7 @@ const diagInfo = ref('');
 
 const route = useRoute();
 const router = useRouter();
-const { getAuctionById, updateAuctionStatus, isLoading, updateAuction, updateAuctionIsDeposit, diagnostic } = useAuctions();
+const { getAuctionById, updateAuctionStatus, isLoading, updateAuction, updateAuctionIsDeposit, diagnostic, checkNameChangeStatus, checkNameChangeDealer } = useAuctions();
 const auctionId = route.params.id; 
 const auctionDetails = ref(null);
 const isVisible = ref(false);
@@ -908,8 +910,12 @@ const diagAuction = async (status) => {
     try {
       const id = route.params.id;
       await updateAuctionStatus(id, status);
-      router.push({ name: 'auctions.index' }); 
-      status == 'ing' ? alert('경매진행으로 상태가 변경되었습니다.') : alert('진단대기로 상태가 변경되었습니다.');
+
+      // TODO: 코드 수정 필요 / 상태값 정확히 확인 해서 알림 처리.
+      // router.push({ name: 'auctions.index' }); 
+      alert('상태가 변경되었습니다.');
+      // status == 'ing' ? alert('경매진행으로 상태가 변경되었습니다.') : alert('진단대기로 상태가 변경되었습니다.');
+      
     } catch (error) {
       console.error('Error updating auction status:', error);
       alert('등록에 실패했습니다.');
@@ -1127,6 +1133,32 @@ const DiagnosticAuctionCheck = (hashid) => {
   });
 }
 
+// 명의이전신청 확인 
+const checkNameChangeStatusEvent = async (auctionId) => {
+  const result = await checkNameChangeStatus(auctionId);
+  console.log('result', result);
+
+  if(result.success === true){
+    alert('명의이전신청 확인 완료');
+    console.log('명의이전신청 확인 완료');
+  }else{
+    alert('명의이전신청 확인 실패 / 딜러가 명의이전 신청 했는지 확인이 필요 합니다.');
+    console.log('명의이전신청 확인 실패');
+  }
+}
+
+// 명의이전신청 알림보내기 
+const checkNameChangeDealerEvent = async (auctionId) => {
+  const result = await checkNameChangeDealer(auctionId);
+  console.log('checkNameChangeDealer ? ', auctionId);
+
+  if(result.success === 'alert_sent'){
+    alert('명의이전신청 알림보내기 완료');
+    console.log('명의이전신청 알림보내기 완료');
+  }else{
+    alert('명의이전신청 알림보내기 실패');
+  }
+}
 
 function editPostCodeReceive(elementName) {
   openPostcode(elementName)

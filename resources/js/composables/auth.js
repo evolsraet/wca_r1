@@ -324,7 +324,7 @@ export default function useAuth() {
             user.email = "";
             localStorage.clear;
             store.dispatch("auth/logout");            
-           // window.location.href = '/login';
+           window.location.href = '/login';
         })
         .post();
 

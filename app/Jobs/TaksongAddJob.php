@@ -54,7 +54,7 @@ class TaksongAddJob implements ShouldQueue
 
             Log::info('[TaksongAddJob] API 호출 시도', ['url' => $this->endPoint, 'payload' => $sendData]);
 
-            $result = $api->sendPost($this->endPoint, $sendData, 'TaksongAddJob');
+            $result = $api->sendRequest('POST', $this->endPoint, $sendData, 'TaksongAddJob');
 
             if (!$result || !isset($result['data'])) {
                 throw new Exception('탁송처리 API 응답 오류');

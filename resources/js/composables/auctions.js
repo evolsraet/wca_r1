@@ -685,6 +685,7 @@ const updateAuctionStatus = async (id, status) => {
     isLoading.value = true;
     validationErrors.value = {};
 
+    // 사고 여부 체크
     let isAccident = 0;
     if(status == 'ing'){
         isAccident = 1;
@@ -707,15 +708,20 @@ const updateAuctionStatus = async (id, status) => {
             console.log(result.msg);
         }
         */
-       let isResult = false;
-       if(result.status === 'ok'){
-        isLoading.value = false;
-        isResult = true;
-       }else{
-        console.log(result.msg);
-       }
+
+        console.log('updateAuctionStatus result?', result);
+
+    //    let isResult = false;
+    //    if(result.status === 'ok'){
+    //     isLoading.value = false;
+    //     isResult = true;
+    //    }else{
+    //     console.log(result.msg);
+    //    }
+
+    
        loadingSpinner(false);
-       return isResult;
+       return result;
     })
     .put();
     
@@ -1277,6 +1283,27 @@ const isAccident = (id) => {
     .get();
   }
 
+  // 명의이전 확인하기 
+  const checkNameChangeDealer = async (auctionId) => {
+    return wicac.conn()
+    .url(`/api/ownership/manual-notify/${auctionId}`)
+    .callback(function (result) {
+      return result;
+    })
+    .get();
+  }
+
+
+  // 명의이전 신청확인 
+  const checkNameChangeStatus = async (auctionId) => {
+    return wicac.conn()
+    .url(`/api/ownership/check/${auctionId}`)
+    .callback(function (result) {
+      return result;
+    })
+    .get();
+  }
+    
     return {
         getAuctionsByDealerLike,
         adminGetAuctions,
@@ -1326,7 +1353,9 @@ const isAccident = (id) => {
         clearCertificationData,
         nameChangeStatus,
         nameChangeFileUpload,
-        diagnostic
+        diagnostic,
+        checkNameChangeDealer,
+        checkNameChangeStatus
     };
     
 }

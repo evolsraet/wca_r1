@@ -22,6 +22,9 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\BusinessController;
+use App\Http\Controllers\Api\DiagController;
+use App\Http\Controllers\Api\OwnershipController;
+
 
 // Route::post('forgetPassword', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 // Route::post('resetPassword', [ResetPasswordController::class, 'reset'])->name('password.reset');
@@ -112,10 +115,10 @@ Route::post('payment/result2', [PaymentController::class, 'resultPayment2']);
 Route::post('payment/request', [PaymentController::class, 'requestPayment']);
 Route::post('payment/notify', [PaymentController::class, 'notify']);
 
-Route::get('diagRequest', [AuctionController::class, 'diagnostic']);
-Route::get('diag/result', [AuctionController::class, 'diagnostic']);
-Route::get('diag/code', [AuctionController::class, 'diagnosticCode']);
-
+Route::get('diagRequest', [DiagController::class, 'diagnostic']);
+Route::get('diag/result', [DiagController::class, 'diagnostic']);
+Route::get('diag/code', [DiagController::class, 'diagnosticCode']);
+Route::get('diagnostic-check', [DiagController::class, 'diagnosticCheck']);
 
 Route::get('carHistory', [AuctionController::class, 'getCarHistory']);
 Route::get('carHistoryMock', [AuctionController::class, 'getCarHistoryMock']);
@@ -143,4 +146,10 @@ Route::get('test-auctions-notification', [AuctionController::class, 'testAuction
 
 // Route::get('test-taksong-service', [AuctionController::class, 'testTaksongService']);
 
-Route::get('diagnostic-check', [AuctionController::class, 'diagnosticCheck']);
+// Route::get('diagnostic-check', [AuctionController::class, 'diagnosticCheck']);
+
+
+// 명의이전 알림 
+Route::get('ownership/manual-notify/{auctionId}', [OwnershipController::class, 'manualNotify']);
+Route::get('ownership/check/{auctionId}', [OwnershipController::class, 'checkOwnership']);
+Route::get('ownership/check-test', [OwnershipController::class, 'checkOwnershipByApiTest']);

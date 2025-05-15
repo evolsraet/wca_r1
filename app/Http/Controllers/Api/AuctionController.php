@@ -28,6 +28,8 @@ use App\Services\ApiRequestService;
 use App\Jobs\AuctionBidStatusJob;
 use App\Models\Bid;
 use App\Jobs\AuctionDoneJob;
+use App\Http\Resources\AuctionResource;
+
 class AuctionController extends Controller
 {
     use CrudControllerTrait;
@@ -56,6 +58,29 @@ class AuctionController extends Controller
         return $result;
     }
 
+
+    // public function update(Request $request, $id)
+    // {
+    //     try {
+    //         $auction = Auction::findOrFail($id);
+    //         $service = new AuctionService();
+            
+    //         $service->middleProcess('update', $request, $auction, $id);
+
+    //         $auction->save();
+
+    //         return response()->json([
+    //             'success' => true,
+    //             'message' => '경매 상태가 성공적으로 업데이트 되었습니다.',
+    //             'data' => new AuctionResource($auction)
+    //         ]);
+    //     } catch (\Exception $e) {
+    //         return response()->json([
+    //             'success' => false,
+    //             'message' => $e->getMessage(),
+    //         ], $e->getCode() ?: 500);
+    //     }
+    // }
 
     public function swapNumber($a, $b)
     {
@@ -488,33 +513,6 @@ class AuctionController extends Controller
     }
 
 
-    public function diagnostic(Request $request)
-    {
-        $result = $this->service->diagnosticResult($request);
-        return response()->api($result);
-    }
-
-    public function diagnosticRequest()
-    {
-
-        die('dd');
-
-    }
-
-    public function diagnosticCheck(): mixed
-    {
-        $auctionService = new AuctionService();
-        $validResults = $auctionService->diagnosticCheck();
-
-        return response()->api($validResults);
-    }
-
-    public function diagnosticCode()
-    {
-        $result = $this->service->diagnosticCode();
-        return $result;
-    }
-
 
     public function getCarHistory(Request $request)
     {
@@ -612,7 +610,7 @@ class AuctionController extends Controller
                     Log::info('[경매완료 상태] ', ['auction' => $auction, 'dealer' => $dealer]);
 
 
-                    $auction->status = 'done';
+                    // $auction->status = 'done';
                     $auction->has_uploaded_name_change_file = true;
                     $auction->save();
                 }

@@ -85,4 +85,9 @@ return [
         'api_key' => ConfigService::safeEnv('WCA_DIAGNOSTIC_API_KEY', 'diagnostic config api_key'),
     ],
 
+    // 명의이전 알림 관리자 아이디
+    'ownership' => [
+        'admin_id' => ConfigService::safeEnv('OWNERSHIP_ADMIN_ID', 'ownership config admin_id'),
+    ],
+
 ];

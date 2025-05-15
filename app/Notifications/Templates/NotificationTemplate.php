@@ -756,6 +756,26 @@ class NotificationTemplate
                 break;
 
 
+            case 'TaksongNameChangeJobAdmin':
+
+                $title = $data->car_no.' 차량 탁송이 완료되었습니다.';
+
+                $message = 
+                $data->car_no.' 차량 탁송이 완료되었습니다. \n'
+                .'영업일 기준 2일 내 명의이전을 등록해 주세요.'.config('app.name').'에서 이전등록증을 등록해 주세요! \n'
+                .'※ 보험은 명의이전이 완료된 후 해지해주세요. \n'
+                .'※ 보험 만기 예정이시거나, 신차 구매로 보험 승계가 필요하시다면 단기 책임보험에 가입하여 보험 유지를 부탁드립니다. \n'
+                .'추가로 궁금한 점이 있으시다면 아래 [자주묻는 질문] 버튼을 눌러 확인 해주세요. \n'
+                .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
+                .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                .'ㅁ 차량번호 : '.$data->car_no.' \n';
+                
+                $link = [
+                    "url" => url('/auction/'.$data->hashid),
+                    "text" => '자주묻는 질문'
+                ];
+
+                break;
             case 'DiagnosisErrorJob':
 
                 $title = $data->car_no.' 차량 진단 결과 오류';
