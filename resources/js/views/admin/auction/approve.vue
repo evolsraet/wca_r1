@@ -15,9 +15,9 @@
         </button>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="#" @click="updateAuction(auctionId, {'status': 'ing'})">경매진행</a></li>
-          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalDeposit')">차량대금 입금완료</a></li>
+          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalDeposit')">차량대금 입금확인</a></li>
           <li><a class="dropdown-item" href="#" @click="checkNameChangeDealerEvent(auction.hashid)">명의이전 알림(딜러)</a></li>
-          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalAfterFee')">수수료 입금완료</a></li>
+          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalAfterFee')">수수료 입금확인</a></li>
           <li><a class="dropdown-item" href="#" @click="checkNameChangeStatusEvent(auction.hashid)">명의이전신청 확인</a></li>
           <li><a class="dropdown-item" href="#" @click="DiagnosticAuctionCheck(auction.hashid)">진단상태확인</a></li>
         </ul>

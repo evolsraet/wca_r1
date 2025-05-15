@@ -313,6 +313,15 @@ class AuctionService
         if ($auction->is_deposit == 'totalDeposit') {
             AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
             AuctionTotalDepositJob::dispatch($bids->user_id, $auction, 'dealer');
+        } 
+        else if ($auction->is_deposit == 'totalAfterFee') {
+            // AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
+
+            $auction->status = 'done';
+            $auction->save();
+
+            AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
+            AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
         } else {
             if ($auction->bids) {
                 AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
@@ -323,18 +332,37 @@ class AuctionService
 
     private function notifyDone($auction, $bids)
     {
-        if ($auction->is_deposit == 'totalAfterFee') {
-            AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
-        } else {
-            AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
-            AuctionDoneJob::dispatch($bids->user_id, $auction->id, 'dealer');
-        }
+        // if ($auction->is_deposit == 'totalAfterFee') {
+        //     AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
+        // } else {
+        //     AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
+        //     AuctionDoneJob::dispatch($bids->user_id, $auction->id, 'dealer');
+        // }
+
+        $auction->status = 'done';
+        $auction->save();
+
+        AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
+        AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
+
     }
 
     private function notifyChosen($auction, $bids)
     {
         if (!request()->mode) {
-            AuctionCohosenJob::dispatch($bids->user_id, $auction->id, 'dealer');
+            // AuctionCohosenJob::dispatch($bids->user_id, $auction->id, 'dealer');
+            // AuctionTotalDepositJob::dispatch($bids->user_id, $auction, 'dealer');
+
+            if ($auction->is_deposit == 'totalDeposit') {
+
+                $auction->status = 'dlvr';
+                $auction->save();
+
+                AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
+                AuctionTotalDepositJob::dispatch($bids->user_id, $auction, 'dealer');
+            }else{
+                AuctionCohosenJob::dispatch($bids->user_id, $auction->id, 'dealer');
+            }
         }
     }
 

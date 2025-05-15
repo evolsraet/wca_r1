@@ -69,7 +69,7 @@ class TaksongAddJob implements ShouldQueue
 
             if(isset($result['data'])){
                 $auction = Auction::find($this->data['id']);
-                $auction->status = 'dlvr';
+                //$auction->status = 'dlvr'; // 차량대금 입금완료시 딜리버리 상태로 변경
                 $auction->is_taksong = 'ask';
                 $auction->taksong_id = $result['data']['chk_id'] ?? null;
                 $auction->update();

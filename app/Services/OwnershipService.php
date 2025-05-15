@@ -146,7 +146,7 @@ class OwnershipService
      */
     private function sendOwnershipAlerts(Auction $auction, ?Bid $bid, bool $isManual): void
     {
-        if($bid && !$auction->done_at){
+        if($bid){
             TaksongNameChangeJob::dispatch($bid->user_id, $auction->id, 'dealer');
         }
 
