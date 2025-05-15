@@ -40,7 +40,17 @@ class AuctionStartJob implements ShouldQueue
 
         $data = json_decode($this->data);
 
-        $notificationTemplate = NotificationTemplate::getTemplate('AuctionStartJob', $data, ['mail']);
+
+        if($this->isUser){
+             // 입찰자
+             $type = 'AuctionStartJob';
+        }else{
+            // 운영사 
+            $type = 'AuctionStartJobAdmin';
+        }
+
+
+        $notificationTemplate = NotificationTemplate::getTemplate($type, $data, ['mail']);
         $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
 
     }

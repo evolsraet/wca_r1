@@ -16,150 +16,11 @@ class NotificationTemplate
     {
         $this->type = $type; // 상황별
         $this->data = $data; // 데이터
-        $this->via = $via; // 전송방식
+        $this->via = $via; // 전송방식 (메일 / 알리고)
     }
 
-    // 회원가입 알림 템플릿
-    public static function welcomeTemplate($data)
-    {
-        $title = config('app.name').' 회원가입을 환영합니다!';
-
-        $message1 = $data.'님 '.config('app.name').' 회원가입을 환영합니다!';
-        $message2 = config('app.name').' url'. url('/');
-
-        $sendMessage = [
-            'title' => $title,
-            'message1' => $message1,
-            'message2' => $message2,
-            'link' => url('/'),
-        ];
-
-        return $sendMessage;
-    }
 
     // 회원상태 변경 알림 템플릿
-    public static function userStatusTemplate($data)
-    {
-
-        $user = $data['user'];
-        $status = $data['status'];
-
-        if($status == 'ok'){ 
-            $isStatus = '정상';
-        }else{
-            $isStatus = '거절';
-        }
-
-        $title = '회원님의 상태가 변경되었습니다.';
-        $message1 = $user->name.' 회원님의 상태가 변경되었습니다.';
-        $message2 = 'ㅁ 이메일 : '.$user->email;
-        $message3 = 'ㅁ 상태 : '.$isStatus;
-
-        $sendMessage = [
-            'title' => $title,
-            'message1' => $message1,
-            'message2' => $message2,
-            'message3' => $message3,
-            'link' => url('/'),
-        ];
-
-        return $sendMessage;
-    }
-
-
-    public static function basicTemplate($data)
-    {
-
-        // 푸터 메시지
-        $footerMsg = $data['footerMsg'] ?? '';
-
-        // 데이터
-        $resultData = $data['data'];
-        
-        // 전송링크 
-        isset($data['link']) ? $link = $data['link'] : $link = '/';
-        isset($data['linkTitle']) ? $linkTitle = $data['linkTitle'] : $linkTitle = '바로가기';
-
-        isset($data['message']) ? $message = $data['message'] : $message = '';
-        isset($data['message_1']) ? $message_1 = $data['message_1'] : $message_1 = '';
-        isset($data['message_2']) ? $message_2 = $data['message_2'] : $message_2 = '';
-        isset($data['message_3']) ? $message_3 = $data['message_3'] : $message_3 = '';
-        isset($data['message_4']) ? $message_4 = $data['message_4'] : $message_4 = '';
-        isset($data['message_5']) ? $message_5 = $data['message_5'] : $message_5 = '';
-        isset($data['message_6']) ? $message_6 = $data['message_6'] : $message_6 = '';
-        isset($data['message_7']) ? $message_7 = $data['message_7'] : $message_7 = '';
-        isset($data['message_8']) ? $message_8 = $data['message_8'] : $message_8 = '';
-        isset($data['message_9']) ? $message_9 = $data['message_9'] : $message_9 = '';
-        isset($data['message_10']) ? $message_10 = $data['message_10'] : $message_10 = '';
-        // 기본 차량 정보 
-        $message1 = 'ㅁ 차량 : '.$resultData->car_maker.' '.$resultData->car_model.' '.$resultData->car_model_sub;
-        $message2 = 'ㅁ 소유주 : '.$resultData->owner_name;
-        $message3 = 'ㅁ 차량번호 : '.$resultData->car_no;
-        isset($data['status']) ? $message4 = 'ㅁ 상태 : '.$data['status'] : $message4 = '';
-
-        isset($data['status2']) ? $message5 = 'ㅁ 경매마감일 : '.$data['status2'] : $message5 = ''; 
-        
-        isset($data['status3']) ? $message6 = 'ㅁ 딜러 : '.$data['status3'] : $message6 = ''; 
-        isset($data['status4']) ? $message7 = 'ㅁ 입찰가 : ' . FormatHelper::formatPriceToMan(number_format($data['status4'])) : $message7 = ''; 
-        
-        isset($data['status5']) ? $message8 = 'ㅁ 계좌번호 : '.$data['status5'] : $message8 = ''; 
-        isset($data['status6']) ? $message9 = 'ㅁ 입금기일 : '.$data['status6'] : $message9 = ''; 
-        
-        isset($data['status7']) ? $message10 = 'ㅁ 탁송시작 예정일 : '.$data['status7'] : $message10 = '';
-        isset($data['status8']) ? $message11 = 'ㅁ 탁송출발지 : '.$data['status8'] : $message11 = '';
-
-        isset($data['status9']) ? $message12 = 'ㅁ 낙찰가 : ' . FormatHelper::formatPriceToMan(number_format($data['status9'])) : $message12 = '';
-        
-        // 딜러 : (수수료 입금안내 / 미확인 시 1일 마다 발송)
-        isset($data['status10']) ? $message13 = 'ㅁ 입찰가 : ' . FormatHelper::formatPriceToMan(number_format($data['status10'])) : $message13 = '';
-        isset($data['status11']) ? $message14 = 'ㅁ 총 입금액 : ' . FormatHelper::formatPriceToMan(number_format($data['status11'])) . ' (VAT 포함)' : $message14 = '';
-        isset($data['status12']) ? $message15 = ' - 수수료 : ' . FormatHelper::formatPriceToMan(number_format($data['status12'])) : $message15 = '';
-        isset($data['status13']) ? $message16 = ' - 진단비 : ' . FormatHelper::formatPriceToMan(number_format($data['status13'])) : $message16 = '';
-        isset($data['status14']) ? $message17 = ' ㅁ 계좌번호 : '.$data['status14'] : $message17 = '';
-        isset($data['status15']) ? $message18 = ' ㅁ 예금주 : '.$data['status15'] : $message18 = '';
-        isset($data['status16']) ? $message19 = ' ㅁ 클레임 마감일 : '.$data['status16'] : $message19 = '';
-
-
-        $sendMessage = [
-            'title' => $data['title'],
-            'message' => $message,
-            'message_1' => $message_1,
-            'message_2' => $message_2,
-            'message_3' => $message_3,
-            'message_4' => $message_4,
-            'message_5' => $message_5,
-            'message_6' => $message_6,
-            'message_7' => $message_7,
-            'message_8' => $message_8,
-            'message_9' => $message_9,
-            'message_10' => $message_10,
-            'message1' => $message1,
-            'message2' => $message2,
-            'message3' => $message3,
-            'message4'  => $message4,
-            'message5'  => $message5,
-            'message6'  => $message6,
-            'message7'  => $message7,
-            'message8'  => $message8,
-            'message9'  => $message9,
-            'message10'  => $message10,
-            'message11'  => $message11,
-            'message12'  => $message12,
-            'message13'  => $message13,
-            'message14'  => $message14,
-            'message15'  => $message15,
-            'message16'  => $message16,
-            'message17'  => $message17,
-            'message18'  => $message18,
-            'message19'  => $message19,
-            'footerMsg' => $footerMsg,
-            'link' => ['url' => url(path: $link), 'text' => $linkTitle],
-        ];
-
-        return $sendMessage;
-
-    }
-
     public static function getTemplate($type, $data, $via)
     {
 
@@ -426,9 +287,8 @@ class NotificationTemplate
                 .'매니저가 딜러의 견적과 필요서류를 확인하고 있어요. 딜러 사정에 따라 늦어지는 경우가 있습니다. 최대한 빨리 확인 후 안내드릴 예정이니, 조금만 기다려주세요! \n'
                 .'이후 판매 과정 \n'
                 .'1. 판매서류 준비하기 \n'
-                .'2. 탁송일정 입력 \n'
-                .'3. (탁송일) 기사 도착&입금받기 \n'
-                .'4. (탁송일 + 2일) 명의이전 완료 \n'
+                .'2. (탁송일) 기사 도착&입금받기 \n'
+                .'3. (탁송일 + 2일) 명의이전 완료 \n'
                 .'* 더자세한 내용은 바로가기를 클릭하여 확인해 주세요. \n'
                 .'\n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
@@ -483,7 +343,7 @@ class NotificationTemplate
 
                 $message = 
                 '차량대금을 입금해주세요. \n'
-                ."아래 기일까지 차량대금을 입금해주세요! 탁송은 '".config('app.name')."' 에서 진행되며 별도의 안내 문자가 발송됩니다 \n"
+                ."아래 기일까지 차량대금을 입금해주세요! 탁송은 '".config('services.taksong.name')."' 에서 진행되며 별도의 안내 문자가 발송됩니다 \n"
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
@@ -540,10 +400,10 @@ class NotificationTemplate
                 $VbankExpDateTrans = date('Y-m-d', strtotime($account['data']['VbankExpDate']));
                 $VbankExpTimeTrans = date('H:i:s', strtotime($account['data']['VbankExpTime']));
 
-                $title = '경매가 완료되었습니다.';
+                $title = '차량명의이전서류를 등록했습니다. 수수료를 입금해 주세요!';
 
                 $message = 
-                '경매가 완료되었습니다. \n'
+                '차량명의이전서류를 등록했습니다. \n'
                 .'수수료를 입금해 주세요! \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -598,6 +458,24 @@ class NotificationTemplate
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
                 .config('app.name')."에 평가사들이 유선전화 드리고 진단요청일에 방문할 예정 입니다. \n";
+
+                // $link = [
+                //     "url" => url('/auction/'.$data->hashid),
+                //     "text" => '바로가기'
+                // ];
+
+                break;
+
+
+            case 'AuctionStartJobAdmin':
+                
+                $title = '경매 등록신청이 완료 되었습니다.';
+
+                $message = 
+                '경매 등록신청이 완료 되었습니다. \n'
+                .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
+                .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                .'ㅁ 차량번호 : '.$data->car_no.' \n';
 
                 // $link = [
                 //     "url" => url('/auction/'.$data->hashid),

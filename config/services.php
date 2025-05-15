@@ -90,4 +90,11 @@ return [
         'admin_id' => ConfigService::safeEnv('OWNERSHIP_ADMIN_ID', 'ownership config admin_id'),
     ],
 
+    // 탁송서비스 이름
+    'taksong' => [
+        'name' => ConfigService::safeEnv('TAKSONG_NAME', 'taksong config name'),
+    ],
+
+
+
 ];

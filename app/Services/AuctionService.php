@@ -269,10 +269,6 @@ class AuctionService
 
     private function processDone($auction)
     {
-        // if (empty($auction->diag_check_at)) {
-        //     throw new \Exception('진단이 완료되지 않았습니다. 상태 변경 불가.', 422);
-        // }
-
         if (in_array($auction->status, ['dlvr', 'chosen'])) {
             $auction->status = 'done';
             Log::info('경매 상태 업데이트 경매완료 모드', ['method' => $auction]);
@@ -293,9 +289,6 @@ class AuctionService
 
     private function processIng($auction)
     {
-        // if (empty($auction->diag_check_at)) {
-        //     throw new \Exception('진단이 완료되지 않았습니다. 상태 변경 불가.', 422);
-        // }
 
         $auction->final_at = now()->addDays(config('days.auction_day'));
 
@@ -341,7 +334,7 @@ class AuctionService
     private function notifyChosen($auction, $bids)
     {
         if (!request()->mode) {
-            AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+            AuctionCohosenJob::dispatch($bids->user_id, $auction->id, 'dealer');
         }
     }
 
