@@ -346,7 +346,7 @@
   
   
   
-            <div class="dropdown border-bottom" v-if="auctionDetail.data.status !== 'ask'">
+            <div class="dropdown border-bottom" v-if="auctionDetail.data.status !== 'ask' || auctionDetail.data.status !== 'diag'">
                 <button
                   class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
                   @click="toggleDropdown('carinfo')"
