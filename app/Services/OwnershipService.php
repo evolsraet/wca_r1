@@ -131,8 +131,12 @@ class OwnershipService
         $auction->done_at = now();
         $auction->save();
 
+
+        $dealer = Bid::find($auction->bid_id);
+
         // 완료된 알림 전달 하기 / 유저
         AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
+        AuctionDoneJob::dispatch($dealer->user_id, $auction->id, 'dealer');
 
         Log::info('[명의이전 완료 처리 / ' . $auction->car_no . ']', ['auction' => $auction]);
     }
@@ -142,7 +146,7 @@ class OwnershipService
      */
     private function sendOwnershipAlerts(Auction $auction, ?Bid $bid, bool $isManual): void
     {
-        if($bid){
+        if($bid && !$auction->done_at){
             TaksongNameChangeJob::dispatch($bid->user_id, $auction->id, 'dealer');
         }
 
