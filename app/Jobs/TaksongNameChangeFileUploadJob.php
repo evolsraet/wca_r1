@@ -47,11 +47,5 @@ class TaksongNameChangeFileUploadJob implements ShouldQueue
         $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
 
 
-
-        // 유저에게 완료 알림
-        $notificationTemplate = NotificationTemplate::getTemplate('AuctionDoneJobUser', $auction, ['mail']);
-        $user = User::find($this->user);
-        $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
-
     }
 }

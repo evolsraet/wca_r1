@@ -206,10 +206,10 @@ class NotificationTemplate
 
             // 딜러님의 입찰이 선택되었습니다.
             case 'AuctionCohosenJobDealer':
-                $title = '딜러님의 입찰이 선택되었습니다.';
+                $title = '판매자가 탁송정보를 입력했습니다.';
 
                 $message = 
-                '딜러님의 입찰이 선택되었습니다. \n'
+                '판매자가 탁송정보를 입력했습니다. \n'
                 .'금액을 다시 한번 확인하시고, 탁송정보를 입력해주세요! 미입력시 경매 절차가 진행되지않아요 😅 \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -503,7 +503,13 @@ class NotificationTemplate
 
             case 'AuctionTotalDepositJobUser':
 
-                $formattedDate = Carbon::parse($data->taksong_wish_at)->format('Y-m-d(D) H시');
+                // $formattedDate = Carbon::parse($data->taksong_wish_at)->format('Y-m-d(D) H시');
+
+                $weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+                $weekday = $weekdays[date('w', strtotime($data->taksong_wish_at))];
+                $formattedDate = date('Y-m-d', strtotime($data->taksong_wish_at)) . "($weekday) " . date('H시', strtotime($data->taksong_wish_at));
+
+
 
                 $title = $data->car_no.' 차량대금 송금이 완료되었습니다.';
 
@@ -528,7 +534,9 @@ class NotificationTemplate
 
             case 'AuctionTotalDepositJobDealer':
 
-                $formattedDate = Carbon::parse($data->taksong_wish_at)->format('Y-m-d(D) H시');
+                $weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+                $weekday = $weekdays[date('w', strtotime($data->taksong_wish_at))];
+                $formattedDate = date('Y-m-d', strtotime($data->taksong_wish_at)) . "($weekday) " . date('H시', strtotime($data->taksong_wish_at));
 
                 $title = '차량대금 입금확인 되어 탁송이 진행됩니다.';
 
