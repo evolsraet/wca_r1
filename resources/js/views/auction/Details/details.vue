@@ -701,7 +701,7 @@
               </div>
   
   
-              <div v-if="auctionDetail.data.is_taksong === 'ing' || auctionDetail.data.is_taksong === 'done'">
+              <div v-if="auctionDetail.data.is_taksong === 'ask' || auctionDetail.data.is_taksong === 'ing' || auctionDetail.data.is_taksong === 'done'">
   
                 <div class="d-flex justify-content-between align-items-baseline pt-4">
                   <h4 class="custom-highlight">탁송 상태 정보</h4>
@@ -709,7 +709,7 @@
   
                 <div class="text-start mt-2">
                 <p class="text-secondary ">상태 :<span class="tc-red ms-1 fw-bold">
-                  {{auctionDetail.data.is_taksong === 'ing' ? '탁송중' : '탁송완료'}}
+                  {{auctionDetail.data.is_taksong === 'ask' ? '배차' : auctionDetail.data.is_taksong === 'ing' ? '탁송중' : '탁송완료'}}
                 </span></p>
                 <p class="text-secondary ">탁송 기사 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_courier_name}} / {{auctionDetail.data.taksong_courier_mobile}}</span></p>
                 <p class="text-secondary ">출발 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_departure_address}}</span></p>
