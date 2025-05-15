@@ -3172,7 +3172,7 @@
     diagnosticExtra.value = diagnosticData.data.extra ? diagnosticData.data.extra : {};
     diagnosticOptions.value = diagnosticData.data.options ? diagnosticData.data.options : {};
   
-    diagnosticOptionView.value = diagnosticData.data.diag_option_view;
+    diagnosticOptionView.value = diagnosticData.data.diag_option_view ? diagnosticData.data.diag_option_view : [];
   
   
     if(auctionDetail.value.data.car_thumbnails){
