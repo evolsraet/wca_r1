@@ -178,7 +178,7 @@ class TaksongService
     private function handleDone(string $carNo, $auction, $bid, $status, $modifyData){
         Log::info("[탁송 / {$carNo}] 탁송 상태 처리 완료 확인", ['status' => $status, 'car_no' => $carNo]);
 
-        $isCheck = Auction::where('car_no', $carNo)->where('status', 'dlvr')->where('is_taksong', 'ing')->first();
+        $isCheck = Auction::where('car_no', $carNo)->where('status', 'dlvr')->first();
         if($isCheck){
             $updateData = [
                 'is_taksong' => 'done',

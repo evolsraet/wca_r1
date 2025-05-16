@@ -60,7 +60,11 @@ export function cmmn() {
                 element.style.display = 'block';
                 var currentScroll = Math.max(document.body.scrollTop, document.documentElement.scrollTop);
                 const postCode = new daum.Postcode({
-                    oncomplete: data => resolve({ zonecode: data.zonecode, address: data.address }),
+                    oncomplete: data => {
+                        console.log('주소 검색 결과:', data);
+                        // TODO:디비에 저정하는 코드 추가 (post_locations) / 주소 정보가 없는 경우 주소 정보 저장 있으면 넘어감 
+                        resolve({ zonecode: data.zonecode, address: data.address });
+                    },
                     onclose: state => {
                         if (state === 'COMPLETE_CLOSE') {
                             element.style.display = 'none';

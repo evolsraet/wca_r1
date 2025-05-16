@@ -126,6 +126,23 @@ class AuctionService
 
     private function postUpdateProcess($auction)
     {
+
+
+        // TODO: 경매상태가 '탁송중' 으로 변경시, 탁송정보 (판매자,구매자) 정보없을때 예외처리
+
+        // TODO: 경매진행 으로 변경 시 진단데이터 확인
+
+        // 진단데이터가 없거나, 진단데이터를 불러오지 못하면 예외처리
+        // 진단데이터 = 기존 진단데이터
+        // if( 진단데이터 없으면 )
+        //     진단데이터 = 진단불러와();
+        //     if( 진단데이터 없으면 )
+        //         throw new \Exception("진단데이터 불러오기 실패", 1);
+
+
+        // if ($auction->isDirty('status') && $auction->status === 'done') {
+        // }
+
         $bids = Bid::find($auction->bid_id);
 
         if ($auction->status == 'cancel') {
@@ -332,7 +349,7 @@ class AuctionService
 
     private function notifyDone($auction, $bids)
     {
-        
+
     }
 
     private function notifyChosen($auction, $bids)
