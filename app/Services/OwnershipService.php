@@ -147,7 +147,7 @@ class OwnershipService
     private function sendOwnershipAlerts(Auction $auction, ?Bid $bid, bool $isManual): void
     {
         if($bid){
-            TaksongNameChangeJob::dispatch($bid->user_id, $auction->id, 'dealer');
+            TaksongNameChangeJob::dispatch($bid->user_id, $auction->id, 'dealerResend');
         }
 
         Log::info('[명의이전 파일첨부 안내 알림 발송 / ' . $auction->car_no . ']', ['auction_id' => $auction->id, 'is_manual' => $isManual]);

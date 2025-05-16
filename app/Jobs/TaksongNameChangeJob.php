@@ -69,6 +69,13 @@ class TaksongNameChangeJob implements ShouldQueue
             $user = User::find($this->user);
             $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
         }
+
+        if($this->type == 'dealerResend'){
+            $notificationTemplate = NotificationTemplate::getTemplate('TaksongNameChangeJobDealerResend', $this->data, ['mail']);
+            $user = User::find($this->user);
+            $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
+        }
+        
         // $sendMessage = NotificationTemplate::basicTemplate($data);
 
         // $user = User::find($this->user);
