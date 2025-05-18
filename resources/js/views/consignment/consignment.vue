@@ -143,13 +143,13 @@
             <div>
             <p>1. 자동차등록증 원본</p>
             <p>2. 자동차매도용 인감증명서 (매수자 인적사항 기재 필수)</p>
-            <p>3. 사업자동등록증</p>
+            <p>3. 사업자등록증</p>
             <p class="bolder my-2">사업용으로 사용한 경우, 기본 필수 서류</p>
             <p>복식부기</p>
             <p>1. 자동차등록증 원본</p>
             <p>2. 자동차매도용 인감증명서 (매수자 인적사항 기재 필수)</p>
             <p>3. 일반 인감증명서 (사실확인 증빙용)</p>
-            <p>4. 사업자동등록증 사본</p>
+            <p>4. 사업자등록증 사본</p>
             <p>5. 비사업용 사실확인서 (세무사 명판 날인)</p>
             <p class="mb-3">6. ‘차량운반구 감가상각비명세서’ 또는 ‘고정자산명세서’</p>
             <p>간편등록부의 경우, 상기 1~5번 제출 서류들과 ‘총 수입금액 및 필요경비명세서’가 필요합니다.</p>
@@ -205,22 +205,34 @@
       <h4 class="mt-4">마지막으로 꼼꼼히 확인해 주세요!</h4>
       <h5 class="tc-red fs-6">&#8251; 매도용 인감증명서를 준비해주세요</h5>
       <div class="summary-box d-flex flex-column p-3 mt-3">
-        <div class="d-flex justify-content-start gap-5 mb-2">
-          <p class="mb-0">낙찰액</p>
-          <p class="mb-0">{{ amtComma(selectedBid?.price ?? auctionDetail?.data?.final_price ??0) }}</p>
+        <div class="mb-2">
+          <div class="d-flex justify-content-between">
+            <span>낙찰액</span>
+            <strong>{{ amtComma(selectedBid?.price ?? auctionDetail?.data?.final_price ?? 0) }}</strong>
+          </div>
         </div>
-        <div class="d-flex justify-content-start gap-5">
-          <p class="mb-0"><span class="me-3">딜</span>러</p>
-          <p class="mb-0">{{ userData?.dealer?.name ?? auctionDetail?.data?.dealer_name }}</p>
+
+        <div class="mb-2">
+          <div class="d-flex justify-content-between">
+            <span>딜러</span>
+            <span>{{ userData?.dealer?.name ?? auctionDetail?.data?.dealer_name }}</span>
+          </div>
         </div>
-        <div class="d-flex justify-content-start gap-5 mt-2">
-          <p class="mb-0">탁송일</p>
-          <p class="mb-0"><span>{{ yearLabel }}</span>&nbsp;{{ monthLabel }} {{ selectedDateLabel }} {{ selectedTime }}</p>
+
+        <div class="mb-2">
+          <div class="d-flex justify-content-between">
+            <span>탁송일</span>
+            <span>{{ yearLabel }}년 {{ monthLabel }} {{ selectedDateLabel }} {{ selectedTime }}</span>
+          </div>
         </div>
-        <div class="d-flex justify-content-start gap-5 mt-2">
-          <p class="mb-0"><span class="me-3">은</span>행</p>
-          <p class="mb-0"><span class="me-2">{{ selectedBank }}</span>|<span class="ms-2">{{ account }}</span></p>
+
+        <div class="mb-2">
+          <div class="d-flex justify-content-between">
+            <span>은행</span>
+            <span>{{ selectedBank }} {{ account }}</span>
+          </div>
         </div>
+
       </div>
       <p class="text-secondary opacity-75 text-center mt-3">취소와 변경이 어려우니 유의해 주세요.</p>
       <button class="btn btn-primary my-3 w-100" @click="confirmSelection">완료</button>
@@ -527,24 +539,26 @@ const toggleView = () => {
   const textOk = `
     <h4 class="mt-4">마지막으로 꼼꼼히 확인해 주세요!</h4>
     <h5 class="tc-red fs-6">&#8251; 매도용 인감증명서를 준비해주세요</h5>
-    <div class="summary-box d-flex flex-column p-3 mt-3">
-      <div class="d-flex justify-content-start gap-5 mt-2">
-        <p class="mb-0" style="width: 100px; text-align: left;">탁송일</p>
-        <p class="mb-0"><span>${yearLabel.value} </span>&nbsp;${monthLabel.value} ${selectedDateLabel.value} ${selectedTime.value}</p>
-      </div>
-      <div class="d-flex justify-content-start gap-5 mt-2">
-        <p class="mb-0" style="width: 100px; text-align: left;">탁송주소</p>
-        <p class="mb-0"><span>${addrPost.value}</span> | <span>${addr.value}</span> | <span>${addrdt.value}</span></p>
-      </div>
-      <div class="d-flex justify-content-start gap-5 mt-2">
-        <p class="mb-0" style="width: 100px; text-align: left;">은행</p>
-        <p class="mb-0"><span class="me-2">${selectedBank.value ?? '선택 안됨'}</span> | <span class="ms-2">${account.value ?? '계좌번호 없음'}</span></p>
-      </div>
-      <div class="d-flex justify-content-start gap-5 mt-2">
-        <p class="mb-0" style="width: 100px; text-align: left;">고객 연락처</p>
-        <p class="mb-0"><span>${customTel1.value}</span> | <span>${customTel2.value}</span></p>
-      </div>
-    </div>
+    <table class="table-summary" cellspacing="0" cellpadding="0">
+      <tbody>
+        <tr>
+          <th style="text-align: left; width: 100px; font-size: 16px;">탁송일</th>
+          <td style="text-align: left; font-size: 16px;">${yearLabel.value} ${monthLabel.value} ${selectedDateLabel.value} ${selectedTime.value}</td>
+        </tr>
+        <tr>
+          <th style="text-align: left; width: 100px; font-size: 16px; padding-top: 10px;">탁송주소</th>
+          <td style="text-align: left; font-size: 16px;">${addrPost.value} | ${addr.value} | ${addrdt.value}</td>
+        </tr>
+        <tr>
+          <th style="text-align: left; width: 100px; font-size: 16px; padding-top: 10px;">은행</th>
+          <td style="text-align: left; font-size: 16px;">${selectedBank.value ?? '선택 안됨'} | ${account.value}</td>
+        </tr>
+        <tr>
+          <th style="text-align: left; width: 100px; font-size: 16px; padding-top: 10px;">고객 연락처</th>
+          <td style="text-align: left; font-size: 16px;">${customTel1.value} | ${customTel2.value}</td>
+        </tr>
+      </tbody>
+    </table>
     <p class="text-secondary opacity-75 text-center mt-3">취소와 변경이 어려우니 유의해 주세요.</p>
   `;
 

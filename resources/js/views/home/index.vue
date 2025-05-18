@@ -525,6 +525,9 @@ watch(() => carInfoForm.no, (newValue) => {
 // })
 
   onMounted(() => {
+    
+    user ? carInfoForm.owner = user.value.name : carInfoForm.owner = '';
+
     updateCarName();
     getHomeReview();
     nextTick(() => {

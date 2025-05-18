@@ -96,5 +96,19 @@ return [
     ],
 
 
+    // 진단팀 알림 관리자 아이디
+    'diagnostic_admin' => [
+        'admin_id' => ConfigService::safeEnv('DIAG_ADMIN_ID', 'diagnostic config admin_id'),
+    ],
+
+    // 탁송서비스 알림 관리자 아이디
+    'taksong_admin' => [
+        'admin_id' => ConfigService::safeEnv('TAKSONG_ADMIN_ID', 'taksong config admin_id'),
+    ],
+
+    // 클레임 알림 관리자 아이디
+    'claim_admin' => [
+        'admin_id' => ConfigService::safeEnv('CLAIM_ADMIN_ID', 'claim config admin_id'),
+    ],
 
 ];

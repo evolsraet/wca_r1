@@ -43,14 +43,7 @@ document.addEventListener('DOMContentLoaded', function() {
         const body = document.getElementById('app');
         if (path.startsWith('/admin')) {
             body.classList.add('adminPage');
-        }
-        else if (path.startsWith('/')) {
-            body.classList.add('mainPage');
-        }
-        else if (path.startsWith('/loing')) {
-            body.classList.add('mainPage');
-        }
-        else {
+        }else {
             body.classList.remove('adminPage');
         }    
     }, 100);    

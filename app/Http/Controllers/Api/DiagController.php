@@ -18,6 +18,11 @@ class DiagController extends Controller
     public function diagnostic(Request $request): \Illuminate\Http\JsonResponse
     {
         $result = $this->diagService->getDiagData($request);
+
+        if(isset($result['data']['diag_distance'])){
+            $result['data']['diag_distance'] = number_format($result['data']['diag_distance']);
+        }
+
         return response()->api($result['data']);
     }
 

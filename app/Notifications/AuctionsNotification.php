@@ -58,6 +58,8 @@ class AuctionsNotification extends Notification
         // line 에 $messageArray 의 값을 추가
         $mailMessage = new MailMessage();
         $mailMessage->subject($sendMessage['title']);
+        $mailMessage->greeting('');
+        
         foreach ($messageArray as $message) {
             $mailMessage->line($message);
         }
@@ -65,6 +67,7 @@ class AuctionsNotification extends Notification
         if(isset($sendMessage['link'])){
             $mailMessage->action($sendMessage['link']['text'], $sendMessage['link']['url']);
         }
+        $mailMessage->salutation('');
     
         return $mailMessage;
     }

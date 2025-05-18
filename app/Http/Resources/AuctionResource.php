@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Models\Auction;
 
 class AuctionResource extends JsonResource
 {
@@ -138,6 +139,10 @@ class AuctionResource extends JsonResource
 
 
         $addArray['car_thumbnails'] = json_decode($auction->car_thumbnail, true);
+
+        // 경매 횟수 
+        $auction_count = Auction::where('user_id', $auction->user_id)->count();
+        $addArray['auction_count'] = $auction_count;
 
 
 

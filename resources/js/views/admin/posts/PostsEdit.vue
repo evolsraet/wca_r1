@@ -25,8 +25,6 @@
               <label v-if="!navigatedThroughHandleRowClick && boardId == 'notice'" for="post-category" class="form-label">카테고리</label>
               <label v-if="!navigatedThroughHandleRowClick && boardId == 'claim'" for="post-category" class="form-label">상태</label>
               <div v-if="isAdmin && !navigatedThroughHandleRowClick">
-            
-            
                 <v-select
                 v-model="post.category"
                   :options="categories"
@@ -70,6 +68,11 @@
                 <div v-if="validationErrors.content">{{ validationErrors.content }}</div>
               </div>
             </div>
+
+            <div v-if="!navigatedThroughHandleRowClick && post.filePath && isAdmin">
+                <img :src="post.filePath" alt="첨부 이미지" class="img-fluid">
+            </div>
+
             <div v-if="!navigatedThroughHandleRowClick">
               <div v-if="boardId == 'claim'">
                 <p class="text-secondary opacity-75 fs-6 mb-2">
@@ -90,7 +93,7 @@
       </div>
     </form>
     <!-- Comments Section -->
-    <div v-if="boardId === 'claim' && navigatedThroughHandleRowClick" class="row my-5 mov-wide m-auto container">
+    <div v-if="boardId === 'claim'" class="row my-5 mov-wide m-auto container">
       <!-- Comments List -->
       <label for="comments" class="form-label">코멘트</label>
       <div class="comment-list">

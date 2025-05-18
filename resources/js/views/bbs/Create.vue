@@ -28,7 +28,7 @@
                                 </div>
                                 <div v-if = "isMobileView">
                                     <div class="img_box">
-                                        <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2">
+                                      <img :src="auction.car_thumbnails ? auction.car_thumbnails[0] : auction.car_thumbnail" alt="차량 사진" class="mb-2">
                                     </div>
                                 </div>
                             </div>

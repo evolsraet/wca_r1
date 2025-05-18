@@ -165,11 +165,22 @@ export function initReviewSystem() {
         review.star = starScore;
 
         if(review.auction_id == "" || review.dealer_id == ""){
-            alert("오류가 발생하였습니다. 관리자에게 문의해주세요.");
+            swal.fire({
+                title: '오류가 발생하였습니다. 관리자에게 문의해주세요.',
+                icon: 'error',
+                confirmButtonText: '확인',
+            });
             return;
         }
         if(starScore == 0 && starScore == ""){
-            alert("별점을 입력해주세요.");
+            // alert("별점을 입력해주세요.");
+
+            swal.fire({
+                title: '별점을 입력해주세요.',
+                icon: 'error',
+                confirmButtonText: '확인',
+            });
+
             return;
         }
         const form = {

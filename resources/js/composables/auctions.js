@@ -245,16 +245,16 @@ const getAuctionById = async (id) => {
 };
 // 상태를 
 const statusMap = {
-    cancel: "취소",
-    done: "경매완료",
-    chosen: "선택완료",
-    wait: "선택대기",
-    ing: "경매진행",
-    diag: "진단대기",
-    dlvr: "탁송진행",
     ask: "신청완료",
+    diag: "진단대기",
+    wait: "선택대기",
+    chosen: "선택완료",
+    ing: "경매진행",
+    done: "경매완료",
+    dlvr: "탁송진행",
     totalDeposit : "입금완료",
-    totalAfterFee : "수수료 입금완료"
+    totalAfterFee : "수수료 입금완료",
+    cancel: "취소"
 };
 const getStatusLabel = (status) => {
     return statusMap[status] || status;
@@ -908,6 +908,22 @@ const getIngAuctions = async (bidsNumList,page) => {
         */
 };
 
+
+const getReview = async (userId, page = 1) => {
+    return wicac.conn()
+    .url(`/api/reviews`)
+    .whereOr('reviews.user_id',`${userId}`) 
+    .page(`${page}`)
+    .pageLimit(12)
+    .callback(function(result) {
+
+        console.log('getReview11',result);
+
+        return result;
+    })
+    .get();
+}
+
 const setTacksong = async (id, data) => {
 
     try {
@@ -1355,7 +1371,8 @@ const isAccident = (id) => {
         nameChangeFileUpload,
         diagnostic,
         checkNameChangeDealer,
-        checkNameChangeStatus
+        checkNameChangeStatus,
+        getReview
     };
     
 }

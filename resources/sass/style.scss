@@ -2764,6 +2764,7 @@ video{
     .form-group .bank,
     .form-group input[type=carNo],
     .form-group input[type=text],
+    .form-group input[type=number],
     .form-group input[type=datetime-local] {
         width: 100%;
         padding: 15px;
@@ -3791,6 +3792,15 @@ input[type="checkbox"] {
     width: 20px;
     height: 20px;
     background-image: url('../img/Icon-feather-edit.png'); 
+    background-size: cover;
+    background-position: center; 
+    background-repeat: no-repeat;
+    display: inline-block; 
+}
+.icon-doc-img{
+    width: 20px;
+    height: 20px;
+    background-image: url('../img/Icon-feather-doc.png'); 
     background-size: cover;
     background-position: center; 
     background-repeat: no-repeat;

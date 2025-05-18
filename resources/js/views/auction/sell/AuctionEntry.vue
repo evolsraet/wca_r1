@@ -134,7 +134,7 @@
         <div class="form-group mt-4">
           <label><span class="text-danger me-2">*</span>은행 <span class="text-secondary">( 매매대금 입금 받을 계좌 )</span></label>
           <input type="text" id="bank" placeholder="은행 선택" @click="handleBankLabelClick" v-model="selectedBank" readonly ref="bankSelect">
-          <input type="text" v-model="account" placeholder="계좌번호" :class="{'block': accountDetails}" class="account-num" ref="accountSelect" @keydown.enter="handleEnterPress('diagFirstAtSelect')">
+          <input type="number" v-model="account" placeholder="계좌번호(숫자만)" :class="{'block': accountDetails}" class="account-num" ref="accountSelect" @keydown.enter="handleEnterPress('diagFirstAtSelect')" @input="limitAccountLength">
           <p class="text-danger">※ 계좌는 차량 소유주의 계좌번호만 입력가능 합니다.</p>
         </div>
 
@@ -373,7 +373,7 @@ const { wica } = cmmn();
 const { createAuction, validationErrors, checkAuctionEntryPublic, checkBusinessStatus, getCertificationData, clearCertificationData } = useAuctions();
 const store = useStore();
 const swal = inject('$swal');
-
+const user = computed(() => store.getters['auth/user']);
 const ownerName = ref(''); // 소유자 이름
 const isVerified = ref(false); // 본인 인증 상태
 // const isVerified = ref(true); // 본인 인증 상태
@@ -923,23 +923,15 @@ const confirmEditIfDisabled = (carNumber) => {
           // 인증 캐시정보 초기화 
           clearCertificationData(result.rawData.carNumber).then(res => {
             console.log('clearCertificationData',res);
-            wica.ntcn(swal)
-            .icon('S')
-            .addClassNm('cmm-review-custom')
-            .addOption({ padding: 20})
-            .callback(function(result) {
-            })
-            .alert('인증 정보가 초기화되었습니다.');
+            // wica.ntcn(swal)
+            // .icon('S')
+            // .addClassNm('cmm-review-custom')
+            // .addOption({ padding: 20})
+            // .callback(function(result) {
+            // })
+            // .alert('인증 정보가 초기화되었습니다.');
           });
           
-        }else{
-          wica.ntcn(swal)
-            .icon('S')
-            .addClassNm('cmm-review-custom')
-            .addOption({ padding: 20})
-            .callback(function(result) {
-            })
-            .alert('인증 정보가 초기화가 취소되었습니다.');
         }
       })
     .confirm('소유자 정보를 수정하시겠습니까?');
@@ -1225,7 +1217,7 @@ const openAlarmModal = () => {
             <tr>
               <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">연락처</td>
               <td style="padding: 8px; border: 1px solid #ddd; width: 70%;">
-                <input type="text" class="form-control print-input" id="delegator-phone" placeholder="연락처">
+                <input type="text" class="form-control print-input" id="delegator-phone" placeholder="연락처" maxlength="11" value="${user.value.phone}">
               </td>
             </tr>
         </table>
@@ -1496,6 +1488,13 @@ onMounted(() => {
   });
 
 });
+
+const limitAccountLength = (event) => {
+  const value = event.target.value;
+  if (value.length > 15) {
+    account.value = value.slice(0, 15);
+  }
+};
 
 </script>
 

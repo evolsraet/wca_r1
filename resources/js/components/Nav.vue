@@ -1,7 +1,7 @@
 <template>
 <div id="UsersNav" :class="['fixed-top', isDealer ? 'dealer-nav-wrap' : 'user-nav-wrap']">
     <div class="overlay" style="display: none;"></div>
-    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, 'p-2' , 'px-2', isDealer ? 'dealer-nav' : 'user-nav']">
+    <nav :class="['navbar', 'navbar-expand-md', 'navbar-light', 'shadow-sm', navbarClass, textClass, isDealer ? 'dealer-nav' : 'user-nav']">
       <div v-if="isAuctionDetailPage"></div>
       <div class="nav-font" :class="{ 'container': isContainer }">
         <button v-if="isDetailPage && isUser" @click="goBack" class="btn btn-back back-btn-icon"></button>
@@ -29,7 +29,7 @@
               <div class="top-content">
                 <div class="menu-illustration p-3">
                   <div class="sub-board-style">
-                    <div v-if="fetchFilteredViewBids.value" class="text-start">
+                    <!-- <div v-if="fetchFilteredViewBids.value" class="text-start">
                       <p>경매가 종료됐어요!</p>
                       <div class="d-flex align-items-center">
                         <router-link :to="{ name: 'auth.login' }" class="tc-primary bold-18-font" @click="toggleNavbar">선택완료차량 확인</router-link>
@@ -42,7 +42,7 @@
                         <router-link :to="{ name: 'auction.index'}" class="tc-primary bold-18-font" @click="toggleNavbar">진행 중 경매 확인</router-link>
                         <div class="icon right-icon"></div>
                       </div>
-                    </div>
+                    </div> -->
                   </div>
                 </div>
               </div>
@@ -560,6 +560,7 @@ watch(() => route.params.id, () => {
   
   onMounted(async () => {
     checkWidth();
+    // fetchFilteredViewBids();
     window.addEventListener('resize', checkWidth);
     if (isUser || isDealer) {
       fileExstCheck(user.value);
@@ -704,6 +705,11 @@ watch(() => route.params.id, () => {
   
   
   <style scoped>
+
+    .navbar{
+      padding: 10px 10px !important;
+    }
+
   .toggle-nav-content {
     display: flex;
     flex-direction: column;
@@ -913,6 +919,10 @@ watch(() => route.params.id, () => {
       }
       .navbar-expand-md .navbar-collapse {
         display: block !important;
+    }
+
+    .navbar{
+      padding: 0px 10px !important;
     }
 }
 .user-nav .nav-link:hover {

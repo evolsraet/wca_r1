@@ -187,10 +187,6 @@ class AuctionService
 
         }
 
-        if ($auction->status == 'diag') {
-            AuctionDiagJob::dispatch($auction->user_id, $auction);
-        }
-
         if ($auction->status == 'ing') {
             if (empty($auction->diag_check_at)) {
                 throw new \Exception('진단이 완료되지 않았습니다.', 500);
@@ -330,6 +326,7 @@ class AuctionService
         if ($auction->is_deposit == 'totalDeposit') {
             AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
             AuctionTotalDepositJob::dispatch($bids->user_id, $auction, 'dealer');
+            AuctionTotalDepositJob::dispatch(config('services.taksong_admin'), $auction, 'taksong');
         } 
         else if ($auction->is_deposit == 'totalAfterFee') {
             // AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
@@ -365,6 +362,7 @@ class AuctionService
 
                 AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
                 AuctionTotalDepositJob::dispatch($bids->user_id, $auction, 'dealer');
+                AuctionTotalDepositJob::dispatch(config('services.taksong_admin'), $auction, 'taksong');
             }else{
                 AuctionCohosenJob::dispatch($bids->user_id, $auction->id, 'dealer');
             }

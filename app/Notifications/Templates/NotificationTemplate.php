@@ -5,6 +5,7 @@ use App\Helpers\FormatHelper;
 use Carbon\Carbon;
 use App\Http\Controllers\Api\PaymentController;
 use App\Models\User;
+use App\Models\Auction;
 class NotificationTemplate
 {
 
@@ -91,14 +92,16 @@ class NotificationTemplate
             // 딜러가 고객님의 차량에 입찰했습니다.
             case 'AuctionBidStatusJobAsk':
 
-                $title = '딜러가 고객님의 차량에 입찰했습니다.';
+                $dealer = User::find($data->dealer->id);
+
+                $title = $dealer->company.' '.$dealer->name.' 딜러가 고객님의 차량에 입찰했습니다.';
 
                 $message = 
-                '딜러가 고객님의 차량에 입찰했습니다. \n'
+                $dealer->company.' '.$dealer->name.' 딜러가 고객님의 차량에 입찰했습니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
-                .'ㅁ 딜러 : '.$data->dealer->company.' '.$data->dealer->name.' \n'
+                .'ㅁ 딜러 : '.$dealer->company.' '.$dealer->name.' \n'
                 .'ㅁ 입찰가 : '.FormatHelper::formatPriceToMan(number_format($data->price)).' \n'
                 .'';
 
@@ -159,6 +162,28 @@ class NotificationTemplate
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
                 .'ㅁ 상태 : 취소';
+
+                $link = [
+                    "url" => url('/auction/'.$data->hashid),
+                    "text" => '바로가기'
+                ];
+
+                break;
+
+
+
+            // 경매 입찰이 취소되었습니다.
+            case 'AuctionBidStatusJobDelete':
+
+                $dealer = User::find($data->dealer->id);
+
+                $title = $dealer->name.' 딜러가 경매 입찰을 취소했습니다.';
+
+                $message = 
+                $dealer->name.' 딜러가 경매 입찰을 취소했습니다. \n'
+                .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
+                .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                .'ㅁ 차량번호 : '.$data->car_no.' \n';
 
                 $link = [
                     "url" => url('/auction/'.$data->hashid),
@@ -265,6 +290,26 @@ class NotificationTemplate
 
                 $message = 
                 '경매 상태가 변경되었습니다. \n'
+                .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
+                .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                .'ㅁ 차량번호 : '.$data->car_no.' \n'
+                .'ㅁ 상태 : 진단대기';  
+
+
+                $link = [
+                    "url" => url('/auction/'.$data->hashid),
+                    "text" => '바로가기'
+                ];
+
+                break;
+
+
+            case 'AuctionDiagJobAdmin':
+                $title = $data->car_no.' 차량 진단 대기중입니다.';
+
+                $message = 
+                '진단 대기중인 차량이 있습니다. \n'
+                .'진단팀에서 진단을 진행 해 주세요 \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
@@ -556,6 +601,30 @@ class NotificationTemplate
 
                 break;
 
+            case 'AuctionTotalDepositJobTaksong':
+
+                $weekdays = ['일', '월', '화', '수', '목', '금', '토'];
+                $weekday = $weekdays[date('w', strtotime($data->taksong_wish_at))];
+                $formattedDate = date('Y-m-d', strtotime($data->taksong_wish_at)) . "($weekday) " . date('H시', strtotime($data->taksong_wish_at));
+
+                $title = $data->car_no.' 차량대금 입금이 확인 되었습니다.';
+
+                $message = 
+                $data->car_no.' 차량대금 입금이 확인 되었습니다. \n'
+                .'탁송서비스 예약이 완료되었습니다. \n'
+                .'탁송팀 에서는 해당 예약내용을 확인해 주세요. \n'
+                .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
+                .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                .'ㅁ 차량번호 : '.$data->car_no.' \n'
+                ."ㅁ 탁송예정일 : ".$formattedDate." \n"
+                ."ㅁ 탁송출발지 : ".$data->addr_post." ".$data->addr1." ".$data->addr2." \n";
+
+                // $link = [
+                //     "url" => url('/auction/'.$data->hashid),
+                //     "text" => '탁송서비스 예약확인'
+                // ];
+
+                break;
 
             case 'AuctionTotalDepositMissJob':
 
@@ -605,9 +674,9 @@ class NotificationTemplate
                 $message = 
                 '차량 탁송이 완료되었습니다. \n'
                 .'영업일 기준 2일 내 명의이전이 완료될 예정입니다.'.config('app.name').'에서 이전등록증을 확인하실 수 있어요! \n'
-                .'※ 보험은 명의이전이 완료된 후 해지해주세요. \n'
+                .'※ 보험은 명의이전이 완료된 후 해지 부탁드립니다. \n'
                 .'※ 보험 만기 예정이시거나, 신차 구매로 보험 승계가 필요하시다면 단기 책임보험에 가입하여 보험 유지를 부탁드립니다. \n'
-                .'추가로 궁금한 점이 있으시다면 아래 [자주묻는 질문] 버튼을 눌러 확인 해주세요. \n'
+                .'추가로 궁금한 점이 있으시다면 아래 [자주묻는 질문] 버튼을 눌러 확인 부탁드립니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
@@ -624,19 +693,23 @@ class NotificationTemplate
 
                 $title = $data->car_no.' 차량 탁송이 완료되었습니다.';
 
+                // 수수료 계산방법 내용 필요함
+                $total_fee = FormatHelper::formatPriceToMan(number_format(15)); // 임시금액
+
                 $message = 
                 $data->car_no.' 차량 탁송이 완료되었습니다. \n'
-                .'영업일 기준 2일 내 명의이전을 등록해 주세요.'.config('app.name').'에서 이전등록증을 등록해 주세요! \n'
-                .'※ 보험은 명의이전이 완료된 후 해지해주세요. \n'
-                .'※ 보험 만기 예정이시거나, 신차 구매로 보험 승계가 필요하시다면 단기 책임보험에 가입하여 보험 유지를 부탁드립니다. \n'
-                .'추가로 궁금한 점이 있으시다면 아래 [자주묻는 질문] 버튼을 눌러 확인 해주세요. \n'
+                .'수수료 입금 내용을 확인 해 주세요. \n'
+                .'영업일 기준 2일 내 [이전등록증]을 등록해 주세요. \n'
+                .'※ 이전등록증 등록후 경매가 완료됩니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
-                .'ㅁ 차량번호 : '.$data->car_no.' \n';
+                .'ㅁ 차량번호 : '.$data->car_no.' \n'
+                ."ㅁ 수수료 : ".$total_fee." \n"
+                ."ㅁ 계좌번호 : - \n";
                 
                 $link = [
                     "url" => url('/auction/'.$data->hashid),
-                    "text" => '자주묻는 질문'
+                    "text" => '이전등록증 등록'
                 ];
 
                 break;
@@ -700,6 +773,73 @@ class NotificationTemplate
 
                 break;
 
+
+            // 클래임 알림
+            case 'ClaimAdminJob':
+
+                $auction = Auction::find($data->extra1);
+
+                $title = $auction->car_no.' 클레임 알림';
+
+                $message = 
+                $auction->car_no.' 클레임 알림 \n'
+                .'ㅁ 게시글 제목 : '.$data->title.' \n'
+                .'ㅁ 게시글 내용 : '.$data->content.' \n';
+                
+                $link = [
+                    "url" => url('/board/claim'),
+                    "text" => '바로가기'
+                ];
+
+                break;
+
+
+            case 'ClaimAdminUpdateJob':
+
+                $title = $data->car_no.' 클레임 상태 변경 알림';
+
+                $message = 
+                $data->car_no.' 클레임 상태 변경 알림 \n'
+                .'ㅁ 게시글 제목 : '.$data->title.' \n'
+                .'ㅁ 게시글 내용 : '.$data->content.' \n'
+                .'ㅁ 상태 : '.$data->category.' \n';
+
+                $link = [
+                    "url" => url('/board/claim'),
+                    "text" => '바로가기'
+                ];
+
+                break;
+
+            case 'ClaimCommentJob':
+                
+                    $title = '댓글 클레임 알림';
+
+                    $message = 
+                    '댓글 클레임 알림 \n'
+                    .'ㅁ 내용 : '.$data->content.' \n';
+                    
+                    $link = [
+                        "url" => url('/board/claim'),
+                        "text" => '바로가기'
+                    ];
+
+                break;
+
+            case 'ClaimCommentUpdateJob':
+                
+                    $title = '댓글 수정 클레임 알림';
+
+                    $message = 
+                    '댓글 수정 클레임 알림 \n'
+                    .'ㅁ 내용 : '.$data->content.' \n';
+                    
+                    $link = [
+                        "url" => url('/board/claim'),
+                        "text" => '바로가기'
+                    ];
+
+                break;
 
 
             case 'basic':

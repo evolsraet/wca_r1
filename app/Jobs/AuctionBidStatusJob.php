@@ -90,6 +90,15 @@ class AuctionBidStatusJob implements ShouldQueue
             $notificationTemplate = NotificationTemplate::getTemplate('AuctionBidStatusJobReauction', $this->auction, ['mail']);
             $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
 
+        } else if($this->status == 'delete'){
+
+            // 딜러정보 
+            $dealer = User::find($this->result);
+            $this->auction['dealer'] = $dealer;
+            
+            $notificationTemplate = NotificationTemplate::getTemplate('AuctionBidStatusJobDelete', $this->auction, ['mail']);
+            $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
+
         }
 
     }

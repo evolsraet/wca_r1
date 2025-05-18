@@ -49,6 +49,12 @@ class AuctionTotalDepositJob implements ShouldQueue
             $user = User::find($this->user);
             $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
 
+        }else if($this->type == 'taksong'){
+
+            $notificationTemplate = NotificationTemplate::getTemplate('AuctionTotalDepositJobTaksong', $this->auction, ['mail']);
+            $user = User::find($this->user);
+            $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
+
         }
 
 

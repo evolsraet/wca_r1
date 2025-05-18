@@ -54,6 +54,7 @@
                         <li class="col"><a href="#" @click="setCurrentTab('dealerInfo')" :class="{ active: currentTab === 'dealerInfo' }">딜러 정보</a></li>
                         <li class="col"><a href="#" @click="setCurrentTab('pastAuctions')" :class="{ active: currentTab === 'pastAuctions' }">지난 낙찰건</a></li>
                         <li class="col"><a href="#" @click="setCurrentTab('scsbidInfo2')" :class="{ active: currentTab === 'scsbidInfo2' }">유찰</a></li>
+                        <li class="col"><a href="#" @click="setCurrentTab('scsbidInfo3')" :class="{ active: currentTab === 'scsbidInfo3' }">후기</a></li>
                     </ul>
                 </div>
             </div>
@@ -239,6 +240,75 @@
                 </div>
             </div>
 
+
+            <!-- 후기 -->
+            <div class="p-3" v-if="currentTab === 'scsbidInfo3'">
+                <div class="enter-view mt-3 mb-2">
+                    <h5>후기</h5>
+                </div>
+                <span class="text-secondary opacity-50">딜러에 대한 후기들이에요.</span>
+                <!--
+                <div v-if="filteredViewBids.length == 0">
+                    <p class="tc-primary bold-18-font my-2">낙찰 받은 매물이 없습니다.</p>
+                </div>
+                -->
+                <div class="container my-4">
+                    <div class="row">
+                        
+                        <!--<div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auctionsDoneData in filteredDone" :key="auctionsDoneData.id" @click="navigateToDetail(auctionsDoneData)" :style="getAuctionStyle(auctionsDoneData)">-->
+                        <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="(bid, index) in auctionsDoneData" :key="bid.id" @click="navigateToDetail(bid)" :style="getAuctionStyle(bid)">
+                            <div class="card my-auction">
+                                <div class="card-img-top-placeholder grayscale_img">
+                                    <div v-if="bid.car_thumbnail">
+                                        <img v-if="bid.car_thumbnails" :src="bid.car_thumbnails[0]">
+                                        <img v-else="bid.car_thumbnail" :src="bid.car_thumbnail">
+                                    </div>
+                                    <div v-else>
+                                        <img  src="../../../../img/car_example.png">
+                                    </div>
+                                </div>
+                                <span v-if="bid.status === 'done'" class="mx-2 auction-done">경매완료</span>
+                                <div class="card-body">
+                                    <!--<h5 class="card-title"><span class="blue-box">무사고</span>{{bid.car_no}}</h5>-->
+                                    <h5 class="card-title">{{bid.car_model ? bid.car_model +' '+ bid.car_model_sub +' '+ bid.car_fuel + '('+ bid.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑'}}</h5>
+                                    <h5>[ {{bid.car_no}} ]</h5>
+                                    <p>{{bid.car_year ? bid.car_year +'년' : '2020년'}} | {{bid.car_km ? bid.car_km +'km' : '2.4km'}} | {{ isAccident(bid.is_accident) }}</p>
+                                    <div class="d-flex justify-content-between">
+                                        <!-- <div>
+                                            <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
+                                        </div> -->
+                                        <!--<p class="tc-primary">{{ amtComma(review.auction.win_bid.price) }}</p>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-if="!isData" class="complete-car my-3">
+                            <div class="card my-auction mt-3">
+                                <div class="none-complete">
+                                    <span class="text-secondary opacity-50">낙찰 받은 매물이 없습니다.</span>
+                                </div>
+                            </div>
+                        </div>
+                        <nav>
+                            <ul class="pagination justify-content-center">
+                                <li class="page-item" :class="{ disabled: !pagination.prev }">
+                                    
+                                    <a class="page-link prev-style" @click="loadPage( pagination.current_page - 1, pagination)"></a>
+                                </li>
+                                <li v-for="n in pagination.last_page" :key="n" class="page-item" :class="{ active: n === pagination.current_page }">
+                                    <a class="page-link" @click="loadPage( n , pagination)">{{ n }}</a>
+                                </li>
+                                <li class="page-item next-prev" :class="{ disabled: !pagination.next }">
+                                    <a class="page-link next-style" @click="loadPage( pagination.current_page + 1, pagination)"></a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+
+
         </div>
     </div>
     <Footer />
@@ -254,6 +324,7 @@ import Footer from "@/views/layout/footer.vue"
 import profileDom from '/resources/img/profile_dom.png'; 
 import useLikes from '@/composables/useLikes';
 import { useRouter } from 'vue-router';
+import { initReviewSystem } from '@/composables/review';
 
 const router = useRouter();
 const photoUrl = ref(profileDom);
@@ -261,6 +332,7 @@ const currentTab = ref('dealerInfo');
 const store = useStore();
 const { getDoneAuctions, pagination, isAccident, getIngAuctions } = useAuctions(); // 경매 관련 함수를 사용
 const { getMyLikesCount } = useLikes();
+const { getAllReview , reviewsData , splitDate, reviewPagination, getUserReview } = initReviewSystem(); 
 const { bidsData, bidsCountByUser, getHomeBids, getBidsByUserId } = useBid();
 const { getUser } = useUsers();
 const myBidCount = ref(0);
@@ -351,6 +423,8 @@ onMounted(async () => {
     getIngAuctionsByBidsNum(AuctionsNumList);
     console.log('ing',auctionsIngData);
 
+    getReviewData();
+
 });
 
 const getDoneAuctionsByBidsNum = async(numList) =>{
@@ -373,6 +447,12 @@ const getIngAuctionsByBidsNum = async(AuctionsNumList) =>{
     }else{
         isIngData = false;
     }
+}
+
+const getReviewData = async(page = 1) => {
+    console.log('user.value.id',user.value.id);
+    const reviewData = await getUserReview(user.value.id, page);
+    console.log('reviewData11111',reviewData);
 }
 
 function navigateToDetail(auction) {

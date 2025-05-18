@@ -7,7 +7,7 @@
         <button class="btn btn-primary btn-sm" @click="updateAuction(auctionId, auction)">저장</button>
       </div>
       <div style="margin-right: 5px;"> 
-        <button class="btn btn-success btn-sm" @click="diagAuction('diag')">진단대기</button>
+        <button class="btn btn-success btn-sm" @click="updateAuction(auctionId, {'status': 'diag'})">진단대기</button>
       </div>
       <div class="dropdown">
         <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -15,9 +15,9 @@
         </button>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item" href="#" @click="updateAuction(auctionId, {'status': 'ing'})">경매진행</a></li>
-          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalDeposit')">차량대금 입금확인</a></li>
+          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalDeposit')">차량대금 입금처리</a></li>
           <li><a class="dropdown-item" href="#" @click="checkNameChangeDealerEvent(auction.hashid)">명의이전 알림(딜러)</a></li>
-          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalAfterFee')">수수료 입금확인</a></li>
+          <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalAfterFee')">수수료 입금처리</a></li>
           <li><a class="dropdown-item" href="#" @click="checkNameChangeStatusEvent(auction.hashid)">명의이전신청 확인</a></li>
           <li><a class="dropdown-item" href="#" @click="DiagnosticAuctionCheck(auction.hashid)">진단상태확인</a></li>
         </ul>

@@ -10,6 +10,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use App\Http\Resources\ArticleResource;
+use App\Jobs\ClaimJob;
+use App\Models\User;
 
 class ArticleService
 {
@@ -115,6 +117,12 @@ class ArticleService
                 $validateCondition['title'] = 'required|string|max:255';
 
                 if ($this->board->id === 'claim') {
+
+                    // 운영자에게 알림 전송
+                    $adminId = config('services.claim_admin.admin_id');
+                    Log::info('[클레임] 알림 전송 ' . $data->id, ['data' => $data, 'adminId' => $adminId]);
+                    ClaimJob::dispatch($adminId, $data, 'admin');
+
                     $validateCondition['extra1'] = 'required|numeric';
                 } elseif ($this->board->categories) {
                     $validateCondition['category'] = 'required|string';
@@ -146,6 +154,19 @@ class ArticleService
                 // 관리자 또는 본인 글만 수정삭제 가능
                 if (!auth()->user()->can('act.admin') && $article->user_id != auth()->user()->id) {
                     throw new \Exception('관리자나 본인 글만 수정삭제 가능합니다.');
+                }
+
+
+                if ($this->board->id === 'claim') {
+
+                    // 운영자에게 알림 전송
+                    $adminId = config(key: 'services.claim_admin.admin_id');
+                    Log::info('[클레임] 수정 알림 전송 ' . $data->id, ['data' => $data, 'adminId' => $adminId]);
+                    ClaimJob::dispatch($adminId, $data, 'adminUpdate');
+
+                    $validateCondition['extra1'] = 'required|numeric';
+                } elseif ($this->board->categories) {
+                    $validateCondition['category'] = 'required|string';
                 }
 
                 break;

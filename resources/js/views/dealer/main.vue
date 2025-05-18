@@ -6,7 +6,7 @@
                     <div class="styled-div mt-0">
                         <h1 class="centered-text fade-in" :class="{ 'fade-in-active': isVisible }">
                             현재 진행중인 경매가
-                            <span class="ms-2 underline">{{ ingCount }} 건</span> 있어요.
+                            <span class="ms-2 underline">{{ ingCount ? ingCount : 0 }} 건</span> 있어요.
                         </h1>
                         
                     <swiper

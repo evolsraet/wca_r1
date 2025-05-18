@@ -106,16 +106,7 @@
   
                           </div>
                           <div v-else id="no-image" class="d-flex">
-                            <div class="w-50">
-                              <div class="card-img-top-ty02">
-                                <img :src="auctionDetail.data.car_thumbnail" alt="Car Image">
-                                <!-- <img src="../../../../img/no-image.png" alt="Car Image"> -->
-                              </div>
-                            </div>
-                            <!-- <div class="w-50 d-flex flex-column gap-1">
-                              <div class="card-img-top-ty02 h-50 left-image background-auto"></div>
-                              <div class="card-img-top-ty02 h-50 right-image background-auto"></div>
-                            </div> -->
+                            <img :src="auctionDetail.data.car_thumbnail" alt="Car Image" style="width: 100%; height: 100%; object-fit: cover;">
                           </div>
                         </div>
                         <div v-if="isMobileView">
@@ -143,7 +134,9 @@
   
                           </div>
                           <div id="no-image" class="d-flex" v-else>
-                            <div class="card-img-top-ty02"></div>
+                            <div class="card-img-top-ty02">
+                              <img :src="auctionDetail.data.car_thumbnail" alt="Car Image" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -187,7 +180,7 @@
                       <div v-if="auctionDetail.data.status === 'chosen' && isDealer">
                         <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openCarLicenseModal">자동차등록증</p>
                       </div>
-                      <div v-if="auctionDetail.data.status === 'dlvr' || auctionDetail.data.status === 'dlvrDone' && isUser" class="mt-4">
+                      <div v-if="(auctionDetail.data.status === 'dlvr' || auctionDetail.data.status === 'dlvrDone') && isUser" class="mt-4">
                         <div>
                           <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">매수자 사업자등록증</p>
                         </div>
@@ -210,7 +203,7 @@
                 <CarInfoItem label="차대번호" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_car_id ? diagnosticResult.diag_car_id : '-'  : '-'" />
                 <CarInfoItem label="차량번호" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_car_no ? diagnosticResult.diag_car_no : '-' : '-' " />
                 <CarInfoItem label="최초등록일" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_registred_date ? diagnosticResult.diag_registred_date :'-' : '-' " />
-                <CarInfoItem label="주행거리" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_distance ? diagnosticResult.diag_distance + ' km' : '-' : '-' " />
+                <CarInfoItem label="주행거리" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_distance ? diagnosticResult.diag_distance.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',') + ' km' : '-' : '-' " />
   
                 <CarInfoItem label="엔진형식" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_car_id ? carDetails.engineType : '-' : '-' " />
                 <CarInfoItem label="미션" :value="auctionDetail.data.status !== 'diag' ? diagnosticResult.diag_mission ? diagnosticResult.diag_mission : '-' : '-' " />
@@ -260,14 +253,14 @@
               >
                 추가옵션
                 <img
-                  :src="openSection === 'general_1' ? iconUp : iconDown"
+                  :src="openSection.includes('general_1') ? iconUp : iconDown"
                   alt="Dropdown Icon"
                   class="dropdown-icon"
                   width="14"
                 />
               </button>
               <transition name="slide">
-              <div v-show="openSection === 'general_1'" class="dropdown-content mt-0 p-4">
+              <div v-show="openSection.includes('general_1')" class="dropdown-content mt-0 p-4">
                 <div v-html="diagnosticResult.diag_base_option ? diagnosticResult.diag_base_option : '내용이 없습니다.'" id="diag_base_option" class="html-table-wrapper">
                 </div>
               </div>
@@ -282,14 +275,14 @@
               >
                 기타옵션
                 <img
-                  :src="openSection === 'general_2' ? iconUp : iconDown"
+                  :src="openSection.includes('general_2') ? iconUp : iconDown"
                   alt="Dropdown Icon"
                   class="dropdown-icon"
                   width="14"
                 />
               </button>
               <transition name="slide">
-                <div v-show="openSection === 'general_2'" class="dropdown-content mt-0 p-4">
+                <div v-show="openSection.includes('general_2')" class="dropdown-content mt-0 p-4">
                   {{ diagnosticResult.diag_add_option? diagnosticResult.diag_add_option : '내용이 없습니다.' }}
                 </div>
               </transition>
@@ -345,26 +338,26 @@
             <!-- <div class="contour-style"></div> -->
   
   
-            <div class="dropdown border-bottom" v-if="auctionDetail.data.status === 'ing' || auctionDetail.data.status === 'dlvr' || auctionDetail.data.status === 'done'">
+            <div class="dropdown border-bottom" v-if="auctionDetail.data.status === 'ing' || auctionDetail.data.status === 'dlvr' || auctionDetail.data.status === 'chosen' || auctionDetail.data.status === 'done'">
                 <button
                   class="dropdown-btn ps-3 d-flex justify-content-between align-items-center"
                   @click="toggleDropdown('carinfo')"
                 >
                   차량 세부정보
                   <img
-                    :src="openSection === 'carinfo' ? iconUp : iconDown"
+                    :src="openSection.includes('carinfo') ? iconUp : iconDown"
                     alt="Dropdown Icon"
                     class="dropdown-icon"
                     width="14"
                   />
                 </button>
                 <transition name="slide">
-                <div v-show="openSection === 'carinfo'" class="mt-0 p-4">
+                <div v-show="openSection.includes('carinfo')" class="mt-0">
                   
                   <div id="car-history-detail">
               <!-- 차량 세부 정보 내용 -->
   
-                  <div class="container px-4 py-5">
+                  <div class="container px-3 py-5">
                     <h5>이력</h5>
                     <div class="p-4 rounded text-body-emphasis bg-body-secondary">
                       <ul class="mt-0 machine-inform-title">
@@ -683,25 +676,71 @@
               </BottomSheet02>
             </div>
             <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen' || auctionDetail.data.status == 'dlvrDone') && scsbid">
+
+
+              <div v-if="(auctionDetail.data.status == 'chosen') && scsbid" class="mb-4">
+
+                
+                <div class="d-flex justify-content-between align-items-baseline">
+                  <h4 class="custom-highlight">탁송전 진행상황</h4>
+                </div>
+                
+                <div class="sheet-content" style="width: 100% !important;">
+                  <div class="container">
+                    <div class="content" style="padding: 0px !important; margin: 0px !important; padding-top: 10px !important;">
+                      <div class="steps-container mb-3">
+                        <div :class="auctionDetail.data.taksong_wish_at === null ? 'step completed' : 'step completed'">
+                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label completed' : 'label completed'">STEP01</div>
+                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label label-style text-secondary opacity-50' : 'label label-style text-secondary opacity-50'">선택완료</div>
+                        </div>
+                        <div :class="auctionDetail.data.taksong_wish_at === null ? 'line completed' : 'line completed'"></div>
+                        <div :class="auctionDetail.data.taksong_wish_at === null ? 'step completing' : 'step completed'">
+                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label completed' : 'label completed'">STEP02</div>
+                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label label-style tc-gray completing-text' : 'label label-style text-secondary opacity-50'">판매자 탁송정보입력</div>
+                        </div>
+                        <div :class="auctionDetail.data.taksong_wish_at === null ? 'line' : 'line completed'"></div>
+                        <div :class="auctionDetail.data.taksong_wish_at === null ? 'step' : 'step completed'">
+                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label' : 'label completed'">STEP03</div>
+                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label label-style02 text-secondary opacity-50' : 'label label-style tc-gray completing-text'">구매자<br> 탁송하기</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <p class="auction-deadline text-center mt-2">
+                  {{auctionDetail.data.taksong_wish_at === null ? '판매자가 탁송정보를 입력중 입니다.' : auctionDetail.data.taksong_id === null ? '판매자가 탁송정보를 입력했습니다.' : '구매자가 탁송 신청 했습니다. 차량대금 입금이 완료 되면 탁송이 시작 됩니다.'}}
+                </p>
+              </div>
+              
   
-              <div class="mb-3">
+              <div class="mb-5" v-if="auctionDetail.data.taksong_wish_at === null && isUser">
                 <!-- <button class="border-6 btn-fileupload my-4 shadow02 text-secondary opacity-50" @click="AttachedInform">딜러 첨부파일</button> -->
-                <button v-if="auctionDetail.data.taksong_wish_at === null && isUser" @click="showModal2" class="btn btn-primary w-100">탁송일 입력하기</button>
+                <button @click="showModal2" class="btn btn-primary w-100">탁송일 입력하기</button>
                 <!--<button class="border-6 btn-fileupload my-4 shadow02"><a :href=fileSignUrl download class="text-secondary opacity-50">매도용 인감증명서 다운로드</a></button>-->
               </div>
   
-               <div class="d-flex justify-content-between align-items-baseline">
+              
+               <div class="d-flex justify-content-between align-items-baseline" v-if="auctionDetail.data.is_taksong !== 'done' && auctionDetail.data.taksong_wish_at !== null">
                 <h4 class="custom-highlight">탁송 신청 정보</h4>
               </div>
-              <div class="text-start mt-2">
+              <div class="text-start mt-2" v-if="auctionDetail.data.is_taksong !== 'done' && auctionDetail.data.taksong_wish_at !== null">
                 <p class="text-secondary ">낙&nbsp;&nbsp;  찰&nbsp;&nbsp;  액 : <span class="tc-red ms-1 fw-bold">{{auctionDetail.data.final_price}} 만원</span></p>
                 <p class="text-secondary ">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p>
-                <p class="text-secondary ">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.taksong_wish_at}}</span></p>
+                <p class="text-secondary ">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :<span class="tc-red ms-1 fw-bold">{{ auctionDetail.data.taksong_wish_at?.substring(0, 16) }}</span></p>
                 <p class="text-secondary ">장&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 소 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.addr1}}</span></p>
               </div>
-  
-  
-              <div v-if="auctionDetail.data.is_taksong === 'ask' || auctionDetail.data.is_taksong === 'start' || auctionDetail.data.is_taksong === 'ing' || auctionDetail.data.is_taksong === 'done'">
+
+              <div v-if="isDealer">
+                <div class="d-flex justify-content-between align-items-baseline pt-4">
+                  <h4 class="custom-highlight">경락 확인서</h4>
+                </div>
+                <div class="d-flex justify-content-between align-items-baseline">
+                    경락확인서를 확인 하세요.
+                </div>
+                <button class="my-2 btn btn-outline-primary w-100 mt-4" @click="openDoneModal(auctionId)">경락 확인서</button>
+              </div>
+
+              <div v-if="auctionDetail.data.is_taksong === 'ask' || auctionDetail.data.is_taksong === 'start' || auctionDetail.data.is_taksong === 'ing'">
   
                 <div class="d-flex justify-content-between align-items-baseline pt-4">
                   <h4 class="custom-highlight">탁송 상태 정보</h4>
@@ -709,9 +748,9 @@
   
                 <div class="text-start mt-2">
                 <p class="text-secondary ">상태 :<span class="tc-red ms-1 fw-bold">
-                  {{auctionDetail.data.is_taksong === 'ask' ? '대기중' : auctionDetail.data.is_taksong === 'ing' ? '탁송중' : '탁송완료'}}
+                  {{auctionDetail.data.is_taksong === 'ask' ? '대기중' : auctionDetail.data.is_taksong === 'start' ? '탁송중' : auctionDetail.data.is_taksong === 'ing' ? '탁송중' : '탁송완료'}}
                 </span></p>
-                <p class="text-secondary ">탁송 기사 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_courier_name}} / {{auctionDetail.data.taksong_courier_mobile}}</span></p>
+                <p class="text-secondary ">탁송 기사 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_courier_name ? auctionDetail.data.taksong_courier_name+' / ' : '' }}  {{auctionDetail.data.taksong_courier_mobile ? auctionDetail.data.taksong_courier_mobile : '미정'}}</span></p>
                 <p class="text-secondary ">출발 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_departure_address}}</span></p>
                 <p class="text-secondary ">도착 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_dest_address}}</span></p>
                 <p class="text-secondary ">출발 시간 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_departure_at}}</span></p>
@@ -756,9 +795,9 @@
                     <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCompanyLicense" ref="fileInputRefCompanyLicenseBtn">
                       파일 첨부
                     </button>
-                    <div class="text-start text-secondary opacity-50 mt-2" v-if="fileAuctionCompanyLicenseName">명의이전 서류: <a :href="fileAuctionCompanyLicenseUrl" target="_blank">{{ fileAuctionCompanyLicenseName }}</a></div>
+                    <div class="text-start text-secondary opacity-50 mt-2" v-if="fileAuctionCompanyLicenseName">명의이전 서류: {{ fileAuctionCompanyLicenseName }}</div>
   
-                    <button type="button" class="btn btn-primary w-100 mt-3" @click="requestedFileUpload" :disabled="fileAuctionCompanyLicenseName !== ''">첨부하기</button>
+                    <button type="button" class="btn btn-primary w-100 mt-3" @click="requestedFileUpload" :disabled="auctionDetail.data.has_uploaded_name_change_file">첨부하기</button>
   
                   </div>
   
@@ -771,10 +810,19 @@
               </div>
   
               <div v-if="isUser">
-                <div class="d-flex justify-content-between align-items-baseline mt-4">
+
+                <div v-if="auctionDetail.data.is_taksong == 'done' && auctionDetail.data.has_uploaded_name_change_file != '1'">
+                  <div class="dropdown-content" style="border-radius: 15px;">
+                    <div class="text-start">
+                      구매자가 명의 이전 진행중입니다.<br/> 영업일 기준 2일 내 명의이전이 완료될 예정입니다.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-baseline mt-4" v-if="auctionDetail.data.is_taksong !== 'done'">
                   <h4 class="custom-highlight">탁송 전, 준비해 주세요</h4>
                 </div>
-                <div>
+                <div v-if="auctionDetail.data.is_taksong !== 'done'">
                   <!-- <p class="text-secondary ">차에 있는 짐 빼기</p> -->
                   
                   <div class="dropdown border-bottom">
@@ -784,14 +832,14 @@
                     >
                     <span>1. 차에 있는 짐 빼기</span>
                       <img
-                        :src="openSection === 'general1' ? iconUp : iconDown"
+                        :src="openSection.includes('general1') ? iconUp : iconDown"
                         alt="Dropdown Icon"
                         class="dropdown-icon"
                         width="14"
                       />
                     </button>
                     <transition name="slide">
-                    <div v-show="openSection === 'general1'" class="dropdown-content mt-0 p-4" style="border-radius: 15px;">
+                    <div v-show="openSection.includes('general1')" class="dropdown-content mt-0 p-4" style="border-radius: 15px;">
   
                       <h4 class="text-secondary mt-3 mb-3 text-center">자주 분실하는 물건이에요!</h4>
   
@@ -850,14 +898,14 @@
                     >
                     <span>2. 필수서류 준비하기</span>
                       <img
-                        :src="openSection === 'general2' ? iconUp : iconDown"
+                        :src="openSection.includes('general2') ? iconUp : iconDown"
                         alt="Dropdown Icon"
                         class="dropdown-icon"
                         width="14"
                       />
                     </button>
                     <transition name="slide">
-                    <div v-show="openSection === 'general2'" class="dropdown-content mt-0 p-4" style="border-radius: 15px;">
+                    <div v-show="openSection.includes('general2')" class="dropdown-content mt-0 p-4" style="border-radius: 15px;">
                         <div class="font-size-14 font-weight-bold">탁송기사님 도착 전까지, <br/>아래 2가지 서류를 준비해주세요.</div>
                         <div class="d-flex justify-content-between mt-3">
                           <div style="width: 45%;">
@@ -880,8 +928,9 @@
   
                 </div>
   
-                <div class="d-flex justify-content-between align-items-baseline mt-4">
-                  <h4 class="custom-highlight">매수자 정보</h4>
+                <div class="mt-4">
+                  <h4 class="">매수자 정보</h4>
+                  <p class="text-danger">본인서명 사실 확인서 (자동차매도용) 발금정보</p>
                 </div>
   
                 <div class="dropdown-content" style="border-radius: 15px;">
@@ -904,14 +953,14 @@
                   >
                   <span>본인서명사실확인서(매도용 인감증명서) 전자 발급 가능한가요?</span>
                     <img
-                      :src="openSection === 'general3' ? iconUp : iconDown"
+                      :src="openSection.includes('general3') ? iconUp : iconDown"
                       alt="Dropdown Icon"
                       class="dropdown-icon"
                       width="14"
                     />
                   </button>
                   <transition name="slide">
-                  <div v-show="openSection === 'general3'" class="dropdown-content mt-0 p-4" style="border-radius: 15px;">
+                  <div v-show="openSection.includes('general3')" class="dropdown-content mt-0 p-4" style="border-radius: 15px;">
                     아닙니다.<br/>
                     전자 발급 서류는 사용할 수 없습니다.<br/>
                     자동차 매도용은 <span class="tc-red">주민센터 방문</span>하여 발급받은 원본만 가능합니다.<br/>
@@ -993,7 +1042,7 @@
                 </div>
                 <button v-if="destAddrBtn"
                   class="my-4 btn-primary btn w-100"
-                  @click="dealerAddrCompetion"
+                  @click="dealerAddrCompetion" :disabled="auctionDetail.data.taksong_wish_at === null"
                 >
                       <p>탁송하기</p>
                     </button>
@@ -1007,7 +1056,7 @@
                               <button type="button" class="mb-1 btn-close" @click="closeAddr"></button>
                             </div>
                             <p>원하시는 탁송지를 선택해주세요.</p>
-                            <a href="/addr" class="fs-6 tc-gray link-hov">다른 주소지로 변경, 추가를 원하시나요?</a>
+                            <a href="/addr" class="fs-6 tc-gray link-hov text-decoration-underline text-danger">다른 주소지로 변경, 추가를 원하시나요?</a>
                           </div>
                           <div class="p-0 scrollable-content mt-4" ref="scrollableContent"></div>
                           <div class="card-footer">
@@ -1145,7 +1194,7 @@
                           </div>
                            <!-- 딜러 선택시 모달 -->
                       
-                          <BottomSheet02 class="container" v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
+                          <BottomSheet02 class="container dealer-bottom-sheet" v-if="!showReauctionView" initial="half" :dismissable="true" style="position: fixed !important;">
                             <button type="button" class="btn btn-dark d-flex align-items-center justify-content-center gap-1" @click="toggleView">재경매 하기<div class="icon-up-wh">&nbsp;</div></button>
                           </BottomSheet02>
                          <!-- <BottomSheet03 initial="half" :dismissable="true" v-if="showReauctionView &&isUser" class="p-0 filter-content">
@@ -1486,7 +1535,7 @@
   const lowestBid = ref(0);
   const fileUserSignData = ref({});
   const currentPage = ref(1);
-  const openSection = ref('general');
+  const openSection = ref([]);
   const carHistoryCrash = ref({});
   const niceDnrHistory = ref({});
   const auctionLocation = ref({});
@@ -1925,7 +1974,7 @@
   
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">경매회차</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;"></td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.auction_count ? detailInfo.auction_count : '-'}</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">경매일</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${created_at_view ? created_at_view : '-'}</td>
               </tr>
@@ -1943,7 +1992,7 @@
               </tr>
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">배기량</td>
-                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;"></td>
+                <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${diagnosticResult.value.diag_displacement ? diagnosticResult.value.diag_displacement : '-'}</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">계기판주행</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 30%;">${detailInfo.car_km ? detailInfo.car_km + ' km' : '-'}</td>
               </tr>
@@ -1998,7 +2047,7 @@
               <tr>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 20%;">주소</td>
                 <td style="padding: 8px; border: 1px solid #ddd; width: 80%;" colspan="3">
-                  (${detailInfo.dealer.company_post}) ${detailInfo.dealer.company_addr1} ${detailInfo.dealer.company_addr2}
+                  (${detailInfo.dest_addr_post ? detailInfo.dest_addr_post : detailInfo.dealer.company_post}) ${detailInfo.dest_addr1 ? detailInfo.dest_addr1 : detailInfo.dealer.company_addr1} ${detailInfo.dest_addr2 ? detailInfo.dest_addr2 : detailInfo.dealer.company_addr2}
                 </td>
               </tr>
           </table>
@@ -2159,26 +2208,30 @@
   const openDealerLicenseModal = () => {
   
     console.log('auctionDetail.value.data.top_bids',auctionDetail.value);
-    const winBid = auctionDetail.value.data.win_bid.id;
+    const winBid = auctionDetail.value.data.win_bid?.id;
   
-    const fileId = auctionDetail.value.data.top_bids.filter(bid => bid.id === winBid)[0].dealerfile.files.file_user_biz[0].id;
-    const fileName = auctionDetail.value.data.top_bids.filter(bid => bid.id === winBid)[0].dealerfile.files.file_user_biz[0].file_name;
-    
+    let fileId, fileName;
+    if (winBid) {
+      const winningBid = auctionDetail.value.data.top_bids.find(bid => bid.id === winBid);
+      if (winningBid && winningBid.dealerfile && winningBid.dealerfile.files && winningBid.dealerfile.files.file_user_biz) {
+        fileId = winningBid.dealerfile.files.file_user_biz[0]?.id;
+        fileName = winningBid.dealerfile.files.file_user_biz[0]?.file_name;
+      }
+    }
+  
     let dealerLicenseUrl = '';
-    if(fileId && fileName){
-      dealerLicenseUrl = '../media/' + fileId +'/' + fileName;
+    if (fileId && fileName) {
+      dealerLicenseUrl = `../media/${fileId}/${fileName}`;
     }
   
     let dealerLicenseHtml = '';
-  
-    if(dealerLicenseUrl){
+    if (dealerLicenseUrl) {
       dealerLicenseHtml = `<iframe
               src="${dealerLicenseUrl}" 
               width="100%"
               height="600px"
-              
           ></iframe>`;
-    }else{
+    } else {
       dealerLicenseHtml = '<div style="text-align: center; padding: 20px;">사업자등록증이 아직 등록되지 않았습니다.</div>';
     }
   
@@ -2775,14 +2828,17 @@
   const handleFileUploadCompanyLicense = (event) => {
     const file = event.target.files[0];
 
-    if(file){
-      wica.ntcn(swal)
-      .addClassNm('cmm-review-custom')
-      .icon('I')
-      .title(`파일이 선택되었습니다. 첨부하기를 클릭해 주세요.`)
-      .alert();
 
-    }
+    fileAuctionCompanyLicenseName.value = file.name;
+
+    // if(file){
+    //   wica.ntcn(swal)
+    //   .addClassNm('cmm-review-custom')
+    //   .icon('I')
+    //   .title(`파일이 선택되었습니다. 첨부하기를 클릭해 주세요.`)
+    //   .alert();
+
+    // }
 
   }
   
@@ -2953,8 +3009,16 @@
       fileAuctionCompanyLicenseName.value = result.data.media.name;
 
       if(result.data.media){
-        // 새로고침 
-        window.location.reload();
+
+        wica.ntcn(swal)
+        .icon('I')
+        .addClassNm('cmm-review-custom')
+        .addOption({ padding: 20})
+        .callback(function(result) {
+          window.location.reload();
+        })
+        .alert('명의이전이 확인되면 경매완료로 변경 됩니다.');
+
         // router.push({ name: 'AuctionDetail', params: { id: auctionDetail.value.data.id } });
       }
       
@@ -3137,10 +3201,7 @@
     if(auctionDetailData.status === 'ing' && isUser.value){
       startPolling();
     }
-  
-    if(auctionDetailData.status == 'done' && isDealer.value){
-      openDoneModal();
-    }
+
   
     if(auctionDetailData.status == 'chosen' && isDealer.value){
   
@@ -3362,12 +3423,19 @@
     showCarHistory.value = !showCarHistory.value;
   }
   
+  // const toggleDropdown = (section) => {
+  //   openSection.value = openSection.value === section ? null : section;
+  // };
+
   const toggleDropdown = (section) => {
-    openSection.value = openSection.value === section ? null : section;
+    const index = openSection.value.indexOf(section);
+    if (index > -1) {
+      openSection.value.splice(index, 1); // 이미 열려 있으면 닫기
+    } else {
+      openSection.value.push(section); // 없으면 추가해서 열기
+    }
   };
-  
-  // const 
-  
+
   </script>
   
   
@@ -3529,6 +3597,11 @@
     .inSlideContent {
       width:100%;
     }
+
+    .bid-content {
+      background-color: transparent;
+    }
+    
   }
   
   .carThumbnail img {
@@ -3554,5 +3627,11 @@
       height: 460px !important;
     }
   }
+
+
+  .dealer-bottom-sheet {
+    height: 100px !important;
+  }
+
   
   </style>

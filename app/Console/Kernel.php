@@ -58,7 +58,7 @@ class Kernel extends ConsoleKernel
             //     }
             // }
 
-            $auction = Auction::where('status', 'dlvr')->whereNotNull('is_taksong')->get();
+            $auction = Auction::whereIn('status', ['chosen','dlvr'])->whereNotNull('is_taksong')->where('is_taksong', '!=', 'done')->get();
             if($auction){
                 foreach($auction as $auctionStatus){
                     Log::info('[kernel 탁송 상태 확인]', ['auction' => $auctionStatus]);
@@ -97,13 +97,13 @@ class Kernel extends ConsoleKernel
         $schedule->call(function() {
             $auctionService = new AuctionService();
             $auctionService->auctionAfterFeeDone();
-        })->dailyAt('00:00');
+        })->dailyAt('09:00');
 
 
         $schedule->call(function() {
             $ownershipService = new OwnershipService(new ApiRequestService());
             $ownershipService->sendOwnershipAlertsAuto();
-        })->dailyAt('00:00');
+        })->dailyAt('09:00');
 
         $schedule->command('ownership:check')->hourly(); // 명의이전 확인 한시간 간격 / hourly
 

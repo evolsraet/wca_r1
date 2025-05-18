@@ -107,7 +107,7 @@
                 <th v-if="boardId === 'notice' && (isDealer || isUser)" class="px-6 py-3 bg-gray-50 text-left" style="width: 8%;">날짜</th>
                 <th v-if="boardId === 'claim'" class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">차량번호</th>
           
-                <th v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">수정/삭제</th>
+                <th v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-3 bg-gray-50 text-left" style="width: 15%;">보기/수정/삭제</th>
               </tr>
             </thead>
             <tbody>
@@ -126,7 +126,7 @@
               <tr 
                   v-for="(post, index) in posts" 
                   :key="post.id" 
-                  @click="handleRowClick(post.id)" 
+                  @click="handleRowClick(post.id, isMemberType)" 
                   class="pointer-cursor"
                 >
               <td v-if="boardId === 'notice' && (isDealer || isUser)">{{ index + 1 }}</td>
@@ -140,7 +140,10 @@
                 <td v-if="boardId !== 'notice' || (isUser && isDealer) || !isUser&&!isDealer" class="px-6 py-4 text-sm text-overflow" :class="{'clicked-row': selectedPostId === post.id, 'pointer-cursor': isClickableRow()}">{{ stripHtmlTags(post.content) }}</td>
                 <td v-if="boardId === 'claim'"><span class="blue-box mb-0 mx-0">{{ auctionDetails[post.extra1]?.data?.car_no || '' }}</span></td>
                 <td v-if="!isDealer && !isUser || boardId === 'claim'&& isDealer" class="px-6 py-4 text-sm" @click.stop>
-                  <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id }, query: { navigatedThroughHandleRowClick: false } }" class="badge">
+                  <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id }, query: { navigatedThroughHandleRowClick: true } }" class="badge">
+                    <div class="icon-doc-img"></div>
+                  </router-link>
+                  <router-link :to="{ name: 'posts.edit', params: { boardId, id: post.id }, query: { navigatedThroughHandleRowClick: false } }" class="ms-2 badge">
                     <div class="icon-edit-img"></div>
                   </router-link>
                   <a href="#" @click.stop class="ms-2 badge web_style">
@@ -217,6 +220,18 @@ const isUser = computed(() => user.value?.roles?.includes('user'));
 const filter = ref('all');
 const categoriesList = ref([]);
 const showModal = ref(false);
+
+// 회원이 어떤 상태 인지 체크 유저 = user, 딜러 = dealer, 관리자 = admin
+const isMemberType = computed(() => {
+  if(isDealer.value){
+    return 'dealer';
+  }else if(isUser.value){
+    return 'user';
+  }else{
+    return 'admin';
+  }
+});
+
 const setFilter = (selectedFilter) => {
   filter.value = selectedFilter;
   fetchPosts();  // 필터링된 게시물을 가져오기 위해 fetchPosts 호출
@@ -310,10 +325,15 @@ const updateOrdering = (column) => {
 };
 
 const navigatedThroughHandleRowClick = ref(false);
-const handleRowClick = (postId) => {
+const handleRowClick = (postId, isMemberType) => {
     hideButton.value = true;
     navigatedThroughHandleRowClick.value = true; 
-    router.push({ name: 'posts.edit', params: { boardId: boardId.value, id: postId }, query: { navigatedThroughHandleRowClick: true } });
+
+    if(isMemberType === 'admin'){      
+      router.push({ name: 'posts.edit', params: { boardId: boardId.value, id: postId }, query: { navigatedThroughHandleRowClick: false } });
+    }else{
+      router.push({ name: 'posts.edit', params: { boardId: boardId.value, id: postId }, query: { navigatedThroughHandleRowClick: true } });
+    }
 };
 
 const isClickableRow = () => {

@@ -1,6 +1,6 @@
 <template>
   <div></div>
-  <form @submit.prevent="submitForm">
+  <form @submit.prevent="submitForm" class="pt-2">
     <div class="row my-5 mov-wide m-auto">
       <div class="card border-0 shadow-none">
         <h4 class="mt-2">{{ boardText }}</h4>
@@ -8,6 +8,24 @@
           {{ boardTextMessage }}
         </p>
         <div class="card-body">
+
+          <div v-if="boardText === '클레임'">
+            <div class="mb-3">
+              <!-- <label for="post-title" class="form-label">경매 정보</label> -->
+              <div v-if="auctionCarInfo">
+                <p class="card-title fw-bolder">
+                    <!-- {{ auction.auction_type === '1' ? '공매' : '경매' }} -->
+                    {{ auctionCarInfo.car_model ? auctionCarInfo.car_model +' '+ auctionCarInfo.car_model_sub +' '+ auctionCarInfo.car_fuel + ' [ '+ auctionCarInfo.car_no +' ]' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}
+                </p>
+                <p class="tc-gray mt-0"> {{ auctionCarInfo.car_year ? auctionCarInfo.car_year : '2020' }} 년 |<span class="mx-1">{{ auctionCarInfo.car_km ? auctionCarInfo.car_km : '2.4' }}km</span></p>
+                <p class="tc-gray mt-0">{{ auctionCarInfo.car_maker ? auctionCarInfo.car_maker + ' ' + auctionCarInfo.car_model : '현대 소나타' }} ({{ auctionCarInfo.car_grade ? auctionCarInfo.car_grade : 'DN8' }})</p>
+              </div>
+              <div v-else>
+                <p>경매 정보를 불러오는 중입니다...</p>
+              </div>
+            </div>
+          </div>
+
           <div class="d-flex justify-content-end">
             <div>
               <button :disabled="isLoading" class="primary-btn">
@@ -19,6 +37,7 @@
               </button>
             </div>
           </div>
+          
           <!-- Category -->
           <div v-if="boardId === 'notice'" class="mb-3">
             <h6 class="mt-3">카테고리</h6>
@@ -49,10 +68,16 @@
         </button>
       </div>
       <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
-      <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">사진 파일: 
-        <a :href=boardAttachUrl download>{{ post.board_attach_name }}</a>
-        <span class="icon-close-img cursor-pointer" @click="triggerFileDelete()"></span>
+      <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">
+        사진 파일: <a :href="boardAttachUrl" download>{{ post.board_attach_name }}</a>
+        <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(post.fileUUID)"></span>
       </div>
+      <!-- <div v-if="boardAttachUrls.length" class="text-start text-secondary opacity-50">
+        <div v-for="(url, index) in boardAttachUrls" :key="index">
+          사진 파일: <a :href="url" download>{{ post.board_attach_names[index] }}</a>
+          <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(index)"></span>
+        </div>
+      </div> -->
    <!-- 비밀글 생성 <div class="p-0 my-3 d-flex gap-2">
       <p class="text-secondary opacity-70">비밀글: </p>
       <div class="d-flex align-items-center">
@@ -80,9 +105,14 @@ import { cmmn } from '@/hooks/cmmn';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
 import vSelect from 'vue-select';
+import useAuctions from '@/composables/auctions';
+import { initPostSystem } from "@/composables/posts";
 
 defineRule("required", required);
 defineRule("min", min);
+
+const { getPost, updatePost, categories, getBoardCategories, addCommentAPI, deleteComment, editComment } = initPostSystem();
+
 const isBizChecked = ref(false);
 const schema = {
   title: "required",
@@ -130,7 +160,11 @@ const router = useRouter();
 const route = useRoute();
 const boardId = route.params.boardId;
 const auctionId = route.params.auctionId; 
+// const boardAttachUrls = ref([]);
 const boardAttachUrl = ref('');
+const auctionCarInfo = ref('');
+const { getAuctionById } = useAuctions();
+
 function stripHtml(html) {
   let tmp = document.createElement("DIV");
   tmp.innerHTML = html;
@@ -150,6 +184,18 @@ const getBoardData = async () => {
     console.error('Error fetching board data:', error);
   }
 };
+
+const getAuctionCarInfo = async () => {
+  try {
+    const result = await getAuctionById(auctionId);
+    if (result && result.data) {
+      auctionCarInfo.value = result.data;
+    }
+  } catch (error) {
+    console.error('Error fetching auction car info:', error);
+  }
+};
+
 const validationErrors = reactive({
   category: '',
   title: '',
@@ -201,9 +247,6 @@ function submitForm() {
   });
 }
 
-
-
-
 const submitPost = async (postData) => {
   if (isLoading.value) return;
 
@@ -252,13 +295,20 @@ const submitPost = async (postData) => {
 };
 
 function handleFileUpload(event) {
+  // const files = event.target.files;
+  // if (files.length) {
+  //   post.board_attach = files;
+  //   post.board_attach_names = Array.from(files).map(file => file.name);
+  //   boardAttachUrls.value = Array.from(files).map(file => URL.createObjectURL(file));
+  // }
+
   const file = event.target.files[0];
   if (file) {
     post.board_attach = file;
     post.board_attach_name = file.name;
     boardAttachUrl.value = URL.createObjectURL(file);
-    //console.log("Certification file:", file.name);
   }
+
 }
 
 function triggerFileUpload() {
@@ -269,14 +319,26 @@ function triggerFileUpload() {
   }
 };
 
-function triggerFileDelete() {
+// function triggerFileDelete(index) {
+//   post.board_attach_names.splice(index, 1);
+//   post.board_attach.splice(index, 1);
+//   boardAttachUrls.value.splice(index, 1);
+// }
+
+function triggerFileDelete(UUID) {
   post.board_attach_name = '';
-  post.board_attach='';
+  post.board_attach = '';
   boardAttachUrl.value = '';
+  if(UUID){
+    post.fileDeleteChk = true;
+  }
 }
 
 onMounted(() => {
   getBoardData();
+  if (boardText.value === '클레임') {
+    getAuctionCarInfo();
+  }
 });
 </script>
 

@@ -7,6 +7,9 @@ use App\Traits\CrudTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\LikeResource;
+use Illuminate\Support\Facades\Log;
+use App\Models\Article;
+use App\Jobs\ClaimJob;
 
 class CommentService
 {
@@ -49,6 +52,14 @@ class CommentService
                 if ($result->getOriginal('user_id') != auth()->user()->id) {
                     throw new \Exception('권한이 없습니다. [서비스]');
                 }
+
+                Log::info('[댓글] 수정 알림 전송 ' . $result->id, ['result' => $result]);
+                $article = Article::find($result->commentable_id);
+                if($article->board_id === 'claim'){
+                    $user = $article->user_id;
+                    ClaimJob::dispatch($user, $result, 'comment_update');
+                }
+
                 break;
             case 'destroy':
                 if (!$this->getRequest('where', 'comments.commentable_type', '|')) {
@@ -66,6 +77,15 @@ class CommentService
                 $result->user_id = auth()->user()->id;
                 $result->ip = request()->header('X-Real-IP') ?? request()->ip();
                 // $result->ip = file_get_contents('https://api.ipify.org');
+
+                // 댓글 알림 전송
+                Log::info('[댓글] 알림 전송 ' . $result->id, ['result' => $result]);
+                $article = Article::find($result->commentable_id);
+                if($article->board_id === 'claim'){
+                    $user = $article->user_id;
+                    ClaimJob::dispatch($user, $result, 'comment');
+                }
+
                 break;
         }
     }

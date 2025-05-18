@@ -216,14 +216,7 @@ const closePriceModal = () => {
     }
 };
 const ExpectationPrice = () => {
-
-    /*
-    <div class="input-wrapper">
-        <span class="size_14">정상</span>
-        <input type="text" placeholder="개" name="tireStatusNormal" class="text-right" value="">
-    </div>
-    <div class="error tireStatusNormal-error" style="color: red;"></div>
-    */
+    const carDetails_km = carDetails.value.km ? carDetails.value.km : 0;
 
     const text = `
         <div>
@@ -235,7 +228,7 @@ const ExpectationPrice = () => {
                <div class="form-group">
                     <label style="color: #000; display: block; font-weight: bold; margin-bottom: 5px;">주행거리</label>
                     <div class="d-flex align-items-center">
-                        <input type="text" placeholder="키로수" name="mileage" class="mileage_input" value="`+carDetails.value.km+`" style="margin-right: 10px;"> Km                        
+                        <input type="text" placeholder="키로수" name="mileage" class="mileage_input" value="0" style="margin-right: 10px;"> Km                        
                     </div>
                     <div class="error mileage-error" style="color: red;"></div>
                 </div>
@@ -336,6 +329,8 @@ const ExpectationPrice = () => {
         .addOption({ padding: 15, zIndex: 1210 })
         .confirm(text);
     setTimeout(() => {
+
+        document.querySelector('input[name="mileage"]').value = carDetails_km;
 
         // mileage_input 에 값은 숫자만 입력 가능하게 한다. 
         const mileageInput = document.querySelector('input[name="mileage"]');

@@ -91,8 +91,8 @@ class BidService
         } elseif ($method == 'destroy') {
 
             // 경매 입찰취소시 상태 업데이트
-            // Log::info('경매 입찰 상태 업데이트', ['user_id' => $result->user_id, 'status' => 'cancel']);
-            // AuctionBidStatusJob::dispatch($result->user_id, 'cancel');
+            $auction = Auction::find($result->auction_id);
+            AuctionBidStatusJob::dispatch($auction->user_id, 'delete', $auction->id, $result->user_id, $result->price);
 
             $this->modifyOnlyMe($result);
         }

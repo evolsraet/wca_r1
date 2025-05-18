@@ -35,6 +35,7 @@ class AuctionDiagJob implements ShouldQueue
     {
 
         $user = User::find($this->user);
+        $admin = User::where('id', config('services.diagnostic_admin.admin_id'))->first();
 
         // $data['title'] = '경매 상태가 변경되었습니다.';
         // $data['data'] = $this->data;
@@ -47,8 +48,14 @@ class AuctionDiagJob implements ShouldQueue
         // 이메일 전송 
         // $user->notify(new AuctionDiagNotification($user, $sendMessage));
 
+        // 유저 알림전송
         $notificationTemplate = NotificationTemplate::getTemplate('AuctionDiagJob', $this->data, ['mail']);
         $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
+
+
+        // 진단팀 알림전송
+        $notificationTemplate = NotificationTemplate::getTemplate('AuctionDiagJobAdmin', $this->data, ['mail']);
+        $admin->notify(new AuctionsNotification($admin, $notificationTemplate, ['mail'])); // 메일 전송
 
         // 알리고 알림톡 전송 
         // $user->notify(new AligoNotification([
