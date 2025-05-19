@@ -17,7 +17,7 @@ services:
             XDEBUG_MODE: "${SAIL_XDEBUG_MODE:-off}"
             XDEBUG_CONFIG: "${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}"
             IGNITION_LOCAL_SITES_PATH: "${PWD}"
-            # SUPERVISOR_PHP_COMMAND: "/usr/bin/php -d variables_order=EGPCS /var/www/html/artisan octane:start --server=roadrunner --host=0.0.0.0 --rpc-port=6001 --port=80"
+            TZ: '${APP_TIMEZONE}'
         volumes:
             - ".:/var/www/html"
         networks:
@@ -26,20 +26,7 @@ services:
             - mariadb
             - redis
             - mailpit
-    worker:
-        image: sail-8.3/app
-        restart: unless-stopped
-        environment:
-            WWWUSER: '${WWWUSER}'
-            LARAVEL_SAIL: 1
-            TZ: '${APP_TIMEZONE}'
-        volumes:
-            - ".:/var/www/html"
-        networks:
-            - sail
-        depends_on:
-            - laravel.test
-        command: bash -c "php /var/www/html/artisan schedule:work & php /var/www/html/artisan queue:work --tries=3 --timeout=90"
+        command: bash -c "php /var/www/html/artisan schedule:work & php /var/www/html/artisan queue:work --tries=3 --timeout=90 & apache2-foreground"
     mariadb:
         image: "mariadb:10.11"
         command: --general-log=1 --general-log-file=/var/log/mysql/general.log
