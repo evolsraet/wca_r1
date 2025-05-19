@@ -360,25 +360,16 @@ class NotificationTemplate
                     'Sunday'    => '일요일',
                 ];
                 
-                $carbonDate = Carbon::parse($data->taksong_wish_at);
-                $weekdayEng = $carbonDate->format('l'); // Monday, Tuesday 등
+                // 현재시간 기준으로 2시간 이내 날짜와 시간 표시 
+                $timeNow = Carbon::parse($data->taksong_wish_at);
+                $twoHoursLater = $timeNow->copy()->subHours(config('days.taksong_time'));
+                // 형식 지정 출력
+                //$formattedTime = $twoHoursLater->format('Y-m-d H:i');
+
+                $weekdayEng = $twoHoursLater->format('l'); // Monday, Tuesday 등
                 $weekdayKor = $weekdays[$weekdayEng] ?? $weekdayEng;
-                
-                $now = Carbon::now();
+                $formattedTime = $twoHoursLater->format('Y-m-d') . "({$weekdayKor}) " . $twoHoursLater->format('H시'). "(탁송 ".config('days.taksong_time')."시간 전)";
 
-                // 시간 차이 (절댓값 X, 미래면 음수일 수 있음)
-                $diffInHours = $carbonDate->diffInHours($now, false); // false: 음수 허용
-
-                // 차이 문자열 포맷
-                if ($diffInHours < 0) {
-                    $diffText = '(탁송 '.abs($diffInHours).'시간 전)';
-                } elseif ($diffInHours > 0) {
-                    $diffText = '(탁송 '.$diffInHours.'시간 후)';
-                } else {
-                    $diffText = '(탁송 현재)';
-                }
-
-                $formattedDate = $carbonDate->format('Y-m-d') . "({$weekdayKor}) " . $carbonDate->format('H시'). "${diffText}";
 
                 $randomPrefix = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 8);
                 $randomSuffix = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 3);
@@ -394,7 +385,7 @@ class NotificationTemplate
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
                 ."ㅁ 입찰가 : ".FormatHelper::formatPriceToMan(number_format($data->final_price))." \n"
                 ."ㅁ 계좌번호 : ".$data->bank." ".$data->account." \n"
-                ."ㅁ 입금기일 : ".$formattedDate." \n"
+                ."ㅁ 입금기일 : ".$formattedTime." \n"
                 ;
 
                 $link = [

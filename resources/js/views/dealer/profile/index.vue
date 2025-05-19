@@ -256,23 +256,23 @@
                     <div class="row">
                         
                         <!--<div class="col-6 col-md-4 mb-4 pt-2 shadow-hover" v-for="auctionsDoneData in filteredDone" :key="auctionsDoneData.id" @click="navigateToDetail(auctionsDoneData)" :style="getAuctionStyle(auctionsDoneData)">-->
-                        <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="(bid, index) in auctionsDoneData" :key="bid.id" @click="navigateToDetail(bid)" :style="getAuctionStyle(bid)">
+                        <div class="col-6 col-md-4 mb-4 pt-2 hover-anymate" v-for="(review, index) in reviewData" :key="review.id" @click="navigateToDetailReview(review)" :style="getAuctionStyle(review)">
                             <div class="card my-auction">
                                 <div class="card-img-top-placeholder grayscale_img">
-                                    <div v-if="bid.car_thumbnail">
-                                        <img v-if="bid.car_thumbnails" :src="bid.car_thumbnails[0]">
-                                        <img v-else="bid.car_thumbnail" :src="bid.car_thumbnail">
+                                    <div v-if="review.auction.car_thumbnail">
+                                        <img v-if="review.auction.car_thumbnails" :src="review.auction.car_thumbnails[0]">
+                                        <img v-else="review.auction.car_thumbnail" :src="review.auction.car_thumbnail">
                                     </div>
                                     <div v-else>
                                         <img  src="../../../../img/car_example.png">
                                     </div>
                                 </div>
-                                <span v-if="bid.status === 'done'" class="mx-2 auction-done">경매완료</span>
+                                <span v-if="review.auction.status === 'done'" class="mx-2 auction-done">경매완료</span>
                                 <div class="card-body">
                                     <!--<h5 class="card-title"><span class="blue-box">무사고</span>{{bid.car_no}}</h5>-->
-                                    <h5 class="card-title">{{bid.car_model ? bid.car_model +' '+ bid.car_model_sub +' '+ bid.car_fuel + '('+ bid.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑'}}</h5>
-                                    <h5>[ {{bid.car_no}} ]</h5>
-                                    <p>{{bid.car_year ? bid.car_year +'년' : '2020년'}} | {{bid.car_km ? bid.car_km +'km' : '2.4km'}} | {{ isAccident(bid.is_accident) }}</p>
+                                    <h5 class="card-title">{{review.auction.car_model ? review.auction.car_model +' '+ review.auction.car_model_sub +' '+ review.auction.car_fuel + '('+ review.auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑'}}</h5>
+                                    <h5>[ {{review.auction.car_no}} ]</h5>
+                                    <p>{{review.auction.car_year ? review.auction.car_year +'년' : '2020년'}} | {{review.auction.car_km ? review.auction.car_km +'km' : '2.4km'}} | {{ isAccident(review.auction.is_accident) }}</p>
                                     <div class="d-flex justify-content-between">
                                         <!-- <div>
                                             <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
@@ -332,7 +332,7 @@ const currentTab = ref('dealerInfo');
 const store = useStore();
 const { getDoneAuctions, pagination, isAccident, getIngAuctions } = useAuctions(); // 경매 관련 함수를 사용
 const { getMyLikesCount } = useLikes();
-const { getAllReview , reviewsData , splitDate, reviewPagination, getUserReview } = initReviewSystem(); 
+const { getAllReview , reviewsData , splitDate, reviewPagination, getUserReview, getDealerReview } = initReviewSystem(); 
 const { bidsData, bidsCountByUser, getHomeBids, getBidsByUserId } = useBid();
 const { getUser } = useUsers();
 const myBidCount = ref(0);
@@ -341,13 +341,17 @@ const myIngCount = ref(0);
 const filteredDoneBids = ref([]);
 const auctionsDoneData = ref([]);
 const auctionsIngData = ref([]);
+const reviewData = ref([]);
 const currentPage = ref(1); 
 const ingPage = ref(1);
+const reviewPage = ref(1);
 const points = ref(0);
 let isData = false;
 let isIngData = false;
+let isReviewData = false;
 let bidsNumList ='';
 let AuctionsNumList = '';
+let reviewDataNum = '';
 
 const setCurrentTab = (tab) => {
     currentTab.value = tab;
@@ -423,15 +427,16 @@ onMounted(async () => {
     getIngAuctionsByBidsNum(AuctionsNumList);
     console.log('ing',auctionsIngData);
 
-    getReviewData();
-
+    //getReviewData();
+    reviewData.value = await getDealerReview(user.value.id, 1);
+    console.log('reviewData',reviewData.value);
 });
 
 const getDoneAuctionsByBidsNum = async(numList) =>{
     // console.log('numList',numList);
     // console.log('AuctionsNumList',AuctionsNumList);
     auctionsDoneData.value = await getDoneAuctions(numList,currentPage.value);
-    // console.log('auctionsDoneData',auctionsDoneData);
+    console.log('auctionsDoneData',auctionsDoneData);
     if(auctionsDoneData._rawValue.length>0){
         isData = true;
     }else{
@@ -449,14 +454,24 @@ const getIngAuctionsByBidsNum = async(AuctionsNumList) =>{
     }
 }
 
-const getReviewData = async(page = 1) => {
+const getReviewData = async(reviewDataNum) => {
     console.log('user.value.id',user.value.id);
-    const reviewData = await getUserReview(user.value.id, page);
-    console.log('reviewData11111',reviewData);
+    reviewData.value = await getDealerReview(user.value.id, reviewPage.value);
+    console.log('reviewData11111',reviewData.value);
+
+    if(reviewData._rawValue.length>0){
+        isReviewData = true;
+    }else{
+        isReviewData = false;
+    }
 }
 
 function navigateToDetail(auction) {
     router.push({ name: 'AuctionDetail', params: { id: auction.hashid } });
+}
+
+function navigateToDetailReview(review){
+    router.push({ name: 'user.review-detail', params: { id: review.id } });
 }
 
 function getAuctionStyle(auction) { 
@@ -470,8 +485,10 @@ function loadPage( page, pagination) {
     
     currentPage.value = page;
     ingPage.value = page;
+    reviewPage.value = page;
     getDoneAuctionsByBidsNum(bidsNumList);
     getIngAuctionsByBidsNum(AuctionsNumList);
+    getReviewData();
 }
 
 </script>

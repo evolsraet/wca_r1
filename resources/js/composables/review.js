@@ -370,6 +370,27 @@ export function initReviewSystem() {
         .get();
     }
 
+    const getDealerReview = async (id , page=1) => {
+
+        return wicac.conn()
+        //.log() //로그 출력
+        .url(`/api/reviews`) //호출 URL
+        .where([
+            `reviews.dealer_id:${id}`
+        ]) 
+        .with([
+            'auction',
+            'user'
+        ]) 
+        .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
+        .callback(function(result) {
+            reviewsData.value = result.data;
+            reviewPagination.value = result.rawData.data.meta;
+            return result.data; //결과값을 후 처리 할때 필수 선언
+        })
+        .get();
+    }
+
     //작성한 이용후기별 불러오기(로그인 전 리뷰는 auction 불러오지 않음.)
     const getUserReviewInfo = async (
         id,
@@ -519,6 +540,7 @@ export function initReviewSystem() {
         getWriteReviewCnt,
         setInitialStarRating,
         getReviewsDeleteList,
+        getDealerReview
     }
 
 }

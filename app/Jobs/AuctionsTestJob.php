@@ -47,14 +47,14 @@ class AuctionsTestJob implements ShouldQueue
 
         // $data = 412351;
 
-        $auction = Auction::find(104);
+        $auction = Auction::find(144);
 
         // dd($auction);
         
         // 회원가입시 템플릿
-        $notificationTemplate = NotificationTemplate::getTemplate('welcome', $data, ['mail']);
+        //$notificationTemplate = NotificationTemplate::getTemplate('welcome', $data, ['mail']);
         // $auctionsNotification = new AuctionsNotification($user, $notificationTemplate, ['mail']);
-        $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
+        //$this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
         // $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['aligo'])); // 알리고 알림톡 전송
 
 
@@ -97,8 +97,8 @@ class AuctionsTestJob implements ShouldQueue
         // $notificationTemplate = NotificationTemplate::getTemplate('AuctionDlvrJobUser', $auction, ['mail']);
         // $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
 
-        // $notificationTemplate = NotificationTemplate::getTemplate('AuctionDlvrJobDealer', $auction, ['mail']);
-        // $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
+        $notificationTemplate = NotificationTemplate::getTemplate('AuctionDlvrJobDealer', $auction, ['mail']);
+        $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
 
         // $notificationTemplate = NotificationTemplate::getTemplate('AuctionDoneJobUser', $auction, ['mail']);
         // $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송

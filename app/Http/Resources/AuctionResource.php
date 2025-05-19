@@ -11,6 +11,7 @@ use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\Auction;
+use App\Models\Review;
 
 class AuctionResource extends JsonResource
 {
@@ -144,6 +145,10 @@ class AuctionResource extends JsonResource
         $auction_count = Auction::where('user_id', $auction->user_id)->count();
         $addArray['auction_count'] = $auction_count;
 
+
+        // review 아이디 확인
+        $review_id = Review::where('auction_id', $auction->id)->first();
+        $addArray['review_id'] = $review_id ? $review_id->id : null;
 
 
         $this->withFiles($parentArray, $addArray);
