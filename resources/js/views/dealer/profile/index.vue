@@ -400,10 +400,14 @@ onMounted(async () => {
     const myLikeCountData = await getMyLikesCount(user.value.id);
     myLikeCount.value = myLikeCountData.rawData.data.data_count;
 
+    console.log('user.value.id',user.value.id);
     let bidsList = await getBidsByUserId(user.value.id);
     bidsNumList = '';
     AuctionsNumList = '';
     let auctionNum = 0;
+
+    console.log('bidsList',bidsList);
+
     if(bidsList){
         for(let i=0; i<bidsList.length; i++){
             bidsNumList += bidsList[i].id;
@@ -421,7 +425,7 @@ onMounted(async () => {
         }
     }
     // console.log('auctionNum',auctionNum);
-    // console.log('AuctionsNumList',AuctionsNumList);
+    console.log('AuctionsNumList',AuctionsNumList);
     myIngCount.value = auctionNum;
     getDoneAuctionsByBidsNum(bidsNumList);
     getIngAuctionsByBidsNum(AuctionsNumList);

@@ -36,27 +36,22 @@ class AuctionTotalDepositJob implements ShouldQueue
     public function handle(): void
     {
         $baseUrl = config('app.url');
-
-        if($this->type == 'user'){
-
-            $notificationTemplate = NotificationTemplate::getTemplate('AuctionTotalDepositJobUser', $this->auction, ['mail']);
-            $user = User::find($this->user);
-            $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
-            
-        }else if($this->type == 'dealer'){
-
-            $notificationTemplate = NotificationTemplate::getTemplate('AuctionTotalDepositJobDealer', $this->auction, ['mail']);
-            $user = User::find($this->user);
-            $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
-
-        }else if($this->type == 'taksong'){
-
-            $notificationTemplate = NotificationTemplate::getTemplate('AuctionTotalDepositJobTaksong', $this->auction, ['mail']);
-            $user = User::find($this->user);
-            $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
-
+        $type = "";
+        switch($this->type){
+            case 'user':
+                $type = 'AuctionTotalDepositJobUser';
+                break;
+            case 'dealer':
+                $type = 'AuctionTotalDepositJobDealer';
+                break;
+            case 'taksong':
+                $type = 'AuctionTotalDepositJobTaksong';
+                break;
         }
 
+        $notificationTemplate = NotificationTemplate::getTemplate($type, $this->auction, ['mail']);
+        $user = User::find($this->user);
+        $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
 
     }
 }

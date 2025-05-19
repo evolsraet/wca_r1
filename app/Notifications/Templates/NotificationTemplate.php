@@ -833,7 +833,18 @@ class NotificationTemplate
                 break;
 
 
-            case 'basic':
+            case 'ReviewSendJob':
+
+                $title = '리뷰 작성 알림';
+
+                $message = 
+                '리뷰 작성 알림 \n'
+                .'ㅁ 내용 : '.$data->content.' \n';
+
+                $link = [
+                    "url" => url('/board/claim'),
+                    "text" => '바로가기'
+                ];
 
                 break;
                 

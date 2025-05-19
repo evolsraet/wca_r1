@@ -37,7 +37,7 @@ class BidResource extends JsonResource
             self::setAuctionUserId($auctionId, $auctionUserId);
         }
 
-        Log::info("Bid ID: {$this->id}, Auction ID: {$auctionId}, Auction User ID: {$auctionUserId}");
+        // Log::info("Bid ID: {$this->id}, Auction ID: {$auctionId}, Auction User ID: {$auctionUserId}");
 
         $parentArray = $this->formatDates(parent::toArray($request));
         $addArray = [];
@@ -58,8 +58,10 @@ class BidResource extends JsonResource
 
         // 리뷰 갯수 확인하여 사용자 점수 표시 
         $averageStar = \App\Models\Review::where('dealer_id', $parentArray['user_id'])->avg('star');
-        $averageStar = min($averageStar, 5);
-        $averageStar = round($averageStar, 1);
+        if($averageStar){
+            $averageStar = min($averageStar, 5);
+            $averageStar = round($averageStar, 1);
+        }
         $parentArray['points'] = $averageStar ? $averageStar : 0;
 
         return array_merge($parentArray, $addArray);

@@ -143,7 +143,7 @@ class AuctionService
         // if ($auction->isDirty('status') && $auction->status === 'done') {
         // }
 
-        $bids = Bid::find($auction->bid_id);
+        $bid = Bid::find($auction->bid_id);
 
         if ($auction->status == 'cancel') {
             if (empty($auction->diag_check_at)) {
@@ -158,7 +158,7 @@ class AuctionService
                 throw new \Exception('탁송 여부가 선택되지 않았습니다.', 500);
             }
 
-            $this->notifyDlvr($auction, $bids);
+            $this->notifyDlvr($auction, $bid);
         }
 
         if ($auction->status == 'wait') {
@@ -180,7 +180,7 @@ class AuctionService
 
 
             if($auction->is_taksong == 'done'){
-                $this->notifyDone($auction, $bids);
+                $this->notifyDone($auction, $bid);
             }else{
                 throw new \Exception('탁송 상태가 완료되지 않았습니다.', 500);
             }
@@ -203,7 +203,7 @@ class AuctionService
                 throw new \Exception('입찰자가 없습니다.', 500);
             }
 
-            $this->notifyChosen($auction, $bids);
+            $this->notifyChosen($auction, $bid);
         }
     }
 
@@ -321,50 +321,65 @@ class AuctionService
         }
     }
 
-    private function notifyDlvr($auction, $bids)
+    private function notifyDlvr($auction, $bid)
     {
         if ($auction->is_deposit == 'totalDeposit') {
             AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
-            AuctionTotalDepositJob::dispatch($bids->user_id, $auction, 'dealer');
+            AuctionTotalDepositJob::dispatch($bid->user_id, $auction, 'dealer');
             AuctionTotalDepositJob::dispatch(config('services.taksong_admin'), $auction, 'taksong');
         } 
         else if ($auction->is_deposit == 'totalAfterFee') {
-            // AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
+            // AuctionTotalAfterFeeJob::dispatch($bid->user_id, $auction);
 
             $auction->status = 'done';
             $auction->save();
 
+            $bid = Bid::find($auction->bid_id);
+            $bid->status = $auction->status;
+            $bid->save();
+
             AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
-            AuctionTotalAfterFeeJob::dispatch($bids->user_id, $auction);
+            AuctionTotalAfterFeeJob::dispatch($bid->user_id, $auction);
         } else {
-            if ($auction->bids) {
-                AuctionCohosenJob::dispatch($auction->bids->first()->user_id, $auction->id, 'dealer');
+            if ($auction->bid) {
+                AuctionCohosenJob::dispatch($auction->bid->first()->user_id, $auction->id, 'dealer');
             }
             AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
         }
     }
 
-    private function notifyDone($auction, $bids)
+    private function notifyDone($auction, $bid)
     {
+
+        $auction->status = 'done';
+        $auction->save();
+
+        $bid = Bid::find($auction->bid_id);
+        $bid->status = $auction->status;
+        $bid->save();
 
     }
 
-    private function notifyChosen($auction, $bids)
+    private function notifyChosen($auction, $bid)
     {
         if (!request()->mode) {
-            // AuctionCohosenJob::dispatch($bids->user_id, $auction->id, 'dealer');
-            // AuctionTotalDepositJob::dispatch($bids->user_id, $auction, 'dealer');
+            // AuctionCohosenJob::dispatch($bid->user_id, $auction->id, 'dealer');
+            // AuctionTotalDepositJob::dispatch($bid->user_id, $auction, 'dealer');
 
             if ($auction->is_deposit == 'totalDeposit') {
 
                 $auction->status = 'dlvr';
                 $auction->save();
 
+                $bid = Bid::find($auction->bid_id);
+                $bid->status = $auction->status;
+                $bid->save();
+
                 AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
-                AuctionTotalDepositJob::dispatch($bids->user_id, $auction, 'dealer');
+                AuctionTotalDepositJob::dispatch($bid->user_id, $auction, 'dealer');
                 AuctionTotalDepositJob::dispatch(config('services.taksong_admin'), $auction, 'taksong');
             }else{
-                AuctionCohosenJob::dispatch($bids->user_id, $auction->id, 'dealer');
+                AuctionCohosenJob::dispatch($bid->user_id, $auction->id, 'dealer');
             }
         }
     }

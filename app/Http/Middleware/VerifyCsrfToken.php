@@ -39,8 +39,8 @@ class VerifyCsrfToken extends Middleware
             $this->except[] = 'api/payment/request';
         }
 
-        if (str_contains(request()->header('Referer'), 'nicepay.co.kr') || request()->is('api/payment/notify')) {
-            $this->except[] = 'api/payment/notify';
-        }
+        // if (str_contains(request()->header('Referer'), 'nicepay.co.kr') || request()->is('api/payment/notify')) {
+        //     $this->except[] = 'api/payment/notify';
+        // }
     }
 }

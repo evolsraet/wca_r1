@@ -14,7 +14,7 @@
                     </div>
                     <div v-if="activeTab === 'available'" class="row">
                         <div class="col-md-3 p-2 mb-2 hover-ac pointer" v-if="auctionsData.length > 0" v-for="auction in auctionsData" :key="auction.id" @click="navigateToDetail(auction.id)">
-                            <div class="p-2 card my-auction"> 
+                            <div class="card my-auction"> 
                                     <div class="card-img-top-placeholder">
                                         <div v-if="auction.car_thumbnail">
                                             <!-- <img :src="auction.car_thumbnail" alt="Car Image"> -->
@@ -25,7 +25,7 @@
                                         </div>
                                         <!-- <img src="../../../img/car_example.png"> -->
                                     </div> 
-                                    <p class="review-date">{{ splitDate(auction.updated_at) }} ({{ getDayOfWeek(auction.updated_at) }})</p>
+                                    <!-- <p class="review-date">{{ splitDate(auction.updated_at) }} ({{ getDayOfWeek(auction.updated_at) }})</p> -->
                                 <div class="card-body">
                                     <div class="popup-menu" v-show="isMenuVisible">
                                         <ul>
@@ -38,9 +38,9 @@
                                     <h5 class="card-title">{{ auction.car_model ? auction.car_model +' '+ auction.car_model_sub +' '+ auction.car_fuel + '('+ auction.car_no +')' : '더 뉴 그랜저 IG 2.5 가솔린 르블랑' }}</h5>
                                         <p>{{ auction.car_year ? auction.car_year : '2020' }}년 | {{ auction.car_km ? auction.car_km : '2.4' }}km | {{ isAccident(auction.is_accident) }}</p>
                                         <div class="d-flex justify-content-between align-items-baseline">
-                                            <div>
+                                            <!-- <div>
                                                 <span class="blue-box border-6">보험 3건</span><span class="gray-box border-6">재경매</span>
-                                            </div>
+                                            </div> -->
                                                 <h5 class="tc-primary fs-5">{{ amtComma(auction.win_bid.price) }}</h5>
                                             </div>
                                        <!-- <a class="btn-review" @click="navigateToDetail(auction.id)">후기작성</a>-->

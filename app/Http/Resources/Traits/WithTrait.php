@@ -30,7 +30,7 @@ trait WithTrait
         if (!$this->cachedResource) {
             $this->cachedResource = $this->resource;
             $this->loadedRelations = array_keys($this->cachedResource->getRelations());
-            Log::debug('로드된 관계: ' . implode(', ', $this->loadedRelations));
+            // Log::debug('로드된 관계: ' . implode(', ', $this->loadedRelations));
         }
         return $this->cachedResource;
     }
@@ -42,7 +42,7 @@ trait WithTrait
             $relations = explode(',', $withRelations);
 
             foreach ($relations as $relation) {
-                Log::debug("관계 처리 중: {$relation}");
+                // Log::debug("관계 처리 중: {$relation}");
 
                 if ($relation == 'likeable') {
                     $relation = Str::studly(Str::singular(class_basename($parentArray['likeable_type'])));
@@ -57,7 +57,7 @@ trait WithTrait
     {
         $resource = $this->getCachedResource();
         if (in_array($relation, $this->loadedRelations)) {
-            Log::debug("로드된 관계 처리 중: {$relation}");
+            // Log::debug("로드된 관계 처리 중: {$relation}");
             $singularRelation = Str::singular($relation);
             $resourceClass = '\\App\\Http\\Resources\\' . ucfirst($singularRelation) . 'Resource';
             if (class_exists($resourceClass)) {
@@ -69,7 +69,7 @@ trait WithTrait
                 $parentArray[$relation] = '리소스 클래스 에러: ' . $resourceClass;
             }
         } else {
-            Log::debug("관계가 로드되지 않음: {$relation}");
+            // Log::debug("관계가 로드되지 않음: {$relation}");
         }
     }
 
@@ -77,7 +77,7 @@ trait WithTrait
     {
         $resource = $this->getCachedResource();
         if (in_array('media', $this->loadedRelations)) {
-            Log::debug("미디어 파일 처리 중");
+            // Log::debug("미디어 파일 처리 중");
             $addArray['files'] = $resource->media->groupBy('collection_name')
                 ->map(function ($group) {
                     return $group->map(function ($media) {
@@ -86,7 +86,7 @@ trait WithTrait
                 });
             unset($parentArray['media']);
         } else {
-            Log::debug("미디어가 로드되지 않음");
+            // Log::debug("미디어가 로드되지 않음");
         }
     }
 }

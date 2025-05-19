@@ -8,7 +8,7 @@ use App\Traits\CrudTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ReviewResource;
-
+use App\Jobs\ReviewSendJob;
 class ReviewService
 {
     use CrudTrait;
@@ -30,6 +30,9 @@ class ReviewService
                     throw new \Exception('리뷰작성 가능한 경매건이 아닙니다.');
 
                 $this->modifyAuth($auction->user_id);
+                
+                // $this->sendReviewNotification($result);
+
                 break;
             case 'update':
             case 'destroy':
@@ -50,5 +53,17 @@ class ReviewService
         if (!auth()->user()->hasPermissionTo('act.admin') && $user_id != auth()->user()->id) {
             throw new \Exception('권한이 없습니다.');
         }
+    }
+
+    public function sendReviewNotification($result)
+    {
+        $user = $result->user;
+        $data = [
+            'review' => $result,
+        ];
+
+        $via = ['mail'];
+
+        ReviewSendJob::dispatch($user, $data, $via);
     }
 }

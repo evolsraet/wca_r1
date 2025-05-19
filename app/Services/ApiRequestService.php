@@ -15,7 +15,7 @@ class ApiRequestService
 
         try {
             // 요청 로그
-            Log::debug("[$logContext] {$method} 요청", ['url' => $url, 'params' => $params]);
+            // Log::debug("[$logContext] {$method} 요청", ['url' => $url, 'params' => $params]);
 
             // HTTP 요청 초기화
             $httpRequest = Http::timeout(10);

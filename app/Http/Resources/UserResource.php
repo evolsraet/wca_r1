@@ -53,8 +53,10 @@ class UserResource extends JsonResource
         }
 
         $averageStar = \App\Models\Review::where('dealer_id', $this->resource->id)->avg('star');
-        $averageStar = min($averageStar, 5);
-        $averageStar = round($averageStar, 1);
+        if($averageStar){
+            $averageStar = min($averageStar, 5);
+            $averageStar = round($averageStar, 1);
+        }
         $parentArray['points'] = $averageStar ? $averageStar : 0;
 
         return array_merge($parentArray, $additionalArray);

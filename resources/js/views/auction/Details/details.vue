@@ -3206,8 +3206,10 @@
     if(auctionDetailData.status == 'chosen' && isDealer.value){
   
       console.log('auctionDetail.??1',auctionDetail.value.data);
+      console.log('user.value',user.value);
   
       if(auctionDetail.value.data.dest_addr_post){
+        console.log('auctionDetail.value.data.dest_addr_post',auctionDetail.value.data.dest_addr_post);
         destAddrBtn.value = false;
         selectedAuction.value = {
           addr1 : auctionDetail.value.data.dest_addr1,
@@ -3215,6 +3217,7 @@
           addr_post : auctionDetail.value.data.dest_addr_post,
         }
       }else{
+        console.log('user.value.dealer',user.value.dealer);
         selectedAuction.value = {
           addr1 : user.value.dealer.company_addr1,
           addr2 : user.value.dealer.company_addr2,
