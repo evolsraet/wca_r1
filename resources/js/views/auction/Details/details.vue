@@ -696,12 +696,12 @@
                         <div :class="auctionDetail.data.taksong_wish_at === null ? 'line completed' : 'line completed'"></div>
                         <div :class="auctionDetail.data.taksong_wish_at === null ? 'step completing' : 'step completed'">
                           <div :class="auctionDetail.data.taksong_wish_at === null ? 'label completed' : 'label completed'">STEP02</div>
-                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label label-style tc-gray completing-text' : 'label label-style text-secondary opacity-50'">판매자 탁송정보입력</div>
+                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label label-style tc-gray completing-text' : 'label label-style text-secondary opacity-50'">판매자<br> 탁송정보</div>
                         </div>
                         <div :class="auctionDetail.data.taksong_wish_at === null ? 'line' : 'line completed'"></div>
                         <div :class="auctionDetail.data.taksong_wish_at === null ? 'step' : 'step completed'">
                           <div :class="auctionDetail.data.taksong_wish_at === null ? 'label' : 'label completed'">STEP03</div>
-                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label label-style02 text-secondary opacity-50' : 'label label-style tc-gray completing-text'">구매자<br> 탁송하기</div>
+                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label label-style02 text-secondary opacity-50' : 'label label-style tc-gray completing-text'">구매자<br> 탁송정보</div>
                         </div>
                       </div>
                     </div>

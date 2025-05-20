@@ -63,7 +63,6 @@ class AuctionService
                 break;
 
             case 'update':
-                Log::info('경매 상태 업데이트 모드??', ['method' => $auction, 'mode' => $request->mode]);
 
                 $this->prepareMode($request, $auction);
                 $this->modifyOnlyMe($auction, request()->mode == 'dealerInfo');
