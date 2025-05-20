@@ -22,25 +22,30 @@ class VerifyCsrfToken extends Middleware
     public function __construct(\Illuminate\Foundation\Application $app, \Illuminate\Contracts\Encryption\Encrypter $encrypter)
     {
         parent::__construct($app, $encrypter);
-        // 환경 변수나 애플리케이션의 설정을 기반으로 조건을 추가
-        if (app()->environment('local') && str_contains(request()->header('Referer'), '/api-docs')) {
-            $this->except = ['api/*', 'login', 'logout', 'register'];
-        }
 
-        if (str_contains(request()->header('Referer'), 'nicepay.co.kr') || request()->is('api/payment/result')) {
-            $this->except[] = 'api/payment/result';
-        }
+        $referer = request()->header('Referer');
 
-        if (str_contains(request()->header('Referer'), 'nicepay.co.kr') || request()->is('api/payment/result2')) {
-            $this->except[] = 'api/payment/result2';
-        }
+        if($referer) {
+            // 환경 변수나 애플리케이션의 설정을 기반으로 조건을 추가
+            if (app()->environment('local') && str_contains($referer, '/api-docs')) {
+                $this->except = ['api/*', 'login', 'logout', 'register'];
+            }
 
-        if (str_contains(request()->header('Referer'), 'nicepay.co.kr') || request()->is('api/payment/request')) {
-            $this->except[] = 'api/payment/request';
-        }
+            if (str_contains($referer, 'nicepay.co.kr') || request()->is('api/payment/result')) {
+                $this->except[] = 'api/payment/result';
+            }
 
-        // if (str_contains(request()->header('Referer'), 'nicepay.co.kr') || request()->is('api/payment/notify')) {
-        //     $this->except[] = 'api/payment/notify';
-        // }
+            if (str_contains($referer, 'nicepay.co.kr') || request()->is('api/payment/result2')) {
+                $this->except[] = 'api/payment/result2';
+            }
+
+            if (str_contains($referer, 'nicepay.co.kr') || request()->is('api/payment/request')) {
+                $this->except[] = 'api/payment/request';
+            }
+
+            // if (str_contains(request()->header('Referer'), 'nicepay.co.kr') || request()->is('api/payment/notify')) {
+            //     $this->except[] = 'api/payment/notify';
+            // }            
+        }
     }
 }
