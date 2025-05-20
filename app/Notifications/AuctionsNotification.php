@@ -47,7 +47,7 @@ class AuctionsNotification extends Notification
     {
 
         $sendMessage = $this->data;
-        Log::info("[AuctionsNotification] toMail : {$sendMessage->title}", $sendMessage);
+        Log::info("[AuctionsNotification] toMail : {$sendMessage['title']}", $sendMessage);
 
         // $sendMessage['message'] 의 값을 \n 을 기분으로 배열로 변환
         $normalized = str_replace('\\n', "\n", $sendMessage['message']);
