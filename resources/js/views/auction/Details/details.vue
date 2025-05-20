@@ -185,7 +185,7 @@
                           <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openDealerLicenseModal">매수자 사업자등록증</p>
                         </div>
                       </div>
-                      <div v-if="auctionDetail.data.status === 'dlvr' || auctionDetail.data.status === 'dlvrDone' && isUser" class="mt-4">
+                      <div v-if="auctionDetail.data.status === 'dlvr' || auctionDetail.data.status === 'dlvrDone' || auctionDetail.data.status === 'done' && isUser" class="mt-4">
                         <p class="ac-evaluation btn-fileupload-red btn-shadow" @click.prevent="openNameChangeModal">명의이전 등록증</p>
                       </div>
                  </div>
@@ -678,9 +678,10 @@
             <BottomSheet02 v-if="(auctionDetail.data.status == 'dlvr' || auctionDetail.data.status == 'chosen' || auctionDetail.data.status == 'dlvrDone') && scsbid">
 
 
-              <div v-if="(auctionDetail.data.status == 'chosen') && scsbid" class="mb-4">
+              <div v-if="(auctionDetail.data.status == 'chosen' || auctionDetail.data.status == 'dlvr') && scsbid">
 
-                
+                <div v-if="auctionDetail.data.is_taksong === null || auctionDetail.data.is_taksong === 'ask'" class="mb-4">
+
                 <div class="d-flex justify-content-between align-items-baseline">
                   <h4 class="custom-highlight">탁송전 진행상황</h4>
                 </div>
@@ -689,20 +690,21 @@
                   <div class="container">
                     <div class="content" style="padding: 0px !important; margin: 0px !important; padding-top: 10px !important;">
                       <div class="steps-container mb-3">
-                        <div :class="auctionDetail.data.taksong_wish_at === null ? 'step completed' : 'step completed'">
-                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label completed' : 'label completed'">STEP01</div>
-                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label label-style text-secondary opacity-50' : 'label label-style text-secondary opacity-50'">선택완료</div>
-                        </div>
-                        <div :class="auctionDetail.data.taksong_wish_at === null ? 'line completed' : 'line completed'"></div>
                         <div :class="auctionDetail.data.taksong_wish_at === null ? 'step completing' : 'step completed'">
-                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label completed' : 'label completed'">STEP02</div>
-                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label label-style tc-gray completing-text' : 'label label-style text-secondary opacity-50'">판매자<br> 탁송정보</div>
+                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label completed' : 'label completed'">STEP01</div>
+                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label label-style tc-gray completing-text' : 'label label-style tc-gray completing-text'">판매자<br> 탁송정보</div>
                         </div>
                         <div :class="auctionDetail.data.taksong_wish_at === null ? 'line' : 'line completed'"></div>
                         <div :class="auctionDetail.data.taksong_wish_at === null ? 'step' : 'step completed'">
-                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label' : 'label completed'">STEP03</div>
+                          <div :class="auctionDetail.data.taksong_wish_at === null ? 'label' : 'label completed'">STEP02</div>
                           <div :class="auctionDetail.data.taksong_wish_at === null ? 'label label-style02 text-secondary opacity-50' : 'label label-style tc-gray completing-text'">구매자<br> 탁송정보</div>
                         </div>
+                        <div :class="auctionDetail.data.is_taksong === null && auctionDetail.data.is_taksong !== 'start' ? 'line' : 'line completed'"></div>
+                        <div :class="auctionDetail.data.is_taksong === null && auctionDetail.data.is_taksong !== 'start' ? 'step' : 'step completed'">
+                          <div :class="auctionDetail.data.is_taksong === null && auctionDetail.data.is_taksong !== 'start' ? 'label' : 'label completed'">STEP03</div>
+                          <div :class="auctionDetail.data.is_taksong === null && auctionDetail.data.is_taksong !== 'start' ? 'label label-style text-secondary opacity-50' : 'label label-style tc-gray completing-text'">구매자<br> 입금완료</div>
+                        </div>
+                        
                       </div>
                     </div>
                   </div>
@@ -710,6 +712,8 @@
                 <p class="auction-deadline text-center mt-2">
                   {{auctionDetail.data.taksong_wish_at === null ? '판매자가 탁송정보를 입력중 입니다.' : auctionDetail.data.taksong_id === null ? '판매자가 탁송정보를 입력했습니다.' : '구매자가 탁송 신청 했습니다. 차량대금 입금이 완료 되면 탁송이 시작 됩니다.'}}
                 </p>
+
+                </div>
               </div>
               
   
@@ -719,6 +723,15 @@
                 <!--<button class="border-6 btn-fileupload my-4 shadow02"><a :href=fileSignUrl download class="text-secondary opacity-50">매도용 인감증명서 다운로드</a></button>-->
               </div>
   
+              <div v-if="isDealer" class="mb-4">
+                <div class="d-flex justify-content-between align-items-baseline pt-4">
+                  <h4 class="custom-highlight">경락 확인서</h4>
+                </div>
+                <div class="d-flex justify-content-between align-items-baseline">
+                    경락확인서를 확인 하세요.
+                </div>
+                <button class="my-2 btn btn-outline-primary w-100 mt-4" @click="openDoneModal(auctionId)">경락 확인서</button>
+              </div>
               
                <div class="d-flex justify-content-between align-items-baseline" v-if="auctionDetail.data.is_taksong !== 'done' && auctionDetail.data.taksong_wish_at !== null">
                 <h4 class="custom-highlight">탁송 신청 정보</h4>
@@ -728,16 +741,6 @@
                 <p class="text-secondary ">입금&nbsp;&nbsp;은행 :<span class="tc-red ms-1 fw-bold">( {{auctionDetail.data.bank}} ) {{auctionDetail.data.account}}</span></p>
                 <p class="text-secondary ">탁&nbsp;&nbsp; 송&nbsp;&nbsp; 일 :<span class="tc-red ms-1 fw-bold">{{ auctionDetail.data.taksong_wish_at?.substring(0, 16) }}</span></p>
                 <p class="text-secondary ">장&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 소 :<span class="tc-red ms-1 fw-bold">{{auctionDetail.data.addr1}}</span></p>
-              </div>
-
-              <div v-if="isDealer">
-                <div class="d-flex justify-content-between align-items-baseline pt-4">
-                  <h4 class="custom-highlight">경락 확인서</h4>
-                </div>
-                <div class="d-flex justify-content-between align-items-baseline">
-                    경락확인서를 확인 하세요.
-                </div>
-                <button class="my-2 btn btn-outline-primary w-100 mt-4" @click="openDoneModal(auctionId)">경락 확인서</button>
               </div>
 
               <div v-if="auctionDetail.data.is_taksong === 'ask' || auctionDetail.data.is_taksong === 'start' || auctionDetail.data.is_taksong === 'ing'">
@@ -795,7 +798,10 @@
                     <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCompanyLicense" ref="fileInputRefCompanyLicenseBtn">
                       파일 첨부
                     </button>
-                    <div class="text-start text-secondary opacity-50 mt-2" v-if="fileAuctionCompanyLicenseName">명의이전 서류: {{ fileAuctionCompanyLicenseName }}</div>
+                    <div class="text-start text-secondary opacity-50 mt-2" v-if="fileAuctionCompanyLicenseName">
+                      명의이전 서류: {{ fileAuctionCompanyLicenseName }}
+                      <!-- <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(handleFileUploadCompanyLicense)"></span> -->
+                    </div>
   
                     <button type="button" class="btn btn-primary w-100 mt-3" @click="requestedFileUpload" :disabled="auctionDetail.data.has_uploaded_name_change_file">첨부하기</button>
   
@@ -3438,6 +3444,11 @@
       openSection.value.push(section); // 없으면 추가해서 열기
     }
   };
+
+  const triggerFileDelete = (file) => {
+    fileAuctionCompanyLicenseName.value = ''; // 파일 이름 초기화
+    file.target.value = null; // 파일 입력 필드 
+  }
 
   </script>
   

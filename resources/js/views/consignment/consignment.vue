@@ -547,15 +547,17 @@ const toggleView = () => {
         </tr>
         <tr>
           <th style="text-align: left; width: 100px; font-size: 16px; padding-top: 10px;">탁송주소</th>
-          <td style="text-align: left; font-size: 16px;">${addrPost.value} | ${addr.value} | ${addrdt.value}</td>
+          <td style="text-align: left; font-size: 16px;">
+            ${addrPost.value ? '( '+addrPost.value+' )' : '' } ${addr.value ? addr.value : '' } ${addrdt.value ? addrdt.value : '' }
+          </td>
         </tr>
         <tr>
           <th style="text-align: left; width: 100px; font-size: 16px; padding-top: 10px;">은행</th>
-          <td style="text-align: left; font-size: 16px;">${selectedBank.value ?? '선택 안됨'} | ${account.value}</td>
+          <td style="text-align: left; font-size: 16px;">${selectedBank.value ? '( '+selectedBank.value+' )' : ''} ${account.value ? account.value : ''}</td>
         </tr>
         <tr>
           <th style="text-align: left; width: 100px; font-size: 16px; padding-top: 10px;">고객 연락처</th>
-          <td style="text-align: left; font-size: 16px;">${customTel1.value} | ${customTel2.value}</td>
+          <td style="text-align: left; font-size: 16px;">${customTel1.value ? customTel1.value : '' } ${customTel2.value ? '|'+customTel2.value : '' }</td>
         </tr>
       </tbody>
     </table>
