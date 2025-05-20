@@ -13,7 +13,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Vinkla\Hashids\Facades\Hashids;
-
+use Illuminate\Support\Facades\Log;
+use App\Services\AuctionLogService;
+use App\Models\AuctionLog;
 
 class Auction extends Model implements HasMedia
 {
@@ -158,9 +160,21 @@ class Auction extends Model implements HasMedia
 
         static::creating(function ($auction) {
             $auction->unique_number = self::generateUniqueNumber();
+
+            
+
         });
 
-        static::saving(function ($auction) {
+        static::saved(function ($auction) {
+
+            // 업데이트 시 로그 생성
+            AuctionLog::create([
+                'auction_id' => $auction->id,
+                'user_id' => auth()->check() ? auth()->user()->id : null,
+                'ip' => request()->ip(),
+                'status' => $auction->status,
+                'changes' => $auction->getChanges() ? json_encode($auction->getChanges()) : null
+            ]);
 
         });
     }

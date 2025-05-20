@@ -314,6 +314,7 @@ class NotificationTemplate
                 .'진단팀에서 진단을 진행 해 주세요 \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                // .'ㅁ 고객 주소 : '.$data->addr_post.'',
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
                 .'ㅁ 고객사코드 : '.Hashids::encode($data->id).' \n'
                 .'ㅁ 상태 : 진단대기';  
@@ -328,7 +329,7 @@ class NotificationTemplate
 
 
             case 'AuctionDlvrJobUser':
-                $title = '판매요청이 잘 접수됐어요.';
+                $title = '탁송요청이 정상적으로 처리됐습니다.';
 
                 // $message = 
                 // '판매요청이 잘 접수됐어요. \n'
@@ -344,17 +345,18 @@ class NotificationTemplate
                 // .'ㅁ 차량번호 : '.$data->car_no.' \n';
 
                 $message = 
-                '판매요청이 잘 접수됐어요. \n'
-                .'매니저가 딜러의 견적과 필요서류를 확인하고 있어요. 딜러 사정에 따라 늦어지는 경우가 있습니다. 최대한 빨리 확인 후 안내드릴 예정이니, 조금만 기다려주세요! \n'
-                .'이후 판매 과정 \n'
-                .'1. 판매서류 준비하기 \n'
-                .'2. (탁송일) 기사 도착&입금받기 \n'
-                .'3. (탁송일 + 2일) 명의이전 완료 \n'
+                '탁송요청이 정상적으로 처리됐습니다. \n'
+                .'탁송전 판매서류를 준비해주세요\n'
+                .'* 판매대금 입금 전 탁송을 보내지마세요! \n'
+                .'탁송전 : 판매서류 준비하기 \n'
+                .'탁송일 : 기사 도착, 판매대금 입금받기 \n'
+                .'탁송일 + '.config('days.taksong_day').'일) : 명의이전 완료 \n'
                 .'* 더자세한 내용은 바로가기를 클릭하여 확인해 주세요. \n'
                 .'\n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
-                .'ㅁ 차량번호 : '.$data->car_no.' \n';
+                .'ㅁ 차량번호 : '.$data->car_no.' \n'
+                .'ㅁ 입찰가 : '.FormatHelper::formatPriceToMan(number_format($data->final_price)).' \n';
 
                 $link = [
                     "url" => url('/auction/'.$data->hashid),
@@ -453,21 +455,14 @@ class NotificationTemplate
                 $VbankExpDateTrans = date('Y-m-d', strtotime($account['data']['VbankExpDate']));
                 $VbankExpTimeTrans = date('H:i:s', strtotime($account['data']['VbankExpTime']));
 
-                $title = '차량명의이전서류를 등록했습니다. 수수료를 입금해 주세요!';
+                $title = '차량명의이전서류가 등록됐습니다.';
 
                 $message = 
-                '차량명의이전서류를 등록했습니다. \n'
-                .'수수료를 입금해 주세요! \n'
+                '차량명의이전서류가 등록됐습니다. \n'
+                ."\n"
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
-                ."ㅁ 탁송시작 예정일 : ".$data->taksong_wish_at." \n"
-                ."ㅁ 총 입금액 : ".FormatHelper::formatPriceToMan(number_format($data->final_price))." \n"
-                ."- 수수료 : ".FormatHelper::formatPriceToMan(number_format($data->total_fee))." \n"
-                ."- 계좌번호 : ".$data->bank." ".$data->account." \n"
-                ."- 입금기일 : ".$VbankExpDateTrans."(".$VbankExpTimeTrans.") \n"
-                ."\n"
-                ."* 수수료 미입금시 클레임이 불가합니다."
                 ;
 
                 // $link = [
@@ -662,7 +657,7 @@ class NotificationTemplate
 
                 $message = 
                 '차량명의이전 등록증 업로드가 완료되었습니다. \n'
-                .config('app.name').'에서 이전등록증을 확인하실 수 있어요! \n'
+                .'모든 차량판매가 완료되었습니다. 감사합니다 \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
@@ -705,10 +700,11 @@ class NotificationTemplate
                 $total_fee = FormatHelper::formatPriceToMan(number_format(15)); // 임시금액
 
                 $message = 
-                $data->car_no.' 차량 탁송이 완료되었습니다. \n'
+                $data->car_no." 차량 탁송이 완료되었습니다. \n"
                 .'수수료 입금 내용을 확인 해 주세요. \n'
                 .'영업일 기준 2일 내 [이전등록증]을 등록해 주세요. \n'
-                .'※ 이전등록증 등록후 경매가 완료됩니다. \n'
+                ."* 수수료 미입금시 클레임이 불가합니다. \n"
+                ."\n"
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
