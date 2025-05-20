@@ -90,7 +90,7 @@ class DiagService
             );
 
             if (!isset($response['status']) || $response['status'] !== 'ok') {
-                Log::info("[진단 데이터 오류] 진단에 미등록된 차량입니다: {$carNo}", ['response' => $response]);
+                Log::debug("[진단 데이터 오류] 진단에 미등록된 차량입니다: {$carNo}", ['response' => $response]);
                 return [
                     'status' => 'error',
                     'message' => '진단 데이터 조회 실패. 진단에 미등록된 차량입니다.',
@@ -101,7 +101,7 @@ class DiagService
 
             // 진단 데이터가 확인되었고 본사검수까지 되었는지 체크
             if (empty($response['data']['diag_is_confirmed'])) {
-                Log::info("[진단 데이터 오류] 본사 검수가 되지 않았습니다: {$carNo}", ['response' => $response]);
+                Log::debug("[진단 데이터 오류] 본사 검수가 되지 않았습니다: {$carNo}", ['response' => $response]);
                 return [
                     'status' => 'error',
                     'message' => '본사 검수가 되지 않았습니다.',
