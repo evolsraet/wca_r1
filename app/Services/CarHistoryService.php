@@ -15,7 +15,7 @@ class CarHistoryService
 
         // 세션에서 먼저 확인
         if (Session::has($sessionKey)) {
-            Log::info("[CarHistory] 캐시된 데이터 사용 - 차량번호: {$carNumber}");
+            Log::info("[카히스토리] 캐시된 데이터 사용 - 차량번호: {$carNumber}");
             
             $data = Session::get($sessionKey);
             $data['is_session'] = true;
@@ -26,7 +26,7 @@ class CarHistoryService
         // 데이터베이스에서 확인
         $carHistory = NiceCarHistory::where('car_no', $carNumber)->first();
         if ($carHistory) {
-            Log::info("[CarHistory] 데이터베이스에서 데이터 사용 - 차량번호: {$carNumber}");
+            Log::info("[카히스토리] 데이터베이스에서 데이터 사용 - 차량번호: {$carNumber}");
 
             $data['is_database'] = true;
 
@@ -44,7 +44,7 @@ class CarHistoryService
             'rType'       => 'J',
         ];
 
-        Log::info("[CarHistory] API 요청 준비 완료", ['payload' => $payload]);
+        Log::info("[카히스토리] API 요청 준비 완료", ['payload' => $payload]);
 
         try {
             $response = Http::asForm()->timeout(15)->post(config('services.carHistory.api_url'), $payload);
@@ -52,7 +52,7 @@ class CarHistoryService
             if ($response->successful()) {
                 $data = $response->json();
 
-                Log::info("[CarHistory] 응답 수신 성공", ['response' => $data]);
+                Log::info("[카히스토리] 응답 수신 성공", ['response' => $data]);
 
                 // 세션에 저장
                 Session::put($sessionKey, $data);
@@ -68,12 +68,12 @@ class CarHistoryService
                 return $data;
             }
 
-            Log::error("[CarHistory] 응답 실패", [
+            Log::error("[카히스토리] 응답 실패", [
                 'status' => $response->status(),
                 'body' => $response->body()
             ]);
         } catch (\Exception $e) {
-            Log::error("[CarHistory] 요청 중 예외 발생", [
+            Log::error("[카히스토리] 요청 중 예외 발생", [
                 'message' => $e->getMessage()
             ]);
         }
@@ -110,7 +110,7 @@ class CarHistoryService
         // dd($carHistory);
 
         if ($carHistory) {
-            Log::info("[CarHistory] 데이터베이스에서 데이터 사용 - 차량번호: {$carNumber}");
+            Log::info("[카히스토리] 데이터베이스에서 데이터 사용 - 차량번호: {$carNumber}");
 
 
             $data = $carHistory['data'];

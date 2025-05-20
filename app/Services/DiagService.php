@@ -90,7 +90,7 @@ class DiagService
             );
 
             if (!isset($response['status']) || $response['status'] !== 'ok') {
-                Log::debug("[진단 데이터] 진단에 미등록된 차량입니다: {$carNo}", ['response' => $response]);
+                Log::debug("[진단 데이터] 미등록 차량 : {$carNo}", ['response' => $response]);
                 return [
                     'status' => 'error',
                     'message' => '진단 데이터 조회 실패. 진단에 미등록된 차량입니다.',
@@ -114,7 +114,7 @@ class DiagService
             $diagnosticCode = $this->diagnosticCode();
 
             if (!isset($diagnosticCode['status']) || $diagnosticCode['status'] !== 'ok') {
-                Log::error("[진단 코드 오류] {$carNo}", ['diagnosticCode' => $diagnosticCode]);
+                Log::error("[진단 데이터] 코드오류 : {$carNo}", ['diagnosticCode' => $diagnosticCode]);
                 return [
                     'status' => 'error',
                     'message' => '진단 코드 조회 실패.',
@@ -150,7 +150,7 @@ class DiagService
             ];
 
         } catch (\Exception $e) {
-            Log::error("[진단 데이터 조회 실패] {$carNo}", ['error' => $e->getMessage()]);
+            Log::error("[진단 데이터] 조회 실패 {$carNo}", ['error' => $e->getMessage()]);
             return [
                 'status' => 'error',
                 'message' => '진단 데이터 조회 중 오류 발생: ' . $e->getMessage(),
@@ -170,7 +170,7 @@ class DiagService
             ->get();
 
         if ($auctions->isEmpty()) {
-            Log::info('[진단 상태 확인] 대기 중인 경매가 없습니다.');
+            Log::info('[진단 상태 확인] 대기 중인 경매 0건');
             return $validResults;
         }
 

@@ -49,7 +49,7 @@ class ApiRequestService
             // 성공 로그
             $result = $response->json();
 
-            Log::info("{$method} 성공 : [$logContext] ", [
+            Log::info("[리퀘스트 {$method} 성공] $logContext ", [
                 'url'    => $url,
                 'params' => $params,
                 'result' => $result,
@@ -58,7 +58,7 @@ class ApiRequestService
             return $result;
 
         } catch (Exception $e) {
-            $msg = "{$method} 실패 : [$logContext]";
+            $msg = "[리퀘스트 {$method} 실패] $logContext";
             $context = [
                 'message'    => $e->getMessage(),
                 'error_data' => $errorData,
