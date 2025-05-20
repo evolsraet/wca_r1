@@ -98,6 +98,12 @@ export function initPostSystem() {
         if (postData.thumbnail) {
             serializedPost.append('article[thumbnail]', postData.thumbnail);
         }
+        // Handle multiple file uploads for board_attach
+        if (postData.board_attach && Array.isArray(postData.board_attach)) {
+            postData.board_attach.forEach(file => {
+                serializedPost.append('board_attach[]', file);
+            });
+        }
 
         try {
             const response = await axios.post(`/api/board/${boardId}/articles`, serializedPost, {
@@ -133,9 +139,11 @@ export function initPostSystem() {
         data.article.category = postData.category;
         const serializedPost = new FormData();
         serializedPost.append('article', JSON.stringify(data.article));
-    
-        if (postData.board_attach) {
-            serializedPost.append('board_attach', postData.board_attach);
+        // Handle multiple file uploads for board_attach
+        if (postData.board_attach && Array.isArray(postData.board_attach)) {
+            postData.board_attach.forEach(file => {
+                serializedPost.append('board_attach[]', file);
+            });
         }
     
         let alimMsg = '';

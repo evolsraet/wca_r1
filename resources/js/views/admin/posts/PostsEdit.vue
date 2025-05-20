@@ -55,8 +55,13 @@
             </div>
             <!-- Content -->
             <div class="mb-3">
-              <div v-if="navigatedThroughHandleRowClick && post.filePath">
+              <!-- <div v-if="navigatedThroughHandleRowClick && post.filePath">
                 <img :src="post.filePath" alt="첨부 이미지" class="img-fluid">
+              </div> -->
+              <div v-if="navigatedThroughHandleRowClick && post.board_attach_list && post.board_attach_list.length">
+                <div v-for="(file, idx) in post.board_attach_list" :key="file.uuid">
+                  <img :src="file.url" :alt="file.name" class="img-fluid mb-2">
+                </div>
               </div>
               <label v-if="!navigatedThroughHandleRowClick && isAdmin" for="post-content" class="form-label">컨텐츠 내용</label>
               <div v-if="navigatedThroughHandleRowClick" class="py-3">
@@ -69,8 +74,10 @@
               </div>
             </div>
 
-            <div v-if="!navigatedThroughHandleRowClick && post.filePath && isAdmin">
-                <img :src="post.filePath" alt="첨부 이미지" class="img-fluid">
+            <div v-if="!navigatedThroughHandleRowClick && post.board_attach_list && post.board_attach_list.length && isAdmin">
+              <div v-for="(file, idx) in post.board_attach_list" :key="file.uuid">
+                <img :src="file.url" :alt="file.name" class="img-fluid mb-2">
+              </div>
             </div>
 
             <div v-if="!navigatedThroughHandleRowClick">
@@ -177,7 +184,8 @@ const post = reactive({
   board_attach_name: '',
   fileUUID: '',
   filePath: '',
-  fileDeleteChk: false
+  fileDeleteChk: false,
+  board_attach_list: []
 });
 
 const newComment = reactive({
@@ -277,15 +285,15 @@ const sanitizedContent = computed(() => {
   return sanitizeHtml(post.content);
 });
 
-function fileExstCheck(info){
-  if(info.hasOwnProperty('files')){
-    if(info.files.hasOwnProperty('board_attach')){
-      if(info.files.board_attach[0].hasOwnProperty('original_url')){
-        boardAttachUrl.value = info.files.board_attach[0].original_url;
-        post.board_attach_name = info.files.board_attach[0].file_name;
-        post.fileUUID = info.files.board_attach[0].uuid;
-        post.filePath = info.files.board_attach[0].original_url;
-      }
+function fileExstCheck(info) {
+  if (info.hasOwnProperty('files')) {
+    if (info.files.hasOwnProperty('board_attach')) {
+      // 여러 파일의 정보를 배열로 저장
+      post.board_attach_list = info.files.board_attach.map(file => ({
+        url: file.original_url,
+        name: file.file_name,
+        uuid: file.uuid
+      }));
     }
   }
 }

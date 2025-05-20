@@ -11,6 +11,7 @@ use App\Models\Bid;
 use App\Models\TaksongStatusTemp;
 use App\Jobs\TaksongNameChangeJob;
 use App\Jobs\AuctionCancelJob;
+use App\Models\Dealer;
 
 class TaksongService
 {
@@ -71,6 +72,7 @@ class TaksongService
                 'chk_departure_address' => $data['startAddr'],
                 'chk_dest_mobile' => $data['destMobile'],
                 'chk_dest_address' => $data['destAddr'],
+                'chk_dest_alarm_mobile' => $data['destMobile'],
                 'api_key' => $this->taksongApiKey,
             ];
 
@@ -125,7 +127,7 @@ class TaksongService
 
             // 탁송 상태 처리
             match($status) {
-                'start'  => $this->handleStart($carNo),
+                'start'  => $this->handleStart($carNo, $data),
                 'ing'    => $this->handleInProgress($carNo, $data),
                 'done'   => $this->handleDone($carNo, $auction, $bid, $status, $modifyData),
                 'cancel' => $this->handleCancel($carNo, $modifyData),
@@ -151,9 +153,23 @@ class TaksongService
     }
 
     // 탁송 시작 상태 처리
-    private function handleStart(string $carNo)
+    private function handleStart(string $carNo, $data)
     {
-        Auction::where('car_no', $carNo)->update(['is_taksong' => 'start']);
+
+        $updateData = [
+            'taksong_courier_fee' => $data['chk_courier_fee'] ?? null,
+            'taksong_courier_name' => $data['chk_courier_name'] ?? null,
+            'taksong_courier_mobile' => $data['chk_courier_mobile'] ?? null,
+            'taksong_departure_address' => $data['chk_departure_address'] ?? null,
+            'taksong_departure_mobile' => $data['chk_departure_mobile'] ?? null,
+            'taksong_dest_address' => $data['chk_dest_address'] ?? null,
+            'taksong_dest_mobile' => $data['chk_dest_mobile'] ?? null,
+            'taksong_departure_at' => $data['chk_departure_at'] ?? null,
+            'taksong_dest_at' => $data['chk_dest_at'] ?? null,
+            'is_taksong' => 'start'
+        ];
+
+        Auction::where('car_no', $carNo)->update($updateData);
     }
 
     // 탁송 진행중 상태 처리

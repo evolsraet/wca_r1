@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import routes from './routes.js'
-
+import store from '../store';
 const router = createRouter({
     history: createWebHistory(),
     routes
@@ -18,4 +18,13 @@ const router = createRouter({
     }
 })*/
 
+router.beforeEach((to, from, next) => {
+    const isAuthenticated = store.getters['auth/isAuthenticated'];
+    if (to.meta.requiresAuth && !isAuthenticated) {
+      next({ name: 'auth.login' }); // 로그인 페이지로 이동
+    } else {
+      next();
+    }
+});
+  
 export default router;

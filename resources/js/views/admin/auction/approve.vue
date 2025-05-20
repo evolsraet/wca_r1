@@ -19,7 +19,7 @@
           <li><a class="dropdown-item" href="#" @click="checkNameChangeDealerEvent(auction.hashid)">명의이전 알림(딜러)</a></li>
           <li><a class="dropdown-item" href="#" @click="AuctionIsDeposit('totalAfterFee')">수수료 입금처리</a></li>
           <li><a class="dropdown-item" href="#" @click="checkNameChangeStatusEvent(auction.hashid)">명의이전신청 확인</a></li>
-          <li><a class="dropdown-item" href="#" @click="DiagnosticAuctionCheck(auction.hashid)">진단상태확인</a></li>
+          <li><a class="dropdown-item" href="#" @click="DiagnosticAuctionCheck(auction.hashid)">진단상태 강제갱신</a></li>
         </ul>
       </div>
     </div>

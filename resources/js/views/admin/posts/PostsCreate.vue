@@ -67,10 +67,12 @@
           파일 첨부
         </button>
       </div>
-      <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload">
-      <div v-if="boardAttachUrl" class="text-start text-secondary opacity-50">
-        사진 파일: <a :href="boardAttachUrl" download>{{ post.board_attach_name }}</a>
-        <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(post.fileUUID)"></span>
+      <input type="file" ref="fileInputRef" style="display:none" @change="handleFileUpload" multiple>
+      <div v-if="boardAttachUrls.length" class="text-start text-secondary opacity-50">
+        <div v-for="(url, index) in boardAttachUrls" :key="index">
+          사진 파일: <a :href="url" download>{{ post.board_attach_names[index] }}</a>
+          <span class="icon-close-img cursor-pointer" @click="triggerFileDelete(index)"></span>
+        </div>
       </div>
       <!-- <div v-if="boardAttachUrls.length" class="text-start text-secondary opacity-50">
         <div v-for="(url, index) in boardAttachUrls" :key="index">
@@ -145,8 +147,8 @@ const post = reactive({
   title,
   content,
   category: '',
-  board_attach : '',
-  board_attach_name : '',
+  board_attach : [],
+  board_attach_names : [],
   is_secret: 0 
 });
 
@@ -160,8 +162,7 @@ const router = useRouter();
 const route = useRoute();
 const boardId = route.params.boardId;
 const auctionId = route.params.auctionId; 
-// const boardAttachUrls = ref([]);
-const boardAttachUrl = ref('');
+const boardAttachUrls = ref([]);
 const auctionCarInfo = ref('');
 const { getAuctionById } = useAuctions();
 
@@ -261,8 +262,10 @@ const submitPost = async (postData) => {
   if (boardId === 'claim') {
     serializedPost.append('article[extra1]', auctionId);
   }
-  if(postData.board_attach){
-    serializedPost.append('board_attach', postData.board_attach);
+  if(postData.board_attach && Array.isArray(postData.board_attach)){
+    postData.board_attach.forEach(file => {
+      serializedPost.append('board_attach[]', file);
+    });
   }
 
   wicac.conn()
@@ -295,20 +298,12 @@ const submitPost = async (postData) => {
 };
 
 function handleFileUpload(event) {
-  // const files = event.target.files;
-  // if (files.length) {
-  //   post.board_attach = files;
-  //   post.board_attach_names = Array.from(files).map(file => file.name);
-  //   boardAttachUrls.value = Array.from(files).map(file => URL.createObjectURL(file));
-  // }
-
-  const file = event.target.files[0];
-  if (file) {
-    post.board_attach = file;
-    post.board_attach_name = file.name;
-    boardAttachUrl.value = URL.createObjectURL(file);
+  const files = event.target.files;
+  if (files.length) {
+    post.board_attach = Array.from(files);
+    post.board_attach_names = Array.from(files).map(file => file.name);
+    boardAttachUrls.value = Array.from(files).map(file => URL.createObjectURL(file));
   }
-
 }
 
 function triggerFileUpload() {
@@ -319,19 +314,10 @@ function triggerFileUpload() {
   }
 };
 
-// function triggerFileDelete(index) {
-//   post.board_attach_names.splice(index, 1);
-//   post.board_attach.splice(index, 1);
-//   boardAttachUrls.value.splice(index, 1);
-// }
-
-function triggerFileDelete(UUID) {
-  post.board_attach_name = '';
-  post.board_attach = '';
-  boardAttachUrl.value = '';
-  if(UUID){
-    post.fileDeleteChk = true;
-  }
+function triggerFileDelete(index) {
+  post.board_attach_names.splice(index, 1);
+  post.board_attach.splice(index, 1);
+  boardAttachUrls.value.splice(index, 1);
 }
 
 onMounted(() => {
@@ -341,28 +327,6 @@ onMounted(() => {
   }
 });
 </script>
-
-<style scoped>
-.primary-btn {
-  width: 90px;
-  border-radius: 30px;
-  height: 38px !important;
-}
-
-.image-icon-pen {
-  width: 18px;
-  height: 18px;
-  line-height: unset;
-}
-
-.btn-fileupload {
-  width: 25% !important;
-}
-.cursor-pointer{
-  cursor: pointer;
-}
-</style>
-
 
 <style scoped>
 .primary-btn {

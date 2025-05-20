@@ -49,6 +49,7 @@ class TaksongAddJob implements ShouldQueue
                 'chk_departure_address' => $this->data['start_addr'],
                 'chk_dest_mobile' => $this->data['dest_mobile'],
                 'chk_dest_address' => $this->data['dest_addr'],
+                'chk_dest_alarm_mobile' => $this->data['dest_mobile'],
                 'api_key' => config('taksongApi.TAKSONG_API_KEY')
             ];
 

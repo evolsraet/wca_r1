@@ -658,22 +658,23 @@ class AuctionController extends Controller
 
 
 
-    // public function testTaksongService(Request $request){
+    public function testTaksongService(Request $request){
 
-    //     $data = [
-    //         'carNo' => '24API12343',
-    //         'carModel' => '개발모델',
-    //         'mobile' => '010-3425-8175',
-    //         'destMobile' => '01034258175',
-    //         'taksongWishAt' => '2025-04-22 11:30',
-    //         'startAddr' => '대전 유성',
-    //         'destAddr' => '충남 계룡',
-    //         'id' => '100',
-    //     ];
+        $data = [
+            'carNo' => '24API12343',
+            'carModel' => '개발모델',
+            'mobile' => '010-3425-8175',
+            'destMobile' => '01034258175',
+            'taksongWishAt' => '2025-04-22 11:30',
+            'startAddr' => '대전 유성',
+            'destAddr' => '충남 계룡',
+            'bid_id' => '100',
+        ];
 
-    //     $taksongService = new TaksongService(app(ApiRequestService::class));
-    //     $result = $taksongService->addTaksong($data);
-    //     return response()->api($result);
-    // }
+        $taksongService = new TaksongService(app(ApiRequestService::class));
+        $result = $taksongService->addTaksong($data);
+        return $result;
+        // return response()->api($result);
+    }
 
 }

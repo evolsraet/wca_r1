@@ -43,6 +43,7 @@ class Article extends Model implements HasMedia
     }
 
     // 파일
+    /* 
     public function registerMediaCollections(): void
     {
         foreach ($this->files as $file => $name) {
@@ -56,6 +57,21 @@ class Article extends Model implements HasMedia
             }
         }
     }
+    */
+
+    public function registerMediaCollections(): void
+    {
+        foreach ($this->files as $file => $label) {
+            $collection = $this->addMediaCollection($file)
+                ->useFallbackUrl('/images/placeholder.jpg')
+                ->useFallbackPath(public_path('/images/placeholder.jpg'));
+
+            // ✅ 단일 업로드만 지정된 항목에 singleFile() 적용
+            if (in_array($file, $this->files_one, true)) {
+                $collection->singleFile();
+            }
+        }
+    }
 
     public function registerMediaConversions(Media $media = null): void
     {
@@ -63,6 +79,38 @@ class Article extends Model implements HasMedia
             $this->addMediaConversion('resized-image')
                 ->width(env('IMAGE_WIDTH', 300))
                 ->height(env('IMAGE_HEIGHT', 300));
+        }
+    }
+
+    /**
+     * 첨부파일 업로드를 모델 레벨에서 안전하게 처리
+     *
+     * @param mixed $files 업로드된 파일 또는 파일 배열
+     * @param string $collection 미디어 컬렉션명 (기본값: board_attach)
+     */
+    public function attachUploadedFiles($files, $collection = 'board_attach')
+    {
+        if (!is_array($files)) {
+            $files = [$files];
+        }
+
+        foreach ($files as $index => $file) {
+            if ($file instanceof \Illuminate\Http\UploadedFile && $file->isValid()) {
+                \Log::info('[Article 모델] addMedia - 파일 처리 중', [
+                    'originalName' => $file->getClientOriginalName(),
+                    'mimeType' => $file->getMimeType(),
+                    'size' => $file->getSize()
+                ]);
+
+                $this->addMedia($file->getRealPath())
+                    ->usingFileName($file->getClientOriginalName())
+                    ->toMediaCollection($collection);
+            } else {
+                \Log::warning('[Article 모델] 유효하지 않은 파일', [
+                    'file_key' => "$collection.$index",
+                    '파일객체' => $file
+                ]);
+            }
         }
     }
 }

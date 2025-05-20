@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use App\Jobs\AuctionBidStatusJob;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Models\DiagInfo;
 
 // 진단 서비스
 class DiagService
@@ -52,6 +53,27 @@ class DiagService
     {
 
         $carNo = $result['diag_car_no'];
+        
+        if (!$carNo) {
+            return [
+                'status' => 'error',
+                'message' => '유효하지 않은 차량번호',
+                'code' => 400,
+                'data' => [],
+            ];
+        }
+    
+        // 1. DB에 진단 데이터가 이미 있는지 확인 (car_no 기준)
+        $existing = DiagInfo::where('code', $carNo)->first();
+    
+        if ($existing) {
+            return [
+                'status' => 'ok',
+                'message' => 'DB에서 진단 데이터 불러옴',
+                'code' => 200,
+                'data' => $existing->diag_data,
+            ];
+        }    
 
         try {
             $apiRequestService = new ApiRequestService();
@@ -114,6 +136,11 @@ class DiagService
                     ];
                 }
             }
+
+            DiagInfo::create([
+                'code' => $carNo,
+                'diag_data' => $response,
+            ]);
 
             return [
                 'status' => 'ok',

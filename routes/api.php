@@ -24,7 +24,7 @@ use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\Api\DiagController;
 use App\Http\Controllers\Api\OwnershipController;
-
+use App\Http\Controllers\Api\WebhookController;
 
 // Route::post('forgetPassword', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 // Route::post('resetPassword', [ResetPasswordController::class, 'reset'])->name('password.reset');
@@ -144,7 +144,7 @@ Route::get('name-change-status-all-test', [AuctionController::class, 'processCom
 
 Route::get('test-auctions-notification', [AuctionController::class, 'testAuctionsNotification']);
 
-// Route::get('test-taksong-service', [AuctionController::class, 'testTaksongService']);
+Route::get('test-taksong-service', [AuctionController::class, 'testTaksongService']);
 
 // Route::get('diagnostic-check', [AuctionController::class, 'diagnosticCheck']);
 
@@ -153,3 +153,6 @@ Route::get('test-auctions-notification', [AuctionController::class, 'testAuction
 Route::get('ownership/manual-notify/{auctionId}', [OwnershipController::class, 'manualNotify']);
 Route::get('ownership/check/{auctionId}', [OwnershipController::class, 'checkOwnership']);
 Route::get('ownership/check-test', [OwnershipController::class, 'checkOwnershipByApiTest']);
+
+// 탁송 웹훅
+Route::post('taksong/status_change', [WebhookController::class, 'statusChange']);

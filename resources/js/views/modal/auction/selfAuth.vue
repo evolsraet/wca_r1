@@ -181,16 +181,16 @@
                         </div>
                     </div>
                     <div class="form-group mt-3" id="phoneNoElement" >
-                        <label class="mb-2"><span class="text-danger me-2">*</span> 휴대폰번호</label>
-                        <input type="number" id="phoneNo" class="form-control" placeholder="ex) 01012345678" value="`+user.value?.phone+`" style="width: 100%; padding: 12px;">
+                        <label class="mb-2"><span class="text-danger me-2">*</span> 휴대폰번호 <span class="text-danger">(숫자만)</span></label>
+                        <input type="text" id="phoneNo" class="form-control" placeholder="ex) 01012345678 (숫자만)" value="`+user.value?.phone+`" style="width: 100%; padding: 12px;">
                     </div>
                     <div class="form-group mt-3" id="userNameElement" >
                         <label class="mb-2"><span class="text-danger me-2">*</span> 소유자 이름</label>
                         <input type="text" id="userName" class="form-control" value="`+props.ownerName+`" disabled style="width: 100%;">
                     </div>
                     <div class="form-group mt-3" id="identityElement" >
-                        <label class="mb-2"><span class="text-danger me-2">*</span> 주민번호</label>
-                        <input type="number" id="identity" class="form-control" placeholder="ex) 9034561234567" style="width: 100%; padding: 12px;">
+                        <label class="mb-2"><span class="text-danger me-2">*</span> 주민번호 <span class="text-danger">(숫자만)</span></label>
+                        <input type="text" id="identity" class="form-control" placeholder="ex) 9034561234567 (숫자만)" style="width: 100%; padding: 12px;">
                     </div>            
                 
                 </div>
@@ -223,10 +223,6 @@
         setTimeout(() => {
             // 모든 라디오 버튼에 이벤트 리스너 추가
             const loginTypeLevelElements = document.getElementsByName('loginTypeLevel');
-            const telecomSection = document.getElementById('telecom');
-            const phoneNoSection = document.getElementById('phoneNoElement');
-            const userNameSection = document.getElementById('userNameElement');
-            const identitySection = document.getElementById('identityElement');
             const loginTypeLevelSection = document.getElementById('loginTypeLevel');
             const agreeButton = document.getElementById('agree');
             const agreeElement = document.getElementById('agreeElement');
@@ -270,8 +266,6 @@
                     const selectedLoginTypeValue = Array.from(loginTypeLevelElementsValue).find(radio => radio.checked)?.value;
 
                     if (!selectedLoginTypeValue) {
-                        // wica.ntcn(swal)
-                        // .alert('간편인증을 선택해주세요.');
                         alert('간편인증을 선택해주세요.');
                         return;
                     }
@@ -280,8 +274,6 @@
                     const selectedTelecom = Array.from(telecomElements).find(radio => radio.checked)?.value;
 
                     if (!selectedTelecom) {
-                        // wica.ntcn(swal)
-                        // .alert('통신사를 선택해주세요.');
                         alert('통신사를 선택해주세요.');
                         return;
                     }
@@ -295,11 +287,34 @@
                     console.log('identityValue',identityValue);
 
                     if (!phoneNoValue || !identityValue) {
-                        // wica.ntcn(swal)
-                        // .alert('휴대폰번호와 주민번호를 입력해주세요.');
                         alert('휴대폰번호와 주민번호를 입력해주세요.');
                         return;
                     }
+
+                    if(phoneNoValue){
+
+                        // 숫자가 아니면 리턴 
+                        if(isNaN(phoneNoValue)){
+                            alert('휴대폰번호는 숫자만 입력해주세요.');
+                            return;
+                        }
+
+                        // 휴대폰번호 유효성 검사 숫자에 - 가 들어가면 제거 
+                        // phoneNoValue = phoneNoValue.replace(/-/g, '');
+                    }
+
+                    if(identityValue){
+
+                        // 숫자가 아니면 리턴 
+                        if(isNaN(identityValue)){
+                            alert('주민번호는 숫자만 입력해주세요.');
+                            return;
+                        }
+
+                        // 주민번호 유효성 검사 숫자에 - 가 들어가면 제거 
+                        // identityValue = identityValue.replace(/-/g, '');
+                    }
+
 
                     let loginIdentity = identityValue.substring(0, 6);
                     const firstNumber = loginIdentity.substring(0, 1);
@@ -341,8 +356,6 @@
 
                 }else{
                     alert('개인사업자등록상태 조회 고지사항에 동의하고 다시 인증해주세요.');
-                    // wica.ntcn(swal)
-                    // .alert('개인사업자등록상태 조회 고지사항에 동의하고 다시 인증해주세요.');
                     return;
                 }
 
@@ -351,6 +364,11 @@
         }, 1000);
     
     };
+
+
+    const selfAuthModal2 = () => {
+
+    }
 
 
     const twoWayAuth = (resultData, getData) => {

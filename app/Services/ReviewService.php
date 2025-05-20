@@ -9,6 +9,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Http\Resources\ReviewResource;
 use App\Jobs\ReviewSendJob;
+use Illuminate\Support\Facades\Log;
+
 class ReviewService
 {
     use CrudTrait;
@@ -31,7 +33,7 @@ class ReviewService
 
                 $this->modifyAuth($auction->user_id);
                 
-                // $this->sendReviewNotification($result);
+                $this->sendReviewNotification($request, $result);
 
                 break;
             case 'update':
@@ -55,15 +57,8 @@ class ReviewService
         }
     }
 
-    public function sendReviewNotification($result)
+    public function sendReviewNotification($request, $result)
     {
-        $user = $result->user;
-        $data = [
-            'review' => $result,
-        ];
-
-        $via = ['mail'];
-
-        ReviewSendJob::dispatch($user, $data, $via);
+        ReviewSendJob::dispatch($request['dealer_id'], $request);
     }
 }

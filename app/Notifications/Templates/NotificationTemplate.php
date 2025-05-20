@@ -6,6 +6,8 @@ use Carbon\Carbon;
 use App\Http\Controllers\Api\PaymentController;
 use App\Models\User;
 use App\Models\Auction;
+use Vinkla\Hashids\Facades\Hashids;
+
 class NotificationTemplate
 {
 
@@ -313,6 +315,7 @@ class NotificationTemplate
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
+                .'ㅁ 고객사코드 : '.Hashids::encode($data->id).' \n'
                 .'ㅁ 상태 : 진단대기';  
 
 
@@ -839,12 +842,10 @@ class NotificationTemplate
 
                 $message = 
                 '리뷰 작성 알림 \n'
-                .'ㅁ 내용 : '.$data->content.' \n';
-
-                $link = [
-                    "url" => url('/board/claim'),
-                    "text" => '바로가기'
-                ];
+                .'ㅁ 내용 : '.$data->content.' \n'
+                .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
+                .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                .'ㅁ 차량번호 : '.$data->car_no.' \n';
 
                 break;
                 

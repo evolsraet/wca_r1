@@ -748,7 +748,7 @@
   
                 <div class="text-start mt-2">
                 <p class="text-secondary ">상태 :<span class="tc-red ms-1 fw-bold">
-                  {{auctionDetail.data.is_taksong === 'ask' ? '대기중' : auctionDetail.data.is_taksong === 'start' ? '탁송중' : auctionDetail.data.is_taksong === 'ing' ? '탁송중' : '탁송완료'}}
+                  {{auctionDetail.data.is_taksong === 'ask' ? '대기중' : auctionDetail.data.is_taksong === 'start' ? '배차' : auctionDetail.data.is_taksong === 'ing' ? '탁송중' : '탁송완료'}}
                 </span></p>
                 <p class="text-secondary ">탁송 기사 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_courier_name ? auctionDetail.data.taksong_courier_name+' / ' : '' }}  {{auctionDetail.data.taksong_courier_mobile ? auctionDetail.data.taksong_courier_mobile : '미정'}}</span></p>
                 <p class="text-secondary ">출발 주소 :<span class="tc-red ms-1">{{auctionDetail.data.taksong_departure_address}}</span></p>
