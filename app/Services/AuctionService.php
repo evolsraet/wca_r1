@@ -689,7 +689,7 @@ class AuctionService
                         ->where('final_at', '<', Carbon::now()->format('Y-m-d H:i:s'))
                         ->get();
 
-        Log::info('경매시간만료 확인', [$auctions]);
+        Log::debug('[경매시간만료] 확인 ' . count( (array) $auctions ) . '건', $auctions);
 
         foreach($auctions as $auction){
             // 현재시간 final_at 시간 비교해서 현재 시간이 더 클 경우 상태 변경 
@@ -697,7 +697,7 @@ class AuctionService
             $auction->choice_at = Carbon::now()->addDays(config('days.choice_day'));
             $auction->save();
 
-            Log::info("경매시간 만료시 선택대기로 변경 {$auction->id}", [$auction]);
+            Log::info("[경매시간만료] 선택대기로 변경 {$auction->id}", [$auction]);
 
             // 알림 보내기
             AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '','');
