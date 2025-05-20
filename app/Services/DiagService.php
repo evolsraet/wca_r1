@@ -90,7 +90,7 @@ class DiagService
             );
 
             if (!isset($response['status']) || $response['status'] !== 'ok') {
-                Log::debug("[진단 데이터] 미등록 차량 : {$carNo}", ['response' => $response]);
+                Log::debug("[진단 데이터] 진단에 미등록된 차량입니다: {$carNo}", ['response' => $response]);
                 return [
                     'status' => 'error',
                     'message' => '진단 데이터 조회 실패. 진단에 미등록된 차량입니다.',
@@ -185,14 +185,14 @@ class DiagService
                     $resultArray['status'] === 'ok' &&
                     $resultArray['data']['data']['diag_is_confirmed'] == 1
                 ) {
-                    Log::info('[진단 상태 확인] : ' . $auction->id, ['result' => $resultArray]);
+                    Log::info('[진단 상태 확인] 완료 : ' . $auction->hashid, ['result' => $resultArray]);
                     $validResults[] = $resultArray;
 
                     $this->processValidDiagResult($auction, $resultArray);
                 }
 
             } catch (\Exception $e) {
-                Log::error('[진단 상태 확인 오류] Auction ID: ' . $auction->id, ['error' => $e->getMessage()]);
+                Log::error('[진단 상태 확인] 오류 : Auction hashid: ' . $auction->hashid, ['error' => $e->getMessage()]);
             }
         }
 

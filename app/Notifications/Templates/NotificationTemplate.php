@@ -469,7 +469,7 @@ class NotificationTemplate
                 $weekday = $weekdays[date('w', strtotime($data->final_at))];
                 $finalAtTrans = date('Y-m-d', strtotime($data->final_at)) . "($weekday) " . date('H시', strtotime($data->final_at));
 
-                $title = '경매 상태가 변경되었습니다.';
+                $title = '경매 상태가 변경되었습니다. ['.$data->car_no.' 경매진행]';
 
                 $message = 
                 '경매 상태가 변경되었습니다. \n'

@@ -395,7 +395,7 @@ class AuctionService
             $key = "auction_view_{$userId}_{$auctionId}";
 
             if (!Redis::get($key)) {
-                Log::info("조회수 증가 user : {$userId} , auction : {$auctionId}");
+                // Log::info("조회수 증가 user : {$userId} , auction : {$auctionId}");
                 $auction->increment('hit');  // 조회수 증가
                 Redis::setex($key, 86400, true);  // 24시간 동안 유효한 키 설정
             }
