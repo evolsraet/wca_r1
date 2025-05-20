@@ -330,6 +330,19 @@ class NotificationTemplate
             case 'AuctionDlvrJobUser':
                 $title = '판매요청이 잘 접수됐어요.';
 
+                // $message = 
+                // '판매요청이 잘 접수됐어요. \n'
+                // .'매니저가 딜러의 견적과 필요서류를 확인하고 있어요. 딜러 사정에 따라 늦어지는 경우가 있습니다. 최대한 빨리 확인 후 안내드릴 예정이니, 조금만 기다려주세요! \n'
+                // .'이후 판매 과정 \n'
+                // .'1. 판매서류 준비하기 \n'
+                // .'2. (탁송일) 기사 도착&입금받기 \n'
+                // .'3. (탁송일 + 2일) 명의이전 완료 \n'
+                // .'* 더자세한 내용은 바로가기를 클릭하여 확인해 주세요. \n'
+                // .'\n'
+                // .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
+                // .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                // .'ㅁ 차량번호 : '.$data->car_no.' \n';
+
                 $message = 
                 '판매요청이 잘 접수됐어요. \n'
                 .'매니저가 딜러의 견적과 필요서류를 확인하고 있어요. 딜러 사정에 따라 늦어지는 경우가 있습니다. 최대한 빨리 확인 후 안내드릴 예정이니, 조금만 기다려주세요! \n'
@@ -389,6 +402,7 @@ class NotificationTemplate
                 ."ㅁ 입찰가 : ".FormatHelper::formatPriceToMan(number_format($data->final_price))." \n"
                 ."ㅁ 계좌번호 : ".$data->bank." ".$data->account." \n"
                 ."ㅁ 입금기일 : ".$formattedTime." \n"
+                ."* 사이트에서 [경락 확인서]를 확인하실 수 있어요!"
                 ;
 
                 $link = [

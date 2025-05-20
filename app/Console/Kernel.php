@@ -61,7 +61,7 @@ class Kernel extends ConsoleKernel
             $auction = Auction::whereIn('status', ['chosen','dlvr'])->whereNotNull('is_taksong')->where('is_taksong', '!=', 'done')->get();
             if($auction){
                 foreach($auction as $auctionStatus){
-                    Log::info('[kernel 탁송 상태 확인]', ['auction' => $auctionStatus]);
+                    Log::info('[탁송 상태 / 스케쥴] 확인', ['auction' => $auctionStatus]);
                     TaksongStatusJob::dispatch($auctionStatus->taksong_id);
                 }
             }
