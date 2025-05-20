@@ -39,7 +39,7 @@ class TaksongService
                 throw new Exception('차량번호가 없습니다.', 422);
             }
 
-            Log::debug("[탁송요청 {$carNo}] 시작", [
+            Log::debug("[탁송 요청 {$carNo}] 시작", [
                 'api_url' => $this->taksongApiUrl,
                 'data' => $data
             ]);
@@ -50,7 +50,7 @@ class TaksongService
             foreach ($requiredFields as $field) {
                 if (empty($data[$field])) {
                     $message = "필수값 누락: {$field}";
-                    Log::debug("[탁송요청 {$carNo}] 필수값 누락: {$field}", ['field' => $field, 'input_data' => $data]);
+                    Log::debug("[탁송 요청 {$carNo}] 필수값 누락: {$field}", ['field' => $field, 'input_data' => $data]);
                     throw new Exception($message, 422);
                 }
             }
@@ -80,15 +80,15 @@ class TaksongService
 
             if (!$result) {
                 $message = '탁송처리 API 요청 실패: 응답 없음';
-                Log::error('[탁송 / '.$carNo.'] API 응답 실패', ['request' => $sendData]);
+                Log::error('[탁송 요청] {$carNo} API 응답 실패', ['request' => $sendData]);
                 throw new Exception($message, 500);
             }
 
-            Log::info('[탁송 / '.$carNo.'] 탁송 요청 성공', ['result' => $result]);
+            Log::info('[탁송 요청] {$carNo} 탁송 요청 성공', ['result' => $result]);
             return $result;
 
         } catch (Exception $e) {
-            Log::error('[탁송 / '.$carNo.'] 예외 발생', [
+            Log::error('[탁송 요청] {$carNo} 예외 발생', [
                 'message' => $e->getMessage(),
                 'code' => $e->getCode(),
                 'trace' => $e->getTraceAsString()
@@ -131,13 +131,13 @@ class TaksongService
                 'ing'    => $this->handleInProgress($carNo, $data),
                 'done'   => $this->handleDone($carNo, $auction, $bid, $status, $modifyData),
                 'cancel' => $this->handleCancel($carNo, $modifyData),
-                default  => Log::warning("[탁송 / {$carNo}] 알 수 없는 상태", ['status' => $status, 'car_no' => $carNo]),
+                default  => Log::warning("[탁송 상태] {$carNo} 알 수 없는 상태", ['status' => $status, 'car_no' => $carNo]),
             };
     
-            Log::info("[탁송 / {$carNo}] 상태 처리 완료", ['status' => $status, 'car_no' => $carNo]);
+            Log::info("[탁송 상태] {$carNo} 상태 처리 완료", ['status' => $status, 'car_no' => $carNo]);
 
         } catch (Exception $e) {
-            Log::error("[탁송 / {$carNo}] 예외 발생", [
+            Log::error("[탁송 상태] {$carNo} 예외 발생", [
                 'status' => $status,
                 'car_no' => $carNo,
                 'message' => $e->getMessage(),
@@ -192,7 +192,7 @@ class TaksongService
 
     // 탁송 완료 상태 처리
     private function handleDone(string $carNo, $auction, $bid, $status, $modifyData){
-        Log::info("[탁송 / {$carNo}] 탁송 상태 처리 완료 확인", ['status' => $status, 'car_no' => $carNo]);
+        Log::info("[탁송 상태] {$carNo} 탁송 상태 처리 완료 확인", ['status' => $status, 'car_no' => $carNo]);
 
         $isCheck = Auction::where('car_no', $carNo)->where('status', 'dlvr')->first();
         if($isCheck){
