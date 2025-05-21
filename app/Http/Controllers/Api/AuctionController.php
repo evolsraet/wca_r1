@@ -677,4 +677,17 @@ class AuctionController extends Controller
         // return response()->api($result);
     }
 
+
+
+    public function rollbackAuction(Request $request)
+    {
+
+        $auctionId = $request->auctionId;
+
+        $auctionService = new AuctionService();
+        $result = $auctionService->rollbackAuctionResult($auctionId);
+        return response()->api($result);
+    }
+
+
 }

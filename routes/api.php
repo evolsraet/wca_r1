@@ -156,3 +156,6 @@ Route::get('ownership/check-test', [OwnershipController::class, 'checkOwnershipB
 
 // 탁송 웹훅
 Route::post('taksong/status_change', [WebhookController::class, 'statusChange']);
+
+// 롤백 처리
+Route::post('auctions/rollback/', [AuctionController::class, 'rollbackAuction']);

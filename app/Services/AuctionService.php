@@ -31,6 +31,8 @@ use App\Notifications\Templates\NotificationTemplate;
 use App\Services\ApiRequestService;
 use Illuminate\Support\Str;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Models\AuctionLog;
+
 class AuctionService
 {
     use CrudTrait;
@@ -754,14 +756,55 @@ class AuctionService
 
 
     // 롤백 처리
-    public function rollbackAuction($auctionId, $auction)
+    public function rollbackAuctionResult($auctionId)
     {
 
-        // 롤백 처리 전 확인 
+        $autcion_id = Hashids::decode($auctionId);
+        $auction = Auction::find($autcion_id);
 
-        $auction = Auction::find($auctionId);
-        $auction->status = 'cancel';
-        $auction->save();
+        Log::info("[상태롤백] 처리 {$auctionId}", ['auction' => $auction]);
+
+        // 상태변경 이력 조회
+        $auctionLog = AuctionLog::where('auction_id', $autcion_id)->orderBy('id', 'desc')->skip(1)->first();
+        //$auctionLogFirst = AuctionLog::where('auction_id', $autcion_id)->orderBy('id', 'desc')->first();
+
+        // Log::info("[상태롤백] 데이터 {$auctionLog->status}", ['auctionLog' => $auctionLog, 'auctionLogFirst' => json_decode($auctionLogFirst->changes, true)]);
+       
+        // 상태 변경
+        $auctionChanges = Auction::where('id', $autcion_id)->first();
+        $auctionChanges->status = $auctionLog->status;
+
+        $auctionLogChanges = json_decode($auctionLog->changes, true);
+
+        $changesData = [];
+
+        foreach($auctionLogChanges as $key => $value){
+            if($key !== 'status'){
+                $changesData[$key] = null;
+                // if (is_string($value) && strtotime($value) !== false) {
+                //     $changesData[$key] = '';
+                // } else {
+                //     $changesData[$key] = null;
+                // }
+            }
+        }
+
+        // Log::info("[상태롤백] 데이터", ['changesData' => $changesData]);
+
+        Log::info("[상태롤백] 데이터", ['changesData' => $changesData, 'auctionChanges' => $auctionChanges]);
+
+        $result = $auctionChanges->save();
+
+        if($result){
+            return response()->json([
+                'isSuccess' => true
+            ]);
+        } else {
+            return response()->json([
+                'isSuccess' => false
+            ]);
+        }
+
     }
 
 }

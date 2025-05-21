@@ -1319,7 +1319,19 @@ const isAccident = (id) => {
     })
     .get();
   }
-    
+
+  // 롤백 처리
+  const rollbackAuction = async (auctionId) => {
+    return wicac.conn()
+    .url(`/api/auctions/rollback/`)
+    .param({
+      "auctionId":auctionId
+    })
+    .callback(function (result) {
+      return result;
+    })
+    .post();
+  }
     return {
         getAuctionsByDealerLike,
         adminGetAuctions,
@@ -1372,7 +1384,8 @@ const isAccident = (id) => {
         diagnostic,
         checkNameChangeDealer,
         checkNameChangeStatus,
-        getReview
+        getReview,
+        rollbackAuction
     };
     
 }

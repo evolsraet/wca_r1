@@ -192,8 +192,11 @@
                       <!-- <li><a href="#" class="google" title="google" @click.prevent="handleSocialLogin('google')">Google</a></li>
                       <li><a href="#" class="naver" title="naver" @click.prevent="handleSocialLogin('naver')">Naver</a></li>
                       <li><a href="#" class="kakao" title="kakao" @click.prevent="handleSocialLogin('kakao')">Kakao</a></li> -->
-                      <li>
+                      <!-- <li>
                         <a href="/auth/google/redirect" class="google">Google</a>
+                      </li> -->
+                      <li>
+                        <a href="javascript:alert('현재 개발중')" class="google">Google</a>
                       </li>
                       <li>
                         <a href="/auth/naver/redirect" class="naver">Naver</a>
@@ -261,8 +264,11 @@
                     <h3 class="mb-2 text-secondary opacity-50"><span>또는 소셜 로그인</span></h3>
                     <ul class="login-v2-area">
                       
-                      <li>
+                      <!-- <li>
                         <a href="/auth/google/redirect" class="google">Google</a>
+                      </li> -->
+                      <li>
+                        <a href="javascript:alert('현재 개발중')" class="google">Google</a>
                       </li>
                       <li>
                         <a href="/auth/naver/redirect" class="naver">Naver</a>

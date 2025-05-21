@@ -23,7 +23,7 @@
         </ul>
       </div>
       <div style="margin-left: 5px;">
-        <button class="btn btn-primary btn-sm" @click="rollbackAuction(auctionId, auction)">롤백 (개발용)</button>
+        <button class="btn btn-primary btn-sm" @click="rollbackAuctionBtn(auctionId)">롤백 (개발용)</button>
       </div>
     </div>
     
@@ -677,7 +677,17 @@ const diagInfo = ref('');
 
 const route = useRoute();
 const router = useRouter();
-const { getAuctionById, updateAuctionStatus, isLoading, updateAuction, updateAuctionIsDeposit, diagnostic, checkNameChangeStatus, checkNameChangeDealer } = useAuctions();
+const { 
+  getAuctionById, 
+  updateAuctionStatus, 
+  isLoading, 
+  updateAuction, 
+  updateAuctionIsDeposit, 
+  diagnostic, 
+  checkNameChangeStatus, 
+  checkNameChangeDealer,
+  rollbackAuction
+} = useAuctions();
 const auctionId = route.params.id; 
 const auctionDetails = ref(null);
 const isVisible = ref(false);
@@ -1173,8 +1183,8 @@ function editPostCodeReceive(elementName) {
     });
 }
 
-const rollbackAuction = async (auctionId, auction) => {
-  console.log('rollbackAuction', auctionId, auction);
+const rollbackAuctionBtn = async (auctionId) => {
+  console.log('rollbackAuction', auctionId);
 
   const confirm = await swal.fire({
     title: '롤백',
@@ -1184,8 +1194,17 @@ const rollbackAuction = async (auctionId, auction) => {
 
   if(confirm.isConfirmed){
     console.log('롤백 완료');
+
+    const result = await rollbackAuction(auctionId);
+    console.log('result', result.isSuccess);
+
+    if(result.isSuccess === true){
+      alert('롤백 완료');
+    }else{
+      alert('롤백 실패');
+    }
   }else{
-    console.log('롤백 취소');
+    // console.log('롤백 취소');
   }
 }
 
