@@ -22,6 +22,9 @@
           <li><a class="dropdown-item" href="#" @click="DiagnosticAuctionCheck(auction.hashid)">진단상태 강제갱신</a></li>
         </ul>
       </div>
+      <div style="margin-left: 5px;">
+        <button class="btn btn-primary btn-sm" @click="rollbackAuction(auctionId, auction)">롤백 (개발용)</button>
+      </div>
     </div>
     
   </div>
@@ -41,6 +44,8 @@
                     </div>
                   </div>
                   <div class="car-info">
+
+
                       <div class="item">
                         <span class="label">차량번호</span>
                         <span class="value">{{ auction.car_no }}</span>
@@ -1166,6 +1171,22 @@ function editPostCodeReceive(elementName) {
       auction.dest_addr_post = zonecode;
       auction.dest_addr1 = address;
     });
+}
+
+const rollbackAuction = async (auctionId, auction) => {
+  console.log('rollbackAuction', auctionId, auction);
+
+  const confirm = await swal.fire({
+    title: '롤백',
+    text: '롤백하시겠습니까?',
+    icon: 'warning',
+  }); 
+
+  if(confirm.isConfirmed){
+    console.log('롤백 완료');
+  }else{
+    console.log('롤백 취소');
+  }
 }
 
 onBeforeUnmount(() => {

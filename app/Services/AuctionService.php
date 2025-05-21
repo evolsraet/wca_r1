@@ -752,4 +752,16 @@ class AuctionService
         return $response->json()['dataBody']['access_token'];
     }
 
+
+    // 롤백 처리
+    public function rollbackAuction($auctionId, $auction)
+    {
+
+        // 롤백 처리 전 확인 
+
+        $auction = Auction::find($auctionId);
+        $auction->status = 'cancel';
+        $auction->save();
+    }
+
 }
