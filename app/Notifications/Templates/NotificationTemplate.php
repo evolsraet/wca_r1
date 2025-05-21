@@ -457,13 +457,25 @@ class NotificationTemplate
 
                 $title = '차량명의이전서류가 등록됐습니다.';
 
+                $total_fee = FormatHelper::formatPriceToMan(number_format(15)); // 임시금액
+
                 $message = 
                 '차량명의이전서류가 등록됐습니다. \n'
+                ."\n"
+                .'수수료 입금 내용을 확인 해 주세요. \n'
+                .'영업일 기준 2일 내 [이전등록증]을 등록해 주세요. \n'
+                ."❖ 수수료 미입금시 클레임이 불가합니다. \n"
                 ."\n"
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
-                ;
+                ."ㅁ 수수료 : ".$total_fee." (테스트용 임시금액) \n"
+                ."ㅁ 계좌번호 : 1234124-124124124 (테스트용 계좌번호) \n";
+
+                // .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
+                // .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                // .'ㅁ 차량번호 : '.$data->car_no.' \n'
+                // ;
 
                 // $link = [
                 //     "url" => url('/api/payment?code='.$bidCode),
