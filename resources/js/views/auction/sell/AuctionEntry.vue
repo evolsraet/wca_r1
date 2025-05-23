@@ -89,7 +89,7 @@
         </div>
 
         <div class="form-group" v-if="auctionType !== '1'">
-          <label for="memo"><span class="text-danger me-2">*</span>차량상태입력</label>
+          <label for="memo">차량상태입력 (선택)</label>
 
           <div class="form-check">
             <div class="row">
@@ -121,7 +121,16 @@
           </div>
 
           <div class="mt-1">
-            <input type="text" id="car_condition" v-model="carKm" readonly placeholder="키로수">
+            <div class="row">
+              <div class="col-10">
+                <input type="text" id="car_condition" v-model="carKm" readonly placeholder="키로수">
+              </div>
+              <div class="col-2 d-flex align-items-center">
+                <span style="padding-top: 30px;">Km</span>
+              </div>
+            </div>
+            
+            
           </div>
 
           <textarea type="text" id="memo" v-model="memo" placeholder="ex) 외관손상, 차량내부손상, 사고유무등 &#13;&#10;주의) 주요결함 미고지시 추후 환불등 불이익이 있을수 있습니다. &#13;&#10;최근 정비이력 등 이슈나 내차를 뽐내주세요" rows="2" ref="memoSelect" style="height: 100px;"></textarea>

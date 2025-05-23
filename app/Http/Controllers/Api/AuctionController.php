@@ -204,6 +204,102 @@ class AuctionController extends Controller
 
     }
 
+
+    public function depreciationCalculate(Request $request)
+    {
+        // 입력값 파싱
+        $regYear = (int) $request->query('regYear');
+        $regMonth = (int) $request->query('regMonth');
+
+        $now = new \DateTime();
+        $currentYear = (int) $request->query('currentYear', (int) $now->format('Y'));
+        $currentMonth = (int) $request->query('currentMonth', (int) $now->format('n'));
+
+        $currentMileage = (int) $request->query('currentMileage');
+        $basePrice = (int) $request->query('initialPrice');
+        $type = $request->query('type', 'basic'); // 'basic' 또는 'adjusted'
+
+        $monthsUsed = ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth);
+        $yearsUsed = $currentYear - $regYear;
+
+        $residualRates = [
+            0 => 0.95, 1 => 0.85, 2 => 0.77, 3 => 0.69, 4 => 0.61,
+            5 => 0.53, 6 => 0.45, 7 => 0.37, 8 => 0.29, 9 => 0.21,
+            10 => 0.16, 11 => 0.16, 12 => 0.16, 13 => 0.16, 14 => 0.16,
+            15 => 0.16, 16 => 0.16, 17 => 0.16, 18 => 0.16, 19 => 0.16,
+        ];
+
+        $residualRate = $residualRates[$yearsUsed] ?? 0.16;
+        $standardMileage = $monthsUsed * 1.25 * 1000;
+        $mileageDiff = $standardMileage - $currentMileage;
+
+        if ($type === 'adjusted') {
+            // 조정 조건 적용 버전
+            $isOver10Years = $yearsUsed >= 10;
+            $isOver200k = $currentMileage >= 200000;
+            $isEligibleForBonus = !$isOver10Years && !$isOver200k;
+
+            $adjustment = ($basePrice * 0.1 / 20) * (abs($mileageDiff) / 1000) * $residualRate;
+
+            if ($mileageDiff > 0) {
+                // 가산 조건
+                if ($isEligibleForBonus) {
+                    $adjustment = min($adjustment, $basePrice * 0.2);
+                    $estimatedPrice = $basePrice + $adjustment;
+                } else {
+                    $adjustment = 0;
+                    $estimatedPrice = $basePrice;
+                }
+            } else {
+                // 감가 조건
+                $adjustment = min($adjustment, $basePrice * 0.4);
+                $estimatedPrice = $basePrice - $adjustment;
+            }
+        } else {
+            // 기본 계산 로직
+            $adjustment = ($basePrice * 0.1 / 20) * (abs($mileageDiff) / 1000) * $residualRate;
+            if ($mileageDiff < 0) {
+                $adjustment = -$adjustment;
+            }
+            $estimatedPrice = $adjustment > 0
+                ? $basePrice - $adjustment
+                : $basePrice + $adjustment;
+        }
+
+        return response()->json([
+            'regYear' => $regYear,
+            'regMonth' => $regMonth,
+            'currentYear' => $currentYear,
+            'currentMonth' => $currentMonth,
+            'monthsUsed' => $monthsUsed,
+            'yearsUsed' => $yearsUsed,
+            'standardMileage' => round($standardMileage),
+            'mileageDifference' => round($mileageDiff),
+            'residualRate' => $residualRate,
+            'basePrice' => $basePrice,
+            'adjustment' => round($adjustment),
+            'estimatedPrice' => round($estimatedPrice),
+            'estimatedPriceInTenThousandWon' => round($estimatedPrice / 10000, 1),
+            '한글결과' => [
+                '등록년도' => $regYear,
+                '등록월' => $regMonth,
+                '현재년도' => $currentYear,
+                '현재월' => $currentMonth,
+                '사용개월수' => $monthsUsed,
+                '사용연수' => $yearsUsed,
+                '표준주행거리' => round($standardMileage),
+                '주행거리차이' => round($mileageDiff),
+                '잔가율' => $residualRate,
+                '기준가격' => $basePrice,
+                '감가조정' => round($adjustment),
+                '예상금액' => round($estimatedPrice),
+                '예상금액(만원)' => round($estimatedPrice / 10000, 1),
+            ]
+        ]);
+
+    }
+
+
     // 예상가 확인 API
     public function CheckExpectedPrice(Request $request)
     {

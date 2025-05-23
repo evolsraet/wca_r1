@@ -113,7 +113,7 @@ class UserService
 
             // 회원가입 알림 발송
             if($data['role'] == 'user' && $item){
-                UserRegisteredJob::dispatch($item);
+                UserRegisteredJob::dispatch($item, 'user');
             }
 
             // 하위 모델
@@ -157,7 +157,7 @@ class UserService
 
                 // 회원가입 알림 발송
                 if($dealer){
-                    UserRegisteredJob::dispatch($item);
+                    UserRegisteredJob::dispatch($item, 'dealer');
                 }
             }
 

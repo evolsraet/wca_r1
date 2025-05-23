@@ -83,6 +83,22 @@
                         <div class="gap-1" :class="[{ 'grayscale_img': auctionDetail.data.status === 'done' || auctionDetail.data.status === 'cancel' }]">
                         <div v-if="!isMobileView" class="d-flex flex-row gap-1 img-container" :style="auctionDetail.data.car_thumbnails ? '' : 'height:320px'">
   
+
+                          <swiper
+                            :modules="modules"
+                            :slides-per-view="3"
+                            :space-between="50"
+                            navigation
+                            :pagination="{ clickable: true }"
+                            :scrollbar="{ draggable: true }"
+                            @swiper="onSwiper"
+                            @slideChange="onSlideChange"
+                          >
+                            <swiper-slide>Slide 1</swiper-slide>
+                            <swiper-slide>Slide 2</swiper-slide>
+                            <swiper-slide>Slide 3</swiper-slide>
+                          </swiper>
+
   
                           <div v-if="auctionDetail.data.car_thumbnails" class="img-wrapper">
                               <!-- <img :src="thumbnail" alt="Car Image" v-for="thumbnail in auctionDetail.data.car_thumbnails" :key="thumbnail"> -->
@@ -1250,6 +1266,10 @@
   
   import { Swiper, SwiperSlide } from "swiper/vue";
   import "swiper/swiper-bundle.css";
+  import 'swiper/css';
+  import 'swiper/css/navigation';
+  import 'swiper/css/pagination';
+  import 'swiper/css/scrollbar';
   import { Navigation, Pagination, Autoplay } from "swiper/modules";
   
   export default {
@@ -1271,6 +1291,19 @@
     components: {
       Swiper,
       SwiperSlide,
+    },
+    setup() {
+      const onSwiper = (swiper) => {
+        console.log(swiper);
+      };
+      const onSlideChange = () => {
+        console.log('slide change');
+      };
+      return {
+        onSwiper,
+        onSlideChange,
+        modules: [Navigation, Pagination, Scrollbar, A11y],
+      };
     },
     methods: {
       getStatusIndex(status) {

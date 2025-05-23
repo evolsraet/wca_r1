@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Carbon\Carbon;
 
 class Dealer extends Model implements HasMedia
 {
@@ -69,5 +70,23 @@ class Dealer extends Model implements HasMedia
     {
         // 숫자가 아닌 모든 문자를 제거
         $this->attributes['phone'] = preg_replace('/\D+/', '', $value);
+    }
+
+    protected static function booted()
+    {
+
+        static::creating(function ($dealer) {
+
+            // 딜러 회원가입시 대기 알림 
+            
+        });
+
+        static::saving(function ($dealer) {
+            // dealerBirthDate 가 870426 형식이면 1987-04-26 으로 변환
+            if (!empty($dealer->dealerBirthDate)) {
+                $dealer->dealerBirthDate = Carbon::parse($dealer->dealerBirthDate)->format('Y-m-d');
+            }
+        });
+        
     }
 }

@@ -159,3 +159,7 @@ Route::post('taksong/status_change', [WebhookController::class, 'statusChange'])
 
 // 롤백 처리
 Route::post('auctions/rollback/', [AuctionController::class, 'rollbackAuction']);
+
+
+// 예상가격 테스트 
+Route::get('depreciation/calculate', [AuctionController::class, 'depreciationCalculate']);

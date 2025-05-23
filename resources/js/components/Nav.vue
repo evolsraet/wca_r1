@@ -326,9 +326,9 @@
             <li class="nav-item">
               <router-link :to="{ name: 'posts.index', params: { boardId: 'claim' } }" class="nav-link tc-wh mx-3" exact-active-class="active-link">클레임</router-link>
             </li>
-            <li class="nav-item">
+            <!-- <li class="nav-item">
               <router-link :to="{ name: 'dealer.searchbid'}" class="nav-link tc-wh mx-3" exact-active-class="active-link">시세 조회</router-link>
-            </li>
+            </li> -->
             <li class="nav-item">
               <router-link :to="{ name: 'index.introduce'}" class="nav-link tc-wh mx-3" to="/register" exact-active-class="active-link">서비스소개</router-link>
             </li>

@@ -447,6 +447,8 @@ const checkExpectedPriceClick = async () => {
 
     const initialPrice = carDetails.value.priceNowWhole;
 
+    console.log('initialPrice??',initialPrice);
+
     // console.log(currentPrice);
 
     const data = {

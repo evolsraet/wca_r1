@@ -22,7 +22,6 @@ class UserRegisteredJob implements ShouldQueue
      * Create a new job instance.
      */
     protected $item;
-
     public function __construct($item)
     {
         $this->item = $item;
@@ -37,30 +36,20 @@ class UserRegisteredJob implements ShouldQueue
         Log::info('UserRegisteredJob 실행되었습니다!....', ['item' => $this->item]);
         
         $item = $this->item;
-        $name = $item->name;
-
-        // dd($item);
-
-        $data = [
-            'user' => $item,
-            'name' => $name,
-            'title' => '회원가입 알림',
-            'message' => '회원가입 알림',
-        ];
-
-        // 회원가입 메시지 템플릿
-        $notificationTemplate = NotificationTemplate::getTemplate('welcome', $item, ['mail']);
 
 
         // 운영자 회원에게 알림 보내기 추가 / id 가 1, 2 인 회원에게 알림 보내기
         $adminUsers = User::whereIn('id', [1, 2])->get();
         foreach ($adminUsers as $adminUser) {
-            // $adminUser->notify(new WelcomeNotification($this->item, $sendMessage));
+            $notificationTemplate = NotificationTemplate::getTemplate('welcome', $item, ['mail']);
             $adminUser->notify(new AuctionsNotification($this->item, $notificationTemplate, ['mail']));
             
         }
         // 이메일 전송
-        // $this->item->notify(new WelcomeNotification($this->item, $sendMessage));
+
+        $item->status == 'ok' ? $type = 'welcome' : $type = 'dealerRegisterWait';
+
+        $notificationTemplate = NotificationTemplate::getTemplate($type, $item, ['mail']);
         $this->item->notify(new AuctionsNotification($this->item, $notificationTemplate, ['mail']));
 
     }

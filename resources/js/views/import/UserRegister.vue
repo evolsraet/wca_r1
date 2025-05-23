@@ -39,7 +39,7 @@
         </div>
         <div v-if="registerURL || adminCreateURL" class="form-group">
           <label for="name"><span class="text-danger">*</span> 전화번호</label>
-          <input type="text" id="phone" v-model="profile.phone" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
+          <input type="text" id="phone" v-model="profile.phone" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요" style="padding: 8px;" />
           <div v-if="registerURL || adminCreateURL || adminEditURL" class="text-danger mt-1">
             <div v-for="message in validationErrors?.phone">
                 {{ message }}
@@ -132,26 +132,14 @@
 
           <div v-if="isDealer || profile.isDealer">
             
-            <a @click="isDealerCheckEvent" class="icon-link">
-              <img src="../../../img/Icon-file.png" class="ms-2" alt="온라인자동차경매장 규약">온라인자동차경매장 규약
-            </a>
-
-            <a @click="isDealerCheckEvent2" class="icon-link mt-3">
-              <img src="../../../img/Icon-file.png" class="ms-2" alt="주민등록번호(법인등록번호)고지사항">주민등록번호(법인등록번호) 수집 동의
-            </a>
-
-            <a @click="isDealerCheckEvent3" class="icon-link mt-3">
-              <img src="../../../img/Icon-file.png" class="ms-2" alt="자동차관리사업등록번호 고지사항">자동차관리사업등록번호 수집 동의
-            </a>
-
-            <a @click="isDealerCheckEvent4" class="icon-link mt-3">
-              <img src="../../../img/Icon-file.png" class="ms-2" alt="사업자정보">사업자정보 수집 동의
-            </a>
-
             <!-- <DealerPersonalNumber :mode="check2" /> -->
 
             <div class="form-group dealer-check" style="margin-top: 20px;">
-                <label for="dealer">온라인자동차경매장 규약</label>
+                <label for="dealer">
+                  <a @click="isDealerCheckEvent">
+                    온라인자동차경매장 규약
+                  </a>
+                </label>
                 <div class="check_box">
                     <input type="checkbox" id="ch5" v-model="profile.isDealerApplyCheck" class="form-control" ref="isDealerApplyCheckSelect">
                     <label for="ch5">동의</label>
@@ -160,7 +148,11 @@
 
 
             <div class="form-group dealer-check" style="margin-top: 20px;">
-                <label for="dealer">주민등록번호(법인등록번호) 수집 동의</label>
+                <label for="dealer">
+                  <a @click="isDealerCheckEvent2">
+                    주민등록번호(법인등록번호) 수집 동의
+                  </a>
+                </label>
                 <div class="check_box">
                     <input type="checkbox" id="ch6" v-model="profile.isDealerApplyCheck1" class="form-control" ref="isDealerApplyCheckSelect1">
                     <label for="ch6">동의</label>
@@ -168,7 +160,11 @@
             </div>
 
             <div class="form-group dealer-check" style="margin-top: 20px;">
-                <label for="dealer">자동차관리사업등록번호 수집 동의</label>
+                <label for="dealer">
+                  <a @click="isDealerCheckEvent3">
+                    자동차관리사업등록번호 수집 동의
+                  </a>
+                </label>
                 <div class="check_box">
                     <input type="checkbox" id="ch7" v-model="profile.isDealerApplyCheck2" class="form-control" ref="isDealerApplyCheckSelect2">
                     <label for="ch7">동의</label>
@@ -176,7 +172,11 @@
             </div>
 
             <div class="form-group dealer-check" style="margin-top: 20px;">
-                <label for="dealer">사업자정보 수집 동의</label>
+                <label for="dealer">
+                  <a @click="isDealerCheckEvent4">
+                    사업자정보 수집 동의
+                  </a>
+                </label>
                 <div class="check_box">
                     <input type="checkbox" id="ch8" v-model="profile.isDealerApplyCheck3" class="form-control" ref="isDealerApplyCheckSelect3">
                     <label for="ch8">동의</label>
@@ -188,14 +188,14 @@
 
         </div>
         <div v-if="isDealer || profile.isDealer">
-          <div v-if="registerURL || adminCreateURL" class="mb-3">
+          <div v-if="registerURL || adminCreateURL" class="mb-3 mt-3">
                 <label for="user-title" class="form-label"
-                    >사진 (본인 확인용)</label
+                    ><span class="text-danger">*</span> 사진 (본인 확인용)</label
                 >
                 <div class="file-upload-container">
                     <img :src="photoUrl" alt="Profile Photo" class="profile-photo" v-if="profile.file_user_photo_name"/>
                 </div>
-                <input type="file" @change="handleFileUploadPhoto" ref="fileInputPhoto" style="display:none">
+                <input type="file" id="fileInputPhoto" @change="handleFileUploadPhoto" ref="fileInputPhoto" style="display:none">
                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadPhoto">
                     파일 첨부
                 </button>
@@ -215,22 +215,22 @@
           </div>
           <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
             <label for="name"><span class="text-danger">*</span> 연락처</label>
-            <input type="text" id="phone" v-model="profile.dealerContact" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요"/>
+            <input type="text" id="dealerContact" v-model="profile.dealerContact" class="form-control" placeholder="- 없이 전화번호를 입력해 주세요" style="padding: 8px;" />
             <div v-for="message in validationErrors?.phone" class="text-danger mt-1">
                   {{ message }}
             </div>
           </div>
           <div v-if="registerURL || adminCreateURL || userEditURL || adminEditURL" class="form-group">
               <label for="dealerBirthDate"><span class="text-danger">*</span> 생년월일</label>
-              <input type="date" id="dealerBirthDate" v-model="profile.dealerBirthDate" placeholder="1990-12-30">
+              <input type="text" id="dealerBirthDate" v-model="profile.dealerBirthDate" class="form-control" placeholder="901230" maxlength="6">
               <div v-for="message in validationErrors?.birthday" class="text-danger mt-1">
                   {{ message }}
             </div>
           </div>
 
-          <div class="form-group">
+          <div class="form-group" style="padding: 0px;">
             <label for="dealer"><span class="text-danger">*</span> 자동차관리사업등록번호</label>
-            <input type="text" v-model="profile.car_management_business_registration_number" class="form-control" placeholder="자동차관리사업등록번호"/>
+            <input type="number" id="carManagementBusinessRegistrationNumber" v-model="profile.car_management_business_registration_number" class="form-control" style="padding: 8px;" placeholder="자동차관리사업등록번호"/>
             <div v-for="message in validationErrors?.car_management_business_registration_number" class="text-danger mt-1">
                   {{ message }}
             </div>
@@ -238,7 +238,7 @@
 
           <div class="form-group">
             <label for="dealer"><span class="text-danger">*</span> 사업자번호</label>
-            <input type="text" v-model="profile.business_registration_number" class="form-control" placeholder="사업자번호"/>
+            <input type="number" id="businessRegistrationNumber" v-model="profile.business_registration_number" class="form-control" style="padding: 8px;" placeholder="사업자번호"/>
             <div v-for="message in validationErrors?.business_registration_number" class="text-danger mt-1">
                   {{ message }}
             </div>
@@ -246,7 +246,7 @@
 
           <div class="form-group">
             <label for="dealer"><span class="text-danger">*</span> 주민등록번호 또는 법인번호</label>
-            <input type="text" v-model="profile.corporation_registration_number" class="form-control" placeholder="주민등록번호 또는 법인번호"/>
+            <input type="number" id="corporationRegistrationNumber" v-model="profile.corporation_registration_number" class="form-control" style="padding: 8px;" placeholder="주민등록번호 또는 법인번호"/>
             <div v-for="message in validationErrors?.corporation_registration_number" class="text-danger mt-1">
                   {{ message }}
             </div>
@@ -254,21 +254,21 @@
 
           <div class="form-group">
             <label for="dealer"><span class="text-danger">*</span> 소속상사</label>
-            <input type="text" v-model="profile.company" class="form-control" placeholder="상사명(상사 정식 명칭)"/>
+            <input type="text" id="company" v-model="profile.company" class="form-control" placeholder="상사명(상사 정식 명칭)"/>
             <div v-for="message in validationErrors?.company" class="text-danger mt-1">
                   {{ message }}
             </div>
           </div>
           <div class="form-group">
             <label for="dealer"><span class="text-danger">*</span> 소속상사 직책</label>
-            <input type="text" v-model="profile.dealerCompanyDuty" class="form-control" placeholder="사원"/>
+            <input type="text" id="dealerCompanyDuty" v-model="profile.dealerCompanyDuty" class="form-control" placeholder="사원"/>
             <div v-for="message in validationErrors?.company_duty" class="text-danger mt-1">
                   {{ message }}
             </div>
           </div>
           <div class="form-group">
             <label for="dealer"><span class="text-danger">*</span> 소속상사 주소 </label>
-            <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_post" class="input-dis form-control" placeholder="우편번호" readonly/>
+            <input type="text" id="companyPost" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_post" class="input-dis form-control" placeholder="우편번호" readonly/>
             <button type="button" class="search-btn" @click="editPostCode('daumPostcodeInput')">검색</button>
             <div id="daumPostcodeInput" style="display: none; border: 1px solid; width: 100%; height: 466px; margin: 5px 0px; position: relative">
                 <img src="//t1.daumcdn.net/postcode/resource/images/close.png" style="cursor:pointer;position:absolute;right:0px;top:-1px;z-index:1" @click="closePostcode('daumPostcodeInput')">
@@ -277,7 +277,7 @@
             <input type="text" @click="editPostCode('daumPostcodeInput')" v-model="profile.company_addr1" class="input-dis form-control" placeholder="주소" readonly/>
             
           </div>
-            <input type="text" v-model="profile.company_addr2" class="form-control" placeholder="상세주소"/>
+            <input type="text" id="companyAddr2" v-model="profile.company_addr2" class="form-control" placeholder="상세주소"/>
             <div v-for="message in validationErrors?.company_post" class="text-danger mt-1">
                   {{ message }}
             </div>
@@ -302,7 +302,7 @@
           </div>
           <div class="form-group">
             <label for="dealer"><span class="text-danger">*</span> 소개</label>
-            <textarea type="text" v-model="profile.introduce" class="custom-textarea mt-2" placeholder="소개를 입력해주세요."></textarea>
+            <textarea type="text" id="introduce" v-model="profile.introduce" class="custom-textarea mt-2" placeholder="소개를 입력해주세요."></textarea>
             <div v-for="message in validationErrors?.introduce" class="text-danger mt-1">
                   {{ message }}
             </div>
@@ -310,19 +310,21 @@
 
           <div class="form-group">
             <div v-if="registerURL">
-              <p>추가 서류가 필요해요</p>
-              <li>사업자등록증</li>
-              <li>매도용인감정보</li>
-              <li>매매업체 대표증 or 종사원증</li>
-              <div class="d-flex justify-content-flex-end">
+              <p class="text-danger font-weight-bold">추가 서류가 필요해요 !</p>
+              <!-- <ul class="list-unstyled">
+                <li>- 사업자등록증</li>
+                <li>- 매도용인감정보</li>
+                <li>- 매매업체 대표증 or 종사원증</li>
+              </ul> -->
+              <!-- <div class="d-flex justify-content-flex-end">
                 <a href="#" class="seal-info text-secondary opacity-50 my-2 float-end" alt="인감정보양식 다운로드 링크">인감정보양식 다운로드</a>
-              </div>
+              </div> -->
             </div>
-            <div class="mb-3">
+            <div class="mb-3 mt-3">
                 <label for="user-title" class="form-label"
-                    >사업자 등록증</label
+                    ><span class="text-danger">*</span> 사업자 등록증</label
                 >
-                <input type="file" @change="handleFileUploadBiz" ref="fileInputRefBiz" style="display:none">
+                <input type="file" id="fileInputRefBiz" @change="handleFileUploadBiz" ref="fileInputRefBiz" style="display:none">
                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadBiz">
                     파일 첨부
                 </button>
@@ -343,9 +345,9 @@
             </div>
             <div class="mb-3">
                 <label for="user-title" class="form-label"
-                    >매도용인감정보</label
+                    ><span class="text-danger">*</span> 매도용인감정보</label
                 >
-                <input type="file" @change="handleFileUploadSign" ref="fileInputRefSign" style="display:none">
+                <input type="file" id="fileInputRefSign" @change="handleFileUploadSign" ref="fileInputRefSign" style="display:none">
                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadSign">
                     파일 첨부
                 </button>
@@ -358,9 +360,9 @@
             </div>
             <div class="mb-3">
                 <label for="user-title" class="form-label"
-                    >매매업체 대표증 or 종사원증</label
+                    ><span class="text-danger">*</span> 매매업체 대표증 or 종사원증</label
                 >
-                <input type="file" @change="handleFileUploadCert" ref="fileInputRefCert" style="display:none">
+                <input type="file" id="fileInputRefCert" @change="handleFileUploadCert" ref="fileInputRefCert" style="display:none">
                 <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadCert">
                     파일 첨부
                 </button>
@@ -432,19 +434,7 @@
     methods: {
     },
     mounted() {
-      flatpickr("#dealerBirthDate", {
-        locale: Korean,
-        //enableTime: true,
-        dateFormat: "Y-m-d",
-        // minDate: "today",
-        minDate: new Date(),
-        disable: [
-          function (date) {
-            // 주말 비활성화
-            return date.getDay() === 0 || date.getDay() === 6;
-          },
-        ],
-      });
+
     },
   };
   </script>
@@ -1358,7 +1348,289 @@
       updateProfile(profile,userId.value);
     }else if(route.path == '/register'){
 
+      if(profile.value.name == ''){
+
+        document.getElementById('name').focus();
+
+        wica.ntcn(swal)
+        .icon('W')
+        .addClassNm('cmm-review-custom')
+        .addOption({ padding: 20})
+        .callback(function(result) {
+        })
+        .alert('이름을 입력해주세요.');
+        return;
+      }
+
+      if(profile.value.phone == ''){
+        document.getElementById('phone').focus();
+
+        wica.ntcn(swal)
+        .icon('W')
+        .addClassNm('cmm-review-custom')
+        .addOption({ padding: 20})
+        .callback(function(result) {
+        })
+        .alert('전화번호를 입력해주세요.');
+        return;
+      }
+
+      if(profile.value.email == ''){
+        document.getElementById('email').focus();
+
+        wica.ntcn(swal)
+        .icon('W')
+        .addClassNm('cmm-review-custom')
+        .addOption({ padding: 20})
+        .callback(function(result) {
+        })
+        .alert('이메일을 입력해주세요.');
+        return;
+      }
+
+      if(!profile.value.socialLogin){
+        if(profile.value.password == ''){
+          document.getElementById('password').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('비밀번호를 입력해주세요.');
+          return;
+        }
+
+        if(profile.value.password_confirmation == ''){
+          document.getElementById('password_confirmation').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('비밀번호 확인을 입력해주세요.');
+          return;
+        }
+
+      }
+
       if(profile.value.isDealer){
+
+        const fileInputPhoto = document.getElementById('fileInputPhoto').files[0];
+        const fileInputRefBiz = document.getElementById('fileInputRefBiz').files[0];
+        const fileInputRefSign = document.getElementById('fileInputRefSign').files[0];
+        const fileInputRefCert = document.getElementById('fileInputRefCert').files[0];
+
+        // 사진 첨부 여부 확인
+        if(!fileInputPhoto){
+          document.getElementById('fileInputPhoto').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('사진을 첨부해주세요.');
+          return;
+        }
+
+        if(profile.value.dealer_name == ''){
+
+          document.getElementById('dealerName').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('딜러 이름을 입력해주세요.');
+          return;
+        }
+
+        if(profile.value.dealerContact == ''){
+          document.getElementById('dealerContact').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('딜러 연락처를 입력해주세요.');
+          return;
+        }
+
+        if(profile.value.dealerBirthDate == ''){
+          document.getElementById('dealerBirthDate').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('딜러 생년월일을 입력해주세요.');
+          return;
+        }
+
+        if(profile.value.car_management_business_registration_number == ''){
+          document.getElementById('carManagementBusinessRegistrationNumber').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('자동차 관리 사업등록번호를 입력해주세요.');
+          return;
+        }
+
+
+        if(profile.value.business_registration_number == ''){
+          document.getElementById('businessRegistrationNumber').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('사업자번호를 입력해주세요.');
+          return;
+        }
+
+
+        if(profile.value.corporation_registration_number == ''){
+          document.getElementById('corporationRegistrationNumber').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('주민등록번호 또는 법인번호를 입력해주세요.');
+          return;
+        }
+
+
+        if(profile.value.company == ''){
+          document.getElementById('company').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('상사명을 입력해주세요.');
+          return;
+        }
+
+
+        if(profile.value.dealerCompanyDuty == ''){
+          document.getElementById('dealerCompanyDuty').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('소속상사 직책을 입력해주세요.');
+          return;
+        }
+
+
+        if(profile.value.company_post == ''){
+          document.getElementById('companyPost').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('소속상사 주소를 입력해주세요.');
+          return;
+        }
+
+
+        if(profile.value.company_addr2 == ''){
+          document.getElementById('companyAddr2').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('소속상사 상세주소를 입력해주세요.');
+          return;
+        }
+
+        if(profile.value.introduce == ''){
+          document.getElementById('introduce').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('소개를 입력해주세요.');
+          return;
+        }
+
+
+        // 사업자등록증 첨부 여부 확인
+        if(!fileInputRefBiz){
+          document.getElementById('fileInputRefBiz').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('사업자등록증을 첨부해주세요.');
+          return;
+        }
+
+        if(!fileInputRefSign){
+          document.getElementById('fileInputRefSign').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('인감 정보 파일을 첨부해주세요.');
+          return;
+        }
+
+        if(!fileInputRefCert){
+          document.getElementById('fileInputRefCert').focus();
+
+          wica.ntcn(swal)
+          .icon('W')
+          .addClassNm('cmm-review-custom')
+          .addOption({ padding: 20})
+          .callback(function(result) {
+          })
+          .alert('대표증 또는 종사원증 파일을 첨부해주세요.');
+          return;
+        }
+
+
+
         if(!profile.value.isDealerApplyCheck){
           isDealerApplyCheckSelect.value.focus();
 
@@ -1670,7 +1942,11 @@ input[type="date"] {
   }  
 } */
 
-
+@media screen and (max-width: 768px) {
+  .register-content{
+    padding-top: 140px !important;
+  }
+}
 
   </style>
   

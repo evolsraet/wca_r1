@@ -532,6 +532,7 @@ class AuctionService
     }
 
 
+    /*
     public function calculateCarPrice(
         $currentYear,
         $currentMonth,
@@ -632,6 +633,86 @@ class AuctionService
             'calculationSteps' => $calculationSteps
         ];
     }
+    */
+
+
+
+    public function calculateCarPrice(
+        int $currentYear,
+        int $currentMonth,
+        int $regYear,
+        int $regMonth,
+        int $currentMileage,
+        float $initialPrice, // 셀카 기준 가격 (이미 잔가율 반영된 기준가)
+        bool $isImported = false,
+        bool $isVan = false
+    ): array {
+        $monthsUsed = max(0, ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth));
+        $mileageStandardUnit = $isVan ? 2500 : 1250;
+        $standardMileage = $monthsUsed * $mileageStandardUnit;
+        $yearsUsed = intdiv($monthsUsed, 12);
+
+        $domesticRates = [0=>0.95,1=>0.85,2=>0.77,3=>0.69,4=>0.61,5=>0.53,6=>0.45,7=>0.37,8=>0.29,9=>0.21,10=>0.16,11=>0.16,12=>0.16,13=>0.16,14=>0.16,15=>0.16];
+        $importRates = [0=>0.85,1=>0.76,2=>0.67,3=>0.58,4=>0.49,5=>0.40,6=>0.31,7=>0.26,8=>0.21,9=>0.16,10=>0.16,11=>0.16,12=>0.16,13=>0.16,14=>0.16,15=>0.16];
+
+        $residualRate = $isImported
+            ? ($importRates[$yearsUsed] ?? 0.16)
+            : ($domesticRates[$yearsUsed] ?? 0.16);
+
+        $basePrice = $initialPrice; // 셀카 기준가 = 감가 기준값 (잔가율 적용된 상태)
+        $distanceDiff = $currentMileage - $standardMileage;
+        $adjustment = 0;
+
+        if ($yearsUsed < 10 && $currentMileage < 200000) {
+            if ($distanceDiff > 0) {
+                $adjustment = min(
+                    ($initialPrice * 0.1 / 20) * ($distanceDiff / 1000) * $residualRate,
+                    $initialPrice * 0.4
+                );
+            } elseif ($distanceDiff < 0) {
+                $adjustment = -min(
+                    ($initialPrice * 0.1 / 20) * (abs($distanceDiff) / 1000) * $residualRate,
+                    $initialPrice * 0.2
+                );
+            }
+        }
+
+        $estimatedPrice = max(0, $basePrice - $adjustment);
+
+        $calculationSteps = [
+            'monthsUsed' => $monthsUsed,
+            'standardMileage' => $standardMileage,
+            'mileageDifference' => $distanceDiff,
+            'residualRate' => $residualRate,
+            'basePrice' => round($basePrice),
+            'adjustment' => round($adjustment),
+            'estimatedPrice' => round($estimatedPrice),
+        ];
+
+        $susic = ""
+        . "[1] 사용개월 = (현재년도 - 등록년도) × 12 + (현재월 - 등록월)\n"
+        . "[2] 표준주행거리 = 사용개월 × {$mileageStandardUnit}km (" . ($isVan ? '승합차' : '승용차') . ")\n"
+        . "[3] 주행거리차이 = 실제주행거리 - 표준주행거리\n"
+        . "[4] 감가/가점 = ((기준가 × 0.1 / 20) × 차이(km) / 1000) × 잔가율 (조건부 적용)\n"
+        . "[5] 예상가 = 기준가 - 감가 (+가점)\n"
+        . "[6] 만원 단위 = round(예상가 ÷ 10,000, 1)";
+
+        return [
+            'susic' => $susic,
+            'monthsUsed' => $monthsUsed,
+            'standardMileage' => $standardMileage,
+            'mileageDifference' => $distanceDiff,
+            'residualRate' => $residualRate,
+            'basePrice' => round($basePrice),
+            'mileageDepreciation' => round($adjustment),
+            'adjustment' => round($adjustment),
+            'estimatedPrice' => round($estimatedPrice),
+            'estimatedPriceInTenThousandWon' => round($estimatedPrice / 10000, 1),
+            'calculationSteps' => $calculationSteps
+        ];
+    }
+
+
 
     // 경매 완료 수수료 처리 확인 
     public function auctionAfterFeeDone()

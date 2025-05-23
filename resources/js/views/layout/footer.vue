@@ -5,8 +5,9 @@
         <p class="mb-4">
           <p class="mt-3">온라인 경매 서비스 ㅣ{{ wicaLabel.title() }}(주) ㅣ대표이사 정태영</p>
           <p>사업자등록번호 : 755-81-02354 I 통신판매업신고 제2023-용인기흥-6932호</p>
-          <p>경기도 용인시 기흥구 중부대로 242 A동 W117호</p>
-          <p>대표전화번호:  1544-2165 이메일 WECAR@WECR-M.CO.KR</p>
+          <p>본사 : 경기도 용인시 기흥구 중부대로 242 A동 W117호</p>
+          <p>부산지점 : 부산 기장군 장안읍 반룡산단3로 95 C동 지하1층 B106호</p>
+          <p>대표전화번호:  1544-2165 이메일 wecar@wecar-m.co.kr</p>
         </p>
         <!-- <img src="../../../img/footerlogo.png" width="100" class="mt-2"> -->
         <img src="../../../img/busan_wecar_logo_footer.png" width="100" class="mt-2">

@@ -39,7 +39,7 @@ class UserRegisteredListener implements ShouldQueue
 
 
         // 사용자에게 알림 보내기
-        $event->user->notify(new WelcomeNotification());
+        // $event->user->notify(new WelcomeNotification());
         // Notification::send($user, new WelcomeNotification());
     }
 
