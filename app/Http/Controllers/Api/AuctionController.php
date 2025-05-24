@@ -219,7 +219,7 @@ class AuctionController extends Controller
         $type = $request->query('type', 'basic'); // 기본값: basic
         $vin = strtoupper($request->query('vin', '')); // 대문자 변환 + 기본값 처리
         $typeOfCar = str_starts_with($vin, 'K') ? 'domestic' : 'imported'; // 차량 종류: domestic or imported
-
+        $carCategory = $request->query('carCategory', 'passenger'); // passenger or van
         // 사용 개월 수 및 사용 연수
         $monthsUsed = max(0, ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth));
         $yearsUsed = intdiv($monthsUsed, 12); // 잔가율 계산용 연수 (소수점 버림)
@@ -243,7 +243,8 @@ class AuctionController extends Controller
         $residualRates = $typeOfCar === 'imported' ? $residualRatesImported : $residualRatesDomestic;
         $residualRate = $residualRates[$yearsUsed] ?? 0.16;
 
-        $standardMileage = $monthsUsed * 1.25 * 1000;
+        $mileageFactor = $carCategory === 'van' ? 2.5 : 1.25;
+        $standardMileage = $monthsUsed * $mileageFactor * 1000;
         $mileageDiff = $standardMileage - $currentMileage;
 
         $adjustment = ($basePrice * 0.1 / 20) * ($mileageDiff / 1000) * $residualRate;
