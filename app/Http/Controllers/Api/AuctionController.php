@@ -292,6 +292,7 @@ class AuctionController extends Controller
                 '예상금액(만원)' => round($estimatedPrice / 10000, 1)
             ]
         ]);
+
     }
 
 
