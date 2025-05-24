@@ -214,53 +214,46 @@ class AuctionController extends Controller
         $currentMonth = (int) ($request->query('currentMonth') ?? date('n'));
         $currentMileage = (int) $request->query('currentMileage');
         $basePrice = (int) $request->query('initialPrice');
-        $type = $request->query('type', 'basic'); // 계산 방식 선택 (basic / adjusted)
+        $type = $request->query('type', 'basic'); // 기본값: basic
 
-        // 사용 개월 수 = (현재년도 - 등록년도) * 12 + (현재월 - 등록월)
+        // 사용 개월 수 및 사용 연수
         $monthsUsed = max(0, ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth));
-        
-        // 사용 연수 = 현재년도 - 등록년도 (음수 방지)
         $yearsUsed = max(0, $currentYear - $regYear);
 
-        // 잔가율 테이블 (문자열 키로 선언)
+        // 잔가율 테이블 (문자열 키)
         $residualRates = [
             '0' => 0.95, '1' => 0.85, '2' => 0.77, '3' => 0.69, '4' => 0.61,
             '5' => 0.53, '6' => 0.45, '7' => 0.37, '8' => 0.29, '9' => 0.21,
             '10' => 0.16, '11' => 0.16, '12' => 0.16, '13' => 0.16, '14' => 0.16,
             '15' => 0.16, '16' => 0.16, '17' => 0.16, '18' => 0.16, '19' => 0.16
         ];
+        $residualRate = $residualRates[(string)$yearsUsed] ?? 0.16;
 
-        $residualRate = $residualRates[strval($yearsUsed)] ?? 0.16;
-
-        // 표준 주행거리 = 사용개월수 * 1.25 * 1000
+        // 표준 주행거리 및 차이
         $standardMileage = $monthsUsed * 1.25 * 1000;
-
-        // 주행거리 차이 = 표준주행거리 - 실제주행거리
         $mileageDiff = $standardMileage - $currentMileage;
 
-        // 감가 조정 계산식 (차이가 양수면 가산, 음수면 감가)
-        $adjustment = ($basePrice * 0.1 / 20) * (abs($mileageDiff) / 1000) * $residualRate;
+        // 감가 조정 계산 (엑셀 수식 완전 반영)
+        $adjustment = ($basePrice * 0.1 / 20) * ($mileageDiff / 1000) * $residualRate;
 
         if ($type === 'adjusted') {
             if ($yearsUsed >= 10 || $currentMileage >= 200000) {
                 if ($mileageDiff > 0) {
-                    $adjustment = 0;
+                    $adjustment = 0; // 가산 금지
+                } else {
+                    $adjustment = max($adjustment, -$basePrice * 0.4); // 감가 최대치
                 }
-            } elseif ($mileageDiff > 0) {
-                $adjustment = min($adjustment, $basePrice * 0.2);
-            } elseif ($mileageDiff < 0) {
-                $adjustment = max(-$adjustment, -$basePrice * 0.4);
-                $adjustment = -$adjustment;
-            }
-        } else {
-            if ($mileageDiff < 0) {
-                $adjustment = -$adjustment;
+            } else {
+                if ($mileageDiff > 0) {
+                    $adjustment = min($adjustment, $basePrice * 0.2); // 가산 최대치
+                } elseif ($mileageDiff < 0) {
+                    $adjustment = max($adjustment, -$basePrice * 0.4); // 감가 최대치
+                }
             }
         }
 
-        $estimatedPrice = $adjustment > 0
-            ? max(0, $basePrice - $adjustment)
-            : max(0, $basePrice + $adjustment);
+        // 예상 가격 계산 (엑셀 방식: 기준가 + 감가조정)
+        $estimatedPrice = max(0, $basePrice + $adjustment);
 
         return response()->json([
             'regYear' => $regYear,
