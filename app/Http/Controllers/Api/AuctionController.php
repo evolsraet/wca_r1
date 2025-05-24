@@ -219,7 +219,7 @@ class AuctionController extends Controller
         $type = $request->query('type', 'basic'); // 기본값: basic
         $vin = strtoupper($request->query('vin', '')); // 대문자 변환 + 기본값 처리
         $typeOfCar = str_starts_with($vin, 'K') ? 'domestic' : 'imported'; // 차량 종류: domestic or imported
-        $carCategory = $request->query('carCategory', 'passenger'); // passenger or van
+        $carCategory = $request->query('carCategory', 'passenger'); // 승용차 or 승합차 /passenger or van
         // 사용 개월 수 및 사용 연수
         $monthsUsed = max(0, ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth));
         $yearsUsed = intdiv($monthsUsed, 12); // 잔가율 계산용 연수 (소수점 버림)
