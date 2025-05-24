@@ -54,7 +54,7 @@ class TaksongStatusJob implements ShouldQueue
 
             // 네트워크 오류 알림 추가
             NetworkHelper::alertIfNetworkError($e, [
-                'source' => $this->endPoint,
+                'source' => '탁송 상태 처리 / '.$this->endPoint,
                 'time' => now()->toDateTimeString(),
             ]);
 

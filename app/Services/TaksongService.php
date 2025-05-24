@@ -92,7 +92,7 @@ class TaksongService
 
             // 네트워크 오류 알림 추가
             NetworkHelper::alertIfNetworkError($e, [
-                'source' => $this->taksongApiUrl,
+                'source' => '탁송 요청 / '.$this->taksongApiUrl,
                 'time' => now()->toDateTimeString(),
             ]);
     
