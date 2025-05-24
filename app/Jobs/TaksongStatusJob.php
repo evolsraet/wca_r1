@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Services\ApiRequestService;
 use App\Services\TaksongService;
 use App\Models\ApiErrorLog;
+use App\Helpers\NetworkHelper;
 use Exception;
 
 class TaksongStatusJob implements ShouldQueue
@@ -50,6 +51,13 @@ class TaksongStatusJob implements ShouldQueue
             $taksongService->processStatus($result['data'][0]);
 
         } catch (Exception $e) {
+
+            // 네트워크 오류 알림 추가
+            NetworkHelper::alertIfNetworkError($e, [
+                'source' => $this->endPoint,
+                'time' => now()->toDateTimeString(),
+            ]);
+
             Log::critical("[탁송 job / chk_id : {$this->response}] 예외 발생", [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()

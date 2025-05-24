@@ -12,6 +12,7 @@ use App\Models\TaksongStatusTemp;
 use App\Jobs\TaksongNameChangeJob;
 use App\Jobs\AuctionCancelJob;
 use App\Models\Dealer;
+use App\Helpers\NetworkHelper;
 
 class TaksongService
 {
@@ -88,6 +89,14 @@ class TaksongService
             return $result;
 
         } catch (Exception $e) {
+
+            // 네트워크 오류 알림 추가
+            NetworkHelper::alertIfNetworkError($e, [
+                'source' => $this->taksongApiUrl,
+                'time' => now()->toDateTimeString(),
+            ]);
+    
+            
             Log::error('[탁송 요청] {$carNo} / 예외 발생', [
                 'message' => $e->getMessage(),
                 'code' => $e->getCode(),

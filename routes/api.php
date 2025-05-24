@@ -25,6 +25,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\Api\DiagController;
 use App\Http\Controllers\Api\OwnershipController;
 use App\Http\Controllers\Api\WebhookController;
+use App\Helpers\NetworkHelper;
 
 // Route::post('forgetPassword', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 // Route::post('resetPassword', [ResetPasswordController::class, 'reset'])->name('password.reset');
@@ -163,3 +164,19 @@ Route::post('auctions/rollback/', [AuctionController::class, 'rollbackAuction'])
 
 // 예상가격 테스트 
 Route::get('depreciation/calculate', [AuctionController::class, 'depreciationCalculate']);
+
+
+// 네트워크 오류 알림 테스트
+Route::get('/test-network-alert', function () {
+    try {
+        // 테스트용 네트워크 예외 던지기
+        throw new \Exception('cURL error 7: Failed to connect to api.example.com');
+    } catch (\Exception $e) {
+        NetworkHelper::alertIfNetworkError($e, [
+            'source' => '테스트 라우트',
+            'time' => now()->toDateTimeString(),
+        ]);
+    }
+
+    return response()->json(['result' => '테스트 완료. 로그와 Job 확인']);
+});

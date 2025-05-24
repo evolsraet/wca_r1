@@ -895,7 +895,21 @@ class NotificationTemplate
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
 
                 break;
-                
+
+
+            case 'NetworkErrorJob':
+
+                $context = $data;
+                $source = $context['source'];
+                $time = $context['time'];
+
+                $title = '[네트워크 오류] '.$source;
+
+                $message = 
+                '[네트워크 오류] '.$source.' / '.$time.' \n';
+
+                break;
+
         }
 
         $sendMessage = [   
