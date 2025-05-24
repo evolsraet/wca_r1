@@ -29,6 +29,8 @@ use App\Jobs\AuctionBidStatusJob;
 use App\Models\Bid;
 use App\Jobs\AuctionDoneJob;
 use App\Http\Resources\AuctionResource;
+use Illuminate\Support\Str;
+
 
 class AuctionController extends Controller
 {
@@ -208,46 +210,52 @@ class AuctionController extends Controller
     public function depreciationCalculate(Request $request)
     {
         // 기본 입력값 파싱
-        $regYear = (int) $request->query('regYear');
-        $regMonth = (int) $request->query('regMonth');
-        $currentYear = (int) ($request->query('currentYear') ?? date('Y'));
-        $currentMonth = (int) ($request->query('currentMonth') ?? date('n'));
-        $currentMileage = (int) $request->query('currentMileage');
+        $regYear = (int) $request->query('regYear'); // 등록년도
+        $regMonth = (int) $request->query('regMonth'); // 등록월
+        $currentYear = (int) ($request->query('currentYear') ?? date('Y')); // 현재년도
+        $currentMonth = (int) ($request->query('currentMonth') ?? date('n')); // 현재월
+        $currentMileage = (int) $request->query('currentMileage'); // 현재주행거리
         $basePrice = (int) $request->query('initialPrice');
         $type = $request->query('type', 'basic'); // 기본값: basic
+        $vin = strtoupper($request->query('vin', '')); // 대문자 변환 + 기본값 처리
+        $typeOfCar = str_starts_with($vin, 'K') ? 'domestic' : 'imported'; // 차량 종류: domestic or imported
 
         // 사용 개월 수 및 사용 연수
         $monthsUsed = max(0, ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth));
-        $yearsUsed = max(0, $currentYear - $regYear);
+        $yearsUsed = intdiv($monthsUsed, 12); // 잔가율 계산용 연수 (소수점 버림)
 
-        // 잔가율 테이블 (문자열 키)
-        $residualRates = [
+        // 잔가율 테이블 (국산)
+        $residualRatesDomestic = [
             '0' => 0.95, '1' => 0.85, '2' => 0.77, '3' => 0.69, '4' => 0.61,
             '5' => 0.53, '6' => 0.45, '7' => 0.37, '8' => 0.29, '9' => 0.21,
             '10' => 0.16, '11' => 0.16, '12' => 0.16, '13' => 0.16, '14' => 0.16,
             '15' => 0.16, '16' => 0.16, '17' => 0.16, '18' => 0.16, '19' => 0.16
         ];
-        $residualRate = $residualRates[(string)$yearsUsed] ?? 0.16;
 
-        // 표준 주행거리 및 차이
+        // 잔가율 테이블 (수입)
+        $residualRatesImported = [
+            '0' => 0.85, '1' => 0.76, '2' => 0.67, '3' => 0.58, '4' => 0.49,
+            '5' => 0.40, '6' => 0.31, '7' => 0.26, '8' => 0.21, '9' => 0.16,
+            '10' => 0.16, '11' => 0.16, '12' => 0.16, '13' => 0.16, '14' => 0.16,
+            '15' => 0.16, '16' => 0.16, '17' => 0.16, '18' => 0.16, '19' => 0.16
+        ];
+
+        $residualRates = $typeOfCar === 'imported' ? $residualRatesImported : $residualRatesDomestic;
+        $residualRate = $residualRates[$yearsUsed] ?? 0.16;
+
         $standardMileage = $monthsUsed * 1.25 * 1000;
         $mileageDiff = $standardMileage - $currentMileage;
 
-        // 감가 조정 계산 (엑셀 수식 완전 반영)
         $adjustment = ($basePrice * 0.1 / 20) * ($mileageDiff / 1000) * $residualRate;
 
         if ($type === 'adjusted') {
             if ($yearsUsed >= 10 || $currentMileage >= 200000) {
-                if ($mileageDiff > 0) {
-                    $adjustment = 0; // 가산 금지
-                } else {
-                    $adjustment = max($adjustment, -$basePrice * 0.4); // 감가 최대치
-                }
+                $adjustment = $mileageDiff > 0 ? 0 : max($adjustment, -$basePrice * 0.4);
             } else {
                 if ($mileageDiff > 0) {
-                    $adjustment = min($adjustment, $basePrice * 0.2); // 가산 최대치
+                    $adjustment = min($adjustment, $basePrice * 0.2);
                 } elseif ($mileageDiff < 0) {
-                    $adjustment = max($adjustment, -$basePrice * 0.4); // 감가 최대치
+                    $adjustment = max($adjustment, -$basePrice * 0.4);
                 }
             }
         }

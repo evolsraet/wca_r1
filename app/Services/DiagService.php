@@ -12,6 +12,7 @@ use Illuminate\Support\Str;
 use App\Jobs\AuctionBidStatusJob;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\DiagInfo;
+use App\Helpers\NetworkHelper;
 
 // 진단 서비스
 class DiagService
@@ -150,6 +151,13 @@ class DiagService
             ];
 
         } catch (\Exception $e) {
+
+            // 네트워크 오류 알림 추가
+            NetworkHelper::alertIfNetworkError($e, [
+                'source' => '진단API / '.$this->diagApiUrl,
+                'time' => now()->toDateTimeString(),
+            ]);
+
             Log::error("[진단 데이터] 조회 실패 {$carNo}", ['error' => $e->getMessage()]);
             return [
                 'status' => 'error',
@@ -192,6 +200,13 @@ class DiagService
                 }
 
             } catch (\Exception $e) {
+
+                // 네트워크 오류 알림 추가
+                NetworkHelper::alertIfNetworkError($e, [
+                    'source' => '진단API / '.$this->diagApiUrl,
+                    'time' => now()->toDateTimeString(),
+                ]);
+
                 Log::error('[진단 상태 확인] 오류 : Auction hashid: ' . $auction->hashid, ['error' => $e->getMessage()]);
             }
         }
