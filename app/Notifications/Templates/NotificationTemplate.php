@@ -903,10 +903,11 @@ class NotificationTemplate
                 $source = $context['source'];
                 $time = $context['time'];
 
-                $title = '[네트워크 오류] '.$source;
+                $title = '[네트워크 오류] '.$source['title'];
 
                 $message = 
-                '[네트워크 오류] '.$source.' / '.$time.' \n';
+                '[네트워크 오류] '.$source['title'].' / '.$time.' \n'
+                .'ㅁ url : '.$source['url'].' \n';
 
                 break;
 

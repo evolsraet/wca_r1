@@ -154,7 +154,10 @@ class DiagService
 
             // 네트워크 오류 알림 추가
             NetworkHelper::alertIfNetworkError($e, [
-                'source' => '진단API / '.$this->diagApiUrl,
+                'source' => [
+                    'title' => '진단API',
+                    'url' => $this->diagApiUrl,
+                ],
                 'time' => now()->toDateTimeString(),
             ]);
 
@@ -203,7 +206,10 @@ class DiagService
 
                 // 네트워크 오류 알림 추가
                 NetworkHelper::alertIfNetworkError($e, [
-                    'source' => '진단API / '.$this->diagApiUrl,
+                    'source' => [
+                        'title' => '진단API',
+                        'url' => $this->diagApiUrl,
+                    ],
                     'time' => now()->toDateTimeString(),
                 ]);
 

@@ -173,7 +173,10 @@ Route::get('/test-network-alert', function () {
         throw new \Exception('cURL error 7: Failed to connect to api.example.com');
     } catch (\Exception $e) {
         NetworkHelper::alertIfNetworkError($e, [
-            'source' => '테스트 라우트',
+            'source' => [
+                'title' => '테스트 라우트',
+                'url' => 'http://localhost:8000/test-network-alert',
+            ],
             'time' => now()->toDateTimeString(),
         ]);
     }
