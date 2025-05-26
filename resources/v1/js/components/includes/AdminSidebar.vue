@@ -1,7 +1,7 @@
 <template>
     <nav class="admin-nav bg-white sidebar" style="right:270px;">
         <div class="d-flex flex-column align-items-center ms-3 pt-0 mb-4">
-            <router-link to="/admin" class="navbar-brand col-md-3 col-lg-2 ms-1 px-3 fs-6 nuxt-link-active mini mb-2" style="width: 50%;"></router-link>
+            <router-link to="/v1/admin" class="navbar-brand col-md-3 col-lg-2 ms-1 px-3 fs-6 nuxt-link-active mini mb-2" style="width: 50%;"></router-link>
             <span class="admin-icon admin-icon-profile admin-icon-large"></span>
             <p class="profile-name">{{ userName }}</p>
             <p class="profile-name text-secondary opacity-50">{{ userEmail }}</p>
@@ -17,7 +17,7 @@
                     </a>  
                 </router-link>
             </div>
-            <router-link to="/admin" class="btn shadow-sm bg-secondary tc-wh bg-opacity-50 w-100 admin-dashboard"><span class="admin-icon admin-icon-dashboard me-2 mb-1"></span>대시보드</router-link>
+            <router-link to="/v1/admin" class="btn shadow-sm bg-secondary tc-wh bg-opacity-50 w-100 admin-dashboard"><span class="admin-icon admin-icon-dashboard me-2 mb-1"></span>대시보드</router-link>
         </div>
         <div class="pt-3 sidebar-sticky">
             <ul id="menu" class="nav flex-column mb-2">

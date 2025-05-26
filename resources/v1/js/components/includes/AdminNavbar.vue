@@ -27,7 +27,7 @@
     </nav>
     <div v-if="showSettings" :class="['settings-menu', { show: showSettings }]">
       <router-link :to="{ name: 'myinfo.edit' }" class="menu-item mt-0">내 정보 수정</router-link>
-      <a class="menu-item mt-0" href="/login" @click="logout">로그아웃</a>
+      <a class="menu-item mt-0" href="/v1/login" @click="logout">로그아웃</a>
     </div>
     <div :class="['menu-container sticky-top', { show: isMenuOpen || !isAdminPage }]" id="navbarSupportedContent">
         <ul class="d-flex mb-0 ps-3 ms-auto mb-lg-0 overflow-x-auto overflow-y-hidden">
