@@ -190,6 +190,8 @@
                       </div>
                     </div>
                     </div>
+
+
                     <div class="mb-3">
                       <div class="card-body">
                       <label for="user-title" class="form-label">위임장 or 소유자 인감 증명서</label>
@@ -204,6 +206,26 @@
                         </li>
                         <li v-if="fileProxyUrl">
                           <a :href=fileProxyUrl download>{{ auction.file_auction_proxy_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerProxyFileDelete()"></span>
+                        </li>
+                      </div>
+                      </div>
+                    </div>
+
+
+                    <div class="mb-3">
+                      <div class="card-body">
+                      <label for="user-title" class="form-label">명의이전 관련서류</label>
+                      <input type="file" @change="handleFileUploadNameChange" ref="fileAuctionNameChange" style="display:none">
+                      <button type="button" class="btn btn-fileupload w-100" @click="triggerFileUploadNameChange">
+                          파일 첨부
+                      </button>
+                      <div class="text-start mb-5 text-secondary opacity-50" v-if="fileAuctionNameChangeFileList.length > 0 || fileNameChangeUrl">
+                        명의이전 관련서류 : 
+                        <li v-for="(file, index) in fileAuctionNameChangeFileList" :key="index">
+                            <a :href=file.original_url download>{{ file.file_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerFileDelete(file.uuid)"></span>
+                        </li>
+                        <li v-if="fileNameChangeUrl">
+                          <a :href=fileNameChangeUrl download>{{ auction.file_auction_name_change_name }}</a><span class="icon-close-img cursor-pointer" @click="triggerNameChangeFileDelete()"></span>
                         </li>
                       </div>
                       </div>
@@ -707,6 +729,10 @@ const fileOwnerUrl = ref('');
 const fileProxyUrl =ref('');
 const fileAuctionProxyList = ref([]);
 const fileAuctionProxyFileList = ref([]);
+const fileAuctionNameChange = ref(null);
+const fileAuctionNameChangeList = ref([]);
+const fileAuctionNameChangeFileList = ref([]);
+const fileNameChangeUrl = ref('');
 const fileAuctionOwnerList = ref([]);
 const fileAuctionOwnerFileList = ref([]);
 const fileAuctionCarLicense = ref(null);
@@ -829,6 +855,19 @@ function fileExstCheck(info){
             }
           }
           */
+      }
+
+      if(info.files.hasOwnProperty('file_auction_name_change')){
+        fileAuctionNameChangeList.value = info.files.file_auction_name_change;
+        if(fileAuctionNameChangeList.value.length>0){
+          for(let i=0; fileAuctionNameChangeList.value.length>i; i++){
+            fileAuctionNameChangeFileList.value.push({
+              original_url: fileAuctionNameChangeList.value[i].original_url,
+              file_name: fileAuctionNameChangeList.value[i].file_name,
+              uuid: fileAuctionNameChangeList.value[i].uuid
+            })
+          }
+        }
       }
 
       if(info.files.hasOwnProperty('file_auction_car_license')){
@@ -988,6 +1027,15 @@ function handleFileUploadProxy(event) {
     auction.file_auction_proxy = file;
     auction.file_auction_proxy_name = file.name;
     fileProxyUrl.value = URL.createObjectURL(file);
+  }
+}
+
+function handleFileUploadNameChange(event) {
+  const file = event.target.files[0];
+  if (file) {
+    auction.file_auction_name_change = file;
+    auction.file_auction_name_change_name = file.name;
+    fileNameChangeUrl.value = URL.createObjectURL(file);
   }
 }
 

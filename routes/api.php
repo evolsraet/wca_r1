@@ -168,14 +168,27 @@ Route::get('depreciation/calculate', [AuctionController::class, 'depreciationCal
 
 // 네트워크 오류 알림 테스트
 Route::get('/test-network-alert', function () {
+    
+    $sendData = [
+        'method' => 'POST',
+        'url' => 'https://check-dev.wecarmobility.co.kr/api/outside/check/taksong_add',
+        'params' => ['key' => 'value'],
+        'logContext' => 'test',
+    ];
+    
     try {
         // 테스트용 네트워크 예외 던지기
-        throw new \Exception('cURL error 7: Failed to connect to api.example.com');
+
+        // $result = $apiRequestService->sendRequest($sendData);
+
+        throw new \Exception('Connection timed out: Failed to connect to api.example.com');
     } catch (\Exception $e) {
         NetworkHelper::alertIfNetworkError($e, [
             'source' => [
-                'title' => '테스트 라우트',
+                'title' => '진단API / 진단대기중 상태확인',
                 'url' => 'http://localhost:8000/test-network-alert',
+                'context' => $e->getMessage(),
+                'sendData' => $sendData,
             ],
             'time' => now()->toDateTimeString(),
         ]);

@@ -9,8 +9,14 @@ use Exception;
 
 class ApiRequestService
 {
-    public function sendRequest(string $method, string $url, array $params = [], string $logContext = 'API', bool $throwOnError = true)
+    public function sendRequest(array $data)
     {
+        $method = $data['method'];
+        $url = $data['url'];
+        $params = $data['params'];
+        $logContext = $data['logContext'] ?? 'API';
+        $throwOnError = $data['throwOnError'] ?? true;
+
         $errorData = null;
 
         try {

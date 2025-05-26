@@ -16,6 +16,8 @@ use App\Notifications\JobSuccessNotification;
 use Carbon\Carbon;
 use Exception;
 use App\Models\Auction;
+use App\Helpers\NetworkHelper;
+
 class TaksongAddJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -55,10 +57,18 @@ class TaksongAddJob implements ShouldQueue
 
             Log::info('[TaksongAddJob] API 호출 시도', ['url' => $this->endPoint, 'payload' => $sendData]);
 
-            $result = $api->sendRequest('POST', $this->endPoint, $sendData, 'TaksongAddJob');
+
+            $sendRequest = [
+                'method' => 'POST',
+                'url' => $this->endPoint,
+                'params' => $sendData,
+                'logContext' => 'TaksongAddJob',
+            ];
+
+            $result = $api->sendRequest($sendRequest);
 
             if (!$result || !isset($result['data'])) {
-                throw new Exception('탁송처리 API 응답 오류');
+                throw new Exception('Connection timed out: Failed to connect to '.$this->endPoint, 500);
             }
 
             // 이 부분 제거 필요 
@@ -102,6 +112,17 @@ class TaksongAddJob implements ShouldQueue
             
 
         } catch (Exception $e) {
+
+            NetworkHelper::alertIfNetworkError($e, [
+                'source' => [
+                    'title' => '탁송API / 탁송신청 요청',
+                    'url' => $this->endPoint,
+                    'context' => $e->getMessage(),
+                    'sendData' => $sendRequest,
+                ],
+                'time' => now()->toDateTimeString(),
+            ]);
+
             Log::critical('[TaksongAddJob] 처리 실패', [
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()

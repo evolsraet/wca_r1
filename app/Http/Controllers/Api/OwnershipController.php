@@ -35,7 +35,7 @@ class OwnershipController extends Controller
         return response()->json($result);
     }
 
-    // 외부 API로 명의이전 상태 확인 후 상태 업데이트
+    // 외부 API로 명의이전 상태 확인 후 상태 업데이트 ( 관리자에서 명의이전 상태 클릭시 동작 )
     public function checkOwnership($auctionId)
     {
         try {

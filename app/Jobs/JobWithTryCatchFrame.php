@@ -34,12 +34,14 @@ class ExampleJob implements ShouldQueue
                 'payload' => $this->payload
             ]);
 
-            $response = $apiRequestService->sendRequest(
-                'POST',
-                $this->apiUrl,
-                $this->payload,
-                'ExampleJob'
-            );
+            $sendData = [
+                'method' => 'POST',
+                'url' => $this->apiUrl,
+                'params' => $this->payload,
+                'logContext' => 'ExampleJob',
+            ];
+
+            $response = $apiRequestService->sendRequest($sendData);
 
             if (!$response) {
                 throw new Exception('API 응답이 비어있거나 실패했습니다.');

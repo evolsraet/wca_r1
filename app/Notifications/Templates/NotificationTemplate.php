@@ -902,12 +902,17 @@ class NotificationTemplate
                 $context = $data;
                 $source = $context['source'];
                 $time = $context['time'];
+                $sendData = $source['sendData'];
 
-                $title = '[네트워크 오류] '.$source['title'];
+                $title = '['.$source['title'].'] 네트워크 오류 ';
 
                 $message = 
-                '[네트워크 오류] '.$source['title'].' / '.$time.' \n'
-                .'ㅁ url : '.$source['url'].' \n';
+                '['.$source['title'].'] 네트워크 오류 \n'
+                .'ㅁ 시간 : '.$time.' \n'
+                .'ㅁ 오류내용 : '.$source['context'].' \n'
+                .'ㅁ Method : '.$sendData['method'].' \n'
+                .'ㅁ API URL : '.$sendData['url'].' \n'
+                .'ㅁ Params : '.json_encode($sendData['params'], flags: JSON_PRETTY_PRINT).' \n';
 
                 break;
 

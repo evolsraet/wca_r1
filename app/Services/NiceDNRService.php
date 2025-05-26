@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Cache;
 use App\Models\NiceDNRData;
 use Illuminate\Support\Facades\Log;
+use App\Services\ApiRequestService;
+use App\Helpers\NetworkHelper;
 use Carbon\Carbon;
 
 class NiceDNRService
@@ -60,19 +62,31 @@ class NiceDNRService
 
         // 3. DB에도 없으면 API 호출
         try {
-            $response = Http::get(config('niceDnr.NICE_DNR_API_URL'), [
-                'loginId'  => $this->loginId,
-                'kindOf'   => $this->kindOf,
-                'apiKey'   => $this->apiKey,
-                'chkSec'   => $this->chkSec,
-                'chkKey'   => $this->chkKey,
-                'ownerNm'  => $ownerNm,
-                'vhrNo'    => $vhrNo,
-            ]);
+            $sendRequest = [
+                'method' => 'GET',
+                'url' => config('niceDnr.NICE_DNR_API_URL'),
+                'params' => [
+                    'loginId'  => $this->loginId,
+                    'kindOf'   => $this->kindOf,
+                    'apiKey'   => $this->apiKey,
+                    'chkSec'   => $this->chkSec,
+                    'chkKey'   => $this->chkKey,
+                    'ownerNm'  => $ownerNm,
+                    'vhrNo'    => $vhrNo,
+                ],
+            ];
 
-            Log::info('Nice DNR API 호출 결과', $response->json());
+            $api = new ApiRequestService();
+            $response = $api->sendRequest($sendRequest);
 
-            $responseData = $response->json();
+            if(!$response){
+                throw new Exception('Connection timed out: Failed to connect to '.config('niceDnr.NICE_DNR_API_URL'), 500);
+            }
+
+
+            Log::info('Nice DNR API 호출 결과', $response);
+
+            $responseData = $response;
 
             if($responseData){
                 $responseData['carInfo'] = [
@@ -98,6 +112,17 @@ class NiceDNRService
             return $responseData;
 
         } catch (\Exception $e) {
+
+            NetworkHelper::alertIfNetworkError($e, [
+                'source' => [
+                    'title' => 'NICE D&R API / 호출',
+                    'url' => config('niceDnr.NICE_DNR_API_URL'),
+                    'context' => $e->getMessage(),
+                    'sendData' => $sendRequest,
+                ],
+                'time' => now()->toDateTimeString(),
+            ]);
+
             Log::error('Nice DNR API 호출 실패: ' . $e->getMessage(), [
                 'ownerNm' => $ownerNm,
                 'vhrNo' => $vhrNo

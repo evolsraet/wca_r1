@@ -79,16 +79,21 @@ class DiagService
         try {
             $apiRequestService = new ApiRequestService();
 
-            $response = $apiRequestService->sendRequest(
-                'POST',
-                $this->diagApiUrl . 'diag_by_car_no',
-                [
+            $sendData = [
+                'method' => 'POST',
+                'url' => $this->diagApiUrl . 'diag_by_car_no',
+                'params' => [
                     'auth' => $this->diagApiAuth,
                     'api_key' => $this->diagApiKey,
                     'diag_car_no' => $carNo,
                 ],
-                '진단 결과 / ' . $carNo
-            );
+            ];
+
+            $response = $apiRequestService->sendRequest($sendData);
+
+            if(!$response){
+                throw new \Exception('Connection timed out: Failed to connect to '.$this->diagApiUrl, 500);
+            }
 
             if (!isset($response['status']) || $response['status'] !== 'ok') {
                 Log::debug("[진단 데이터] 진단에 미등록된 차량입니다: {$carNo}", ['response' => $response]);
@@ -155,8 +160,10 @@ class DiagService
             // 네트워크 오류 알림 추가
             NetworkHelper::alertIfNetworkError($e, [
                 'source' => [
-                    'title' => '진단API',
+                    'title' => '진단API / 진단데이터 확인',
                     'url' => $this->diagApiUrl,
+                    'context' => $e->getMessage(),
+                    'sendData' => $sendData,
                 ],
                 'time' => now()->toDateTimeString(),
             ]);
@@ -189,6 +196,11 @@ class DiagService
             try {
                 $hashid = Hashids::encode($auction->id);
                 $result = $this->getDiagData(['diag_car_no' => $hashid]);
+
+                if(!$result){
+                    throw new \Exception('Connection timed out: Failed to connect to '.$this->diagApiUrl, 500);
+                }
+
                 $resultArray = is_array($result) ? $result : json_decode(json_encode($result), true);
 
                 if (
@@ -205,13 +217,15 @@ class DiagService
             } catch (\Exception $e) {
 
                 // 네트워크 오류 알림 추가
-                NetworkHelper::alertIfNetworkError($e, [
-                    'source' => [
-                        'title' => '진단API',
-                        'url' => $this->diagApiUrl,
-                    ],
-                    'time' => now()->toDateTimeString(),
-                ]);
+                // NetworkHelper::alertIfNetworkError($e, [
+                //     'source' => [
+                //         'title' => '진단API / 진단대기중 상태확인',
+                //         'url' => $this->diagApiUrl,
+                //         'context' => $e->getMessage(),
+                //         'sendData' => $sendData,
+                //     ],
+                //     'time' => now()->toDateTimeString(),
+                // ]);
 
                 Log::error('[진단 상태 확인] 오류 : Auction hashid: ' . $auction->hashid, ['error' => $e->getMessage()]);
             }

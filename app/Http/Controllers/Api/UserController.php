@@ -109,7 +109,15 @@ class UserController extends Controller
     {
 
         $apiRequestService = new \App\Services\ApiRequestService();
-        $result = $apiRequestService->sendRequest('POST', 'https://check-dev.wecarmobility.co.kr/api/outside/check/taksong_add', ['key' => 'value']);
+
+        $sendData = [
+            'method' => 'POST',
+            'url' => 'https://check-dev.wecarmobility.co.kr/api/outside/check/taksong_add',
+            'params' => ['key' => 'value'],
+            'logContext' => 'test',
+        ];
+
+        $result = $apiRequestService->sendRequest($sendData);
     
         return response()->api(null, "테스트 결과." . json_encode($result, JSON_PRETTY_PRINT), 'ok', 200);
         dd($result);

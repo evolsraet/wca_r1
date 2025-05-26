@@ -10,6 +10,7 @@ use App\Services\ApiRequestService;
 use App\Services\NiceDNRService;
 use App\Jobs\AuctionDoneJob;
 use App\Jobs\TaksongNameChangeJob;
+use App\Helpers\NetworkHelper;
 use Exception;
 
 class OwnershipService
@@ -56,7 +57,7 @@ class OwnershipService
     }
 
     /**
-     * 외부 API로 명의이전 여부 확인 및 상태 업데이트
+     * 명의이전 여부 확인 및 상태 업데이트 (NICE D&R API 호출)
      */
     public function checkOwnershipByApi(Auction $auction, $test = false): bool
     {
@@ -81,6 +82,7 @@ class OwnershipService
             return false;
 
         } catch (Exception $e) {
+
             Log::error('[명의이전 API 확인 오류 / ' . $auction->car_no . ']', ['auction_id' => $auction->id, 'error' => $e->getMessage()]);
             return false;
         }

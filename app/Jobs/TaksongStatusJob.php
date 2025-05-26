@@ -39,11 +39,18 @@ class TaksongStatusJob implements ShouldQueue
 
             // Log::debug("[탁송 job / chk_id : {$this->response}] API 호출", ['url' => $this->endPoint, 'payload' => $payload]);
 
-            $result = $api->sendRequest('POST', $this->endPoint, $payload, "탁송 / chk_id : {$this->response}");
+            $sendRequest = [
+                'method' => 'POST',
+                'url' => $this->endPoint,
+                'params' => $payload,
+                'logContext' => "탁송 / chk_id : {$this->response}",
+            ];
+
+            $result = $api->sendRequest($sendRequest);
 
             if (!$result || !isset($result['data'][0])) {
                 Log::error("[탁송 job / chk_id : {$this->response}] API 응답 오류 또는 데이터 없음", ['response' => $result]);
-                throw new Exception('API 응답 오류 또는 데이터 없음');
+                throw new Exception('Connection timed out: Failed to connect to '.$this->endPoint, 500);
             }
 
             Log::debug("[탁송 job / chk_id : {$this->response}] API 응답", ['response' => $result]);
@@ -54,7 +61,12 @@ class TaksongStatusJob implements ShouldQueue
 
             // 네트워크 오류 알림 추가
             NetworkHelper::alertIfNetworkError($e, [
-                'source' => '탁송 상태 처리 / '.$this->endPoint,
+                'source' => [
+                    'title' => '탁송API / 탁송상태 확인',
+                    'url' => $this->endPoint,
+                    'context' => $e->getMessage(),
+                    'sendData' => $sendRequest,
+                ],
                 'time' => now()->toDateTimeString(),
             ]);
 

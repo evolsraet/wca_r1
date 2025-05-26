@@ -77,11 +77,19 @@ class TaksongService
                 'api_key' => $this->taksongApiKey,
             ];
 
-            $result = $this->api->sendRequest('POST', $this->taksongApiUrl, $sendData, '[탁송 / '.$carNo.']');
+
+            $sendRequest = [
+                'method' => 'POST',
+                'url' => $this->taksongApiUrl,
+                'params' => $sendData,
+                'logContext' => '[탁송 / '.$carNo.']',
+            ];
+
+            $result = $this->api->sendRequest($sendRequest);
 
             if (!$result) {
-                $message = '탁송처리 API 요청 실패: 응답 없음';
-                Log::error('[탁송 요청] {$carNo} / API 응답 실패', ['request' => $sendData]);
+                $message = 'Connection timed out: Failed to connect to '.$this->taksongApiUrl;
+                Log::error('[탁송 요청] {$carNo} / API 응답 실패', ['request' => $sendRequest]);
                 throw new Exception($message, 500);
             }
 
@@ -93,8 +101,10 @@ class TaksongService
             // 네트워크 오류 알림 추가
             NetworkHelper::alertIfNetworkError($e, [
                 'source' => [
-                    'title' => '탁송API',
-                    'url' => $this->taksongApiUrl
+                    'title' => '탁송API / 탁송신청 요청',
+                    'url' => $this->taksongApiUrl,
+                    'context' => $e->getMessage(),
+                    'sendData' => $sendRequest,
                 ],
                 'time' => now()->toDateTimeString(),
             ]);

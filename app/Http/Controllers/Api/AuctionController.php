@@ -690,32 +690,71 @@ class AuctionController extends Controller
         if ($request->hasFile('nameChange_file')) {
             $file = $request->file('nameChange_file');
             $mediaService = new MediaService();
-            $media = $mediaService->uploadFile($file, $auction, 'file_auction_name_change');
-            // Log::info('nameChangeFileUpload??', ['auction' => $auction]);         
+            $media = $mediaService->uploadFile($file, $auction, 'file_auction_name_change');       
             if($media){
                 $auctionId = $auction->id;
                 // 파일업로드가 완료 되었으면, 유저에게 알림 전송 
-                $fileUploadJob = TaksongNameChangeFileUploadJob::dispatch($auction->user_id, $auctionId); // 고객
-
-                if($fileUploadJob){
-                    //AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
-                    $dealer = Bid::find($auction->bid_id);
-                    AuctionDoneJob::dispatch($dealer->user_id, $auction->id, 'dealer');
-                    Log::info('[경매완료 상태] ', ['auction' => $auction, 'dealer' => $dealer]);
+                // $fileUploadJob = TaksongNameChangeFileUploadJob::dispatch($auction->user_id, $auctionId); // 고객
 
 
-                    // $auction->status = 'done';
-                    $auction->has_uploaded_name_change_file = true;
-                    $auction->save();
-                }
+                $dealer = Bid::find($auction->bid_id);
+                // AuctionDoneJob::dispatch($dealer->user_id, $auction->id, 'dealer');
+                Log::info('[명의이전] 파일업로드 완료 / 경매번호 : '.$auction->hash_id, ['auction' => $auction, 'dealer' => $dealer]);
+
+                $auction->has_uploaded_name_change_file = true;
+                $auction->save();
+
+                // TODO:관리자 에게 알림 추가 
+                /* 관리자에게 전달할 알림 내용 
+                : 명의이전 파일이 첨부되었습니다.
+                관리자 페이지 에서 명의이전파일을 확인후 판매자의 완료처리 해주세요.
+                ㅁ 경매번호 : A23D232
+                ㅁ 차량 : 대우 뉴 더 뉴 더 뉴
+                ㅁ 소유주 : 홍길동
+                ㅁ 차량번호 : 1234567890
+                */
 
                 return response()->api(['success' => true, 'media' => $media]);
+            }else{
+                Log::info('[명의이전] 파일업로드 실패 / 경매번호 : '.$auction->hash_id, ['auction' => $auction]);
+                return response()->json(['success' => false, 'message' => '파일이 전송되지 않았습니다.'], 400);
             }
 
-            return response()->json(['success' => false, 'message' => '파일이 전송되지 않았습니다.'], 400);
         } else {
+            Log::info('[명의이전] 파일첨부 되지 않았습니다. / 경매번호 : '.$auction->hash_id, ['auction' => $auction]);
             return response()->json(['success' => false, 'message' => '파일이 전송되지 않았습니다.'], 400);
         }
+    }
+
+
+    //TODO: 관리자가 명의이전 확인하고 승인버튼 클릭시
+    public function nameChangeStatusApprove(Request $request)
+    {
+        /*
+        관리자가 해당 매물의 명의이전을 확인하고 클릭시
+        1. 명의이전 파일이 첨부되었는지 확인
+        2. 경매상태를 완료로 처리 ( 딜러에게는 수수료처리 관련 알림이 필요 / 유저에게는 경매완료 처리알림 )
+        3. 딜러에게 명의이전파일을 확인 했다는 알림 전송 
+        4. 유저에게는 경매완료 상태를 알림전송         
+        */
+
+        $auctionId = $request->input('auction_id');
+
+        // 첨부파일 확인 
+        $mediaService = new MediaService();
+        $media = $mediaService->getMedia($auctionId, 'file_auction_name_change');
+        if(!$media){
+
+            return response()->json(['success' => false, 'message' => '명의이전 파일이 첨부되지 않았습니다.'], 400);
+        }
+
+        // 경매상태를 완료로 처리 
+        $auction = Auction::find($auctionId);
+        $auction->status = 'done';
+        $auction->save();
+
+
+
     }
 
     public function nameChangeStatusAll()
@@ -726,10 +765,10 @@ class AuctionController extends Controller
     }
 
 
-    public function processCompletedNameChangeAuctions()
+    public function nameChangeStatusDone($auctionId)
     {
         $nameChangeService = new NameChangeService();
-        $nameChangeService->processCompletedNameChangeAuctions();
+        $nameChangeService->changeAuctionStatus($auctionId);
     }
 
     public function testAuctionsNotification(){
