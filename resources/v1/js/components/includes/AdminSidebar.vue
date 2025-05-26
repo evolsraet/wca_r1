@@ -6,7 +6,7 @@
             <p class="profile-name">{{ userName }}</p>
             <p class="profile-name text-secondary opacity-50">{{ userEmail }}</p>
             <div class="d-flex mt-2 gap-3 mb-2">
-                <a href="/login" @click="logout" class="text-secondary nav-link d-flex align-items-center ft-13 mx-1">
+                <a href="/v1/login" @click="logout" class="text-secondary nav-link d-flex align-items-center ft-13 mx-1">
                     <span class="d-none d-sm-inline text-secondary opacity-75 ms-1">로그아웃</span>
                 </a>
                 <router-link :to="{ name: 'myinfo.edit' }" class="">

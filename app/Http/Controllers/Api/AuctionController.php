@@ -53,7 +53,7 @@ class AuctionController extends Controller
         $user = $request->user(); // 고객
         $result = $this->service->store($request);
 
-        Log::info('[경매] 등록 결과 / 경매 ID : ' . $result->id, [
+        Log::info('[경매] 등록 결과', [
             'path'=> __FILE__,
             'line'=> __LINE__,
             'result' => $result

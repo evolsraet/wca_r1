@@ -981,7 +981,8 @@ const diagAuction = async (status) => {
 }
 
 const AuctionIsDeposit = async (IsDeposit) => {
-  
+  console.log('AuctionIsDeposit 함수 시작', IsDeposit);
+
   const confirm = await swal.fire({
     title: '상태 변경',
     text: '상태를 변경하시겠습니까?',
@@ -994,23 +995,23 @@ const AuctionIsDeposit = async (IsDeposit) => {
   });
 
   if (confirm.isConfirmed) {
-  
-    try {
-      const id = route.params.id;
-      await updateAuctionIsDeposit(id, IsDeposit);
-      router.push({ name: 'auctions.index' }); 
-      alert('등록되었습니다.');
-    } catch (error) {
-      console.error('Error updating auction status:', error);
-      alert('등록에 실패했습니다.');
-    }
+    console.log('사용자가 상태 변경을 확인했습니다.');
 
-  }else{
+    const id = route.params.id;
+    console.log('경매 ID:', id);
+
+    await updateAuctionIsDeposit(id, IsDeposit).then((result) => {
+      console.log('updateAuctionIsDeposit 결과:', result);
+    }).catch((error) => {
+      console.error('updateAuctionIsDeposit 에러:', error);
+    });
+
+  } else {
+    console.log('사용자가 상태 변경을 취소했습니다.');
     return;
   }
-  
-  
-  
+
+  console.log('AuctionIsDeposit 함수 종료');
 }
 
 function editPostCode(elementName) {
