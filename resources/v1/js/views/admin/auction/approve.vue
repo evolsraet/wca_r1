@@ -39,9 +39,14 @@
 
               <div class="sell-info">
                   <div class="car-image-style">
-                    <div class="card-img-top-ty01" :style="{ backgroundImage: `url(${auction.car_thumbnail})` }">
-                      <!-- <img :src="auction.car_thumbnail" alt="차량 사진" class="mb-2"> -->
+
+                    <div v-if="auction.car_thumbnails" class="card-img-top-ty01" :style="{ backgroundImage: `url(${auction.car_thumbnails[0]})` }">
+                        <!-- <img :src="auction.car_thumbnails[0]" alt="Car Image"> -->
                     </div>
+                    <div v-else class="card-img-top-ty01" :style="{ backgroundImage: `url(${auction.car_thumbnail})` }">
+                        <img src="../../../../img/car_example.png">
+                    </div>
+
                   </div>
                   <div class="car-info">
 
@@ -116,7 +121,13 @@
                     <div class="card-body">
                       <p class="text-secondary opacity-50">상태</p>
                       <select class="form-select" :v-model="auction.status" @change="changeStatus($event)" id="status">
-                        <option v-for="(label, value) in statusLabel" :key="value" :value="value">{{ label }}</option>
+                        <option
+                          v-for="option in statusLabel"
+                          :key="option.value"
+                          :value="option.value"
+                        >
+                          {{ option.label }}
+                        </option>
                       </select>
                       <p class="opacity-50 text-red">*신청완료 -> 진단대기 -> 경매진행 순서로 진단대기를 거쳐야 경매마감일자가 나옵니다. </p>
                     </div>
@@ -1074,7 +1085,19 @@ function triggerFileUploadCarLicense() {
 }
 
 onMounted(async () => {
-  statusLabel = wicas.enum(store).auctions();
+  const statusLabelData = wicas.enum(store).auctions();
+
+  const orderedKeys = ['ask', 'diag', 'ing', 'wait', 'chosen', 'dlvr', 'done', 'cancel'];
+
+  const statusOptions = orderedKeys.map(key => ({
+    value: key,
+    label: statusLabelData[key]
+  }));
+
+  statusLabel = statusOptions;
+
+  console.log('statusLabel//', statusLabel);
+
   window.addEventListener('resize', checkScreenWidth);
   checkScreenWidth();
   await fetchAuctionDetails();
@@ -1137,6 +1160,8 @@ onMounted(async () => {
     auction.dest_addr2 = data.dest_addr2;
     auction.dealer_name = data.dealer_name;
     auction.dealer = data.dealer;
+    auction.car_thumbnails = data.car_thumbnails;
+    auction.car_thumbnail = data.car_thumbnail;
     // auction.dealer_tel = data.phone;
     if(data.is_biz == 1){
       auction.isBizChecked = true;
