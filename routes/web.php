@@ -24,6 +24,18 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 |
 */
 
+Route::get('/', function () {
+    return redirect('/v1');
+});
+
+Route::get('/v1', function () {
+        return view('v1.main-view');
+});
+
+Route::get('/v2', function () {
+    return view('v2.main-view');
+});
+
 Route::get('/test22', function () {
     // return 'test';
     $auctionService = new AuctionService();
@@ -106,10 +118,13 @@ Route::middleware(['web'])->group(function () {
 Route::get('/nice/test-api', [NiceApiController::class, 'testApi']);
 
 
-Route::view('/{any?}', 'main-view')
+Route::view('/{any?}', 'v1.main-view')
     ->name('dashboard')
     ->where('any', '.*');
 
+Route::view('/v2/{any?}', 'v2.main-view')
+    ->name('dashboard')
+    ->where('any', '.*');
 
 
 // Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');

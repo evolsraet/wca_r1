@@ -93,11 +93,11 @@ class SocialAuthController extends Controller
             }
 
             // 로그인 페이지로 리다이렉트하면서 데이터 전달
-            return redirect('/login?social_callback=' . urlencode(json_encode($response)));
+            return redirect('v1/login?social_callback=' . urlencode(json_encode($response)));
 
         } catch (\Exception $e) {
             Log::error('Social Login Error: ' . $e->getMessage());
-            return redirect('/login?social_callback=' . urlencode(json_encode([
+            return redirect('v1/login?social_callback=' . urlencode(json_encode([
                 'isError' => true,
                 'isAlert' => true,
                 'msg' => '소셜 로그인 처리 중 오류가 발생했습니다.'

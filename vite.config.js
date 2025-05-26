@@ -7,8 +7,8 @@ export default defineConfig({
     plugins: [
         laravel({
             input: [
-                'resources/sass/app.scss',
-                'resources/js/app.js',
+                'resources/v1/sass/app.scss',
+                'resources/v1/js/app.js',
             ],
             refresh: true,
         }),
@@ -24,14 +24,14 @@ export default defineConfig({
     css: {
         preprocessorOptions: {
             scss: {
-                additionalData: `@use "resources/sass/variables" as *;`
+                additionalData: `@use "resources/v1/sass/variables" as *;`
             }
         }
     },
     resolve: {
         alias: {
             vue: 'vue/dist/vue.esm-bundler.js',
-            '@': path.resolve(__dirname, './resources/js'),
+            '@': path.resolve(__dirname, './resources/v1/js'),
             'swiper/vue': 'swiper/vue',
             'swiper': 'swiper',
         },
