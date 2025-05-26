@@ -129,64 +129,7 @@ class UserController extends Controller
         $result = $apiRequestService->sendRequest($sendData);
     
         return response()->api(null, "테스트 결과." . json_encode($result, JSON_PRETTY_PRINT), 'ok', 200);
-        dd($result);
-
-        // $auctionService = new AuctionService();
-        // $auctionService->auctionAfterFeeDone();
-
-        // $auctionService->auctionTotalDepositMiss();
-
-        // vXzPR5E0WLeGpbwkrpNo3XsEJ0D0uTPjgVJVQug88E+sNNzAyQzxAZCVxdoJVFnS3KWY9z4FxKMxdcAwCGATww==
-
-        // echo 'asd';
-        
-        // $data = array(
-        //     'VbankAccountName'=>'홍길동', 
-        //     'VbankExpDate'=>'20250126', 
-        //     'VbankExpTime'=>'100000', 
-        //     'Amt'=>'1000', 
-        //     'Moid'=>'1234567890');
-
-            // $dealer = User::find($this->user->user_id);
-        // $auction_id = '123';
-        // $randomPrefix = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 8);
-        // $randomSuffix = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 3);
-        // $moid = $randomPrefix . $auction_id . $randomSuffix; // 앞에8자리 랜덤 + bid_id + 뒤에 랜덤 3자리 조합 
-        // $VbankExpDate = date('Ymd', strtotime('+1 day'));
-        // $VbankExpTime = date('His');
-        // // 나이스페이먼츠 API 가상계좌 번호 발급 
-        // $data = array(
-        //     'VbankAccountName'=>'홍길동', 
-        //     'VbankExpDate'=>$VbankExpDate, 
-        //     'VbankExpTime'=>$VbankExpTime, 
-        //     'Amt'=>'100', 
-        //     'Moid'=>$moid);
-                
-
-        // $account1 = (new PaymentController())->checkOverPayment($data);
-
-        // dd($account1);
-
-
-        // $auctionService = new AuctionService();
-        // // $auctionService->auctionFinalAtUpdate();
-
-        // $result = $auctionService->getCarmerceAuth();
-
-        // $currentData = [
-        //     'firstRegistrationDate' => '20240101',
-        //     'classModelNm' => '현대',
-        //     'year' => '2024',
-        // ];
-
-
-        // $result2 = $auctionService->getCarmercePrice($result['accessToken'], $currentData);
-
-        // dd($result2);
-
-
-        // $ec = (new PaymentController())->getRandomAccount();
-        // dd($ec);
+        //dd($result);
 
 
     }

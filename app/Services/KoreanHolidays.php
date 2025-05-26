@@ -10,11 +10,15 @@ use Illuminate\Support\Facades\Http;
 
 class KoreanHolidays
 {
-    private $apiUrl = 'http://apis.data.go.kr/B090041/openapi/service/SpcdeInfoService';
+    private $apiUrl;
     private $apiKey;
 
     public function __construct()
     {
+        $this->apiUrl = config('holidays.KOR_HOLIDAY_API_URL', null);
+        if (!$this->apiUrl) {
+            throw new \Exception('KOR_HOLIDAY_API_URL is not set');
+        }
         $this->apiKey = config('holidays.KOR_HOLIDAY_API_KEY', null);
         if (!$this->apiKey) {
             throw new \Exception('KOR_HOLIDAY_API_KEY is not set');
