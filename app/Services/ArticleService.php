@@ -120,7 +120,13 @@ class ArticleService
 
                     // 운영자에게 알림 전송
                     $adminId = config('services.claim_admin.admin_id');
-                    Log::info('[클레임] 알림 전송 ' . $data->id, ['data' => $data, 'adminId' => $adminId]);
+                    Log::info('[클레임] 알림 전송 ' . $data->id, [
+                        'name'=> '클레임 알림 전송',
+                        'path'=> __FILE__,
+                        'line'=> __LINE__,
+                        'data' => $data,
+                        'adminId' => $adminId
+                    ]);
                     ClaimJob::dispatch($adminId, $data, 'admin');
 
                     $validateCondition['extra1'] = 'required|numeric';
@@ -161,7 +167,13 @@ class ArticleService
 
                     // 운영자에게 알림 전송
                     $adminId = config(key: 'services.claim_admin.admin_id');
-                    Log::info('[클레임] 수정 알림 전송 ' . $data->id, ['data' => $data, 'adminId' => $adminId]);
+                    Log::info('[클레임] 수정 알림 전송 ' . $data->id, [
+                        'name'=> '클레임 알림 전송',
+                        'path'=> __FILE__,
+                        'line'=> __LINE__,
+                        'data' => $data,
+                        'adminId' => $adminId
+                    ]);
                     ClaimJob::dispatch($adminId, $data, 'adminUpdate');
 
                     $validateCondition['extra1'] = 'required|numeric';

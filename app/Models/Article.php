@@ -9,6 +9,7 @@ use Spatie\MediaLibrary\InteractsWithMedia;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Illuminate\Support\Facades\Log;
 
 class Article extends Model implements HasMedia
 {
@@ -96,7 +97,7 @@ class Article extends Model implements HasMedia
 
         foreach ($files as $index => $file) {
             if ($file instanceof \Illuminate\Http\UploadedFile && $file->isValid()) {
-                \Log::info('[Article 모델] addMedia - 파일 처리 중', [
+                Log::info('[Article 모델] addMedia - 파일 처리 중', [
                     'originalName' => $file->getClientOriginalName(),
                     'mimeType' => $file->getMimeType(),
                     'size' => $file->getSize()
@@ -106,7 +107,7 @@ class Article extends Model implements HasMedia
                     ->usingFileName($file->getClientOriginalName())
                     ->toMediaCollection($collection);
             } else {
-                \Log::warning('[Article 모델] 유효하지 않은 파일', [
+                Log::warning('[Article 모델] 유효하지 않은 파일', [
                     'file_key' => "$collection.$index",
                     '파일객체' => $file
                 ]);

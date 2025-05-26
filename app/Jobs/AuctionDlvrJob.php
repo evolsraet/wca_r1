@@ -53,8 +53,13 @@ class AuctionDlvrJob implements ShouldQueue
 
 
 
-            Log::info('탁송 신청이 완료되었습니다.', ['data' => $this->thisData]);
-        
+            Log::info('[탁송] 신청이 완료되었습니다.', [
+                'name'=> '탁송 신청이 완료되었습니다.',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'data' => $this->thisData
+            ]);
+
         }
 
     }

@@ -55,8 +55,6 @@ class TaksongAddJob implements ShouldQueue
                 'api_key' => config('taksongApi.TAKSONG_API_KEY')
             ];
 
-            Log::info('[TaksongAddJob] API 호출 시도', ['url' => $this->endPoint, 'payload' => $sendData]);
-
 
             $sendRequest = [
                 'method' => 'POST',
@@ -86,7 +84,13 @@ class TaksongAddJob implements ShouldQueue
                 $auction->update();
             }
 
-            Log::info('[TaksongAddJob] API 호출 성공', ['result' => $result]);
+            Log::info('[탁송 등록] API 호출 성공', [
+                'name'=> '탁송 등록 API 호출 성공',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'result' => $result,
+                'sendData' => $sendData
+            ]);
 
             try {
 
@@ -95,9 +99,15 @@ class TaksongAddJob implements ShouldQueue
 
                 // Notification::route('mail', 'admin@example.com')
                 //     ->notify(new JobSuccessNotification($result));
-                Log::info('[TaksongAddJob] 알림 전송 완료');
+
             } catch (Exception $e) {
-                Log::error('[TaksongAddJob] 알림 실패', ['message' => $e->getMessage()]);
+                Log::error('[탁송 등록] 알림 실패', [
+                    'name'=> '탁송 등록 알림 실패',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'message' => $e->getMessage(),
+                    'sendData' => $sendData
+                ]);
                 ApiErrorLog::create([
                     'job_name' => static::class,
                     'method' => 'NOTIFY',
@@ -123,9 +133,13 @@ class TaksongAddJob implements ShouldQueue
                 'time' => now()->toDateTimeString(),
             ]);
 
-            Log::critical('[TaksongAddJob] 처리 실패', [
+            Log::info('[탁송 등록] 처리 실패', [
+                'name'=> '탁송 등록 처리 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'message' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+                'trace' => $e->getTraceAsString(),
+                'sendData' => $sendData
             ]);
 
             ApiErrorLog::create([

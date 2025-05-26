@@ -52,11 +52,15 @@ class AppServiceProvider extends ServiceProvider
 
         // 발리데이터 - 필드명으로 가져오는 클래스 로드
         $validationFactory->resolver(function ($translator, $data, $rules, $messages, $customAttributes) {
-            // Log::info("Setting up custom validator.");
             $validator = new FieldCommentValidator($translator, $data, $rules, $messages, $customAttributes);
             if (isset($data['model']) && method_exists($data['model'], 'getTable')) {
                 $validator->setTable($data['model']->getTable());
-                Log::info("Model table set in validator: " . $data['model']->getTable());
+                Log::info("[Model] table set in validator " . $data['model']->getTable(), [
+                    'name'=> 'Model table set in validator',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'model' => $data['model']->getTable()
+                ]);
             }
             return $validator;
         });

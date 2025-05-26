@@ -74,7 +74,6 @@ class AuctionBidStatusJob implements ShouldQueue
 
         } else if($this->status == 'wait'){
 
-            // Log::info('경매 상태가 선택대기로 변경되었습니다.', $this->auction);
             $notificationTemplate = NotificationTemplate::getTemplate('AuctionBidStatusJobWait', $this->auction, ['mail']);
             $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
 

@@ -303,14 +303,18 @@ class PaymentController extends Controller
                 'created_at'       => now(),
             ]);
 
-            Log::info('Payment Notification Success: ', ['data' => $data]);
-
             $bid = substr($data['MOID'], 8);
             $bid = substr($bid, 0, -3);
             $bidFind = Bid::find($bid);
             $auction = Auction::find($bidFind->auction_id);
 
-            Log::info('Payment Notification Success: ', ['bidFind' => $bidFind, 'auction' => $auction]);
+            Log::info('[결제] 알림 성공', [
+                'name'=> '결제 알림 성공',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'bidFind' => $bidFind,
+                'auction' => $auction
+            ]);
 
             AuctionTotalDepositJob::dispatch($auction->user_id, $auction);
             AuctionTotalDepositJob::dispatch($bidFind->user_id, $auction);
@@ -319,7 +323,12 @@ class PaymentController extends Controller
             return response("OK\n", 200);
         } catch (\Exception $e) {
             // DB 저장 실패 시 로그 기록
-            Log::error('Payment Notification Error: ' . $e->getMessage());
+            Log::error('[결제] 알림 오류', [
+                'name'=> '결제 알림 오류',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'message' => $e->getMessage()
+            ]);
             return response("FAIL: Server error\n", 500);
         }
     }
@@ -419,7 +428,12 @@ class PaymentController extends Controller
 
         curl_close($ch);
 
-        Log::info('checkOverPayment: ', ['data' => $result]);
+        Log::info('[과오납 체크] 결과', [
+            'name'=> '과오납 체크 결과',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'data' => $result
+        ]);
 
         return $result;
 

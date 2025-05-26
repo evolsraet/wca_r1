@@ -37,8 +37,6 @@ class BidResource extends JsonResource
             self::setAuctionUserId($auctionId, $auctionUserId);
         }
 
-        // Log::info("Bid ID: {$this->id}, Auction ID: {$auctionId}, Auction User ID: {$auctionUserId}");
-
         $parentArray = $this->formatDates(parent::toArray($request));
         $addArray = [];
 

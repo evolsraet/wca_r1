@@ -46,7 +46,12 @@ class NetworkErrorJob implements ShouldQueue
             $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail']));
 
         } catch (\Exception $e) {
-            Log::error('[네트워크 오류 알림전송 실패 / '.$data->id.']', ['error' => $e->getMessage()]);
+            Log::error('[네트워크 오류] 알림전송 실패 / '.$data->id, [
+                'name'=> '네트워크 오류 알림전송 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'error' => $e->getMessage()
+            ]);
         }
         
     }

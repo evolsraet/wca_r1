@@ -15,7 +15,12 @@ class CarHistoryService
 
         // 세션에서 먼저 확인
         if (Session::has($sessionKey)) {
-            Log::info("[카히스토리] 캐시된 데이터 사용 - 차량번호: {$carNumber}");
+            Log::info("[카히스토리] 캐시된 데이터 사용 - 차량번호: {$carNumber}", [
+                'name'=> '카히스토리 캐시된 데이터 사용',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'carNumber' => $carNumber
+            ]);
             
             $data = Session::get($sessionKey);
             $data['is_session'] = true;
@@ -26,7 +31,12 @@ class CarHistoryService
         // 데이터베이스에서 확인
         $carHistory = NiceCarHistory::where('car_no', $carNumber)->first();
         if ($carHistory) {
-            Log::info("[카히스토리] 데이터베이스에서 데이터 사용 - 차량번호: {$carNumber}");
+            Log::info("[카히스토리] 데이터베이스에서 데이터 사용 - 차량번호: {$carNumber}", [
+                'name'=> '카히스토리 데이터베이스에서 데이터 사용',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'carNumber' => $carNumber
+            ]);
 
             $data['is_database'] = true;
 
@@ -44,7 +54,12 @@ class CarHistoryService
             'rType'       => 'J',
         ];
 
-        Log::info("[카히스토리] API 요청 준비 완료", ['payload' => $payload]);
+        Log::info("[카히스토리] API 요청 준비 완료", [
+            'name'=> '카히스토리 API 요청 준비 완료',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'payload' => $payload
+        ]);
 
         try {
             $response = Http::asForm()->timeout(15)->post(config('services.carHistory.api_url'), $payload);
@@ -52,7 +67,12 @@ class CarHistoryService
             if ($response->successful()) {
                 $data = $response->json();
 
-                Log::info("[카히스토리] 응답 수신 성공", ['response' => $data]);
+                Log::info("[카히스토리] 응답 수신 성공", [
+                    'name'=> '카히스토리 응답 수신 성공',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'response' => $data
+                ]);
 
                 // 세션에 저장
                 Session::put($sessionKey, $data);
@@ -69,11 +89,17 @@ class CarHistoryService
             }
 
             Log::error("[카히스토리] 응답 실패", [
+                'name'=> '카히스토리 응답 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'status' => $response->status(),
                 'body' => $response->body()
             ]);
         } catch (\Exception $e) {
             Log::error("[카히스토리] 요청 중 예외 발생", [
+                'name'=> '카히스토리 요청 중 예외 발생',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'message' => $e->getMessage()
             ]);
         }
@@ -110,7 +136,12 @@ class CarHistoryService
         // dd($carHistory);
 
         if ($carHistory) {
-            Log::info("[카히스토리] 데이터베이스에서 데이터 사용 - 차량번호: {$carNumber}");
+            Log::info("[카히스토리] 데이터베이스에서 데이터 사용 - 차량번호: {$carNumber}", [
+                'name'=> '카히스토리 데이터베이스에서 데이터 사용',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'carNumber' => $carNumber
+            ]);
 
 
             $data = $carHistory['data'];

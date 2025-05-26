@@ -46,7 +46,14 @@ class AuctionDoneJob implements ShouldQueue
         switch($this->mode){
             case 'user':
 
-                Log::info('[경매완료] auction_id: ' . $auction->id .'/'. $this->mode, ['auction' => $this->auction, 'user' => $this->user, 'mode' => $this->mode]);
+                Log::info('[경매완료] 경매 아이디: ' . $auction->id .'/'. $this->mode, [
+                    'name'=> '경매완료',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'auction' => $this->auction,
+                    'user' => $this->user,
+                    'mode' => $this->mode
+                ]);
 
                 $notificationTemplate = NotificationTemplate::getTemplate('AuctionDoneJobUser', $auction, ['mail']);
                 $user = User::find($this->user);
@@ -56,7 +63,14 @@ class AuctionDoneJob implements ShouldQueue
 
             case 'dealer':
 
-                Log::info('[경매완료] auction_id: ' . $auction->id .'/'. $this->mode, ['auction' => $this->auction, 'user' => $this->user, 'mode' => $this->mode]);
+                Log::info('[경매완료] 경매 아이디: ' . $auction->id .'/'. $this->mode, [
+                    'name'=> '경매완료',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'auction' => $this->auction,
+                    'user' => $this->user,
+                    'mode' => $this->mode
+                ]);
 
                 $notificationTemplate = NotificationTemplate::getTemplate('AuctionDoneJobDealer', $auction, ['mail']);
                 $user = User::find($this->user);

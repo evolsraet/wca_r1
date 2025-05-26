@@ -33,7 +33,6 @@ class Kernel extends ConsoleKernel
         $admin = User::where('id', 1)->first();
         Auth::login($admin); // 명시적으로 시스템 유저를 로그인                
 
-        // Log::info('Kernel schedule start : user : ' . auth()->user()->name);
 
         $schedule->call(function() {
 
@@ -61,7 +60,6 @@ class Kernel extends ConsoleKernel
             $auction = Auction::whereIn('status', ['chosen','dlvr'])->whereNotNull('is_taksong')->where('is_taksong', '!=', 'done')->get();
             if($auction){
                 foreach($auction as $auctionStatus){
-                    // Log::info('[탁송 상태 / 스케쥴] 확인', ['auction' => $auctionStatus]);
                     TaksongStatusJob::dispatch($auctionStatus->taksong_id);
                 }
             }

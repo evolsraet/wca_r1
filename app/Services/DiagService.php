@@ -96,7 +96,12 @@ class DiagService
             }
 
             if (!isset($response['status']) || $response['status'] !== 'ok') {
-                Log::debug("[진단 데이터] 진단에 미등록된 차량입니다: {$carNo}", ['response' => $response]);
+                Log::debug("[진단 데이터] 진단에 미등록된 차량입니다: {$carNo}", [
+                    'name'=> '진단 데이터 조회 실패. 진단에 미등록된 차량입니다.',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'response' => $response
+                ]);
                 return [
                     'status' => 'error',
                     'message' => '진단 데이터 조회 실패. 진단에 미등록된 차량입니다.',
@@ -107,7 +112,12 @@ class DiagService
 
             // 진단 데이터가 확인되었고 본사검수까지 되었는지 체크
             if (empty($response['data']['diag_is_confirmed'])) {
-                Log::debug("[진단 데이터] 본사 검수가 되지 않았습니다: {$carNo}", ['response' => $response]);
+                Log::debug("[진단 데이터] 본사 검수가 되지 않았습니다: {$carNo}", [
+                    'name'=> '진단 데이터 조회 실패. 본사 검수가 되지 않았습니다.',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'response' => $response
+                ]);
                 return [
                     'status' => 'error',
                     'message' => '본사 검수가 되지 않았습니다.',
@@ -120,7 +130,12 @@ class DiagService
             $diagnosticCode = $this->diagnosticCode();
 
             if (!isset($diagnosticCode['status']) || $diagnosticCode['status'] !== 'ok') {
-                Log::error("[진단 데이터] 코드오류 : {$carNo}", ['diagnosticCode' => $diagnosticCode]);
+                Log::error("[진단 데이터] 코드오류 : {$carNo}", [
+                    'name'=> '진단 데이터 조회 실패. 진단 코드 조회 실패.',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'diagnosticCode' => $diagnosticCode
+                ]);
                 return [
                     'status' => 'error',
                     'message' => '진단 코드 조회 실패.',
@@ -168,7 +183,12 @@ class DiagService
                 'time' => now()->toDateTimeString(),
             ]);
 
-            Log::error("[진단 데이터] 조회 실패 {$carNo}", ['error' => $e->getMessage()]);
+            Log::error("[진단 데이터] 조회 실패 {$carNo}", [
+                'name'=> '진단 데이터 조회 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'error' => $e->getMessage()
+            ]);
             return [
                 'status' => 'error',
                 'message' => '진단 데이터 조회 중 오류 발생: ' . $e->getMessage(),
@@ -188,7 +208,11 @@ class DiagService
             ->get();
 
         if ($auctions->isEmpty()) {
-            Log::info('[진단 상태 확인] 대기 중인 경매 0건');
+            Log::info('[진단 상태 확인] 대기 중인 경매 0건', [
+                'name'=> '진단 상태 확인',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+            ]);
             return $validResults;
         }
 
@@ -208,7 +232,12 @@ class DiagService
                     $resultArray['status'] === 'ok' &&
                     $resultArray['data']['data']['diag_is_confirmed'] == 1
                 ) {
-                    Log::info('[진단 상태 확인] 완료 : ' . $auction->hashid, ['result' => $resultArray]);
+                    Log::info('[진단 상태 확인] 완료 : ' . $auction->hashid, [
+                        'name'=> '진단 상태 확인',
+                        'path'=> __FILE__,
+                        'line'=> __LINE__,
+                        'result' => $resultArray
+                    ]);
                     $validResults[] = $resultArray;
 
                     $this->processValidDiagResult($auction, $resultArray);
@@ -227,7 +256,12 @@ class DiagService
                 //     'time' => now()->toDateTimeString(),
                 // ]);
 
-                Log::error('[진단 상태 확인] 오류 : Auction hashid: ' . $auction->hashid, ['error' => $e->getMessage()]);
+                Log::error('[진단 상태 확인] 오류 : Auction hashid: ' . $auction->hashid, [
+                    'name'=> '진단 상태 확인',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'error' => $e->getMessage()
+                ]);
             }
         }
 
@@ -243,14 +277,24 @@ class DiagService
             $hashid = Hashids::decode($resultArray['data']['data']['diag_outer_id']);
 
             if (empty($hashid[0])) {
-                Log::warning('[진단 상태 확인] Hashids decode 실패', ['diag_outer_id' => $resultArray['data']['data']['diag_outer_id']]);
+                Log::warning('[진단 상태 확인] Hashids decode 실패', [
+                    'name'=> '진단 상태 확인',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'diag_outer_id' => $resultArray['data']['data']['diag_outer_id']
+                ]);
                 return;
             }
             
             $targetAuction = Auction::find($hashid[0] ?? null);
 
             if (!$targetAuction) {
-                Log::warning('[진단 상태 확인] 고객사 코드 오류', ['diag_outer_id' => $resultArray['data']['data']['diag_outer_id']]);
+                Log::warning('[진단 상태 확인] 고객사 코드 오류', [
+                    'name'=> '진단 상태 확인',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'diag_outer_id' => $resultArray['data']['data']['diag_outer_id']
+                ]);
                 return;
             }
 
@@ -264,7 +308,12 @@ class DiagService
 
             AuctionBidStatusJob::dispatch($targetAuction->user_id, 'ing', $targetAuction->id, '', '');
 
-            Log::info('[진단 상태 확인 완료] : ' . $targetAuction->id, ['result' => $resultArray]);
+            Log::info('[진단 상태 확인 완료] : ' . $targetAuction->id, [
+                'name'=> '진단 상태 확인 완료',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'result' => $resultArray
+            ]);
         }
     }
 

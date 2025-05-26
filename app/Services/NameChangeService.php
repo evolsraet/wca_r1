@@ -48,14 +48,24 @@ class NameChangeService
         $auction = Auction::find($auction_id);
 
         if ($auction->status === 'done') {
-            Log::info('변경 생략: 이미 done 상태임', ['auction_id' => $auction_id]);
+            Log::info('[명의변경] 변경 생략: 이미 done 상태임', [
+                'name'=> '명의변경 변경 생략',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'auction_id' => $auction_id
+            ]);
             return;
         }
         
         $auction->status = 'done';
         $auction->save();
 
-        Log::info('changeAuctionStatus', ['auction' => $auction_id]);
+        Log::info('[명의변경] changeAuctionStatus', [
+            'name'=> '명의변경 changeAuctionStatus',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'auction' => $auction_id
+        ]);
 
         $dealer = Bid::find($auction->bid_id);
 
@@ -74,13 +84,23 @@ class NameChangeService
                           ->where('has_uploaded_name_change_file', true)
                           ->get();
 
-        Log::info('[명의변경 완료] processCompletedNameChangeAuctions', ['auctions' => $auctions]);
+        Log::info('[명의변경 완료] processCompletedNameChangeAuctions', [
+            'name'=> '명의변경 완료',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'auctions' => $auctions
+        ]);
 
         foreach ($auctions as $item) {
             // 2. media 테이블에서 model_id가 경매의 id와 일치하고, collection_name이 'file_auction_name_change'인 미디어가 있는지 확인
             $mediaService = new MediaService();
 
-            Log::info('[명의변경 완료 확인] processCompletedNameChangeAuctions', ['item' => $item]);
+            Log::info('[명의변경 완료 확인] processCompletedNameChangeAuctions', [
+                'name'=> '명의변경 완료 확인',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'item' => $item
+            ]);
 
             // $media = $mediaService->getMedia($item, 'file_auction_name_change')->first();
 

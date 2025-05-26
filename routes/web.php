@@ -48,10 +48,6 @@ Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
 Route::get('excelDown/{resource}', function ($resource) {
 
-    // Log::info('엑셀 다운로드 라우트 실행: ' . $resource);
-    // Log::info(auth()->check());
-    // Log::info('EOF');
-
     if (!auth()->check() || !auth()->user()->hasPermissionTo('act.admin')) {
         return abort(401, '로그인이 필요합니다.');
     }

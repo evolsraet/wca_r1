@@ -46,11 +46,14 @@ class AuthenticatedSessionController extends Controller
         //     'debbug' => 'hahahoho',
         // ]], 404);
 
-        Log::info('login',[$request]);
-
         $user = User::where('email', $request->email)->orWhere('phone', $request->email)->first();
 
-        Log::info('userinfo',[$user]);
+        Log::info('[로그인] 사용자 정보', [
+            'name'=> '로그인 사용자 정보',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'user' => $user
+        ]);
 
         if(!$user){
             throw new \Exception('등록된 회원이 아닙니다.');

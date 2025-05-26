@@ -41,6 +41,9 @@ class TaksongService
             }
 
             Log::debug("[탁송 요청] {$carNo} / 시작", [
+                'name'=> '탁송 요청 시작',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'api_url' => $this->taksongApiUrl,
                 'data' => $data
             ]);
@@ -51,7 +54,13 @@ class TaksongService
             foreach ($requiredFields as $field) {
                 if (empty($data[$field])) {
                     $message = "필수값 누락: {$field}";
-                    Log::debug("[탁송 요청] {$carNo} / 필수값 누락: {$field}", ['field' => $field, 'input_data' => $data]);
+                    Log::debug("[탁송 요청] {$carNo} / 필수값 누락: {$field}", [
+                        'name'=> '탁송 요청 필수값 누락',
+                        'path'=> __FILE__,
+                        'line'=> __LINE__,
+                        'field' => $field,
+                        'input_data' => $data
+                    ]);
                     throw new Exception($message, 422);
                 }
             }
@@ -89,11 +98,21 @@ class TaksongService
 
             if (!$result) {
                 $message = 'Connection timed out: Failed to connect to '.$this->taksongApiUrl;
-                Log::error('[탁송 요청] {$carNo} / API 응답 실패', ['request' => $sendRequest]);
+                Log::error('[탁송 요청] {$carNo} / API 응답 실패', [
+                    'name'=> '탁송 요청 API 응답 실패',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'request' => $sendRequest
+                ]);
                 throw new Exception($message, 500);
             }
 
-            Log::info('[탁송 요청] {$carNo} / 탁송 요청 성공', ['result' => $result]);
+            Log::info('[탁송 요청] {$carNo} / 탁송 요청 성공', [
+                'name'=> '탁송 요청 성공',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'result' => $result
+            ]);
             return $result;
 
         } catch (Exception $e) {
@@ -111,6 +130,9 @@ class TaksongService
     
             
             Log::error('[탁송 요청] {$carNo} / 예외 발생', [
+                'name'=> '탁송 요청 예외 발생',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'message' => $e->getMessage(),
                 'code' => $e->getCode(),
                 'trace' => $e->getTraceAsString()
@@ -156,10 +178,19 @@ class TaksongService
                 // default  => Log::warning("[탁송 상태] {$carNo} / 알 수 없는 상태", ['status' => $status, 'car_no' => $carNo]),
             };
     
-            Log::info("[탁송 상태] {$carNo} / 상태 처리 완료", ['status' => $status, 'car_no' => $carNo]);
+            Log::info("[탁송 상태] {$carNo} / 상태 처리 완료", [
+                'name'=> '탁송 상태 처리 완료',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'status' => $status,
+                'car_no' => $carNo
+            ]);
 
         } catch (Exception $e) {
             Log::error("[탁송 상태] {$carNo} / 예외 발생", [
+                'name'=> '탁송 상태 처리 예외 발생',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'status' => $status,
                 'car_no' => $carNo,
                 'message' => $e->getMessage(),
@@ -214,7 +245,13 @@ class TaksongService
 
     // 탁송 완료 상태 처리
     private function handleDone(string $carNo, $auction, $bid, $status, $modifyData){
-        Log::info("[탁송 상태] {$carNo} / 탁송 상태 처리 완료 확인", ['status' => $status, 'car_no' => $carNo]);
+        Log::info("[탁송 상태] {$carNo} / 탁송 상태 처리 완료 확인", [
+            'name'=> '탁송 상태 처리 완료 확인',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'status' => $status,
+            'car_no' => $carNo
+        ]);
 
         $isCheck = Auction::where('car_no', $carNo)->where('status', 'dlvr')->first();
         if($isCheck){

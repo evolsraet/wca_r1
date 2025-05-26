@@ -221,20 +221,36 @@ class UserService
             $data = $request->input('user');
             $data = $this->checkJson($data);
 
-            Log::info('data', ['data' => $data]);
 
             if ($data) {
 
-                Log::info('data2', ['data' => $data]);
+                Log::info('[유저] 상태 업데이트', [
+                    'name'=> '유저 상태 업데이트',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'data' => $data
+                ]);
 
                 // 승인여부 업데이트 
                 if($item->hasRole('dealer')){
                     $user = User::find($item->id);
                     if($data['status'] == 'ok'){
-                        Log::info('딜러 상태 업데이트', ['user_id' => $item->id, 'status' => 'ok']);
+                        Log::info('[유저] 딜러 상태 업데이트', [
+                            'name'=> '유저 딜러 상태 업데이트',
+                            'path'=> __FILE__,
+                            'line'=> __LINE__,
+                            'user_id' => $item->id,
+                            'status' => 'ok'
+                        ]);
                         UaerDealerStatusJob::dispatch($user, 'ok');
                     }else if($data['status'] == 'reject'){
-                        Log::info('딜러 상태 업데이트', ['user_id' => $item->id, 'status' => 'reject']);
+                        Log::info('[유저] 딜러 상태 업데이트', [
+                            'name'=> '유저 딜러 상태 업데이트',
+                            'path'=> __FILE__,
+                            'line'=> __LINE__,
+                            'user_id' => $item->id,
+                            'status' => 'reject'
+                        ]);
                         UaerDealerStatusJob::dispatch($user, 'reject');
                     }
                 }
@@ -425,9 +441,7 @@ class UserService
             if (auth()->user()->can('act.dealer')) {
                 $item->where('id', auth()->user()->id);
             } elseif (auth()->user()->can('act.user')) {
-                // Log::info($auction_ids);
-                // Log::info($bid_user_ids);
-
+                
                 $item->where(function ($query) {
                     $query
                         ->role('dealer')

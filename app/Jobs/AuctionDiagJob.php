@@ -43,7 +43,6 @@ class AuctionDiagJob implements ShouldQueue
 
         // $sendMessage = NotificationTemplate::basicTemplate($data);
 
-        // Log::info('AuctionDiagJob_sendMessage2', ['sendMessage' => $sendMessage]);
 
         // 이메일 전송 
         // $user->notify(new AuctionDiagNotification($user, $sendMessage));

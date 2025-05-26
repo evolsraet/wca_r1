@@ -56,12 +56,15 @@ class UserController extends Controller
         }
 
         Log::info(
+            '[비밀번호 재설정] 링크 생성',
             [
-                $phone,
-                $encryptCode,
-                Crypt::decryptString($encryptCode),
-                $user->toArray(),
-
+                'name'=> '비밀번호 재설정 링크 생성',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'phone' => $phone,
+                'encryptCode' => $encryptCode,
+                'decryptCode' => Crypt::decryptString($encryptCode),
+                'user' => $user->toArray(),
             ]
         );
 
@@ -88,7 +91,13 @@ class UserController extends Controller
         $phone = $codeDecode[0];
         $expire = $codeDecode[1];
 
-        Log::info([$phone, $expire, now()->format('Y-m-d H:i:s')]);
+        Log::info('[비밀번호 재설정] 링크 확인', [
+            'name'=> '비밀번호 재설정 링크 확인',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'phone' => $phone,
+            'expire' => $expire,
+        ]);
 
         if ($expire < now()->format('Y-m-d H:i:s')) {
             throw new \Exception('링크가 만료되었습니다.');

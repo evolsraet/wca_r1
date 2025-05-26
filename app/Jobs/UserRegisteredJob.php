@@ -32,8 +32,6 @@ class UserRegisteredJob implements ShouldQueue
      */
     public function handle(): void
     {
-
-        Log::info('UserRegisteredJob 실행되었습니다!....', ['item' => $this->item]);
         
         $item = $this->item;
 

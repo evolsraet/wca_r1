@@ -20,7 +20,12 @@ class SocialAuthController extends Controller
         try {
             return Socialite::driver($provider)->redirect();
         } catch (\Exception $e) {
-            Log::error('Social Login Redirect Error: ' . $e->getMessage());
+            Log::error('[소셜 로그인] 리다이렉트 오류', [
+                'name'=> '소셜 로그인 리다이렉트 오류',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'message' => $e->getMessage()
+            ]);
             return response()->json([
                 'isError' => true,
                 'isAlert' => true,
@@ -96,7 +101,12 @@ class SocialAuthController extends Controller
             return redirect('v1/login?social_callback=' . urlencode(json_encode($response)));
 
         } catch (\Exception $e) {
-            Log::error('Social Login Error: ' . $e->getMessage());
+            Log::error('[소셜 로그인] 로그인 오류', [
+                'name'=> '소셜 로그인 로그인 오류',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'message' => $e->getMessage()
+            ]);
             return redirect('v1/login?social_callback=' . urlencode(json_encode([
                 'isError' => true,
                 'isAlert' => true,

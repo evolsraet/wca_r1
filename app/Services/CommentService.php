@@ -53,7 +53,12 @@ class CommentService
                     throw new \Exception('권한이 없습니다. [서비스]');
                 }
 
-                Log::info('[댓글] 수정 알림 전송 ' . $result->id, ['result' => $result]);
+                Log::info('[댓글] 수정 알림 전송 ' . $result->id, [
+                    'name'=> '댓글 수정 알림 전송',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'result' => $result
+                ]);
                 $article = Article::find($result->commentable_id);
                 if($article->board_id === 'claim'){
                     $user = $article->user_id;
@@ -79,7 +84,12 @@ class CommentService
                 // $result->ip = file_get_contents('https://api.ipify.org');
 
                 // 댓글 알림 전송
-                Log::info('[댓글] 알림 전송 ' . $result->id, ['result' => $result]);
+                Log::info('[댓글] 알림 전송 ' . $result->id, [
+                    'name'=> '댓글 알림 전송',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'result' => $result
+                ]);
                 $article = Article::find($result->commentable_id);
                 if($article->board_id === 'claim'){
                     $user = $article->user_id;

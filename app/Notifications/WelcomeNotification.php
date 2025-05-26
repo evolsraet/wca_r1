@@ -21,8 +21,6 @@ class WelcomeNotification extends Notification
     {
         $this->item = $item;
         $this->sendMessage = $sendMessage;
-        //
-        // Log::info('WelcomeNotification 생성되었습니다!....');
     }
 
     /**
@@ -48,7 +46,10 @@ class WelcomeNotification extends Notification
                 ->line($message1)
                 ->action('위카옥션', url(path: $this->sendMessage['link']));
         } catch (\Exception $e) {
-            Log::channel('mail')->error('메일 전송 실패: ' . $e->getMessage(), [
+            Log::channel('mail')->error('[알림] 메일 전송 실패', [
+                'name'=> '알림 메일 전송 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'user' => $notifiable->email ?? 'unknown',
                 'error' => $e->getMessage(),
                 'stack_trace' => $e->getTraceAsString()

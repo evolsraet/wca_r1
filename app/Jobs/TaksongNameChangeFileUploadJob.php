@@ -39,7 +39,12 @@ class TaksongNameChangeFileUploadJob implements ShouldQueue
     {
         //
         $auction = Auction::find($this->auctionId);
-        Log::info('TaksongNameChangeFileUploadJob', ['auction' => $auction]);
+        Log::info('[차량 명의이전] 파일 업로드 알림 발송', [
+            'name'=> '차량 명의이전 파일 업로드 알림 발송',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'auction' => $auction
+        ]);
 
 
         $notificationTemplate = NotificationTemplate::getTemplate('TaksongNameChangeFileUploadJob', $auction, ['mail']);

@@ -84,7 +84,12 @@ class NiceDNRService
             }
 
 
-            Log::info('Nice DNR API 호출 결과', $response);
+            Log::info('[Nice DNR] API 호출 결과', [
+                'name'=> 'Nice DNR API 호출 결과',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'response' => $response
+            ]);
 
             $responseData = $response;
 
@@ -123,7 +128,10 @@ class NiceDNRService
                 'time' => now()->toDateTimeString(),
             ]);
 
-            Log::error('Nice DNR API 호출 실패: ' . $e->getMessage(), [
+            Log::error('[Nice DNR] API 호출 실패: ' . $e->getMessage(), [
+                'name'=> 'Nice DNR API 호출 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'ownerNm' => $ownerNm,
                 'vhrNo' => $vhrNo
             ]);

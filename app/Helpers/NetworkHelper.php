@@ -31,7 +31,7 @@ class NetworkHelper
         if (self::isNetworkError($e)) {
             $message = $e->getMessage();
 
-            Log::warning('[네트워크 에러 감지]', array_merge([
+            Log::warning('[네트워크 에러]', array_merge([
                 'message' => $message,
                 'code' => $e->getCode(),
                 'file' => $e->getFile(),

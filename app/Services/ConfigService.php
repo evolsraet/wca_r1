@@ -20,10 +20,6 @@ class ConfigService
             return $value;
 
         } catch (Exception $e) {
-            // Log::error("[$context] config/env 로딩 실패", [
-            //     'key' => $key,
-            //     'message' => $e->getMessage(),
-            // ]);
 
             error_log("[{$context}] [ENV] {$key} is missing");
 

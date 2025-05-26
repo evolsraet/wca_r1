@@ -53,7 +53,11 @@ class AuctionController extends Controller
         $user = $request->user(); // 고객
         $result = $this->service->store($request);
 
-        Log::info('경매 등록 결과', ['result' => $result]);
+        Log::info('[경매] 등록 결과 / 경매 ID : ' . $result->id, [
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'result' => $result
+        ]);
 
         AuctionStartJob::dispatch($result, $user, $request->auction, true); // 고객
         AuctionStartJob::dispatch($result, $super, $request->auction); // 운영사
@@ -187,7 +191,11 @@ class AuctionController extends Controller
                 'engineType' => $niceDnrResult['carSise']['info']['carinfo']['engineType']
             ];
 
-            Log::info('[차량정보 확인]', ['result' => $result]);
+            Log::info('[차량정보 확인] / 경매 ID : ' . $result['no'], [
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'result' => $result
+            ]);
 
             // 임시 데이터 리턴
             return $result;
@@ -331,7 +339,6 @@ class AuctionController extends Controller
         $viewChange = $request->input('viewChange');
         $viewBreak = $request->input('viewBreak');
 
-        // Log::info('예상가 확인 호출', ['request' => $request->all()]);
 
         $nowYear = Carbon::now()->format('Y'); // 현재년도
         $nowMonth = Carbon::now()->format('m'); // 현재 월
@@ -347,7 +354,6 @@ class AuctionController extends Controller
         // $firstRegMonth = 6;
         // $mileage = 80000;
 
-        Log::info('예상가 확인 호출', ['현재년도' => $nowYear, '현재 월' => $nowMonth, '최초등록년도' => $firstRegYear, '최초등록월' => $firstRegMonth, 'mileage' => $mileage]);
 
         // $initialPrice = $currentPrice; // 차량 초기 가격 3천만 원
 
@@ -419,7 +425,12 @@ class AuctionController extends Controller
         $resultc['최종 예상 가격 (만원 단위)'] = number_format($result['estimatedPriceInTenThousandWon']) . "만원\n";
 
 
-        Log::info('예상가 확인 결과', ['result' => $resultc]);
+        Log::info('[차량 예상가격] 확인 결과', [
+            'name'=> '차량 현재 예상가격 확인 결과',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'result' => $resultc
+        ]);
 
         // 계산식 작성 end
         $result['estimatedPrice'] = round($resultPrice / 10000);
@@ -699,7 +710,13 @@ class AuctionController extends Controller
 
                 $dealer = Bid::find($auction->bid_id);
                 // AuctionDoneJob::dispatch($dealer->user_id, $auction->id, 'dealer');
-                Log::info('[명의이전] 파일업로드 완료 / 경매번호 : '.$auction->hash_id, ['auction' => $auction, 'dealer' => $dealer]);
+                Log::info('[명의이전] 파일업로드 완료 / 경매번호 : '.$auction->hash_id, [
+                    'name'=> '명의이전 파일 업로드 완료',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'auction' => $auction,
+                    'dealer' => $dealer
+                ]);
 
                 $auction->has_uploaded_name_change_file = true;
                 $auction->save();
@@ -716,12 +733,22 @@ class AuctionController extends Controller
 
                 return response()->api(['success' => true, 'media' => $media]);
             }else{
-                Log::info('[명의이전] 파일업로드 실패 / 경매번호 : '.$auction->hash_id, ['auction' => $auction]);
+                Log::info('[명의이전] 파일업로드 실패 / 경매번호 : '.$auction->hash_id, [
+                    'name'=> '명의이전 파일 업로드 실패',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'auction' => $auction
+                ]);
                 return response()->json(['success' => false, 'message' => '파일이 전송되지 않았습니다.'], 400);
             }
 
         } else {
-            Log::info('[명의이전] 파일첨부 되지 않았습니다. / 경매번호 : '.$auction->hash_id, ['auction' => $auction]);
+            Log::info('[명의이전] 파일첨부 되지 않았습니다. / 경매번호 : '.$auction->hash_id, [
+                'name'=> '명의이전 파일 업로드 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'auction' => $auction
+            ]);
             return response()->json(['success' => false, 'message' => '파일이 전송되지 않았습니다.'], 400);
         }
     }
@@ -752,8 +779,6 @@ class AuctionController extends Controller
         $auction = Auction::find($auctionId);
         $auction->status = 'done';
         $auction->save();
-
-
 
     }
 

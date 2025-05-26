@@ -13,7 +13,12 @@ class FieldCommentValidator extends Validator
     public function setTable($table)
     {
         $this->table = $table;
-        Log::info("검증기 테이블 설정: {$table}");
+        Log::info("[검증기] 테이블 설정: {$table}", [
+            'name'=> '검증기 테이블 설정',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'table' => $table
+        ]);
     }
 
     protected function replaceAttributePlaceholder($message, $value)
@@ -22,13 +27,25 @@ class FieldCommentValidator extends Validator
         $formattedColumn = str_replace(' ', '_', $value);
         $comment = $this->getColumnComment($this->table, $formattedColumn);
         $attributeName = $comment ?: $value;
-        Log::info("Replacing attribute '{$value}' with comment '{$attributeName}' in message.");
+        Log::info("Replacing attribute '{$value}' with comment '{$attributeName}' in message.", [
+            'name'=> '검증기 컬럼 코멘트 치환',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'value' => $value,
+            'attributeName' => $attributeName
+        ]);
         return str_replace([':attribute', ':ATTRIBUTE', ':Attribute'], $attributeName, $message);
     }
 
     protected function getColumnComment($table, $column)
     {
-        Log::info("테이블 '{$table}', 컬럼 '{$column}'의 코멘트를 가져옵니다.");
+        Log::info("테이블 '{$table}', 컬럼 '{$column}'의 코멘트를 가져옵니다.", [
+            'name'=> '검증기 컬럼 코멘트 조회',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'table' => $table,
+            'column' => $column
+        ]);
         $comment = DB::table('INFORMATION_SCHEMA.COLUMNS')
             ->select('COLUMN_COMMENT')
             ->where('TABLE_SCHEMA', DB::connection()->getDatabaseName())
@@ -37,7 +54,13 @@ class FieldCommentValidator extends Validator
             ->value('COLUMN_COMMENT');
 
         if (!$comment) {
-            Log::warning("테이블 '{$table}', 컬럼 '{$column}'에 코멘트가 없습니다.");
+            Log::warning("테이블 '{$table}', 컬럼 '{$column}'에 코멘트가 없습니다.", [
+                'name'=> '테이블 컬럼 코멘트 없음',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'table' => $table,
+                'column' => $column
+            ]);
         }
 
         return $comment ?: null;

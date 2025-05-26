@@ -52,7 +52,12 @@ class CarmerceService
             'endDriveKm' => '',
         ]);
 
-        Log::info('카머스 시세 조회 결과', ['result' => $response->json()]);
+        Log::info('[카머스] 시세 조회 결과', [
+            'name'=> '카머스 시세 조회 결과',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'result' => $response->json()
+        ]);
         
         return $response->json();
     }   

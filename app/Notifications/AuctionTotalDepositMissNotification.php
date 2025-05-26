@@ -35,7 +35,12 @@ class AuctionTotalDepositMissNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        Log::info('AuctionTotalDepositMissNotification', $this->sendMessage);
+        Log::info('AuctionTotalDepositMissNotification', [
+            'name'=> 'AuctionTotalDepositMissNotification',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'sendMessage' => $this->sendMessage
+        ]);
         return (new MailMessage)
                     ->subject($this->sendMessage['title'])
                     ->line($this->sendMessage['title'])

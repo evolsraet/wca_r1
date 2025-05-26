@@ -46,7 +46,13 @@ class OwnershipController extends Controller
             // return response()->json(['success' => $result]);
 
         } catch (Exception $e) {
-            Log::error('[명의이전 알림 오류]', ['auction_id' => $auctionId, 'message' => $e->getMessage()]);
+            Log::error('[명의이전] 알림 오류', [
+                'name'=> '명의이전 알림 오류',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'auction_id' => $auctionId,
+                'message' => $e->getMessage()
+            ]);
         }
 
         return response()->json(['success' => $result]);

@@ -155,7 +155,6 @@ class User extends Authenticatable implements HasMedia
         //             $user->makeVisible(['phone']);
         //         }
         //     } catch (\Exception $e) {
-        //         Log::error('Error in User retrieved event: ' . $e->getMessage());
         //         // 필요하다면 여기에서 추가적인 예외 처리를 할 수 있습니다.
         //     }
         // });

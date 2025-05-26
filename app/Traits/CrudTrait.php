@@ -237,13 +237,9 @@ trait CrudTrait
             $whereGroup = preg_split('/(_and_|_or_)/', request('where'), -1, PREG_SPLIT_DELIM_CAPTURE);
             $whereGroupFunction = 'where';
 
-            // Log::info(['웨어그룹 시작', $whereGroup]);
-
             foreach ($whereGroup as $whereGroupItem) {
                 // whereGroupItem 값에 따라 쿼리 그룹화 방식을 결정합니다.
                 // '_or_'이면 orWhere 그룹, '_and_'이면 where 그룹을 사용합니다.
-
-                // Log::info(['whereGroupItem 포이치입장', $whereGroupItem, $whereGroupFunction]);
 
                 switch ($whereGroupItem) {
                     case '_or_':
@@ -258,14 +254,6 @@ trait CrudTrait
 
                 $wheres = explode('|', $whereGroupItem);
 
-                // Log::info(
-                //     [
-                //         '실행부',
-                //         $whereGroupFunction,
-                //         $wheres
-                //     ]
-                // );
-
                 $result->{$whereGroupFunction}(function ($query) use ($wheres) {
                     $this->parseWhereClause($query, $wheres);
                 });
@@ -278,7 +266,6 @@ trait CrudTrait
         foreach ((array) $wheres as $onewhere) :
             $row = explode(':', $onewhere);
             if (!isset($row[1])) {
-                // Log::info($row, ['비정상 where 구문 parseWhereClause']);
                 continue;
             }
 
@@ -413,8 +400,6 @@ trait CrudTrait
     {
         $this->beforeProcess(__FUNCTION__, $request);
         $modelClass = $this->getModelClass();
-
-        // Log::debug('[CRUD / Store] 호출', ['request' => request()->all()]);
 
         DB::beginTransaction();
         try {
@@ -591,9 +576,6 @@ trait CrudTrait
 
         // 바인딩된 값 가져오기
         // $bindings = $query->getBindings();
-
-        // Log::error($sql);
-        // Log::error($bindings);
 
         // SQL 문자열과 바인딩에서 where 절 확인
         return strpos($sql, 'where') !== false;

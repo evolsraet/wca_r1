@@ -120,7 +120,12 @@ class AuctionService
             case 'requested':
             case 'uploaded':
             case 'confirmed':
-                Log::info("경매 상태 업데이트 {$mode} 모드", ['method' => $auction]);
+                Log::info("[경매] 상태 업데이트 {$mode} 모드", [
+                    'name'=> '경매 상태 업데이트',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'method' => $auction
+                ]);
                 break;
         }
     }
@@ -236,7 +241,12 @@ class AuctionService
             'taksong_wish_at' => $auction->taksong_wish_at,
         ];
 
-        Log::info('[탁송 처리] 딜러정보 모드', ['method' => $data]);
+        Log::info('[탁송 처리] 딜러정보 모드', [
+            'name'=> '탁송 처리',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'method' => $data
+        ]);
         TaksongAddJob::dispatch($auction, $data);
     }
 
@@ -247,7 +257,12 @@ class AuctionService
             $auction->is_reauction = true;
             $auction->final_at = now()->addDays(config('days.reauction_day'));
 
-            Log::info('재경매 모드', ['method' => $auction]);
+            Log::info('[경매상태] 재경매 모드', [
+                'name'=> ' 경매상태 재경매 모드',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'method' => $auction
+            ]);
 
             $bids = Bid::where('auction_id', $auction->id)->get();
             foreach ($bids as $bid) {
@@ -265,7 +280,12 @@ class AuctionService
             $auction->status = 'diag';
             $auction->final_at = now()->addDays(config('days.auction_day'));
 
-            Log::info('경매 상태 업데이트 진단대기중 모드', ['method' => $auction]);
+            Log::info('[경매상태] 업데이트 진단대기중 모드', [
+                'name'=> '경매상태 업데이트 진단대기중 모드',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'method' => $auction
+            ]);
             AuctionDiagJob::dispatch($auction->user_id, $auction);
         } else {
             throw new \Exception('진단변경 가능상태가 아닙니다.');
@@ -285,7 +305,12 @@ class AuctionService
     {
         if (in_array($auction->status, ['dlvr', 'chosen'])) {
             $auction->status = 'done';
-            Log::info('경매 상태 업데이트 경매완료 모드', ['method' => $auction]);
+            Log::info('[경매상태] 업데이트 경매완료 모드', [
+                'name'=> '경매상태 업데이트 경매완료 모드',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'method' => $auction
+            ]);
         } else {
             throw new \Exception('배송변경 가능상태가 아닙니다.');
         }
@@ -295,7 +320,12 @@ class AuctionService
     {
         if (!in_array($auction->status, ['done', 'dlvr'])) {
             $auction->status = 'cancel';
-            Log::info('경매 상태 업데이트 취소 모드', ['method' => $auction]);
+            Log::info('[경매상태] 업데이트 취소 모드', [
+                'name'=> '경매상태 업데이트 취소 모드',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'method' => $auction
+            ]);
         } else {
             throw new \Exception('취소변경 가능상태가 아닙니다.');
         }
@@ -307,7 +337,12 @@ class AuctionService
         $auction->final_at = now()->addDays(config('days.auction_day'));
 
         if (!$auction->bid_id) {
-            Log::info('경매 상태 업데이트 경매진행중 모드', ['method' => $auction]);
+            Log::info('[경매상태] 업데이트 경매진행중 모드', [
+                'name'=> '경매상태 업데이트 경매진행중 모드',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'method' => $auction
+            ]);
             AuctionIngJob::dispatch($auction->user_id, $auction->id, $auction->final_at);
         }
     }
@@ -396,7 +431,6 @@ class AuctionService
             $key = "auction_view_{$userId}_{$auctionId}";
 
             if (!Redis::get($key)) {
-                // Log::info("조회수 증가 user : {$userId} , auction : {$auctionId}");
                 $auction->increment('hit');  // 조회수 증가
                 Redis::setex($key, 86400, true);  // 24시간 동안 유효한 키 설정
             }
@@ -515,7 +549,13 @@ class AuctionService
 
         $result = json_decode($result, true);
 
-        Log::info('카머스 시세확인 API 호출 결과', ['result' => $result, 'currentData' => $currentData]);
+        Log::info('[카머스] 시세확인 API 호출 결과', [
+            'name'=> '카머스 시세확인 API 호출 결과',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'result' => $result,
+            'currentData' => $currentData
+        ]);
 
         
         curl_close($curl);
@@ -771,7 +811,12 @@ class AuctionService
                         ->where('final_at', '<', Carbon::now()->format('Y-m-d H:i:s'))
                         ->get();
 
-        Log::debug('[경매시간만료] 확인 ' . count( (array) $auctions ) . '건', $auctions);
+        Log::debug('[경매시간만료] 확인 ' . count( (array) $auctions ) . '건', [
+            'name'=> '경매시간만료',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'auctions' => $auctions
+        ]);
 
         foreach($auctions as $auction){
             // 현재시간 final_at 시간 비교해서 현재 시간이 더 클 경우 상태 변경 
@@ -779,7 +824,12 @@ class AuctionService
             $auction->choice_at = Carbon::now()->addDays(config('days.choice_day'));
             $auction->save();
 
-            Log::info("[경매시간만료] 선택대기로 변경 {$auction->id}", [$auction]);
+            Log::info("[경매시간만료] 선택대기로 변경 {$auction->id}", [
+                'name'=> '경매시간만료',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'auction' => $auction
+            ]);
 
             // 알림 보내기
             AuctionBidStatusJob::dispatch($auction->user_id, 'wait', $auction->id, '','');
@@ -843,13 +893,16 @@ class AuctionService
         $autcion_id = Hashids::decode($auctionId);
         $auction = Auction::find($autcion_id);
 
-        Log::info("[상태롤백] 처리 {$auctionId}", ['auction' => $auction]);
+        Log::info("[상태롤백] 처리 {$auctionId}", [
+            'name'=> '상태롤백',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'auction' => $auction
+        ]);
 
         // 상태변경 이력 조회
         $auctionLog = AuctionLog::where('auction_id', $autcion_id)->orderBy('id', 'desc')->skip(1)->first();
         //$auctionLogFirst = AuctionLog::where('auction_id', $autcion_id)->orderBy('id', 'desc')->first();
-
-        // Log::info("[상태롤백] 데이터 {$auctionLog->status}", ['auctionLog' => $auctionLog, 'auctionLogFirst' => json_decode($auctionLogFirst->changes, true)]);
        
         // 상태 변경
         $auctionChanges = Auction::where('id', $autcion_id)->first();
@@ -870,9 +923,14 @@ class AuctionService
             }
         }
 
-        // Log::info("[상태롤백] 데이터", ['changesData' => $changesData]);
 
-        Log::info("[상태롤백] 데이터", ['changesData' => $changesData, 'auctionChanges' => $auctionChanges]);
+        Log::info("[상태롤백] 데이터", [
+            'name'=> '상태롤백',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'changesData' => $changesData,
+            'auctionChanges' => $auctionChanges
+        ]);
 
         $result = $auctionChanges->save();
 

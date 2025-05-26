@@ -32,7 +32,12 @@ class ClaimJob implements ShouldQueue
         $user = User::find($this->userId);
 
         if (!$user) {
-            Log::warning("[클레임] 알림 전송 실패: 유저 없음. ID: {$this->userId}");
+            Log::warning("[클레임] 알림 전송 실패: 유저 없음. ID: {$this->userId}", [
+                'name'=> '클레임 알림 전송 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'userId' => $this->userId
+            ]);
             return; // 유저 없으면 처리 중단
         }
 

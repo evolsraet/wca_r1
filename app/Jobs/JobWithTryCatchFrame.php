@@ -30,6 +30,9 @@ class ExampleJob implements ShouldQueue
     {
         try {
             Log::info('[ExampleJob] API 호출 시도', [
+                'name'=> 'ExampleJob API 호출 시도',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'url' => $this->apiUrl,
                 'payload' => $this->payload
             ]);
@@ -47,16 +50,29 @@ class ExampleJob implements ShouldQueue
                 throw new Exception('API 응답이 비어있거나 실패했습니다.');
             }
 
-            Log::info('[ExampleJob] API 호출 성공', ['response' => $response]);
+            Log::info('[ExampleJob] API 호출 성공', [
+                'name'=> 'ExampleJob API 호출 성공',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'response' => $response
+            ]);
 
             // 알림 전송 시도
             try {
                 Notification::route('mail', 'admin@example.com')
                     ->notify(new \App\Notifications\JobSuccessNotification($response));
 
-                Log::info('[ExampleJob] 알림 전송 성공');
+                Log::info('[ExampleJob] 알림 전송 성공', [
+                    'name'=> 'ExampleJob 알림 전송 성공',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'response' => $response
+                ]);
             } catch (Exception $e) {
                 Log::error('[ExampleJob] 알림 전송 실패', [
+                    'name'=> 'ExampleJob 알림 전송 실패',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
                     'message' => $e->getMessage(),
                     'trace' => $e->getTraceAsString()
                 ]);
@@ -74,6 +90,9 @@ class ExampleJob implements ShouldQueue
 
         } catch (Exception $e) {
             Log::critical('[ExampleJob] API 호출 실패', [
+                'name'=> 'ExampleJob API 호출 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);

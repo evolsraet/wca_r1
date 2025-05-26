@@ -35,13 +35,25 @@ class OwnershipService
             if ($auction->is_taksong !== 'done') {
                 $message = '탁송 상태가 완료되지 않았습니다.';
                 if ($isManual) throw new Exception($message);
-                Log::info('[탁송 상태 확인 오류]', ['auction_id' => $auctionId, 'message' => $message]);
+                Log::info('[탁송 상태] 명의이전 확인 오류', [
+                    'name'=> '탁송 상태 확인 오류',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'auction_id' => $auctionId,
+                    'message' => $message
+                ]);
                 return ['status' => 'skip', 'message' => $message, 'auction_id' => $auctionId];
             }
 
             // 명의이전 파일 등록 여부 확인
             if ($auction->has_uploaded_name_change_file) {
-                Log::info('[명의이전 파일 등록 여부 확인]', ['auction_id' => $auctionId, 'message' => '명의이전 파일이 이미 등록되었습니다.']);
+                Log::info('[명의이전] 파일 등록 여부 확인', [
+                    'name'=> '명의이전 파일 등록 여부 확인',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'auction_id' => $auctionId,
+                    'message' => '명의이전 파일이 이미 등록되었습니다.'
+                ]);
                 return ['status' => 'already_registered', 'auction_id' => $auctionId, 'message' => '명의이전 파일이 이미 등록되었습니다.'];
             }
 
@@ -51,7 +63,13 @@ class OwnershipService
             return ['status' => 'alert_sent', 'auction_id' => $auctionId, 'message' => '명의이전 알림이 발송되었습니다.'];
 
         } catch (Exception $e) {
-            Log::error('[명의이전 알림 오류]', ['auction_id' => $auctionId, 'message' => $e->getMessage()]);
+            Log::error('[명의이전] 알림 오류', [
+                'name'=> '명의이전 알림 오류',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'auction_id' => $auctionId,
+                'message' => $e->getMessage()
+            ]);
             return ['status' => 'error', 'auction_id' => $auctionId, 'message' => $e->getMessage()];
         }
     }
@@ -69,7 +87,13 @@ class OwnershipService
             // dd($response);
 
             if ($response['resultCode'] !== '0000') {
-                Log::warning('[명의이전 API 실패 / ' . $auction->car_no . ']', ['auction_id' => $auction->id, 'response' => $response]);
+                Log::warning('[명의이전] API 실패 / ' . $auction->car_no, [
+                    'name'=> '명의이전 API 실패',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'auction_id' => $auction->id,
+                    'response' => $response
+                ]);
                 return false;
             }
 
@@ -83,7 +107,13 @@ class OwnershipService
 
         } catch (Exception $e) {
 
-            Log::error('[명의이전 API 확인 오류 / ' . $auction->car_no . ']', ['auction_id' => $auction->id, 'error' => $e->getMessage()]);
+            Log::error('[명의이전] API 확인 오류 / ' . $auction->car_no, [
+                'name'=> '명의이전 API 확인 오류',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'auction_id' => $auction->id,
+                'error' => $e->getMessage()
+            ]);
             return false;
         }
     }
@@ -140,7 +170,12 @@ class OwnershipService
         AuctionDoneJob::dispatch($auction->user_id, $auction->id, 'user');
         AuctionDoneJob::dispatch($dealer->user_id, $auction->id, 'dealer');
 
-        Log::info('[명의이전 완료 처리 / ' . $auction->car_no . ']', ['auction' => $auction]);
+        Log::info('[명의이전] 완료 처리 / ' . $auction->car_no, [
+            'name'=> '명의이전 완료 처리',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'auction' => $auction
+        ]);
     }
 
     /**
@@ -152,7 +187,13 @@ class OwnershipService
             //TaksongNameChangeJob::dispatch($bid->user_id, $auction->id, 'dealerResend');
         }
 
-        Log::info('[명의이전 파일첨부 안내 알림 발송 / ' . $auction->car_no . ']', ['auction_id' => $auction->id, 'is_manual' => $isManual]);
+        Log::info('[명의이전] 파일첨부 안내 알림 발송 / ' . $auction->car_no, [
+            'name'=> '명의이전 파일첨부 안내 알림 발송',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'auction_id' => $auction->id,
+            'is_manual' => $isManual
+        ]);
 
         if (!$isManual && $auction->done_at) {
             $daysSinceDone = now()->diffInDays($auction->done_at);
@@ -161,7 +202,13 @@ class OwnershipService
                 // OwnershipNotifyJob::dispatch($adminId, $auction->id, 'admin');
                 TaksongNameChangeJob::dispatch($adminId, $auction->id, 'admin');
 
-                Log::info('[명의이전 파일첨부 안내 운영자 알림 발송 / ' . $auction->car_no . ']', ['auction_id' => $auction->id, 'days_since_done' => $daysSinceDone]);
+                Log::info('[명의이전] 파일첨부 안내 운영자 알림 발송 / ' . $auction->car_no, [
+                    'name'=> '명의이전 파일첨부 안내 운영자 알림 발송',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'auction_id' => $auction->id,
+                    'days_since_done' => $daysSinceDone
+                ]);
             }
         }
     }

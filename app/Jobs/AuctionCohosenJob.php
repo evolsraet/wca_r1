@@ -49,7 +49,14 @@ class AuctionCohosenJob implements ShouldQueue
             $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
 
     
-            Log::info('경매 선택 알림', ['status' => $auction, 'mode' => $this->mode, 'user' => $this->user]);
+            Log::info('[경매] 선택 알림', [
+                'name'=> '경매 선택 알림',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'status' => $auction,
+                'mode' => $this->mode,
+                'user' => $this->user
+            ]);
             
 
         }else{

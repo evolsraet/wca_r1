@@ -20,8 +20,6 @@ class ApiRequestService
         $errorData = null;
 
         try {
-            // 요청 로그
-            // Log::debug("[$logContext] {$method} 요청", ['url' => $url, 'params' => $params]);
 
             // HTTP 요청 초기화
             $httpRequest = Http::timeout(10);
@@ -56,6 +54,9 @@ class ApiRequestService
             $result = $response->json();
 
             Log::info("[리퀘스트 {$method} 성공] $logContext ", [
+                'name'=> '리퀘스트 성공',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'url'    => $url,
                 'params' => $params,
                 'result' => $result,
@@ -73,9 +74,19 @@ class ApiRequestService
 
             $errorLevel = 'warning';
             if( $e->getCode() == 500 ) {
-                Log::error($msg, $context);
+                Log::error($msg, [
+                    'name'=> '리퀘스트 실패',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'context' => $context
+                ]);
             } else {
-                Log::warning($msg, $context);
+                Log::warning($msg, [
+                    'name'=> '리퀘스트 실패',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'context' => $context
+                ]);
             }
             
             $this->logErrorToDb($method, $url, $params, $errorData['body'] ?? null, $logContext, $e);
@@ -102,6 +113,9 @@ class ApiRequestService
             ]);
         } catch (Exception $ex) {
             Log::critical("[$context] DB 로그 저장 실패", [
+                'name'=> 'DB 로그 저장 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'message' => $ex->getMessage(),
                 'trace'   => $ex->getTraceAsString()
             ]);

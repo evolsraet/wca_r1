@@ -39,7 +39,12 @@ class AuctionTotalDepositMissJob implements ShouldQueue
         $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
 
 
-        Log::info('AuctionTotalDepositMissJob', $notificationTemplate);
+        Log::info('[경매] 입찰 보증금 미납 알림', [
+            'name'=> '경매 입찰 보증금 미납 알림',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'notificationTemplate' => $notificationTemplate
+        ]);
 
 
     }

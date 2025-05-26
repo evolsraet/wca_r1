@@ -37,8 +37,6 @@ class TaksongStatusJob implements ShouldQueue
                 'api_key' => config('taksongApi.TAKSONG_API_KEY')
             ];
 
-            // Log::debug("[탁송 job / chk_id : {$this->response}] API 호출", ['url' => $this->endPoint, 'payload' => $payload]);
-
             $sendRequest = [
                 'method' => 'POST',
                 'url' => $this->endPoint,
@@ -49,11 +47,21 @@ class TaksongStatusJob implements ShouldQueue
             $result = $api->sendRequest($sendRequest);
 
             if (!$result || !isset($result['data'][0])) {
-                Log::error("[탁송 job / chk_id : {$this->response}] API 응답 오류 또는 데이터 없음", ['response' => $result]);
+                Log::error("[탁송 job / chk_id : {$this->response}] API 응답 오류 또는 데이터 없음", [
+                    'name'=> '탁송 job / chk_id : {$this->response}] API 응답 오류 또는 데이터 없음',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'response' => $result
+                ]);
                 throw new Exception('Connection timed out: Failed to connect to '.$this->endPoint, 500);
             }
 
-            Log::debug("[탁송 job / chk_id : {$this->response}] API 응답", ['response' => $result]);
+            Log::debug("[탁송 job / chk_id : {$this->response}] API 응답", [
+                'name'=> "탁송 job / chk_id : {$this->response}] API 응답",
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'response' => $result
+            ]);
 
             $taksongService->processStatus($result['data'][0]);
 
@@ -71,6 +79,9 @@ class TaksongStatusJob implements ShouldQueue
             ]);
 
             Log::critical("[탁송 job / chk_id : {$this->response}] 예외 발생", [
+                'name'=> "탁송 job / chk_id : {$this->response}] 예외 발생",
+                'path'=> __FILE__,
+                'line'=> __LINE__,
                 'message' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);

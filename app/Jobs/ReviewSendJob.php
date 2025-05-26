@@ -50,11 +50,21 @@ class ReviewSendJob implements ShouldQueue
             $send = $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail']));
             
             if ($send) {
-                Log::info('[리뷰작성 알림전송 / '.$data['review_id'].']', ['request' => $this->data]);
+                Log::info('[리뷰작성] 알림전송 / '.$data['review_id'], [
+                    'name'=> '리뷰작성 알림전송',
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                    'request' => $this->data
+                ]);
             }
 
         } catch (\Exception $e) {
-            Log::error('[리뷰작성 알림전송 실패 / '.$data['review_id'].']', ['error' => $e->getMessage()]);
+            Log::error('[리뷰작성] 알림전송 실패 / '.$data['review_id'], [
+                'name'=> '리뷰작성 알림전송 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'error' => $e->getMessage()
+            ]);
         }
         
     }

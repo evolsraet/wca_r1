@@ -37,7 +37,12 @@ class NiceApiService
             ]);
 
         if ($response->failed()) {
-            Log::error('토큰 발급 실패', ['response' => $response->body()]);
+            Log::error('[NICE] 토큰 발급 실패', [
+                'name'=> 'NICE 토큰 발급 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'response' => $response->body()
+            ]);
             throw new \Exception('토큰 발급 실패: ' . $response->body());
         }
 
@@ -63,7 +68,12 @@ class NiceApiService
             ->post('https://svc.niceapi.co.kr:22001/digital/niceid/oauth/oauth/token/revokeById');
 
         if ($response->failed() || $response->json()['dataBody']['result'] !== "true") {
-            Log::error('토큰 폐기 실패', ['response' => $response->body()]);
+            Log::error('[NICE] 토큰 폐기 실패', [
+                'name'=> 'NICE 토큰 폐기 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'response' => $response->body()
+            ]);
             throw new \Exception('토큰 폐기 실패: ' . $response->body());
         }
 
@@ -88,7 +98,14 @@ class NiceApiService
         ]);
 
         if ($response->failed()) {
-            Log::error('API 호출 실패', ['response' => $response->body()]);
+            #TODO: api 연결안될경우 운영자에게 알림 추가
+
+            Log::error('[NICE] API 호출 실패', [
+                'name'=> 'NICE API 호출 실패',
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'response' => $response->body()
+            ]);
             throw new \Exception('API 호출 실패: ' . $response->body());
         }
 

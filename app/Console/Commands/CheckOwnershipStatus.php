@@ -27,14 +27,22 @@ class CheckOwnershipStatus extends Command
             ->get();
 
         if ($auctions->isEmpty()) {
-            Log::info('명의이전 완료 확인할 경매가 없습니다.');
+            Log::info('[명의이전] 확인 / 경매가 없습니다.', [
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'auctions' => $auctions
+            ]);
             $this->info('명의이전 완료 확인할 경매가 없습니다.');
             return Command::SUCCESS;
         }
 
         foreach ($auctions as $auction) {
             $result = $this->ownershipService->checkOwnershipByApi($auction);
-            Log::info("명의이전 경매 ID {$auction->id} 확인 결과: " . ($result ? '완료' : '미완료'));
+            Log::info("[명의이전] 경매 ID {$auction->id} / 확인결과 : " . ($result ? '완료' : '미완료'), [
+                'path'=> __FILE__,
+                'line'=> __LINE__,
+                'result' => $result
+            ]);
             $this->info("명의이전 경매 ID {$auction->id} 확인 결과: " . ($result ? '완료' : '미완료'));
         }
 

@@ -48,7 +48,6 @@ class AuctionDoneNotification extends Notification
 
         // $owner_name = $auction->owner_name;
         // $car_no = $auction->car_no;
-        // Log::info('경매 완료 알림', ['auction' => $auction]);
 
         // // dd($this->mode);
 

@@ -54,7 +54,12 @@ class CodefService
 
         $result = $this->execute($this->businessCheckApi, 1, $payload);
 
-        Log::info('checkBusinessStatus', $result);
+        Log::info('[CODEF] 사업자 상태 확인', [
+            'name'=> 'CODEF 사업자 상태 확인',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'result' => $result
+        ]);
 
         return $result;
     }
@@ -85,7 +90,12 @@ class CodefService
 
         $result = $this->requestCertification($this->businessCheckApi, $payload, $data['carNumber']);
 
-        Log::info('twoWayAuth', [$result]);
+        Log::info('[CODEF] 이중인증 결과', [
+            'name'=> 'CODEF 이중인증 결과',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'result' => $result
+        ]);
 
         return $result;
     }
@@ -233,10 +243,15 @@ class CodefService
             return response()->json(['code' => 'CF-00003', 'message' => '추가인증 파라미터(twoWayInfo)가 필요합니다.']);
         }
 
-        Log::info('requestCertification_parameterMap?:', [$parameterMap, $carNumber]);
-
         $result = $this->execute($this->businessCheckApi, 1, $parameterMap);
-        Log::info('requestCertification?:', [$result]);
+        Log::info('[CODEF] 인증 요청 결과', [
+            'name'=> 'CODEF 인증 요청 결과',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'result' => $result,
+            'parameterMap' => $parameterMap,
+            'carNumber' => $carNumber
+        ]);
 
         if ($result) {
             

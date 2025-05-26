@@ -39,7 +39,12 @@ class AligoNotification extends Notification
      */
     public function toAligo($notifiable)
     {
-        Log::info('AligoNotification toAligo', ['phone' => $notifiable->phone]);
+        Log::info('[알림] 알리고 알림 전송', [
+            'name'=> '알리고 알림 전송',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'phone' => $notifiable->phone
+        ]);
         return [
             'phone' => $notifiable->phone, // 예: 수신자 전화번호
             'tpl_data' => $this->data['tpl_data'],

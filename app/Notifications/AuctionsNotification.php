@@ -47,13 +47,17 @@ class AuctionsNotification extends Notification
     {
 
         $sendMessage = $this->data;
-        Log::info("[AuctionsNotification] toMail : {$sendMessage['title']}", $sendMessage);
+        Log::info("[알림] toMail 전송", [
+            'name'=> '알림 toMail 전송',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'title' => $sendMessage['title'],
+            'message' => $sendMessage['message']
+        ]);
 
         // $sendMessage['message'] 의 값을 \n 을 기분으로 배열로 변환
         $normalized = str_replace('\\n', "\n", $sendMessage['message']);
         $messageArray = explode("\n",$normalized);
-
-        // Log::debug('messageArray', [$messageArray]);
 
         // line 에 $messageArray 의 값을 추가
         $mailMessage = new MailMessage();
@@ -77,7 +81,12 @@ class AuctionsNotification extends Notification
      */ 
     public function toAligo(object $notifiable)
     {
-        Log::info('[AligoNotification] toAligo', ['phone' => $notifiable->phone]);
+        Log::info('[알림] toAligo 전송', [
+            'name'=> '알림 toAligo 전송',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'phone' => $notifiable->phone
+        ]);
         return [
             'phone' => $notifiable->phone, // 예: 수신자 전화번호
             'tpl_data' => $this->data['tpl_data'],

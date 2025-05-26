@@ -26,11 +26,6 @@ class UserRegisteredListener implements ShouldQueue
     public function handle(UserRegistered $event): void
     {
 
-        // Log::info('Welcome 알림이 시작되었습니다!', [
-        //     'user_id' => $event->user->id,
-        //     'email' => $event->user->email
-        // ]);
-
         //
         $user = $event->user;
         if ($user) {
@@ -45,7 +40,10 @@ class UserRegisteredListener implements ShouldQueue
 
     public function succese(UserRegistered $event)
     {
-        Log::info('Welcome 알림이 성공적으로 전송되었습니다!', [
+        Log::info('[회원가입] 알림이 성공적으로 전송되었습니다!', [
+            'name'=> '회원가입 알림 전송 성공',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
             'user_id' => $event->user->id,
             'email' => $event->user->email
         ]);

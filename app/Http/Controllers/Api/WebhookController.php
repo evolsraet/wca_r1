@@ -12,7 +12,12 @@ class WebhookController extends Controller
     {
         $data = $request->all();
 
-        Log::info('[웹훅 수신: 탁송 상태 변경]', $data);
+        Log::info('[웹훅 수신] 탁송 상태 변경', [
+            'name'=> '웹훅 수신 탁송 상태 변경',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'data' => $data
+        ]);
 
         // 예시: 탁송 상태 처리
         // if (isset($data['chk_api_id'])) {
