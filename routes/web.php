@@ -123,7 +123,7 @@ Route::view('/{any?}', 'v1.main-view')
     ->where('any', '.*');
 
 Route::view('/v2/{any?}', 'v2.main-view')
-    ->name('dashboard')
+    ->name('dashboard_v2')
     ->where('any', '.*');
 
 
