@@ -1125,7 +1125,7 @@ const isAccident = (id) => {
     console.log(elementValue);
 
     const idValue = elementValue;
-    const msg = '';
+    let msg = '';
     switch(id){
       case 'region':
         msg = '지역번호를 선택해 주세요.';
