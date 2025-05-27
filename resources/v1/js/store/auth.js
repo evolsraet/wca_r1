@@ -45,7 +45,7 @@ export default {
       }
       
       return wicac.conn()
-      .url(`/login`) //호출 URL
+      .url(`/v1/login`) //호출 URL
       .param(loginForm)
       .callback(function(result) {
           if(result.isError) {

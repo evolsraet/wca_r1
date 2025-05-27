@@ -25,7 +25,7 @@ function requireAct(act) {
         if (act != null && act && act != undefined) {
             const isLogin = store.state.auth.authenticated && store.state.auth.user;
             if (!isLogin) {
-                next('/login');
+                next('/v1/login');
             } else {
                 const userActs = store.state.auth.user.act;
                 let canProceed = false;
