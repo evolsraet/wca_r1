@@ -26,7 +26,7 @@ services:
             - mariadb
             - redis
             - mailpit
-        command: bash -c "php /var/www/html/artisan schedule:work & php /var/www/html/artisan queue:work --tries=3 --timeout=90 & apache2-foreground"
+        command: bash -c "php /var/www/html/artisan schedule:work & php /var/www/html/artisan queue:work --tries=3 --timeout=90 & php artisan serve --host=0.0.0.0 --port=80"
     mariadb:
         image: "mariadb:10.11"
         command: --general-log=1 --general-log-file=/var/log/mysql/general.log
