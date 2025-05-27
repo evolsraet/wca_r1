@@ -1,0 +1,450 @@
+@use "../sass/variables" as *;
+.admin-icon {
+    display: inline-block;
+    width: 20px; 
+    height: 20px; 
+    background-size: cover; 
+    background-repeat: no-repeat;
+    background-position: center;
+    vertical-align: middle; 
+  }
+  
+  .admin-icon-small-02 {
+    width: 16px !important;
+    height: 17px !important;
+}
+
+  .admin-icon-small {
+    width: 22px !important;
+    height: 17px !important;
+  }
+  
+  .admin-icon-medium {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .admin-icon-large {
+    width: 65px !important; 
+    height: 65px !important;
+  }
+  
+  .admin-icon-primary {
+    filter: brightness(0) saturate(100%) invert(21%) sepia(83%) saturate(5891%) hue-rotate(198deg) brightness(96%) contrast(104%);
+  }
+  
+  .admin-icon-secondary {
+    filter: brightness(0) saturate(100%) invert(31%) sepia(96%) saturate(677%) hue-rotate(323deg) brightness(93%) contrast(101%);
+  }
+  /* 사이드 바 아이콘 스타일*/
+
+  .admin-icon-profile{
+    background-image: url('../img/admin/profile.png');  
+  }
+  .admin-icon-dashboard {
+    background-image: url('../img/admin/dashIcon.png');
+    width: 16px !important;
+    height: 16px !important;
+  }
+  .admin-icon-settings {
+    background-image: url('../img/admin/settings.png');
+  }
+  .admin-icon-users {
+    background-image: url('../img/admin/disabled/person.png');
+  }
+  
+  .admin-icon-coin {
+    background-image: url('../img/admin/disabled/coin.png');
+    width: 18px !important;
+    height: 16px !important;
+  }
+  
+  .admin-icon-car {
+    background-image: url('../img/admin/disabled/awesome-car.png');
+  }
+  
+  .admin-icon-review {
+    background-image: url('../img/admin/disabled/review.png');
+  }
+  .admin-icon-pass{
+      background-image: url('../img/admin/disabled/right.png');
+      width: 10px !important;
+      height: 14px !important;
+  }
+  .admin-icon-pen{
+    background-image: url('../img/admin/penicon.png');
+    width: 15px !important;
+    height: 14px !important;
+  }
+  .admin-icon-noti {
+    background-image: url('../img/admin/notif.png');
+    width: 15px !important;
+    height: 14px !important;
+}
+    /* topbar 아이콘 스타일*/
+
+  .admin-icon-dashboard-top{
+    background-image: url('../img/admin/top-dash.png');
+    width: 25px !important;
+    height: 24px !important;
+}
+  .admin-icon-my{
+    background-image: url('../img/admin/my.png');
+    width: 25px !important;
+    height: 24px !important;
+  }
+  .admin-icon-menu-top{
+    background-image: url('../img/admin/menu.png');
+    width: 40px !important;
+    height: 38px !important;
+  }
+  
+.admin-icon-dashboard {
+  transition: box-shadow 0.3s ease;
+
+}
+
+.side-navbar-link {
+  .admin-icon {
+      transition: background-image 0.3s ease, transform 0.3s ease;
+  }
+
+  &:hover, 
+  &.router-link-exact-active {
+      color: $primary !important;
+
+      .admin-icon-users {
+          background-image: url('../img/admin/activate/person.png');
+      }
+      .admin-icon-coin {
+          background-image: url('../img/admin/activate/coin.png');
+          width: 18px !important;
+          height: 16px !important;
+      }
+      .admin-icon-car {
+          background-image: url('../img/admin/activate/awesome-car.png');
+      }
+      .admin-icon-review {
+          background-image: url('../img/admin/activate/review.png');
+      }
+      .admin-icon-pass {
+          background-image: url('../img/admin/activate/right.png');
+          width: 10px !important;
+          height: 14px !important;
+          transform: translateX(5px);
+      }
+      .admin-icon-pen {
+        background-image: url('../img/admin/penred.png');
+    }
+      .admin-icon-noti {
+        background-image: url('../img/admin/notifred.png');
+    }
+  }
+}
+  
+    /* Menu 아이콘 스타일*/
+  .admin-icon-menu{
+      background-image: url('../img/admin/menu_Icon.png');
+      width: 18px !important;
+      height: 20px !important;
+      margin-right: 10px;
+      margin-bottom: 5px;
+  }
+  .admin-icon-menu02{
+    background-image: url('../img/admin/Icon-coin-black.png');
+    width: 22px !important;
+    height: 20px !important;
+    margin-right: 10px;
+    margin-bottom: 5px;
+  }
+  .admin-icon-menu03{
+    background-image: url('../img/admin/Icon-car-black.png');
+    width: 26px !important;
+    height: 20px !important;
+    margin-right: 10px;
+    margin-bottom: 5px;
+  }
+  .admin-icon-menu04{
+    background-image: url('../img/admin/Icon-pen-black.png');
+    width: 21px !important;
+    height: 20px !important;
+    margin-right: 10px;
+    margin-bottom: 5px;
+  }
+  .admin-icon-menu05{
+    background-image: url('../img/admin/Icon-notice-black.png');
+    width: 21px !important;
+    height: 20px !important;
+    margin-right: 10px;
+    margin-bottom: 5px;
+  }
+.select-none span{
+  cursor: pointer;
+}
+
+.leading-4 {
+  cursor: pointer;
+}
+
+/* 대시보드 scss*/
+
+#dashadmin {
+  .card-container {
+    font-size: 1.3rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .section {
+    text-align: center;
+    margin: 10px;
+    flex: 1 1 200px;
+  }
+
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    width: auto;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 285px;
+  }
+
+  .title {
+    margin-bottom: 10px;
+  }
+
+  .subtext {
+    margin-top: 10px;
+    color: #888;
+  }
+
+  .divider {
+    border-top: 1px solid #ddd;
+    margin: 10px 0;
+  }
+
+  @media (max-width: 1153px) {
+    .card-container {
+      justify-content: center;
+    }
+
+    .section {
+      flex: 1 1 45%;
+      margin: 10px 5px;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .section {
+      flex: 1 1 100%;
+      margin: 10px 0;
+    }
+  }
+
+  @media (max-width: 767px) {
+    h4 {
+      padding-left: 15px;
+      padding-right: 15px;
+    }
+
+    .col-2 {
+      flex: 0 0 auto;
+      width: 27.666667%;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .form-select {
+      width: 100px !important;
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    thead {
+      display: none;
+    }
+
+    tbody {
+      tr {
+        border-bottom: 1px solid #f0f0f0;
+        td {
+          padding: 10px;
+          &:first-child {
+            color: #888;
+          }
+          &.content {
+            width: 70%;
+          }
+          &.actions {
+            text-align: right;
+            a {
+              margin: 0 5px;
+              color: #888;
+              text-decoration: none;
+              &.delete {
+                color: red;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .auction-deadline {
+    width: 100%;
+    height: 38px;
+    background-color: $sub-color02;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: space-between;
+    padding: 25px;
+    border-radius: 6px;
+  }
+
+  .tab-nav {
+    ul {
+      display: flex;
+      list-style: none;
+      padding: 0;
+      margin: 0 auto;
+      width: 100%;
+      justify-content: flex-start;
+      li {
+        flex: 0 0 auto;
+        text-align: center;
+        display: flex;
+        justify-content: flex-start;
+        a {
+          width: auto;
+          font-size: 1.3rem;
+          &.active {
+            color: red;
+            font-weight: bold;
+            border-bottom: 1px solid red;
+            width: 78px;
+            display: flex;
+            text-align: center;
+            flex-direction: row;
+            justify-content: center;
+            align-items: center;
+          }
+        }
+      }
+    }
+  }
+
+  .review-content {
+    .card:hover {
+      box-shadow: 4px 3px 13px -1px rgba(27, 50, 142, 0.2) !important;
+    }
+  }
+
+  .my-info {
+    width: 100%;
+    height: 80%;
+    border-radius: 6px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    background-color: #fff;
+    padding: 30px;
+    gap: 6px;
+  }
+
+  .dealinfo-content {
+    width: 100%;
+    height: auto;
+    padding: 0 20px 20px 20px;
+    margin-top: 0px;
+    background-color: $sub-color02;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    flex-direction: column;
+    h5 {
+      margin: 15px;
+      width: auto;
+    }
+  }
+
+  .profile-card {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    border-radius: 5px;
+
+    .profile-picture {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      background-color: $sub-color02;
+      margin-right: 15px;
+    }
+
+    .profile-details {
+      flex: 1;
+    }
+  }
+
+  .membership {
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    padding: 2px 5px;
+    font-size: 12px;
+    display: inline-block;
+  }
+
+  .form-select {
+    width: 150px;
+  }
+}
+
+.edit{
+  margin: 0 5px;
+  color: #888 !important;
+  text-decoration: none;
+}
+.delete{
+  color: red !important;
+}
+.file-upload-container img{
+  max-width: 40%;
+}
+
+#app div:first-child .container-fluid {
+  margin-left: 270px !important;
+}
+#app div:first-child .container-fluid .container-fluid {
+  margin-left: 0px !important;
+}
+@media (max-width: 767.98px){
+
+  #app div:first-child .container-fluid:first-child {
+    margin-top: calc(90px + env(safe-area-inset-top)) !important;
+  }
+  #app div:first-child .container-fluid {
+      margin-left: 0px !important;
+  }
+  #app div:first-child .container-fluid .container-fluid {
+    margin-left: 0px !important;
+  }
+}
+
+@media screen and (max-width: 991px) {
+  #app>div:nth-child(2){
+      margin-top: 0px !important;
+  }
+}

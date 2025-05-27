@@ -38,6 +38,8 @@ class FormatHelper
         
         // return $formatted . '만' . ($showWon ? '원' : '');
 
+        $numPrice = number_format($numPrice);
+
         return $numPrice . '만원';
     }
 }

@@ -404,6 +404,14 @@ class AuctionService
 
             if ($auction->is_deposit == 'totalDeposit') {
 
+                if (empty($auction->diag_check_at)) {
+                    throw new \Exception('진단이 완료되지 않았습니다.', 500);
+                }
+    
+                if (empty($auction->bid_id)) {
+                    throw new \Exception('입찰자가 없습니다.', 500);
+                }
+
                 $auction->status = 'dlvr';
                 $auction->save();
 

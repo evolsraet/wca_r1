@@ -27,25 +27,28 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 Route::get('/', function () {
     return redirect('/v1');
 });
-
 Route::get('/v1', function () {
-        return view('v1.main-view');
+    return view('v1.main-view');
 });
 
+
+
+// v2 Routes
 Route::get('/v2', function () {
-    return view('v2.main-view');
+    return view('v2.views.home');
 });
 
-Route::get('/test22', function () {
-    // return 'test';
-    $auctionService = new AuctionService();
-    $auctionService->auctionFinalAtUpdate();
+Route::get('/v2/test', function () {
+    return view('v2.views.test');
 });
+
+
 
 Route::post('login', [AuthenticatedSessionController::class, 'login']);
-// Route::post('register', [AuthenticatedSessionController::class, 'register']);
+Route::post('register', [AuthenticatedSessionController::class, 'register']);
 Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
+// 엑셀파일 다운로드
 Route::get('excelDown/{resource}', function ($resource) {
 
     if (!auth()->check() || !auth()->user()->hasPermissionTo('act.admin')) {
@@ -65,62 +68,21 @@ Route::get('excelDown/{resource}', function ($resource) {
     return abort(404, '컨트롤러가 존재하지 않습니다.');
 })->name('excelDown/');
 
-// 소셜 간편 로그인 라우트
-// 카카오 로그인 리디렉션
-// Route::get('auth/kakao', function () {
-//     // echo 'test';
-//     return Socialite::driver('kakao')->redirect();
-// });
 
-// // 카카오 로그인 콜백
-// Route::get('auth/kakao/callback', function () {
-//     $kakaoUser = Socialite::driver('kakao')->user();
-//     // 사용자 정보 출력 (테스트용)
-//     dd($kakaoUser);
-// });
-
-
-// // 네이버 로그인 리디렉션
-// Route::get('auth/naver', function () {
-//     return Socialite::driver('naver')->redirect();
-// });
-
-// // 네이버 로그인 콜백
-// Route::get('auth/naver/callback', function () {
-//     $naverUser = Socialite::driver('naver')->user();
-//     dd($naverUser);
-// });
-
-// // 구글 로그인 리디렉션
-// Route::get('auth/google', function () {
-//     return Socialite::driver('google')->redirect();
-// });
-
-// // 구글 로그인 콜백
-// Route::get('auth/google/callback', function () {
-//     $googleUser = Socialite::driver('google')->user();
-//     dd($googleUser);
-// });
-
-
-// Route::get('/auth/{provider}', [SocialAuthController::class, 'redirect'])->name('social.login')->middleware('web');
-// Route::get('/auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback')->middleware('web');
-
+// SNS 간편로그인 리다이렉트 
 Route::middleware(['web'])->group(function () {
     Route::get('auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])->name('social.redirect');
     Route::get('auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback');
 });
 
-Route::get('/nice/test-api', [NiceApiController::class, 'testApi']);
-
-
-Route::view('/{any?}', 'v1.main-view')
+// v1 fallback 라우트
+Route::view('/v1/{any?}', 'v1.main-view')
     ->name('dashboard')
     ->where('any', '.*');
 
-Route::view('/v2/{any?}', 'v2.main-view')
-    ->name('dashboard_v2')
-    ->where('any', '.*');
+Route::fallback(function () {
+    return response()->view('errors.404', [], 404);
+});
 
 
 // Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');

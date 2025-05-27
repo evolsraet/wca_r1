@@ -13,6 +13,8 @@ use App\Jobs\AuctionBidStatusJob;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\DiagInfo;
 use App\Helpers\NetworkHelper;
+use App\Models\AuctionLog;
+use App\Models\ApiErrorLog;
 
 // 진단 서비스
 class DiagService
@@ -54,11 +56,14 @@ class DiagService
     {
 
         $carNo = $result['diag_car_no'];
+
+        $hashid = Hashids::decode($carNo);
+        $auction = Auction::where('id', $hashid)->orWhere('car_no', $carNo)->first();
         
         if (!$carNo) {
             return [
                 'status' => 'error',
-                'message' => '유효하지 않은 차량번호',
+                'message' => '진단 데이터 조회 실패. 차량번호 또는 고객사코드가 입력되지 않았습니다.',
                 'code' => 400,
                 'data' => [],
             ];
@@ -96,7 +101,20 @@ class DiagService
             }
 
             if (!isset($response['status']) || $response['status'] !== 'ok') {
-                Log::debug("[진단 데이터] 진단에 미등록된 차량입니다: {$carNo}", [
+
+                // DB에 저장 
+                ApiErrorLog::create([
+                    'job_name' => '진단데이터 조회',
+                    'method' => 'POST',
+                    'url' => $this->diagApiUrl . 'diag_by_car_no',
+                    'payload' => json_encode($sendData, JSON_UNESCAPED_UNICODE),
+                    'response_body' => json_encode($response, JSON_UNESCAPED_UNICODE),
+                    'error_message' => '진단 데이터 조회 실패. 진단에 미등록된 차량입니다.',
+                    'trace' => json_encode($response, JSON_UNESCAPED_UNICODE),
+                ]);
+
+
+                Log::debug("[진단 데이터] 진단에 미등록된 차량입니다: {$carNo} / id: {$auction->id}", [
                     'name'=> '진단 데이터 조회 실패. 진단에 미등록된 차량입니다.',
                     'path'=> __FILE__,
                     'line'=> __LINE__,
@@ -112,6 +130,18 @@ class DiagService
 
             // 진단 데이터가 확인되었고 본사검수까지 되었는지 체크
             if (empty($response['data']['diag_is_confirmed'])) {
+
+                // DB에 저장 
+                ApiErrorLog::create([
+                    'job_name' => '진단데이터 본사검수 체크',
+                    'method' => 'POST',
+                    'url' => $this->diagApiUrl . 'diag_by_car_no',
+                    'payload' => json_encode($sendData, JSON_UNESCAPED_UNICODE),
+                    'response_body' => json_encode($response, JSON_UNESCAPED_UNICODE),
+                    'error_message' => '본사 검수가 되지 않았습니다.',
+                    'trace' => json_encode($response, JSON_UNESCAPED_UNICODE),
+                ]);
+
                 Log::debug("[진단 데이터] 본사 검수가 되지 않았습니다: {$carNo}", [
                     'name'=> '진단 데이터 조회 실패. 본사 검수가 되지 않았습니다.',
                     'path'=> __FILE__,
@@ -130,6 +160,18 @@ class DiagService
             $diagnosticCode = $this->diagnosticCode();
 
             if (!isset($diagnosticCode['status']) || $diagnosticCode['status'] !== 'ok') {
+                
+                // DB에 저장 
+                ApiErrorLog::create([
+                    'job_name' => '진단데이터 코드 조회',
+                    'method' => 'POST',
+                    'url' => $this->diagApiUrl . 'diag_by_car_no',
+                    'payload' => json_encode($sendData, JSON_UNESCAPED_UNICODE),
+                    'response_body' => json_encode($response, JSON_UNESCAPED_UNICODE),
+                    'error_message' => '진단 코드 조회 실패.',
+                    'trace' => json_encode($response, JSON_UNESCAPED_UNICODE),
+                ]);
+                
                 Log::error("[진단 데이터] 코드오류 : {$carNo}", [
                     'name'=> '진단 데이터 조회 실패. 진단 코드 조회 실패.',
                     'path'=> __FILE__,
@@ -244,17 +286,6 @@ class DiagService
                 }
 
             } catch (\Exception $e) {
-
-                // 네트워크 오류 알림 추가
-                // NetworkHelper::alertIfNetworkError($e, [
-                //     'source' => [
-                //         'title' => '진단API / 진단대기중 상태확인',
-                //         'url' => $this->diagApiUrl,
-                //         'context' => $e->getMessage(),
-                //         'sendData' => $sendData,
-                //     ],
-                //     'time' => now()->toDateTimeString(),
-                // ]);
 
                 Log::error('[진단 상태 확인] 오류 : Auction hashid: ' . $auction->hashid, [
                     'name'=> '진단 상태 확인',

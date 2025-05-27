@@ -1,0 +1,689 @@
+
+// Body
+$body-bg: #f8fafc;
+
+// Typography
+$font-family-sans-serif: "Spoqa Han Sans", system-ui, sans-serif;
+$font-size-base: 0.9rem;
+$line-height-base: 1.6;
+
+// Bootstrap 5
+/* 전역적 컬러 스타일*/
+/* background-color: rgba($primary, 0.03); -> #fff9f9*/
+
+$primary: #da3138;
+
+$primary-sub: #fae8e8;
+$primary-sub02:#fbeaea;
+
+$primary-hover:#b92a30;
+
+$sub-color:#ff837a;
+$sub-color01: #4263EA;
+$sub-color02: #f7f8fb;
+$sub-color03: #65666d;
+$sub-color04: #EBEFFD;
+$sub-color05:#FFF9F9;
+a {
+    font-weight: bold;
+}
+.btn:hover{
+    background-color: $primary ;
+    border-color: $primary ;
+}
+.btn-outline-primary{
+   border-color: $primary !important;
+}
+.btn-primary {
+    background-color: $primary !important;
+    border-color: $primary !important;
+}
+.bg-primary{
+    background-color: $primary !important;   
+}
+.bc-primary{
+    background-color: $primary !important;
+}
+.tc-primary{
+    color: $primary !important;
+}
+
+.bc-primary-sb02{
+    background-color: $primary-sub02;
+}
+.btn-outline-primary:hover{
+    color: white !important;
+}
+h4{
+    font-size: 1.35em !important; 
+    font-weight: bolder !important;
+}
+h5{
+    font-size: 1.25em !important; 
+    font-weight: bold !important;
+}
+
+.bold-20-font{
+    font-size: 1.25em; 
+    font-weight: bold;
+}
+.bold-18-font{
+    font-size: 1.125em; 
+    font-weight: bold;
+}
+.normal-16-font{
+    font-size: 1em; 
+    font-weight: normal;
+}
+.normal-14-font{
+    font-size: 0.875em; 
+    font-weight: normal;
+}
+.input-dis{
+    background-color: $sub-color02 !important;
+    color: $sub-color03 !important;
+}
+.tc-sub05{background-color: $sub-color05 !important;}
+.tc-gray{
+    color: $sub-color03 !important;
+}
+.cursor-dis{
+    cursor: default !important;
+}
+.sider-content .side-content label{
+    color: $sub-color03;
+}
+/* 이미지 흑백 처리 필터 */
+.grayscale_img {
+    filter: grayscale(70%);
+}
+.bg-sub-color01{
+background-color: $sub-color01 !important;
+}
+.bg-sub-color{
+background-color: $sub-color !important;
+}
+.custom-highlight {
+    background: linear-gradient(transparent 50%, rgba($primary, 0.1) 40%);
+}
+/* 딜러 메인 컬러*/
+.primary-background{
+    background-color: rgba($primary, 0.03);
+}
+.tooltip-area {
+    cursor: pointer;
+}
+.tooltip-area{
+    right: 16px;
+    bottom: 272px;
+}
+#tooltip {
+    z-index: 10;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    font-size: 14px;
+}
+.tooltip2 {
+    position: absolute; 
+    top: 50%;
+    right: 0px;
+    left: 0px;
+    transform: translate(0px, -50%);
+    background: white;
+    padding: 10px; 
+    border-radius: 5px; 
+    border: 1px solid $sub-color03;
+}
+@media (max-width:512px) {
+ .tooltip-area{
+    right: 4% !important;
+    bottom: 37% !important;
+ }
+
+}
+.primary-back{
+    background-color: $primary !important;
+}
+.border-line-none{
+    border: none !important;
+}
+/* 버튼 스타일 */
+.primary-btn {
+    width: 100%;
+    color: #fff !important;
+    background-color: $primary !important;
+    height: 44px;
+    line-height: 30px !important;
+    box-shadow: 0 5px 8px rgb(0 0 0 / 26%);
+}
+
+.primary-disable{
+    width: 100%;
+    color: #fff !important;
+    background-color: rgba($primary, 0.388) !important; 
+    height: 44px;
+    line-height: 30px !important;
+    box-shadow: 0 3px 7px rgba(0, 0, 0, 0.26);
+}
+
+.primary-btn:hover{
+    background-color: $primary-hover;
+    border-color: $primary-hover;
+}
+.pointer{
+    cursor: pointer !important;
+}
+.over-text{
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    width: 100px;
+    height: 20px;
+}
+
+.review-btn {
+    display: block; 
+    width: 100%; 
+    height: 38px; 
+    color: $primary;
+    background-color: #fff; 
+    border: 1px solid $primary;
+    border-radius: 6px;
+    padding: 0 15px;
+    line-height: 38px; 
+    text-align: center; 
+    cursor: pointer;
+    margin-top: 12px;
+
+    &:hover {
+      background-color: darken($primary-sub, 5%); 
+      border-color: darken($primary, 10%); 
+    }
+  }
+  .review-none {
+    display: block;
+    width: 100%;
+    height: 38px;
+    color: $sub-color03;
+    background-color: #fff;
+    border: 1px solid $sub-color03;
+    border-radius: 6px;
+    padding: 0 15px;
+    line-height: 38px;
+    text-align: center;
+    margin-top: 12px;
+}
+.btn-primary {
+    color: #fff;
+    background-color: $primary !important;
+    border-color: $primary !important;
+    box-shadow: 0 3px 12px 0 rgba(117, 18, 22, 0.2);
+
+    &:hover {
+        background-color: $primary-hover !important;
+        border-color: $primary-hover !important;
+    }
+
+    &:focus {
+        box-shadow: 0 0 0 0.25rem rgba(218, 49, 56, 0.5); 
+    }
+
+    &:disabled {
+        background-color: $primary !important;
+        border-color: $primary !important;
+    }
+}
+.border-none{
+    border: none !important;
+}
+.pagination {
+    .page-link {
+      background-color: #ffffff !important;   
+      border-color: $primary-sub;         
+  
+      &:hover {
+        background-color:$primary-sub !important;     
+        color: #fff;              
+      }
+  
+      &.active {
+        background-color:$primary-sub !important;   
+        border-color:$primary-sub !important;     
+      }
+    }
+  }
+/* Text color */
+.tc-red{color:red !important;}
+
+.card-body .link-hov:hover{
+    color: $primary !important;
+    text-decoration: underline !important;
+  }
+.tc-blue{color:$sub-color01 !important;}
+
+/* box 스타일 */
+.blue-box {
+    display: inline-block;
+    width: auto;
+    height: 25px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 16px;
+    background-color:$sub-color04 !important;
+    color: blue !important;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: center;
+    font-weight: 500;
+    padding-right:8px;
+    padding-left:8px;
+}
+.blue-box02{
+    display: inline-block;
+    width: auto;
+    height: 25px;
+    margin-right: 10px;
+    border-radius: 16px;
+    background-color:blue !important;
+    color: rgb(255, 255, 255) !important;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: center;
+    font-weight: 500;
+    padding-right:8px;
+    padding-left:8px;
+}
+.box{
+    display: inline-block;
+    width: auto;
+    height: 25px;
+    margin-right: 10px;
+    border-radius: 16px;
+    color: rgb(255, 255, 255) !important;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: center;
+    font-weight: 500;
+    padding-right:8px;
+    padding-left:8px;
+}
+.red-box {
+    display: inline-block;
+    width: auto;
+    height: 25px;
+    border-radius: 16px;
+    background-color:#da31374b !important;
+    color:  $primary !important;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: center;
+    font-weight: 500;
+    padding-right:8px;
+    padding-left:8px;
+}
+.red-box-type03 {
+    display: inline-block;
+    width: auto;
+    height: 25px;
+    border-radius: 10px;
+    background-color: $primary-sub02 ;
+    color: $primary !important;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: center;
+    font-weight: 500;
+    padding-right:8px;
+    padding-left:8px;
+}
+.red-box-type02 {
+    display: inline-block;
+    width: auto;
+    height: 25px;
+    border-radius: 10px;
+    background-color: $primary-sub02 ;
+    color: $primary !important;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: center;
+    font-weight: 500;
+    padding-right:8px;
+    padding-left:8px;
+    margin: 0 -8px 0 8px;
+    transition: background-color 0.3s ease-in-out;
+}
+
+.btn-shadow {
+    box-shadow: 0 3px 6px 0 rgba(117, 18, 22, 0.2);
+    transition: background-color 0.3s ease-in-out; 
+}
+
+.btn-shadow:hover, .red-box-type02{
+    background-color: rgba($primary, 0.11) !important;
+    box-shadow: 0 5px 6px 0 rgba(117, 18, 22, 0.2);
+}
+
+.ac-evaluation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 50px;
+    border-radius: 6px;
+    background-color: rgba($primary, 0.088);
+    color: $primary !important;
+    text-align: center;
+    transition: box-shadow 0.3s ease-in-out;
+    cursor: pointer;
+}
+
+.modal-bid {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 65px;
+    border-radius: 6px;
+    background-color: $primary;
+    color: white;
+    text-align: center;
+    transition: box-shadow 0.3s ease-in-out;
+    box-shadow: 0 3px 6px 0 rgba(117, 18, 22, 0.2);
+}
+
+
+.gray-box {
+    display: inline-block;
+    width: auto;
+    height: 25px;
+    margin-right: 10px;
+    border-radius: 16px;
+    background: rgba($sub-color03 , 0.1) !important;
+    color: $sub-color03 !important;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: center;
+    padding-right:8px;
+    padding-left:8px;
+}
+
+.auc-gray {
+    display: inline-block;
+    width: auto;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 20px;
+    background: $sub-color03 !important;
+    color: #ffffff !important;
+    font-size: 15px;
+    text-align: center;
+    padding-right:8px;
+    padding-left:8px;
+    line-height: 27px;
+}
+
+.auc-blue {
+    display: inline-block;
+    width: auto;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 20px;
+    background-color:blue !important;
+    color: rgb(255, 255, 255) !important;
+    font-size: 15px;
+    text-align: center;
+    padding-right:8px;
+    padding-left:8px;
+    line-height: 27px;
+}
+
+.auc-black {
+    display: inline-block;
+    width: auto;
+    height: 30px;
+    margin-right: 10px;
+    border-radius: 20px;
+    background: #000000 !important;
+    color: #ffffff !important;
+    font-size: 15px;
+    text-align: center;
+    padding-right:8px;
+    padding-left:8px;
+    line-height: 27px;
+}
+.nav-gray-box{
+    background-color: #f5f5f5;
+    border-radius: 10px;
+    text-align: center;
+    height: 50px;
+    line-height: 10px;
+    padding: 20px;
+    font-weight: 500;
+}
+
+.gray-bl-box {
+    display: inline-block;
+    width: auto;
+    height: 25px;
+    border-radius: 6px;
+    background:$sub-color03 !important;
+    color: #000000 !important;
+    font-size: 14px;
+    line-height: 25px;
+    text-align: center;
+    padding-right:8px;
+    padding-left:8px;
+}
+
+/*비활성화 상태 */
+.no-bidding{
+    color: #fff;
+    height: 30px;
+    padding: 3px 15px;
+    border-radius: 6px;
+    background-color: $sub-color03;
+}
+.bidding{
+    color: #fff;
+    height: 30px;
+    padding: 2px 17px;
+    border-radius: 6px;
+    background-color: $primary;
+}
+
+
+.recent-new::before {
+    content: ""; 
+    position: absolute;
+    right: -10px;
+    top: -3px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #f24200;
+}
+
+.tc-wh{
+    color: #fff !important;
+}
+.wd-100{
+    width: 100% !important;
+}
+
+@keyframes social-button-beat {
+    0% {
+        opacity: 0.3;
+        transform: scale(1);
+    }
+    70% {
+        opacity: 0;
+        transform: scale(1.5);
+    }
+    100% {
+        opacity: 0;
+    }
+}
+@keyframes title {
+0% {
+    opacity: 0;
+    -webkit-transform: translateX(5px);
+    transform: translateX(5px);
+}
+100% {
+    opacity: 1;
+    -webkit-transform: translateX(0);
+    transform: translateX(0);
+}
+}
+
+@media (max-width: 575px){
+.d-sm-flex {
+    display: flex !important;
+}
+}
+
+.hp-100{
+    height: 100px !important;
+}
+.hp-75{
+    height: 75px !important;
+}
+.hp-50{
+    height: 50px !important;
+}
+.hp-25{
+    height: 25px !important;
+}
+.mx-width-no{
+    max-width: none !important;
+}
+.min-width-no{
+    min-width: none !important;
+}
+.hv-25{
+    height: 25vh !important; 
+}
+.hover-anymate{
+    cursor: pointer;
+}
+.hover-anymate img {
+    transition: transform 0.3s ease;
+}
+
+.hover-anymate:hover img {
+    transform: scale(1.05);
+}
+.mx-width{
+    width: max-content;
+}
+@media (min-width: 768px) {
+    .navbar-expand-md .navbar-collapse {
+        display: grid;
+        flex-basis: auto;
+    }
+}
+.border-6{
+    border-radius: 6px !important;
+}
+blockquote {
+    border-left: 5px solid #ccc !important;
+    margin-left: 0;
+    margin-right: 0;
+    overflow: hidden;
+    padding-left: 1.5em!important;
+    padding-right: 1.5em!important;
+}
+.line-height-10{
+    line-height: 124px !important;
+}
+.border-16{
+    border-radius: 16px;
+}
+ul {
+    list-style-type: none;
+    padding-left: 0;
+}
+.text-overflow{
+    max-width: 130px; 
+    overflow: hidden; 
+    text-overflow: ellipsis;
+    white-space: nowrap; 
+  }
+/* Font */
+.size_14 {font-size: 0.875rem;}
+.size_15 {font-size: 0.937rem;}
+.size_16 {font-size: 1rem;}
+.size_18 {font-size: 1.125rem;}
+.size_20 {font-size: 1.25rem;}
+.size_22 {font-size: 1.375rem;}
+.size_24 {font-size: 1.5rem;}
+.size_26 {font-size: 1.625rem;}
+.size_28 {font-size: 1.75rem;}
+.size_30 {font-size: 1.875rem;}
+.size_32 {font-size: 2rem;}
+.size_36 {font-size: 2.25rem;}
+.size_38 {font-size: 2.375rem;}
+.size_40 {font-size: 2.5rem;}
+.size_42 {font-size: 2.75rem;}
+/* 기본 글꼴 굵기 설정 */
+.normal {font-weight: normal !important;}
+.bold {font-weight: bold; }
+.bolder {font-weight: bolder;}
+.lighter {font-weight: lighter;}
+.inherit {font-weight: inherit;}
+.initial {font-weight: initial;}
+.tc-black{
+    color: #000;
+}
+.bc-gray{
+    background-color: $sub-color02 !important;
+}
+.custom-select-box {
+    display: inline-block;
+    position: relative;
+    border: 1px solid #d1d5db; /* 테두리 색상 */
+    border-radius: 4px; /* 둥근 테두리 */
+    padding: 5px 10px; /* 내부 패딩 */
+    background-color: #fff; /* 배경색 */
+    font-size: 14px; /* 글꼴 크기 */
+    color: #000; /* 글자 색상 */
+    width: 150px; /* 너비 설정 */
+  }
+  
+  .custom-select-box select {
+    width: 100%;
+    border: none;
+    background: none;
+    outline: none;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    padding: 5px 0;
+    font-size: 14px;
+    color: #000;
+  }
+  /* 자동 완성된 입력 필드 스타일 재정의 */
+input:-webkit-autofill {
+    background-color: white !important; /* 원하는 배경색 */
+    color: black !important; /* 텍스트 색상 */
+    border: 1px solid #ccc; /* 테두리 색상 */
+    box-shadow: 0 0 0px 1000px white inset !important; /* 배경색 덮어쓰기 */
+    
+  }
+
+.noUi-target{
+    height: 5px !important;
+}
+.noUi-handle:before, .noUi-handle:after{
+    display: none !important;
+}
+.noUi-horizontal .noUi-handle {
+    width: 20px !important;
+    height: 20px !important;
+    border-radius: 70% !important;
+    top: -9px !important;
+}
+.noUi-connect{
+    background: $primary !important;
+}
+.noUi-target{
+    margin-right: 12px;
+}

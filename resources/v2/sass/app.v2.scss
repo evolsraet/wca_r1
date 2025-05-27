@@ -1,0 +1,142 @@
+@use "variables" as *;
+@use "style" as *;
+@use "layout" as *;
+@use "defalut" as *;
+@use "admin" as *;
+@use "Nav" as *;
+@use "modal" as *;
+
+@import "bootstrap/scss/bootstrap";
+
+@import url("https://fonts.bunny.net/css?family=Nunito");
+
+
+:root {
+  --bs-body-bg: #ffffff;
+  --bs-primary: $primary !important;
+  --main-font-family: 'Nunito', sans-serif !important;
+}
+
+
+body {
+    background-color: #ffffff ;
+    font-family: var(--main-font-family);
+}
+.dropdown-menu {
+--bs-dropdown-item-padding-y: 0.5rem;
+left: -48px !important;
+}
+.pagination .page-link:hover{
+  background-color: rgba(255, 255, 255, 0) !important;
+}
+  /* 'demo' : 임의의 데이터 */
+  .demo::before {
+    content: "demo";  
+    color: white;     
+    background-color: rgb(255, 102, 0); 
+    padding: 10px;   
+    margin: 10px;    
+    display: block; 
+  }
+
+  /* ' 구현 진행 중' */
+  .proceeding::before {
+    content: "기능구현중";  
+    color: white;     
+    background-color: rgb(17, 0, 255); 
+    padding: 10px;   
+    margin: 10px;    
+    display: block; 
+  }
+
+/* 전체 페이지의 스크롤바 스타일 */
+.scrollable-content::-webkit-scrollbar {
+  width: 12px;
+}
+.scrollable-content::-webkit-scrollbar-track {
+  background: #f1f1f1; 
+  border-radius: 6px !important; 
+}
+
+.scrollable-content::-webkit-scrollbar-thumb {
+  background: #c5c5c5;
+  border-radius: 6px !important; 
+  transition: background 0.3s ease, border-radius 0.3s ease; 
+}
+
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+  background: #b1b1b1; 
+  border-radius: 6px !important ; 
+}
+
+.time.selected {
+  color: $primary !important;
+  border:solid 2px $primary !important;
+}
+
+.date.selected {
+  color: $primary !important;
+  border:solid 2px $primary !important;
+}
+.timeline li .circle {
+  width: 26px;
+  height: 24px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  font-size: 14px;
+  color: white;
+  z-index: 1;
+  background-color: $primary;
+}
+.ribbon-holder {
+  position: absolute; 
+  overflow: hidden;
+  pointer-events: none
+}
+.ribbon-holder:after {
+  content: "";
+  display: block;
+  height: 0;
+  width: 100%;
+  padding-top: 70.710678118%;
+}
+.ribbon {
+  font-family: sans-serif;
+  font-size: 14px;
+  background-color: $primary;
+  color: white;
+  padding: 10px calc(30px + 15px);
+  position: relative;
+  transform-origin: 0 0;
+  transform: translate(-30px, -30px)
+    rotate(-90deg) translateX(-70.710678118%)
+    rotate(45deg);
+}
+
+.bg-primary{
+  background-color: $primary !important;   
+}
+
+.loadingSpinner {
+  content: '';
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+  z-index: 9999;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.icon-shape {
+  --icon-color: #eb1a1a !important;
+}
+
+.form-control::placeholder {
+  color: #555555;
+  opacity: 0.4;
+}

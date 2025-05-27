@@ -9,6 +9,8 @@ export default defineConfig({
             input: [
                 'resources/v1/sass/app.scss',
                 'resources/v1/js/app.js',
+                'resources/v2/sass/app.v2.scss',
+                'resources/v2/js/app.v2.js',
             ],
             refresh: true,
         }),
@@ -24,7 +26,9 @@ export default defineConfig({
     css: {
         preprocessorOptions: {
             scss: {
-                additionalData: `@use "resources/v1/sass/variables" as *;`
+                additionalData: `
+                @use "resources/v1/sass/variables" as v1;
+                @use "resources/v2/sass/variables" as v2;`
             }
         }
     },
@@ -32,6 +36,7 @@ export default defineConfig({
         alias: {
             vue: 'vue/dist/vue.esm-bundler.js',
             '@': path.resolve(__dirname, './resources/v1/js'),
+            '@v2': path.resolve(__dirname, './resources/v2/js'),
             'swiper/vue': 'swiper/vue',
             'swiper': 'swiper',
         },
