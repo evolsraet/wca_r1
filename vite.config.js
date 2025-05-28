@@ -27,6 +27,7 @@ export default defineConfig({
         preprocessorOptions: {
             scss: {
                 additionalData: `
+                @use "sass:math";
                 @use "resources/v1/sass/variables" as v1;
                 @use "resources/v2/sass/variables" as v2;`
             }

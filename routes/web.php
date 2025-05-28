@@ -32,17 +32,19 @@ Route::get('/v1', function () {
 });
 
 
+// v2 prefix
+Route::prefix('v2')->group(function () {
+    // v2 Routes
+    Route::get('/', function () {
+        // return view('v2.pages.home');
+        return view('v2.pages.dashboard');
+    });
 
-// v2 Routes
-Route::get('/v2', function () {
-    return view('v2.views.home');
+    Route::get('/test', function () {
+        return view('v2.pages.test');
+    });
+
 });
-
-Route::get('/v2/test', function () {
-    return view('v2.views.test');
-});
-
-
 
 Route::post('login', [AuthenticatedSessionController::class, 'login']);
 Route::post('register', [AuthenticatedSessionController::class, 'register']);
@@ -69,7 +71,7 @@ Route::get('excelDown/{resource}', function ($resource) {
 })->name('excelDown/');
 
 
-// SNS 간편로그인 리다이렉트 
+// SNS 간편로그인 리다이렉트
 Route::middleware(['web'])->group(function () {
     Route::get('auth/{provider}/redirect', [SocialAuthController::class, 'redirect'])->name('social.redirect');
     Route::get('auth/{provider}/callback', [SocialAuthController::class, 'callback'])->name('social.callback');
