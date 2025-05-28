@@ -81,4 +81,11 @@ https://drive.google.com/file/d/1JMak5vJLC6F3kHxrnGV-AmQYBoHUWnRw/view?usp=drive
         -   git commit -am '메세지' // 로컬에만 저장됨
         -   git push // 저장소에 업로드
 
-# 테스트3
+# 프론트엔트 분리 추가 : 25-05-28
+
+- vite 둘로 나눔 v1,v2
+- sail npm run build:v1/sail npm run dev:v2
+
+- 추후 v1 삭제
+
+

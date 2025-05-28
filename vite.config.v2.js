@@ -11,6 +11,7 @@ export default defineConfig({
                 'resources/v2/js/app.v2.js',
             ],
             refresh: true,
+            buildDirectory: 'build/v2',
         }),
         vue({
             template: {
@@ -24,8 +25,7 @@ export default defineConfig({
     css: {
         preprocessorOptions: {
             scss: {
-                additionalData: `
-                @use "resources/v2/sass/variables" as *;`
+                additionalData: ``
             }
         }
     },
@@ -47,6 +47,7 @@ export default defineConfig({
     },
     },
     build: {
-        outDir: 'public/v2',
+        outDir: 'public/build/v2',
+        manifest: true,
     },
 });
