@@ -151,7 +151,12 @@ class TaksongService
     {
         $status = $data['chk_status'] ?? null;
         $carNo = $data['chk_car_no'] ?? null;
+        $chk_id = $data['chk_id'] ?? null;
 
+        if(!$carNo){
+            $auction = Auction::where('taksong_id', $chk_id)->firstOrFail();
+            $carNo = $auction->car_no;
+        }
 
         try {
             $auction = Auction::where('car_no', $carNo)->firstOrFail();
@@ -262,8 +267,13 @@ class TaksongService
             Auction::where('car_no', $carNo)->update($updateData);
 
             // 명의이전 등록 관련 메시지 전달 
-            TaksongNameChangeJob::dispatch($modifyData['user_id'], $modifyData['auction_id'], 'user');
-            TaksongNameChangeJob::dispatch($modifyData['bid_user_id'], $modifyData['auction_id'], 'dealer');
+            
+            if($modifyData['user_id']){
+                TaksongNameChangeJob::dispatch($modifyData['user_id'], $modifyData['auction_id'], 'user');
+            }
+            if($modifyData['bid_user_id']){
+                TaksongNameChangeJob::dispatch($modifyData['bid_user_id'], $modifyData['auction_id'], 'dealer');
+            }
 
         }
     }

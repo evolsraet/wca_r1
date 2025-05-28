@@ -366,4 +366,9 @@ class DiagService
         return $files;
     }
 
+    public function diagnosticCheckAdminMessage()
+    {
+        // 진단일 예정일 하루 지나고 한번 관리자에게 메일 전송 
+    }
+
 }

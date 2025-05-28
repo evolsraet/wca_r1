@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use App\Services\TaksongService;
+use App\Services\ApiRequestService;
+
 class WebhookController extends Controller
 {
     // 탁송 상태 변경
@@ -19,24 +22,19 @@ class WebhookController extends Controller
             'data' => $data
         ]);
 
-        // 예시: 탁송 상태 처리
-        // if (isset($data['chk_api_id'])) {
-        //     \App\Models\Auction::where('id', $data['chk_api_id'])->update([
-        //         'status' => $data['chk_status'],
-        //         'taksong_fee' => $data['chk_courier_fee'] ?? null,
-        //         'taksong_updated_at' => now(),
-        //     ]);
+        $taksongService = new TaksongService(new ApiRequestService());
+        $taksongService->processStatus($data);
 
-        //     // 이미지 처리도 나중에 추가 가능
-        // }
-
-        // 파일 오는것은 ? 
-        // 서버에 파일로 저장 해서 보여 주는 방식으로 ? 
-
+        if($taksongService){
+            return response()->json([
+                'message' => '웹훅 정상 수신',
+                'received_status' => $data['chk_status'] ?? null
+            ], 200);
+        }
         return response()->json([
-            'message' => '웹훅 정상 수신',
-            'received_status' => $data['chk_status'] ?? null
-        ], 200);
+            'message' => '웹훅 수신 실패',
+            'received_status' => null
+        ], 400);
     }
 
 }
