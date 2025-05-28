@@ -1,8 +1,10 @@
 {
     "private": true,
     "scripts": {
-        "dev": "vite",
-        "build": "vite build"
+        "dev:v1": "vite --config=vite.config.v1.js",
+        "dev:v2": "vite --config=vite.config.v2.js",
+        "build:v1": "vite build --config=vite.config.v1.js",
+        "build:v2": "vite build --config=vite.config.v2.js"
     },
     "devDependencies": {
         "@popperjs/core": "^2.11.8",
@@ -18,8 +20,8 @@
     "dependencies": {
         "@casl/ability": "^6.5.0",
         "@casl/vue": "^2.2.1",
-        "@ckeditor/ckeditor5-build-classic": "^40.0.0",
-        "@ckeditor/ckeditor5-vue": "^5.1.0",
+        "@ckeditor/ckeditor5-build-classic": "^44.3.0",
+        "@ckeditor/ckeditor5-vue": "^7.3.0",
         "@mdi/font": "^7.4.47",
         "@vuepic/vue-datepicker": "^10.0.0",
         "alpinejs": "^3.14.9",
@@ -42,7 +44,6 @@
         "vue-multiselect-listbox": "^0.4.5",
         "vue-router": "^4.2.5",
         "vue-select": "^4.0.0-beta.5",
-        "vue-slider-component": "^3.2.24",
         "vue-sweetalert2": "^5.0.5",
         "vue3-datepicker": "^0.4.0",
         "vue3-slider": "^1.10.1",
