@@ -57,6 +57,10 @@ Route::prefix('v2')->group(function () {
         return view('v2.pages.test');
     });
 
+    Route::get('/introduce', function () {
+        return view('v2.pages.introduce');
+    });
+
     Route::get('/test/upload', function () {
         return view('v2.test.upload');
     });
