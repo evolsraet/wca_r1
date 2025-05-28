@@ -140,7 +140,7 @@ Route::get('name-change-status', [AuctionController::class, 'nameChangeStatus'])
 Route::post('name-change-file-upload', [AuctionController::class, 'nameChangeFileUpload']);
 Route::post('/auctions/{auction}/name-change-file-upload', [AuctionController::class, 'nameChangeFileUpload']);
 Route::get('name-change-status-all', [AuctionController::class, 'nameChangeStatusAll']);
-Route::get('name-change-status-all-test', [AuctionController::class, 'processCompletedNameChangeAuctions']);
+// Route::get('name-change-status-all-test', [AuctionController::class, 'processCompletedNameChangeAuctions']);
 // Route::get('name-change-status-all-test', [AuctionController::class, 'nameChangeStatusAll']);
 
 Route::get('test-auctions-notification', [AuctionController::class, 'testAuctionsNotification']);
@@ -150,7 +150,7 @@ Route::get('test-taksong-service', [AuctionController::class, 'testTaksongServic
 // Route::get('diagnostic-check', [AuctionController::class, 'diagnosticCheck']);
 
 
-// 명의이전 알림 
+// 명의이전 알림
 Route::get('ownership/manual-notify/{auctionId}', [OwnershipController::class, 'manualNotify']);
 Route::get('ownership/check/{auctionId}', [OwnershipController::class, 'checkOwnership']);
 Route::get('ownership/check-test', [OwnershipController::class, 'checkOwnershipByApiTest']);
@@ -162,20 +162,20 @@ Route::post('taksong/status_change', [WebhookController::class, 'statusChange'])
 Route::post('auctions/rollback/', [AuctionController::class, 'rollbackAuction']);
 
 
-// 예상가격 테스트 
+// 예상가격 테스트
 Route::get('depreciation/calculate', [AuctionController::class, 'depreciationCalculate']);
 
 
 // 네트워크 오류 알림 테스트
 Route::get('/test-network-alert', function () {
-    
+
     $sendData = [
         'method' => 'POST',
         'url' => 'https://check-dev.wecarmobility.co.kr/api/outside/check/taksong_add',
         'params' => ['key' => 'value'],
         'logContext' => 'test',
     ];
-    
+
     try {
         // 테스트용 네트워크 예외 던지기
 

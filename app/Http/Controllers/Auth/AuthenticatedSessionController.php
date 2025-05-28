@@ -19,6 +19,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
+
 class AuthenticatedSessionController extends Controller
 {
     /**
@@ -65,25 +66,25 @@ class AuthenticatedSessionController extends Controller
             // 경고1 상태인 경우 3일 동안 로그인 제한
             $penaltyDays = 3;
             $penaltyUntil = now()->addDays($penaltyDays);
-            
+
             // penalty_until 필드가 있는 경우에만 업데이트
             if (Schema::hasColumn('users', 'penalty_until')) {
                 $user->penalty_until = $penaltyUntil;
                 $user->save();
             }
-            
+
             throw new \Exception("경고1 상태로 {$penaltyDays}일 동안 로그인이 제한됩니다. (" . $penaltyUntil->format('Y-m-d H:i') . "까지)");
         } elseif ($user->status == 'warning2') {
             // 경고2 상태인 경우 1개월 동안 로그인 제한
             $penaltyDays = 30;
             $penaltyUntil = now()->addDays($penaltyDays);
-            
+
             // penalty_until 필드가 있는 경우에만 업데이트
             if (Schema::hasColumn('users', 'penalty_until')) {
                 $user->penalty_until = $penaltyUntil;
                 $user->save();
             }
-            
+
             throw new \Exception("경고2 상태로 {$penaltyDays}일 동안 로그인이 제한됩니다. (" . $penaltyUntil->format('Y-m-d H:i') . "까지)");
         } elseif ($user->status == 'expulsion') {
             // 제명 상태인 경우 영구적으로 로그인 제한
@@ -170,5 +171,15 @@ class AuthenticatedSessionController extends Controller
 
         return response()->api($user, '회원등록 되었습니다.');
         return $this->successResponse($user, 'Registration Successfully');
+    }
+
+    public function destroy(Request $request)
+    {
+        Auth::guard('web')->logout();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return redirect('/');
     }
 }

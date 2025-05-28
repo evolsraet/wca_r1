@@ -70,7 +70,7 @@ class AuctionController extends Controller
     //     try {
     //         $auction = Auction::findOrFail($id);
     //         $service = new AuctionService();
-            
+
     //         $service->middleProcess('update', $request, $auction, $id);
 
     //         $auction->save();
@@ -144,7 +144,7 @@ class AuctionController extends Controller
         }
 
         $niceDnrResult = $NiceDNRService->getNiceDnr($request->input('owner'), $request->input('no'), config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
-            
+
         if(isset($niceDnrResult['count']) && $niceDnrResult['count'] == 0){
             $data = [
                 'status' => 'is_not_count',
@@ -158,7 +158,7 @@ class AuctionController extends Controller
 
             // $auctionService = new AuctionService();
             // $niceDnrResult = $auctionService->getNiceDnr($request->input('owner'), $request->input('no'));
-            
+
 
             $NiceDNRService = new NiceDNRService();
             $niceDnrResult = $NiceDNRService->getNiceDnr($request->input('owner'), $request->input('no'), config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
@@ -358,16 +358,16 @@ class AuctionController extends Controller
         // $initialPrice = $currentPrice; // 차량 초기 가격 3천만 원
 
         $result = $auctionService->calculateCarPrice(
-            $nowYear, 
-            $nowMonth, 
-            $firstRegYear, 
-            $firstRegMonth, 
-            $mileage, 
+            $nowYear,
+            $nowMonth,
+            $firstRegYear,
+            $firstRegMonth,
+            $mileage,
             $initialPrice);
-        
+
         $resultPrice = $result['estimatedPrice'];
 
-        // 사고이력 
+        // 사고이력
         switch($accident){
             case '교환':
                 $resultPrice -= 500000; // 50만원
@@ -385,17 +385,17 @@ class AuctionController extends Controller
             $resultPrice -= 300000; // 30만원
         }
 
-        // 휠스크래치   
+        // 휠스크래치
         if($wheelScratch > 0){
             $resultPrice -= 150000; // 15만원
         }
 
-        // 타이어 
+        // 타이어
         // if($tireStatusNormal > 0){
         //     $resultPrice -= 150000;
         // }
 
-        // 타이어 교체 
+        // 타이어 교체
         if($tireStatusReplaced > 0){
             $resultPrice -= 300000; // 30만원
         }
@@ -405,7 +405,7 @@ class AuctionController extends Controller
             $resultPrice -= 100000; // 10만원
         }
 
-        // 외부 교체    
+        // 외부 교체
         if($viewChange > 0){
             $resultPrice -= 300000; // 30만원
         }
@@ -414,7 +414,7 @@ class AuctionController extends Controller
         if($viewBreak > 0){
             $resultPrice -= 100000; // 10만원
         }
-        
+
         $resultc['사용 월수'] = $result['monthsUsed'] . "개월\n";
         $resultc['표준 주행거리'] = number_format($result['standardMileage']) . "km\n";
         $resultc['주행거리 차이'] = number_format($result['mileageDifference']) . "km\n";
@@ -444,12 +444,12 @@ class AuctionController extends Controller
     {
 
         $auctionService = new AuctionService();
-        $auth = $auctionService->getCarmerceAuth(); // 인증 
+        $auth = $auctionService->getCarmerceAuth(); // 인증
 
         $refreshToken = $auth['refreshToken']; // 리프레시 토큰
-        $accessToken = $auth['accessToken']; // 액세스 토큰 
+        $accessToken = $auth['accessToken']; // 액세스 토큰
 
-        $priceResult = $auctionService->getCarmercePrice($accessToken, $currentData); // 시세확인 
+        $priceResult = $auctionService->getCarmercePrice($accessToken, $currentData); // 시세확인
 
         $result = $priceResult['data'];
 
@@ -514,12 +514,12 @@ class AuctionController extends Controller
     public function entryPublic(Request $request)
     {
         $file = $request->file('file');
-    
+
         // 파일이 들어왔는지 확인
         if (!$file) {
             return response()->json(['message' => '파일이 전송되지 않았습니다.'], 400);
         }
-    
+
         // 엑셀 파일에서 데이터 읽기
         try {
             $data = Excel::toArray(new Auction, $file);
@@ -543,7 +543,7 @@ class AuctionController extends Controller
 
                 $CarmerceService = new CarmerceService();
 
-            
+
                 if ($row[0]) { // car_no가 있고, part가 "공매"인 경우에만 변환
                     return [
                         'part' => $row[0] ?? null,
@@ -584,12 +584,12 @@ class AuctionController extends Controller
             //     if (empty($item)) {
             //         return false;
             //     }
-            
+
             //     // $item['part']가 "공매"인 경우만 유지
             //     if ($item['part'] !== "공매") {
             //         return false;
             //     }
-            
+
             //     return true;
             // });
 
@@ -600,9 +600,9 @@ class AuctionController extends Controller
 
             // JSON 데이터 출력 (디버깅용)
             // dd($jsonData);
-            
+
             return response()->api($jsonData);
-     
+
         } catch (\Exception $e) {
             return response()->api([], '엑셀 파일을 처리하는 중 오류가 발생했습니다.', 500);
         }
@@ -641,7 +641,7 @@ class AuctionController extends Controller
     public function getCarHistoryMock()
     {
         $data = json_decode(file_get_contents(storage_path('mock/car_history_sample.json')), true);
-        
+
         // 라벨 붙이기
         $data['data'] = $this->applyLabels($data);
         return response()->api($data);
@@ -701,10 +701,10 @@ class AuctionController extends Controller
         if ($request->hasFile('nameChange_file')) {
             $file = $request->file('nameChange_file');
             $mediaService = new MediaService();
-            $media = $mediaService->uploadFile($file, $auction, 'file_auction_name_change');       
+            $media = $mediaService->uploadFile($file, $auction, 'file_auction_name_change');
             if($media){
                 $auctionId = $auction->id;
-                // 파일업로드가 완료 되었으면, 유저에게 알림 전송 
+                // 파일업로드가 완료 되었으면, 유저에게 알림 전송
                 // $fileUploadJob = TaksongNameChangeFileUploadJob::dispatch($auction->user_id, $auctionId); // 고객
 
 
@@ -721,8 +721,8 @@ class AuctionController extends Controller
                 $auction->has_uploaded_name_change_file = true;
                 $auction->save();
 
-                // TODO:관리자 에게 알림 추가 
-                /* 관리자에게 전달할 알림 내용 
+                // TODO:관리자 에게 알림 추가
+                /* 관리자에게 전달할 알림 내용
                 : 명의이전 파일이 첨부되었습니다.
                 관리자 페이지 에서 명의이전파일을 확인후 판매자의 완료처리 해주세요.
                 ㅁ 경매번호 : A23D232
@@ -761,13 +761,13 @@ class AuctionController extends Controller
         관리자가 해당 매물의 명의이전을 확인하고 클릭시
         1. 명의이전 파일이 첨부되었는지 확인
         2. 경매상태를 완료로 처리 ( 딜러에게는 수수료처리 관련 알림이 필요 / 유저에게는 경매완료 처리알림 )
-        3. 딜러에게 명의이전파일을 확인 했다는 알림 전송 
-        4. 유저에게는 경매완료 상태를 알림전송         
+        3. 딜러에게 명의이전파일을 확인 했다는 알림 전송
+        4. 유저에게는 경매완료 상태를 알림전송
         */
 
         $auctionId = $request->input('auction_id');
 
-        // 첨부파일 확인 
+        // 첨부파일 확인
         $mediaService = new MediaService();
         $media = $mediaService->getMedia($auctionId, 'file_auction_name_change');
         if(!$media){
@@ -775,7 +775,7 @@ class AuctionController extends Controller
             return response()->json(['success' => false, 'message' => '명의이전 파일이 첨부되지 않았습니다.'], 400);
         }
 
-        // 경매상태를 완료로 처리 
+        // 경매상태를 완료로 처리
         $auction = Auction::find($auctionId);
         $auction->status = 'done';
         $auction->save();
@@ -805,7 +805,7 @@ class AuctionController extends Controller
             'title' => '경매 이름 변경 알림',
             'message' => '경매 이름이 변경되었습니다.',
         ];
-        
+
         // $notificationTemplate = NotificationTemplate::getTemplate('userStatus', $data, ['mail']);
         // $auctionsNotification = new AuctionsNotification($user, $notificationTemplate, ['mail']);
         AuctionsTestJob::dispatch($user, $data, ['mail']);

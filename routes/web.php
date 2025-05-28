@@ -13,6 +13,8 @@ use App\Http\Controllers\NiceApiController;
 use App\Http\Controllers\Api\AuctionController;
 use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\ForgotPasswordController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -25,12 +27,18 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 */
 
 Route::get('/', function () {
-    return redirect('/v1');
+    if (app()->environment('production')) {
+        return redirect('/v1');
+    }
+    return redirect('/v2');
 });
 Route::get('/v1', function () {
     return view('v1.main-view');
 });
-
+// V1 용 auth
+Route::post('login', [AuthenticatedSessionController::class, 'login']);
+Route::post('register', [AuthenticatedSessionController::class, 'register']);
+Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
 // v2 prefix
 Route::prefix('v2')->group(function () {
@@ -44,11 +52,50 @@ Route::prefix('v2')->group(function () {
         return view('v2.pages.test');
     });
 
+    Route::post('login', [AuthenticatedSessionController::class, 'login']);
+    Route::post('register', [AuthenticatedSessionController::class, 'register']);
+    Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
+
+    // 인증 관련 라우트
+    Route::middleware('guest')->group(function () {
+        Route::get('/login', function () {
+            return view('v2.auth.login');
+        })->name('login');
+
+        Route::get('/register', function () {
+            return view('v2.auth.register');
+        })->name('register');
+
+
+
+        // 비밀번호 재설정 라우트
+        Route::get('/forgot-password', function () {
+            return view('v2.auth.forgot-password');
+        })->name('password.request');
+
+        Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
+            ->name('password.email');
+
+        Route::get('/reset-password/{token}', function ($token) {
+            return view('v2.auth.reset-password', ['token' => $token]);
+        })->name('password.reset');
+
+        Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
+            ->name('password.update');
+
+
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
+
+        Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
+            ->name('logout');
+    });
 });
 
-Route::post('login', [AuthenticatedSessionController::class, 'login']);
-Route::post('register', [AuthenticatedSessionController::class, 'register']);
-Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
 // 엑셀파일 다운로드
 Route::get('excelDown/{resource}', function ($resource) {

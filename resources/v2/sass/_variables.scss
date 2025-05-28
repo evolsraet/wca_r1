@@ -1,4 +1,18 @@
-// @use "sass:color";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+@import "bootstrap/scss/mixins";
+
+// Bootstrap 변수 오버라이드
+$theme-colors: (
+    "primary": #da3138,
+    "secondary": #6c757d,
+    "success": #28a745,
+    "info": #17a2b8,
+    "warning": #ffc107,
+    "danger": #dc3545,
+);
+
+
 
 // Body
 $body-bg: #f8fafc;
@@ -7,9 +21,3 @@ $body-bg: #f8fafc;
 $font-family-sans-serif: "Spoqa Han Sans", system-ui, sans-serif;
 $font-size-base: 0.9rem;
 $line-height-base: 1.6;
-
-// Bootstrap 5
-/* 전역적 컬러 스타일*/
-/* background-color: rgba($primary, 0.03); -> #fff9f9*/
-
-// $primary: blue;

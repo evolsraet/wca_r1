@@ -1,11 +1,7 @@
-@use "./_variables" as *;
-@use "bootstrap/scss/bootstrap" as *;
-@use "./layout" as *;
-// @use "./style" as *;
-// @use "./defalut" as *;
-// @use "./admin" as *;
-// @use "./Nav" as *;
-// @use "./modal" as *;
+@import 'variables';
+@import 'bootstrap/scss/bootstrap';
+@import 'layout';
+
 
 // General x-cloak style
 [x-cloak] {
