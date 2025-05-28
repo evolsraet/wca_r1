@@ -196,3 +196,20 @@ Route::get('/test-network-alert', function () {
 
     return response()->json(['result' => '테스트 완료. 로그와 Job 확인']);
 });
+
+Route::post('/test/upload', function (Request $request) {
+    if ($request->hasFile('file')) {
+        $file = $request->file('file');
+        $path = $file->store('test-uploads');
+
+        return response()->json([
+            'message' => '파일이 성공적으로 업로드되었습니다.',
+            'path' => $path,
+            'files' => $_FILES
+        ]);
+    }
+
+    return response()->json([
+        'message' => '파일이 없습니다.'
+    ], 400);
+});

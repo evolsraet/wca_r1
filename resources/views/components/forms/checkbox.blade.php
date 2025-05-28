@@ -3,7 +3,7 @@
     'name' => '',
     'required' => false,
     'class' => '',
-    'errors' => null
+    'errors' => null,
 ])
 
 <div class="mb-3">
@@ -15,13 +15,13 @@
             name="{{ $name }}"
             x-model="form.{{ $name }}"
             {{ $required ? 'required' : '' }}
-            :class="{ 'is-invalid': errors?.{{ $name }}?.length > 0 }"
+            :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
             {{ $attributes }}
         >
         <label class="form-check-label" for="{{ $name }}">{!! $label !!}</label>
 
         @if($errors)
-            <div class="invalid-feedback" x-text="errors?.{{ $name }}?.[0]"></div>
+            <div class="invalid-feedback" x-text="errors?.{{ str_replace('.', '?.', $name) }}?.[0]"></div>
         @endif
     </div>
 </div>

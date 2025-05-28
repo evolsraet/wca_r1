@@ -46,9 +46,24 @@ class UserService
         try {
             $data = $request->input('user');
             $data = $this->checkJson($data);
+            $data['socialLogin'] = isset($data['socialLogin']) ? $data['socialLogin'] : false;
+            $data['role'] = isset($data['role']) ? $data['role'] : 'user';
+
             $dealerData = $this->checkJson($request->input('dealer'));
 
-            // print_r($request->all());
+            return response()->api(null, 'test', 'fail', 400, [
+                    '_FILES' => $_FILES,
+                    'request->file()' => $request->file(),
+                    'request->all()' => $request->all(),
+                ]
+            );
+
+            // print_r([
+            //     '_FILES' => $_FILES,
+            //     'request->file()' => $request->file(),
+            //     'request->all()' => $request->all(),
+            // ]);
+
             // print_r($data);
             // die();
 
@@ -66,23 +81,26 @@ class UserService
             // beforeData() 이전에 발리데이트 해야함
 
             if ($data['socialLogin'] !== 'true') {
-                $validatedData = validator($requestData, [
+                $validator = Validator::make($requestData, [
                     'name' => 'required|max:255',
                     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                     'phone' => ['required', 'string', 'unique:users'],
                     'password' => ['required', 'string', 'min:8', 'confirmed'],
-                ])->validate();
+                ]);
             }else{
-                $validatedData = validator($requestData, [
+                $validator = Validator::make($requestData, [
                     'name' => 'required|max:255',
                     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                     'phone' => ['required', 'string', 'unique:users'],
-                ])->validate();
+                ]);
+            }
+
+            // 유효성 검사 실패 시
+            if ($validator->fails()) {
+                return response()->api(null, '필수값이 누락되었습니다.', 'fail', 422, ['errors' => ['user' => $validator->errors()]]);
             }
 
             $data = $this->beforeData($data);
-
-
 
             if($data['socialLogin'] === 'true'){
                 $data['password'] = Hash::make(Str::random(32));
@@ -145,7 +163,7 @@ class UserService
                 ]);
                 // 유효성 검사 실패 시
                 if ($validator->fails()) {
-                    return response()->api(null, '필수값이 누락되었습니다.', 'fail', 422, ['errors' => $validator->errors()]);
+                    return response()->api(null, '필수값이 누락되었습니다.', 'fail', 422, ['errors' => ['dealer' => $validator->errors()]]);
                 }
 
                 unset($dealerData['file_user_photo_name']);
@@ -231,7 +249,7 @@ class UserService
                     'data' => $data
                 ]);
 
-                // 승인여부 업데이트 
+                // 승인여부 업데이트
                 if($item->hasRole('dealer')){
                     $user = User::find($item->id);
                     if($data['status'] == 'ok'){
@@ -441,7 +459,7 @@ class UserService
             if (auth()->user()->can('act.dealer')) {
                 $item->where('id', auth()->user()->id);
             } elseif (auth()->user()->can('act.user')) {
-                
+
                 $item->where(function ($query) {
                     $query
                         ->role('dealer')

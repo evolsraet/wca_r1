@@ -17,154 +17,209 @@
 
                             <x-forms.input
                                 type="text"
-                                name="name"
+                                name="user.name"
                                 label="이름"
                                 placeholder="이름을 입력해주세요."
-                                required
+                                {{-- required --}}
                                 :errors="true"
                             />
 
                             <x-forms.input
                                 type="email"
-                                name="email"
+                                name="user.email"
                                 label="이메일"
-                                required
+                                {{-- required --}}
                                 :errors="true"
                             />
 
                             <x-forms.input
                                 type="tel"
-                                name="phone"
+                                name="user.phone"
                                 label="전화번호"
                                 placeholder="- 없이 전화번호를 입력해 주세요"
-                                required
+                                {{-- required --}}
                                 :errors="true"
                             />
 
                             <x-forms.input
                                 type="password"
-                                name="password"
+                                name="user.password"
                                 label="비밀번호"
                                 placeholder="6~8자리 숫자,영어,특수문자 혼합"
-                                required
+                                {{-- required --}}
                                 :errors="true"
                             />
 
                             <x-forms.input
                                 type="password"
-                                name="password_confirmation"
+                                name="user.password_confirmation"
                                 label="비밀번호 확인"
                                 placeholder="비밀번호를 다시 입력해주세요"
-                                required
+                                {{-- required --}}
                             />
                         </div>
 
                         <!-- 딜러 정보 -->
                         <div class="mb-4">
                             <x-forms.checkbox
-                                name="isDealer"
+                                name="user.role"
+                                value="dealer"
+                                :errors="false"
                                 label="혹시 딜러이신가요? 네,딜러에요!"
                             />
 
-                            <template x-if="form.isDealer">
+                            <template x-if="form.user.role">
                                 <div>
                                     <p class="text-secondary opacity-50">딜러라면 추가 정보 입력이 필요해요</p>
 
                                     <x-forms.input
                                         type="text"
-                                        name="dealerName"
+                                        name="dealer.name"
                                         label="딜러 이름"
-                                        required
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.input
                                         type="text"
-                                        name="dealerBirthDate"
+                                        name="dealer.birthday"
                                         label="생년월일"
-                                        placeholder="901230"
-                                        maxlength="6"
-                                        required
+                                        placeholder="생년월일 6자리"
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.input
                                         type="tel"
-                                        name="dealerContact"
+                                        name="dealer.phone"
                                         label="연락처"
                                         placeholder="- 없이 전화번호를 입력해 주세요"
-                                        required
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.input
                                         type="text"
-                                        name="company"
+                                        name="dealer.company"
                                         label="소속상사"
                                         placeholder="상사명(상사 정식 명칭)"
-                                        required
+                                        {{-- required --}}
+                                        :errors="true"
+                                    />
+
+                                    <x-forms.input
+                                        type="text"
+                                        name="dealer.company_duty"
+                                        label="직책"
+                                        placeholder="직책을 입력해주세요"
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.textarea
-                                        name="introduce"
-                                        label="소개"
+                                        name="dealer.introduce"
+                                        label="딜러소개"
                                         rows="3"
                                         placeholder="소개를 입력해주세요."
-                                        required
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <!-- 회사 주소 -->
                                     <x-forms.address
                                         label="소속상사 주소"
-                                        postName="company_post"
-                                        addr1Name="company_addr1"
-                                        addr2Name="company_addr2"
-                                        postCodeId="company_post"
-                                        required
+                                        postName="dealer.company_post"
+                                        addr1Name="dealer.company_addr1"
+                                        addr2Name="dealer.company_addr2"
+                                        postCodeId="dealer.company_post"
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <!-- 수신 주소 -->
                                     <x-forms.address
                                         label="인수차량 도착지 주소"
-                                        postName="receive_post"
-                                        addr1Name="receive_addr1"
-                                        addr2Name="receive_addr2"
-                                        postCodeId="receive_post"
+                                        postName="dealer.receive_post"
+                                        addr1Name="dealer.receive_addr1"
+                                        addr2Name="dealer.receive_addr2"
+                                        postCodeId="dealer.receive_post"
+                                        :errors="true"
+                                    />
+
+                                    <!-- 사업자 관련 번호 -->
+                                    <x-forms.input
+                                        type="text"
+                                        name="dealer.business_registration_number"
+                                        label="사업자등록번호"
+                                        placeholder="사업자등록번호를 입력해주세요"
+                                        {{-- required --}}
+                                        :errors="true"
+                                    />
+
+                                    <x-forms.input
+                                        type="text"
+                                        name="dealer.corporation_registration_number"
+                                        label="법인등록번호"
+                                        placeholder="법인등록번호를 입력해주세요"
+                                        {{-- required --}}
+                                        :errors="true"
+                                    />
+
+                                    <x-forms.input
+                                        type="text"
+                                        name="dealer.car_management_business_registration_number"
+                                        label="자동차관리업 등록번호"
+                                        placeholder="자동차관리업 등록번호를 입력해주세요"
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <!-- 파일 업로드 -->
+                                    {{-- <div class="mb-3">
+                                        <label class="form-label">사진 (본인 확인용)</label>
+                                        <div class="d-flex align-items-center">
+                                            <template x-if="photoUrl">
+                                                <img :src="photoUrl" class="rounded-circle me-3" style="width: 100px; height: 100px; object-fit: cover;">
+                                            </template>
+                                            <div>
+                                                <input
+                                                    type="file"
+                                                    class="form-control"
+                                                    name="file_user_photo"
+                                                    @change="handleFileUpload"
+                                                    accept="image/*"
+                                                    :class="{ 'is-invalid': errors?.file_user_photo?.length > 0 }"
+                                                >
+                                                <div class="invalid-feedback" x-text="errors?.file_user_photo?.[0]"></div>
+                                            </div>
+                                        </div>
+                                    </div> --}}
+
                                     <x-forms.file-upload
                                         label="사진 (본인 확인용)"
                                         name="file_user_photo"
-                                        accept="image/*"
-                                        :preview="true"
-                                        previewUrl="photoUrl"
-                                        required
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.file-upload
                                         label="사업자 등록증"
                                         name="file_user_biz"
-                                        required
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.file-upload
                                         label="매도용인감정보"
                                         name="file_user_sign"
-                                        required
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.file-upload
                                         label="매매업체 대표증 or 종사원증"
                                         name="file_user_cert"
-                                        required
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
@@ -172,28 +227,28 @@
                                     <x-forms.checkbox
                                         name="isDealerApplyCheck"
                                         label="<a href='#' @click.prevent='openModal(\"privacy\")'>온라인자동차경매장 규약</a>에 동의합니다."
-                                        required
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.checkbox
                                         name="isDealerApplyCheck1"
                                         label="<a href='#' @click.prevent='openModal(\"privacy\")'>주민등록번호(법인등록번호) 수집 동의</a>에 동의합니다."
-                                        required
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.checkbox
                                         name="isDealerApplyCheck2"
                                         label="<a href='#' @click.prevent='openModal(\"privacy\")'>자동차관리사업등록번호 수집 동의</a>에 동의합니다."
-                                        required
+                                        {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.checkbox
                                         name="isDealerApplyCheck3"
                                         label="<a href='#' @click.prevent='openModal(\"privacy\")'>사업자정보 수집 동의</a>에 동의합니다."
-                                        required
+                                        {{-- required --}}
                                         :errors="true"
                                     />
                                 </div>

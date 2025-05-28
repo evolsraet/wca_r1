@@ -23,11 +23,11 @@
         {{ $required ? 'required' : '' }}
         {{ $readonly ? 'readonly' : '' }}
         placeholder="{{ $placeholder }}"
-        :class="{ 'is-invalid': errors?.{{ $name }}?.length > 0 }"
+        :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
         {{ $attributes }}
     ></textarea>
 
     @if($errors)
-        <div class="invalid-feedback" x-text="errors?.{{ $name }}?.[0]"></div>
+        <div class="invalid-feedback" x-text="errors?.{{ str_replace('.', '?.', $name) }}?.[0]"></div>
     @endif
 </div>
