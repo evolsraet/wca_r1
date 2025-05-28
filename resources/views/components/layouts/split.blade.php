@@ -8,7 +8,7 @@
     'initialRightPanelOpen' => false // 모바일에서 우측 패널 초기 열림 상태
 ])
 
-<div class="split-container container-fluid">
+<div class="split-container">
     <div class="row">
         <!-- 좌측 영역 -->
         <div class="split-left-panel {{ $leftClass }}">
@@ -19,7 +19,27 @@
 
         <!-- 우측 영역 (Alpine.js로 제어) -->
         <div class="split-right-panel {{ $rightClass }}"
-             x-data="{ isOpen: {{ $initialRightPanelOpen ? 'true' : 'false' }}, hasInit: false }"
+             x-data="{
+                isOpen: {{ $initialRightPanelOpen ? 'true' : 'false' }},
+                hasInit: false,
+                // 모바일 모달 내부 스크롤이 끝나도 body가 스크롤되지 않도록 막는 함수
+                lockBodyScroll(e) {
+                    const el = e.currentTarget;
+                    const scrollTop = el.scrollTop;
+                    const scrollHeight = el.scrollHeight;
+                    const offsetHeight = el.offsetHeight;
+                    // 터치 방향 계산
+                    const direction = e.touches[0].clientY - (el._lastTouchY || 0);
+                    el._lastTouchY = e.touches[0].clientY;
+                    // 스크롤이 맨 위에서 아래로, 맨 아래에서 위로 더 스크롤하려 할 때 body로 이벤트 전파 방지
+                    if (
+                        (scrollTop === 0 && direction > 0) ||
+                        (scrollTop + offsetHeight >= scrollHeight && direction < 0)
+                    ) {
+                        e.preventDefault();
+                    }
+                }
+             }"
              x-init="setTimeout(() => { hasInit = true }, 10)">
 
             <div class="split-right-content-wrapper"

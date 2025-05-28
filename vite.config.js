@@ -27,8 +27,7 @@ export default defineConfig({
         preprocessorOptions: {
             scss: {
                 additionalData: `
-                @use "sass:math";
-                @use "resources/v1/sass/variables" as v1;
+                // @use "resources/v1/sass/variables" as v1;
                 @use "resources/v2/sass/variables" as v2;`
             }
         }
@@ -47,7 +46,8 @@ export default defineConfig({
         port: 5173,      // Vite 서버의 포트 (필요에 따라 변경 가능)
         hmr: {
             // host: '192.168.10.185', // 외부 접속용 IP
-            host: 'localhost',
-        },
+            host: process.env.VITE_DEV_SERVER_HOST || 'localhost',
+            port: process.env.VITE_DEV_SERVER_PORT || 5173,      // Vite 서버의 포트 (필요에 따라 변경 가능)
+    },
     },
 });

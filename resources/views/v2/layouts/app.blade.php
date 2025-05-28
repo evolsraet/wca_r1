@@ -11,7 +11,6 @@
 
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
-    <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
 
     <!-- Scripts -->
     @vite(['resources/v2/sass/app.v2.scss', 'resources/v2/js/app.v2.js'])
@@ -21,7 +20,9 @@
     @include('v2.partials.header')
 
     <main>
-        @yield('content')
+        <div class="container">
+            @yield('content')
+        </div>
     </main>
 
     @include('v2.partials.footer')

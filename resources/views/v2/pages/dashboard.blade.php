@@ -6,12 +6,13 @@
     <x-layouts.split
         leftClass="col-lg-7"
         rightClass="col-lg-5"
-        leftContainerClass="p-3 bg-light"
-        rightContainerClass="p-3"
+        leftContainerClass=""
+        rightContainerClass=""
         :initialRightPanelOpen="false">
 
         <x-slot:leftContent>
-            <p>이 부분은 좌측 패널의 내용입니다. PC에서는 <code>leftClass</code> (예: col-lg-7)에 정의된 너비를 가집니다.</p>
+            <button class="btn btn-primary">더 보기</button>
+            <p>이 부분은 좌측 패널의 내용입니다11. PC에서는 <code>leftClass</code> (예: col-lg-7)에 정의된 너비를 가집니다.</p>
             <p>모바일에서는 이 영역이 주 컨텐츠로 표시됩니다.</p>
             @for ($i = 1; $i <= 15; $i++)
                 <div class="card mb-3">
@@ -35,6 +36,9 @@
                     </div>
                 </div>
             @endfor
+
+            <button class="btn btn-primary">더 보기</button>
+
         </x-slot:rightContent>
 
     </x-layouts.split>
