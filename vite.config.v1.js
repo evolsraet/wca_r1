@@ -48,5 +48,6 @@ export default defineConfig({
     },
     build: {
         outDir: 'public/build/v1',
+        manifest: true,
     },
 });

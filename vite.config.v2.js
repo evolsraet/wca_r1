@@ -31,10 +31,8 @@ export default defineConfig({
     },
     resolve: {
         alias: {
-            vue: 'vue/dist/vue.esm-bundler.js',
             '@v2': path.resolve(__dirname, './resources/v2/js'),
-            'swiper/vue': 'swiper/vue',
-            'swiper': 'swiper',
+            // '~bootstrap': path.resolve(__dirname, 'node_modules/bootstrap'),
         },
     },
     server: {
