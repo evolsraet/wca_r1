@@ -1,5 +1,33 @@
 import Alpine from 'alpinejs';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { api, handleFileUpload } from './util/axios.js';
+import Swal from 'sweetalert2';
+import toastr from 'toastr';
+import 'toastr/build/toastr.min.css';
+
+// toastr 설정
+toastr.options = {
+    closeButton: true,
+    progressBar: true,
+    positionClass: 'toast-top-right',
+    timeOut: 3000
+};
+
+// 파일 업로드 전역 함수 등록
+Alpine.data('handleFileUpload', () => ({
+    handleFileUpload(event) {
+        handleFileUpload(event, this);
+    }
+}));
+
+// axios 전역 설정
+Alpine.store('api', api);
+
+// sweetalert 전역 설정
+Alpine.store('swal', Swal);
+
+// toastr 전역 설정
+Alpine.store('toastr', toastr);
 
 // 컴포넌트 feature 자동 등록 (하위 폴더 포함)
 const components = import.meta.glob('./feature/**/*.js', { eager: true });

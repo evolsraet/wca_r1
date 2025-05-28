@@ -8,7 +8,7 @@
     'errors' => null
 ])
 
-<div class="mb-3">
+<div class="mb-3" x-data="handleFileUpload">
     @if($label)
         <label class="form-label">{{ $label }}</label>
     @endif

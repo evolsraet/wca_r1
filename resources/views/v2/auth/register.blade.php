@@ -62,13 +62,12 @@
                         <!-- 딜러 정보 -->
                         <div class="mb-4">
                             <x-forms.checkbox
-                                name="user.role"
-                                value="dealer"
+                                name="isDealer"
                                 :errors="false"
                                 label="혹시 딜러이신가요? 네,딜러에요!"
                             />
 
-                            <template x-if="form.user.role">
+                            <template x-if="form.isDealer">
                                 <div>
                                     <p class="text-secondary opacity-50">딜러라면 추가 정보 입력이 필요해요</p>
 

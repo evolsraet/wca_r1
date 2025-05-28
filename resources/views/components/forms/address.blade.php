@@ -18,6 +18,7 @@
             class="form-control"
             x-model="form.{{ $postName }}"
             readonly
+            placeholder="우편번호"
             :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $postName) }}?.length > 0 }"
         >
         <button
@@ -44,6 +45,7 @@
         class="form-control mb-2"
         x-model="form.{{ $addr1Name }}"
         readonly
+        placeholder="주소"
         :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $addr1Name) }}?.length > 0 }"
     >
 
