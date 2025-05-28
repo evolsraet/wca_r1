@@ -13,7 +13,7 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
 
     <!-- Scripts -->
-    @vite(['resources/v2/sass/app.v2.scss', 'resources/v2/js/app.v2.js'])
+    @vite(['resources/v2/sass/app.v2.scss', 'resources/v2/js/app.v2.js'], 'build/v2')
 </head>
 <body>
 

@@ -28,7 +28,7 @@
         window.config = @json($config);
     </script>
     <!-- Scripts -->
-    @vite(['resources/v1/sass/app.scss', 'resources/v1/js/app.js'])
+    @vite(['resources/v1/sass/app.scss', 'resources/v1/js/app.js'], 'build/v1')
 </head>
 <body class="font-sans antialiased" id="app">
     <router-view></router-view>

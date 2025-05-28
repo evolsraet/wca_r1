@@ -32,21 +32,26 @@ Route::get('/', function () {
     }
     return redirect('/v2');
 });
+
 Route::get('/v1', function () {
     return view('v1.main-view');
 });
+
+
 // V1 용 auth
 Route::post('login', [AuthenticatedSessionController::class, 'login']);
 Route::post('register', [AuthenticatedSessionController::class, 'register']);
 Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
+
+
 
 // v2 prefix
 Route::prefix('v2')->group(function () {
     // v2 Routes
     Route::get('/', function () {
         // return view('v2.pages.home');
-        return view('v2.pages.dashboard');
-    });
+        return view('v2.pages.home');
+    })->name('home');
 
     Route::get('/test', function () {
         return view('v2.pages.test');

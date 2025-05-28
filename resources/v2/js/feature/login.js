@@ -6,6 +6,7 @@ export default function() {
             email: '',
             password: ''
         },
+        error: null,
         errors: {},
         loading: false,
 

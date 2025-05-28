@@ -2,7 +2,7 @@
 @import "bootstrap/scss/variables";
 @import "bootstrap/scss/mixins";
 
-// Bootstrap 변수 오버라이드
+// Bootstrap 변수 오버라이드 // 메인컬러 외 임시
 $theme-colors: (
     "primary": #da3138,
     "secondary": #6c757d,
@@ -11,8 +11,6 @@ $theme-colors: (
     "warning": #ffc107,
     "danger": #dc3545,
 );
-
-
 
 // Body
 $body-bg: #f8fafc;
