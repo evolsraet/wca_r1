@@ -21,6 +21,51 @@ export const handleFileUpload = (event, component) => {
     }
 };
 
+// 파일 업로드 관련 유틸리티 함수들
+export const fileUploader = {
+    // 파일 선택 시 처리
+    handleFileSelect(event, component) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const fieldName = event.target.name;
+        const previewField = `${fieldName}_url`;
+        const nameField = `${fieldName}_name`;
+
+        // 파일 데이터 설정
+        component.form[fieldName] = file;
+        component.form[nameField] = file.name;
+
+        // 이미지인 경우 미리보기 URL 생성
+        if (file.type.startsWith('image/')) {
+            component.form[previewField] = URL.createObjectURL(file);
+        }
+
+        // 파일 크기 검증 (10MB 제한)
+        if (file.size > 10 * 1024 * 1024) {
+            Alpine.store('toastr').error('파일 크기는 10MB를 초과할 수 없습니다.');
+            event.target.value = '';
+            return;
+        }
+    },
+
+    // 파일 제거
+    removeFile(component, fieldName) {
+        component.form[fieldName] = null;
+        component.form[`${fieldName}_name`] = '';
+        component.form[`${fieldName}_url`] = '';
+    }
+};
+
+// FormData에 파일 추가하는 유틸리티 함수
+export const appendFilesFormData = (formData, component, fileFields) => {
+    fileFields.forEach(fieldName => {
+        if (component.form[fieldName]) {
+            formData.append(fieldName, component.form[fieldName]);
+        }
+    });
+};
+
 // axios 인스턴스 생성
 const instance = axios.create({
     baseURL: '',  // v2 prefix 사용

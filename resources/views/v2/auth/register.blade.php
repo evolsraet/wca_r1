@@ -7,10 +7,8 @@
             <div class="card">
                 <div class="card-header">회원가입</div>
 
-                <div class="card-body"
-                    x-data="register"
-                >
-                    <form @submit.prevent="submit">
+                <div class="card-body">
+                    <form @submit.prevent="submit" x-data="register">
                         <!-- 기본 정보 -->
                         <div class="mb-4">
                             <h5>기본 정보</h5>
@@ -174,29 +172,10 @@
                                     />
 
                                     <!-- 파일 업로드 -->
-                                    {{-- <div class="mb-3">
-                                        <label class="form-label">사진 (본인 확인용)</label>
-                                        <div class="d-flex align-items-center">
-                                            <template x-if="photoUrl">
-                                                <img :src="photoUrl" class="rounded-circle me-3" style="width: 100px; height: 100px; object-fit: cover;">
-                                            </template>
-                                            <div>
-                                                <input
-                                                    type="file"
-                                                    class="form-control"
-                                                    name="file_user_photo"
-                                                    @change="handleFileUpload"
-                                                    accept="image/*"
-                                                    :class="{ 'is-invalid': errors?.file_user_photo?.length > 0 }"
-                                                >
-                                                <div class="invalid-feedback" x-text="errors?.file_user_photo?.[0]"></div>
-                                            </div>
-                                        </div>
-                                    </div> --}}
-
                                     <x-forms.file-upload
                                         label="사진 (본인 확인용)"
                                         name="file_user_photo"
+                                        :preview="true"
                                         {{-- required --}}
                                         :errors="true"
                                     />

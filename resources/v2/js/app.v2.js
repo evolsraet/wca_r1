@@ -17,13 +17,10 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
     Alpine.store('toastr', toastr);
 
 // 파일 업로드 전역 함수 등록
-    import { api, handleFileUpload } from './util/axios.js';
+    import { api, fileUploader, appendFilesFormData } from './util/axios.js';
     Alpine.store('api', api);
-    Alpine.data('handleFileUpload', () => ({
-        handleFileUpload(event) {
-            handleFileUpload(event, this);
-        }
-    }));
+    Alpine.store('fileUploader', fileUploader);
+    Alpine.store('appendFilesFormData', appendFilesFormData);
 
 // Alpine.js 전역 스토어에 Daum 주소 검색 함수 추가
 Alpine.store('address', {
@@ -89,6 +86,44 @@ Alpine.store('modal', modal);
 //     Alpine.store('modal', modal);
 //     Alpine.start();
 // });
+
+// 파일 업로드 컴포넌트 등록
+Alpine.data('fileUpload', (fieldName) => ({
+    previewUrl: '',
+    handleFileSelect(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        try {
+            // 이미지인 경우 미리보기 URL 생성
+            if (file.type.startsWith('image/')) {
+                this.previewUrl = URL.createObjectURL(file);
+            }
+
+            // 파일 데이터를 이벤트로 전달
+            this.$dispatch('file-selected', {
+                fieldName,
+                file,
+                fileName: file.name,
+                previewUrl: this.previewUrl
+            });
+        } catch (error) {
+            Alpine.store('toastr').error('파일 처리 중 오류가 발생했습니다.');
+        }
+    },
+    removeFile() {
+        try {
+            // 파일 제거 이벤트 발생
+            this.$dispatch('file-removed', {
+                fieldName
+            });
+
+            this.previewUrl = '';
+        } catch (error) {
+            Alpine.store('toastr').error('파일 제거 중 오류가 발생했습니다.');
+        }
+    }
+}));
 
 window.Alpine = Alpine;
 Alpine.start();

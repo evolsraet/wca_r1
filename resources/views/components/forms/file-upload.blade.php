@@ -8,22 +8,34 @@
     'errors' => null
 ])
 
-<div class="mb-3" x-data="handleFileUpload">
+<div class="mb-3"
+    x-data="fileUpload('{{ $name }}')"
+    x-init="console.log('FileUpload initialized:', {
+        name: '{{ $name }}',
+        parent: $el.closest('[x-data]'),
+        hasForm: $el.closest('[x-data]')?.form ? true : false
+    })"
+>
     @if($label)
         <label class="form-label">{{ $label }}</label>
     @endif
 
     @if($preview)
         <div class="d-flex align-items-center">
-            <template x-if="photoUrl">
-                <img :src="photoUrl" class="rounded-circle me-3" style="width: {{ $previewSize }}; height: {{ $previewSize }}; object-fit: cover;">
+            <template x-if="previewUrl">
+                <div class="position-relative me-3">
+                    <img :src="previewUrl" class="rounded" style="width: {{ $previewSize }}; height: {{ $previewSize }}; object-fit: cover;">
+                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" @click="removeFile">
+                        <i class="bi bi-x"></i>
+                    </button>
+                </div>
             </template>
             <div>
                 <input
                     type="file"
                     class="form-control"
                     name="{{ $name }}"
-                    @change="handleFileUpload($event)"
+                    @change="handleFileSelect"
                     accept="{{ $accept }}"
                     :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
                     {{ $attributes }}
@@ -38,7 +50,7 @@
             type="file"
             class="form-control"
             name="{{ $name }}"
-            @change="handleFileUpload($event)"
+            @change="handleFileSelect"
             accept="{{ $accept }}"
             :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
             {{ $attributes }}

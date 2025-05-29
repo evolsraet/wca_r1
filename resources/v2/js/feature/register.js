@@ -1,4 +1,3 @@
-
 export default function() {
     return {
         form: {
@@ -31,12 +30,16 @@ export default function() {
             },
             file_user_photo: null,
             file_user_photo_name: '',
+            file_user_photo_url: '',
             file_user_biz: null,
             file_user_biz_name: '',
+            file_user_biz_url: '',
             file_user_sign: null,
             file_user_sign_name: '',
+            file_user_sign_url: '',
             file_user_cert: null,
             file_user_cert_name: '',
+            file_user_cert_url: '',
             isDealerApply1: false,
             isDealerApply2: false,
             isDealerApply3: false,
@@ -62,6 +65,21 @@ export default function() {
                 this.form.email = emailParam;
                 this.form.name = nameParam;
             }
+
+            // 파일 이벤트 리스너 등록
+            this.$el.addEventListener('file-selected', (event) => {
+                const { fieldName, file, fileName, previewUrl } = event.detail;
+                this.form[fieldName] = file;
+                this.form[`${fieldName}_name`] = fileName;
+                this.form[`${fieldName}_url`] = previewUrl;
+            });
+
+            this.$el.addEventListener('file-removed', (event) => {
+                const { fieldName } = event.detail;
+                this.form[fieldName] = null;
+                this.form[`${fieldName}_name`] = '';
+                this.form[`${fieldName}_url`] = '';
+            });
         },
 
         async submit() {
@@ -69,9 +87,6 @@ export default function() {
             this.errors = {};
 
             try {
-                // TODO: 동의 확인
-
-                // FormData 생성
                 const formData = new FormData();
 
                 // user 데이터 추가
@@ -87,20 +102,20 @@ export default function() {
                     });
 
                     // 파일 데이터 추가
-                    const fileFields = ['file_user_photo', 'file_user_biz', 'file_user_sign', 'file_user_cert'];
-                    fileFields.forEach(key => {
-                        if (this.form[key]) {
-                            // console.log(`Adding file ${key}:`, this.form[key]);
-                            formData.append(key, this.form[key]);
+                    const fileFields = [
+                        'file_user_photo',
+                        'file_user_biz',
+                        'file_user_sign',
+                        'file_user_cert'
+                    ];
+
+                    fileFields.forEach(fieldName => {
+                        const file = this.form[fieldName];
+                        if (file instanceof File) {
+                            formData.append(fieldName, file);
                         }
                     });
                 }
-
-                // FormData 내용 확인
-                // console.log('FormData contents before submit:');
-                // for (let pair of formData.entries()) {
-                //     console.log(pair[0], pair[1] instanceof File ? pair[1].name : pair[1]);
-                // }
 
                 const response = await this.$store.api.post('/api/users', formData);
                 window.location.href = '/v2/login';
