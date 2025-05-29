@@ -69,13 +69,28 @@ Route::prefix('v2')->group(function () {
         return view('v2.pages.user-main');
     });
 
-    Route::get('/docs/privacy', function () {
-        return view('v2.pages.privacy');
-    })->name('docs.privacy');
-
-    Route::get('/docs/terms', function () {
-        return view('v2.pages.terms');
-    })->name('docs.terms');
+    Route::get('/docs/{type}', function ($type) {
+        $available = ['privacy', 'terms'];
+    
+        if (!in_array($type, $available)) {
+            abort(404);
+        }
+    
+        $title = $type === 'privacy' ? '개인정보 처리방침' : '이용약관';
+        $htmlPath = resource_path("v2/docs/{$type}.html");
+    
+        if (!file_exists($htmlPath)) {
+            abort(404);
+        }
+    
+        $html = file_get_contents($htmlPath);
+    
+        return view('v2.pages.docs', [
+            'title' => $title,
+            'html' => $html,
+            'type' => $type
+        ]);
+    })->name('docs.show');
 
     Route::post('login', [AuthenticatedSessionController::class, 'login']);
     Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
