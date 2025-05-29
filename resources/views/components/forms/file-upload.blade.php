@@ -15,11 +15,14 @@
 
 <div class="mb-3"
     x-data="fileUpload('{{ $inputName }}', {{ $multiple ? 'true' : 'false' }})"
-    x-init="console.log('FileUpload initialized:', {
-        name: '{{ $inputName }}',
-        parent: $el.closest('[x-data]'),
-        hasForm: $el.closest('[x-data]')?.form ? true : false
-    })"
+    x-init="
+        $nextTick(() => {
+            const parent = $el.closest('form');
+            if (parent && parent._x_dataStack && parent._x_dataStack[0]) {
+                form = parent._x_dataStack[0].form;
+            }
+        })
+    "
 >
     @if($label)
         <label class="form-label">{{ $label }}</label>
@@ -27,10 +30,12 @@
 
     @if($preview)
         <div class="d-flex align-items-center">
-            <template x-if="previewUrl">
+            <template x-if="fileList && fileList.length > 0">
                 <div class="position-relative me-3">
-                    <img :src="previewUrl" class="rounded" style="width: {{ $previewSize }}; height: {{ $previewSize }}; object-fit: cover;">
-                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" @click="removeFile">
+                    <template x-if="fileList[0] && fileList[0].previewUrl">
+                        <img :src="fileList[0].previewUrl" class="rounded" style="width: {{ $previewSize }}; height: {{ $previewSize }}; object-fit: cover;">
+                    </template>
+                    <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" @click="removeFile()">
                         <i class="bi bi-x-lg"></i>
                     </button>
                 </div>
@@ -68,7 +73,7 @@
             @endif
 
             <!-- 선택된 파일 목록 -->
-            <template x-if="fileList.length > 0">
+            <template x-if="fileList && fileList.length > 0">
                 <div class="mt-2">
                     <template x-for="(file, index) in fileList" :key="index">
                         <div class="d-flex align-items-center justify-content-between bg-light p-2 rounded mb-1">

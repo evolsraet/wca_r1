@@ -17,10 +17,8 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
     Alpine.store('toastr', toastr);
 
 // 파일 업로드 전역 함수 등록
-    import { api, fileUploader, appendFilesFormData } from './util/axios.js';
-    Alpine.store('api', api);
-    Alpine.store('fileUploader', fileUploader);
-    Alpine.store('appendFilesFormData', appendFilesFormData);
+import { api } from './util/axios.js';
+Alpine.store('api', api);
 
 // Alpine.js 전역 스토어에 Daum 주소 검색 함수 추가
 Alpine.store('address', {
@@ -91,6 +89,7 @@ Alpine.store('modal', modal);
 Alpine.data('fileUpload', (fieldName, multiple = false) => ({
     previewUrl: '',
     fileList: [],
+    form: null,
     handleFileSelect(event) {
         const files = Array.from(event.target.files);
         if (files.length === 0) return;
@@ -112,6 +111,19 @@ Alpine.data('fileUpload', (fieldName, multiple = false) => ({
                         fileName: file.name,
                         previewUrl: file.type.startsWith('image/') ? URL.createObjectURL(file) : ''
                     });
+
+                    // 폼 데이터 직접 업데이트
+                    if (this.form) {
+                        const baseFieldName = fieldName.slice(0, -2);
+                        if (!this.form[baseFieldName]) {
+                            this.form[baseFieldName] = [];
+                            this.form[`${baseFieldName}_name`] = [];
+                            this.form[`${baseFieldName}_url`] = [];
+                        }
+                        this.form[baseFieldName].push(file);
+                        this.form[`${baseFieldName}_name`].push(file.name);
+                        this.form[`${baseFieldName}_url`].push(file.type.startsWith('image/') ? URL.createObjectURL(file) : '');
+                    }
                 });
             } else {
                 // 단일 파일 처리
@@ -129,32 +141,78 @@ Alpine.data('fileUpload', (fieldName, multiple = false) => ({
                     fileName: file.name,
                     previewUrl: file.type.startsWith('image/') ? URL.createObjectURL(file) : ''
                 });
+
+                // 폼 데이터 직접 업데이트
+                if (this.form) {
+                    this.form[fieldName] = file;
+                    this.form[`${fieldName}_name`] = file.name;
+                    this.form[`${fieldName}_url`] = file.type.startsWith('image/') ? URL.createObjectURL(file) : '';
+                }
             }
         } catch (error) {
+            console.error('FileUpload - Error:', error);
             Alpine.store('toastr').error('파일 처리 중 오류가 발생했습니다.');
         }
     },
     removeFile(index) {
-        if (index === undefined) {
-            // 단일 파일 제거
-            this.fileList = [];
-        } else {
-            // 특정 파일 제거
-            const removedFile = this.fileList[index];
-            this.fileList.splice(index, 1);
+        try {
+            if (index === undefined) {
+                // 단일 파일 제거
+                const removedFile = this.fileList[0];
+                this.fileList = [];
 
-            // 파일 제거 이벤트 발생
-            this.$dispatch('file-removed', {
-                fieldName,
-                index,
-                fileName: removedFile.name
-            });
-        }
+                // 폼 데이터 직접 업데이트
+                if (this.form) {
+                    this.form[fieldName] = null;
+                    this.form[`${fieldName}_name`] = '';
+                    this.form[`${fieldName}_url`] = '';
+                }
 
-        // 파일 입력 필드 초기화 (안전하게 처리)
-        const fileInput = this.$el.querySelector(`input[type="file"][name="${fieldName}"]`);
-        if (fileInput) {
-            fileInput.value = '';
+                // 파일 제거 이벤트 발생
+                if (removedFile) {
+                    this.$dispatch('file-removed', {
+                        fieldName,
+                        fileName: removedFile.name
+                    });
+                }
+            } else {
+                // 특정 파일 제거
+                const removedFile = this.fileList[index];
+                this.fileList.splice(index, 1);
+
+                // 폼 데이터 직접 업데이트
+                if (this.form) {
+                    const baseFieldName = fieldName.slice(0, -2);
+                    if (Array.isArray(this.form[baseFieldName])) {
+                        this.form[baseFieldName].splice(index, 1);
+                        this.form[`${baseFieldName}_name`].splice(index, 1);
+                        this.form[`${baseFieldName}_url`].splice(index, 1);
+                    } else {
+                        // 단일 파일인 경우
+                        this.form[fieldName] = null;
+                        this.form[`${fieldName}_name`] = '';
+                        this.form[`${fieldName}_url`] = '';
+                    }
+                }
+
+                // 파일 제거 이벤트 발생
+                if (removedFile) {
+                    this.$dispatch('file-removed', {
+                        fieldName,
+                        index,
+                        fileName: removedFile.name
+                    });
+                }
+            }
+
+            // 파일 입력 필드 초기화 (안전하게 처리)
+            const fileInput = this.$el.querySelector(`input[type="file"][name="${fieldName}"]`);
+            if (fileInput) {
+                fileInput.value = '';
+            }
+        } catch (error) {
+            console.error('FileUpload - Error in removeFile:', error);
+            Alpine.store('toastr').error('파일 제거 중 오류가 발생했습니다.');
         }
     }
 }));

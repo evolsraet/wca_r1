@@ -1,71 +1,6 @@
 import axios from 'axios';
 import Alpine from 'alpinejs';
 
-// 파일 업로드 처리 함수
-export const handleFileUpload = (event, component) => {
-    const file = event.target.files[0];
-    if (file) {
-        const fieldName = event.target.name;
-        // console.log(`File selected for ${fieldName}:`, file);
-
-        component.form[fieldName] = file;
-        component.form[fieldName + '_name'] = file.name;
-        component.form[fieldName + '_url'] = URL.createObjectURL(file);
-
-        console.log('File data set:', {
-            fieldName,
-            file: component.form[fieldName],
-            fileName: component.form[fieldName + '_name'],
-            previewUrl: component.form[fieldName + '_url']
-        });
-    }
-};
-
-// 파일 업로드 관련 유틸리티 함수들
-export const fileUploader = {
-    // 파일 선택 시 처리
-    handleFileSelect(event, component) {
-        const file = event.target.files[0];
-        if (!file) return;
-
-        const fieldName = event.target.name;
-        const previewField = `${fieldName}_url`;
-        const nameField = `${fieldName}_name`;
-
-        // 파일 데이터 설정
-        component.form[fieldName] = file;
-        component.form[nameField] = file.name;
-
-        // 이미지인 경우 미리보기 URL 생성
-        if (file.type.startsWith('image/')) {
-            component.form[previewField] = URL.createObjectURL(file);
-        }
-
-        // 파일 크기 검증 (10MB 제한)
-        if (file.size > 10 * 1024 * 1024) {
-            Alpine.store('toastr').error('파일 크기는 10MB를 초과할 수 없습니다.');
-            event.target.value = '';
-            return;
-        }
-    },
-
-    // 파일 제거
-    removeFile(component, fieldName) {
-        component.form[fieldName] = null;
-        component.form[`${fieldName}_name`] = '';
-        component.form[`${fieldName}_url`] = '';
-    }
-};
-
-// FormData에 파일 추가하는 유틸리티 함수
-export const appendFilesFormData = (formData, component, fileFields) => {
-    fileFields.forEach(fieldName => {
-        if (component.form[fieldName]) {
-            formData.append(fieldName, component.form[fieldName]);
-        }
-    });
-};
-
 // axios 인스턴스 생성
 const instance = axios.create({
     baseURL: '',  // v2 prefix 사용
@@ -77,7 +12,6 @@ const instance = axios.create({
     transformRequest: [(data, headers) => {
         // FormData인 경우 Content-Type을 multipart/form-data로 설정
         if (data instanceof FormData) {
-            console.log('FormData detected, setting multipart/form-data');
             headers['Content-Type'] = 'multipart/form-data';
             return data;
         }
@@ -89,7 +23,6 @@ const instance = axios.create({
 
         // 일반 객체인 경우 JSON으로 변환
         if (typeof data === 'object' && data !== null) {
-            console.log('Converting data to JSON');
             headers['Content-Type'] = 'application/json';
             return JSON.stringify(data);
         }
@@ -109,16 +42,8 @@ instance.interceptors.request.use(
 
         // FormData인 경우 Content-Type 설정
         if (config.data instanceof FormData) {
-            console.log('Request interceptor: FormData detected');
             config.headers['Content-Type'] = 'multipart/form-data';
         }
-
-        // console.log('Request config:', {
-        //     url: config.url,
-        //     method: config.method,
-        //     headers: config.headers,
-        //     data: config.data instanceof FormData ? 'FormData' : config.data
-        // });
 
         return config;
     },
@@ -130,7 +55,6 @@ instance.interceptors.request.use(
 // 응답 인터셉터
 instance.interceptors.response.use(
     (response) => {
-        console.debug('Response:', response);
         if (response.data?.status != 'ok') {
             Alpine.store('swal').fire({
                 icon: 'error',
@@ -145,19 +69,12 @@ instance.interceptors.response.use(
     (error) => {
         if (error.response && error.response.data?.status) {
             if( error.response.data?.errors ) {
-                // console.log(error.response.data.errors);
-
-                // 첫번째 에러 필드로 포커스
                 const models = Object.keys(error.response.data.errors);
                 if (models.length > 0) {
                     const firstModel = models[0];
                     const firstField = Object.keys(error.response.data.errors[firstModel])[0];
-                    // console.log('첫번째 모델:', firstModel);
-                    // console.log('첫번째 필드:', firstField);
                     const elementName = firstModel + '.' + firstField;
                     const element = document.querySelector(`[name="${elementName}"]`);
-                    // console.log('elementName:', elementName);
-                    // console.log('element:', element);
                     if( element ) {
                         element.focus();
                         element.scrollIntoView({ behavior: 'smooth', block: 'center' });
@@ -166,10 +83,7 @@ instance.interceptors.response.use(
             }
 
             if (error.response.status === 422) {
-                // console.log('422');
                 Alpine.store('toastr').error(error.response.data?.message || '입력 값을 확인 해 주세요');
-                // window.location.href = '/v2/login';
-            // 419 CSRF 토큰 만료
             } else if (error.response.status === 419) {
                 Alpine.store('swal').fire({
                     icon: 'warning',
@@ -181,7 +95,6 @@ instance.interceptors.response.use(
                     window.location.reload();
                 });
             } else {
-                // status가 false인 경우 처리
                 Alpine.store('swal').fire({
                     icon: 'error',
                     title: '오류 발생',
@@ -191,7 +104,6 @@ instance.interceptors.response.use(
                 return Promise.reject(error);
             }
         } else if (error.request) {
-            // 요청은 보냈지만 응답을 받지 못한 경우
             Alpine.store('swal').fire({
                 icon: 'error',
                 title: '네트워크 오류',
@@ -199,7 +111,6 @@ instance.interceptors.response.use(
                 confirmButtonText: '확인'
             });
         } else {
-            // 요청 설정 중 오류가 발생한 경우
             Alpine.store('swal').fire({
                 icon: 'error',
                 title: '요청 오류',
