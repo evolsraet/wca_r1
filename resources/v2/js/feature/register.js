@@ -10,6 +10,7 @@ export default function() {
                 socialLogin: false,
                 // role 체크시 dealer 로
             },
+            isDealer: true,
             dealer: {
                 name: '',
                 phone: '',
@@ -69,16 +70,52 @@ export default function() {
             // 파일 이벤트 리스너 등록
             this.$el.addEventListener('file-selected', (event) => {
                 const { fieldName, file, fileName, previewUrl } = event.detail;
-                this.form[fieldName] = file;
-                this.form[`${fieldName}_name`] = fileName;
-                this.form[`${fieldName}_url`] = previewUrl;
+
+                // 멀티플 파일 처리
+                if (fieldName.endsWith('[]')) {
+                    const baseFieldName = fieldName.slice(0, -2);
+                    if (!this.form[baseFieldName]) {
+                        this.form[baseFieldName] = [];
+                    }
+                    if (!this.form[`${baseFieldName}_name`]) {
+                        this.form[`${baseFieldName}_name`] = [];
+                    }
+                    if (!this.form[`${baseFieldName}_url`]) {
+                        this.form[`${baseFieldName}_url`] = [];
+                    }
+
+                    this.form[baseFieldName].push(file);
+                    this.form[`${baseFieldName}_name`].push(fileName);
+                    this.form[`${baseFieldName}_url`].push(previewUrl);
+                } else {
+                    // 단일 파일 처리
+                    this.form[fieldName] = file;
+                    this.form[`${fieldName}_name`] = fileName;
+                    this.form[`${fieldName}_url`] = previewUrl;
+                }
             });
 
             this.$el.addEventListener('file-removed', (event) => {
-                const { fieldName } = event.detail;
-                this.form[fieldName] = null;
-                this.form[`${fieldName}_name`] = '';
-                this.form[`${fieldName}_url`] = '';
+                const { fieldName, index } = event.detail;
+
+                // 멀티플 파일 처리
+                if (fieldName.endsWith('[]')) {
+                    const baseFieldName = fieldName.slice(0, -2);
+                    if (index !== undefined) {
+                        this.form[baseFieldName].splice(index, 1);
+                        this.form[`${baseFieldName}_name`].splice(index, 1);
+                        this.form[`${baseFieldName}_url`].splice(index, 1);
+                    } else {
+                        this.form[baseFieldName] = [];
+                        this.form[`${baseFieldName}_name`] = [];
+                        this.form[`${baseFieldName}_url`] = [];
+                    }
+                } else {
+                    // 단일 파일 처리
+                    this.form[fieldName] = null;
+                    this.form[`${fieldName}_name`] = '';
+                    this.form[`${fieldName}_url`] = '';
+                }
             });
         },
 
@@ -110,9 +147,17 @@ export default function() {
                     ];
 
                     fileFields.forEach(fieldName => {
-                        const file = this.form[fieldName];
-                        if (file instanceof File) {
-                            formData.append(fieldName, file);
+                        const files = this.form[fieldName];
+                        if (Array.isArray(files)) {
+                            // 멀티플 파일 처리
+                            files.forEach((file, index) => {
+                                if (file instanceof File) {
+                                    formData.append(`${fieldName}[]`, file);
+                                }
+                            });
+                        } else if (files instanceof File) {
+                            // 단일 파일 처리
+                            formData.append(fieldName, files);
                         }
                     });
                 }
@@ -131,7 +176,6 @@ export default function() {
         deletePhotoImg() {
             this.form.file_user_photo = null;
             this.photoUrl = null;
-            console.log('After deleting photo:', this.form.file_user_photo);
         }
     }
 }

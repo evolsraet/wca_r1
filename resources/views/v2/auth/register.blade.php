@@ -199,6 +199,7 @@
                                         name="file_user_cert"
                                         {{-- required --}}
                                         :errors="true"
+                                        :multiple="true"
                                     />
 
                                     @php
