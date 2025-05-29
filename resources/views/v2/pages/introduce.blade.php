@@ -2,7 +2,8 @@
 @section('content')
 
 <div class="pb-5 intro">
-    <div class="section section01" :class="{ animated: animate, hidden: !animate }">
+
+    <div class="section section01" data-animate="animate__bounce">
         <p class="small-text">내차팔때 고민이시죠?</p>
         <p class="title mb-5">{{ config('app.name') }}의 내차팔기 서비스</p>
         <div class="chat-box">
@@ -10,7 +11,7 @@
         </div>
     </div>
 
-    <div class="section section02" :class="{ animated: animate, hidden: !animate }">
+    <div class="section section02" data-animate="animate__fadeInUp">
         <p class="title mb-5">이제 이런 걱정은 하지 마세요</p>
         <div class="features">
             <div class="feature-item">
@@ -28,15 +29,14 @@
         </div>
     </div>
 
-    <div class="section section03" :class="{ animated: animate, hidden: !animate }">
-        <img src="{{ asset('images/intro-06.png') }}" alt="배경" class="bk-section">
+    <div class="section section03" data-animate="animate__fadeIn">
         <div class="content">
             <p class="title">내차팔기 이젠 {{ config('app.name') }}에 의뢰하세요</p>
             <p>이제 안심하고 내차를 높은 가격으로 판매할 수 있습니다</p>
         </div>
     </div>
 
-    <div class="section section04" :class="{ animated02: animate, hidden: !animate }">
+    <div class="section section04" data-animate="animate__zoomIn">
         <img src="{{ asset('images/intro-05.png') }}" width="600px">
         <p class="text-muted02 d-flex mt-4 align-center">
             {{ config('app.name') }}은
@@ -46,6 +46,30 @@
             이 함께합니다.
         </p>
     </div>
+
 </div>
+
+{{-- 애니메이션 스크립트 --}}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const elements = document.querySelectorAll('[data-animate]');
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const el = entry.target;
+                    const animation = el.dataset.animate;
+
+                    el.classList.add('animate__animated', animation);
+                    observer.unobserve(el);
+                }
+            });
+        }, {
+            threshold: 0.2 // 화면에 20% 보이면 실행
+        });
+
+        elements.forEach(el => observer.observe(el));
+    });
+</script>
 
 @endsection

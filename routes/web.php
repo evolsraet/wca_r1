@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,7 +51,15 @@ Route::prefix('v2')->group(function () {
     // v2 Routes
     Route::get('/', function () {
         // return view('v2.pages.home');
-        return view('v2.pages.home');
+
+        $user = Auth::user();
+        if ($user?->hasRole('user')) {
+            return view('v2.pages.user-main');
+        } elseif ($user?->hasRole('dealer')) {
+            return view('v2.pages.user-main');
+        } else {
+            return view('v2.pages.home');
+        }
     })->name('home');
 
     Route::get('/test', function () {
@@ -64,6 +73,25 @@ Route::prefix('v2')->group(function () {
     Route::get('/test/upload', function () {
         return view('v2.test.upload');
     });
+
+    Route::get('/user-main', function () {
+        return view('v2.pages.user-main');
+    });
+
+    // docs 라우트 / docs 폴더에 html 파일을 찾아서 보여줌
+    Route::get('/docs/{doc}', function ($doc) {
+        $filePath = resource_path("v2/docs/{$doc}.html");
+    
+        if (!file_exists($filePath)) {
+            abort(404, '문서를 찾을 수 없습니다.');
+        }
+
+        $html = file_get_contents($filePath);
+    
+        return view('v2.pages.docs', [
+            'html' => $html,
+        ]);
+    })->where('doc', '[A-Za-z0-9\-_]+')->name('docs.show');
 
     Route::post('login', [AuthenticatedSessionController::class, 'login']);
     Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
