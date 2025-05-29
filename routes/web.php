@@ -69,28 +69,20 @@ Route::prefix('v2')->group(function () {
         return view('v2.pages.user-main');
     });
 
-    Route::get('/docs/{type}', function ($type) {
-        $available = ['privacy', 'terms'];
+    // docs 라우트 / docs 폴더에 html 파일을 찾아서 보여줌
+    Route::get('/docs/{doc}', function ($doc) {
+        $filePath = resource_path("v2/docs/{$doc}.html");
     
-        if (!in_array($type, $available)) {
-            abort(404);
+        if (!file_exists($filePath)) {
+            abort(404, '문서를 찾을 수 없습니다.');
         }
-    
-        $title = $type === 'privacy' ? '개인정보 처리방침' : '이용약관';
-        $htmlPath = resource_path("v2/docs/{$type}.html");
-    
-        if (!file_exists($htmlPath)) {
-            abort(404);
-        }
-    
-        $html = file_get_contents($htmlPath);
+
+        $html = file_get_contents($filePath);
     
         return view('v2.pages.docs', [
-            'title' => $title,
             'html' => $html,
-            'type' => $type
         ]);
-    })->name('docs.show');
+    })->where('doc', '[A-Za-z0-9\-_]+')->name('docs.show');
 
     Route::post('login', [AuthenticatedSessionController::class, 'login']);
     Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
