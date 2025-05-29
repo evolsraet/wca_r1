@@ -1,6 +1,21 @@
+import { api } from './axios';
+
 export const fileUpload = (fieldName) => ({
     previewUrl: '',
     fileList: [],
+    existingFiles: [],
+
+    init() {
+        // 기존 파일 삭제 이벤트 리스너
+        this.$el.addEventListener('click', (e) => {
+            if (e.target.matches('[data-delete-file]') || e.target.closest('[data-delete-file]')) {
+                const button = e.target.matches('[data-delete-file]') ? e.target : e.target.closest('[data-delete-file]');
+                const fileUuid = button.dataset.fileUuid;
+                this.deleteExistingFile(fileUuid);
+            }
+        });
+    },
+
     handleFileSelect(event) {
         const files = Array.from(event.target.files);
         if (files.length === 0) return;
@@ -46,6 +61,7 @@ export const fileUpload = (fieldName) => ({
             Alpine.store('toastr').error('파일 처리 중 오류가 발생했습니다.');
         }
     },
+
     removeFile(index) {
         try {
             if (index === undefined) {
@@ -83,6 +99,24 @@ export const fileUpload = (fieldName) => ({
         } catch (error) {
             console.error('FileUpload - Error in removeFile:', error);
             Alpine.store('toastr').error('파일 제거 중 오류가 발생했습니다.');
+        }
+    },
+
+    async deleteExistingFile(fileUuid) {
+        if (confirm('정말로 이 파일을 삭제하시겠습니까?')) {
+            try {
+                await api.delete(`/api/media/${fileUuid}`);
+
+                // 파일 목록에서 제거
+                const fileElement = this.$el.querySelector(`[data-file-uuid="${fileUuid}"]`);
+                if (fileElement) {
+                    fileElement.remove();
+                }
+
+                Alpine.store('toastr').success('파일이 삭제되었습니다.');
+            } catch (error) {
+                Alpine.store('toastr').error('파일 삭제 중 오류가 발생했습니다.');
+            }
         }
     }
 });

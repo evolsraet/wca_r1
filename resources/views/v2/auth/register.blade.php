@@ -192,6 +192,13 @@
                                         name="file_user_sign"
                                         {{-- required --}}
                                         :errors="true"
+                                        :existingFiles="[
+                                            [
+                                                'uuid' => '2e94a56f-a40f-4fbf-a5c0-365769a30fb4',
+                                                'file_name' => '05.png',
+                                                'original_url' => 'http://localhost/media/1/05.png'
+                                            ]
+                                        ]"
                                     />
 
                                     <x-forms.file-upload

@@ -5,7 +5,8 @@
     'preview' => false,
     'previewUrl' => '',
     'previewSize' => '100px',
-    'errors' => null
+    'errors' => null,
+    'existingFiles' => []
 ])
 
 @php
@@ -81,6 +82,29 @@
                     </template>
                 </div>
             </template>
+        </div>
+    @endif
+
+    <!-- 기존 파일 목록 -->
+    @if(count($existingFiles) > 0)
+        <div class="mt-2">
+            <small class="text-muted mb-1 d-block">기존 파일</small>
+            @foreach($existingFiles as $file)
+                <div class="d-flex align-items-center justify-content-between bg-light p-2 rounded mb-1" data-file-uuid="{{ $file['uuid'] }}">
+                    <div class="d-flex align-items-center">
+                        <i class="bi bi-file-earmark me-2"></i>
+                        <a href="{{ $file['original_url'] }}" target="_blank" class="text-decoration-none text-truncate" style="max-width: 200px;">
+                            {{ $file['file_name'] }}
+                        </a>
+                    </div>
+                    <button type="button"
+                            class="btn btn-sm btn-outline-danger"
+                            data-delete-file
+                            data-file-uuid="{{ $file['uuid'] }}">
+                        <i class="bi bi-x-lg"></i>
+                    </button>
+                </div>
+            @endforeach
         </div>
     @endif
 </div>
