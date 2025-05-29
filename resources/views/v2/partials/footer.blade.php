@@ -1,5 +1,5 @@
 {{-- 푸터 스타일 --}}
-<footer class="site-footer py-5 mt-5">
+<footer class="site-footer py-5">
   <div class="container">
     <div class="row">
       <div class="col-md-6 mb-4">
@@ -13,9 +13,9 @@
       <div class="col-md-6 text-md-end">
         <p class="mb-1 fw-bold">{{ config('app.name') }}이 함께하면<br>내차판매 걱정없어요</p>
         <div class="mb-3">
-          <a href="#" class="footer-link">개인정보 처리방침</a>
+          <a href="{{ route('docs.privacy') }}" class="footer-link">개인정보 처리방침</a>
           <span class="px-2">|</span>
-          <a href="#" class="footer-link">이용약관</a>
+          <a href="{{ route('docs.terms') }}" class="footer-link">이용약관</a>
         </div>
         <p class="mb-1">Copyrights {{ config('app.name') }} All Rights Reserved</p>
         <p class="mb-2">Terms of Use / Privacy Policy</p>

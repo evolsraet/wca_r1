@@ -1,46 +1,32 @@
 @extends('v2.layouts.app')
-
-@section('title', 'Split Layout 대시보드')
-
+@section('title', '메인 페이지')
 @section('content')
 
-    <x-layouts.split
-        leftClass="col-lg-7"
-        rightClass="col-lg-5"
-        leftContainerClass=""
-        rightContainerClass=""
-        :initialRightPanelOpen="false">
+<div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="7000" data-bs-pause="false">
+  <div class="carousel-inner">
 
-        <x-slot:leftContent>
-            <button class="btn btn-primary">더 보기</button>
-            <p>이 부분은 좌측 패널의 내용입니다11. PC에서는 <code>leftClass</code> (예: col-lg-7)에 정의된 너비를 가집니다.</p>
-            <p>모바일에서는 이 영역이 주 컨텐츠로 표시됩니다.</p>
-            @for ($i = 1; $i <= 15; $i++)
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">좌측 아이템 {{ $i }}</h5>
-                        <p class="card-text">스크롤 테스트를 위한 더미 컨텐츠입니다. 좌측 패널의 내용이 길어질 경우 이 영역이 스크롤됩니다.</p>
-                    </div>
-                </div>
-            @endfor
-        </x-slot:leftContent>
+    {{-- 슬라이드 1 --}}
+    <div class="carousel-item active">
+      <div class="carousel-bg" style="background-image: url('{{ asset('images/main_banner02.png') }}');">
+      <x-carousel.carousel />
+      </div>
+    </div>
 
-        <x-slot:rightContent>
-            <p>이 부분은 우측 패널의 내용입니다.</p>
-            <p>PC에서는 <code>rightClass</code> (예: col-lg-5)에 정의된 너비로 항상 표시됩니다.</p>
-            <p>모바일에서는 하단의 "더 보기" 버튼을 통해 이 영역을 슬라이드 업/다운하여 토글할 수 있습니다.</p>
-            @for ($i = 1; $i <= 15; $i++)
-                <div class="card mb-3">
-                    <div class="card-body">
-                        <h5 class="card-title">우측 아이템 {{ $i }}</h5>
-                        <p class="card-text">스크롤 테스트를 위한 더미 컨텐츠입니다. 우측 패널의 내용이 길어질 경우 이 영역이 스크롤됩니다.</p>
-                    </div>
-                </div>
-            @endfor
+    {{-- 슬라이드 2 --}}
+    <div class="carousel-item active">
+      <div class="carousel-bg" style="background-image: url('{{ asset('images/main_p2.png') }}');">
+      <x-carousel.carousel />
+      </div>
+    </div>
 
-            <button class="btn btn-primary">더 보기</button>
+    {{-- 슬라이드 3 --}}
+    <div class="carousel-item">
+      <div class="carousel-bg" style="background-image: url('{{ asset('images/main_p3.png') }}');">
+      <x-carousel.carousel />
+      </div>
+    </div>
 
-        </x-slot:rightContent>
+  </div>
+</div>
 
-    </x-layouts.split>
 @endsection

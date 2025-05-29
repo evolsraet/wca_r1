@@ -65,6 +65,18 @@ Route::prefix('v2')->group(function () {
         return view('v2.test.upload');
     });
 
+    Route::get('/user-main', function () {
+        return view('v2.pages.user-main');
+    });
+
+    Route::get('/docs/privacy', function () {
+        return view('v2.pages.privacy');
+    })->name('docs.privacy');
+
+    Route::get('/docs/terms', function () {
+        return view('v2.pages.terms');
+    })->name('docs.terms');
+
     Route::post('login', [AuthenticatedSessionController::class, 'login']);
     Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 

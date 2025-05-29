@@ -1,11 +1,25 @@
+// 컨테이너 상하단 여백
 .container{
     padding: 10px 0;
 }
+
+// 토글버튼 포커스 제거
+.navbar-toggler {
+    outline: none !important;
+    box-shadow: none !important;
+    border:0px solid transparent;
+}
+
+.toggle-nav-img{
+    width: 45px;
+    height: 45px;
+}
+
 // 헤더 네비게이션 스타일
 .navbar {
     background-color: $white !important;
     font-family: $font-family-sans-serif;
-    border-bottom: 1px solid #e9ecef;
+    border-bottom: 1px solid $gray-200;
     padding: 0.7rem 0;
 
     .navbar-brand {
@@ -29,7 +43,7 @@
 
         &.active,
         &:hover {
-            color: $danger;
+            color: map-get($theme-colors, "primary");
         }
     }
 
@@ -45,7 +59,7 @@
             bottom: 0;
             width: 100%;
             height: 2px;
-            background-color: $danger;
+            background-color: map-get($theme-colors, "primary");
             transform: scaleY(0);
             transform-origin: bottom;
             transition: transform 0.3s ease;
@@ -70,7 +84,7 @@
 }
 
 .login-rounded-btn {
-    background-color: #f8f9fa;
+    background-color: $gray-100;
     border: none;
     border-radius: 1rem;
     padding: 0.5rem 1rem;
@@ -81,7 +95,7 @@
     text-decoration: none;
 
     &:hover {
-        background-color: darken(#f8f9fa, 3%);
+        background-color: darken($gray-100, 3%);
         color: $secondary;
     }
 
@@ -124,7 +138,7 @@
 
 // 딜러 전용 헤더
 .dealer-header {
-    background-color: $danger !important;
+    background-color: map-get($theme-colors, "primary") !important;
     color: $white;
 
     .navbar-brand {
@@ -147,7 +161,7 @@
     }
 
     .user-dropdown-btn {
-        background-color: darken($danger, 5%);
+        background-color: darken(map-get($theme-colors, "primary"), 5%);
         color: $white;
         border-radius: 2rem;
         padding: 0.4rem 1rem;
@@ -158,10 +172,10 @@
 
 // 푸터 스타일
 .site-footer {
-    background-color: #f7f8fb;
+    background-color: $gray-100;
     font-size: 0.9rem;
-    color: #6c757d;
-    border-top: 1px solid #dee2e6;
+    color: $gray-600;
+    border-top: 1px solid $gray-200;
     padding: 0 10px;
 
     .site-footer p {
@@ -170,12 +184,12 @@
     }
 
     .footer-link {
-        color: #6c757d;
+        color: $gray-500;
         text-decoration: none;
         font-weight: 500;
 
         &:hover {
-            color: #da3138;
+            color: map-get($theme-colors, "primary");
             text-decoration: underline;
         }
     }
@@ -183,7 +197,7 @@
     .fw-bold {
         font-weight: 700;
         font-size: 1.2rem;
-        color: #1d1d1f;
+        color: $black;
     }
 
     .footer-logo {
@@ -197,21 +211,195 @@
 }
 
 
+// 모바일 메뉴 영역 스타일
+.offcanvas {
+    width: 310px !important;
+
+    .offcanvas-content-wrapper {
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        background: $white;
+        color: $black;
+
+        .offcanvas-top {
+            padding: 16px 16px 0;
+        }
+          
+        .offcanvas-bottom {
+            margin-top: auto;
+            padding: 20px 16px;
+        }
+          
+        .offcanvas-menu {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px;
+          
+            li {
+              margin-bottom: 20px;
+            }
+          
+            .menu-link {
+              display: flex;
+              align-items: center;
+              gap: 12px;
+              text-decoration: none;
+              color: inherit;
+            }
+          
+            .menu-icon {
+              width: 48px;
+              height: 48px;
+              border-radius: 10px;
+              background: $gray-100;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+          
+              img {
+                width: 24px;
+                height: 24px;
+                object-fit: contain;
+              }
+            }
+          
+            .menu-text {
+              display: flex;
+              flex-direction: column;
+              justify-content: center;
+          
+              strong {
+                font-size: 16px;
+                font-weight: 600;
+                color: $black;
+                margin-bottom: 2px;
+              }
+          
+              small {
+                font-size: 14px;
+                color: $gray-500;
+              }
+            }
+        }
+          
+        .offcanvas-footer-logo {
+            text-align: center;
+            
+            img {
+                width: 80px;
+                opacity: 0.3;
+            }
+        }
+
+        .offcanvas-close {
+            outline: none !important;
+            box-shadow: none !important;
+            font-size: 1.5rem;
+        }
+    
+        .login-card {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: $gray-100;
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            background-image: url('/public/images/login-object.png');
+            background-size: 155px;
+            background-repeat: no-repeat;
+            background-position: right;        
+        
+            .login-card-text {
+                flex: 1;
+            }
+              
+            .login-subtitle {
+                margin: 0;
+                color: map-get($theme-colors, "primary");
+                font-size: 14px;
+            }
+            
+            .login-link {
+                display: inline-block;
+                margin-top: 4px;
+                font-size: 18px;
+                font-weight: 700;
+                color: map-get($theme-colors, "primary");
+                text-decoration: none;
+            }
+            
+            .login-card-image img {
+                width: 120px;
+                height: auto;
+            }
+            
+        }
+        
+        .sell-highlight-card {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            background: map-get($theme-colors, "primary");
+            border-radius: 12px;
+            padding: 10px 20px;
+            margin-bottom: 20px;
+            color: $white;
+            position: relative;
+            overflow: visible;
+          
+            .sell-highlight-text {
+              flex: 1;
+              z-index: 1;
+            }
+          
+            .headline {
+              font-size: 16px;
+              font-weight: 500;
+              margin: 0;
+            }
+          
+            .subline {
+              font-size: 20px;
+              font-weight: 700;
+              margin: 0;
+            }
+          
+            .sell-highlight-image {
+              position: absolute;
+              right: 10px;
+              top: -42px; // 위로 튀어나오게
+              transform: scale(1.1);
+              z-index: 2;
+          
+              img {
+                width: 150px;
+                height: auto;
+              }
+            }
+        }
+
+    }
+
+}
+
+  
+
 // 서비스 소개 페이지 전용 스타일
 .intro {
     text-align: center;
-    padding-top: 3rem;
 
     .title {
         font-size: 1.75rem;
         font-weight: 700;
-        color: #1d1d1f;
+        color: $black;
     }
 
     .small-text {
         font-size: 1rem;
         font-weight: 500;
-        color: #6c757d;
+        color: $gray-700;
     }
 
     /* 채팅 이미지 영역 */
@@ -223,7 +411,7 @@
 
     .chat-img {
         max-width: 100%;
-        width: 400px;
+        width: 500px;
         height: auto;
     }
 
@@ -237,8 +425,8 @@
     }
 
     .feature-item {
-        background-color: #fff;
-        border: 1px solid #e6e6e6;
+        background-color: $white;
+        border: 1px solid $gray-200;
         border-radius: 1rem;
         width: 260px;
         padding: 2rem 1rem;
@@ -247,7 +435,7 @@
 
         p {
         font-size: 0.95rem;
-        color: #333;
+        color: $gray-800;
         margin-top: 1rem;
         line-height: 1.5;
         }
@@ -257,10 +445,26 @@
         height: 60px;
     }
 
+    .section01 {
+        background-color: $white;
+        padding-top: 3rem;
+        padding-bottom: 5rem;
+    }
+
+    .section02 {
+        padding-top: 4rem;
+        padding-bottom: 5rem;
+        background-color: $gray-100;
+    }
+
     /* 배경 + 문구 */
     .section03 {
-        margin-top: 5rem;
         position: relative;
+        background-image: url('/public/images/intro-06.png');
+        background-size: cover;
+        background-position: bottom;
+        background-repeat: no-repeat;
+        height: 250px;
 
         .bk-section {
         width: 100%;
@@ -273,7 +477,7 @@
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%);
-        color: #111;
+        color: $black;
 
         p.title {
             font-size: 1.5rem;
@@ -283,12 +487,11 @@
         p {
             font-size: 1rem;
             margin-top: 0.5rem;
-            color: #333;
+            color: $gray-800;
         }
         }
     }
 
-    /* 제휴 영역 */
     .section04 {
         margin-top: 6rem;
         text-align: center;
@@ -301,10 +504,219 @@
 
     .text-muted02 {
         font-size: 0.9rem;
-        color: #666;
+        color: $gray-500;
         justify-content: center;
         align-items: center;
         gap: 0.5rem;
         flex-wrap: wrap;
+    }
+}
+
+
+
+
+
+
+#mainCarousel {
+    .carousel-inner {
+      height: 100vh;
+    }
+  
+    .carousel-item {
+      position: relative;
+  
+      .carousel-bg {
+        height: 100vh;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; // PC에서는 왼쪽 정렬
+        padding-left: 8%;
+        padding-right: 8%;
+      }
+  
+      .carousel-caption-box {
+        color: $white;
+        text-align: left;
+        padding: 20px;
+        border-radius: 12px;
+        max-width: 620px;
+  
+        .carousel-title {
+          font-size: 2.4rem;
+          font-weight: 500;
+          line-height: 1.4;
+          strong {
+            font-weight: 900;
+          }
+        }
+  
+        .carousel-subtitle {
+          font-size: 1.1rem;
+          margin-top: 10px;
+          margin-bottom: 24px;
+          font-weight: 300;
+        }
+  
+        .carousel-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 12px 60px;
+          border: 1px solid $white;
+          color: $white;
+          border-radius: 30px;
+          font-weight: 600;
+          text-decoration: none;
+          transition: all 0.3s ease;
+          font-size: 16px;
+  
+          i {
+            font-size: 18px;
+          }
+  
+          &:hover {
+            background-color: $white;
+            color: $black;
+          }
+
+          .carousel-btn-icon {
+            width: 20px;
+          }
+        }
+
+        .dealer-join-box {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 20px;
+            color: $white;
+          
+            .dealer-label {
+              font-weight: 400;
+            }
+          
+            .dealer-link {
+              font-weight: 700;
+              color: $white;
+              text-decoration: none;
+              border-bottom: 2px solid $white;
+              padding-bottom: 2px;
+          
+              &:hover {
+                opacity: 0.8;
+                border-color: $gray-300;
+              }
+            }
+        }
+
+        .carousel-logo {
+            width: 90px;
+            height: auto;
+            margin-top: 20px;
+        }
+      }
+    }
+  
+
+    @media (max-width: 768px) {
+      .carousel-inner {
+        height: auto;
+      }
+  
+      .carousel-bg {
+        height: auto;
+        padding: 60px 20px;
+        justify-content: center !important; // 모바일 중앙 정렬
+      }
+  
+      .carousel-caption-box {
+        text-align: center;
+        max-width: 100%;
+        padding: 24px;
+  
+        .carousel-title {
+          font-size: 1.6rem;
+        }
+  
+        .carousel-subtitle {
+          font-size: 1rem;
+          margin-top: 8px;
+          margin-bottom: 20px;
+        }
+  
+        .carousel-btn {
+          font-size: 15px;
+          padding: 10px 20px;
+        }
+      }
+    }
+}
+
+// 이용약관 & 개인정보 처리방침 스타일 
+
+.docs-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 40px 24px;
+    font-family: 'Spoqa Han Sans Neo', 'Noto Sans KR', sans-serif;
+    color: $black;
+  
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+    }
+  
+    h2, h3, h4, h5 {
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: $black;
+    }
+  
+    h5 {
+      font-size: 18px;
+      border-left: 4px solid map-get($theme-colors, "primary");
+      padding-left: 10px;
+    }
+  
+    p {
+      line-height: 1.8;
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+  
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 20px;
+    }
+  
+    li {
+      line-height: 1.6;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+  
+    strong {
+      color: map-get($theme-colors, "primary");
+      font-weight: bold;
+    }
+  
+    .terms-content {
+      font-size: 15px;
+      line-height: 1.8;
+    }
+  
+    @media (max-width: 768px) {
+      padding: 24px 16px;
+      h1 {
+        font-size: 24px;
+      }
+      h5 {
+        font-size: 16px;
+      }
     }
 }
