@@ -37,7 +37,11 @@ export default function() {
             file_user_sign_name: '',
             file_user_cert: null,
             file_user_cert_name: '',
-
+            isDealerApply1: false,
+            isDealerApply2: false,
+            isDealerApply3: false,
+            isDealerApply4: false,
+            isPrivacyCheck: false,
         },
         errors: {},
         loading: false,

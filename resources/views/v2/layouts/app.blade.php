@@ -20,9 +20,9 @@
     @include('v2.partials.header')
 
     <main>
-        <div class="container">
+        {{-- <div class="container"> --}}
             @yield('content')
-        </div>
+        {{-- </div> --}}
     </main>
 
     @include('v2.partials.footer')

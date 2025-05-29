@@ -222,37 +222,59 @@
                                         :errors="true"
                                     />
 
+                                    @php
+                                        $privacy = [
+                                            'title' => '온라인자동차경매장 규약',
+                                            'content' => file_get_contents(resource_path('v2/docs/privacy.html')),
+                                        ];
+                                    @endphp
                                     <!-- 약관 동의 -->
                                     <x-forms.checkbox
-                                        name="isDealerApplyCheck"
-                                        label="<a href='#' @click.prevent='openModal(\"privacy\")'>온라인자동차경매장 규약</a>에 동의합니다."
+                                        name="dealer.isCheckDealer1"
+                                        label="<a href='#' @click.prevent='Alpine.store(`modal`).showHtml(`<h2>개인정보 수집 및 이용 동의</h2>
+
+<p>당사는 회원가입, 상담, 서비스 신청 등을 위해 아래와 같은 개인정보를 수집하고 있습니다.</p>
+
+<h3>1. 수집하는 개인정보 항목</h3>
+<ul>
+    <li>필수항목: 이름, 주민등록번호(법인등록번호), 로그인ID, 비밀번호, 자택 주소, 휴대전화번호, 이메일, 서비스 이용기록, 접속 로그, 쿠키, 접속 IP 정보</li>
+    <li>선택항목: 자동차관리사업등록번호, 회사명, 부서, 직책, 팩스번호</li>
+</ul>
+`, {title: `{{ $privacy['title'] }}`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})'>{{ $privacy['title'] }}</a>에 동의합니다."
                                         {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.checkbox
-                                        name="isDealerApplyCheck1"
-                                        label="<a href='#' @click.prevent='openModal(\"privacy\")'>주민등록번호(법인등록번호) 수집 동의</a>에 동의합니다."
+                                        name="dealer.isCheckDealer2"
+                                        label="<a href='#' @click.prevent='openModal(`privacy`)'>주민등록번호(법인등록번호) 수집 동의</a>에 동의합니다."
                                         {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.checkbox
-                                        name="isDealerApplyCheck2"
-                                        label="<a href='#' @click.prevent='openModal(\"privacy\")'>자동차관리사업등록번호 수집 동의</a>에 동의합니다."
+                                        name="dealer.isCheckDealer3"
+                                        label="<a href='#' @click.prevent='openModal(`privacy`)'>자동차관리사업등록번호 수집 동의</a>에 동의합니다."
                                         {{-- required --}}
                                         :errors="true"
                                     />
 
                                     <x-forms.checkbox
-                                        name="isDealerApplyCheck3"
-                                        label="<a href='#' @click.prevent='openModal(\"privacy\")'>사업자정보 수집 동의</a>에 동의합니다."
+                                        name="dealer.isCheckDealer4"
+                                        label="<a href='#' @click.prevent='openModal(`privacy`)'>사업자정보 수집 동의</a>에 동의합니다."
                                         {{-- required --}}
                                         :errors="true"
                                     />
                                 </div>
                             </template>
                         </div>
+
+                        <x-forms.checkbox
+                            name="user.isCheckPrivacy"
+                            label="<a href='#' @click.prevent='openModal(`privacy`)'>개인정보처리방침</a>에 동의합니다."
+                            {{-- required --}}
+                            :errors="true"
+                        />
 
                         <div class="d-grid">
                             <button type="submit" class="btn btn-primary" :disabled="loading">

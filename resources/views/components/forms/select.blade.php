@@ -9,7 +9,12 @@
 
 <div class="mb-3">
     @if($label)
-        <label for="{{ $name }}" class="form-label">{{ $label }}</label>
+        <label class="form-label">
+            @if($required)
+                <span class="text-danger">*</span>
+            @endif
+            {{ $label }}
+        </label>
     @endif
 
     <select

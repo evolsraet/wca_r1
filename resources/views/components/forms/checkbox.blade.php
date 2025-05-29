@@ -21,7 +21,7 @@
         <label class="form-check-label" for="{{ $name }}">{!! $label !!}</label>
 
         @if($errors)
-            <div class="invalid-feedback" x-text="errors?.{{ str_replace('.', '?.', $name) }}?.[0]"></div>
+            {{-- <div class="invalid-feedback" x-text="errors?.{{ str_replace('.', '?.', $name) }}?.[0]"></div> --}}
         @endif
     </div>
 </div>

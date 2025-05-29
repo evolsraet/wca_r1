@@ -66,7 +66,6 @@ Route::prefix('v2')->group(function () {
     });
 
     Route::post('login', [AuthenticatedSessionController::class, 'login']);
-    Route::post('register', [AuthenticatedSessionController::class, 'register']);
     Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
     // 인증 관련 라우트

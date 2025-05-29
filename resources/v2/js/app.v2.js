@@ -1,41 +1,29 @@
 import Alpine from 'alpinejs';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { api, handleFileUpload } from './util/axios.js';
-import Swal from 'sweetalert2';
-import toastr from 'toastr';
-import 'toastr/build/toastr.min.css';
-
-// toastr 설정
-toastr.options = {
-    closeButton: true,
-    progressBar: true,
-    positionClass: 'toast-top-right',
-    timeOut: 3000
-};
-
-// 파일 업로드 전역 함수 등록
-Alpine.data('handleFileUpload', () => ({
-    handleFileUpload(event) {
-        handleFileUpload(event, this);
-    }
-}));
-
-// axios 전역 설정
-Alpine.store('api', api);
 
 // sweetalert 전역 설정
-Alpine.store('swal', Swal);
+    import Swal from 'sweetalert2';
+    Alpine.store('swal', Swal);
 
-// toastr 전역 설정
-Alpine.store('toastr', toastr);
+// toastr 설정
+    import toastr from 'toastr';
+    import 'toastr/build/toastr.min.css';
+    toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        positionClass: 'toast-top-right',
+        timeOut: 3000
+    };
+    Alpine.store('toastr', toastr);
 
-// 컴포넌트 feature 자동 등록 (하위 폴더 포함)
-const components = import.meta.glob('./feature/**/*.js', { eager: true });
-Object.entries(components).forEach(([path, module]) => {
-    // 경로에서 파일명만 추출 (확장자 제외)
-    const name = path.split('/').pop().replace('.js', '');
-    Alpine.data(name, module.default);
-});
+// 파일 업로드 전역 함수 등록
+    import { api, handleFileUpload } from './util/axios.js';
+    Alpine.store('api', api);
+    Alpine.data('handleFileUpload', () => ({
+        handleFileUpload(event) {
+            handleFileUpload(event, this);
+        }
+    }));
 
 // Alpine.js 전역 스토어에 Daum 주소 검색 함수 추가
 Alpine.store('address', {
@@ -85,6 +73,22 @@ Alpine.store('address', {
         }
     }
 });
+
+// 컴포넌트 feature 자동 등록 (하위 폴더 포함)
+const components = import.meta.glob('./feature/**/*.js', { eager: true });
+Object.entries(components).forEach(([path, module]) => {
+    // 경로에서 파일명만 추출 (확장자 제외)
+    const name = path.split('/').pop().replace('.js', '');
+    Alpine.data(name, module.default);
+});
+
+import { modal } from './util/modal.js';
+Alpine.store('modal', modal);
+
+// document.addEventListener('alpine:init', () => {
+//     Alpine.store('modal', modal);
+//     Alpine.start();
+// });
 
 window.Alpine = Alpine;
 Alpine.start();

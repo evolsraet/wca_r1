@@ -33,16 +33,23 @@ const instance = axios.create({
         // FormData인 경우 Content-Type을 multipart/form-data로 설정
         if (data instanceof FormData) {
             console.log('FormData detected, setting multipart/form-data');
-            // FormData 내용 로깅
-            // for (let pair of data.entries()) {
-            //     console.log('FormData entry:', pair[0], pair[1] instanceof File ? pair[1].name : pair[1]);
-            // }
             headers['Content-Type'] = 'multipart/form-data';
             return data;
         }
-        // 일반 데이터인 경우 JSON으로 변환
-        console.log('Converting data to JSON');
-        return JSON.stringify(data);
+
+        // 이미 문자열인 경우 그대로 반환
+        if (typeof data === 'string') {
+            return data;
+        }
+
+        // 일반 객체인 경우 JSON으로 변환
+        if (typeof data === 'object' && data !== null) {
+            console.log('Converting data to JSON');
+            headers['Content-Type'] = 'application/json';
+            return JSON.stringify(data);
+        }
+
+        return data;
     }]
 });
 

@@ -140,39 +140,6 @@ class AuthenticatedSessionController extends Controller
         return redirect('/');
     }
 
-    /**
-     * Create User
-     * @param RegisterRequest $request
-     * @return JsonResponse
-     */
-    public function register(RegisterRequest $request)
-    {
-        // dd('register');
-        $user = User::where('phone', $request['phone'])->first();
-
-        if ($user) {
-            return response(['error' => 1, 'message' => 'user already exists'], 409);
-        }
-
-        $user = User::create([
-            'phone' => $request['phone'],
-            'email' => $request['email'],
-            'password' => Hash::make($request['password']),
-            'name' => $request['name'],
-        ]);
-
-        $role = $request->role_id
-            ? Role::find($request->role_id)
-            : Role::where('name', 'user')->first();
-
-        $user->assignRole($role);
-
-        return new UserResource($user);
-
-        return response()->api($user, '회원등록 되었습니다.');
-        return $this->successResponse($user, 'Registration Successfully');
-    }
-
     public function destroy(Request $request)
     {
         Auth::guard('web')->logout();

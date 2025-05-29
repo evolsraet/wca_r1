@@ -86,18 +86,20 @@ class UserService
                     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                     'phone' => ['required', 'string', 'unique:users'],
                     'password' => ['required', 'string', 'min:8', 'confirmed'],
+                    'isCheckPrivacy' => 'required',
                 ]);
             }else{
                 $validator = Validator::make($requestData, [
                     'name' => 'required|max:255',
                     'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
                     'phone' => ['required', 'string', 'unique:users'],
+                    'isCheckPrivacy' => 'required',
                 ]);
             }
 
             // 유효성 검사 실패 시
             if ($validator->fails()) {
-                return response()->api(null, '필수값이 누락되었습니다.', 'fail', 422, ['errors' => ['user' => $validator->errors()]]);
+                return response()->api(null, '입력값을 확인하세요.', 'fail', 422, ['errors' => ['user' => $validator->errors()]]);
             }
 
             $data = $this->beforeData($data);
@@ -127,6 +129,7 @@ class UserService
             // dd($data);
 
             // dd([gettype($data), $data, $request->file()]);
+            unset($data['isCheckPrivacy']);
             $item = User::create($data);
 
             // 회원가입 알림 발송
@@ -143,34 +146,72 @@ class UserService
 
                 $dealerData['user_id'] = $item->id;
 
+
+                $requiredFiles = [
+                    'file_user_photo',
+                    'file_user_biz',
+                    'file_user_cert',
+                    'file_user_sign',
+                ];
+
+                $requiredFileNames = (
+                        request()->headers->get('referer')
+                        && str_contains(request()->headers->get('referer'), 'v2')
+                        ? [
+                            'isCheckDealer1' => 'required',
+                            'isCheckDealer2' => 'required',
+                            'isCheckDealer3' => 'required',
+                            'isCheckDealer4' => 'required',
+                        ]
+                        : [
+                            'file_user_photo_name' => 'required',
+                            'file_user_biz_name' => 'required',
+                            'file_user_cert_name' => 'required',
+                            'file_user_sign_name' => 'required',
+                        ]
+                    );
+
                 $validator = Validator::make($dealerData, [
                     'name' => 'required',
                     'phone' => 'required',
-                    'birthday' => 'required',
+                    'birthday' => 'required|digits:6',
                     'company' => 'required',
                     'company_duty' => 'required',
                     'company_post' => 'required',
                     'company_addr1' => 'required',
                     'company_addr2' => 'required',
                     'introduce' => 'required',
-                    'file_user_photo_name' => 'required',
-                    'file_user_biz_name' => 'required',
-                    'file_user_cert_name' => 'required',
-                    'file_user_sign_name' => 'required',
                     'car_management_business_registration_number' => 'required',
                     'business_registration_number' => 'required',
                     'corporation_registration_number' => 'required',
+                    ...$requiredFileNames,
                 ]);
+
                 // 유효성 검사 실패 시
                 if ($validator->fails()) {
-                    return response()->api(null, '필수값이 누락되었습니다.', 'fail', 422, ['errors' => ['dealer' => $validator->errors()]]);
+                    return response()->api(null, '입력값을 확인하세요.', 'fail', 422, ['errors' => ['dealer' => $validator->errors()]]);
+                }
+
+                $remindFiles = [];
+                foreach($requiredFiles as $key){
+                    if( !$request->hasFile($key) ){
+                        $remindFiles[$key][] = '파일을 첨부하세요';
+                    }
+                }
+                if( count($remindFiles) > 0 ){
+                    return response()->api(null, '파일을 첨부하세요.', 'fail', 422, ['errors' => $remindFiles]);
                 }
 
                 unset($dealerData['file_user_photo_name']);
                 unset($dealerData['file_user_biz_name']);
                 unset($dealerData['file_user_cert_name']);
                 unset($dealerData['file_user_sign_name']);
+                unset($dealerData['isCheckDealer1']);
+                unset($dealerData['isCheckDealer2']);
+                unset($dealerData['isCheckDealer3']);
+                unset($dealerData['isCheckDealer4']);
 
+                $dealerData['biz_check'] = 0;
                 $dealer = $item->dealer()->create($dealerData);
 
                 // 회원가입 알림 발송
@@ -351,7 +392,7 @@ class UserService
                     ]);
                     // 유효성 검사 실패 시
                     if ($validator->fails()) {
-                        return response()->api(null, '필수값이 누락되었습니다.', 'fail', 422, ['errors' => $validator->errors()]);
+                        return response()->api(null, '입력값을 확인하세요.', 'fail', 422, ['errors' => $validator->errors()]);
                     }
 
                     $item->dealer()->create($data['dealer']);
