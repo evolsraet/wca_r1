@@ -813,12 +813,12 @@
     .step-circle {
       width: 120px;
       height: 120px;
-      border: 1px solid #dee2e6;
+      border: 1px solid $gray-200;
       border-radius: 50%;
       display: flex;
       justify-content: center;
       align-items: center;
-      background-color: #fff;
+      background-color: $white;
   
       img {
         width: 50px;
@@ -836,6 +836,12 @@
       font-size: 0.75rem;
       padding: 0.4em 0.8em;
       border-radius: 0.5rem;
+    }
+
+    .fw-semibold {
+      font-weight: 500;
+      background-color: $gray-200;
+      color: $black;
     }
   
     .fw-bold {
