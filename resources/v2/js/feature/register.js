@@ -111,7 +111,8 @@ export default function() {
                         'file_user_photo',
                         'file_user_biz',
                         'file_user_sign',
-                        'file_user_cert[]'
+                        'file_user_cert[]',
+                        'file_user_cert'
                     ];
 
                     fileFields.forEach(fieldName => {
