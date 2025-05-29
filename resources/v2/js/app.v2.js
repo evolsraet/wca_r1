@@ -86,16 +86,16 @@ Alpine.store('modal', modal);
 // });
 
 // 파일 업로드 컴포넌트 등록
-Alpine.data('fileUpload', (fieldName, multiple = false) => ({
+Alpine.data('fileUpload', (fieldName) => ({
     previewUrl: '',
     fileList: [],
-    form: null,
     handleFileSelect(event) {
         const files = Array.from(event.target.files);
         if (files.length === 0) return;
 
         try {
-            if (multiple) {
+            const isMultiple = fieldName.endsWith('[]');
+            if (isMultiple) {
                 // 멀티플 파일 처리
                 files.forEach(file => {
                     this.fileList.push({
@@ -111,19 +111,6 @@ Alpine.data('fileUpload', (fieldName, multiple = false) => ({
                         fileName: file.name,
                         previewUrl: file.type.startsWith('image/') ? URL.createObjectURL(file) : ''
                     });
-
-                    // 폼 데이터 직접 업데이트
-                    if (this.form) {
-                        const baseFieldName = fieldName.slice(0, -2);
-                        if (!this.form[baseFieldName]) {
-                            this.form[baseFieldName] = [];
-                            this.form[`${baseFieldName}_name`] = [];
-                            this.form[`${baseFieldName}_url`] = [];
-                        }
-                        this.form[baseFieldName].push(file);
-                        this.form[`${baseFieldName}_name`].push(file.name);
-                        this.form[`${baseFieldName}_url`].push(file.type.startsWith('image/') ? URL.createObjectURL(file) : '');
-                    }
                 });
             } else {
                 // 단일 파일 처리
@@ -141,13 +128,6 @@ Alpine.data('fileUpload', (fieldName, multiple = false) => ({
                     fileName: file.name,
                     previewUrl: file.type.startsWith('image/') ? URL.createObjectURL(file) : ''
                 });
-
-                // 폼 데이터 직접 업데이트
-                if (this.form) {
-                    this.form[fieldName] = file;
-                    this.form[`${fieldName}_name`] = file.name;
-                    this.form[`${fieldName}_url`] = file.type.startsWith('image/') ? URL.createObjectURL(file) : '';
-                }
             }
         } catch (error) {
             console.error('FileUpload - Error:', error);
@@ -161,13 +141,6 @@ Alpine.data('fileUpload', (fieldName, multiple = false) => ({
                 const removedFile = this.fileList[0];
                 this.fileList = [];
 
-                // 폼 데이터 직접 업데이트
-                if (this.form) {
-                    this.form[fieldName] = null;
-                    this.form[`${fieldName}_name`] = '';
-                    this.form[`${fieldName}_url`] = '';
-                }
-
                 // 파일 제거 이벤트 발생
                 if (removedFile) {
                     this.$dispatch('file-removed', {
@@ -179,21 +152,6 @@ Alpine.data('fileUpload', (fieldName, multiple = false) => ({
                 // 특정 파일 제거
                 const removedFile = this.fileList[index];
                 this.fileList.splice(index, 1);
-
-                // 폼 데이터 직접 업데이트
-                if (this.form) {
-                    const baseFieldName = fieldName.slice(0, -2);
-                    if (Array.isArray(this.form[baseFieldName])) {
-                        this.form[baseFieldName].splice(index, 1);
-                        this.form[`${baseFieldName}_name`].splice(index, 1);
-                        this.form[`${baseFieldName}_url`].splice(index, 1);
-                    } else {
-                        // 단일 파일인 경우
-                        this.form[fieldName] = null;
-                        this.form[`${fieldName}_name`] = '';
-                        this.form[`${fieldName}_url`] = '';
-                    }
-                }
 
                 // 파일 제거 이벤트 발생
                 if (removedFile) {

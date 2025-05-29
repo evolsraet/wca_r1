@@ -32,7 +32,7 @@ export default function() {
             file_user_photo: null,
             file_user_biz: null,
             file_user_sign: null,
-            file_user_cert: null,
+            file_user_cert: [],
             isDealerApply1: false,
             isDealerApply2: false,
             isDealerApply3: false,
@@ -54,6 +54,37 @@ export default function() {
                 this.form.email = emailParam;
                 this.form.name = nameParam;
             }
+
+            // 파일 선택 이벤트 리스너 등록
+            this.$el.addEventListener('file-selected', (event) => {
+                const { fieldName, file } = event.detail;
+                if (fieldName.endsWith('[]')) {
+                    // 멀티플 파일 처리
+                    const baseFieldName = fieldName.slice(0, -2);
+                    if (!this.form[baseFieldName]) {
+                        this.form[baseFieldName] = [];
+                    }
+                    this.form[baseFieldName].push(file);
+                } else {
+                    // 단일 파일 처리
+                    this.form[fieldName] = file;
+                }
+            });
+
+            // 파일 제거 이벤트 리스너 등록
+            this.$el.addEventListener('file-removed', (event) => {
+                const { fieldName, index } = event.detail;
+                if (fieldName.endsWith('[]')) {
+                    // 멀티플 파일 제거
+                    const baseFieldName = fieldName.slice(0, -2);
+                    if (index !== undefined && this.form[baseFieldName]) {
+                        this.form[baseFieldName].splice(index, 1);
+                    }
+                } else {
+                    // 단일 파일 제거
+                    this.form[fieldName] = null;
+                }
+            });
         },
 
         async submit() {
@@ -80,22 +111,27 @@ export default function() {
                         'file_user_photo',
                         'file_user_biz',
                         'file_user_sign',
-                        'file_user_cert'
+                        'file_user_cert[]'
                     ];
 
                     fileFields.forEach(fieldName => {
-                        const files = this.form[fieldName];
-
-                        if (Array.isArray(files)) {
+                        if (fieldName.endsWith('[]')) {
                             // 멀티플 파일 처리
-                            files.forEach((file, index) => {
-                                if (file instanceof File) {
-                                    formData.append(`${fieldName}[]`, file);
-                                }
-                            });
-                        } else if (files instanceof File) {
+                            const baseFieldName = fieldName.slice(0, -2);
+                            const files = this.form[baseFieldName];
+                            if (Array.isArray(files)) {
+                                files.forEach(file => {
+                                    if (file instanceof File) {
+                                        formData.append(fieldName, file);
+                                    }
+                                });
+                            }
+                        } else {
                             // 단일 파일 처리
-                            formData.append(fieldName, files);
+                            const file = this.form[fieldName];
+                            if (file instanceof File) {
+                                formData.append(fieldName, file);
+                            }
                         }
                     });
                 }

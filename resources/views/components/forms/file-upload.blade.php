@@ -5,24 +5,16 @@
     'preview' => false,
     'previewUrl' => '',
     'previewSize' => '100px',
-    'errors' => null,
-    'multiple' => false
+    'errors' => null
 ])
 
 @php
-    $inputName = $multiple ? $name . '[]' : $name;
+    $isMultiple = str_ends_with($name, '[]');
+    $inputName = $name;
 @endphp
 
 <div class="mb-3"
-    x-data="fileUpload('{{ $inputName }}', {{ $multiple ? 'true' : 'false' }})"
-    x-init="
-        $nextTick(() => {
-            const parent = $el.closest('form');
-            if (parent && parent._x_dataStack && parent._x_dataStack[0]) {
-                form = parent._x_dataStack[0].form;
-            }
-        })
-    "
+    x-data="fileUpload('{{ $inputName }}')"
 >
     @if($label)
         <label class="form-label">{{ $label }}</label>
@@ -47,7 +39,7 @@
                     name="{{ $inputName }}"
                     @change="handleFileSelect"
                     accept="{{ $accept }}"
-                    :multiple="{{ $multiple ? 'true' : 'false' }}"
+                    :multiple="{{ $isMultiple ? 'true' : 'false' }}"
                     :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
                     {{ $attributes }}
                 >
@@ -64,7 +56,7 @@
                 name="{{ $inputName }}"
                 @change="handleFileSelect"
                 accept="{{ $accept }}"
-                :multiple="{{ $multiple ? 'true' : 'false' }}"
+                :multiple="{{ $isMultiple ? 'true' : 'false' }}"
                 :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
                 {{ $attributes }}
             >

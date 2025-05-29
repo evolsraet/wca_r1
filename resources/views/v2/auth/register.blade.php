@@ -196,10 +196,9 @@
 
                                     <x-forms.file-upload
                                         label="매매업체 대표증 or 종사원증"
-                                        name="file_user_cert"
+                                        name="file_user_cert[]"
                                         {{-- required --}}
                                         :errors="true"
-                                        :multiple="true"
                                     />
 
                                     @php
