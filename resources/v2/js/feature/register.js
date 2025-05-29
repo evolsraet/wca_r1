@@ -5,8 +5,8 @@ export default function() {
         form: {
             user: {
                 name: '1',
-                email: 'a@b.com',
-                phone: '222',
+                email: 'a@b.com111111',
+                phone: '2222222222222',
                 password: '123123123',
                 password_confirmation: '123123123',
                 socialLogin: false,
@@ -31,10 +31,10 @@ export default function() {
                 car_management_business_registration_number: '',
                 business_identity_number: '',
             },
-            file_user_photo: null,
-            file_user_biz: null,
-            file_user_sign: null,
-            file_user_cert: [],
+            // file_user_photo: null,
+            // file_user_biz: null,
+            // file_user_sign: null,
+            // file_user_cert: [],
             isDealerApply1: false,
             isDealerApply2: false,
             isDealerApply3: false,
@@ -92,7 +92,17 @@ export default function() {
                 }
 
                 const response = await this.$store.api.post('/api/users', formData);
-                window.location.href = '/v2/login';
+
+                Alpine.store('swal').fire({
+                    title: '회원가입 완료',
+                    text: response.data.message,
+                    icon: 'success',
+                    confirmButtonText: '확인'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/v2/login';
+                    }
+                });
             } catch (error) {
                 if (error.response?.data?.errors) {
                     this.errors = error.response.data.errors;

@@ -51,12 +51,12 @@ class UserService
 
             $dealerData = $this->checkJson($request->input('dealer'));
 
-            return response()->api(null, ''.count( $request->file() ), 'fail', 400, [
-                    '_FILES' => $_FILES,
-                    'request->file()' => $request->file(),
-                    'request->all()' => $request->all(),
-                ]
-            );
+            // return response()->api(null, ''.count( $request->file() ), 'fail', 400, [
+            //         '_FILES' => $_FILES,
+            //         'request->file()' => $request->file(),
+            //         'request->all()' => $request->all(),
+            //     ]
+            // );
 
             // print_r([
             //     '_FILES' => $_FILES,
