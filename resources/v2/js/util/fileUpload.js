@@ -1,5 +1,69 @@
 import { api } from './axios';
 
+// 파일 처리 유틸리티 함수
+export const appendFilesToFormData = (formData, fileFields, form) => {
+    fileFields.forEach(fieldName => {
+        const baseFieldName = fieldName.replace('[]', '');
+        const value = form[baseFieldName];
+
+        if (fieldName.endsWith('[]')) {
+            // 멀티플 파일 처리
+            if (Array.isArray(value)) {
+                value.forEach(file => {
+                    if (file instanceof File) {
+                        formData.append(fieldName, file);
+                    }
+                });
+            }
+        } else {
+            // 단일 파일 처리
+            if (value instanceof File) {
+                formData.append(fieldName, value);
+            }
+        }
+    });
+};
+
+// 파일 업로드 이벤트 리스너 설정 함수
+export const setupFileUploadListeners = (form, element) => {
+    const listeners = {
+        handleFileSelected(event) {
+            const { fieldName, file } = event.detail;
+            if (fieldName.endsWith('[]')) {
+                // 멀티플 파일 처리
+                const baseFieldName = fieldName.slice(0, -2);
+                if (!form[baseFieldName]) {
+                    form[baseFieldName] = [];
+                }
+                form[baseFieldName].push(file);
+            } else {
+                // 단일 파일 처리
+                form[fieldName] = file;
+            }
+        },
+
+        handleFileRemoved(event) {
+            const { fieldName, index } = event.detail;
+            if (fieldName.endsWith('[]')) {
+                // 멀티플 파일 제거
+                const baseFieldName = fieldName.slice(0, -2);
+                if (index !== undefined && form[baseFieldName]) {
+                    form[baseFieldName].splice(index, 1);
+                }
+            } else {
+                // 단일 파일 제거
+                form[fieldName] = null;
+            }
+        }
+    };
+
+    // 이벤트 리스너 자동 등록
+    element.addEventListener('file-selected', listeners.handleFileSelected);
+    element.addEventListener('file-removed', listeners.handleFileRemoved);
+
+    return listeners;
+};
+
 export const fileUpload = (fieldName) => ({
     previewUrl: '',
     fileList: [],

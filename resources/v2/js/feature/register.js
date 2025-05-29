@@ -1,3 +1,5 @@
+import { appendFilesToFormData, setupFileUploadListeners } from '../util/fileUpload';
+
 export default function() {
     return {
         form: {
@@ -55,36 +57,8 @@ export default function() {
                 this.form.name = nameParam;
             }
 
-            // 파일 선택 이벤트 리스너 등록
-            this.$el.addEventListener('file-selected', (event) => {
-                const { fieldName, file } = event.detail;
-                if (fieldName.endsWith('[]')) {
-                    // 멀티플 파일 처리
-                    const baseFieldName = fieldName.slice(0, -2);
-                    if (!this.form[baseFieldName]) {
-                        this.form[baseFieldName] = [];
-                    }
-                    this.form[baseFieldName].push(file);
-                } else {
-                    // 단일 파일 처리
-                    this.form[fieldName] = file;
-                }
-            });
-
-            // 파일 제거 이벤트 리스너 등록
-            this.$el.addEventListener('file-removed', (event) => {
-                const { fieldName, index } = event.detail;
-                if (fieldName.endsWith('[]')) {
-                    // 멀티플 파일 제거
-                    const baseFieldName = fieldName.slice(0, -2);
-                    if (index !== undefined && this.form[baseFieldName]) {
-                        this.form[baseFieldName].splice(index, 1);
-                    }
-                } else {
-                    // 단일 파일 제거
-                    this.form[fieldName] = null;
-                }
-            });
+            // 파일 업로드 이벤트 리스너 설정 (필수설정)
+            setupFileUploadListeners(this.form, this.$el);
         },
 
         async submit() {
@@ -111,30 +85,10 @@ export default function() {
                         'file_user_photo',
                         'file_user_biz',
                         'file_user_sign',
-                        'file_user_cert[]',
-                        'file_user_cert'
+                        'file_user_cert[]'
                     ];
 
-                    fileFields.forEach(fieldName => {
-                        if (fieldName.endsWith('[]')) {
-                            // 멀티플 파일 처리
-                            const baseFieldName = fieldName.slice(0, -2);
-                            const files = this.form[baseFieldName];
-                            if (Array.isArray(files)) {
-                                files.forEach(file => {
-                                    if (file instanceof File) {
-                                        formData.append(fieldName, file);
-                                    }
-                                });
-                            }
-                        } else {
-                            // 단일 파일 처리
-                            const file = this.form[fieldName];
-                            if (file instanceof File) {
-                                formData.append(fieldName, file);
-                            }
-                        }
-                    });
+                    appendFilesToFormData(formData, fileFields, this.form);
                 }
 
                 const response = await this.$store.api.post('/api/users', formData);
