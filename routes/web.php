@@ -15,6 +15,7 @@ use App\Http\Controllers\Auth\SocialAuthController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
+use Illuminate\Support\Facades\Auth;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,7 +51,15 @@ Route::prefix('v2')->group(function () {
     // v2 Routes
     Route::get('/', function () {
         // return view('v2.pages.home');
-        return view('v2.pages.home');
+
+        $user = Auth::user();
+        if ($user?->hasRole('user')) {
+            return view('v2.pages.user-main');
+        } elseif ($user?->hasRole('dealer')) {
+            return view('v2.pages.user-main');
+        } else {
+            return view('v2.pages.home');
+        }
     })->name('home');
 
     Route::get('/test', function () {

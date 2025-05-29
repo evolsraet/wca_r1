@@ -35,6 +35,13 @@
         white-space: nowrap;
     }
 
+    @media (max-width: 768px) {
+        padding: 0.2rem 0 !important;
+        .navbar-brand {
+            background-size: 100px;
+        }
+    }
+
     .nav-link {
         color: $secondary;
         font-weight: 500;
@@ -140,6 +147,7 @@
 .dealer-header {
     background-color: map-get($theme-colors, "primary") !important;
     color: $white;
+    border-bottom: 0px;
 
     .navbar-brand {
         background-image: url('/public/images/busan_wecar_logo_white.png');
@@ -178,13 +186,23 @@
     border-top: 1px solid $gray-200;
     padding: 0 10px;
 
+    a {
+        color: $gray-700;
+        text-decoration: none;
+
+        &:hover {
+            color: map-get($theme-colors, "primary");
+            text-decoration: underline;
+        }
+    }
+
     .site-footer p {
         margin-bottom: 0.3rem;
         line-height: 1.5;
     }
 
     .footer-link {
-        color: $gray-500;
+        color: $gray-700;
         text-decoration: none;
         font-weight: 500;
 
@@ -197,7 +215,7 @@
     .fw-bold {
         font-weight: 700;
         font-size: 1.2rem;
-        color: $black;
+        color: $gray-600;
     }
 
     .footer-logo {
@@ -205,7 +223,7 @@
     }
 
     .footer-cert {
-        height: 50px;
+        height: 60px;
         margin-top: 0.5rem;
     }
 }
@@ -392,7 +410,7 @@
 
     .title {
         font-size: 1.75rem;
-        font-weight: 700;
+        font-weight: 600;
         color: $black;
     }
 
@@ -521,9 +539,24 @@
     .carousel-inner {
       height: 100vh;
     }
-  
+
+    .user-main-carousel-inner {
+        height: 450px;
+    }
+    
     .carousel-item {
       position: relative;
+
+      .carousel-user-bg {
+        height: 450px;
+        background-size: cover;
+        background-position: center;
+        display: flex;
+        align-items: center;
+        justify-content: flex-start; // PC에서는 왼쪽 정렬
+        padding-left: 8%;
+        padding-right: 8%;
+      }
   
       .carousel-bg {
         height: 100vh;
@@ -563,11 +596,11 @@
           display: inline-flex;
           align-items: center;
           gap: 8px;
-          padding: 12px 60px;
+          padding: 6px 60px;
           border: 1px solid $white;
           color: $white;
           border-radius: 30px;
-          font-weight: 600;
+          font-weight: 500;
           text-decoration: none;
           transition: all 0.3s ease;
           font-size: 16px;
@@ -590,7 +623,7 @@
             display: flex;
             align-items: center;
             gap: 16px;
-            font-size: 20px;
+            font-size: 16px;
             color: $white;
           
             .dealer-label {
@@ -617,6 +650,56 @@
             margin-top: 20px;
         }
       }
+
+
+
+      .carousel-user-caption {
+        position: absolute;
+        bottom: 35%;
+        left: 25%;
+        transform: translateY(20%);
+        color: $white;
+        max-width: 680px;
+      
+        h2.carousel-title {
+          font-size: 30px;
+          font-weight: 500;
+          line-height: 1.4;
+          margin-bottom: 20px;
+      
+          strong {
+            font-weight: 900;
+          }
+        }
+      
+        .carousel-subtitle {
+          font-size: 18px;
+          margin-bottom: 30px;
+      
+          strong {
+            font-weight: 600;
+            color: $white;
+          }
+        }
+      
+        .carousel-btn {
+          display: inline-flex;
+          align-items: center;
+          padding: 10px 28px;
+          background-color: map-get($theme-colors, "primary");
+          color: $white;
+          font-weight: 700;
+          font-size: 16px;
+          border-radius: 32px;
+          text-decoration: none;
+          transition: 0.3s ease;
+      
+          &:hover {
+            background-color: map-get($theme-colors, "primary");
+          }
+        }
+      }
+
     }
   
 
@@ -630,20 +713,26 @@
         padding: 60px 20px;
         justify-content: center !important; // 모바일 중앙 정렬
       }
+
+      .carousel-user-caption {
+        left: 0% !important;
+        transform: translateY(10%);
+        padding: 0 20px;
+      }
   
       .carousel-caption-box {
         text-align: center;
         max-width: 100%;
-        padding: 24px;
+        padding: 10px !important;
   
         .carousel-title {
-          font-size: 1.6rem;
+          font-size: 1.4rem !important;
         }
   
         .carousel-subtitle {
-          font-size: 1rem;
-          margin-top: 8px;
-          margin-bottom: 20px;
+          font-size: 1rem !important;
+          margin-top: 8px !important;
+          margin-bottom: 20px !important;
         }
   
         .carousel-btn {
@@ -716,6 +805,64 @@
       }
       h5 {
         font-size: 16px;
+      }
+    }
+}
+
+.process-steps {
+    .step-circle {
+      width: 120px;
+      height: 120px;
+      border: 1px solid #dee2e6;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #fff;
+  
+      img {
+        width: 50px;
+        height: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+  
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+  
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.4em 0.8em;
+      border-radius: 0.5rem;
+    }
+  
+    .fw-bold {
+      font-size: 1rem;
+    }
+  
+    .small {
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+  
+    @media (max-width: 768px) {
+      .step-circle {
+        width: 90px;
+        height: 90px;
+  
+        img {
+          width: 40px;
+        }
+      }
+  
+      .fw-bold {
+        font-size: 0.95rem;
+      }
+  
+      .small {
+        font-size: 0.8rem;
       }
     }
 }
