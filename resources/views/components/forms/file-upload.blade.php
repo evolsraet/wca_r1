@@ -11,6 +11,7 @@
 @php
     $isMultiple = str_ends_with($name, '[]');
     $inputName = $name;
+    $errorKey = str_replace('[]', '', $name);
 @endphp
 
 <div class="mb-3"
@@ -40,11 +41,11 @@
                     @change="handleFileSelect"
                     accept="{{ $accept }}"
                     :multiple="{{ $isMultiple ? 'true' : 'false' }}"
-                    :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
+                    :class="{ 'is-invalid': errors?.{{ $errorKey }}?.length > 0 }"
                     {{ $attributes }}
                 >
                 @if($errors)
-                    <div class="invalid-feedback" x-text="errors?.{{ str_replace('.', '?.', $name) }}?.[0]"></div>
+                    <div class="invalid-feedback" x-text="errors?.{{ $errorKey }}?.[0]"></div>
                 @endif
             </div>
         </div>
@@ -57,11 +58,11 @@
                 @change="handleFileSelect"
                 accept="{{ $accept }}"
                 :multiple="{{ $isMultiple ? 'true' : 'false' }}"
-                :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
+                :class="{ 'is-invalid': errors?.{{ $errorKey }}?.length > 0 }"
                 {{ $attributes }}
             >
             @if($errors)
-                <div class="invalid-feedback" x-text="errors?.{{ str_replace('.', '?.', $name) }}?.[0]"></div>
+                <div class="invalid-feedback" x-text="errors?.{{ $errorKey }}?.[0]"></div>
             @endif
 
             <!-- 선택된 파일 목록 -->
