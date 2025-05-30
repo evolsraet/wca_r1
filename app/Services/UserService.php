@@ -435,7 +435,10 @@ class UserService
 
             DB::commit();
 
-            if( $item->dealer && $item->dealer->isDirty() ) {
+            if( auth()->user()->hasPermissionTo('act.admin')
+                && $item->dealer
+                && $item->dealer->isDirty()
+            ) {
                 $item->status = 'ask';
                 $item->save();
                 auth()->user()->tokens()->delete(); // API 토큰 삭제
