@@ -3,7 +3,7 @@
 
 <div class="pb-5 intro">
 
-    <div class="section section01" data-animate="animate__bounce">
+    <div class="section section01" data-animate="animate__fadeIn">
         <p class="small-text">내차팔때 고민이시죠?</p>
         <p class="title mb-5">{{ config('app.name') }}의 내차팔기 서비스</p>
         <div class="chat-box">
@@ -11,7 +11,7 @@
         </div>
     </div>
 
-    <div class="section section02" data-animate="animate__fadeInUp">
+    <div class="section section02" data-animate="animate__fadeIn">
         <p class="title mb-5">이제 이런 걱정은 하지 마세요</p>
         <div class="features">
             <div class="feature-item">
@@ -36,7 +36,7 @@
         </div>
     </div>
 
-    <div class="section section04" data-animate="animate__zoomIn">
+    <div class="section section04" data-animate="animate__fadeIn">
         <img src="{{ asset('images/intro-05.png') }}" width="600px">
         <p class="text-muted02 d-flex mt-4 align-center">
             {{ config('app.name') }}은

@@ -3,11 +3,12 @@
   <div class="container">
     <div class="row">
       <div class="col-md-6 mb-4">
-        <p class="mb-1">온라인 경매 서비스 | {{ config('app.name') }}(주) | 대표이사 정태영</p>
-        <p class="mb-1">사업자등록번호 : 755-81-02354 | 통신판매업신고 제2023-용인기흥-6932호</p>
-        <p class="mb-1">본사: 경기도 용인시 기흥구 중부대로 242 A동 W117호</p>
-        <p class="mb-1">부산지점: 부산 가정로 장안읍 반룡산단로 95 C동 지하1층 B106호</p>
-        <p class="mb-0">대표전화번호: <a href="tel:1544-2165">1544-2165</a> | 이메일 <a href="mailto:wecar@wecar-m.co.kr">wecar@wecar-m.co.kr</a></p>
+        <p class="mb-1">온라인 경매 서비스 | {{ config('app.name') }}(주) | 대표이사 {{ config('auction.company.name') }}</p>
+        <p class="mb-1">사업자등록번호 : {{ config('auction.company.business_number') }} | 통신판매업신고 제{{ config('auction.company.interim_number') }}</p>
+        @foreach(config('auction.company.address') as $address)
+        <p class="mb-1">{{ $address['name'] }}: {{ $address['address'] }}</p>
+        @endforeach
+        <p class="mb-0">대표전화번호: <a href="tel:{{ config('auction.company.phone') }}">{{ config('auction.company.phone') }}</a> | 이메일 <a href="mailto:{{ config('auction.company.email') }}">{{ config('auction.company.email') }}</a></p>
         <img src="{{ asset('images/busan_wecar_logo_footer.png') }}" alt="BUSAN weCar" class="footer-logo mt-3">
       </div>
       <div class="col-md-6 text-md-end">

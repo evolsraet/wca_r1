@@ -19,7 +19,7 @@
             <li class="notice-item">
                 <div class="notice-num">{{ $notice['id'] }}</div>
                 <div class="notice-datetime">{{ $notice['datetime'] }}</div>
-                <div class="notice-content">{{ $notice['content'] }}</div>
+                <div class="notice-content"><a href="#">{{ $notice['content'] }}</a></div>
             </li>
         @endforeach
     </ul>
