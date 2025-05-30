@@ -39,11 +39,13 @@
 
 <div class="container mt-5 mb-5">
   <div class="row">
-    <div class="col-md-6">
-      <!-- <h5>공지사항</h5> -->
+    <div class="col-md-6 order-2 order-md-1">
+      <!-- 공지사항 -->
+      <x-latests.Notice />
     </div>
-    <div class="col-md-6">
-      <!-- <h5>내 매물관리</h5> -->
+    <div class="col-md-6 order-1 order-md-2">
+      <!-- 내 매물관리 -->
+      <x-latests.my-listings />
     </div>
   </div>
   <div class="row">
@@ -51,7 +53,8 @@
       <x-latests.AuctionProcess />
     </div>
     <div class="col-md-12">
-      <!-- [나의 이용후기] -->
+      <!-- 나의 이용후기 -->
+      <x-latests.my-review />
     </div>
   </div>
 </div>

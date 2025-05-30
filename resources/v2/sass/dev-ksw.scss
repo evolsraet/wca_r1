@@ -8,6 +8,7 @@
     outline: none !important;
     box-shadow: none !important;
     border:0px solid transparent;
+    padding: 0px;
 }
 
 .toggle-nav-img{
@@ -314,6 +315,7 @@
             outline: none !important;
             box-shadow: none !important;
             font-size: 1.5rem;
+            margin-right: 20px !important;
         }
     
         .login-card {
@@ -714,10 +716,26 @@
         justify-content: center !important; // 모바일 중앙 정렬
       }
 
+
+      .user-main-carousel-inner, .carousel-user-bg {
+        height: 350px !important;
+      }
+
       .carousel-user-caption {
         left: 0% !important;
         transform: translateY(10%);
-        padding: 0 20px;
+        padding: 0 20px !important;
+        text-align: center;
+        width: 100% !important;
+
+        h2.carousel-title {
+            font-size: 24px !important;
+          }
+        
+        .carousel-subtitle {
+        font-size: 16px !important;
+        }
+
       }
   
       .carousel-caption-box {
@@ -748,7 +766,7 @@
     max-width: 1200px;
     margin: 20px auto;
     padding: 40px 24px;
-    font-family: 'Spoqa Han Sans Neo', 'Noto Sans KR', sans-serif;
+    font-family: $font-family-sans-serif;
     color: $black;
   
     h1 {
@@ -870,5 +888,275 @@
       .small {
         font-size: 0.8rem;
       }
+    }
+}
+
+
+// 공지사항 최신글 스타일
+.notice-wrapper {
+    padding: 1rem;
+    background: $white;
+    border-radius: 8px;
+    font-family: $font-family-sans-serif;
+}
+
+.notice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+
+    h5 {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .notice-all-link {
+        font-size: 0.9rem;
+        color: $gray-500;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.notice-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .notice-item {
+        display: flex;
+        align-items: center;
+        border-top: 1px solid $gray-200;
+        padding: 0.75rem 0;
+        font-size: 0.95rem;
+
+        &:first-child {
+            border-top: none;
+        }
+
+        .notice-num {
+            width: 2rem;
+            text-align: center;
+            color: $gray-500;
+        }
+
+        .notice-datetime {
+            width: 10rem;
+            color: $gray-500;
+        }
+
+        .notice-content {
+            flex: 1;
+            color: $black;
+        }
+    }
+}
+
+
+
+.car-wrapper {
+    padding: 1rem;
+    background: #f8f9fb;
+    border-radius: 10px;
+    font-family: $font-family-sans-serif;
+}
+
+.car-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+
+    h5 {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .car-all-link {
+        font-size: 0.9rem;
+        color: #888;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.car-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .car-item {
+        display: flex;
+        align-items: center;
+        background: $white;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+        .car-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 1rem;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .car-number {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #222;
+            flex: 1;
+        }
+
+        .car-status {
+            padding: 0.35rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .status-tag-blue {
+            background-color: #00c2dd;
+        }
+
+        .status-tag-purple {
+            background-color: #1c20ff;
+        }
+    }
+
+}
+
+.car-add-box {
+    padding: 1rem 0;
+    text-align: center;
+
+    .car-add-btn {
+        display: inline-block;
+        background-color: $white;
+        border-radius: 12px;
+        padding: 1rem;
+        color: $gray-500;
+        font-size: 0.95rem;
+        font-weight: 500;
+        width: 100%;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        border: 1px solid $gray-200;
+        transition: all 0.2s ease;
+        text-decoration: none;
+
+        .plus-icon {
+            margin-left: 6px;
+            font-weight: bold;
+        }
+
+        &:hover {
+            background-color: $gray-100;
+            color: $black;
+        }
+    }
+}
+
+
+
+.review-wrapper {
+    padding: 1rem;
+    background: $white;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    .review-all-link {
+        font-size: 0.9rem;
+        color: $gray-500;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+.review-empty-box {
+    background: $gray-100;
+    text-align: center;
+    padding: 4rem 1rem;
+    border-radius: 10px;
+
+    .btn-review-add {
+        background: transparent;
+        border: 1px solid $gray-400;
+        padding: 0.6rem 1.2rem;
+        border-radius: 10px;
+        color: $gray-500;
+        font-size: 0.95rem;
+        cursor: pointer;
+
+        &:hover {
+            background: $gray-200;
+        }
+    }
+
+    p {
+        font-size: 0.9rem;
+        color: $gray-500;
+    }
+}
+
+.review-list {
+    list-style: none;
+    padding: 0;
+
+    .review-item {
+        padding: 1rem 0;
+        border-top: 1px solid #eee;
+
+        &:first-child {
+            border-top: none;
+        }
+
+        .review-name {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .review-content {
+            font-size: 0.95rem;
+            color: $black;
+        }
+
+        .review-date {
+            font-size: 0.85rem;
+            color: $gray-500;
+            margin-top: 0.3rem;
+        }
     }
 }

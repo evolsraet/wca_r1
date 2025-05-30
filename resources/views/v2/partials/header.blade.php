@@ -6,12 +6,12 @@
   if (Auth::check()) {
     if ($user->hasRole('user')) {
       $menus = [
-        ['key' => 'mycar', 'label' => '내차조회', 'url' => url('/v2/mycar'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => '내 차량 조회'],
+        ['key' => 'mycar', 'label' => '내차조회', 'url' => url('/v2/mycar'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
         ['key' => 'listing', 'label' => '내 매물관리', 'url' => url('/v2/listing'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
-        ['key' => 'reviews', 'label' => '이용후기', 'url' => url('/v2/reviews'), 'icon' => asset('images/rating.png'), 'desc' => '다양한 판매 후기'],
+        ['key' => 'reviews', 'label' => '이용후기', 'url' => url('/v2/reviews'), 'icon' => asset('images/rating.png'), 'desc' => ''],
         ['key' => 'name-transfer', 'label' => '명의이전서류', 'url' => url('/v2/name-transfer'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
         ['key' => 'notice', 'label' => '공지사항', 'url' => url('/v2/notice'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
-        ['key' => 'introduce', 'label' => '서비스소개', 'url' => url('/v2/introduce'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => '위카란?'],
+        ['key' => 'introduce', 'label' => '서비스소개', 'url' => url('/v2/introduce'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => ''],
       ];
     } elseif ($user->hasRole('dealer')) {
       $menus = [
@@ -85,7 +85,7 @@
 {{-- 모바일 메뉴 --}}
 <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
   <div class="offcanvas-header">
-    <button type="button" class="btn-close btn-close offcanvas-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    <button type="button" class="btn-close btn-close offcanvas-close" data-bs-dismiss="offcanvas" aria-label="Close" style="margin-right: 6px; margin-top: 5px;"></button>
   </div>
   <div class="offcanvas-content-wrapper">
     <div class="offcanvas-top">
