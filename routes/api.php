@@ -42,7 +42,9 @@ Route::get('users/resetPasswordLogin/{encryptCode}', [UserController::class, 're
 Route::apiResource('users', UserController::class)
     ->middleware('auth:sanctum')
     ->withoutMiddleware('auth:sanctum', ['store', 'test']);
-
+// Route::post('users', function (Request $request) {
+//     dd($request->all());
+// });
 
 // auction
 Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);

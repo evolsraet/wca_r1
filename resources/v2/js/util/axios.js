@@ -42,6 +42,13 @@ instance.interceptors.request.use(
         // FormData인 경우 Content-Type 설정
         if (config.data instanceof FormData) {
             config.headers['Content-Type'] = 'multipart/form-data';
+
+            // PUT 요청일 때 _method 필드 추가
+            if (config.method === 'put') {
+                config.data.append('_method', 'PUT');
+                // PUT 요청을 POST로 변경
+                config.method = 'post';
+            }
         }
 
         return config;
@@ -128,6 +135,25 @@ export const api = {
     put: (url, data = {}, config = {}) => instance.put(url, data, config),
     patch: (url, data = {}, config = {}) => instance.patch(url, data, config),
     delete: (url, config = {}) => instance.delete(url, config)
+};
+
+// FormData 처리 함수
+export const appendFormData = (formData, formElements) => {
+    Array.from(formElements).forEach(element => {
+        if (element.name && !element.disabled) {  // name 속성이 있고 disabled가 아닌 요소만 처리
+            if (element.name.includes('.')) {
+                const [key, value] = element.name.split('.');
+                if (element.type === 'checkbox') {
+                    if (element.checked) {
+                        formData.append(`${key}[${value}]`, 1);  // 숫자 1로 전송
+                    }
+                } else {
+                    formData.append(`${key}[${value}]`, element.value);
+                }
+            }
+        }
+    });
+    return formData;
 };
 
 export default instance;

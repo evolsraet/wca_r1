@@ -275,6 +275,13 @@ class UserService
             // print_r($item->dealer()->exists() ? 'true' : 'false');
             // die();
 
+            // return response()->api(null, ''.count( $request->file() ), 'fail', 400, [
+            //         '_FILES' => $_FILES,
+            //         'request->file()' => $request->file(),
+            //         'request->all()' => $request->all(),
+            //     ]
+            // );
+
             $this->modifyAuth($item);
 
             $data = $request->input('user');
@@ -291,7 +298,7 @@ class UserService
                 ]);
 
                 // 승인여부 업데이트
-                if($item->hasRole('dealer')){
+                if(auth()->user()->hasPermissionTo('act.admin') && $item->hasRole('dealer')){
                     $user = User::find($item->id);
                     if($data['status'] == 'ok'){
                         Log::info('[유저] 딜러 상태 업데이트', [
@@ -314,13 +321,21 @@ class UserService
                     }
                 }
 
+                if( $data['password'] == null ) {
+                    unset($data['password']);
+                }
 
-                $validatedData = validator($data, [
+                $validator = Validator::make($data, [
                     'name' => 'sometimes|required|max:255',
                     'email' => ['sometimes', 'string', 'email', 'max:255', 'unique:users'],
                     'phone' => 'sometimes|required',
                     'password' => ['sometimes', 'required', 'string', 'min:8', 'confirmed'],
-                ])->validate();
+                ]);
+                // 유효성 검사 실패 시
+                if ($validator->fails()) {
+                    return response()->api(null, '입력값을 확인하세요.', 'fail', 422, ['errors' => ['user' => $validator->errors()]]);
+                }
+
 
                 unset($data['password_confirmation']);
 
@@ -368,16 +383,18 @@ class UserService
                 // $item->dealer()->updateOrCreate 는 제대로 기능안함. create 만 하려고함
 
                 if ($item->dealer()->exists()) {
-                    // print_r(
-                    //     [
-                    //         '업데이트',
-                    //         '데이터' => $data['dealer'],
-                    //     ]
-                    // );
-                    // die();
-                    // 기존 Dealer 업데이트
-                    $item->dealer()->update($data['dealer']);
-                    // TODO: 변경불가 사항 업데이트 시 상태변경 (누구에게 알림?)
+                    // 딜러 모델 로드
+                    $item->load('dealer');
+                    $dealer = $item->dealer;
+
+                    // 업데이트 전 상태 저장
+                    $dealer->fill($data['dealer']);
+
+                    // 변경사항이 있는지 확인
+                    if ($dealer->isDirty()) {
+                        // 기존 Dealer 업데이트
+                        $item->dealer()->update(values: $data['dealer']);
+                    }
                 } else {
                     $validator = Validator::make($data['dealer'], [
                         'name' => 'required',
@@ -392,18 +409,13 @@ class UserService
                     ]);
                     // 유효성 검사 실패 시
                     if ($validator->fails()) {
-                        return response()->api(null, '입력값을 확인하세요.', 'fail', 422, ['errors' => $validator->errors()]);
+                        return response()->api(null, '입력값을 확인하세요.', 'fail', 422, ['errors' => ['dealer' => $validator->errors()]]);
                     }
 
                     $item->dealer()->create($data['dealer']);
-                    // TODO: 알림 : 누구에게?
-
                 }
-
-                $item->load('dealer');
             }
             unset($data['dealer']);
-
 
             $file_result = [];
             $logs = [];
@@ -422,6 +434,16 @@ class UserService
             }
 
             DB::commit();
+
+            if( $item->dealer && $item->dealer->isDirty() ) {
+                $item->status = 'ask';
+                $item->save();
+                auth()->user()->tokens()->delete(); // API 토큰 삭제
+                auth()->logout(); // 세션 로그아웃
+
+                UaerDealerStatusJob::dispatch($item, 'ask');
+                return response()->api(['redirect' => '/', 'dirty' => $item->dealer->getDirty()], '딜러 정보가 변경되었습니다. 재심사 후 로그인 가능합니다.', 'ok', 200);
+            }
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;

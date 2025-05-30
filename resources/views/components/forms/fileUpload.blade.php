@@ -47,7 +47,7 @@
                     {{ $attributes }}
                     id="file-{{ $inputName }}"
                 >
-                <button type="button" class="btn btn-secondary w-100 border" onclick="document.getElementById('file-{{ $inputName }}').click()">
+                <button type="button" class="btn btn-light w-100 border" onclick="document.getElementById('file-{{ $inputName }}').click()">
                     <i class="mdi mdi-upload me-1"></i>{{ $buttonText }}
                 </button>
                 @if($errors)
@@ -68,7 +68,7 @@
                 {{ $attributes }}
                 id="file-{{ $inputName }}"
             >
-            <button type="button" class="btn btn-secondary w-100 border" onclick="document.getElementById('file-{{ $inputName }}').click()">
+            <button type="button" class="btn btn-light w-100 border" onclick="document.getElementById('file-{{ $inputName }}').click()">
                 <i class="mdi mdi-upload me-1"></i>{{ $buttonText }}
             </button>
             @if($errors)

@@ -1,24 +1,32 @@
 import { api } from './axios';
 
 // 파일 처리 유틸리티 함수
-export const appendFilesToFormData = (formData, fileFields, form) => {
+export const appendFilesToFormData = (formData, fileFields, element) => {
+    // const fileFields = Array.from(element.querySelectorAll('input[type="file"]')).map(input => input.name);
+    // console.log('fileFields', fileFields);
+
+    // console.log('appendFilesToFormData', formData, fileFields, element);
     fileFields.forEach(fieldName => {
-        const baseFieldName = fieldName.replace('[]', '');
-        const value = form[baseFieldName];
+        let fileInput = element.querySelector(`input[type="file"][name="${fieldName}"]`);
+        if (!fileInput) {
+            fileInput = element.querySelector(`input[type="file"][name="${fieldName}[]"]`);
+            fieldName = fieldName + '[]';
+            if (!fileInput) {
+                return;
+            }
+        }
+
+        // console.log('fileInput', fileInput.name, fieldName);
 
         if (fieldName.endsWith('[]')) {
             // 멀티플 파일 처리
-            if (Array.isArray(value)) {
-                value.forEach(file => {
-                    if (file instanceof File) {
-                        formData.append(fieldName, file);
-                    }
-                });
-            }
+            Array.from(fileInput.files).forEach(file => {
+                formData.append(fieldName, file);
+            });
         } else {
             // 단일 파일 처리
-            if (value instanceof File) {
-                formData.append(fieldName, value);
+            if (fileInput.files.length > 0) {
+                formData.append(fieldName, fileInput.files[0]);
             }
         }
     });

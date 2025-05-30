@@ -51,7 +51,6 @@ Route::prefix('v2')->group(function () {
     // v2 Routes
     Route::get('/', function () {
         // return view('v2.pages.home');
-
         $user = Auth::user();
         if ($user?->hasRole('user')) {
             return view('v2.pages.user-main');
@@ -81,13 +80,13 @@ Route::prefix('v2')->group(function () {
     // docs 라우트 / docs 폴더에 html 파일을 찾아서 보여줌
     Route::get('/docs/{doc}', function ($doc) {
         $filePath = resource_path("v2/docs/{$doc}.html");
-    
+
         if (!file_exists($filePath)) {
             abort(404, '문서를 찾을 수 없습니다.');
         }
 
         $html = file_get_contents($filePath);
-    
+
         return view('v2.pages.docs', [
             'html' => $html,
         ]);
@@ -95,6 +94,10 @@ Route::prefix('v2')->group(function () {
 
     Route::post('login', [AuthenticatedSessionController::class, 'login']);
     Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
+
+    Route::get('/modify', function () {
+        return view('v2.auth.register');
+    })->name('modify');
 
     // 인증 관련 라우트
     Route::middleware('guest')->group(function () {
@@ -105,7 +108,6 @@ Route::prefix('v2')->group(function () {
         Route::get('/register', function () {
             return view('v2.auth.register');
         })->name('register');
-
 
 
         // 비밀번호 재설정 라우트

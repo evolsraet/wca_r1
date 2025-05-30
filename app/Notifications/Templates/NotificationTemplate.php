@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace App\Notifications\Templates;
 use App\Helpers\FormatHelper;
@@ -33,15 +33,15 @@ class NotificationTemplate
         // $data['count'] = 0;
 
         switch ($type) {
-            // 회원가입시 
+            // 회원가입시
             case 'welcome':
 
                 $title = config('app.name').' 회원가입을 환영합니다!';
-                $message = 
+                $message =
                 $data['name'].'님 '.config('app.name').' 회원가입을 환영합니다! \n'
                 .'\n'
                 .'';
-                
+
                 $link = [
                     "url" => url('/'),
                     "text" => '바로가기'
@@ -49,11 +49,11 @@ class NotificationTemplate
 
                 break;
 
-            // 딜러 회원가입시 대기 알림 
+            // 딜러 회원가입시 대기 알림
             case 'dealerRegisterWait':
 
                 $title = config('app.name').' 딜러 회원가입을 환영 합니다!';
-                $message = 
+                $message =
                 $data['name'].'님 '.config('app.name').' 딜러 회원가입을 환영 합니다! \n'
                 .'딜러 회원가입 승인 후 딜러 페이지에 접속 가능합니다. \n'
                 .'승인이 될때 까지 조금만 기다려주세요! \n'
@@ -61,28 +61,30 @@ class NotificationTemplate
 
                 break;
 
-            // 회원상태 변경
+            // 회원상태 변경  :  현재 딜러만
             case 'userStatus':
 
                 $user = $data['user'];
                 $status = $data['status'];
 
-                if($status == 'ok'){ 
+                if($status == 'ok'){
                     $isStatus = '승인';
+                }elseif($status == 'ask'){
+                    $isStatus = '심사중';
                 }else{
                     $isStatus = '반려';
                 }
 
-                $title = '회원님의 딜러가입이 '.$isStatus.' 되었습니다.';
-                $message = 
-                $user->name.' 회원님의 딜러가입이 '.$isStatus.' 되었습니다. \n'
+                $title = '회원님의 계정이 ['.$isStatus.'] 로 상태변경 되었습니다.';
+                $message =
+                $user->name.' 회원님의 계정이 ['.$isStatus.'] 로 상태변경 되었습니다. \n'
                 .'이메일 : '.$user->email.' \n'
                 .'상태 : '.$isStatus;
-                
+
                 $link = [
                     "url" => url('/'),
                     "text" => '바로가기'
-                ];  
+                ];
 
                 break;
 
@@ -90,7 +92,7 @@ class NotificationTemplate
             case 'UserResetPasswordNotification':
 
                 $title = '비밀번호 재설정 링크 발송';
-                $message = 
+                $message =
                 '귀하의 계정에 대한 비밀번호 재설정 요청이 접수되었기 때문에 이 이메일을 보내드립니다. \n'
                 .'만약 비밀번호 재설정을 요청하지 않았다면 이 이메일을 무시하세요. \n'
                 .'\n'
@@ -110,7 +112,7 @@ class NotificationTemplate
 
                 $title = $dealer->company.' '.$dealer->name.' 딜러가 고객님의 차량에 입찰했습니다.';
 
-                $message = 
+                $message =
                 $dealer->company.' '.$dealer->name.' 딜러가 고객님의 차량에 입찰했습니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -131,7 +133,7 @@ class NotificationTemplate
 
                 $title = '경매 진행 상태';
 
-                $message = 
+                $message =
                 '경매 진행 상태 안내. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -150,7 +152,7 @@ class NotificationTemplate
 
                 $title = '경매 상태가 선택대기로 변경되었습니다.';
 
-                $message = 
+                $message =
                 '경매 상태가 선택대기로 변경되었습니다. \n'
                 .'경매시간이 종료 되었습니다. 입찰고객을 선택해 주세요. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
@@ -170,7 +172,7 @@ class NotificationTemplate
 
                 $title = '경매 상태가 취소상태로 변경되었습니다.';
 
-                $message = 
+                $message =
                 '경매 상태가 취소상태로 변경되었습니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -193,7 +195,7 @@ class NotificationTemplate
 
                 $title = $dealer->name.' 딜러가 경매 입찰을 취소했습니다.';
 
-                $message = 
+                $message =
                 $dealer->name.' 딜러가 경매 입찰을 취소했습니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -211,7 +213,7 @@ class NotificationTemplate
 
                 $title = '경매 상태가 재경매로 변경되었습니다.';
 
-                $message = 
+                $message =
                 '경매 상태가 재경매로 변경되었습니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -229,7 +231,7 @@ class NotificationTemplate
             case 'AuctionCancelJob':
                 $title = '경매가 취소되었습니다.';
 
-                $message = 
+                $message =
                 '경매가 취소되었습니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -247,7 +249,7 @@ class NotificationTemplate
             case 'AuctionCohosenJobDealer':
                 $title = '판매자가 탁송정보를 입력했습니다.';
 
-                $message = 
+                $message =
                 '판매자가 탁송정보를 입력했습니다. \n'
                 .'금액을 다시 한번 확인하시고, 탁송정보를 입력해주세요! 미입력시 경매 절차가 진행되지않아요 😅 \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
@@ -267,7 +269,7 @@ class NotificationTemplate
             case 'AuctionCohosenJobUser1':
                 $title = '딜러님의 입찰이 선택되었습니다.';
 
-                $message = 
+                $message =
                 '딜러님의 입찰이 선택되었습니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -284,7 +286,7 @@ class NotificationTemplate
             case 'AuctionCohosenJobUser2':
                 $title = '판매가 확정 되었습니다. 탁송정보를 입력해주세요.';
 
-                $message = 
+                $message =
                 '탁송정보를 입력해주세요! 미입력시 경매 절차가 진행되지않아요 😅 \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -301,12 +303,12 @@ class NotificationTemplate
             case 'AuctionDiagJob':
                 $title = '경매 상태가 변경되었습니다.';
 
-                $message = 
+                $message =
                 '경매 상태가 변경되었습니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
-                .'ㅁ 상태 : 진단대기';  
+                .'ㅁ 상태 : 진단대기';
 
 
                 $link = [
@@ -323,7 +325,7 @@ class NotificationTemplate
 
                 $title = $data->car_no.' 차량 진단 대기중입니다.';
 
-                $message = 
+                $message =
                 '진단 대기중인 차량이 있습니다. \n'
                 .'진단팀에서 진단을 진행 해 주세요 \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
@@ -334,7 +336,7 @@ class NotificationTemplate
                 .'ㅁ 고객사코드 : ['.Hashids::encode($data->id).'] \n'
                 .'ㅁ 진단일1 : '.$data->diag_first_at.' \n'
                 .'ㅁ 진단일2 : '.$data->diag_second_at.' \n'
-                .'ㅁ 상태 : 진단대기';  
+                .'ㅁ 상태 : 진단대기';
 
 
                 $link = [
@@ -348,7 +350,7 @@ class NotificationTemplate
             case 'AuctionDlvrJobUser':
                 $title = '탁송요청이 정상적으로 처리됐습니다.';
 
-                // $message = 
+                // $message =
                 // '판매요청이 잘 접수됐어요. \n'
                 // .'매니저가 딜러의 견적과 필요서류를 확인하고 있어요. 딜러 사정에 따라 늦어지는 경우가 있습니다. 최대한 빨리 확인 후 안내드릴 예정이니, 조금만 기다려주세요! \n'
                 // .'이후 판매 과정 \n'
@@ -361,7 +363,7 @@ class NotificationTemplate
                 // .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 // .'ㅁ 차량번호 : '.$data->car_no.' \n';
 
-                $message = 
+                $message =
                 '탁송요청이 정상적으로 처리됐습니다. \n'
                 .'탁송전 판매서류를 준비해주세요\n'
                 .'❖ 판매대금 입금 전 탁송을 보내지마세요! \n'
@@ -384,7 +386,7 @@ class NotificationTemplate
 
 
             case 'AuctionDlvrJobDealer':
-                
+
                 $weekdays = [
                     'Monday'    => '월요일',
                     'Tuesday'   => '화요일',
@@ -394,8 +396,8 @@ class NotificationTemplate
                     'Saturday'  => '토요일',
                     'Sunday'    => '일요일',
                 ];
-                
-                // 현재시간 기준으로 2시간 이내 날짜와 시간 표시 
+
+                // 현재시간 기준으로 2시간 이내 날짜와 시간 표시
                 $timeNow = Carbon::parse($data->taksong_wish_at);
                 $twoHoursLater = $timeNow->copy()->subHours(config('days.taksong_time'));
                 // 형식 지정 출력
@@ -412,7 +414,7 @@ class NotificationTemplate
 
                 $title = '차량대금을 입금해주세요.';
 
-                $message = 
+                $message =
                 '차량대금을 입금해주세요. \n'
                 ."아래 기일까지 차량대금을 입금해주세요! 탁송은 '".config('services.taksong.name')."' 에서 진행되며 별도의 안내 문자가 발송됩니다 \n"
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
@@ -435,7 +437,7 @@ class NotificationTemplate
             case 'AuctionDoneJobUser':
                 $title = '고객님의 차량 경매가 완료되었습니다.';
 
-                $message = 
+                $message =
                 '고객님의 차량 경매가 완료되었습니다. \n'
                 .config('app.name').'을 이용해주셔서 감사합니다. 이전등록증을 확인하실 수 있어요! 후기를 남겨주세요! \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
@@ -448,7 +450,7 @@ class NotificationTemplate
                     "text" => '후기 남기기'
                 ];
 
-                break;  
+                break;
 
             case 'AuctionDoneJobDealer':
 
@@ -456,14 +458,14 @@ class NotificationTemplate
                 $auction_id = $data->auction_id;
                 $randomPrefix = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 8);
                 $randomSuffix = substr(str_shuffle("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ"), 0, 3);
-                $moid = $randomPrefix . $auction_id . $randomSuffix; // 앞에8자리 랜덤 + bid_id + 뒤에 랜덤 3자리 조합 
+                $moid = $randomPrefix . $auction_id . $randomSuffix; // 앞에8자리 랜덤 + bid_id + 뒤에 랜덤 3자리 조합
                 $VbankExpDate = date('Ymd', strtotime('+1 day'));
                 $VbankExpTime = date('His');
-                // 나이스페이먼츠 API 가상계좌 번호 발급 
+                // 나이스페이먼츠 API 가상계좌 번호 발급
                 $paymentData = array(
-                    'VbankAccountName'=>$dealer->name, 
-                    'VbankExpDate'=>$VbankExpDate, 
-                    'VbankExpTime'=>$VbankExpTime, 
+                    'VbankAccountName'=>$dealer->name,
+                    'VbankExpDate'=>$VbankExpDate,
+                    'VbankExpTime'=>$VbankExpTime,
                     'Amt'=>$data->final_price, // $auction->final_price
                     'Moid'=>$moid);
 
@@ -477,7 +479,7 @@ class NotificationTemplate
                 $total_fee = FormatHelper::formatPriceToMan(number_format(num: 15)); // 임시금액
                 // TODO: 수수료관련 - 실제 필드 금액으로 수정
 
-                $message = 
+                $message =
                 '차량명의이전서류가 등록됐습니다. \n'
                 ."\n"
                 .'수수료 입금 내용을 확인 해 주세요. \n'
@@ -512,14 +514,14 @@ class NotificationTemplate
 
                 $title = '경매 상태가 변경되었습니다. ['.$data->car_no.' 경매진행]';
 
-                $message = 
+                $message =
                 '경매 상태가 변경되었습니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
                 ."ㅁ 상태 : 경매진행 \n"
                 ."ㅁ 경매마감일 : ".$finalAtTrans." \n"
-                ;  
+                ;
 
                 $link = [
                     "url" => url('/auction/'.$data->hashid),
@@ -529,10 +531,10 @@ class NotificationTemplate
                 break;
 
             case 'AuctionStartJob':
-                
+
                 $title = '경매 등록신청이 완료 되었습니다.';
 
-                $message = 
+                $message =
                 '경매 등록신청이 완료 되었습니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -548,10 +550,10 @@ class NotificationTemplate
 
 
             case 'AuctionStartJobAdmin':
-                
+
                 $title = '경매 등록신청이 완료 되었습니다.';
 
-                $message = 
+                $message =
                 '경매 등록신청이 완료 되었습니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
@@ -567,7 +569,7 @@ class NotificationTemplate
             case 'AuctionTotalAfterFeeJob':
                 $title = '수수료 입금확인 되었습니다.';
 
-                $message = 
+                $message =
                 '수수료 입금확인 되었습니다. \n'
                 .config('app.name').'을 이용해주셔서 감사합니다. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
@@ -593,7 +595,7 @@ class NotificationTemplate
 
                 $title = $data->car_no.' 차량대금 송금이 완료되었습니다.';
 
-                $message = 
+                $message =
                 $data->car_no.' 차량대금 송금이 완료되었습니다. \n'
                 .'영업일 기준 2일 내 명의이전이 완료될 예정입니다. '.config('app.name').'에서 이전등록증을 확인하실 수 있어요! \n'
                 .'❖ 보험은 명의이전이 완료된 후 해지해주세요. \n'
@@ -620,7 +622,7 @@ class NotificationTemplate
 
                 $title = '차량대금 입금확인 되어 탁송이 진행됩니다.';
 
-                $message = 
+                $message =
                 '차량대금 입금확인 되어 탁송이 진행됩니다. \n'
                 ."탁송은 '위카탁송' 에서 진행되며 별도의 안내 문자가 발송됩니다. \n"
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
@@ -644,7 +646,7 @@ class NotificationTemplate
 
                 $title = $data->car_no.' 차량대금 입금이 확인 되었습니다.';
 
-                $message = 
+                $message =
                 $data->car_no.' 차량대금 입금이 확인 되었습니다. \n'
                 .'탁송서비스 예약이 완료되었습니다. \n'
                 .'탁송팀 에서는 해당 예약내용을 확인해 주세요. \n'
@@ -665,7 +667,7 @@ class NotificationTemplate
 
                 $title = '차량대금 입금이 확인 되지 않았습니다.';
 
-                $message = 
+                $message =
                 '차량대금 입금이 확인 되지 않았습니다. \n'
                 .'미입금시 경매가 취소됩니다. 😅\n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
@@ -687,7 +689,7 @@ class NotificationTemplate
 
                 $title = '차량명의이전 등록증 업로드가 완료되었습니다.';
 
-                $message = 
+                $message =
                 '차량명의이전 등록증 업로드가 완료되었습니다. \n'
                 .'모든 차량판매가 완료되었습니다. 감사합니다 \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
@@ -706,7 +708,7 @@ class NotificationTemplate
 
                 $title = '차량 탁송이 완료되었습니다.';
 
-                $message = 
+                $message =
                 '차량 탁송이 완료되었습니다. \n'
                 .'영업일 기준 2일 내 명의이전이 완료될 예정입니다.'.config('app.name').'에서 이전등록증을 확인하실 수 있어요! \n'
                 .'❖ 보험은 명의이전이 완료된 후 해지 부탁드립니다. \n'
@@ -715,7 +717,7 @@ class NotificationTemplate
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
-                
+
                 $link = [
                     "url" => url('/auction/'.$data->hashid),
                     "text" => '자주묻는 질문'
@@ -731,7 +733,7 @@ class NotificationTemplate
                 // 수수료 계산방법 내용 필요함
                 $total_fee = FormatHelper::formatPriceToMan(number_format(15)); // 임시금액
 
-                $message = 
+                $message =
                 $data->car_no." 차량 탁송이 완료되었습니다. \n"
                 .'수수료 입금 내용을 확인 해 주세요. \n'
                 .'영업일 기준 2일 내 [이전등록증]을 등록해 주세요. \n'
@@ -742,7 +744,7 @@ class NotificationTemplate
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
                 ."ㅁ 수수료 : ".$total_fee." \n"
                 ."ㅁ 계좌번호 : - \n";
-                
+
                 $link = [
                     "url" => url('/auction/'.$data->hashid),
                     "text" => '이전등록증 등록'
@@ -756,7 +758,7 @@ class NotificationTemplate
 
                 $title = $data->car_no.' 차량 명의이전 등록이 안되었습니다.';
 
-                $message = 
+                $message =
                 $data->car_no.' 차량 명의이전 등록이 안되었습니다. \n'
                 .'영업일 기준 2일 내 명의이전을 등록해 주세요.'.config('app.name').'에서 이전등록증을 등록해 주세요! \n'
                 .'❖ 보험은 명의이전이 완료된 후 해지해주세요. \n'
@@ -765,7 +767,7 @@ class NotificationTemplate
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
-                
+
                 $link = [
                     "url" => url('/auction/'.$data->hashid),
                     "text" => '자주묻는 질문'
@@ -778,30 +780,30 @@ class NotificationTemplate
 
                 $title = $data->car_no.' 차량 명의이전 등록이 안되었습니다.';
 
-                $message = 
+                $message =
                 $data->car_no.' 차량 명의이전 등록이 안되었습니다. \n'
                 .'해당 딜러에게 명의이전 등록증을 요청해 주세요. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
-                
+
                 $link = [
                     "url" => url('/auction/'.$data->hashid),
                     "text" => '자주묻는 질문'
                 ];
 
                 break;
-            case 'DiagnosisErrorJob': // API 오류 
+            case 'DiagnosisErrorJob': // API 오류
 
                 $title = $data->car_no.' 차량 진단 API 결과 오류';
 
-                $message = 
+                $message =
                 $data->car_no.' 차량 진단 API 결과 오류가 발생했습니다. \n'
                 .'진단에서 고객사코드가 정확히 입력되었는지 확인 해주세요. \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n';
-                
+
                 // $link = [
                 //     "url" => url('/auction/'.$data->hashid),
                 //     "text" => '자주묻는 질문'
@@ -811,7 +813,7 @@ class NotificationTemplate
 
 
 
-        
+
 
             // 클래임 알림
             case 'ClaimAdminJob':
@@ -820,11 +822,11 @@ class NotificationTemplate
 
                 $title = $auction->car_no.' 클레임 알림';
 
-                $message = 
+                $message =
                 $auction->car_no.' 클레임 알림 \n'
                 .'ㅁ 게시글 제목 : '.$data->title.' \n'
                 .'ㅁ 게시글 내용 : '.htmlspecialchars($data->content).' \n';
-                
+
                 $link = [
                     "url" => url('/board/claim'),
                     "text" => '바로가기'
@@ -837,7 +839,7 @@ class NotificationTemplate
 
                 $title = $data->car_no.' 클레임 상태 변경 알림';
 
-                $message = 
+                $message =
                 $data->car_no.' 클레임 상태 변경 알림 \n'
                 .'ㅁ 게시글 제목 : '.$data->title.' \n'
                 .'ㅁ 게시글 내용 : '.htmlspecialchars($data->content).' \n'
@@ -850,16 +852,16 @@ class NotificationTemplate
 
                 break;
 
-              # TODO : 클레임이 처리중 변경시 / 담당자가 가급적 빠른 시일내에 연락 드리겠습니다. 
+              # TODO : 클레임이 처리중 변경시 / 담당자가 가급적 빠른 시일내에 연락 드리겠습니다.
 
             case 'ClaimCommentJob':
-                
+
                     $title = '댓글 클레임 알림';
 
-                    $message = 
+                    $message =
                     '댓글 클레임 알림 \n'
                     .'ㅁ 내용 : '.htmlspecialchars($data->content).' \n';
-                    
+
                     $link = [
                         "url" => url('/board/claim'),
                         "text" => '바로가기'
@@ -868,13 +870,13 @@ class NotificationTemplate
                 break;
 
             case 'ClaimCommentUpdateJob':
-                
+
                     $title = '댓글 수정 클레임 알림';
 
-                    $message = 
+                    $message =
                     '댓글 수정 클레임 알림 \n'
                     .'ㅁ 내용 : '.htmlspecialchars($data->content).' \n';
-                    
+
                     $link = [
                         "url" => url('/board/claim'),
                         "text" => '바로가기'
@@ -887,7 +889,7 @@ class NotificationTemplate
 
                 $title = '리뷰 작성 알림';
 
-                $message = 
+                $message =
                 '리뷰 작성 알림 \n'
                 .'ㅁ 내용 : '.htmlspecialchars($data->content).' \n'
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
@@ -906,7 +908,7 @@ class NotificationTemplate
 
                 $title = '['.$source['title'].'] 네트워크 오류 ';
 
-                $message = 
+                $message =
                 '['.$source['title'].'] 네트워크 오류 \n'
                 .'ㅁ 시간 : '.$time.' \n'
                 .'ㅁ 오류내용 : '.$source['context'].' \n'
@@ -918,7 +920,7 @@ class NotificationTemplate
 
         }
 
-        $sendMessage = [   
+        $sendMessage = [
             'title' => $title,
             'message' => $message,
             'link' => $link ? $link : null

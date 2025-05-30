@@ -1,4 +1,5 @@
 import { appendFilesToFormData, setupFileUploadListeners } from '../util/fileUpload';
+import { appendFormData } from '../util/axios';
 
 export default function() {
     return {
@@ -46,7 +47,7 @@ export default function() {
 
         init(initialData = {}) {
             Object.assign(this.form, initialData);
-
+            // console.log(initialData);
             const urlParams = new URLSearchParams(window.location.search);
             const socialParam = urlParams.get('social');
             const emailParam = urlParams.get('email');
@@ -61,6 +62,10 @@ export default function() {
             setupFileUploadListeners(this.form, this.$el);
         },
 
+        consoleForm() {
+            console.log(this.form);
+        },
+
         async submit() {
             this.loading = true;
             this.errors = {};
@@ -68,41 +73,56 @@ export default function() {
             try {
                 const formData = new FormData();
 
-                // user 데이터 추가
-                Object.keys(this.form.user).forEach(key => {
-                    formData.append(`user[${key}]`, this.form.user[key]);
-                });
+                // 폼 요소들 가져오기
+                const formElements = this.$el.elements;
+                appendFormData(formData, formElements);
 
-                // dealer 데이터 추가
                 if (this.form.isDealer) {
                     formData.append(`user[role]`, 'dealer');
-                    Object.keys(this.form.dealer).forEach(key => {
-                        formData.append(`dealer[${key}]`, this.form.dealer[key]);
-                    });
-
-                    // 파일 데이터 추가
-                    const fileFields = [
-                        'file_user_photo',
-                        'file_user_biz',
-                        'file_user_sign',
-                        'file_user_cert[]'
-                    ];
-
-                    appendFilesToFormData(formData, fileFields, this.form);
+                    if( !confirm("딜러 정보를 변경하시겠습니까?\n변경 시 재심사가 필요합니다.") ) {
+                        return;
+                    }
                 }
 
-                const response = await this.$store.api.post('/api/users', formData);
+                const fileFields = [
+                    'file_user_photo',
+                    'file_user_biz',
+                    'file_user_sign',
+                    'file_user_cert'
+                ];
 
-                Alpine.store('swal').fire({
-                    title: '회원가입 완료',
-                    text: response.data.message,
-                    icon: 'success',
-                    confirmButtonText: '확인'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/v2/login';
-                    }
-                });
+                appendFilesToFormData(formData, fileFields, this.$el);
+
+                // for (let [key, value] of formData.entries()) {
+                //     console.log(`${key}: ${value}`);
+                // }
+
+                if( this.form.isUpdate ) {
+                    const response = await this.$store.api.put('/api/users/' + this.form.user.id, formData);
+                    Alpine.store('swal').fire({
+                        title: '수정 완료',
+                        text: response.data.message,
+                        icon: 'success',
+                        confirmButtonText: '확인'
+                    }).then((result) => {
+                        if (response.data?.data?.redirect) {
+                            window.location.href = response.data.data.redirect;
+                        }
+                    });
+                } else {
+                    const response = await this.$store.api.post('/api/users', formData);
+                    Alpine.store('swal').fire({
+                        title: '회원가입 완료',
+                        text: response.data.message,
+                        icon: 'success',
+                        confirmButtonText: '확인'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = '/v2/login';
+                        }
+                    });
+                }
+
             } catch (error) {
                 if (error.response?.data?.errors) {
                     this.errors = error.response.data.errors;

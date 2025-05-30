@@ -1,28 +1,32 @@
-v 멀티플 = [] 추가하면?
+2025-05-30
+    - 공용 모달
+    v 정보수정
 
-v file-upload.blade
-    v 선택파일들 노출 및 제거기능
-    v 네임 [] 에러
-    v 기존 파일들 노출 및 삭제기능
-    v register.js 에서 추가하는 부분 함수화
-    v register.js 이벤트리스너
-    v 버튼 형태 디자인
+2025-05-29
+    v 멀티플 = [] 추가하면?
 
-- appjs
-    외부 파일 임포트만 하기 -> 외부파일에서 Alpine 데이터 등록
-    외부 파일 임포트 후 data 등록 -> 외부파일에는 export 만
+    v file-upload.blade
+        v 선택파일들 노출 및 제거기능
+        v 네임 [] 에러
+        v 기존 파일들 노출 및 삭제기능
+        v register.js 에서 추가하는 부분 함수화
+        v register.js 이벤트리스너
+        v 버튼 형태 디자인
 
-v 다음 닫기버튼 , 닫고 다시 열기
+    v appjs
+        외부 파일 임포트만 하기 -> 외부파일에서 Alpine 데이터 등록
+        v 외부 파일 임포트 후 data 등록 -> 외부파일에는 export 만
 
-v app.v2.js fileUploader 와 file-handler.js 를 통합해 app.v2.js 간결하게
-    v address 처리
-    v fileupload
+    v 다음 닫기버튼 , 닫고 다시 열기
 
-- 공용 모달
-v 아이콘
+    v app.v2.js fileUploader 와 file-handler.js 를 통합해 app.v2.js 간결하게
+        v address 처리
+        v fileupload
 
-v 기존파일삭제는 즉시 처리? or add _delete 폼
-v axios 기존 파일함수 제거
+    v 아이콘
+
+    v 기존파일삭제는 즉시 처리? or add _delete 폼
+    v axios 기존 파일함수 제거
 
 // 5월
 

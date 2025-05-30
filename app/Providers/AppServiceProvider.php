@@ -126,7 +126,7 @@ class AppServiceProvider extends ServiceProvider
             }
 
             if (env('APP_ENV') != 'production') {
-                $response['request'] = request()->json();
+                $response['request'] = request()->all();
             }
 
             // print_r([$response, $code]);
