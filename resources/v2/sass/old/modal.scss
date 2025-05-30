@@ -4,16 +4,16 @@ button.btn {
     height: 45px;
     width: auto;
   }
-  
+
   .btn-group {
       display: flex;
       font-size: 0;
       gap: 10px;
-  
+
   }
   .enroll_box {
     position: relative;
-    text-align: center; 
+    text-align: center;
   }
   .overlay_text_cancle{
       white-space: nowrap;
@@ -27,7 +27,7 @@ button.btn {
       font-size: 20px;
       font-weight: 600;
   }
-  
+
   .overlay_text {
       white-space: nowrap;
       position: absolute;
@@ -88,7 +88,7 @@ button.btn {
   margin: 0.75rem auto;
   padding: 0 20px;
 }
-  
+
   .modal-lg{
     max-width: 840px;
   }
@@ -97,89 +97,89 @@ button.btn {
     max-height: 1000px !important;
     min-height: auto !important;
   }
-  
+
   .modal-style02{
     height: 100% !important;
     max-height: 1200px !important;
     min-height: auto !important;
   }
-  
+
   .modal{
     overflow-y:hidden;
   }
   .modal .modal-footer .btn{
     width: 100%;
   }
-  
+
   .modal-title{
     font-size: 18px;
     font-weight: 700;
   }
-  
+
   .modal-title .step{
     margin-left: 8px;
     font-weight: normal;
     font-size: 14px;
     color: #979797;
   }
-  
+
   .modal-content{
      border-radius: 5px;
      max-height: 100%;
      min-height: auto;
   }
-  
+
   .modal-header{
     height: 60px;
     padding: 0 40px;
   }
-  
+
   .modal-body{
     overflow-y: auto;
     padding: 40px;
   }
-  
+
   .modal-body h5.title{
     margin-bottom: 30px;
     font-size: 20px;
   }
-  
+
   .modal-body .con-area{
     padding: 40px;
     margin: 0 -40px;
     background: #fff;
     border-bottom: 10px solid #f9f9f9;
   }
-  
+
   .modal-body .con-area:first-child{
     padding-top: 0;
   }
-  
+
   .modal-body .con-area:last-child{
     padding-bottom: 0;
     border-bottom: 0;
   }
-  
+
   .modal-body .basic-form dl + dl{
     margin-top: 0;
   }
-  
+
   .modal-body dl + dl{
     margin-top: 20px;
   }
-  
+
   .modal-body dl p{
     margin: 0;
   }
-  
+
   .modal-body dl ol li + li{
     margin-top: 15px;
   }
-  
+
   .modal-body dl ol li ol li + li{
     margin-top: 10px;
   }
-  
+
   .modal-body dl dt{
     /* font-size: 18px; */
     font-weight: 600;
@@ -188,33 +188,33 @@ button.btn {
   .modal-body > dl > dd > .txt{
     margin-bottom: 20px;
   }
-  
+
   .modal-body .desc-con{
-    display: flex; 
-    margin: 0 -30px; 
+    display: flex;
+    margin: 0 -30px;
     padding: 0 80px;
   }
-  
+
   .modal-body .desc-con .desc-item{
-    width: 50%; 
-    padding: 0 30px; 
+    width: 50%;
+    padding: 0 30px;
     text-align: center;
   }
-  
+
   .modal-body .desc-con .desc-item strong{
-    display: block; 
-    margin-bottom: 10px; 
+    display: block;
+    margin-bottom: 10px;
     font-size: 20px;
   }
-  
+
   .modal-body .desc-con .desc-item p{
     font-weight: 400;
   }
-  
+
   .modal-body.type-01{
     padding: 0;
   }
-  
+
   .modal-body.type-01 .modal-body-top{
     display: flex;
     align-items: center;
@@ -222,22 +222,22 @@ button.btn {
     padding: 0 40px;
     border-bottom: 1px solid #dee2e6;
   }
-  
+
   .modal-body.type-01 .modal-body-cont{
     padding: 40px;
   }
-  
+
   .modal-footer{
     justify-content: center;
     padding: 40px;
     border: 0;
     margin-top: -30px;
   }
-  
+
   .modal-footer > *{
     margin: 0;
   }
-  
+
   .modal-footer .btn-group,
   .modal-footer .step-foot{
     width: 100%;
@@ -252,7 +252,7 @@ button.btn {
     height: 100%;
     margin: 0 auto;
   }
-  
+
   .modal.alert-modal .modal-content{
     position: absolute;
     top: 43%;
@@ -265,22 +265,22 @@ button.btn {
             transform: translate(-50%, -50%);
     overflow: unset;
   }
-  
-  
+
+
   .dialog-style{
     margin: 7.75rem auto;
   }
   .dialog-type02{
     margin: 11.75rem auto;
   }
-  
-  
+
+
   .modal.alert-modal .modal-body{
     padding: 20px 20px 20px;
     border-radius: 40px;
     text-align: center;
   }
-  
+
   .modal.alert-modal .modal-body .content{
       min-height: 70px;
       display: flex;
@@ -289,30 +289,30 @@ button.btn {
       align-items: center;
       font-weight: 300;
   }
-  
+
   .modal.alert-modal .modal-body .content .txt{
     font-size: 16px;
     font-weight: 600;
   }
-  
+
   .modal.alert-modal .modal-body .content .btn-group{
     width: 100%;
   }
-  
+
   p .menu_msg{
     margin-bottom:20px;
   }
-  
+
   @media screen and (max-width:1024px) {
     .modal-body .desc-con{
-      margin: 0 -10px; 
+      margin: 0 -10px;
       padding: 0 20px;
     }
     .modal-body .desc-con .desc-item{
-      padding: 0 10px; 
+      padding: 0 10px;
     }
   }
-  
+
   @media screen and (max-width:767px) {
     .modal-dialog{
       padding: 0 10px;
@@ -328,7 +328,7 @@ button.btn {
       overflow-x: hidden;
     }
     .modal-body h5.title{
-      margin-bottom: 20px; 
+      margin-bottom: 20px;
       font-size: 16px;
     }
     .modal-body .con-area{
@@ -336,11 +336,11 @@ button.btn {
       margin: 0 -20px;
     }
     .modal-body .desc-con{
-      margin: 0 -5px; 
+      margin: 0 -5px;
       padding: 0;
     }
     .modal-body .desc-con .desc-item{
-      padding: 0 5px; 
+      padding: 0 5px;
     }
     .modal-body .desc-con .desc-item strong{
       font-size: 16px;
@@ -391,13 +391,13 @@ button.btn {
 }
 .manufacturer-model {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); 
+  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
   gap: 10px;
 }
 
 .manufacturer-model .item {
   text-align: center;
-  min-height: 60px; 
+  min-height: 60px;
   border-radius: 6px;
   background-color: #f5f5f5;
   color: gray;
@@ -442,7 +442,7 @@ button.btn {
 .manufacturer-model02 .item {
   font-size: 15px;
   text-align: center;
-  min-height: 50px; 
+  min-height: 50px;
   border-radius: 6px;
   background-color: #f5f5f5;
   color: gray;
@@ -474,10 +474,10 @@ button.btn {
     padding: 10px;
     text-decoration: none;
     color: #ffffff;
-    cursor: pointer; 
+    cursor: pointer;
     line-height: normal !important;
   }
-  
+
   .btn-apply-ty02::after {
     content: "";
     display: block;
@@ -493,9 +493,9 @@ button.btn {
 
 
 .btn-apply-ty02:hover::after {
-    transform: translateX(5px); 
+    transform: translateX(5px);
   }
-  
+
   .modal-body-ty02{
     position: relative;
     flex: 1 0.5 auto;
@@ -510,7 +510,7 @@ button.btn {
 }
 
 /*--------------
-File upload.vue 
+File upload.vue
 ---------------*/
 
 #bank-selection {
@@ -542,7 +542,7 @@ File upload.vue
 .detail-content02 .grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 10px; 
+  gap: 10px;
   padding: 10px;
 }
 
@@ -552,8 +552,8 @@ File upload.vue
 }
 
 .bank-selection .bank-item:active {
-  background: #ddd; 
-  border-color: #007bff; 
+  background: #ddd;
+  border-color: #007bff;
 }
 
 
@@ -562,7 +562,7 @@ File upload.vue
   background: #f7f7f7;
   text-align: center;
   border-radius: 8px;
-  border: 2px solid transparent; 
+  border: 2px solid transparent;
   transition: background-color 0.3s ease, border-color 0.3s ease;
   cursor: pointer;
 }
@@ -572,8 +572,8 @@ File upload.vue
 }
 
 .bank-selection .bank-item:active {
-  background: #ddd; 
-  border-color: #007bff; 
+  background: #ddd;
+  border-color: #007bff;
 }
 
 
@@ -675,8 +675,8 @@ File upload.vue
 .introduce-action img {
   max-width: 100%;
   max-height: 700px;
-  height: auto; 
-  width: auto; 
+  height: auto;
+  width: auto;
 }
 
 .top-title{
@@ -748,7 +748,7 @@ position: absolute;
 }
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
-  transform: translateY(20px); 
+  transform: translateY(20px);
 }
 .fade-enter-to, .fade-leave-from {
   opacity: 1;

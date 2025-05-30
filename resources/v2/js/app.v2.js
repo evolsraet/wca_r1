@@ -36,17 +36,8 @@ Object.entries(components).forEach(([path, module]) => {
 });
 
 // TO.성완 / modal.js 와 bootstrap.js 의 충돌이 있습니다. 드롭다운, offcanvas 사용시 충돌.
-// import { modal } from './util/modal.js';
-// Alpine.store('modal', modal);
-
-// 파일 업로드 컴포넌트 등록
-// import { fileUpload } from './util/fileUpload.js';
-// Alpine.data('fileUpload', fileUpload);
-
-// document.addEventListener('alpine:init', () => {
-//     Alpine.store('modal', modal);
-//     Alpine.start();
-// });
+import { modal } from './util/modal.js';
+Alpine.store('modal', modal);
 
 window.Alpine = Alpine;
 Alpine.start();

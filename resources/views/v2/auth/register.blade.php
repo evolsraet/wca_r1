@@ -3,18 +3,21 @@
 @php
     $form = null;
     $isUpdate = false;
+    $form['isDealer'] = request()->get('isDealer') ? true : false;
+
     if (auth()->check()) {
         $form = [];
         $form['user'] = array_merge(auth()->user()->toArray(), [
                 'phone' => auth()->user()->phone,
         ]);
 
+        // files
         $media = auth()->user()->media->toArray();
         $files = [];
         foreach($media as $item) {
             $files[$item['collection_name']][] = $item;
         }
-        dump($files);
+
         if( isset($form['user']['dealer']) ) {
             $form['dealer'] = auth()->user()->dealer;
             unset($form['user']['dealer']);
@@ -32,24 +35,23 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">
+                {{-- <div class="card-header">
                     @if ($isUpdate)
                         회원정보 수정
                     @else
                         회원가입
                     @endif
-                </div>
+                </div> --}}
 
                 <div class="card-body"
                     x-data="register"
                     x-init="init({{ json_encode($form) }})"
                     >
 
-                    <form @submit.prevent="submit" x-ref="formRef">
+                    <form @submit.prevent="submit">
 
                         @if ($isUpdate)
                             <input type="hidden" name="user.id" value="{{ auth()->user()->id }}">
-                            <input type="hidden" name="user.status" value="{{ auth()->user()->status }}">
                         @endif
 
                         <!-- 기본 정보 -->
@@ -267,37 +269,28 @@
                                     <!-- 약관 동의 -->
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer1"
-                                        label="<a href='#' @click.prevent='Alpine.store(`modal`).showHtml(`<h2>개인정보 수집 및 이용 동의</h2>
-
-<p>당사는 회원가입, 상담, 서비스 신청 등을 위해 아래와 같은 개인정보를 수집하고 있습니다.</p>
-
-<h3>1. 수집하는 개인정보 항목</h3>
-<ul>
-    <li>필수항목: 이름, 주민등록번호(법인등록번호), 로그인ID, 비밀번호, 자택 주소, 휴대전화번호, 이메일, 서비스 이용기록, 접속 로그, 쿠키, 접속 IP 정보</li>
-    <li>선택항목: 자동차관리사업등록번호, 회사명, 부서, 직책, 팩스번호</li>
-</ul>
-`, {title: `{{ $privacy['title'] }}`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})'>{{ $privacy['title'] }}</a>에 동의합니다."
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `' . $privacy['title'] . '`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>' . $privacy['title'] . '</a>에 동의합니다.'"
                                         required
                                         :errors="true"
                                     />
 
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer2"
-                                        label="<a href='#' @click.prevent='openModal(`privacy`)'>주민등록번호(법인등록번호) 수집 동의</a>에 동의합니다."
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `주민등록번호(법인등록번호) 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>주민등록번호(법인등록번호) 수집 동의</a>에 동의합니다.'"
                                         required
                                         :errors="true"
                                     />
 
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer3"
-                                        label="<a href='#' @click.prevent='openModal(`privacy`)'>자동차관리사업등록번호 수집 동의</a>에 동의합니다."
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `자동차관리사업등록번호 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>자동차관리사업등록번호 수집 동의</a>에 동의합니다.'"
                                         required
                                         :errors="true"
                                     />
 
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer4"
-                                        label="<a href='#' @click.prevent='openModal(`privacy`)'>사업자정보 수집 동의</a>에 동의합니다."
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `사업자정보 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>사업자정보 수집 동의</a>에 동의합니다.'"
                                         required
                                         :errors="true"
                                     />
@@ -309,7 +302,7 @@
                         @if (!$isUpdate)
                         <x-forms.checkbox
                             name="user.isCheckPrivacy"
-                            label="<a href='#' @click.prevent='openModal(`privacy`)'>개인정보처리방침</a>에 동의합니다."
+                            :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `개인정보처리방침`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>개인정보처리방침</a>에 동의합니다.'"
                             required
                             :errors="true"
                         />

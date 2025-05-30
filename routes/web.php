@@ -41,9 +41,8 @@ Route::get('/v1', function () {
 
 // V1 용 auth
 Route::post('login', [AuthenticatedSessionController::class, 'login']);
-Route::post('register', [AuthenticatedSessionController::class, 'register']);
+// Route::post('register', [AuthenticatedSessionController::class, 'register']);
 Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
-
 
 
 // v2 prefix
@@ -92,12 +91,10 @@ Route::prefix('v2')->group(function () {
         ]);
     })->where('doc', '[A-Za-z0-9\-_]+')->name('docs.show');
 
-    Route::post('login', [AuthenticatedSessionController::class, 'login']);
-    Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
-    Route::get('/modify', function () {
-        return view('v2.auth.register');
-    })->name('modify');
+    Route::get('/sell', function () {
+        return 'sell';
+    })->name('sell');
 
     // 인증 관련 라우트
     Route::middleware('guest')->group(function () {
@@ -108,7 +105,6 @@ Route::prefix('v2')->group(function () {
         Route::get('/register', function () {
             return view('v2.auth.register');
         })->name('register');
-
 
         // 비밀번호 재설정 라우트
         Route::get('/forgot-password', function () {
@@ -124,9 +120,11 @@ Route::prefix('v2')->group(function () {
 
         Route::post('/reset-password', [ResetPasswordController::class, 'reset'])
             ->name('password.update');
-
-
     });
+    Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
+    Route::get('modify', function () {
+        return view('v2.auth.register');
+    })->name('modify');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', function (Request $request) {

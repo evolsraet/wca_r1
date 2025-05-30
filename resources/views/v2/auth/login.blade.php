@@ -5,9 +5,9 @@
     <div class="row justify-content-center">
         <div class="col-md-6">
             <div class="card mt-5">
-                <div class="card-header">
+                {{-- <div class="card-header">
                     <h4 class="mb-0">로그인</h4>
-                </div>
+                </div> --}}
                 <div class="card-body">
                     <form x-data="login"
                           x-init="$store.login.setRedirectUrl('{{ request()->header('referer') }}')"

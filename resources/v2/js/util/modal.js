@@ -1,5 +1,23 @@
 import { Modal } from 'bootstrap';
 
+// offcanvas backdrop 관리를 위한 전역 변수
+let isOffcanvasOpen = false;
+
+// offcanvas 이벤트 리스너 등록
+document.addEventListener('show.bs.offcanvas', () => {
+    isOffcanvasOpen = true;
+    // 기존 backdrop 제거
+    const backdrops = document.querySelectorAll('.offcanvas-backdrop');
+    backdrops.forEach(backdrop => backdrop.remove());
+});
+
+document.addEventListener('hidden.bs.offcanvas', () => {
+    isOffcanvasOpen = false;
+    // backdrop 제거
+    const backdrops = document.querySelectorAll('.offcanvas-backdrop');
+    backdrops.forEach(backdrop => backdrop.remove());
+});
+
 export const modal = {
     _modal: null,
 
@@ -84,7 +102,9 @@ export const modal = {
 
         // 모달 인스턴스 생성
         const modalElement = document.getElementById(id);
-        const modal = new Modal(modalElement);
+        const modal = new Modal(modalElement, {
+            backdrop: !isOffcanvasOpen
+        });
 
         // 이벤트 리스너 등록
         if (onConfirm) {
@@ -119,6 +139,21 @@ export const modal = {
             ...options,
             content: html
         });
+    },
+
+    // URL을 통해 HTML을 가져와 모달 표시
+    async showHtmlFromUrl(url, options = {}) {
+        try {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const html = await response.text();
+            this.showHtml(html, options);
+        } catch (error) {
+            console.error('Error loading modal content:', error);
+            this.showHtml('<div class="alert alert-danger">내용을 불러오는데 실패했습니다.</div>', options);
+        }
     },
 
     // 모달 닫기
