@@ -6,7 +6,8 @@
     'previewUrl' => '',
     'previewSize' => '100px',
     'errors' => null,
-    'existingFiles' => []
+    'existingFiles' => [],
+    'buttonText' => '파일 선택'
 ])
 
 @php
@@ -30,21 +31,25 @@
                         <img :src="fileList[0].previewUrl" class="rounded" style="width: {{ $previewSize }}; height: {{ $previewSize }}; object-fit: cover;">
                     </template>
                     <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" @click="removeFile()">
-                        <i class="bi bi-x-lg"></i>
+                        <i class="mdi mdi-close"></i>
                     </button>
                 </div>
             </template>
             <div>
                 <input
                     type="file"
-                    class="form-control"
+                    class="d-none"
                     name="{{ $inputName }}"
                     @change="handleFileSelect"
                     accept="{{ $accept }}"
                     :multiple="{{ $isMultiple ? 'true' : 'false' }}"
                     :class="{ 'is-invalid': errors?.{{ $errorKey }}?.length > 0 }"
                     {{ $attributes }}
+                    id="file-{{ $inputName }}"
                 >
+                <button type="button" class="btn btn-secondary w-100 border" onclick="document.getElementById('file-{{ $inputName }}').click()">
+                    <i class="mdi mdi-upload me-1"></i>{{ $buttonText }}
+                </button>
                 @if($errors)
                     <div class="invalid-feedback" x-text="errors?.{{ $errorKey }}?.[0]"></div>
                 @endif
@@ -54,14 +59,18 @@
         <div>
             <input
                 type="file"
-                class="form-control"
+                class="d-none"
                 name="{{ $inputName }}"
                 @change="handleFileSelect"
                 accept="{{ $accept }}"
                 :multiple="{{ $isMultiple ? 'true' : 'false' }}"
                 :class="{ 'is-invalid': errors?.{{ $errorKey }}?.length > 0 }"
                 {{ $attributes }}
+                id="file-{{ $inputName }}"
             >
+            <button type="button" class="btn btn-secondary w-100 border" onclick="document.getElementById('file-{{ $inputName }}').click()">
+                <i class="mdi mdi-upload me-1"></i>{{ $buttonText }}
+            </button>
             @if($errors)
                 <div class="invalid-feedback" x-text="errors?.{{ $errorKey }}?.[0]"></div>
             @endif
@@ -76,7 +85,7 @@
                                 <span x-text="file.name" class="text-truncate" style="max-width: 200px;"></span>
                             </div>
                             <button type="button" class="btn btn-sm btn-outline-danger" @click="removeFile(index)">
-                                <i class="bi bi-x-lg"></i>
+                                <i class="mdi mdi-close"></i>
                             </button>
                         </div>
                     </template>
@@ -101,7 +110,7 @@
                             class="btn btn-sm btn-outline-danger"
                             data-delete-file
                             data-file-uuid="{{ $file['uuid'] }}">
-                        <i class="bi bi-x-lg"></i>
+                        <i class="mdi mdi-close"></i>
                     </button>
                 </div>
             @endforeach

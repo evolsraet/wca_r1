@@ -73,6 +73,7 @@
                                         type="text"
                                         name="dealer.name"
                                         label="딜러 이름"
+                                        placeholder="딜러 이름을 입력해주세요"
                                         {{-- required --}}
                                         :errors="true"
                                     />

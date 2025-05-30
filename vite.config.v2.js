@@ -48,4 +48,5 @@ export default defineConfig({
         outDir: 'public/build/v2',
         manifest: true,
     },
+    publicDir: 'node_modules/@mdi/font/fonts',
 });

@@ -22,6 +22,7 @@
             readonly
             placeholder="우편번호"
             :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $postName) }}?.length > 0 }"
+            @click="$event.target.nextElementSibling.click()"
         >
         <button
             type="button"
@@ -37,7 +38,7 @@
                     console.error('주소 검색 오류:', error);
                 }
             }"
-        >주소 검색</button>
+        ><i class="mdi mdi-pin"></i></button>
     </div>
 
     <div id="{{ $postCodeId }}" class="mb-2"></div>

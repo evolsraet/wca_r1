@@ -1,10 +1,11 @@
+$mdi-font-path: "/node_modules/@mdi/font/fonts";
+@import '@mdi/font/scss/materialdesignicons';
 @import 'variables';
 @import 'bootstrap/scss/bootstrap';
 @import 'layout';
 
 @import 'dev-ksw';
 @import 'wca-v2';
-
 
 // General x-cloak style
 [x-cloak] {
