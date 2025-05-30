@@ -7,17 +7,17 @@
     if ($user->hasRole('user')) {
       $menus = [
         ['key' => 'mycar', 'label' => '내차조회', 'url' => url('/v2/mycar'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
-        ['key' => 'listing', 'label' => '내 매물관리', 'url' => url('/v2/listing'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
+        ['key' => 'auction', 'label' => '내 매물관리', 'url' => url('/v2/auction'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => ''],
         ['key' => 'reviews', 'label' => '이용후기', 'url' => url('/v2/reviews'), 'icon' => asset('images/rating.png'), 'desc' => ''],
-        ['key' => 'name-transfer', 'label' => '명의이전서류', 'url' => url('/v2/name-transfer'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
-        ['key' => 'notice', 'label' => '공지사항', 'url' => url('/v2/notice'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
+        ['key' => 'name-transfer', 'label' => '명의이전서류', 'url' => url('/v2/name-transfer'), 'icon' => asset('images/document.png'), 'desc' => ''],
+        ['key' => 'notice', 'label' => '공지사항', 'url' => url('/v2/notice'), 'icon' => asset('images/Icon-dash.png'), 'desc' => ''],
         ['key' => 'introduce', 'label' => '서비스소개', 'url' => url('/v2/introduce'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => ''],
       ];
     } elseif ($user->hasRole('dealer')) {
       $menus = [
-        ['key' => 'bidding', 'label' => '입찰하기', 'url' => url('/v2/bidding'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
-        ['key' => 'notice', 'label' => '공지사항', 'url' => url('/v2/notice'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
-        ['key' => 'claim', 'label' => '클레임', 'url' => url('/v2/claim'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
+        ['key' => 'auction', 'label' => '입찰하기', 'url' => url('/v2/auction'), 'icon' => asset('images/Icon-tag.png'), 'desc' => ''],
+        ['key' => 'notice', 'label' => '공지사항', 'url' => url('/v2/notice'), 'icon' => asset('images/Icon-dash.png'), 'desc' => ''],
+        ['key' => 'claim', 'label' => '클레임', 'url' => url('/v2/claim'), 'icon' => asset('images/document.png'), 'desc' => ''],
         ['key' => 'introduce', 'label' => '서비스소개', 'url' => url('/v2/introduce'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => '위카란?'],
       ];
     }
@@ -52,10 +52,10 @@
       <ul class="navbar-nav">
         @auth
         <li class="nav-item dropdown">
-            <a class="btn btn-danger dropdown-toggle user-dropdown-btn" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <a class="btn btn-danger dropdown-toggle user-dropdown-btn" href="#" id="userDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               {{ Auth::user()->name }} 님
             </a>
-            <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu">
+            <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" aria-labelledby="userDropdown1" style="z-index: 2000;">
               <li><a class="dropdown-item" href="#">내 정보 수정</a></li>
               <li>
                 <form method="POST" action="{{ route('logout') }}">
@@ -84,18 +84,40 @@
 
 {{-- 모바일 메뉴 --}}
 <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
-  <div class="offcanvas-header">
-    <button type="button" class="btn-close btn-close offcanvas-close" data-bs-dismiss="offcanvas" aria-label="Close" style="margin-right: 6px; margin-top: 5px;"></button>
+  <div class="offcanvas-header {{ $user ? 'isUser' : '' }}">
+    <div class="offcanvas-close-btn">
+      <button type="button" class="btn-close btn-close offcanvas-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    @auth
+    <div class="user-login-box">
+        <div class="user-login-box-text">
+            <div x-data="{ open: false }" class="user-dropdown-wrapper">
+              <a class="user-login-box-text-title"
+                href="#"
+                @click.prevent="open = !open">
+                {{ Auth::user()->name }} 님 <i class="mdi mdi-cog-outline gear-icon"></i>
+              </a>
+
+              <ul class="dropdown-menu user-dropdown-menu"
+                  :class="{ 'show': open }">
+                <li><a class="dropdown-item" href="#">내 정보 수정</a></li>
+                <li>
+                  <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button class="dropdown-item" type="submit">로그아웃</button>
+                  </form>
+                </li>
+              </ul>
+            </div>
+        </div>
+    </div>
+    @endauth
+
   </div>
   <div class="offcanvas-content-wrapper">
     <div class="offcanvas-top">
-      <div class="login-card">
-        <div class="login-card-text">
-          <p class="login-subtitle">내 차 팔까?</p>
-          <a href="{{ route('login') }}" class="login-link">로그인하기</a>
-        </div>
-        <div class="login-card-image"></div>
-      </div>
+      @include('components.offcanvas.topBanner')
     </div>
 
     <div class="offcanvas-bottom">

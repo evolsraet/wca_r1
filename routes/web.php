@@ -52,10 +52,8 @@ Route::prefix('v2')->group(function () {
     Route::get('/', function () {
         // return view('v2.pages.home');
         $user = Auth::user();
-        if ($user?->hasRole('user')) {
-            return view('v2.pages.user-main');
-        } elseif ($user?->hasRole('dealer')) {
-            return view('v2.pages.user-main');
+        if ($user) {
+            return view('v2.pages.userMain');
         } else {
             return view('v2.pages.home');
         }
@@ -74,7 +72,7 @@ Route::prefix('v2')->group(function () {
     });
 
     Route::get('/user-main', function () {
-        return view('v2.pages.user-main');
+        return view('v2.pages.userMain');
     });
 
     // docs 라우트 / docs 폴더에 html 파일을 찾아서 보여줌
@@ -87,11 +85,20 @@ Route::prefix('v2')->group(function () {
 
         $html = file_get_contents($filePath);
 
+        // 쿼리 파라미터가 ?raw=1 인 경우 원본 HTML 출력
+        if (request()->query('raw') === '1') {
+            return response($html)->header('Content-Type', 'text/html');
+        }
+
         return view('v2.pages.docs', [
             'html' => $html,
         ]);
     })->where('doc', '[A-Za-z0-9\-_]+')->name('docs.show');
 
+    Route::get('/auction', function () {
+        return view('v2.pages.auction.auctionList');
+    })->name('auction.list');
+    
     Route::post('login', [AuthenticatedSessionController::class, 'login']);
     Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 

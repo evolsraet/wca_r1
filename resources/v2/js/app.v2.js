@@ -35,6 +35,13 @@ Object.entries(components).forEach(([path, module]) => {
     Alpine.data(name, module.default);
 });
 
+const pages = import.meta.glob('./pages/**/*.js', { eager: true });
+Object.entries(pages).forEach(([path, module]) => {
+    // 경로에서 파일명만 추출 (확장자 제외)
+    const name = path.split('/').pop().replace('.js', '');
+    Alpine.data(name, module.default);
+});
+
 // TO.성완 / modal.js 와 bootstrap.js 의 충돌이 있습니다. 드롭다운, offcanvas 사용시 충돌.
 // import { modal } from './util/modal.js';
 // Alpine.store('modal', modal);
