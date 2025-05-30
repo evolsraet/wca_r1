@@ -1,5 +1,4 @@
 import axios from 'axios';
-import Alpine from 'alpinejs';
 
 // axios 인스턴스 생성
 const instance = axios.create({
