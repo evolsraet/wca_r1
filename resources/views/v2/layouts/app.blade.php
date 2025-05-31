@@ -20,9 +20,13 @@
     @include('v2.partials.header')
 
     <main>
-        {{-- <div class="container"> --}}
+        @if(isset($container) && $container === false)
             @yield('content')
-        {{-- </div> --}}
+        @else
+            <div class="container">
+                @yield('content')
+            </div>
+        @endif
     </main>
 
     @include('v2.partials.footer')
