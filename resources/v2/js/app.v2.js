@@ -13,10 +13,7 @@ import { address } from './util/address.js';
 import { fileUpload } from './util/fileUpload.js';
 import { modal } from './util/modal.js';
 
-// Alpine 중복 초기화 방지 (더 강화된 체크)
-if (window.Alpine && window.Alpine._initialized) {
-    console.log('Alpine already initialized, skipping...');
-} else {
+
     console.log('Initializing Alpine...');
 
     // 이미 시작된 Alpine이 있으면 중단
@@ -67,15 +64,15 @@ if (window.Alpine && window.Alpine._initialized) {
         const name = path.split('/').pop().replace('.js', '');
 
         if (!registeredComponents.has(name)) {
-            console.log(`Registering board component: ${name}`);
+            // console.log(`Registering board component: ${name}`);
 
             // board.js는 스토어로 등록, 나머지는 컴포넌트로 등록
             if (name === 'board') {
                 Alpine.store('board', module.default);
-                console.log('Registered board as store');
+                // console.log('Registered board as store');
             } else {
                 Alpine.data(name, module.default);
-                console.log(`Registered ${name} as component`);
+                // console.log(`Registered ${name} as component`);
             }
             registeredComponents.add(name);
         }
@@ -90,4 +87,3 @@ if (window.Alpine && window.Alpine._initialized) {
     Alpine.start();
 
     console.log('Alpine initialization completed');
-}

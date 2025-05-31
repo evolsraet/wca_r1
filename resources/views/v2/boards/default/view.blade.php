@@ -17,8 +17,7 @@
 </script>
 
 <div class="board-view board-skin-{{ $board->skin }}"
-     x-data="articleView"
-     x-init="init('{{ $board->id }}', '{{ $articleId }}')">
+     x-data="articleView">
 
     <!-- 로딩 상태 -->
     <div x-show="loading" class="text-center py-5">

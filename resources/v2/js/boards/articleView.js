@@ -6,9 +6,15 @@ export default function articleView() {
         loading: false,
         article: null,
         board_attach: [],
+        _initialized: false,
 
         // 초기화
         async init(boardId, articleId) {
+            // 이미 초기화되었다면 중복 실행 방지
+            if (this._initialized) {
+                return;
+            }
+
             // 파라미터가 없거나 undefined인 경우 window.boardConfig에서 가져오기
             this.boardId = boardId || window.boardConfig?.boardId;
             this.articleId = articleId || window.boardConfig?.articleId;
@@ -21,6 +27,9 @@ export default function articleView() {
                 this.showError('게시판 또는 게시글 정보가 올바르지 않습니다.');
                 return;
             }
+
+            // 초기화 플래그 설정
+            this._initialized = true;
 
             // board 스토어 초기화
             this.$store.board.init(this.boardId);
