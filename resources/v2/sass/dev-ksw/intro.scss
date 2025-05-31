@@ -1,0 +1,126 @@
+// 서비스 소개 페이지 전용 스타일
+.intro {
+    text-align: center;
+
+    .title {
+        font-size: 1.75rem;
+        font-weight: 600;
+        color: $black;
+    }
+
+    .small-text {
+        font-size: 1rem;
+        font-weight: 500;
+        color: $gray-700;
+    }
+
+    /* 채팅 이미지 영역 */
+    .chat-box {
+        display: flex;
+        justify-content: center;
+        margin-top: 2rem;
+    }
+
+    .chat-img {
+        max-width: 100%;
+        width: 500px;
+        height: auto;
+    }
+
+    /* 특징 카드 3개 */
+    .features {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 3rem;
+    }
+
+    .feature-item {
+        background-color: $white;
+        border: 1px solid $gray-200;
+        border-radius: 1rem;
+        width: 260px;
+        padding: 2rem 1rem;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        text-align: center;
+
+        p {
+        font-size: 0.95rem;
+        color: $gray-800;
+        margin-top: 1rem;
+        line-height: 1.5;
+        }
+    }
+
+    .hand-img {
+        height: 60px;
+    }
+
+    .section01 {
+        background-color: $white;
+        padding-top: 3rem;
+        padding-bottom: 5rem;
+    }
+
+    .section02 {
+        padding-top: 4rem;
+        padding-bottom: 5rem;
+        background-color: $gray-100;
+    }
+
+    /* 배경 + 문구 */
+    .section03 {
+        position: relative;
+        background-image: url('/public/images/intro-06.png');
+        background-size: cover;
+        background-position: bottom;
+        background-repeat: no-repeat;
+        height: 250px;
+
+        .bk-section {
+        width: 100%;
+        height: auto;
+        border-radius: 0;
+        }
+
+        .content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: $black;
+
+        p.title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        p {
+            font-size: 1rem;
+            margin-top: 0.5rem;
+            color: $gray-800;
+        }
+        }
+    }
+
+    .section04 {
+        margin-top: 6rem;
+        text-align: center;
+
+        img {
+        max-width: 100%;
+        height: auto;
+        }
+    }
+
+    .text-muted02 {
+        font-size: 0.9rem;
+        color: $gray-500;
+        justify-content: center;
+        align-items: center;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+}
+

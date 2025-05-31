@@ -7,7 +7,7 @@
     {{ config('app.name') }}에서 <strong>높은 가격으로!</strong>
     </h4>
     <p class="carousel-subtitle">자동차 진단 전문가 <strong>{{ config('app.name') }}</strong>가 함께합니다.</p>
-    <a href="{{ route('sell') }}" class="carousel-btn">
+    <a href="{{ route('sell') }}" class="btn btn-dark-white rounded-pill" style="width: 200px;">
     내 차 판매하기
     </a>
     <div>
