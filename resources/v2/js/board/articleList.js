@@ -22,6 +22,10 @@ export default () => ({
         paginate: 10
     },
 
+    // 정렬 상태
+    sortColumn: 'id',
+    sortDirection: 'desc',
+
     // Alpine 컴포넌트 초기화 시 자동 실행
     init() {
         console.log('Alpine component initialized');
@@ -61,6 +65,10 @@ export default () => ({
         this.filters.search_text = urlParams.get('search_text') || '';
         this.filters.page = parseInt(urlParams.get('page')) || 1;
         this.filters.paginate = parseInt(urlParams.get('paginate')) || 10;
+
+        // 정렬 파라미터도 URL에서 로드
+        this.sortColumn = urlParams.get('sort') || 'id';
+        this.sortDirection = urlParams.get('direction') || 'desc';
     },
 
     // 게시글 목록 로드
@@ -73,8 +81,8 @@ export default () => ({
                 page: this.filters.page,
                 paginate: this.filters.paginate,
                 with: 'user',
-                order_column: 'id',
-                order_direction: 'desc'
+                order_column: this.sortColumn,
+                order_direction: this.sortDirection
             };
 
             // 카테고리 필터
@@ -135,6 +143,8 @@ export default () => ({
         if (this.filters.search_text) params.set('search_text', this.filters.search_text);
         if (this.filters.page > 1) params.set('page', this.filters.page);
         if (this.filters.paginate !== 10) params.set('paginate', this.filters.paginate);
+        if (this.sortColumn !== 'id') params.set('sort', this.sortColumn);
+        if (this.sortDirection !== 'desc') params.set('direction', this.sortDirection);
 
         const url = params.toString() ? `?${params.toString()}` : window.location.pathname;
         window.history.replaceState({}, '', url);
@@ -217,5 +227,44 @@ export default () => ({
         this.filters.search_text = '';
         this.filters.page = 1;
         this.loadArticles();
+    },
+
+    // 정렬 메소드
+    sort(column) {
+        console.log('Sorting by column:', column);
+
+        // 같은 컬럼을 클릭하면 방향 토글, 다른 컬럼이면 desc로 시작
+        if (this.sortColumn === column) {
+            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+            this.sortColumn = column;
+            this.sortDirection = 'desc';
+        }
+
+        // 정렬 시 첫 페이지로 이동
+        this.filters.page = 1;
+
+        // 목록 다시 로드
+        this.loadArticles();
+    },
+
+    // 정렬 상태 확인 메소드
+    isSorted(column) {
+        return this.sortColumn === column;
+    },
+
+    // 정렬 방향 아이콘 가져오기
+    getSortIcon(column) {
+        if (!this.isSorted(column)) {
+            return 'mdi-sort'; // 기본 정렬 아이콘
+        }
+        return this.sortDirection === 'asc' ? 'mdi-sort-ascending' : 'mdi-sort-descending';
+    },
+
+    // 게시글 순번 계산
+    getArticleNumber(index) {
+        // 전체 개수에서 현재 위치를 빼서 내림차순 번호 생성
+        const currentStart = (this.pagination.current_page - 1) * this.pagination.per_page;
+        return this.pagination.total - (currentStart + index);
     }
 });

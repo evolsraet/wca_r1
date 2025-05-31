@@ -60,20 +60,59 @@
             <table class="table table-hover">
                 <thead class="table-light">
                     <tr>
-                        <th width="60">번호</th>
+                        <th width="60"
+                            class="sortable-header"
+                            @click="sort('id')"
+                            :class="{ 'sorted': isSorted('id') }">
+                            <span class="d-flex align-items-center justify-content-center">
+                                번호
+                                <i :class="`mdi ${getSortIcon('id')} ms-1`"></i>
+                            </span>
+                        </th>
                         @if(!empty($board->categories))
                             <th width="100">카테고리</th>
                         @endif
-                        <th>제목</th>
-                        <th width="100">작성자</th>
-                        <th width="120">작성일</th>
-                        <th width="60">조회</th>
+                        <th class="sortable-header"
+                            @click="sort('title')"
+                            :class="{ 'sorted': isSorted('title') }">
+                            <span class="d-flex align-items-center">
+                                제목
+                                <i :class="`mdi ${getSortIcon('title')} ms-1`"></i>
+                            </span>
+                        </th>
+                        <th width="100"
+                            class="sortable-header"
+                            @click="sort('user_id')"
+                            :class="{ 'sorted': isSorted('user_id') }">
+                            <span class="d-flex align-items-center justify-content-center">
+                                작성자
+                                <i :class="`mdi ${getSortIcon('user_id')} ms-1`"></i>
+                            </span>
+                        </th>
+                        <th width="120"
+                            class="sortable-header"
+                            @click="sort('created_at')"
+                            :class="{ 'sorted': isSorted('created_at') }">
+                            <span class="d-flex align-items-center justify-content-center">
+                                작성일
+                                <i :class="`mdi ${getSortIcon('created_at')} ms-1`"></i>
+                            </span>
+                        </th>
+                        <th width="60"
+                            class="sortable-header"
+                            @click="sort('hit')"
+                            :class="{ 'sorted': isSorted('hit') }">
+                            <span class="d-flex align-items-center justify-content-center">
+                                조회
+                                <i :class="`mdi ${getSortIcon('hit')} ms-1`"></i>
+                            </span>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
-                    <template x-for="article in articles" :key="article.id">
+                    <template x-for="(article, index) in articles" :key="article.id">
                         <tr class="board-article-row">
-                            <td x-text="article.id"></td>
+                            <td x-text="getArticleNumber(index)"></td>
                             @if(!empty($board->categories))
                                 <td>
                                     <span x-show="article.category"
@@ -96,7 +135,7 @@
                             </td>
                             <td x-text="article.user?.name || '익명'"></td>
                             <td x-text="formatDate(article.created_at)"></td>
-                            <td x-text="article.views || 0"></td>
+                            <td x-text="article.hit || 0"></td>
                         </tr>
                     </template>
                 </tbody>
