@@ -304,6 +304,11 @@ pre code {
     }
 }
 
+.carousel-indicators button {
+    height: 0px !important;
+    padding: 0px !important;
+}
+
 // 컨테이너 상하단 여백
 .container{
     padding: 10px 0;
@@ -323,6 +328,9 @@ pre code {
 }
 
   
+.btn-primary, .btn-secondary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-light {
+    border: 0px !important;
+}
 
 
 
