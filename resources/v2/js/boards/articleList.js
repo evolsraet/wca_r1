@@ -172,48 +172,19 @@ export default () => ({
         return pages;
     },
 
-    // 날짜 포맷팅 (board.js 공통 메소드 활용)
+    // 날짜 포맷팅 (board 스토어 메소드 사용)
     formatDate(dateString) {
-        if (!dateString) return '';
-
-        const date = new Date(dateString);
-        const now = new Date();
-        const diffTime = Math.abs(now - date);
-        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-
-        // 오늘 날짜면 시간만 표시
-        if (diffDays <= 1) {
-            return date.toLocaleTimeString('ko-KR', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-            });
-        }
-        // 1년 이내면 월/일 표시
-        else if (diffDays <= 365) {
-            return date.toLocaleDateString('ko-KR', {
-                month: '2-digit',
-                day: '2-digit'
-            });
-        }
-        // 1년 초과면 년/월/일 표시
-        else {
-            return date.toLocaleDateString('ko-KR', {
-                year: '2-digit',
-                month: '2-digit',
-                day: '2-digit'
-            });
-        }
+        return this.$store.board.formatDate(dateString);
     },
 
-    // 성공 메시지 표시
+    // 성공 메시지 표시 (board 스토어 메소드 사용)
     showSuccess(message) {
-        this.$store.toastr.success(message);
+        this.$store.board.showSuccess(message);
     },
 
-    // 에러 메시지 표시
+    // 에러 메시지 표시 (board 스토어 메소드 사용)
     showError(message) {
-        this.$store.toastr.error(message);
+        this.$store.board.showError(message);
     },
 
     // 새로고침
@@ -276,7 +247,7 @@ export default () => ({
         // 다른 컬럼으로 정렬할 때: 현재 검색 결과에서의 순번
         else {
             if (this.sortDirection === 'desc') {
-                return this.pagination.total - (currentStart + index);
+        return this.pagination.total - (currentStart + index);
             } else {
                 return currentStart + index + 1;
             }

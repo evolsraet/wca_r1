@@ -100,6 +100,19 @@ class ArticleService
                 ) {
                     throw new \Exception('비밀글입니다.');
                 }
+
+                // 조회수 증가 (하루에 한 번만)
+                if ($article) {
+                    $today = date('Y-m-d');
+                    $userId = auth()->id() ?? request()->ip(); // 로그인한 경우 user_id, 비회원은 IP
+                    $sessionKey = "article_viewed_{$this->board->id}_{$article->id}_{$userId}_{$today}";
+
+                    // 오늘 이 게시글을 본 적이 없으면 조회수 증가
+                    if (!session()->has($sessionKey)) {
+                        $article->increment('hit');
+                        session()->put($sessionKey, true);
+                    }
+                }
                 break;
             case 'store':
                 $permission = $this->board->write_permission;

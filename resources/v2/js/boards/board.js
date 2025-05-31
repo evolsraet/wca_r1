@@ -1,5 +1,7 @@
-// 게시판 공통 기능 및 유틸리티
-export default () => ({
+// 게시판 공통 기능 및 유틸리티 (Alpine Store)
+import Alpine from 'alpinejs';
+
+Alpine.store('board', {
     // 기본 상태
     boardId: null,
     loading: false,
@@ -29,9 +31,12 @@ export default () => ({
         }
         // 1년 이내면 월/일 표시
         else if (diffDays <= 365) {
-            return date.toLocaleDateString('ko-KR', {
+            return date.toLocaleString('ko-KR', {
                 month: '2-digit',
-                day: '2-digit'
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: false
             });
         }
         // 1년 초과면 년/월/일 표시
@@ -110,27 +115,41 @@ export default () => ({
 
     // 성공 메시지 표시
     showSuccess(message) {
-        this.$store.toastr.success(message);
+        // toastr 스토어가 있으면 사용, 없으면 기본 alert
+        if (Alpine.store('toastr')) {
+            Alpine.store('toastr').success(message);
+        } else {
+            alert(message);
+        }
     },
 
     // 에러 메시지 표시
     showError(message) {
-        this.$store.toastr.error(message);
+        // toastr 스토어가 있으면 사용, 없으면 기본 alert
+        if (Alpine.store('toastr')) {
+            Alpine.store('toastr').error(message);
+        } else {
+            alert(message);
+        }
     },
 
     // 확인 대화상자
     async confirm(title, text = '') {
-        const result = await this.$store.swal.fire({
-            title: title,
-            text: text,
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonText: '확인',
-            cancelButtonText: '취소',
-            reverseButtons: true
-        });
-
-        return result.isConfirmed;
+        // swal 스토어가 있으면 사용, 없으면 기본 confirm
+        if (Alpine.store('swal')) {
+            const result = await Alpine.store('swal').fire({
+                title: title,
+                text: text,
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: '확인',
+                cancelButtonText: '취소',
+                reverseButtons: true
+            });
+            return result.isConfirmed;
+        } else {
+            return confirm(`${title}\n${text}`);
+        }
     },
 
     // URL 파라미터 생성

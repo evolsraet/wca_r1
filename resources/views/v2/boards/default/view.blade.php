@@ -4,13 +4,14 @@
 <script>
     window.boardConfig = {
         boardId: '{{ $board->id }}',
-        boardName: '{{ $board->name ?? $board->id }}'
+        boardName: '{{ $board->name ?? $board->id }}',
+        articleId: '{{ $articleId }}'
     };
 </script>
 
 <div class="board-view board-skin-{{ $board->skin }}"
      x-data="articleView"
-     x-init="init('{{ $board->id }}', {{ $articleId }})">
+     x-init="init('{{ $board->id }}', '{{ $articleId }}')">
 
     <!-- 로딩 상태 -->
     <div x-show="loading" class="text-center py-5">
@@ -108,135 +109,6 @@
                         </button>
                     </template>
                 </div>
-            </div>
-        </div>
-
-        <!-- 댓글 영역 -->
-        <div class="card">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">
-                    <i class="mdi mdi-comment-multiple me-2"></i>
-                    댓글 <span x-text="comments.length" class="badge bg-secondary"></span>
-                </h5>
-                <div x-show="commentsLoading">
-                    <div class="spinner-border spinner-border-sm text-primary" role="status">
-                        <span class="visually-hidden">Loading...</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 댓글 목록 -->
-            <div class="card-body">
-                <!-- 댓글 없음 -->
-                <div x-show="!commentsLoading && comments.length === 0" class="text-center text-muted py-4">
-                    <i class="mdi mdi-comment-outline" style="font-size: 2rem;"></i>
-                    <p class="mb-0 mt-2">첫 번째 댓글을 작성해보세요!</p>
-                </div>
-
-                <!-- 댓글 리스트 -->
-                <template x-for="comment in comments" :key="comment.id">
-                    <div class="border-bottom pb-3 mb-3">
-                        <!-- 댓글 헤더 -->
-                        <div class="d-flex justify-content-between align-items-start mb-2">
-                            <div class="d-flex align-items-center">
-                                <strong x-text="(comment.user && comment.user.name) || '익명'" class="me-2"></strong>
-                                <small class="text-muted" x-text="formatDate(comment.created_at)"></small>
-                                <span x-show="comment.parent_id" class="badge bg-info ms-2">답글</span>
-                            </div>
-
-                            <!-- 댓글 액션 -->
-                            <div class="btn-group btn-group-sm" x-show="comment.user_id === ($store.auth && $store.auth.user && $store.auth.user.id)">
-                                <button @click="startEditComment(comment)"
-                                        x-show="editingComment !== comment.id"
-                                        class="btn btn-outline-secondary btn-sm">
-                                    <i class="mdi mdi-pencil"></i>
-                                </button>
-                                <button @click="deleteComment(comment.id)"
-                                        class="btn btn-outline-danger btn-sm">
-                                    <i class="mdi mdi-delete"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- 댓글 내용 (일반 모드) -->
-                        <div x-show="editingComment !== comment.id">
-                            <p class="mb-2" x-text="comment.content"></p>
-
-                            <div x-show="canComment() && !comment.parent_id">
-                                <button @click="replyToComment(comment.id)"
-                                        class="btn btn-link btn-sm p-0 text-decoration-none">
-                                    <i class="mdi mdi-reply me-1"></i>답글
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- 댓글 수정 모드 -->
-                        <div x-show="editingComment === comment.id">
-                            <div class="mb-2">
-                                <x-forms.textarea
-                                    name="edit_content"
-                                    model="editForm.content"
-                                    rows="3"
-                                    no-margin
-                                />
-                            </div>
-                            <div class="d-flex gap-2">
-                                <button @click="updateComment(comment.id)"
-                                        class="btn btn-primary btn-sm">
-                                    <i class="mdi mdi-content-save me-1"></i>저장
-                                </button>
-                                <button @click="cancelEditComment()"
-                                        class="btn btn-secondary btn-sm">
-                                    취소
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </template>
-            </div>
-
-            <!-- 댓글 작성 폼 -->
-            <div x-show="canComment()" class="card-footer">
-                <form @submit.prevent="submitComment()">
-                    <!-- 대댓글 알림 -->
-                    <div x-show="commentForm.parent_id" class="alert alert-info d-flex justify-content-between align-items-center">
-                        <span>
-                            <i class="mdi mdi-reply me-1"></i>
-                            답글을 작성하고 있습니다.
-                        </span>
-                        <button @click="cancelReply()" type="button" class="btn-close"></button>
-                    </div>
-
-                    <div class="mb-3">
-                        <x-forms.textarea
-                            name="comment_content"
-                            model="commentForm.content"
-                            placeholder="댓글을 입력하세요..."
-                            rows="3"
-                            :errors="'commentErrors'"
-                            x-ref="commentContent"
-                            no-margin
-                        />
-                    </div>
-
-                    <div class="d-flex justify-content-end">
-                        <button type="submit"
-                                :disabled="commentSubmitting || !commentForm.content.trim()"
-                                class="btn btn-primary">
-                            <i x-show="!commentSubmitting" class="mdi mdi-comment-plus me-1"></i>
-                            <i x-show="commentSubmitting" class="mdi mdi-loading mdi-spin me-1"></i>
-                            <span x-show="!commentSubmitting">댓글 등록</span>
-                            <span x-show="commentSubmitting">등록 중...</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-
-            <!-- 로그인 안내 -->
-            <div x-show="!canComment()" class="card-footer text-center text-muted">
-                <i class="mdi mdi-account-alert me-1"></i>
-                댓글을 작성하려면 로그인이 필요합니다.
-                <a href="/login" class="btn btn-outline-primary btn-sm ms-2">로그인</a>
             </div>
         </div>
     </div>

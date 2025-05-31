@@ -26,13 +26,13 @@
                     <label class="form-label">카테고리</label>
                     <select x-model="form.article.category"
                             class="form-select"
-                            :class="{ 'is-invalid': errors.category }">
+                            :class="{ 'is-invalid': errors?.category }">
                         <option value="">카테고리를 선택하세요</option>
                         @foreach(json_decode($board->categories) as $category)
                             <option value="{{ $category }}">{{ $category }}</option>
                         @endforeach
                     </select>
-                    <div x-show="errors.category" class="invalid-feedback" x-text="errors.category"></div>
+                    <div x-show="errors?.category" class="invalid-feedback" x-text="errors?.category"></div>
                 </div>
             @endif
 
@@ -42,10 +42,10 @@
                 <input type="text"
                        x-model="form.article.title"
                        class="form-control"
-                       :class="{ 'is-invalid': errors.title }"
+                       :class="{ 'is-invalid': errors?.title }"
                        placeholder="제목을 입력하세요"
                        required>
-                <div x-show="errors.title" class="invalid-feedback" x-text="errors.title"></div>
+                <div x-show="errors?.title" class="invalid-feedback" x-text="errors?.title"></div>
             </div>
 
             <!-- 내용 -->
@@ -53,11 +53,11 @@
                 <label class="form-label">내용 <span class="text-danger">*</span></label>
                 <textarea x-model="form.article.content"
                           class="form-control"
-                          :class="{ 'is-invalid': errors.content }"
+                          :class="{ 'is-invalid': errors?.content }"
                           rows="15"
                           placeholder="내용을 입력하세요"
                           required></textarea>
-                <div x-show="errors.content" class="invalid-feedback" x-text="errors.content"></div>
+                <div x-show="errors?.content" class="invalid-feedback" x-text="errors?.content"></div>
             </div>
 
             <!-- 첨부파일 -->
@@ -67,11 +67,11 @@
                     <input type="file"
                            name="attachments[]"
                            class="form-control"
-                           :class="{ 'is-invalid': errors.attachments }"
+                           :class="{ 'is-invalid': errors?.attachments }"
                            multiple
                            accept="*/*">
                     <div class="form-text">여러 파일을 선택할 수 있습니다.</div>
-                    <div x-show="errors.attachments" class="invalid-feedback" x-text="errors.attachments"></div>
+                    <div x-show="errors?.attachments" class="invalid-feedback" x-text="errors?.attachments"></div>
 
                     <!-- 기존 첨부파일 (수정시) -->
                     <div x-show="isEdit && existingAttachments.length > 0" class="mt-2">
@@ -109,7 +109,7 @@
             @endif
 
             <!-- 에러 메시지 -->
-            <div x-show="Object.keys(errors).length > 0" class="alert alert-danger mb-3">
+            <div x-show="errors && Object.keys(errors).length > 0" class="alert alert-danger mb-3">
                 <ul class="mb-0">
                     <template x-for="(error, field) in errors" :key="field">
                         <li x-text="error"></li>

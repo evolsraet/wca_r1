@@ -29,13 +29,13 @@
         @if($model)
             x-model="{{ $model }}"
         @else
-            x-model="form.{{ $name }}"
+        x-model="form.{{ $name }}"
         @endif
         {{ $required ? 'required' : '' }}
         {{ $readonly ? 'readonly' : '' }}
         placeholder="{{ $placeholder }}"
         @if($errors)
-            :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
+        :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
         @endif
         {{ $attributes }}
     >
