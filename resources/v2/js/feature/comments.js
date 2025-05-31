@@ -39,8 +39,13 @@ export default () => ({
      * 컴포넌트 초기화
      */
     init(commentableType, commentableId, boardId = null, options = {}) {
-        console.log('Initializing comments component...', { commentableType, commentableId, options });
+        // commentableType이나 commentableId가 undefined인 경우 초기화 중단
+        if (!commentableType || !commentableId) {
+            // console.warn('Invalid commentableType or commentableId, initialization skipped.');
+            return;
+        }
 
+        console.log('코멘트 초기화 : ', { commentableType, commentableId, options });
         this.commentableType = commentableType;
         this.commentableId = commentableId;
         this.options = { ...this.options, ...options };
@@ -68,30 +73,35 @@ export default () => ({
                 this.comments = [];
             }
 
-            // const response = await this.$store.api.get(`/api/comments`, {
-            //     commentable_type: this.commentableType,
-            //     commentable_id: this.commentableId,
-            //     // page: this.currentPage,
-            //     // per_page: this.options.pageSize,
-            //     // sort: this.sortBy
-            // });
-
+            const orderDirection = this.sortBy === 'latest' ? 'desc' : 'asc';
 
             const response = await this.$store.api.get(`/api/comments`, {
-                where: "comments.commentable_type:" + this.commentableType + "|comments.commentable_id:" + this.commentableId
+                where: "comments.commentable_type:" + this.commentableType + "|comments.commentable_id:" + this.commentableId,
+                order_column: 'created_at',
+                order_direction: orderDirection
             });
 
             const data = response.data;
-            console.log('Comments', data.data, this.commentableType, this.commentableId);
+            // console.log('Comments loaded:', data.data);
+
+            const currentUserId = window.user?.id; // 현재 사용자 ID
+
+            const commentsWithPermissions = (data.data || data).map(comment => ({
+                ...comment,
+                can_edit: comment.user_id === currentUserId,
+                can_delete: comment.user_id === currentUserId
+            }));
 
             if (reset) {
-                this.comments = data.data || data;
+                this.comments = commentsWithPermissions;
             } else {
-                this.comments.push(...(data.data || data));
+                this.comments.push(...commentsWithPermissions);
             }
 
             this.totalCount = data.total || this.comments.length;
             this.hasNextPage = data.current_page < data.last_page;
+
+            // console.log('Comments state updated:', this.comments);
 
         } catch (error) {
             console.error('댓글 로드 실패:', error);
@@ -129,10 +139,13 @@ export default () => ({
             const response = await this.$store.api.post(`/api/comments`, form);
 
             // 새 댓글을 목록에 추가
+            const newComment = response.data.data;
+            // console.log('New comment added:', newComment);
+
             if (this.sortBy === 'latest') {
-                this.comments.unshift(response.data);
+                this.comments.unshift(newComment);
             } else {
-                this.comments.push(response.data);
+                this.comments.push(newComment);
             }
 
             this.totalCount++;
@@ -173,17 +186,22 @@ export default () => ({
 
         try {
             const response = await this.$store.api.put(`/api/comments/${commentId}`, {
-                content: this.editForm.content.trim()
+                comment: {
+                    content: this.editForm.content.trim()
+                }
             });
 
             // 댓글 목록에서 해당 댓글 업데이트
+            const updatedComment = response.data.data;
+            // console.log('Comment updated:', updatedComment);
+
             const index = this.comments.findIndex(c => c.id === commentId);
             if (index !== -1) {
-                this.comments[index] = response.data;
+                this.comments[index] = updatedComment;
             }
 
             this.cancelEdit();
-            this.$store.toastr.success('댓글이 수정되었습니다.');
+            this.$store.toastr.success(response.data.message);
 
         } catch (error) {
             console.error('댓글 수정 실패:', error);
@@ -191,7 +209,7 @@ export default () => ({
             if (error.response?.status === 422) {
                 this.editErrors = error.response.data.errors || {};
             } else {
-                this.$store.toastr.error('댓글 수정에 실패했습니다.');
+                this.$store.toastr.error(response.data.message);
             }
         } finally {
             this.loading = false;
@@ -236,7 +254,6 @@ export default () => ({
             this.$store.toastr.success('댓글이 삭제되었습니다.');
 
         } catch (error) {
-            console.error('댓글 삭제 실패:', error);
             this.$store.toastr.error('댓글 삭제에 실패했습니다.');
         } finally {
             this.loading = false;

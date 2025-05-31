@@ -14,6 +14,12 @@
 
     <!-- Scripts -->
     @vite(['resources/v2/sass/app.v2.scss'], 'build/v2')
+    @vite(['resources/v2/js/app.v2.js'], 'build/v2')
+    @php
+        // $viteDev = app()->environment('local') ? 'http://localhost:5173' : mix('');
+    @endphp
+    {{-- <script type="module" src="{{ $viteDev }}/resources/v2/js/app.v2.js" defer></script> --}}
+
 </head>
 <body>
 
@@ -31,6 +37,5 @@
 
     @include('v2.partials.footer')
 
-    @vite(['resources/v2/js/app.v2.js'], 'build/v2')
 </body>
 </html>

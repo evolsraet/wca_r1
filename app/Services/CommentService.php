@@ -67,9 +67,6 @@ class CommentService
 
                 break;
             case 'destroy':
-                if (!$this->getRequest('where', 'comments.commentable_type', '|')) {
-                    throw new \Exception('commentable_type 필수');
-                }
                 // 권한체크
                 $this->modifyOnlyMe($result);
                 break;

@@ -9,6 +9,14 @@
     'class' => ''                    // 추가 CSS 클래스
 ])
 
+@php
+    $is_admin = (auth()->check() && auth()->user()->hasPermissionTo('act.admin')) ? 1 : 0;
+@endphp
+
+<script>
+    window.user = {!! auth()->user() ? auth()->user()->toJson() : 'null' !!};
+</script>
+
 <div class="comments-container {{ $class }}"
      x-data="comments"
      x-init="init('{{ $commentableType }}', '{{ $commentableId }}', null, {
@@ -123,25 +131,18 @@
                                     </div>
                                 </div>
                                 <div class="col-auto">
-                                    <!-- 댓글 액션 메뉴 -->
-                                    <div class="dropdown" x-show="comment.can_edit || comment.can_delete">
-                                        <button class="btn btn-link btn-sm text-muted p-0"
-                                                type="button"
-                                                data-bs-toggle="dropdown">
-                                            <i class="mdi mdi-dots-horizontal"></i>
+                                    <!-- 댓글 액션 버튼 -->
+                                    <div class="d-flex align-items-center gap-2">
+                                        <button class="btn btn-link btn-sm text-muted"
+                                                x-show="comment.user_id==window.user.id||{{ $is_admin }}"
+                                                @click.prevent="editComment(comment)">
+                                            <i class="mdi mdi-pencil"></i> 수정
                                         </button>
-                                        <ul class="dropdown-menu dropdown-menu-end">
-                                            <li x-show="comment.can_edit">
-                                                <a class="dropdown-item" href="#" @click.prevent="editComment(comment)">
-                                                    <i class="mdi mdi-pencil me-2"></i>수정
-                                                </a>
-                                            </li>
-                                            <li x-show="comment.can_delete">
-                                                <a class="dropdown-item text-danger" href="#" @click.prevent="deleteComment(comment.id)">
-                                                    <i class="mdi mdi-delete me-2"></i>삭제
-                                                </a>
-                                            </li>
-                                        </ul>
+                                        <button class="btn btn-link btn-sm text-danger"
+                                                x-show="comment.user_id==window.user.id||{{ $is_admin }}"
+                                                @click.prevent="deleteComment(comment.id)">
+                                            <i class="mdi mdi-delete"></i> 삭제
+                                        </button>
                                     </div>
                                 </div>
                             </div>

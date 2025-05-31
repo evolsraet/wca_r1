@@ -10,8 +10,8 @@
 </script>
 
 <div class="board-form board-skin-{{ $board->skin }}"
-     x-data="articleForm"
-     x-init="init('{{ $board->id }}', '{{ $articleId }}')">
+     x-data="articleForm">
+     {{-- x-init="init('{{ $board->id }}', '{{ $articleId }}')" --}}
 
     <!-- 폼 헤더 -->
     <div class="form-header mb-4">

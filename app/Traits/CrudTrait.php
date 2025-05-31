@@ -606,7 +606,7 @@ trait CrudTrait
             //     auth()->user()->id,
             //     $data->user_id
             // ]);
-            throw new \Exception("권한이 없습니다.");
+            throw new \Exception("권한이 없습니다.", 400);
         }
     }
 
