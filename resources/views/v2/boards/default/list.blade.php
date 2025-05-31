@@ -38,6 +38,7 @@
                         placeholder="전체 카테고리"
                         @change="onCategoryChange()"
                         no-margin
+                        :errors="null"
                     />
                 </div>
                 <div class="col-md-8">
