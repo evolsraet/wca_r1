@@ -121,9 +121,9 @@ trait CrudTrait
                 }
             });
         }
-        
+
         if($search_text && request('with') == 'dealer') {
-            
+
             $query = Review::select('reviews.*')->join('auctions', 'reviews.auction_id', '=', 'auctions.id');
             $query->where(function($q) use ($search_text) {
                 $q->where('reviews.content', 'like', '%' . $search_text . '%')
@@ -368,6 +368,7 @@ trait CrudTrait
 
     public function show($id)
     {
+
         $this->beforeProcess(__FUNCTION__, request(), $data = null, $id);
 
         $modelClass = $this->getModelClass();
@@ -479,6 +480,11 @@ trait CrudTrait
         // print_r('crudTrait');
         // print_r(config('auth.defaults.guard'));
         // die();
+
+        // return response()->api([
+        //     'files' => $_FILES,
+        //     'request' => $request->all(),
+        // ], '삭제되었습니다.', 'fail', 400);
 
         $this->beforeProcess(__FUNCTION__, request());
 

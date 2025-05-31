@@ -95,26 +95,13 @@
             </div>
 
             <!-- 첨부파일 -->
-            <div x-show="article && article.attachments && article.attachments.length > 0" class="card-footer bg-light">
-                <h6 class="mb-2">
-                    <i class="mdi mdi-paperclip me-1"></i>
-                    첨부파일
-                </h6>
-                <div class="list-group list-group-flush">
-                    <template x-for="attachment in (article && article.attachments)" :key="attachment.id">
-                        <button @click="downloadFile(attachment)"
-                                class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
-                            <div>
-                                <i class="mdi mdi-file me-2 text-muted"></i>
-                                <span x-text="attachment.original_name"></span>
-                            </div>
-                            <div class="text-muted small">
-                                <span x-text="formatFileSize(attachment.file_size)"></span>
-                                <i class="mdi mdi-download ms-2"></i>
-                            </div>
-                        </button>
-                    </template>
-                </div>
+            <div x-show="article && article.board_attach && article.board_attach.length > 0" class="card-footer bg-light">
+                <x-forms.fileList
+                    label="첨부파일"
+                    data-path="article.board_attach"
+                    show-download="true"
+                    download-action="downloadFile"
+                />
             </div>
         </div>
     </div>

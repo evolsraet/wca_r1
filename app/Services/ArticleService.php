@@ -41,6 +41,8 @@ class ArticleService
 
     protected function middleProcess($method, $request, $data = null, $id = null)
     {
+
+
         $article = null;
         if ($id)
             $article = Article::findOrFail($id);
@@ -96,9 +98,15 @@ class ArticleService
                 // 비밀글
                 if (
                     $article->is_secret
-                    && !($article->user_id == auth()->user()->id || !auth()->user()->can('act.admin'))
+                    && (
+                        !auth()->check()
+                        || (
+                            $article->user_id != auth()->user()->id
+                            && !auth()->user()->can('act.admin')
+                        )
+                    )
                 ) {
-                    throw new \Exception('비밀글입니다.');
+                    throw new \Exception('비밀글입니다.', 401);
                 }
 
                 // 조회수 증가 (하루에 한 번만)

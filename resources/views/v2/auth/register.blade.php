@@ -20,6 +20,7 @@
 
         if( isset($form['user']['dealer']) ) {
             $form['dealer'] = auth()->user()->dealer;
+            $form['isDealer'] = true;
             unset($form['user']['dealer']);
         } else {
             $form['isDealer'] = false;

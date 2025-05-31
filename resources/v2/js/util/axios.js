@@ -137,23 +137,4 @@ export const api = {
     delete: (url, config = {}) => instance.delete(url, config)
 };
 
-// FormData 처리 함수
-export const appendFormData = (formData, formElements) => {
-    Array.from(formElements).forEach(element => {
-        if (element.name && !element.disabled) {  // name 속성이 있고 disabled가 아닌 요소만 처리
-            if (element.name.includes('.')) {
-                const [key, value] = element.name.split('.');
-                if (element.type === 'checkbox') {
-                    if (element.checked) {
-                        formData.append(`${key}[${value}]`, 1);  // 숫자 1로 전송
-                    }
-                } else {
-                    formData.append(`${key}[${value}]`, element.value);
-                }
-            }
-        }
-    });
-    return formData;
-};
-
 export default instance;

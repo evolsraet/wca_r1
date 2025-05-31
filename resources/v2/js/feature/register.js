@@ -1,5 +1,4 @@
-import { appendFilesToFormData, setupFileUploadListeners } from '../util/fileUpload';
-import { appendFormData } from '../util/axios';
+import { appendFormData, appendFilesToFormData, setupFileUploadListeners } from '../util/fileUpload';
 
 export default function() {
     return {

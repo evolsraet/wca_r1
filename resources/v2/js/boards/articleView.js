@@ -33,7 +33,7 @@ export default function articleView() {
 
             try {
                 const response = await this.$store.api.get(`/api/board/${this.boardId}/articles/${this.articleId}`, {
-                    with: 'user,attachments'
+                    with: 'user,media'
                 });
 
                 if (response.data.status === 'ok') {
@@ -105,7 +105,7 @@ export default function articleView() {
 
         // 첨부파일 다운로드
         downloadFile(attachment) {
-            window.open(`/api/board/${this.boardId}/articles/${this.articleId}/attachments/${attachment.id}/download`, '_blank');
+            window.open(`/api/board/${this.boardId}/articles/${this.articleId}/board_attach/${attachment.id}/download`, '_blank');
         },
 
         // 권한 체크

@@ -50,6 +50,9 @@
                 <button type="button" class="btn btn-light w-100 border" onclick="document.getElementById('file-{{ $inputName }}').click()">
                     <i class="mdi mdi-upload me-1"></i>{{ $buttonText }}
                 </button>
+                @if($isMultiple)
+                    <div class="form-text">여러 파일을 올릴 수 있습니다.</div>
+                @endif
                 @if($errors)
                     <div class="invalid-feedback" x-text="errors?.{{ $errorKey }}?.[0]"></div>
                 @endif
@@ -71,6 +74,9 @@
             <button type="button" class="btn btn-light w-100 border" onclick="document.getElementById('file-{{ $inputName }}').click()">
                 <i class="mdi mdi-upload me-1"></i>{{ $buttonText }}
             </button>
+            @if($isMultiple)
+                <div class="form-text">여러 파일을 올릴 수 있습니다.</div>
+            @endif
             @if($errors)
                 <div class="invalid-feedback" x-text="errors?.{{ $errorKey }}?.[0]"></div>
             @endif

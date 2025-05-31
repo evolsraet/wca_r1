@@ -1,3 +1,5 @@
+import { appendFilesToFormData, appendFormData, setupFileUploadListeners } from '../util/fileUpload';
+
 // 게시글 작성/수정 폼 컴포넌트
 export default () => ({
     // 기본 상태
@@ -15,11 +17,11 @@ export default () => ({
             content: '',
             category: '',
             is_secret: false
-        }
+        },
     },
 
     // 기존 첨부파일 (수정시)
-    existingAttachments: [],
+    files: [],
 
     // 초기화
     async init(boardId, articleId = null) {
@@ -46,6 +48,9 @@ export default () => ({
         // board 스토어 초기화
         this.$store.board.init(this.boardId);
 
+        // 파일 업로드 이벤트 리스너 설정 (register.js 방식)
+        setupFileUploadListeners(this.form, this.$el);
+
         // 수정 모드일 때 기존 데이터 로드
         if (this.isEdit) {
             await this.loadArticle();
@@ -60,7 +65,7 @@ export default () => ({
 
         try {
             const response = await this.$store.api.get(`/api/board/${this.boardId}/articles/${this.articleId}`, {
-                with: 'attachments'
+                with: 'media'
             });
 
             if (response.data.status === 'ok') {
@@ -71,8 +76,7 @@ export default () => ({
                     category: article.category || '',
                     is_secret: !!article.is_secret
                 };
-
-                this.existingAttachments = article.attachments || [];
+                this.files = article.files || [];
             } else {
                 this.showError('게시글을 불러올 수 없습니다.');
             }
@@ -92,27 +96,13 @@ export default () => ({
         try {
             const formData = new FormData();
 
-            // 게시글 데이터
-            Object.keys(this.form.article).forEach(key => {
-                let value = this.form.article[key];
+            // 폼 요소들 가져오기 (register.js 방식)
+            const formElements = this.$el.elements;
+            appendFormData(formData, formElements);
 
-                // boolean 값을 정수로 변환
-                if (typeof value === 'boolean') {
-                    value = value ? 1 : 0;
-                }
-
-                if (value !== null && value !== undefined && value !== '') {
-                    formData.append(`article[${key}]`, value);
-                }
-            });
-
-            // 첨부파일
-            const fileInput = document.querySelector('input[type="file"][name="attachments[]"]');
-            if (fileInput?.files) {
-                Array.from(fileInput.files).forEach(file => {
-                    formData.append('attachments[]', file);
-                });
-            }
+            // 첨부파일 처리 (register.js 방식)
+            const fileFields = ['board_attach'];
+            appendFilesToFormData(formData, fileFields, this.$el);
 
             const url = this.isEdit
                 ? `/api/board/${this.boardId}/articles/${this.articleId}`
@@ -127,12 +117,10 @@ export default () => ({
             });
 
             if (response.data.status === 'ok') {
-                this.showSuccess(this.isEdit ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.');
+                // this.showSuccess(this.isEdit ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.');
 
                 // 목록 페이지로 이동
-                setTimeout(() => {
-                    window.location.href = `/v2/board/${this.boardId}`;
-                }, 1000);
+                window.location.href = `/v2/board/${this.boardId}`;
             } else {
                 if (response.data.errors) {
                     this.handleErrors(response.data.errors);
@@ -152,35 +140,6 @@ export default () => ({
             }
         } finally {
             this.submitting = false;
-        }
-    },
-
-    // 임시저장
-    async saveDraft() {
-        this.showError('임시저장 기능은 아직 구현되지 않았습니다.');
-    },
-
-    // 기존 첨부파일 삭제
-    async removeAttachment(attachmentId) {
-        const confirmed = await this.$store.board.confirm(
-            '첨부파일 삭제',
-            '이 첨부파일을 삭제하시겠습니까?'
-        );
-
-        if (!confirmed) return;
-
-        try {
-            const response = await this.$store.api.delete(`/api/board/${this.boardId}/articles/${this.articleId}/attachments/${attachmentId}`);
-
-            if (response.data.status === 'ok') {
-                this.existingAttachments = this.existingAttachments.filter(att => att.id !== attachmentId);
-                this.showSuccess('첨부파일이 삭제되었습니다.');
-            } else {
-                this.showError('첨부파일 삭제에 실패했습니다.');
-            }
-        } catch (error) {
-            console.error('첨부파일 삭제 실패:', error);
-            this.showError('첨부파일 삭제 중 오류가 발생했습니다.');
         }
     },
 
