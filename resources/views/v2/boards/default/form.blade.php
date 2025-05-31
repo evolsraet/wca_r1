@@ -10,8 +10,8 @@
 </script>
 
 <div class="board-form board-skin-{{ $board->skin }}"
-     x-data="articleForm">
-     {{-- x-init="init('{{ $board->id }}', '{{ $articleId }}')" --}}
+     x-data="articleForm()"
+     x-init="setup('{{ $board->id }}', '{{ $articleId }}')">
 
     <!-- 폼 헤더 -->
     <div class="form-header mb-4">
@@ -79,12 +79,16 @@
                     ]
                 ];
             @endphp
+                <p>루트에서 갯수: <span x-text="files.board_attach"></span></p>
+
                 <x-forms.fileUpload
+                    x-show="!loading"
                     label="첨부파일"
                     name="board_attach[]"
                     accept="*/*"
                     :errors="true"
                     button-text="파일 선택"
+                    alpineFiles="files.board_attach"
                     {{-- x-bind:existingFilesAlpine="files" --}}
                     {{-- :existingFiles="$existingFiles" --}}
                     {{-- existingFilesAlpine="files" --}}
@@ -118,5 +122,10 @@
             </div>
         </form>
     </div>
+
+    {{-- <x-comments
+    commentable-type="Article"
+    commentable-id="{{ $articleId }}"
+    title="댓글" /> --}}
 </div>
 @endsection

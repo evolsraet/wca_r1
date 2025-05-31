@@ -24,7 +24,7 @@ export default () => ({
     files: [],
 
     // 초기화
-    async init(boardId, articleId = null) {
+    async setup(boardId, articleId = null) {
         // 파라미터가 없거나 빈 문자열인 경우 window.boardConfig에서 가져오기
         this.boardId = boardId || window.boardConfig?.boardId;
         this.articleId = (articleId && articleId !== 'null' && articleId !== '') ? articleId : window.boardConfig?.articleId;
@@ -76,7 +76,10 @@ export default () => ({
                     category: article.category || '',
                     is_secret: !!article.is_secret
                 };
+                // console.log('article.files', article.files);
+                // this.files.splice(0, this.files.length, ...(article.files || [])); // 다른 배열이라 덮어쓰기
                 this.files = article.files || [];
+                // console.log('article.files', this.files.board_attach);
             } else {
                 this.showError('게시글을 불러올 수 없습니다.');
             }

@@ -23,12 +23,12 @@ export default () => ({
     },
 
     // 정렬 상태
-    sortColumn: 'id',
-    sortDirection: 'desc',
+    order_column: 'id',
+    order_direction: 'desc',
 
     // Alpine 컴포넌트 초기화 시 자동 실행
     init() {
-        console.log('Alpine component initialized');
+        console.log('List initialized');
 
         // window.boardConfig에서 boardId 가져오기
         const boardId = window.boardConfig?.boardId;
@@ -89,8 +89,8 @@ export default () => ({
         this.filters.paginate = parseInt(urlParams.get('paginate')) || 10;
 
         // 정렬 파라미터도 URL에서 로드
-        this.sortColumn = urlParams.get('sort') || 'id';
-        this.sortDirection = urlParams.get('direction') || 'desc';
+        this.order_column = urlParams.get('sort') || 'id';
+        this.order_direction = urlParams.get('direction') || 'desc';
     },
 
     // 게시글 목록 로드
@@ -103,8 +103,8 @@ export default () => ({
                 page: this.filters.page,
                 paginate: this.filters.paginate,
                 with: 'user',
-                order_column: this.sortColumn,
-                order_direction: this.sortDirection
+                order_column: this.order_column,
+                order_direction: this.order_direction
             };
 
             // 카테고리 필터
@@ -165,8 +165,8 @@ export default () => ({
         if (this.filters.search_text) params.set('search_text', this.filters.search_text);
         if (this.filters.page > 1) params.set('page', this.filters.page);
         if (this.filters.paginate !== 10) params.set('paginate', this.filters.paginate);
-        if (this.sortColumn !== 'id') params.set('sort', this.sortColumn);
-        if (this.sortDirection !== 'desc') params.set('direction', this.sortDirection);
+        if (this.order_column !== 'id') params.set('order_column', this.order_column);
+        if (this.order_direction !== 'desc') params.set('order_direction', this.order_direction);
 
         const url = params.toString() ? `?${params.toString()}` : window.location.pathname;
         window.history.replaceState({}, '', url);
@@ -216,10 +216,9 @@ export default () => ({
 
     // 검색 초기화
     resetSearch() {
-        this.filters.category = '';
-        this.filters.search_text = '';
-        this.filters.page = 1;
-        this.loadArticles();
+        window.location.href = window.location.pathname;
+        // 필터 제거
+        // this.loadArticles();
     },
 
     // 정렬 메소드
@@ -227,11 +226,11 @@ export default () => ({
         console.log('Sorting by column:', column);
 
         // 같은 컬럼을 클릭하면 방향 토글, 다른 컬럼이면 desc로 시작
-        if (this.sortColumn === column) {
-            this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        if (this.order_column === column) {
+            this.order_direction = this.order_direction === 'asc' ? 'desc' : 'asc';
         } else {
-            this.sortColumn = column;
-            this.sortDirection = 'desc';
+            this.order_column = column;
+            this.order_direction = 'desc';
         }
 
         // 정렬 시 첫 페이지로 이동
@@ -243,7 +242,7 @@ export default () => ({
 
     // 정렬 상태 확인 메소드
     isSorted(column) {
-        return this.sortColumn === column;
+        return this.order_column === column;
     },
 
     // 정렬 방향 아이콘 가져오기
@@ -251,7 +250,7 @@ export default () => ({
         if (!this.isSorted(column)) {
             return 'mdi-sort'; // 기본 정렬 아이콘
         }
-        return this.sortDirection === 'asc' ? 'mdi-sort-ascending' : 'mdi-sort-descending';
+        return this.order_direction === 'asc' ? 'mdi-sort-ascending' : 'mdi-sort-descending';
     },
 
     // 게시글 순번 계산
@@ -259,16 +258,16 @@ export default () => ({
         const currentStart = (this.pagination.current_page - 1) * this.pagination.per_page;
 
         // 기본 정렬(id desc) 또는 desc 정렬일 때: 최신 글이 1번
-        if (this.sortColumn === 'id' && this.sortDirection === 'desc') {
+        if (this.order_column === 'id' && this.order_direction === 'desc') {
             return this.pagination.total - (currentStart + index);
         }
         // id 오름차순 정렬일 때: 가장 오래된 글이 1번
-        else if (this.sortColumn === 'id' && this.sortDirection === 'asc') {
+        else if (this.order_column === 'id' && this.order_direction === 'asc') {
             return currentStart + index + 1;
         }
         // 다른 컬럼으로 정렬할 때: 현재 검색 결과에서의 순번
         else {
-            if (this.sortDirection === 'desc') {
+            if (this.order_direction === 'desc') {
         return this.pagination.total - (currentStart + index);
             } else {
                 return currentStart + index + 1;

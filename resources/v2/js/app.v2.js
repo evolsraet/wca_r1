@@ -64,15 +64,10 @@ import { modal } from './util/modal.js';
         const name = path.split('/').pop().replace('.js', '');
 
         if (!registeredComponents.has(name)) {
-            // console.log(`Registering board component: ${name}`);
-
-            // board.js는 스토어로 등록, 나머지는 컴포넌트로 등록
             if (name === 'board') {
                 Alpine.store('board', module.default);
-                // console.log('Registered board as store');
             } else {
                 Alpine.data(name, module.default);
-                // console.log(`Registered ${name} as component`);
             }
             registeredComponents.add(name);
         }

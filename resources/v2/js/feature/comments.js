@@ -10,17 +10,14 @@ export default () => ({
 
     // 데이터 상태
     comments: [],
-    totalCount: 0,
-    currentPage: 1,
+    total: 0,
+    current_page: 1,
+    last_page: 1,
     hasNextPage: false,
     loading: false,
 
     // 정렬 및 필터
     sortBy: 'latest',
-
-    // 권한
-    canWrite: true,  // 권한체크 제거하므로 기본 true
-    canRead: true,
 
     // 폼 데이터
     form: {
@@ -33,19 +30,21 @@ export default () => ({
     editForm: {
         content: ''
     },
-    editErrors: {},
+
+    // 삭제 관련
+    deletingCommentId: null,
 
     /**
      * 컴포넌트 초기화
      */
-    init(commentableType, commentableId, boardId = null, options = {}) {
+    setup(commentableType, commentableId, boardId = null, options = {}) {
         // commentableType이나 commentableId가 undefined인 경우 초기화 중단
+        console.log('코멘트 초기화 : ', { commentableType, commentableId, options });
         if (!commentableType || !commentableId) {
             // console.warn('Invalid commentableType or commentableId, initialization skipped.');
             return;
         }
 
-        console.log('코멘트 초기화 : ', { commentableType, commentableId, options });
         this.commentableType = commentableType;
         this.commentableId = commentableId;
         this.options = { ...this.options, ...options };
@@ -69,7 +68,7 @@ export default () => ({
 
         try {
             if (reset) {
-                this.currentPage = 1;
+                this.current_page = 1;
                 this.comments = [];
             }
 
@@ -78,30 +77,25 @@ export default () => ({
             const response = await this.$store.api.get(`/api/comments`, {
                 where: "comments.commentable_type:" + this.commentableType + "|comments.commentable_id:" + this.commentableId,
                 order_column: 'created_at',
-                order_direction: orderDirection
+                order_direction: orderDirection,
+                // paginate: 2,
+                page: this.current_page
             });
 
             const data = response.data;
-            // console.log('Comments loaded:', data.data);
 
-            const currentUserId = window.user?.id; // 현재 사용자 ID
-
-            const commentsWithPermissions = (data.data || data).map(comment => ({
-                ...comment,
-                can_edit: comment.user_id === currentUserId,
-                can_delete: comment.user_id === currentUserId
-            }));
+            const commentsData = data.data || data;
 
             if (reset) {
-                this.comments = commentsWithPermissions;
+                this.comments = commentsData;
             } else {
-                this.comments.push(...commentsWithPermissions);
+                this.comments.push(...commentsData);
             }
 
-            this.totalCount = data.total || this.comments.length;
-            this.hasNextPage = data.current_page < data.last_page;
-
-            // console.log('Comments state updated:', this.comments);
+            this.total = data.meta.total || this.comments.length;
+            this.current_page = data.meta.current_page;
+            this.last_page = data.meta.last_page;
+            this.hasNextPage = data.meta.current_page < data.meta.last_page;
 
         } catch (error) {
             console.error('댓글 로드 실패:', error);
@@ -115,7 +109,7 @@ export default () => ({
      * 더 많은 댓글 로드
      */
     async loadMore() {
-        this.currentPage++;
+        this.current_page++;
         await this.loadComments();
     },
 
@@ -148,7 +142,7 @@ export default () => ({
                 this.comments.push(newComment);
             }
 
-            this.totalCount++;
+            this.total++;
             this.form.content = '';
 
             this.$store.toastr.success('댓글이 등록되었습니다.');
@@ -172,7 +166,7 @@ export default () => ({
     editComment(comment) {
         this.editingCommentId = comment.id;
         this.editForm.content = comment.content;
-        this.editErrors = {};
+        this.errors = {};
     },
 
     /**
@@ -182,18 +176,17 @@ export default () => ({
         if (this.loading || !this.editForm.content.trim()) return;
 
         this.loading = true;
-        this.editErrors = {};
+        this.errors = {};
 
         try {
             const response = await this.$store.api.put(`/api/comments/${commentId}`, {
                 comment: {
                     content: this.editForm.content.trim()
-                }
+                },
             });
 
             // 댓글 목록에서 해당 댓글 업데이트
             const updatedComment = response.data.data;
-            // console.log('Comment updated:', updatedComment);
 
             const index = this.comments.findIndex(c => c.id === commentId);
             if (index !== -1) {
@@ -207,7 +200,7 @@ export default () => ({
             console.error('댓글 수정 실패:', error);
 
             if (error.response?.status === 422) {
-                this.editErrors = error.response.data.errors || {};
+                this.errors = error.response.data.errors || {};
             } else {
                 this.$store.toastr.error(response.data.message);
             }
@@ -222,7 +215,7 @@ export default () => ({
     cancelEdit() {
         this.editingCommentId = null;
         this.editForm.content = '';
-        this.editErrors = {};
+        this.errors = {};
     },
 
     /**
@@ -242,6 +235,7 @@ export default () => ({
 
         if (!result.isConfirmed) return;
 
+        this.deletingCommentId = commentId;
         this.loading = true;
 
         try {
@@ -249,7 +243,10 @@ export default () => ({
 
             // 댓글 목록에서 제거
             this.comments = this.comments.filter(c => c.id !== commentId);
-            this.totalCount--;
+            this.total--;
+
+            // 테스트로 1초 기다리기
+            await new Promise(resolve => setTimeout(resolve, 1000));
 
             this.$store.toastr.success('댓글이 삭제되었습니다.');
 
@@ -257,6 +254,7 @@ export default () => ({
             this.$store.toastr.error('댓글 삭제에 실패했습니다.');
         } finally {
             this.loading = false;
+            this.deletingCommentId = null;
         }
     },
 

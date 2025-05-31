@@ -95,10 +95,11 @@ export const setupFileUploadListeners = (form, element) => {
     return listeners;
 };
 
-export const fileUpload = (fieldName) => ({
+export const fileUpload = (fieldName, initialFiles = []) => ({
     previewUrl: '',
     fileList: [],
     existingFiles: [],
+    alpineFiles: initialFiles,
 
     init() {
         // 기존 파일 삭제 이벤트 리스너

@@ -1,4 +1,4 @@
-export default function articleView() {
+export default function() {
     return {
         // 기본 상태
         boardId: null,
@@ -6,20 +6,23 @@ export default function articleView() {
         loading: false,
         article: null,
         board_attach: [],
-        _initialized: false,
 
         // 초기화
-        async init(boardId, articleId) {
+        async setup(boardId, articleId) {
             // 이미 초기화되었다면 중복 실행 방지
-            if (this._initialized) {
+            // if (this._initialized) {
+            //     return;
+            // }
+            console.log('articleView init:', { boardId: boardId, articleId: articleId });
+
+            if( boardId === undefined || articleId === undefined ) {
                 return;
             }
 
             // 파라미터가 없거나 undefined인 경우 window.boardConfig에서 가져오기
-            this.boardId = boardId || window.boardConfig?.boardId;
-            this.articleId = articleId || window.boardConfig?.articleId;
+            this.boardId = boardId;
+            this.articleId = articleId;
 
-            console.log('articleView init:', { boardId: this.boardId, articleId: this.articleId });
 
             // 필수 파라미터 검증
             if (!this.boardId || !this.articleId) {
@@ -29,7 +32,7 @@ export default function articleView() {
             }
 
             // 초기화 플래그 설정
-            this._initialized = true;
+            // this._initialized = true;
 
             // board 스토어 초기화
             this.$store.board.init(this.boardId);

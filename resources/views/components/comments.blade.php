@@ -17,9 +17,16 @@
     window.user = {!! auth()->user() ? auth()->user()->toJson() : 'null' !!};
 </script>
 
+<style>
+    .comment-item.loading, .comment-form-container.loading {
+        opacity: 0.5;
+        pointer-events: none;
+    }
+</style>
+
 <div class="comments-container {{ $class }}"
-     x-data="comments"
-     x-init="init('{{ $commentableType }}', '{{ $commentableId }}', null, {
+     x-data="comments()"
+     x-init="setup('{{ $commentableType }}', '{{ $commentableId }}', null, {
          allowReply: false,
          maxDepth: 1,
          pageSize: {{ $pageSize }}
@@ -33,7 +40,7 @@
                 <h5 class="mb-0">
                     <i class="mdi mdi-comment-text-outline me-2"></i>
                     {{ $title }}
-                    <span class="badge bg-secondary ms-2" x-text="totalCount"></span>
+                    <span class="badge bg-secondary ms-2" x-text="total"></span>
                 </h5>
             </div>
             <div class="col-auto">
@@ -50,7 +57,10 @@
     @endif
 
     <!-- 댓글 작성 폼 -->
-    <div class="comment-form-container mb-4" x-show="canWrite">
+    <div class="comment-form-container mb-4"
+        :class="{ 'loading': loading }"
+        x-show="1"
+        >
         <div class="card">
             <div class="card-body">
                 <form @submit.prevent="submitComment()">
@@ -82,14 +92,8 @@
                         </div>
                     </div>
                 </form>
-            </div>
-        </div>
-    </div>
 
-    <!-- 로딩 상태 -->
-    <div class="text-center py-4" x-show="loading && !comments.length">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">댓글을 불러오는 중...</span>
+            </div>
         </div>
     </div>
 
@@ -98,14 +102,14 @@
         <div class="text-muted">
             <i class="mdi mdi-comment-outline display-4 d-block mb-3 opacity-50"></i>
             <p class="mb-0">아직 댓글이 없습니다.</p>
-            <small x-show="canWrite">첫 번째 댓글을 작성해보세요!</small>
+            <small>첫 번째 댓글을 작성해보세요!</small>
         </div>
     </div>
 
     <!-- 댓글 목록 -->
     <div class="comments-list" x-show="comments.length > 0">
         <template x-for="comment in comments" :key="comment.id">
-            <div class="comment-item">
+            <div class="comment-item" :class="{ 'loading': loading && (editingCommentId === comment.id || deletingCommentId === comment.id) }">
 
                 <!-- 댓글 내용 -->
                 <div class="card mb-3">
