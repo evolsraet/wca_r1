@@ -58,10 +58,10 @@
                     <!-- 액션 버튼 -->
                     <div class="ms-3">
                         <div class="btn-group" role="group">
-                            <a href="/v2/board/{{ $board->id }}" class="btn btn-outline-secondary btn-sm">
+                            <button @click="goToList()" class="btn btn-outline-secondary btn-sm">
                                 <i class="mdi mdi-format-list-bulleted me-1"></i>
                                 <span class="d-none d-sm-inline">목록</span>
-                            </a>
+                            </button>
 
                             <template x-if="canEdit()">
                                 <a :href="`/v2/board/{{ $board->id }}/form/${article && article.id}`"
@@ -120,9 +120,9 @@
         </div>
         <h6 class="text-muted mb-2">게시글을 찾을 수 없습니다</h6>
         <p class="text-muted mb-3">삭제되었거나 권한이 없는 게시글입니다.</p>
-        <a href="/v2/board/{{ $board->id }}" class="btn btn-primary">
+        <button @click="goToList()" class="btn btn-primary">
             <i class="mdi mdi-format-list-bulleted me-1"></i>목록으로
-        </a>
+        </button>
     </div>
 </div>
 

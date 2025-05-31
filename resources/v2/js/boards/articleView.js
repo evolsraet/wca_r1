@@ -65,7 +65,7 @@ export default function articleView() {
                     this.showSuccess('게시글이 삭제되었습니다.');
                     // 목록으로 이동
                     setTimeout(() => {
-                        window.location.href = `/v2/board/${this.boardId}`;
+                        this.goToList();
                     }, 1000);
                 } else {
                     this.showError(response.data.message || '게시글 삭제에 실패했습니다.');
@@ -73,6 +73,20 @@ export default function articleView() {
             } catch (error) {
                 console.error('게시글 삭제 실패:', error);
                 this.showError('게시글 삭제에 실패했습니다.');
+            }
+        },
+
+        // 목록으로 이동 (히스토리 백 우선, 없으면 목록 페이지로)
+        goToList() {
+            // 히스토리에서 게시판 목록 페이지 찾기
+            const boardListPath = `/v2/board/${this.boardId}`;
+
+            // 현재 페이지가 직접 접근이 아니고 이전 페이지가 게시판 목록인 경우
+            if (window.history.length > 1 && document.referrer.includes(boardListPath)) {
+                window.history.back();
+            } else {
+                // 직접 접근이거나 다른 페이지에서 온 경우 목록 페이지로 이동
+                window.location.href = boardListPath;
             }
         },
 
