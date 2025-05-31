@@ -4,55 +4,64 @@ import 'animate.css';
 
 // sweetalert 전역 설정
 import Swal from 'sweetalert2';
-Alpine.store('swal', Swal);
-
 // toastr 설정
 import toastr from 'toastr';
 import 'toastr/build/toastr.min.css';
-toastr.options = {
-    closeButton: true,
-    progressBar: true,
-    positionClass: 'toast-top-right',
-    timeOut: 3000
-};
-Alpine.store('toastr', toastr);
-
-// util 파일들 import 및 Alpine 등록
+// util 파일들 import
 import { api } from './util/axios.js';
 import { address } from './util/address.js';
 import { fileUpload } from './util/fileUpload.js';
-
-// Alpine 등록
-Alpine.store('api', api);
-Alpine.store('address', address);
-Alpine.data('fileUpload', fileUpload);
-
-// 컴포넌트 feature 자동 등록 (하위 폴더 포함)
-const components = import.meta.glob('./feature/**/*.js', { eager: true });
-Object.entries(components).forEach(([path, module]) => {
-    // 경로에서 파일명만 추출 (확장자 제외)
-    const name = path.split('/').pop().replace('.js', '');
-    Alpine.data(name, module.default);
-});
-
-const pages = import.meta.glob('./pages/**/*.js', { eager: true });
-Object.entries(pages).forEach(([path, module]) => {
-    // 경로에서 파일명만 추출 (확장자 제외)
-    const name = path.split('/').pop().replace('.js', '');
-    Alpine.data(name, module.default);
-});
-
-// board 폴더 자동 등록
-const boardComponents = import.meta.glob('./board/**/*.js', { eager: true });
-Object.entries(boardComponents).forEach(([path, module]) => {
-    // 경로에서 파일명만 추출 (확장자 제외)
-    const name = path.split('/').pop().replace('.js', '');
-    Alpine.data(name, module.default);
-});
-
-// TO.성완 / modal.js 와 bootstrap.js 의 충돌이 있습니다. 드롭다운, offcanvas 사용시 충돌.
 import { modal } from './util/modal.js';
-Alpine.store('modal', modal);
 
-window.Alpine = Alpine;
-Alpine.start();
+// Alpine 중복 초기화 방지
+if (window.Alpine) {
+    console.log('Alpine already initialized, skipping...');
+} else {
+    console.log('Initializing Alpine...');
+
+    Alpine.store('swal', Swal);
+
+    toastr.options = {
+        closeButton: true,
+        progressBar: true,
+        positionClass: 'toast-top-right',
+        timeOut: 3000
+    };
+    Alpine.store('toastr', toastr);
+
+    // Alpine 등록
+    Alpine.store('api', api);
+    Alpine.store('address', address);
+    Alpine.data('fileUpload', fileUpload);
+
+    // 컴포넌트 feature 자동 등록 (하위 폴더 포함)
+    const components = import.meta.glob('./feature/**/*.js', { eager: true });
+    Object.entries(components).forEach(([path, module]) => {
+        // 경로에서 파일명만 추출 (확장자 제외)
+        const name = path.split('/').pop().replace('.js', '');
+        Alpine.data(name, module.default);
+    });
+
+    const pages = import.meta.glob('./pages/**/*.js', { eager: true });
+    Object.entries(pages).forEach(([path, module]) => {
+        // 경로에서 파일명만 추출 (확장자 제외)
+        const name = path.split('/').pop().replace('.js', '');
+        Alpine.data(name, module.default);
+    });
+
+    // board 폴더 자동 등록
+    const boardComponents = import.meta.glob('./board/**/*.js', { eager: true });
+    Object.entries(boardComponents).forEach(([path, module]) => {
+        // 경로에서 파일명만 추출 (확장자 제외)
+        const name = path.split('/').pop().replace('.js', '');
+        console.log(`Registering board component: ${name}`);
+        Alpine.data(name, module.default);
+    });
+
+    Alpine.store('modal', modal);
+
+    window.Alpine = Alpine;
+    Alpine.start();
+
+    console.log('Alpine initialization completed');
+}
