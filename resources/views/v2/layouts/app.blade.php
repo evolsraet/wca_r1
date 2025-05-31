@@ -23,7 +23,7 @@
         @if(isset($container) && $container === false)
             @yield('content')
         @else
-            <div class="container">
+            <div class="container px-3">
                 @yield('content')
             </div>
         @endif

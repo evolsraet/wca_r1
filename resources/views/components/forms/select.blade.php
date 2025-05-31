@@ -4,10 +4,13 @@
     'options' => [],
     'required' => false,
     'class' => '',
-    'errors' => null
+    'errors' => null,
+    'model' => null,
+    'noMargin' => false,
+    'placeholder' => '선택하세요'
 ])
 
-<div class="mb-3">
+<div class="{{ $noMargin ? '' : 'mb-3' }}">
     @if($label)
         <label class="form-label">
             @if($required)
@@ -21,15 +24,24 @@
         class="form-select {{ $class }}"
         id="{{ $name }}"
         name="{{ $name }}"
-        x-model="form.{{ $name }}"
+        @if($model)
+            x-model="{{ $model }}"
+        @else
+            x-model="form.{{ $name }}"
+        @endif
         {{ $required ? 'required' : '' }}
-        :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
+        @if($errors)
+            :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
+        @endif
         {{ $attributes }}
     >
-        <option value="">선택하세요</option>
+        @if($placeholder)
+            <option value="">{{ $placeholder }}</option>
+        @endif
         @foreach($options as $value => $label)
             <option value="{{ $value }}">{{ $label }}</option>
         @endforeach
+        {{ $slot }}
     </select>
 
     @if($errors)

@@ -7,9 +7,11 @@
     'placeholder' => '',
     'class' => '',
     'errors' => null,
+    'model' => null,
+    'noMargin' => false
 ])
 
-<div class="mb-3">
+<div class="{{ $noMargin ? '' : 'mb-3' }}">
     @if($label)
         <label for="{{ $name }}" class="form-label">
             @if($required)
@@ -24,11 +26,17 @@
         class="form-control {{ $class }}"
         id="{{ $name }}"
         name="{{ $name }}"
-        x-model="form.{{ $name }}"
+        @if($model)
+            x-model="{{ $model }}"
+        @else
+            x-model="form.{{ $name }}"
+        @endif
         {{ $required ? 'required' : '' }}
         {{ $readonly ? 'readonly' : '' }}
         placeholder="{{ $placeholder }}"
-        :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
+        @if($errors)
+            :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
+        @endif
         {{ $attributes }}
     >
 
