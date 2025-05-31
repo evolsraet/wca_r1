@@ -76,9 +76,12 @@ import { modal } from './util/modal.js';
     Alpine.store('modal', modal);
 
     // window.Alpine = Alpine;
+    window.Alpine = Alpine;
 
     // Alpine 시작 전에 초기화 플래그 설정
     Alpine._initialized = true;
+
+    // Alpine 시작
     Alpine.start();
 
     console.log('Alpine initialization completed');

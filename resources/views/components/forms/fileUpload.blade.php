@@ -8,7 +8,6 @@
     'errors' => null,
     'existingFiles' => [],
     'buttonText' => '파일 선택',
-    'alpineFiles' => null
 ])
 
 @php
@@ -18,18 +17,8 @@
 @endphp
 
 <div class="mb-3"
-    x-data="fileUpload('{{ $inputName }}', {{ $alpineFiles }})"
+    x-data="fileUpload('{{ $inputName }}')"
 >
-
-            <!-- 파일 수 표시 -->
-            <p>파일 개수: <span x-text="alpineFiles.length"></span></p>
-
-            <!-- 파일 이름 나열 -->
-            <ul>
-                <template x-for="file in alpineFiles" :key="file.name">
-                    <li x-text="file.uuid"></li>
-                </template>
-            </ul>
 
     @if($label)
         <label class="form-label">{{ $label }}</label>

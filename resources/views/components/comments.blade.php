@@ -165,8 +165,8 @@
                                         class="form-control"
                                         rows="3"
                                         x-model="editForm.content"
-                                        :class="{ 'is-invalid': editErrors?.content?.length > 0 }"></textarea>
-                                    <div class="invalid-feedback" x-text="editErrors?.content?.[0]"></div>
+                                        :class="{ 'is-invalid': errors?.content?.length > 0 }"></textarea>
+                                    <div class="invalid-feedback" x-text="errors?.content?.[0]"></div>
                                 </div>
                                 <div class="text-end">
                                     <button type="button"

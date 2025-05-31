@@ -71,27 +71,23 @@
             <!-- 첨부파일 -->
             @if(auth()->user()?->hasPermissionTo($board->attach_permission ?? 'act.admin'))
             @php
-                $existingFiles = [
-                    [
-                        'uuid' => '123',
-                        'file_name' => 'test.txt',
-                        'original_url' => 'https://www.google.com'
-                    ]
-                ];
+                $article = \App\Models\Article::select('id')->where('id', $articleId)->with('media')->first();
+                $existingFiles = $article->media->map(function ($file) {
+                    return [
+                        'uuid' => $file->uuid,
+                        'file_name' => $file->file_name,
+                        'original_url' => $file->original_url,
+                        'collection_name' => $file->collection_name,
+                    ];
+                });
             @endphp
-                <p>루트에서 갯수: <span x-text="files.board_attach"></span></p>
-
                 <x-forms.fileUpload
-                    x-show="!loading"
                     label="첨부파일"
                     name="board_attach[]"
                     accept="*/*"
                     :errors="true"
                     button-text="파일 선택"
-                    alpineFiles="files.board_attach"
-                    {{-- x-bind:existingFilesAlpine="files" --}}
-                    {{-- :existingFiles="$existingFiles" --}}
-                    {{-- existingFilesAlpine="files" --}}
+                    :existingFiles="$existingFiles"
                 />
             @endif
 
@@ -123,9 +119,10 @@
         </form>
     </div>
 
-    {{-- <x-comments
+    {{-- 댓글 --}}
+    <x-comments
     commentable-type="Article"
     commentable-id="{{ $articleId }}"
-    title="댓글" /> --}}
+    title="댓글" />
 </div>
 @endsection

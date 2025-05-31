@@ -95,13 +95,13 @@ export const setupFileUploadListeners = (form, element) => {
     return listeners;
 };
 
-export const fileUpload = (fieldName, initialFiles = []) => ({
+export const fileUpload = (fieldName) => ({
     previewUrl: '',
     fileList: [],
     existingFiles: [],
-    alpineFiles: initialFiles,
 
     init() {
+        console.log('fileUpload loaded');
         // 기존 파일 삭제 이벤트 리스너
         this.$el.addEventListener('click', (e) => {
             if (e.target.matches('[data-delete-file]') || e.target.closest('[data-delete-file]')) {
@@ -199,6 +199,7 @@ export const fileUpload = (fieldName, initialFiles = []) => ({
     },
 
     async deleteExistingFile(fileUuid) {
+        // console.log(Alpine);
         if (confirm('정말로 이 파일을 삭제하시겠습니까?')) {
             try {
                 await api.delete(`/api/media/${fileUuid}`);
