@@ -1,7 +1,6 @@
 // 게시판 공통 기능 및 유틸리티 (Alpine Store)
-import Alpine from 'alpinejs';
 
-Alpine.store('board', {
+export default {
     // 기본 상태
     boardId: null,
     loading: false,
@@ -171,4 +170,4 @@ Alpine.store('board', {
     reload() {
         window.location.reload();
     }
-});
+};

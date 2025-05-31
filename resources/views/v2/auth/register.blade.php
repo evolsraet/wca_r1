@@ -232,7 +232,7 @@
                                         :preview="true"
                                         :errors="true"
                                         :existingFiles="$files['file_user_photo'] ?? null"
-                                        :required="!$isUpdate"
+                                        {{-- :required="!$isUpdate" --}}
                                     />
 
                                     <x-forms.fileUpload
@@ -240,7 +240,7 @@
                                         name="file_user_biz"
                                         :existingFiles="$files['file_user_biz'] ?? null"
                                         :errors="true"
-                                        :required="!$isUpdate"
+                                        {{-- :required="!$isUpdate" --}}
                                     />
 
                                     <x-forms.fileUpload
@@ -248,7 +248,7 @@
                                         name="file_user_sign"
                                         :errors="true"
                                         :existingFiles="$files['file_user_sign'] ?? null"
-                                        :required="!$isUpdate"
+                                        {{-- :required="!$isUpdate" --}}
                                     />
 
                                     <x-forms.fileUpload
@@ -256,7 +256,7 @@
                                         name="file_user_cert[]"
                                         :existingFiles="$files['file_user_cert'] ?? null"
                                         :errors="true"
-                                        :required="!$isUpdate"
+                                        {{-- :required="!$isUpdate" --}}
                                     />
 
                                     @php

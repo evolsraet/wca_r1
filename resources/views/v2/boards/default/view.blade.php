@@ -13,6 +13,7 @@
         }
     };
     window.user = {!! auth()->user() ? auth()->user()->toJson() : 'null' !!};
+
 </script>
 
 <div class="board-view board-skin-{{ $board->skin }}"
@@ -103,6 +104,14 @@
                     download-action="downloadFile"
                 />
             </div>
+        </div>
+
+        <!-- 댓글 섹션 -->
+        <div class="mt-4">
+            <x-comments
+                commentable-type="Article"
+                commentable-id="{{ $articleId }}"
+                title="댓글" />
         </div>
     </div>
 

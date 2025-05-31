@@ -1,18 +1,17 @@
 @props([
-    'targetType' => 'article',  // 댓글 대상 타입 (article, product, event 등)
-    'targetId' => '',           // 댓글 대상 ID
-    'boardId' => null,          // 게시판 ID (게시판에서 사용시)
-    'title' => '댓글',           // 섹션 제목
-    'showTitle' => true,        // 제목 표시 여부
-    'allowReply' => false,      // 대댓글 허용 안함 (테이블 구조상)
-    'maxDepth' => 1,           // 댓글만 지원
-    'pageSize' => 10,          // 페이지당 댓글 수
-    'class' => ''              // 추가 CSS 클래스
+    'commentableType' => 'Article',  // 댓글 대상 타입 (Article, Product, Event 등)
+    'commentableId' => '',           // 댓글 대상 ID
+    'title' => '댓글',                // 섹션 제목
+    'showTitle' => true,             // 제목 표시 여부
+    'allowReply' => false,           // 대댓글 허용 안함 (테이블 구조상)
+    'maxDepth' => 1,                 // 댓글만 지원
+    'pageSize' => 10,                // 페이지당 댓글 수
+    'class' => ''                    // 추가 CSS 클래스
 ])
 
 <div class="comments-container {{ $class }}"
      x-data="comments"
-     x-init="init('{{ $targetType }}', '{{ $targetId }}', '{{ $boardId }}', {
+     x-init="init('{{ $commentableType }}', '{{ $commentableId }}', null, {
          allowReply: false,
          maxDepth: 1,
          pageSize: {{ $pageSize }}

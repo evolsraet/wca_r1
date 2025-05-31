@@ -301,6 +301,9 @@ trait CrudTrait
                 case 'likes.likeable_type':
                     $value = Str::camel($value);
                     break;
+                case 'comments.commentable_type':
+                    $value = $this->typeToModel($value);
+                    break;
                 default:
                     break;
             }
@@ -672,6 +675,10 @@ trait CrudTrait
 
     protected function typeToModel($type)
     {
-        return 'App\\Models\\' . ucfirst($type);
+        if( Str::contains($type, "\\") ) {
+            return $type;
+        } else {
+            return 'App\\Models\\' . ucfirst($type);
+        }
     }
 }

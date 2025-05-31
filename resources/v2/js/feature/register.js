@@ -4,16 +4,16 @@ export default function() {
     return {
         form: {
             user: {
-                // name: '1',
-                // email: 'a@b.com111111',
-                // phone: '2222222222222',
-                // password: '123123123',
-                // password_confirmation: '123123123',
+                name: '1',
+                email: 'a@b.com111111',
+                phone: '2222222222222',
+                password: '123123123',
+                password_confirmation: '123123123',
                 // socialLogin: false,
                 // role 체크시 dealer 로
             },
-            // isDealer: true,
-            // dealer: {
+            isDealer: true,
+            dealer: {
             //     name: '',
             //     phone: '',
             //     birthday: '',
@@ -30,7 +30,7 @@ export default function() {
             //     corporation_registration_number: '',
             //     car_management_business_registration_number: '',
             //     business_identity_number: '',
-            // },
+            },
 
             // isDealerApply1: false,
             // isDealerApply2: false,
@@ -78,9 +78,12 @@ export default function() {
                 appendFormData(formData, formElements);
 
                 if (this.form.isDealer) {
-                    formData.append(`user[role]`, 'dealer');
-                    if( !confirm("딜러 정보를 변경하시겠습니까?\n변경 시 재심사가 필요합니다.") ) {
-                        return;
+                    if( this.form.isUpdate ) {
+                        if( !confirm("딜러 정보를 변경하시겠습니까?\n변경 시 재심사가 필요합니다.") ) {
+                            return;
+                        }
+                    } else {
+                        formData.append(`user[role]`, 'dealer');
                     }
                 }
 

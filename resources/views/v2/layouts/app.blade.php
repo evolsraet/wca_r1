@@ -13,7 +13,7 @@
     <link rel="dns-prefetch" href="//fonts.gstatic.com">
 
     <!-- Scripts -->
-    @vite(['resources/v2/sass/app.v2.scss', 'resources/v2/js/app.v2.js'], 'build/v2')
+    @vite(['resources/v2/sass/app.v2.scss'], 'build/v2')
 </head>
 <body>
 
@@ -31,5 +31,6 @@
 
     @include('v2.partials.footer')
 
+    @vite(['resources/v2/js/app.v2.js'], 'build/v2')
 </body>
 </html>

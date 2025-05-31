@@ -18,6 +18,7 @@
         <input
             type="text"
             class="form-control"
+            name="{{ $postName }}"
             x-model="form.{{ $postName }}"
             readonly
             placeholder="우편번호"
@@ -46,6 +47,7 @@
     <input
         type="text"
         class="form-control mb-2"
+        name="{{ $addr1Name }}"
         x-model="form.{{ $addr1Name }}"
         readonly
         placeholder="주소"
@@ -55,6 +57,7 @@
     <input
         type="text"
         class="form-control"
+        name="{{ $addr2Name }}"
         x-model="form.{{ $addr2Name }}"
         placeholder="상세주소"
         :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $addr2Name) }}?.length > 0 }"

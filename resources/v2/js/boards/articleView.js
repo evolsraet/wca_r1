@@ -103,22 +103,17 @@ export default function articleView() {
             window.location.href = finalUrl;
         },
 
-        // 첨부파일 다운로드
-        downloadFile(attachment) {
-            window.open(`/api/board/${this.boardId}/articles/${this.articleId}/board_attach/${attachment.id}/download`, '_blank');
-        },
-
         // 권한 체크
         canEdit() {
             // 로그인이 안 되어 있으면 권한 없음
             if (!window.user) {
-                console.log('canEdit: false - 로그인 안됨');
+                // console.log('canEdit: false - 로그인 안됨');
                 return false;
             }
 
             // 관리자는 모든 게시글 수정 가능
             if (window.boardConfig?.permissions?.admin) {
-                console.log('canEdit: true - 관리자 권한');
+                // console.log('canEdit: true - 관리자 권한');
                 return true;
             }
 
@@ -127,13 +122,13 @@ export default function articleView() {
             const isOwner = this.article?.user_id === window.user?.id;
             const canEdit = hasWritePermission && isOwner;
 
-            console.log('canEdit:', {
-                hasWritePermission,
-                isOwner,
-                articleUserId: this.article?.user_id,
-                currentUserId: window.user?.id,
-                result: canEdit
-            });
+            // console.log('canEdit:', {
+            //     hasWritePermission,
+            //     isOwner,
+            //     articleUserId: this.article?.user_id,
+            //     currentUserId: window.user?.id,
+            //     result: canEdit
+            // });
 
             return canEdit;
         },
@@ -141,13 +136,13 @@ export default function articleView() {
         canDelete() {
             // 로그인이 안 되어 있으면 권한 없음
             if (!window.user) {
-                console.log('canDelete: false - 로그인 안됨');
+                // console.log('canDelete: false - 로그인 안됨');
                 return false;
             }
 
             // 관리자는 모든 게시글 삭제 가능
             if (window.boardConfig?.permissions?.admin) {
-                console.log('canDelete: true - 관리자 권한');
+                // console.log('canDelete: true - 관리자 권한');
                 return true;
             }
 
@@ -156,13 +151,13 @@ export default function articleView() {
             const isOwner = this.article?.user_id === window.user?.id;
             const canDelete = hasWritePermission && isOwner;
 
-            console.log('canDelete:', {
-                hasWritePermission,
-                isOwner,
-                articleUserId: this.article?.user_id,
-                currentUserId: window.user?.id,
-                result: canDelete
-            });
+            // console.log('canDelete:', {
+            //     hasWritePermission,
+            //     isOwner,
+            //     articleUserId: this.article?.user_id,
+            //     currentUserId: window.user?.id,
+            //     result: canDelete
+            // });
 
             return canDelete;
         },

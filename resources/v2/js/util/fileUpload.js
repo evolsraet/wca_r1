@@ -3,6 +3,7 @@ import { api } from './axios';
 // FormData 처리 함수
 export const appendFormData = (formData, formElements) => {
     Array.from(formElements).forEach(element => {
+        console.log('appendFormData', element.name, element.disabled);
         if (element.name && !element.disabled) {  // name 속성이 있고 disabled가 아닌 요소만 처리
             if (element.name.includes('.')) {
                 const [key, value] = element.name.split('.');

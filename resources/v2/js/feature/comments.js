@@ -2,7 +2,6 @@ export default () => ({
     // 기본 설정
     commentableType: '',
     commentableId: '',
-    boardId: null,
     options: {
         allowReply: false,  // 테이블에 parent_id가 없으므로 답글 비활성화
         maxDepth: 1,        // 댓글만 지원
@@ -20,7 +19,7 @@ export default () => ({
     sortBy: 'latest',
 
     // 권한
-    canWrite: false,
+    canWrite: true,  // 권한체크 제거하므로 기본 true
     canRead: true,
 
     // 폼 데이터
@@ -39,12 +38,11 @@ export default () => ({
     /**
      * 컴포넌트 초기화
      */
-    init(targetType, targetId, boardId = null, options = {}) {
-        console.log('Initializing comments component...', { targetType, targetId, boardId, options });
+    init(commentableType, commentableId, boardId = null, options = {}) {
+        console.log('Initializing comments component...', { commentableType, commentableId, options });
 
-        this.commentableType = targetType;
-        this.commentableId = targetId;
-        this.boardId = boardId;
+        this.commentableType = commentableType;
+        this.commentableId = commentableId;
         this.options = { ...this.options, ...options };
 
         // 정렬 변경 감지
@@ -52,31 +50,8 @@ export default () => ({
             this.loadComments(true);
         });
 
-        // 권한 체크 및 댓글 로드
-        this.checkPermissions();
+        // 댓글 로드
         this.loadComments();
-    },
-
-    /**
-     * 권한 체크
-     */
-    async checkPermissions() {
-        try {
-            // Laravel의 polymorphic 구조에 맞는 API 호출
-            const response = await this.$store.api.get(`/api/v2/${this.commentableType}/${this.commentableId}/comments/permissions`, {
-                params: {
-                    board_id: this.boardId
-                }
-            });
-
-            this.canWrite = response.data.can_write || false;
-            this.canRead = response.data.can_read || true;
-        } catch (error) {
-            console.error('권한 체크 실패:', error);
-            // 기본값으로 설정
-            this.canWrite = false;
-            this.canRead = true;
-        }
     },
 
     /**
@@ -93,17 +68,21 @@ export default () => ({
                 this.comments = [];
             }
 
-            // Laravel의 polymorphic 구조에 맞는 API 호출
-            const response = await this.$store.api.get(`/api/v2/${this.commentableType}/${this.commentableId}/comments`, {
-                params: {
-                    page: this.currentPage,
-                    per_page: this.options.pageSize,
-                    sort: this.sortBy,
-                    board_id: this.boardId
-                }
+            // const response = await this.$store.api.get(`/api/comments`, {
+            //     commentable_type: this.commentableType,
+            //     commentable_id: this.commentableId,
+            //     // page: this.currentPage,
+            //     // per_page: this.options.pageSize,
+            //     // sort: this.sortBy
+            // });
+
+
+            const response = await this.$store.api.get(`/api/comments`, {
+                where: "comments.commentable_type:" + this.commentableType + "|comments.commentable_id:" + this.commentableId
             });
 
             const data = response.data;
+            console.log('Comments', data.data, this.commentableType, this.commentableId);
 
             if (reset) {
                 this.comments = data.data || data;
@@ -140,10 +119,14 @@ export default () => ({
         this.errors = {};
 
         try {
-            const response = await this.$store.api.post(`/api/v2/${this.commentableType}/${this.commentableId}/comments`, {
-                content: this.form.content.trim(),
-                board_id: this.boardId
-            });
+            const form = {
+                comment: {
+                    commentable_type: this.commentableType,
+                    commentable_id: this.commentableId,
+                    content: this.form.content.trim()
+                }
+            }
+            const response = await this.$store.api.post(`/api/comments`, form);
 
             // 새 댓글을 목록에 추가
             if (this.sortBy === 'latest') {
@@ -189,7 +172,7 @@ export default () => ({
         this.editErrors = {};
 
         try {
-            const response = await this.$store.api.put(`/api/v2/comments/${commentId}`, {
+            const response = await this.$store.api.put(`/api/comments/${commentId}`, {
                 content: this.editForm.content.trim()
             });
 
@@ -244,7 +227,7 @@ export default () => ({
         this.loading = true;
 
         try {
-            await this.$store.api.delete(`/api/v2/comments/${commentId}`);
+            await this.$store.api.delete(`/api/comments/${commentId}`);
 
             // 댓글 목록에서 제거
             this.comments = this.comments.filter(c => c.id !== commentId);
@@ -257,27 +240,6 @@ export default () => ({
             this.$store.toastr.error('댓글 삭제에 실패했습니다.');
         } finally {
             this.loading = false;
-        }
-    },
-
-    /**
-     * 댓글 좋아요 토글 (별도 구현 필요)
-     */
-    async toggleLike(commentId) {
-        try {
-            const response = await this.$store.api.post(`/api/v2/comments/${commentId}/like`);
-
-            // 댓글 목록에서 해당 댓글의 좋아요 정보 업데이트
-            const index = this.comments.findIndex(c => c.id === commentId);
-            if (index !== -1) {
-                this.comments[index].is_liked = response.data.is_liked;
-                this.comments[index].likes_count = response.data.likes_count || 0;
-            }
-
-        } catch (error) {
-            console.error('좋아요 처리 실패:', error);
-            // 좋아요 기능이 구현되지 않았을 수 있으므로 에러 메시지는 표시하지 않음
-            console.log('좋아요 기능이 구현되지 않았습니다.');
         }
     },
 

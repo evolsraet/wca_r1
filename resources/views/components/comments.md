@@ -13,7 +13,7 @@ resources/v2/js/feature/comments.js           ← Alpine.js 컴포넌트
 ```sql
 CREATE TABLE `comments` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `commentable_type` varchar(255) NOT NULL,    -- 댓글 대상 모델 (App\Models\Article 등)
+  `commentable_type` varchar(255) NOT NULL,    -- 댓글 대상 모델 (Article 등)
   `commentable_id` varchar(255) NOT NULL,      -- 댓글 대상 ID
   `content` text NOT NULL,                     -- 댓글 내용
   `user_id` bigint(20) unsigned NOT NULL,      -- 작성자 ID
@@ -30,17 +30,16 @@ CREATE TABLE `comments` (
 ```blade
 <!-- 게시글 상세 페이지에서 -->
 <x-comments 
-    target-type="article" 
-    target-id="{{ $article->id }}" 
-    board-id="{{ $board->id }}" />
+    commentable-type="Article" 
+    commentable-id="{{ $article->id }}" />
 ```
 
 ### 2. 상품에서 사용
 ```blade
 <!-- 상품 상세 페이지에서 -->
 <x-comments 
-    target-type="product" 
-    target-id="{{ $product->id }}" 
+    commentable-type="Product" 
+    commentable-id="{{ $product->id }}" 
     title="상품 리뷰" />
 ```
 
@@ -48,8 +47,8 @@ CREATE TABLE `comments` (
 ```blade
 <!-- 이벤트 페이지에서 -->
 <x-comments 
-    target-type="event" 
-    target-id="{{ $event->id }}" 
+    commentable-type="Event" 
+    commentable-id="{{ $event->id }}" 
     title="이벤트 댓글" />
 ```
 
@@ -57,9 +56,8 @@ CREATE TABLE `comments` (
 
 | 옵션 | 타입 | 기본값 | 설명 |
 |------|------|--------|------|
-| `target-type` | string | 'article' | 댓글 대상 타입 (article, product, event 등) |
-| `target-id` | string | '' | 댓글 대상 ID |
-| `board-id` | string/null | null | 게시판 ID (게시판에서 사용시 필수) |
+| `commentable-type` | string | 'Article' | 댓글 대상 타입 (Article, Product, Event 등) |
+| `commentable-id` | string | '' | 댓글 대상 ID |
 | `title` | string | '댓글' | 댓글 섹션 제목 |
 | `show-title` | boolean | true | 제목 표시 여부 |
 | `page-size` | integer | 10 | 페이지당 댓글 수 |
@@ -72,8 +70,8 @@ CREATE TABLE `comments` (
 ### 1. 제목 숨기고 커스텀 스타일링
 ```blade
 <x-comments 
-    target-type="gallery" 
-    target-id="{{ $gallery->id }}" 
+    commentable-type="Gallery" 
+    commentable-id="{{ $gallery->id }}" 
     :show-title="false"
     class="custom-comments-style" />
 ```
@@ -81,8 +79,8 @@ CREATE TABLE `comments` (
 ### 2. 많은 댓글이 예상되는 경우
 ```blade
 <x-comments 
-    target-type="popular-post" 
-    target-id="{{ $post->id }}" 
+    commentable-type="PopularPost" 
+    commentable-id="{{ $post->id }}" 
     page-size="20" />
 ```
 
@@ -90,20 +88,9 @@ CREATE TABLE `comments` (
 
 댓글 시스템이 정상 작동하려면 다음 API 엔드포인트들이 구현되어야 합니다:
 
-### 1. 권한 확인
+### 1. 댓글 목록 조회
 ```
-GET /api/v2/{commentableType}/{commentableId}/comments/permissions?board_id={boardId}
-
-Response:
-{
-    "can_write": true,
-    "can_read": true
-}
-```
-
-### 2. 댓글 목록 조회
-```
-GET /api/v2/{commentableType}/{commentableId}/comments?page={page}&per_page={size}&sort={sort}&board_id={boardId}
+GET /api/comments?commentable_type={type}&commentable_id={id}&page={page}&per_page={size}&sort={sort}
 
 Response:
 {
@@ -129,31 +116,32 @@ Response:
 }
 ```
 
-### 3. 댓글 작성
+### 2. 댓글 작성
 ```
-POST /api/v2/{commentableType}/{commentableId}/comments
+POST /api/comments
 {
-    "content": "댓글 내용",
-    "board_id": "notice"  // 선택사항
+    "commentable_type": "Article",
+    "commentable_id": "123",
+    "content": "댓글 내용"
 }
 ```
 
-### 4. 댓글 수정
+### 3. 댓글 수정
 ```
-PUT /api/v2/comments/{commentId}
+PUT /api/comments/{commentId}
 {
     "content": "수정된 내용"
 }
 ```
 
-### 5. 댓글 삭제
+### 4. 댓글 삭제
 ```
-DELETE /api/v2/comments/{commentId}
+DELETE /api/comments/{commentId}
 ```
 
-### 6. 댓글 좋아요 (선택사항)
+### 5. 댓글 좋아요 (선택사항)
 ```
-POST /api/v2/comments/{commentId}/like
+POST /api/comments/{commentId}/like
 
 Response:
 {
@@ -195,10 +183,9 @@ class Comment extends Model
 ### Route 설정 예시
 ```php
 // routes/api.php
-Route::prefix('v2')->group(function () {
-    Route::get('{type}/{id}/comments/permissions', [CommentController::class, 'permissions']);
-    Route::get('{type}/{id}/comments', [CommentController::class, 'index']);
-    Route::post('{type}/{id}/comments', [CommentController::class, 'store']);
+Route::prefix('api')->group(function () {
+    Route::get('comments', [CommentController::class, 'index']);
+    Route::post('comments', [CommentController::class, 'store']);
     Route::put('comments/{comment}', [CommentController::class, 'update']);
     Route::delete('comments/{comment}', [CommentController::class, 'destroy']);
     Route::post('comments/{comment}/like', [CommentController::class, 'like']); // 선택사항
@@ -220,18 +207,25 @@ Route::prefix('v2')->group(function () {
 
 1. **답글 기능 제거**: 테이블에 `parent_id` 필드가 없어서 답글 기능을 비활성화
 2. **Polymorphic 지원**: `commentable_type`과 `commentable_id` 활용
-3. **API 경로 변경**: `/api/v2/{type}/{id}/comments` 형태로 변경
-4. **좋아요 기능**: 선택사항으로 처리 (별도 구현 필요)
+3. **API 경로 단순화**: `/api/comments` 형태로 단순화
+4. **권한체크 제거**: 별도 권한체크 없이 바로 사용 가능
+5. **DB 필드명 사용**: props명을 DB 필드명과 일치하게 변경
 
 ## 주의사항
 
 1. **Alpine.js 필수**: 이 컴포넌트는 Alpine.js가 필요합니다.
 2. **API 엔드포인트**: 위에 명시된 API 엔드포인트들이 구현되어야 합니다.
-3. **권한 관리**: 댓글 작성/수정/삭제 권한은 백엔드에서 처리됩니다.
-4. **XSS 방지**: 댓글 내용은 자동으로 HTML 이스케이프 처리됩니다.
-5. **답글 미지원**: 현재 테이블 구조상 답글 기능은 지원하지 않습니다.
+3. **XSS 방지**: 댓글 내용은 자동으로 HTML 이스케이프 처리됩니다.
+4. **답글 미지원**: 현재 테이블 구조상 답글 기능은 지원하지 않습니다.
+5. **모델명 처리**: 백엔드에서 모델명을 자동으로 Full namespace로 변환하여 처리합니다.
 
 ## 트러블슈팅
+
+### Alpine 초기화 문제
+현재 게시판 페이지에서는 Alpine 초기화가 지연되므로, 다음과 같은 과정을 거칩니다:
+1. `window.deferAlpineInit = true`로 Alpine 시작 지연
+2. DOM이 준비되면 `window.deferAlpineInit = false`로 변경
+3. Alpine이 자동으로 시작됨
 
 ### 댓글이 로드되지 않는 경우
 1. API 엔드포인트가 올바르게 구현되었는지 확인
@@ -241,6 +235,5 @@ Route::prefix('v2')->group(function () {
 
 ### 댓글 작성이 안 되는 경우
 1. 사용자 로그인 상태 확인
-2. 권한 설정 확인
-3. CSRF 토큰 설정 확인
-4. 백엔드 validation 에러 확인
+2. CSRF 토큰 설정 확인
+3. 백엔드 validation 에러 확인
