@@ -1,6 +1,7 @@
-// 컨테이너 상하단 여백
+// 컨테이너 상하단 여백 (Bootstrap 기본 좌우 패딩 유지)
 .container{
-    padding: 10px 0;
+    padding-top: 10px;
+    padding-bottom: 10px;
 }
 
 // 토글버튼 포커스 제거
@@ -268,7 +269,7 @@
 
     .user-dropdown-wrapper {
         position: relative;
-      
+
         .user-dropdown-menu {
           position: absolute;
           right: 0;
@@ -278,7 +279,7 @@
           border-radius: 12px;
           background-color: $white;
           z-index: 3000;
-      
+
           &.show {
             display: block;
           }
@@ -302,21 +303,21 @@
         .offcanvas-top {
             padding: 16px 16px 0;
         }
-          
+
         .offcanvas-bottom {
             margin-top: auto;
             padding: 0px;
         }
-          
+
         .offcanvas-menu {
             list-style: none;
             padding: 0;
             margin: 0 20px;
-          
+
             li {
               margin-bottom: 20px;
             }
-          
+
             .menu-link {
               display: flex;
               align-items: center;
@@ -324,7 +325,7 @@
               text-decoration: none;
               color: inherit;
             }
-          
+
             .menu-icon {
               width: 48px;
               height: 48px;
@@ -333,38 +334,38 @@
               display: flex;
               align-items: center;
               justify-content: center;
-          
+
               img {
                 width: 24px;
                 height: 24px;
                 object-fit: contain;
               }
             }
-          
+
             .menu-text {
               display: flex;
               flex-direction: column;
               justify-content: center;
-          
+
               strong {
                 font-size: 16px;
                 font-weight: 600;
                 color: $black;
                 margin-bottom: 2px;
               }
-          
+
               small {
                 font-size: 14px;
                 color: $gray-500;
               }
             }
         }
-          
+
         .offcanvas-footer-logo {
             text-align: center;
             padding: 20px 0px;
             background-color: $gray-100;
-            
+
             img {
                 width: 80px;
                 opacity: 0.3;
@@ -377,7 +378,7 @@
             font-size: 1.5rem;
             margin-right: 20px !important;
         }
-    
+
         .login-card {
             display: flex;
             align-items: center;
@@ -389,18 +390,18 @@
             background-image: url('/public/images/login-object.png');
             background-size: 155px;
             background-repeat: no-repeat;
-            background-position: right;        
-        
+            background-position: right;
+
             .login-card-text {
                 flex: 1;
             }
-              
+
             .login-subtitle {
                 margin: 0;
                 color: map-get($theme-colors, "primary");
                 font-size: 14px;
             }
-            
+
             .login-link {
                 display: inline-block;
                 margin-top: 4px;
@@ -409,14 +410,14 @@
                 color: map-get($theme-colors, "primary");
                 text-decoration: none;
             }
-            
+
             .login-card-image img {
                 width: 120px;
                 height: auto;
             }
-            
+
         }
-        
+
         .sell-highlight-card {
             display: flex;
             align-items: center;
@@ -429,31 +430,31 @@
             overflow: visible;
             margin: 0 20px;
             margin-bottom: 20px;
-          
+
             .sell-highlight-text {
               flex: 1;
               z-index: 1;
             }
-          
+
             .headline {
               font-size: 16px;
               font-weight: 500;
               margin: 0;
             }
-          
+
             .subline {
               font-size: 20px;
               font-weight: 700;
               margin: 0;
             }
-          
+
             .sell-highlight-image {
               position: absolute;
               right: 10px;
               top: -42px; // 위로 튀어나오게
               transform: scale(1.1);
               z-index: 2;
-          
+
               img {
                 width: 150px;
                 height: auto;
@@ -472,24 +473,24 @@
             text-decoration: none;
             color: $black;
             transition: background 0.2s;
-          
+
             &:hover {
               background: $gray-200;
               text-decoration: none;
             }
-          
+
             .sell-car-subtitle {
               font-size: 0.85rem;
               color: $gray-500;
               margin-bottom: 0.3rem;
             }
-          
+
             .sell-car-title {
               font-size: 1rem;
               font-weight: 600;
               color: $black;
             }
-          
+
             .sell-car-icon img {
               width: 52px;
               height: auto;
@@ -501,7 +502,7 @@
 
 }
 
-  
+
 
 // 서비스 소개 페이지 전용 스타일
 .intro {
@@ -644,7 +645,7 @@
     .user-main-carousel-inner {
         height: 450px;
     }
-    
+
     .carousel-item {
       position: relative;
 
@@ -658,7 +659,7 @@
         padding-left: 8%;
         padding-right: 8%;
       }
-  
+
       .carousel-bg {
         height: 100vh;
         background-size: cover;
@@ -669,14 +670,14 @@
         padding-left: 8%;
         padding-right: 8%;
       }
-  
+
       .carousel-caption-box {
         color: $white;
         text-align: left;
         padding: 20px;
         border-radius: 12px;
         max-width: 620px;
-  
+
         .carousel-title {
           font-size: 2.4rem;
           font-weight: 500;
@@ -685,14 +686,14 @@
             font-weight: 900;
           }
         }
-  
+
         .carousel-subtitle {
           font-size: 1.1rem;
           margin-top: 10px;
           margin-bottom: 24px;
           font-weight: 300;
         }
-  
+
         .carousel-btn {
           display: inline-flex;
           align-items: center;
@@ -705,11 +706,11 @@
           text-decoration: none;
           transition: all 0.3s ease;
           font-size: 16px;
-  
+
           i {
             font-size: 18px;
           }
-  
+
           &:hover {
             background-color: $white;
             color: $black;
@@ -726,18 +727,18 @@
             gap: 16px;
             font-size: 16px;
             color: $white;
-          
+
             .dealer-label {
               font-weight: 400;
             }
-          
+
             .dealer-link {
               font-weight: 700;
               color: $white;
               text-decoration: none;
               border-bottom: 2px solid $white;
               padding-bottom: 2px;
-          
+
               &:hover {
                 opacity: 0.8;
                 border-color: $gray-300;
@@ -761,28 +762,28 @@
         transform: translateY(20%);
         color: $white;
         max-width: 680px;
-      
+
         h2.carousel-title {
           font-size: 30px;
           font-weight: 500;
           line-height: 1.4;
           margin-bottom: 20px;
-      
+
           strong {
             font-weight: 900;
           }
         }
-      
+
         .carousel-subtitle {
           font-size: 18px;
           margin-bottom: 30px;
-      
+
           strong {
             font-weight: 600;
             color: $white;
           }
         }
-      
+
         .carousel-btn {
           display: inline-flex;
           align-items: center;
@@ -794,7 +795,7 @@
           border-radius: 32px;
           text-decoration: none;
           transition: 0.3s ease;
-      
+
           &:hover {
             background-color: map-get($theme-colors, "primary");
           }
@@ -813,18 +814,18 @@
         padding: 2.5rem 0 0 0;
         color: $white;
         text-align: center;
-      
+
         .dealer-title {
           font-size: 1.8rem;
           font-weight: bold;
           margin-bottom: 8.5rem;
-      
+
           .count-emphasis {
             font-weight: bold;
             font-size: 2.2rem;
             text-decoration: underline;
           }
-      
+
           @include media-breakpoint-down(md) {
             font-size: 1.2rem;
             margin-bottom: 3.5rem;
@@ -833,7 +834,7 @@
             }
           }
         }
-      
+
         .dealer-stats-container {
           display: flex;
           justify-content: center;
@@ -846,34 +847,34 @@
           flex-wrap: wrap;
           max-width: 1300px;
           margin: 0 auto;
-      
+
           .dealer-stat {
             flex: 1 1 80px;
             text-align: center;
-      
+
             .dealer-count {
               font-size: 1.1rem;
               font-weight: bold;
               margin-bottom: 0.3rem;
             }
-      
+
             .dealer-icon {
               font-size: 1rem;
               color: $gray-300;
               margin-bottom: 0.25rem;
             }
-      
+
             .dealer-label {
               font-size: 0.85rem;
               color: $gray-500;
             }
           }
-      
+
           .dealer-divider {
             width: 1px;
             height: 50px;
             background: $gray-200;
-      
+
             @include media-breakpoint-down(sm) {
               display: none;
             }
@@ -885,16 +886,16 @@
               padding: 0.5rem 0 !important;
             }
           }
-          
+
         }
     }
-  
+
 
     @media (max-width: 768px) {
       .carousel-inner {
         height: auto;
       }
-  
+
       .carousel-bg {
         height: auto;
         padding: 60px 20px;
@@ -916,28 +917,28 @@
         h2.carousel-title {
             font-size: 24px !important;
           }
-        
+
         .carousel-subtitle {
         font-size: 16px !important;
         }
 
       }
-  
+
       .carousel-caption-box {
         text-align: center;
         max-width: 100%;
         padding: 10px !important;
-  
+
         .carousel-title {
           font-size: 1.4rem !important;
         }
-  
+
         .carousel-subtitle {
           font-size: 1rem !important;
           margin-top: 8px !important;
           margin-bottom: 20px !important;
         }
-  
+
         .carousel-btn {
           font-size: 15px;
           padding: 10px 20px;
@@ -946,61 +947,61 @@
     }
 }
 
-// 이용약관 & 개인정보 처리방침 스타일 
+// 이용약관 & 개인정보 처리방침 스타일
 .docs-container {
     max-width: 1200px;
     margin: 20px auto;
     padding: 40px 24px;
     font-family: $font-family-sans-serif;
     color: $black;
-  
+
     h1 {
       font-size: 28px;
       font-weight: 700;
       margin-bottom: 32px;
       padding-bottom: 12px;
     }
-  
+
     h2, h3, h4, h5 {
       font-weight: 600;
       margin-top: 32px;
       margin-bottom: 12px;
       color: $black;
     }
-  
+
     h5 {
       font-size: 18px;
       border-left: 4px solid map-get($theme-colors, "primary");
       padding-left: 10px;
     }
-  
+
     p {
       line-height: 1.8;
       font-size: 15px;
       margin-bottom: 12px;
     }
-  
+
     ul, ol {
       margin-left: 20px;
       margin-bottom: 20px;
     }
-  
+
     li {
       line-height: 1.6;
       font-size: 15px;
       margin-bottom: 6px;
     }
-  
+
     strong {
       color: map-get($theme-colors, "primary");
       font-weight: bold;
     }
-  
+
     .terms-content {
       font-size: 15px;
       line-height: 1.8;
     }
-  
+
     @media (max-width: 768px) {
       padding: 24px 16px;
       h1 {
@@ -1022,19 +1023,19 @@
       justify-content: center;
       align-items: center;
       background-color: $white;
-  
+
       img {
         width: 50px;
         height: auto;
         object-fit: contain;
         transition: transform 0.3s ease;
-  
+
         &:hover {
           transform: scale(1.1);
         }
       }
     }
-  
+
     .badge {
       font-size: 0.75rem;
       padding: 0.4em 0.8em;
@@ -1046,30 +1047,30 @@
       background-color: $gray-200;
       color: $black;
     }
-  
+
     .fw-bold {
       font-size: 1rem;
     }
-  
+
     .small {
       font-size: 0.85rem;
       line-height: 1.4;
     }
-  
+
     @media (max-width: 768px) {
       .step-circle {
         width: 90px;
         height: 90px;
-  
+
         img {
           width: 40px;
         }
       }
-  
+
       .fw-bold {
         font-size: 0.95rem;
       }
-  
+
       .small {
         font-size: 0.8rem;
       }
@@ -1455,16 +1456,16 @@
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
     transition: transform 0.2s, box-shadow 0.2s;
     color: $black;
-  
+
     &:hover {
       transform: translateY(-4px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
       text-decoration: none;
     }
-  
+
     .auction-item-thumb {
       position: relative;
-  
+
       img {
         width: 100%;
         height: 160px;
@@ -1472,7 +1473,7 @@
         border-radius: 12px 12px 0 0;
         display: block;
       }
-  
+
       .auction-item-badge {
         position: absolute;
         top: 8px;
@@ -1485,30 +1486,30 @@
         white-space: nowrap;
       }
     }
-  
+
     .auction-item-body {
       padding: 12px;
-  
+
       .auction-item-title {
         font-weight: 600;
         font-size: 1rem;
         margin-bottom: 6px;
       }
-  
+
       .auction-item-sub {
         font-size: 0.85rem;
         color: $gray-500;
       }
-  
+
       .auction-item-desc {
         font-size: 0.85rem;
         color: $gray-500;
         margin-top: 4px;
       }
-  
+
       .auction-item-tags {
         margin-top: 10px;
-  
+
         .tag {
           display: inline-block;
           font-size: 0.7rem;
@@ -1517,12 +1518,12 @@
           margin-right: 4px;
           font-weight: 500;
         }
-  
+
         .tag-blue {
           background-color: $primary;
           color: $white;
         }
-  
+
         .tag-red {
           background-color: $red;
           color: $white;
@@ -1540,24 +1541,24 @@
     padding: 12px 16px;
     display: flex;
     align-items: center;
-  
+
     .search-icon {
       font-size: 1.2rem;
       color: $gray-500;
       margin-right: 8px;
     }
-  
+
     .search-input {
       border: none;
       background: transparent;
       flex-grow: 1;
       font-size: 1rem;
       color: $black;
-  
+
       &:focus {
         outline: none;
       }
-  
+
       &::placeholder {
         color: $gray-500;
       }
@@ -1569,7 +1570,7 @@
     background: $gray-100;
     padding: 16px;
     border-radius: 8px;
- 
+
     ul {
         list-style: none;
         padding: 0;
@@ -1580,7 +1581,7 @@
       display: flex;
       gap: 20px;
       align-items: center;
-  
+
       .tab-btn {
         background: none;
         border: none;
@@ -1590,14 +1591,14 @@
         cursor: pointer;
         position: relative;
         padding-bottom: 4px;
-  
+
         &:hover {
           color: map-get($theme-colors, "primary");
         }
-  
+
         &.active {
           color: map-get($theme-colors, "primary");
-  
+
           &::after {
             content: '';
             position: absolute;
@@ -1608,7 +1609,7 @@
             background: map-get($theme-colors, "primary");
           }
         }
-  
+
         .tab-count {
           margin-left: 4px;
           font-size: 0.875rem;
