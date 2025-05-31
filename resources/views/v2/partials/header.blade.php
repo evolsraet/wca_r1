@@ -10,13 +10,13 @@
         ['key' => 'auction', 'label' => '내 매물관리', 'url' => url('/v2/auction'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => ''],
         ['key' => 'reviews', 'label' => '이용후기', 'url' => url('/v2/reviews'), 'icon' => asset('images/rating.png'), 'desc' => ''],
         ['key' => 'name-transfer', 'label' => '명의이전서류', 'url' => url('/v2/name-transfer'), 'icon' => asset('images/document.png'), 'desc' => ''],
-        ['key' => 'notice', 'label' => '공지사항', 'url' => url('/v2/notice'), 'icon' => asset('images/Icon-dash.png'), 'desc' => ''],
+        ['key' => 'notice', 'label' => '공지사항', 'url' => url('/v2/board/notice'), 'icon' => asset('images/Icon-dash.png'), 'desc' => ''],
         ['key' => 'introduce', 'label' => '서비스소개', 'url' => url('/v2/introduce'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => ''],
       ];
     } elseif ($user->hasRole('dealer')) {
       $menus = [
         ['key' => 'auction', 'label' => '입찰하기', 'url' => url('/v2/auction'), 'icon' => asset('images/Icon-tag.png'), 'desc' => ''],
-        ['key' => 'notice', 'label' => '공지사항', 'url' => url('/v2/notice'), 'icon' => asset('images/Icon-dash.png'), 'desc' => ''],
+        ['key' => 'notice', 'label' => '공지사항', 'url' => url('/v2/board/notice'), 'icon' => asset('images/Icon-dash.png'), 'desc' => ''],
         ['key' => 'claim', 'label' => '클레임', 'url' => url('/v2/claim'), 'icon' => asset('images/document.png'), 'desc' => ''],
         ['key' => 'introduce', 'label' => '서비스소개', 'url' => url('/v2/introduce'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => '위카란?'],
       ];
@@ -30,7 +30,7 @@
   }
 @endphp
 {{-- 기본 네비게이션 --}}
-<nav class="navbar navbar-expand-lg sticky-top {{ $user?->hasRole('dealer') ? 'dealer-header' : 'default-header' }}">
+<nav class="navbar navbar-expand-lg sticky-top header-navbar {{ $user?->hasRole('dealer') ? 'dealer-header' : 'default-header' }}">
   <div class="container-fluid">
     <a class="navbar-brand logo-text" href="{{ route('home') }}">wecarlogo</a>
 
@@ -51,11 +51,11 @@
 
       <ul class="navbar-nav">
         @auth
-        <li class="nav-item dropdown">
-            <a class="btn btn-danger dropdown-toggle user-dropdown-btn" href="#" id="userDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+        <li class="nav-item dropdown" x-data="{ dropdown: false }">
+            <a class="btn btn-danger dropdown-toggle user-dropdown-btn" href="#" id="userDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false" @click="dropdown = !dropdown">
               {{ Auth::user()->name }} 님
             </a>
-            <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" aria-labelledby="userDropdown1" style="z-index: 2000;">
+            <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" :class="{ 'show': dropdown }" aria-labelledby="userDropdown1" style="z-index: 2000;">
               <li><a class="dropdown-item" href="#">내 정보 수정</a></li>
               <li>
                 <form method="POST" action="{{ route('logout') }}">
@@ -83,7 +83,7 @@
 </nav>
 
 {{-- 모바일 메뉴 --}}
-<div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
+<div class="offcanvas offcanvas-end text-bg-dark mobile-menu" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
   <div class="offcanvas-header {{ $user ? 'isUser' : '' }}">
     <div class="offcanvas-close-btn">
       <button type="button" class="btn-close btn-close offcanvas-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>

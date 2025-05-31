@@ -88,6 +88,7 @@ Route::prefix('v2')->group(function () {
 
         // 쿼리 파라미터가 ?raw=1 인 경우 원본 HTML 출력
         if (request()->query('raw') === '1') {
+            $html = preg_replace('/<h1[^>]*>.*?<\/h1>/s', '', $html);
             return response($html)->header('Content-Type', 'text/html');
         }
 
@@ -104,8 +105,12 @@ Route::prefix('v2')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
     Route::get('/sell', function () {
-        return 'sell';
+        return view('v2.pages.sell');
     })->name('sell');
+
+    Route::get('/style-guide', function () {
+        return view('v2.pages.styleGuide');
+    })->name('style-guide');
 
     // 인증 관련 라우트
     Route::middleware('guest')->group(function () {

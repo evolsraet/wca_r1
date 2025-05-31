@@ -1,0 +1,442 @@
+// 최근 등록 상품 스타일
+
+/* 프로세스 스텝 */
+.process-steps {
+    .step-circle {
+      width: 120px;
+      height: 120px;
+      border: 1px solid $gray-200;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: $white;
+  
+      img {
+        width: 50px;
+        height: auto;
+        object-fit: contain;
+        transition: transform 0.3s ease;
+  
+        &:hover {
+          transform: scale(1.1);
+        }
+      }
+    }
+  
+    .badge {
+      font-size: 0.75rem;
+      padding: 0.4em 0.8em;
+      border-radius: 0.5rem;
+    }
+
+    .fw-semibold {
+      font-weight: 500;
+      background-color: $gray-200;
+      color: $black;
+    }
+  
+    .fw-bold {
+      font-size: 1rem;
+    }
+  
+    .small {
+      font-size: 0.85rem;
+      line-height: 1.4;
+    }
+  
+    @media (max-width: 768px) {
+      .step-circle {
+        width: 90px;
+        height: 90px;
+  
+        img {
+          width: 40px;
+        }
+      }
+  
+      .fw-bold {
+        font-size: 0.95rem;
+      }
+  
+      .small {
+        font-size: 0.8rem;
+      }
+    }
+}
+
+/* 공지사항 최신글 */
+.notice-wrapper {
+    padding: 1rem;
+    background: $white;
+    border-radius: 8px;
+    font-family: $font-family-sans-serif;
+}
+
+/* 공지사항 최신글 헤더 */
+.notice-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+
+    h5 {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .notice-all-link {
+        font-size: 0.9rem;
+        color: $gray-500;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+/* 공지사항 최신글 리스트 */
+.notice-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .notice-item {
+        display: flex;
+        align-items: center;
+        border-top: 1px solid $gray-200;
+        padding: 0.75rem 0;
+        font-size: 0.95rem;
+
+        &:first-child {
+            border-top: none;
+        }
+
+        .notice-num {
+            width: 2rem;
+            text-align: center;
+            color: $gray-500;
+        }
+
+        .notice-datetime {
+            width: 10rem;
+            color: $gray-500;
+        }
+
+        .notice-content {
+            flex: 1;
+            color: $black;
+
+            a {
+                text-decoration: none;
+                color: $black;
+            }
+
+            a:hover {
+                color: map-get($theme-colors, "primary");
+                // text-decoration: underline;
+            }
+        }
+    }
+}
+
+/* 차량 등록 리스트 */
+.car-wrapper {
+    padding: 1rem;
+    background: #f8f9fb;
+    border-radius: 10px;
+    font-family: $font-family-sans-serif;
+}
+
+/* 차량 등록 리스트 헤더 */
+.car-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+
+    h5 {
+        font-size: 1.1rem;
+        margin: 0;
+    }
+
+    .car-all-link {
+        font-size: 0.9rem;
+        color: #888;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+/* 차량 등록 리스트 */
+.car-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    .car-item {
+        display: flex;
+        align-items: center;
+        background: $white;
+        border-radius: 12px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+
+        .car-thumb {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin-right: 1rem;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+        .car-number {
+            font-size: 1.1rem;
+            font-weight: 500;
+            color: #222;
+            flex: 1;
+        }
+
+        .car-status {
+            padding: 0.35rem 0.8rem;
+            font-size: 0.8rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .status-tag-blue {
+            background-color: #00c2dd;
+        }
+
+        .status-tag-purple {
+            background-color: #1c20ff;
+        }
+    }
+
+}
+
+/* 차량 등록 버튼 */
+.car-add-box {
+    padding: 1rem 0;
+    text-align: center;
+
+    .car-add-btn {
+        display: inline-block;
+        background-color: $white;
+        border-radius: 12px;
+        padding: 1rem;
+        color: $gray-500;
+        font-size: 0.95rem;
+        font-weight: 500;
+        width: 100%;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        border: 1px solid $gray-200;
+        transition: all 0.2s ease;
+        text-decoration: none;
+
+        .plus-icon {
+            margin-left: 6px;
+            font-weight: bold;
+        }
+
+        &:hover {
+            background-color: $gray-100;
+            color: $black;
+        }
+    }
+}
+
+/* 이용후기 리스트 */
+.review-wrapper {
+    padding: 1rem;
+    background: $white;
+    border-radius: 12px;
+    margin-top: 2rem;
+}
+
+/* 이용후기 리스트 헤더 */
+.review-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+
+    h5 {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    .review-all-link {
+        font-size: 0.9rem;
+        color: $gray-500;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+/* 이용후기 빈 박스 */
+.review-empty-box {
+    background: $gray-100;
+    text-align: center;
+    padding: 4rem 1rem;
+    border-radius: 10px;
+
+    .btn-review-add {
+        background: transparent;
+        border: 1px solid $gray-400;
+        padding: 0.6rem 1.2rem;
+        border-radius: 10px;
+        color: $gray-500;
+        font-size: 0.95rem;
+        cursor: pointer;
+
+        &:hover {
+            background: $gray-200;
+        }
+    }
+
+    p {
+        font-size: 0.9rem;
+        color: $gray-500;
+    }
+}
+
+/* 이용후기 리스트 */
+.review-list {
+    list-style: none;
+    padding: 0;
+
+    .review-item {
+        padding: 1rem 0;
+        border-top: 1px solid #eee;
+
+        &:first-child {
+            border-top: none;
+        }
+
+        .review-name {
+            font-weight: bold;
+            margin-bottom: 0.3rem;
+        }
+
+        .review-content {
+            font-size: 0.95rem;
+            color: $black;
+        }
+
+        .review-date {
+            font-size: 0.85rem;
+            color: $gray-500;
+            margin-top: 0.3rem;
+        }
+    }
+}
+
+/* 미배정 상품 리스트 */
+.unassigned-wrapper {
+    background: $gray-100;
+    padding: 1.5rem;
+    border-radius: 12px;
+    font-family: $font-family-sans-serif;
+}
+
+/* 미배정 상품 리스트 헤더 */
+.unassigned-header {
+    margin-bottom: 1rem;
+
+    strong {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    .notice-link {
+        font-size: 0.9rem;
+        text-decoration: none;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+}
+
+/* 미배정 상품 빈 박스 */
+.unassigned-empty-box {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    background: $gray-100;
+    border-radius: 10px;
+    padding: 2rem 1rem;
+    margin-bottom: 1rem;
+
+    .unassigned-section {
+        text-align: center;
+
+        .unassigned-icon {
+            width: 70px;
+            height: 70px;
+            margin: 0 auto 0.5rem;
+
+            img {
+                width: 100%;
+                opacity: 0.6;
+            }
+        }
+
+        .unassigned-count {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        .unassigned-label {
+            font-size: 0.9rem;
+            color: $gray-500;
+        }
+    }
+
+    .divider {
+        width: 1px;
+        height: 50px;
+        background-color: $gray-200;
+    }
+}
+
+/* 미배정 상품 액션 */
+.unassigned-action {
+    text-align: center;
+
+    .btn-unassigned-go {
+        display: inline-block;
+        border: 1px solid $gray-300;
+        padding: 0.75rem 1.5rem;
+        border-radius: 10px;
+        color: $gray-600;
+        background: white;
+        font-size: 0.95rem;
+        transition: background 0.2s;
+        text-decoration: none;
+
+        &:hover {
+            background: $gray-400;
+        }
+    }
+}
+

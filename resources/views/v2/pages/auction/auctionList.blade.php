@@ -3,7 +3,7 @@
 
 @include('components.layouts.categoryTab')
 
-<div class="container mt-5">
+<div class="container mt-4">
 
     <div class="row" x-data="auctionList">
     <div class="col-12">

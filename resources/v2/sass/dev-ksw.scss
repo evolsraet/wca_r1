@@ -1,7 +1,316 @@
-// 컨테이너 상하단 여백 (Bootstrap 기본 좌우 패딩 유지)
-.container{
-    padding-top: 10px;
-    padding-bottom: 10px;
+@import "dev-ksw/layout"; // 헤더$푸터
+@import "dev-ksw/intro"; // 서비스 소개 페이지 스타일
+@import "dev-ksw/mainCarousel"; // 메인 캐러셀 스타일
+@import "dev-ksw/docsContainer"; // 이용약관 & 개인정보 처리방침 스타일
+@import "dev-ksw/latests"; // 최근 등록 상품 스타일
+@import "dev-ksw/auction"; // 경매페이지 스타일
+
+$primary: map-get($theme-colors, "primary");
+$secondary: map-get($theme-colors, "secondary");
+$success: map-get($theme-colors, "success");
+$danger: map-get($theme-colors, "danger");
+$warning: map-get($theme-colors, "warning");
+$info: map-get($theme-colors, "info");
+$light: map-get($theme-colors, "light");
+$dark: map-get($theme-colors, "dark");
+
+
+/* style reset */
+.content-wrap {
+    letter-spacing: -0.05rem !important;
+}
+
+/* 링크 텍스트 */
+.link-text {
+    color: $gray-700;
+    font-size: 0.95rem;
+    text-decoration: none;
+
+    &:hover {
+      color: $primary;
+      text-decoration: underline;
+    }
+}
+
+/* 입력 필드 */
+.form-custom {
+    input,
+    select,
+    button,
+    textarea {
+    box-shadow: none !important;
+    outline: none !important;
+    border-color: $gray-400 !important;
+    transition: border-color 0.2s ease;
+    border-width: 1px !important;
+    padding: 0.7rem !important;
+    border-radius: 0.3rem !important;
+
+        &:focus {
+            box-shadow: none !important;
+            outline: none !important;
+            border-width: 1px !important;
+            border-color: $gray-600 !important; // 포커스 시 색만 살짝 진하게
+        }
+
+        &::placeholder {
+            font-size: 0.9rem !important;
+            color: $gray-600 !important;
+            letter-spacing: -0.05rem !important;
+        }
+
+    }
+
+    /* 체크박스 */
+    input[type="checkbox"],
+    input[type="radio"] {
+        accent-color: $primary !important; // 기본 primary
+        width: 10px !important;
+        height: 10px !important;
+        padding: 7px !important;
+        margin-right: 0.5rem !important;
+    }
+}
+
+/* 필수 입력 필드 라벨 */
+.form-label-required {
+    font-weight: 600;
+    color: $gray-800;
+
+    &::before {
+      content: "*";
+      color: $danger;
+      margin-right: 0.25rem;
+    }
+
+    small {
+      font-weight: normal;
+      color: $gray-500;
+      margin-left: 4px;
+    }
+}
+
+/* 입력 필드 크기 */
+.form-control-lg-custom {
+    height: 48px;
+    font-size: 1rem;
+    padding: 0.5rem 1rem;
+}
+
+/* 입력 힌트 오류 */
+.form-hint-danger {
+    color: $danger;
+    font-size: 0.9rem;
+    margin-top: 0.3rem;
+}
+
+/* 입력 유닛 그룹 */
+.input-unit-group {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+
+    input.form-control {
+      padding-right: 3.5rem;
+    }
+
+    .unit-label {
+      position: absolute;
+      right: 1rem;
+      color: $gray-800;
+      font-weight: 500;
+      font-size: 1rem;
+      pointer-events: none;
+    }
+}
+
+
+/* 파일 업로드 버튼 */
+.file-upload-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $gray-100;
+    border-radius: 0.5rem;
+    padding: 0.4rem;
+    font-weight: 600;
+    color: $gray-600;
+    font-size: 1rem;
+    cursor: pointer;
+    width: 100%;
+    transition: all 0.2s ease;
+
+    i {
+      font-size: 1.2rem;
+    }
+
+    &:hover {
+      background-color: darken($gray-100, 5%);
+      color: $gray-900;
+    }
+}
+
+.btn-dark {
+    border: 1px solid $gray-500 !important;
+}
+
+.btn-outline-primary {
+    border: 1px solid $primary !important;
+}
+
+/* 체크박스 */
+.custom-checkbox {
+    input[type="checkbox"] {
+      display: none;
+
+      &:checked + label::before {
+        background-color: $black; // 내부 배경 검정
+        border-color: $black;
+      }
+
+      &:checked + label::after {
+        content: '✔';
+        color: $white; // 체크 표시 흰색
+      }
+    }
+
+    label {
+      position: relative;
+      width: 20px;
+      height: 20px;
+      display: inline-block;
+      cursor: pointer;
+
+      &::before {
+        content: '';
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        background-color: $white;
+        border: 1px solid $gray-400;
+        border-radius: 50%;
+        box-sizing: border-box;
+        transition: all 0.2s ease;
+      }
+
+      &::after {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        font-size: 14px;
+        color: transparent;
+        transition: all 0.2s ease;
+      }
+    }
+}
+
+/* 버튼 */
+.btn-dark-white {
+    background-color: transparent;
+    border: 1px solid $white !important;
+    color: $white;
+
+    &:hover {
+        background-color: $white;
+        border: 1px solid $white !important;
+        color: $black;
+    }
+
+}
+
+/* 코드 미리보기 */
+pre code {
+    display: block;
+    background: $gray-100;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.85rem;
+    color: $gray-700;
+    border: 1px solid $gray-300;
+    white-space: pre-wrap;
+}
+
+// Style Guide 커스텀 스타일
+.style-guide {
+    h1, h2, h3, h4, h5 {
+      font-family: 'Helvetica Neue', sans-serif;
+      font-weight: 700;
+      margin-bottom: 0.75rem;
+    }
+
+    .card {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+    }
+
+    .card-header {
+      background-color: $gray-100;
+      border-bottom: 1px solid $gray-300;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .color-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 120px;
+      height: 100px;
+      border-radius: 8px;
+      color: $white;
+      font-size: 0.875rem;
+      justify-content: center;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .color-label {
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      color: $gray-700;
+      font-weight: 500;
+    }
+
+    .typography-sample {
+      margin-bottom: 1rem;
+      p {
+        margin: 0.25rem 0;
+      }
+    }
+
+    .img-preview {
+      max-width: 100px;
+      border-radius: 8px;
+      box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
+    }
+
+    .example-box {
+      padding: 1rem;
+      border: 1px dashed $gray-300;
+      border-radius: 8px;
+      background-color: $gray-100;
+    }
+
+    .btn-preview {
+      margin: 0.25rem 0.5rem 0.25rem 0;
+    }
+
+    .form-preview input,
+    .form-preview textarea,
+    .form-preview select {
+      margin-bottom: 1rem;
+    }
+}
+
+.carousel-indicators button {
+    height: 0px !important;
+    padding: 0px !important;
 }
 
 // 토글버튼 포커스 제거
@@ -17,1604 +326,14 @@
     height: 45px;
 }
 
-// 헤더 네비게이션 스타일
-.navbar {
-    background-color: $white !important;
-    font-family: $font-family-sans-serif;
-    border-bottom: 1px solid $gray-200;
-    padding: 0.7rem 0;
-
-    .navbar-brand {
-        padding: 0;
-        background-image: url('/public/images/busan_wecar_logo.png');
-        background-size: 120px;
-        background-repeat: no-repeat;
-        background-position: left;
-        width: 120px;
-        height: 55px;
-        text-indent: -9999px;
-        overflow: hidden;
-        white-space: nowrap;
-    }
-
-    @media (max-width: 768px) {
-        padding: 0.2rem 0 !important;
-        .navbar-brand {
-            background-size: 100px;
-        }
-    }
-
-    .nav-link {
-        color: $secondary;
-        font-weight: 500;
-        letter-spacing: -0.05rem;
-        padding: 0 2.4rem;
-
-        &.active,
-        &:hover {
-            color: map-get($theme-colors, "primary");
-        }
-    }
-
-    .navbar-nav .nav-link {
-        position: relative;
-        margin: 0 0.6rem;
-        padding-bottom: 0.4rem;
-
-        &::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 100%;
-            height: 2px;
-            background-color: map-get($theme-colors, "primary");
-            transform: scaleY(0);
-            transform-origin: bottom;
-            transition: transform 0.3s ease;
-        }
-
-        &:hover::after,
-        &.active::after {
-            transform: scaleY(1);
-        }
-    }
-
-    .btn-outline-primary, .btn-outline-danger, .btn-outline-success {
-        border-radius: 0.6rem;
-        font-weight: 500;
-        display: flex;
-        align-items: center;
-    }
-
-    .btn-outline-primary i {
-        margin-right: 0.4rem;
-    }
-}
-
-.login-rounded-btn {
-    background-color: $gray-100;
-    border: none;
-    border-radius: 1rem;
-    padding: 0.5rem 1rem;
-    color: $secondary;
-    font-weight: 500;
-    font-size: 0.9rem;
-    box-shadow: none;
-    text-decoration: none;
-
-    &:hover {
-        background-color: darken($gray-100, 3%);
-        color: $secondary;
-    }
-
-    .login-icon {
-        width: 24px;
-        height: 24px;
-        background-image: url('/public/images/icon-person.png');
-        background-size: cover;
-        background-repeat: no-repeat;
-        display: inline-block;
-    }
-}
-
-.user-dropdown-btn {
-    border-radius: 2rem;
-    font-weight: 600;
-    padding: 0.3rem 1rem;
-    font-size: 0.9rem;
-}
-
-.user-dropdown-menu {
-    border-radius: 0.6rem;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    padding: 0.5rem 0;
-
-    .dropdown-item {
-        font-size: 0.95rem;
-        padding: 0.45rem 1rem;
-        color: $gray-800;
-
-        &:hover {
-            background-color: $gray-100;
-        }
-
-        &.text-danger {
-            color: $danger;
-        }
-    }
-}
-
-// 딜러 전용 헤더
-.dealer-header {
-    background-color: map-get($theme-colors, "primary") !important;
-    color: $white;
-    border-bottom: 0px;
-
-    .navbar-brand {
-        background-image: url('/public/images/busan_wecar_logo_white.png');
-        background-size: 120px;
-    }
-
-    .nav-link {
-        color: $white !important;
-
-        &::after {
-            background-color: $white !important;
-        }
-
-        &:hover,
-        &.active {
-            color: $white !important;
-            font-weight: 700;
-        }
-    }
-
-    .user-dropdown-btn {
-        background-color: darken(map-get($theme-colors, "primary"), 5%);
-        color: $white;
-        border-radius: 2rem;
-        padding: 0.4rem 1rem;
-        font-size: 0.9rem;
-        font-weight: 600;
-    }
-}
-
-// 푸터 스타일
-.site-footer {
-    background-color: $gray-100;
-    font-size: 0.9rem;
-    color: $gray-600;
-    border-top: 1px solid $gray-200;
-    padding: 0 10px;
-
-    a {
-        color: $gray-700;
-        text-decoration: none;
-
-        &:hover {
-            color: map-get($theme-colors, "primary");
-            text-decoration: underline;
-        }
-    }
-
-    .site-footer p {
-        margin-bottom: 0.3rem;
-        line-height: 1.5;
-        overflow-wrap: break-word;
-    }
-
-    .footer-link {
-        color: $gray-700;
-        text-decoration: none;
-        font-weight: 500;
-
-        &:hover {
-            color: map-get($theme-colors, "primary");
-            text-decoration: underline;
-        }
-    }
-
-    .fw-bold {
-        font-weight: 700;
-        font-size: 1.2rem;
-        color: $gray-600;
-    }
-
-    .footer-logo {
-        height: 50px;
-    }
-
-    .footer-cert {
-        height: 60px;
-        margin-top: 0.5rem;
-    }
-
+/* 버튼 테두리 제거 */
+.btn-primary.no-border,
+.btn-secondary.no-border,
+.btn-success.no-border,
+.btn-danger.no-border,
+.btn-warning.no-border,
+.btn-info.no-border {
+  border: 0 !important;
 }
 
 
-// 모바일 메뉴 영역 스타일
-.offcanvas {
-    width: 310px !important;
-
-    .offcanvas-header {
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-    }
-
-    .isUser {
-        justify-content: space-between;
-    }
-
-    .offcanvas-close-btn {
-        margin-top: 10px !important;
-        margin-right: 10px !important;
-        justify-content: flex-end;
-    }
-
-    .user-login-box {
-        justify-content: flex-end;
-        align-items: center !important;
-        margin-right: 10px !important;
-        margin-top: 0px !important;
-    }
-
-    .user-login-box-text-title {
-        display: flex;
-        align-items: center;
-        text-decoration: none;
-        color: $black;
-    }
-
-    .user-dropdown-wrapper {
-        position: relative;
-
-        .user-dropdown-menu {
-          position: absolute;
-          right: 0;
-          top: calc(100% + 4px); // 아래로 살짝 띄움
-          min-width: 160px;
-          box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-          border-radius: 12px;
-          background-color: $white;
-          z-index: 3000;
-
-          &.show {
-            display: block;
-          }
-        }
-    }
-
-    .gear-icon {
-        margin-left: 5px;
-        font-size: 22px;
-        color: $gray-500;
-    }
-
-    .offcanvas-content-wrapper {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-        background: $white;
-        color: $black;
-        overflow-y: scroll;
-
-        .offcanvas-top {
-            padding: 16px 16px 0;
-        }
-
-        .offcanvas-bottom {
-            margin-top: auto;
-            padding: 0px;
-        }
-
-        .offcanvas-menu {
-            list-style: none;
-            padding: 0;
-            margin: 0 20px;
-
-            li {
-              margin-bottom: 20px;
-            }
-
-            .menu-link {
-              display: flex;
-              align-items: center;
-              gap: 12px;
-              text-decoration: none;
-              color: inherit;
-            }
-
-            .menu-icon {
-              width: 48px;
-              height: 48px;
-              border-radius: 10px;
-              background: $gray-100;
-              display: flex;
-              align-items: center;
-              justify-content: center;
-
-              img {
-                width: 24px;
-                height: 24px;
-                object-fit: contain;
-              }
-            }
-
-            .menu-text {
-              display: flex;
-              flex-direction: column;
-              justify-content: center;
-
-              strong {
-                font-size: 16px;
-                font-weight: 600;
-                color: $black;
-                margin-bottom: 2px;
-              }
-
-              small {
-                font-size: 14px;
-                color: $gray-500;
-              }
-            }
-        }
-
-        .offcanvas-footer-logo {
-            text-align: center;
-            padding: 20px 0px;
-            background-color: $gray-100;
-
-            img {
-                width: 80px;
-                opacity: 0.3;
-            }
-        }
-
-        .offcanvas-close {
-            outline: none !important;
-            box-shadow: none !important;
-            font-size: 1.5rem;
-            margin-right: 20px !important;
-        }
-
-        .login-card {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: $gray-100;
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 20px;
-            background-image: url('/public/images/login-object.png');
-            background-size: 155px;
-            background-repeat: no-repeat;
-            background-position: right;
-
-            .login-card-text {
-                flex: 1;
-            }
-
-            .login-subtitle {
-                margin: 0;
-                color: map-get($theme-colors, "primary");
-                font-size: 14px;
-            }
-
-            .login-link {
-                display: inline-block;
-                margin-top: 4px;
-                font-size: 18px;
-                font-weight: 700;
-                color: map-get($theme-colors, "primary");
-                text-decoration: none;
-            }
-
-            .login-card-image img {
-                width: 120px;
-                height: auto;
-            }
-
-        }
-
-        .sell-highlight-card {
-            display: flex;
-            align-items: center;
-            justify-content: flex-start;
-            background: map-get($theme-colors, "primary");
-            border-radius: 12px;
-            padding: 10px 20px;
-            color: $white;
-            position: relative;
-            overflow: visible;
-            margin: 0 20px;
-            margin-bottom: 20px;
-
-            .sell-highlight-text {
-              flex: 1;
-              z-index: 1;
-            }
-
-            .headline {
-              font-size: 16px;
-              font-weight: 500;
-              margin: 0;
-            }
-
-            .subline {
-              font-size: 20px;
-              font-weight: 700;
-              margin: 0;
-            }
-
-            .sell-highlight-image {
-              position: absolute;
-              right: 10px;
-              top: -42px; // 위로 튀어나오게
-              transform: scale(1.1);
-              z-index: 2;
-
-              img {
-                width: 150px;
-                height: auto;
-              }
-            }
-        }
-
-
-        .sell-car-box {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: $gray-100;
-            border-radius: 12px;
-            padding: 1rem 1.2rem;
-            text-decoration: none;
-            color: $black;
-            transition: background 0.2s;
-
-            &:hover {
-              background: $gray-200;
-              text-decoration: none;
-            }
-
-            .sell-car-subtitle {
-              font-size: 0.85rem;
-              color: $gray-500;
-              margin-bottom: 0.3rem;
-            }
-
-            .sell-car-title {
-              font-size: 1rem;
-              font-weight: 600;
-              color: $black;
-            }
-
-            .sell-car-icon img {
-              width: 52px;
-              height: auto;
-              opacity: 0.7;
-            }
-        }
-
-    }
-
-}
-
-
-
-// 서비스 소개 페이지 전용 스타일
-.intro {
-    text-align: center;
-
-    .title {
-        font-size: 1.75rem;
-        font-weight: 600;
-        color: $black;
-    }
-
-    .small-text {
-        font-size: 1rem;
-        font-weight: 500;
-        color: $gray-700;
-    }
-
-    /* 채팅 이미지 영역 */
-    .chat-box {
-        display: flex;
-        justify-content: center;
-        margin-top: 2rem;
-    }
-
-    .chat-img {
-        max-width: 100%;
-        width: 500px;
-        height: auto;
-    }
-
-    /* 특징 카드 3개 */
-    .features {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 2rem;
-        margin-top: 3rem;
-    }
-
-    .feature-item {
-        background-color: $white;
-        border: 1px solid $gray-200;
-        border-radius: 1rem;
-        width: 260px;
-        padding: 2rem 1rem;
-        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
-        text-align: center;
-
-        p {
-        font-size: 0.95rem;
-        color: $gray-800;
-        margin-top: 1rem;
-        line-height: 1.5;
-        }
-    }
-
-    .hand-img {
-        height: 60px;
-    }
-
-    .section01 {
-        background-color: $white;
-        padding-top: 3rem;
-        padding-bottom: 5rem;
-    }
-
-    .section02 {
-        padding-top: 4rem;
-        padding-bottom: 5rem;
-        background-color: $gray-100;
-    }
-
-    /* 배경 + 문구 */
-    .section03 {
-        position: relative;
-        background-image: url('/public/images/intro-06.png');
-        background-size: cover;
-        background-position: bottom;
-        background-repeat: no-repeat;
-        height: 250px;
-
-        .bk-section {
-        width: 100%;
-        height: auto;
-        border-radius: 0;
-        }
-
-        .content {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        color: $black;
-
-        p.title {
-            font-size: 1.5rem;
-            font-weight: 700;
-        }
-
-        p {
-            font-size: 1rem;
-            margin-top: 0.5rem;
-            color: $gray-800;
-        }
-        }
-    }
-
-    .section04 {
-        margin-top: 6rem;
-        text-align: center;
-
-        img {
-        max-width: 100%;
-        height: auto;
-        }
-    }
-
-    .text-muted02 {
-        font-size: 0.9rem;
-        color: $gray-500;
-        justify-content: center;
-        align-items: center;
-        gap: 0.5rem;
-        flex-wrap: wrap;
-    }
-}
-
-
-
-
-
-
-#mainCarousel {
-    position: relative;
-
-    .carousel-inner {
-      height: 100vh;
-    }
-
-    .user-main-carousel-inner {
-        height: 450px;
-    }
-
-    .carousel-item {
-      position: relative;
-
-      .carousel-user-bg {
-        height: 450px;
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start; // PC에서는 왼쪽 정렬
-        padding-left: 8%;
-        padding-right: 8%;
-      }
-
-      .carousel-bg {
-        height: 100vh;
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        align-items: center;
-        justify-content: flex-start; // PC에서는 왼쪽 정렬
-        padding-left: 8%;
-        padding-right: 8%;
-      }
-
-      .carousel-caption-box {
-        color: $white;
-        text-align: left;
-        padding: 20px;
-        border-radius: 12px;
-        max-width: 620px;
-
-        .carousel-title {
-          font-size: 2.4rem;
-          font-weight: 500;
-          line-height: 1.4;
-          strong {
-            font-weight: 900;
-          }
-        }
-
-        .carousel-subtitle {
-          font-size: 1.1rem;
-          margin-top: 10px;
-          margin-bottom: 24px;
-          font-weight: 300;
-        }
-
-        .carousel-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          padding: 6px 60px;
-          border: 1px solid $white;
-          color: $white;
-          border-radius: 30px;
-          font-weight: 500;
-          text-decoration: none;
-          transition: all 0.3s ease;
-          font-size: 16px;
-
-          i {
-            font-size: 18px;
-          }
-
-          &:hover {
-            background-color: $white;
-            color: $black;
-          }
-
-          .carousel-btn-icon {
-            width: 20px;
-          }
-        }
-
-        .dealer-join-box {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            font-size: 16px;
-            color: $white;
-
-            .dealer-label {
-              font-weight: 400;
-            }
-
-            .dealer-link {
-              font-weight: 700;
-              color: $white;
-              text-decoration: none;
-              border-bottom: 2px solid $white;
-              padding-bottom: 2px;
-
-              &:hover {
-                opacity: 0.8;
-                border-color: $gray-300;
-              }
-            }
-        }
-
-        .carousel-logo {
-            width: 90px;
-            height: auto;
-            margin-top: 20px;
-        }
-      }
-
-
-
-      .carousel-user-caption {
-        position: absolute;
-        bottom: 35%;
-        left: 25%;
-        transform: translateY(20%);
-        color: $white;
-        max-width: 680px;
-
-        h2.carousel-title {
-          font-size: 30px;
-          font-weight: 500;
-          line-height: 1.4;
-          margin-bottom: 20px;
-
-          strong {
-            font-weight: 900;
-          }
-        }
-
-        .carousel-subtitle {
-          font-size: 18px;
-          margin-bottom: 30px;
-
-          strong {
-            font-weight: 600;
-            color: $white;
-          }
-        }
-
-        .carousel-btn {
-          display: inline-flex;
-          align-items: center;
-          padding: 10px 28px;
-          background-color: map-get($theme-colors, "primary");
-          color: $white;
-          font-weight: 700;
-          font-size: 16px;
-          border-radius: 32px;
-          text-decoration: none;
-          transition: 0.3s ease;
-
-          &:hover {
-            background-color: map-get($theme-colors, "primary");
-          }
-        }
-      }
-
-    }
-
-
-    .carousel-top-dealer-box {
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 100%;
-        z-index: 100;
-        padding: 2.5rem 0 0 0;
-        color: $white;
-        text-align: center;
-
-        .dealer-title {
-          font-size: 1.8rem;
-          font-weight: bold;
-          margin-bottom: 8.5rem;
-
-          .count-emphasis {
-            font-weight: bold;
-            font-size: 2.2rem;
-            text-decoration: underline;
-          }
-
-          @include media-breakpoint-down(md) {
-            font-size: 1.2rem;
-            margin-bottom: 3.5rem;
-            .count-emphasis {
-              font-size: 1.6rem;
-            }
-          }
-        }
-
-        .dealer-stats-container {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: $white;
-          color: $black;
-          border-radius: 12px 12px 0 0;
-          padding: 1.8rem 0;
-          gap: 1rem;
-          flex-wrap: wrap;
-          max-width: 1300px;
-          margin: 0 auto;
-
-          .dealer-stat {
-            flex: 1 1 80px;
-            text-align: center;
-
-            .dealer-count {
-              font-size: 1.1rem;
-              font-weight: bold;
-              margin-bottom: 0.3rem;
-            }
-
-            .dealer-icon {
-              font-size: 1rem;
-              color: $gray-300;
-              margin-bottom: 0.25rem;
-            }
-
-            .dealer-label {
-              font-size: 0.85rem;
-              color: $gray-500;
-            }
-          }
-
-          .dealer-divider {
-            width: 1px;
-            height: 50px;
-            background: $gray-200;
-
-            @include media-breakpoint-down(sm) {
-              display: none;
-            }
-          }
-
-          @include media-breakpoint-down(md) {
-            .dealer-stat {
-              flex: 0 0 45% !important; // 모바일에서는 2개씩
-              padding: 0.5rem 0 !important;
-            }
-          }
-
-        }
-    }
-
-
-    @media (max-width: 768px) {
-      .carousel-inner {
-        height: auto;
-      }
-
-      .carousel-bg {
-        height: auto;
-        padding: 60px 20px;
-        justify-content: center !important; // 모바일 중앙 정렬
-      }
-
-
-      .user-main-carousel-inner, .carousel-user-bg {
-        height: 350px !important;
-      }
-
-      .carousel-user-caption {
-        left: 0% !important;
-        transform: translateY(10%);
-        padding: 0 20px !important;
-        text-align: center;
-        width: 100% !important;
-
-        h2.carousel-title {
-            font-size: 24px !important;
-          }
-
-        .carousel-subtitle {
-        font-size: 16px !important;
-        }
-
-      }
-
-      .carousel-caption-box {
-        text-align: center;
-        max-width: 100%;
-        padding: 10px !important;
-
-        .carousel-title {
-          font-size: 1.4rem !important;
-        }
-
-        .carousel-subtitle {
-          font-size: 1rem !important;
-          margin-top: 8px !important;
-          margin-bottom: 20px !important;
-        }
-
-        .carousel-btn {
-          font-size: 15px;
-          padding: 10px 20px;
-        }
-      }
-    }
-}
-
-// 이용약관 & 개인정보 처리방침 스타일
-.docs-container {
-    max-width: 1200px;
-    margin: 20px auto;
-    padding: 40px 24px;
-    font-family: $font-family-sans-serif;
-    color: $black;
-
-    h1 {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 32px;
-      padding-bottom: 12px;
-    }
-
-    h2, h3, h4, h5 {
-      font-weight: 600;
-      margin-top: 32px;
-      margin-bottom: 12px;
-      color: $black;
-    }
-
-    h5 {
-      font-size: 18px;
-      border-left: 4px solid map-get($theme-colors, "primary");
-      padding-left: 10px;
-    }
-
-    p {
-      line-height: 1.8;
-      font-size: 15px;
-      margin-bottom: 12px;
-    }
-
-    ul, ol {
-      margin-left: 20px;
-      margin-bottom: 20px;
-    }
-
-    li {
-      line-height: 1.6;
-      font-size: 15px;
-      margin-bottom: 6px;
-    }
-
-    strong {
-      color: map-get($theme-colors, "primary");
-      font-weight: bold;
-    }
-
-    .terms-content {
-      font-size: 15px;
-      line-height: 1.8;
-    }
-
-    @media (max-width: 768px) {
-      padding: 24px 16px;
-      h1 {
-        font-size: 24px;
-      }
-      h5 {
-        font-size: 16px;
-      }
-    }
-}
-
-.process-steps {
-    .step-circle {
-      width: 120px;
-      height: 120px;
-      border: 1px solid $gray-200;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background-color: $white;
-
-      img {
-        width: 50px;
-        height: auto;
-        object-fit: contain;
-        transition: transform 0.3s ease;
-
-        &:hover {
-          transform: scale(1.1);
-        }
-      }
-    }
-
-    .badge {
-      font-size: 0.75rem;
-      padding: 0.4em 0.8em;
-      border-radius: 0.5rem;
-    }
-
-    .fw-semibold {
-      font-weight: 500;
-      background-color: $gray-200;
-      color: $black;
-    }
-
-    .fw-bold {
-      font-size: 1rem;
-    }
-
-    .small {
-      font-size: 0.85rem;
-      line-height: 1.4;
-    }
-
-    @media (max-width: 768px) {
-      .step-circle {
-        width: 90px;
-        height: 90px;
-
-        img {
-          width: 40px;
-        }
-      }
-
-      .fw-bold {
-        font-size: 0.95rem;
-      }
-
-      .small {
-        font-size: 0.8rem;
-      }
-    }
-}
-
-
-// 공지사항 최신글 스타일
-.notice-wrapper {
-    padding: 1rem;
-    background: $white;
-    border-radius: 8px;
-    font-family: $font-family-sans-serif;
-}
-
-.notice-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    margin-bottom: 1rem;
-
-    h5 {
-        font-size: 1.1rem;
-        margin: 0;
-    }
-
-    .notice-all-link {
-        font-size: 0.9rem;
-        color: $gray-500;
-        text-decoration: none;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-}
-
-.notice-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-    .notice-item {
-        display: flex;
-        align-items: center;
-        border-top: 1px solid $gray-200;
-        padding: 0.75rem 0;
-        font-size: 0.95rem;
-
-        &:first-child {
-            border-top: none;
-        }
-
-        .notice-num {
-            width: 2rem;
-            text-align: center;
-            color: $gray-500;
-        }
-
-        .notice-datetime {
-            width: 10rem;
-            color: $gray-500;
-        }
-
-        .notice-content {
-            flex: 1;
-            color: $black;
-
-            a {
-                text-decoration: none;
-                color: $black;
-            }
-
-            a:hover {
-                color: map-get($theme-colors, "primary");
-                // text-decoration: underline;
-            }
-        }
-    }
-}
-
-
-
-.car-wrapper {
-    padding: 1rem;
-    background: #f8f9fb;
-    border-radius: 10px;
-    font-family: $font-family-sans-serif;
-}
-
-.car-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: bold;
-    margin-bottom: 1rem;
-
-    h5 {
-        font-size: 1.1rem;
-        margin: 0;
-    }
-
-    .car-all-link {
-        font-size: 0.9rem;
-        color: #888;
-        text-decoration: none;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-}
-
-.car-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-
-    .car-item {
-        display: flex;
-        align-items: center;
-        background: $white;
-        border-radius: 12px;
-        padding: 1rem;
-        margin-bottom: 1rem;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-
-        .car-thumb {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            overflow: hidden;
-            margin-right: 1rem;
-
-            img {
-                width: 100%;
-                height: 100%;
-                object-fit: cover;
-            }
-        }
-
-        .car-number {
-            font-size: 1.1rem;
-            font-weight: 500;
-            color: #222;
-            flex: 1;
-        }
-
-        .car-status {
-            padding: 0.35rem 0.8rem;
-            font-size: 0.8rem;
-            border-radius: 12px;
-            color: white;
-            font-weight: 500;
-            white-space: nowrap;
-        }
-
-        .status-tag-blue {
-            background-color: #00c2dd;
-        }
-
-        .status-tag-purple {
-            background-color: #1c20ff;
-        }
-    }
-
-}
-
-.car-add-box {
-    padding: 1rem 0;
-    text-align: center;
-
-    .car-add-btn {
-        display: inline-block;
-        background-color: $white;
-        border-radius: 12px;
-        padding: 1rem;
-        color: $gray-500;
-        font-size: 0.95rem;
-        font-weight: 500;
-        width: 100%;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        border: 1px solid $gray-200;
-        transition: all 0.2s ease;
-        text-decoration: none;
-
-        .plus-icon {
-            margin-left: 6px;
-            font-weight: bold;
-        }
-
-        &:hover {
-            background-color: $gray-100;
-            color: $black;
-        }
-    }
-}
-
-
-
-.review-wrapper {
-    padding: 1rem;
-    background: $white;
-    border-radius: 12px;
-    margin-top: 2rem;
-}
-
-.review-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-
-    h5 {
-        font-size: 1.1rem;
-        font-weight: bold;
-    }
-
-    .review-all-link {
-        font-size: 0.9rem;
-        color: $gray-500;
-        text-decoration: none;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-}
-
-.review-empty-box {
-    background: $gray-100;
-    text-align: center;
-    padding: 4rem 1rem;
-    border-radius: 10px;
-
-    .btn-review-add {
-        background: transparent;
-        border: 1px solid $gray-400;
-        padding: 0.6rem 1.2rem;
-        border-radius: 10px;
-        color: $gray-500;
-        font-size: 0.95rem;
-        cursor: pointer;
-
-        &:hover {
-            background: $gray-200;
-        }
-    }
-
-    p {
-        font-size: 0.9rem;
-        color: $gray-500;
-    }
-}
-
-.review-list {
-    list-style: none;
-    padding: 0;
-
-    .review-item {
-        padding: 1rem 0;
-        border-top: 1px solid #eee;
-
-        &:first-child {
-            border-top: none;
-        }
-
-        .review-name {
-            font-weight: bold;
-            margin-bottom: 0.3rem;
-        }
-
-        .review-content {
-            font-size: 0.95rem;
-            color: $black;
-        }
-
-        .review-date {
-            font-size: 0.85rem;
-            color: $gray-500;
-            margin-top: 0.3rem;
-        }
-    }
-}
-
-
-
-.unassigned-wrapper {
-    background: $gray-100;
-    padding: 1.5rem;
-    border-radius: 12px;
-    font-family: $font-family-sans-serif;
-}
-
-.unassigned-header {
-    margin-bottom: 1rem;
-
-    strong {
-        font-size: 1.1rem;
-        font-weight: bold;
-    }
-
-    .notice-link {
-        font-size: 0.9rem;
-        text-decoration: none;
-
-        &:hover {
-            text-decoration: underline;
-        }
-    }
-}
-
-.unassigned-empty-box {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    background: $gray-100;
-    border-radius: 10px;
-    padding: 2rem 1rem;
-    margin-bottom: 1rem;
-
-    .unassigned-section {
-        text-align: center;
-
-        .unassigned-icon {
-            width: 70px;
-            height: 70px;
-            margin: 0 auto 0.5rem;
-
-            img {
-                width: 100%;
-                opacity: 0.6;
-            }
-        }
-
-        .unassigned-count {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        .unassigned-label {
-            font-size: 0.9rem;
-            color: $gray-500;
-        }
-    }
-
-    .divider {
-        width: 1px;
-        height: 50px;
-        background-color: $gray-200;
-    }
-}
-
-.unassigned-action {
-    text-align: center;
-
-    .btn-unassigned-go {
-        display: inline-block;
-        border: 1px solid $gray-300;
-        padding: 0.75rem 1.5rem;
-        border-radius: 10px;
-        color: $gray-600;
-        background: white;
-        font-size: 0.95rem;
-        transition: background 0.2s;
-        text-decoration: none;
-
-        &:hover {
-            background: $gray-400;
-        }
-    }
-}
-
-
-
-.auction-item {
-    display: block;
-    text-decoration: none;
-    background: $white;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s, box-shadow 0.2s;
-    color: $black;
-
-    &:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-      text-decoration: none;
-    }
-
-    .auction-item-thumb {
-      position: relative;
-
-      img {
-        width: 100%;
-        height: 160px;
-        object-fit: cover;
-        border-radius: 12px 12px 0 0;
-        display: block;
-      }
-
-      .auction-item-badge {
-        position: absolute;
-        top: 8px;
-        left: 8px;
-        background: $primary;
-        color: $white;
-        font-size: 0.75rem;
-        padding: 2px 8px;
-        border-radius: 8px;
-        white-space: nowrap;
-      }
-    }
-
-    .auction-item-body {
-      padding: 12px;
-
-      .auction-item-title {
-        font-weight: 600;
-        font-size: 1rem;
-        margin-bottom: 6px;
-      }
-
-      .auction-item-sub {
-        font-size: 0.85rem;
-        color: $gray-500;
-      }
-
-      .auction-item-desc {
-        font-size: 0.85rem;
-        color: $gray-500;
-        margin-top: 4px;
-      }
-
-      .auction-item-tags {
-        margin-top: 10px;
-
-        .tag {
-          display: inline-block;
-          font-size: 0.7rem;
-          padding: 4px 8px;
-          border-radius: 6px;
-          margin-right: 4px;
-          font-weight: 500;
-        }
-
-        .tag-blue {
-          background-color: $primary;
-          color: $white;
-        }
-
-        .tag-red {
-          background-color: $red;
-          color: $white;
-        }
-      }
-    }
-  }
-
-
-
-  .search-bar {
-    position: relative;
-    background: $gray-100;
-    border-radius: 8px;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-
-    .search-icon {
-      font-size: 1.2rem;
-      color: $gray-500;
-      margin-right: 8px;
-    }
-
-    .search-input {
-      border: none;
-      background: transparent;
-      flex-grow: 1;
-      font-size: 1rem;
-      color: $black;
-
-      &:focus {
-        outline: none;
-      }
-
-      &::placeholder {
-        color: $gray-500;
-      }
-    }
-  }
-
-
-  .category-tab {
-    background: $gray-100;
-    padding: 16px;
-    border-radius: 8px;
-
-    ul {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .tab-list {
-      display: flex;
-      gap: 20px;
-      align-items: center;
-
-      .tab-btn {
-        background: none;
-        border: none;
-        font-size: 1rem;
-        font-weight: 500;
-        color: $gray-500;
-        cursor: pointer;
-        position: relative;
-        padding-bottom: 4px;
-
-        &:hover {
-          color: map-get($theme-colors, "primary");
-        }
-
-        &.active {
-          color: map-get($theme-colors, "primary");
-
-          &::after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: -2px;
-            width: 100%;
-            height: 2px;
-            background: map-get($theme-colors, "primary");
-          }
-        }
-
-        .tab-count {
-          margin-left: 4px;
-          font-size: 0.875rem;
-          color: map-get($theme-colors, "primary");
-        }
-      }
-    }
-  }

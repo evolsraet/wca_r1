@@ -14,7 +14,7 @@
 
     @if (empty($reviews))
         <div class="review-empty-box">
-            <button class="btn-review-add">이용후기 등록 하기</button>
+            <a href="#" class="btn btn-dark">이용후기 등록 하기</a>
             <p class="text-muted mt-3">내 차 판매 후, 이용후기를 작성해보세요.</p>
         </div>
     @else

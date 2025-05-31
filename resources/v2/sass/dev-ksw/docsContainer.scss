@@ -1,0 +1,65 @@
+// 이용약관 & 개인정보 처리방침 스타일 
+.docs-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 40px 24px;
+    font-family: $font-family-sans-serif;
+    color: $black;
+  
+    h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 32px;
+      padding-bottom: 12px;
+    }
+  
+    h2, h3, h4, h5 {
+      font-weight: 600;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: $black;
+    }
+  
+    h5 {
+      font-size: 18px;
+      border-left: 4px solid map-get($theme-colors, "primary");
+      padding-left: 10px;
+    }
+  
+    p {
+      line-height: 1.8;
+      font-size: 15px;
+      margin-bottom: 12px;
+    }
+  
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 20px;
+    }
+  
+    li {
+      line-height: 1.6;
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+  
+    strong {
+      color: map-get($theme-colors, "primary");
+      font-weight: bold;
+    }
+  
+    .terms-content {
+      font-size: 15px;
+      line-height: 1.8;
+    }
+  
+    @media (max-width: 768px) {
+      padding: 24px 16px;
+      h1 {
+        font-size: 24px;
+      }
+      h5 {
+        font-size: 16px;
+      }
+    }
+}
