@@ -5,6 +5,10 @@
     'downloadAction' => 'downloadFile'
 ])
 
+@php
+    $dataPath = str_replace('.', '?.', $dataPath);
+@endphp
+
 <div x-show="{{ $dataPath }} && {{ $dataPath }}.length > 0">
     @if($label)
         <h6 class="mb-2">

@@ -42,13 +42,10 @@ export default function() {
         loading: false,
 
         init(initialData = {}) {
-            console.log('전달받은 데이터:', initialData);
 
             if (typeof initialData === 'object' && initialData !== null && Object.keys(initialData).length > 0) {
                 Object.assign(this.form, initialData);
-                console.log('초기화된 form:', this.form);
             } else {
-                console.log('전달된 데이터가 없습니다.');
             }
 
             const urlParams = new URLSearchParams(window.location.search);

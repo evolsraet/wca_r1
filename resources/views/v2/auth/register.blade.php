@@ -46,7 +46,7 @@
 
                 <div class="card-body"
                     x-data="register"
-                    x-init="init(window.registerFormData)"
+                    x-init="init({{ json_encode($form) }})"
                     >
 
                     <form @submit.prevent="submit">

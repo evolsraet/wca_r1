@@ -95,7 +95,7 @@
             </div>
 
             <!-- 첨부파일 -->
-            <div x-show="article && article.board_attach && article.board_attach.length > 0" class="card-footer bg-light">
+            <div x-show="article?.board_attach?.length > 0" class="card-footer bg-light">
                 <x-forms.fileList
                     label="첨부파일"
                     data-path="article.board_attach"

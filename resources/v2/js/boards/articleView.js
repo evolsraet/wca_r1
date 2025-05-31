@@ -5,6 +5,7 @@ export default function articleView() {
         articleId: null,
         loading: false,
         article: null,
+        board_attach: [],
 
         // 초기화
         async init(boardId, articleId) {
@@ -42,7 +43,6 @@ export default function articleView() {
                     this.showError('게시글을 불러올 수 없습니다.');
                 }
             } catch (error) {
-                console.error('게시글 로드 실패:', error);
                 this.showError('게시글을 불러오는데 실패했습니다.');
             } finally {
                 this.loading = false;
