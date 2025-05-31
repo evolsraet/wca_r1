@@ -143,6 +143,49 @@ Route::prefix('v2')->group(function () {
         Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])
             ->name('logout');
     });
+
+    // 공지사항 게시판 라우트
+    Route::prefix('board/notice')->group(function () {
+        Route::get('/', function () {
+            return view('v2.board.basic.list', ['boardName' => 'notice']);
+        })->name('board.notice.index');
+
+        Route::get('/{articleId}', function ($articleId) {
+            return view('v2.board.basic.detail', ['boardName' => 'notice', 'articleId' => $articleId]);
+        })->name('board.notice.show');
+
+        Route::get('/write/{articleId?}', function ($articleId = null) {
+            return view('v2.board.basic.write', ['boardName' => 'notice', 'articleId' => $articleId]);
+        })->name('board.notice.write');
+    });
+
+    Route::prefix('board/free')->group(function () {
+        Route::get('/', function () {
+            return view('v2.board.basic.list', ['boardName' => 'free']);
+        })->name('board.free.index');
+
+        Route::get('/{articleId}', function ($articleId) {
+            return view('v2.board.basic.detail', ['boardName' => 'free', 'articleId' => $articleId]);
+        })->name('board.free.show');
+
+        Route::get('/write/{articleId?}', function ($articleId = null) {
+            return view('v2.board.basic.write', ['boardName' => 'free', 'articleId' => $articleId]);
+        })->name('board.free.write');
+    });
+
+    Route::prefix('board/claim')->group(function () {
+        Route::get('/', function () {
+            return view('v2.board.basic.list', ['boardName' => 'claim']);
+        })->name('board.claim.index');
+
+        Route::get('/{articleId}', function ($articleId) {
+            return view('v2.board.basic.detail', ['boardName' => 'claim', 'articleId' => $articleId]);
+        })->name('board.claim.show');
+
+        Route::get('/write/{articleId?}', function ($articleId = null) {
+            return view('v2.board.basic.write', ['boardName' => 'claim', 'articleId' => $articleId]);
+        })->name('board.claim.write');
+    });
 });
 
 
@@ -185,4 +228,5 @@ Route::fallback(function () {
 
 // Route::get('/payment', [PaymentController::class, 'showPaymentForm'])->name('payment.form');
 // Route::post('/payment', [PaymentController::class, 'processPayment'])->name('payment.process');
+
 
