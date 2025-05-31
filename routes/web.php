@@ -16,6 +16,8 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Board\BoardController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -144,47 +146,16 @@ Route::prefix('v2')->group(function () {
             ->name('logout');
     });
 
-    // 공지사항 게시판 라우트
-    Route::prefix('board/notice')->group(function () {
-        Route::get('/', function () {
-            return view('v2.board.basic.list', ['boardName' => 'notice']);
-        })->name('board.notice.index');
+    // 게시판 라우트 그룹
+    Route::prefix('board/{boardId}')->name('board.')->group(function () {
+        // 목록 페이지
+        Route::get('/', [BoardController::class, 'list'])->name('list');
 
-        Route::get('/{articleId}', function ($articleId) {
-            return view('v2.board.basic.detail', ['boardName' => 'notice', 'articleId' => $articleId]);
-        })->name('board.notice.show');
+        // 상세 페이지
+        Route::get('/view/{articleId}', [BoardController::class, 'view'])->name('view');
 
-        Route::get('/write/{articleId?}', function ($articleId = null) {
-            return view('v2.board.basic.write', ['boardName' => 'notice', 'articleId' => $articleId]);
-        })->name('board.notice.write');
-    });
-
-    Route::prefix('board/free')->group(function () {
-        Route::get('/', function () {
-            return view('v2.board.basic.list', ['boardName' => 'free']);
-        })->name('board.free.index');
-
-        Route::get('/{articleId}', function ($articleId) {
-            return view('v2.board.basic.detail', ['boardName' => 'free', 'articleId' => $articleId]);
-        })->name('board.free.show');
-
-        Route::get('/write/{articleId?}', function ($articleId = null) {
-            return view('v2.board.basic.write', ['boardName' => 'free', 'articleId' => $articleId]);
-        })->name('board.free.write');
-    });
-
-    Route::prefix('board/claim')->group(function () {
-        Route::get('/', function () {
-            return view('v2.board.basic.list', ['boardName' => 'claim']);
-        })->name('board.claim.index');
-
-        Route::get('/{articleId}', function ($articleId) {
-            return view('v2.board.basic.detail', ['boardName' => 'claim', 'articleId' => $articleId]);
-        })->name('board.claim.show');
-
-        Route::get('/write/{articleId?}', function ($articleId = null) {
-            return view('v2.board.basic.write', ['boardName' => 'claim', 'articleId' => $articleId]);
-        })->name('board.claim.write');
+        // 글쓰기/수정 페이지
+        Route::get('/form/{articleId?}', [BoardController::class, 'form'])->name('form');
     });
 });
 
