@@ -49,13 +49,21 @@ if (window.Alpine) {
         Alpine.data(name, module.default);
     });
 
-    // board 폴더 자동 등록
-    const boardComponents = import.meta.glob('./board/**/*.js', { eager: true });
+    // boards 폴더 자동 등록
+    const boardComponents = import.meta.glob('./boards/**/*.js', { eager: true });
     Object.entries(boardComponents).forEach(([path, module]) => {
         // 경로에서 파일명만 추출 (확장자 제외)
         const name = path.split('/').pop().replace('.js', '');
         console.log(`Registering board component: ${name}`);
-        Alpine.data(name, module.default);
+
+        // board.js는 스토어로 등록, 나머지는 컴포넌트로 등록
+        if (name === 'board') {
+            Alpine.store('board', module.default);
+            console.log('Registered board as store');
+        } else {
+            Alpine.data(name, module.default);
+            console.log(`Registered ${name} as component`);
+        }
     });
 
     Alpine.store('modal', modal);

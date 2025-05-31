@@ -263,8 +263,23 @@ export default () => ({
 
     // 게시글 순번 계산
     getArticleNumber(index) {
-        // 전체 개수에서 현재 위치를 빼서 내림차순 번호 생성
         const currentStart = (this.pagination.current_page - 1) * this.pagination.per_page;
-        return this.pagination.total - (currentStart + index);
+
+        // 기본 정렬(id desc) 또는 desc 정렬일 때: 최신 글이 1번
+        if (this.sortColumn === 'id' && this.sortDirection === 'desc') {
+            return this.pagination.total - (currentStart + index);
+        }
+        // id 오름차순 정렬일 때: 가장 오래된 글이 1번
+        else if (this.sortColumn === 'id' && this.sortDirection === 'asc') {
+            return currentStart + index + 1;
+        }
+        // 다른 컬럼으로 정렬할 때: 현재 검색 결과에서의 순번
+        else {
+            if (this.sortDirection === 'desc') {
+                return this.pagination.total - (currentStart + index);
+            } else {
+                return currentStart + index + 1;
+            }
+        }
     }
 });
