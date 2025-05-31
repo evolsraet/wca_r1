@@ -188,7 +188,8 @@
           .count-emphasis {
             font-weight: bold;
             font-size: 2.2rem;
-            text-decoration: underline;
+            padding-bottom: 2px;
+            border-bottom: 2px solid $white;
           }
       
           @include media-breakpoint-down(md) {
@@ -218,7 +219,7 @@
             text-align: center;
       
             .dealer-count {
-              font-size: 1.1rem;
+              font-size: 1.3rem;
               font-weight: bold;
               margin-bottom: 0.3rem;
             }
@@ -231,14 +232,14 @@
       
             .dealer-label {
               font-size: 0.85rem;
-              color: $gray-500;
+              color: $gray-600;
             }
           }
       
           .dealer-divider {
             width: 1px;
             height: 50px;
-            background: $gray-200;
+            background: $gray-400;
       
             @include media-breakpoint-down(sm) {
               display: none;

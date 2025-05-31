@@ -46,6 +46,72 @@
 
 {{-- 메인 컨텐츠 --}}
 <div class="container mt-5 mb-5">
+
+  <div class="row mb-5" style="{{ $user?->hasRole('dealer') ? '' : 'display: none;' }}">
+    <div class="col-md-6">
+
+      <a href="#" class="card border-0 shadow-sm" @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `개인정보처리방침`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})">
+        <div class="card-body p-4">
+          <div class="row">
+            <div class="col-md-9">
+              <h5 class="card-title">이용가이드</h5>
+              <p class="card-text fw-light">{{ config('app.name') }} 이렇게 이용하세요!</p>
+            </div>
+            <div class="col-md-3 text-end">
+              <img src="{{ asset('images/use_icon1.png') }}" alt="이용가이드" class="img-fluid" style="width: 50px;">
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="card border-0 mt-3 shadow-sm">
+        <div class="card-body p-4">
+          <div class="row">
+            <div class="col-md-9">
+              <h5 class="card-title">진단오류 보상</h5>
+              <p class="card-text fw-light">진단오류시 보상 기준표를 안내합니다.</p>
+            </div>
+            <div class="col-md-3 text-end">
+              <img src="{{ asset('images/use_icon3.png') }}" alt="진단오류 보상" class="img-fluid" style="width: 50px;">
+            </div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+    <div class="col-md-6">
+
+      <a href="#" class="card border-0 shadow-sm">
+        <div class="card-body p-4">
+          <div class="row">
+            <div class="col-md-9">
+              <h5 class="card-title">수수료 안내</h5>
+              <p class="card-text fw-light">소정의 정보제공 수수료가 있어요.</p>
+            </div>
+            <div class="col-md-3 text-end">
+              <img src="{{ asset('images/use_icon2.png') }}" alt="수수료 안내" class="img-fluid" style="width: 50px;">
+            </div>
+          </div>
+        </div>
+      </a>
+
+      <a href="#" class="card border-0 mt-3 shadow-sm">
+        <div class="card-body p-4">
+          <div class="row">
+            <div class="col-md-9">
+              <h5 class="card-title">패널티 부과</h5>
+              <p class="card-text fw-light">경매장 이용 오류시 패널티가 부과됩니다</p>
+            </div>
+            <div class="col-md-3 text-end">
+              <img src="{{ asset('images/use_icon7.png') }}" alt="패널티 부과" class="img-fluid" style="width: 50px;">
+            </div>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-md-6 order-2 order-md-1">
       <!-- 공지사항 -->
