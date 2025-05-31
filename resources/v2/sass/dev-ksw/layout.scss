@@ -1,5 +1,5 @@
 // 헤더 네비게이션 스타일
-.navbar {
+.header-navbar {
     background-color: $white !important;
     font-family: $font-family-sans-serif;
     border-bottom: 1px solid $gray-200;
@@ -164,7 +164,7 @@
 }
 
 /* 모바일 메뉴 영역 */
-.offcanvas {
+.mobile-menu {
     width: 310px !important;
 
     .offcanvas-header {

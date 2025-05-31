@@ -16,56 +16,60 @@ $dark: map-get($theme-colors, "dark");
 
 
 /* style reset */
-body {
+.content-wrap {
     letter-spacing: -0.05rem !important;
 }
 
-a {
-    color: $black;
-    text-decoration: none !important;
-}
-
-a:hover {
-    color: $primary;
-    text-decoration: none !important;
+/* 링크 텍스트 */
+.link-text {
+    color: $gray-700;
+    font-size: 0.95rem;
+    text-decoration: none;
+  
+    &:hover {
+      color: $primary;
+      text-decoration: underline;
+    }
 }
 
 /* 입력 필드 */
-input,
-select,
-button,
-textarea {
-box-shadow: none !important;
-outline: none !important;
-border-color: $gray-400 !important;
-transition: border-color 0.2s ease;
-border-width: 1px !important;
-padding: 0.7rem !important;
-border-radius: 0.3rem !important;
+.form-custom {
+    input,
+    select,
+    button,
+    textarea {
+    box-shadow: none !important;
+    outline: none !important;
+    border-color: $gray-400 !important;
+    transition: border-color 0.2s ease;
+    border-width: 1px !important;
+    padding: 0.7rem !important;
+    border-radius: 0.3rem !important;
 
-    &:focus {
-        box-shadow: none !important;
-        outline: none !important;
-        border-width: 1px !important;
-        border-color: $gray-600 !important; // 포커스 시 색만 살짝 진하게
+        &:focus {
+            box-shadow: none !important;
+            outline: none !important;
+            border-width: 1px !important;
+            border-color: $gray-600 !important; // 포커스 시 색만 살짝 진하게
+        }
+
+        &::placeholder {
+            font-size: 0.9rem !important;
+            color: $gray-600 !important;
+            letter-spacing: -0.05rem !important;
+        }
+
     }
 
-    &::placeholder {
-        font-size: 0.9rem !important;
-        color: $gray-600 !important;
-        letter-spacing: -0.05rem !important;
+    /* 체크박스 */
+    input[type="checkbox"],
+    input[type="radio"] {
+        accent-color: $primary !important; // 기본 primary
+        width: 10px !important;
+        height: 10px !important;
+        padding: 7px !important;
+        margin-right: 0.5rem !important;
     }
-
-}
-
-/* 체크박스 */
-input[type="checkbox"],
-input[type="radio"] {
-    accent-color: $primary !important; // 기본 primary
-    width: 10px !important;
-    height: 10px !important;
-    padding: 7px !important;
-    margin-right: 0.5rem !important;
 }
 
 /* 필수 입력 필드 라벨 */
@@ -309,11 +313,6 @@ pre code {
     padding: 0px !important;
 }
 
-// 컨테이너 상하단 여백
-.container{
-    padding: 10px 0;
-}
-
 // 토글버튼 포커스 제거
 .navbar-toggler {
     outline: none !important;
@@ -327,10 +326,14 @@ pre code {
     height: 45px;
 }
 
-  
-.btn-primary, .btn-secondary, .btn-success, .btn-danger, .btn-warning, .btn-info, .btn-light {
-    border: 0px !important;
+/* 버튼 테두리 제거 */
+.btn-primary.no-border,
+.btn-secondary.no-border,
+.btn-success.no-border,
+.btn-danger.no-border,
+.btn-warning.no-border,
+.btn-info.no-border {
+  border: 0 !important;
 }
-
 
 

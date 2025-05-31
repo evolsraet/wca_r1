@@ -30,7 +30,7 @@
   }
 @endphp
 {{-- 기본 네비게이션 --}}
-<nav class="navbar navbar-expand-lg sticky-top {{ $user?->hasRole('dealer') ? 'dealer-header' : 'default-header' }}">
+<nav class="navbar navbar-expand-lg sticky-top header-navbar {{ $user?->hasRole('dealer') ? 'dealer-header' : 'default-header' }}">
   <div class="container-fluid">
     <a class="navbar-brand logo-text" href="{{ route('home') }}">wecarlogo</a>
 
@@ -83,7 +83,7 @@
 </nav>
 
 {{-- 모바일 메뉴 --}}
-<div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
+<div class="offcanvas offcanvas-end text-bg-dark mobile-menu" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
   <div class="offcanvas-header {{ $user ? 'isUser' : '' }}">
     <div class="offcanvas-close-btn">
       <button type="button" class="btn-close btn-close offcanvas-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
