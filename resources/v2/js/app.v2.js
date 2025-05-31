@@ -13,29 +13,6 @@ import { address } from './util/address.js';
 import { fileUpload } from './util/fileUpload.js';
 import { modal } from './util/modal.js';
 
-// 컴포넌트 중복 초기화 방지 래퍼 함수
-function withInitGuard(componentFunction) {
-    return function() {
-        const component = componentFunction();
-        const originalInit = component.init;
-
-        if (originalInit) {
-            component.init = function(...args) {
-                // 이미 초기화된 경우 건너뛰기
-                if (this._initGuardFlag) {
-                    console.log(`Component already initialized, skipping...`);
-                    return;
-                }
-
-                this._initGuardFlag = true;
-                return originalInit.apply(this, args);
-            };
-        }
-
-        return component;
-    };
-}
-
 // Alpine 중복 초기화 방지 (더 강화된 체크)
 if (window.Alpine && window.Alpine._initialized) {
     console.log('Alpine already initialized, skipping...');
@@ -70,7 +47,7 @@ if (window.Alpine && window.Alpine._initialized) {
     Object.entries(components).forEach(([path, module]) => {
         const name = path.split('/').pop().replace('.js', '');
         if (!registeredComponents.has(name)) {
-            Alpine.data(name, withInitGuard(module.default));
+            Alpine.data(name, module.default);
             registeredComponents.add(name);
         }
     });
@@ -79,7 +56,7 @@ if (window.Alpine && window.Alpine._initialized) {
     Object.entries(pages).forEach(([path, module]) => {
         const name = path.split('/').pop().replace('.js', '');
         if (!registeredComponents.has(name)) {
-            Alpine.data(name, withInitGuard(module.default));
+            Alpine.data(name, module.default);
             registeredComponents.add(name);
         }
     });
@@ -97,7 +74,7 @@ if (window.Alpine && window.Alpine._initialized) {
                 Alpine.store('board', module.default);
                 console.log('Registered board as store');
             } else {
-                Alpine.data(name, withInitGuard(module.default));
+                Alpine.data(name, module.default);
                 console.log(`Registered ${name} as component`);
             }
             registeredComponents.add(name);

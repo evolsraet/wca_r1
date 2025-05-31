@@ -42,16 +42,23 @@ export default function() {
         loading: false,
 
         init(initialData = {}) {
-            Object.assign(this.form, initialData);
-            // console.log(initialData);
+            console.log('전달받은 데이터:', initialData);
+
+            if (typeof initialData === 'object' && initialData !== null && Object.keys(initialData).length > 0) {
+                Object.assign(this.form, initialData);
+                console.log('초기화된 form:', this.form);
+            } else {
+                console.log('전달된 데이터가 없습니다.');
+            }
+
             const urlParams = new URLSearchParams(window.location.search);
             const socialParam = urlParams.get('social');
             const emailParam = urlParams.get('email');
             const nameParam = urlParams.get('name');
 
             if (socialParam) {
-                this.form.email = emailParam;
-                this.form.name = nameParam;
+                this.form.user.email = emailParam;
+                this.form.user.name = nameParam;
             }
 
             // 파일 업로드 이벤트 리스너 설정 (필수설정)
