@@ -55,6 +55,28 @@ export default () => ({
 
         // 게시글 목록 로드
         this.loadArticles();
+
+        // 페이지 가시성 변경 시 새로고침 (뒤로 가기 등)
+        this.setupPageVisibilityHandler();
+    },
+
+    // 페이지 가시성 변경 감지 설정
+    setupPageVisibilityHandler() {
+        // 페이지가 다시 보여질 때 목록 새로고침
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden && this.initialized) {
+                console.log('Page became visible, refreshing articles...');
+                this.loadArticles();
+            }
+        });
+
+        // 브라우저의 뒤로/앞으로 가기 감지
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted && this.initialized) {
+                console.log('Page restored from cache, refreshing articles...');
+                this.loadArticles();
+            }
+        });
     },
 
     // URL에서 필터값 로드

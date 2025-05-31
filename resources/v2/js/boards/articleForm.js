@@ -23,12 +23,28 @@ export default () => ({
 
     // 초기화
     async init(boardId, articleId = null) {
-        this.boardId = boardId;
-        this.articleId = articleId;
-        this.isEdit = !!articleId;
+        // 파라미터가 없거나 빈 문자열인 경우 window.boardConfig에서 가져오기
+        this.boardId = boardId || window.boardConfig?.boardId;
+        this.articleId = (articleId && articleId !== 'null' && articleId !== '') ? articleId : window.boardConfig?.articleId;
+
+        // articleId가 'null' 문자열이면 null로 변환
+        if (this.articleId === 'null' || this.articleId === '') {
+            this.articleId = null;
+        }
+
+        this.isEdit = !!this.articleId;
+
+        console.log('articleForm init:', { boardId: this.boardId, articleId: this.articleId, isEdit: this.isEdit });
+
+        // 필수 파라미터 검증
+        if (!this.boardId) {
+            console.error('boardId가 없습니다:', { boardId: this.boardId });
+            this.showError('게시판 정보가 올바르지 않습니다.');
+            return;
+        }
 
         // board 스토어 초기화
-        this.$store.board.init(boardId);
+        this.$store.board.init(this.boardId);
 
         // 수정 모드일 때 기존 데이터 로드
         if (this.isEdit) {
@@ -78,8 +94,15 @@ export default () => ({
 
             // 게시글 데이터
             Object.keys(this.form.article).forEach(key => {
-                if (this.form.article[key] !== null && this.form.article[key] !== undefined) {
-                    formData.append(`article[${key}]`, this.form.article[key]);
+                let value = this.form.article[key];
+
+                // boolean 값을 정수로 변환
+                if (typeof value === 'boolean') {
+                    value = value ? 1 : 0;
+                }
+
+                if (value !== null && value !== undefined && value !== '') {
+                    formData.append(`article[${key}]`, value);
                 }
             });
 
@@ -106,14 +129,13 @@ export default () => ({
             if (response.data.status === 'ok') {
                 this.showSuccess(this.isEdit ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.');
 
-                // 상세보기 페이지로 이동
-                const articleId = response.data.data?.id || this.articleId;
+                // 목록 페이지로 이동
                 setTimeout(() => {
-                    window.location.href = `/v2/board/${this.boardId}/view/${articleId}`;
+                    window.location.href = `/v2/board/${this.boardId}`;
                 }, 1000);
             } else {
                 if (response.data.errors) {
-                    this.errors = response.data.errors;
+                    this.handleErrors(response.data.errors);
                 } else {
                     this.showError(response.data.message || '저장에 실패했습니다.');
                 }
@@ -122,7 +144,9 @@ export default () => ({
             console.error('폼 제출 실패:', error);
 
             if (error.response?.data?.errors) {
-                this.errors = error.response.data.errors;
+                this.handleErrors(error.response.data.errors);
+            } else if (error.response?.data?.message) {
+                this.showError(error.response.data.message);
             } else {
                 this.showError('저장 중 오류가 발생했습니다.');
             }
@@ -157,6 +181,36 @@ export default () => ({
         } catch (error) {
             console.error('첨부파일 삭제 실패:', error);
             this.showError('첨부파일 삭제 중 오류가 발생했습니다.');
+        }
+    },
+
+    // 목록으로 이동 (히스토리 백 우선, 없으면 목록 페이지로)
+    goToList() {
+        // 히스토리에서 게시판 목록 페이지 찾기
+        const boardListPath = `/v2/board/${this.boardId}`;
+
+        // 현재 페이지가 직접 접근이 아니고 이전 페이지가 게시판 목록인 경우
+        if (window.history.length > 1 && (document.referrer.includes(boardListPath) || document.referrer.includes(`/view/`))) {
+            window.history.back();
+        } else {
+            // 직접 접근이거나 다른 페이지에서 온 경우 목록 페이지로 이동
+            window.location.href = boardListPath;
+        }
+    },
+
+    // 에러 처리
+    handleErrors(errors) {
+        this.errors = {};
+
+        if (typeof errors === 'object' && errors !== null) {
+            // Laravel validation errors 형태 처리
+            Object.keys(errors).forEach(field => {
+                if (Array.isArray(errors[field])) {
+                    this.errors[field] = errors[field][0];
+                } else {
+                    this.errors[field] = errors[field];
+                }
+            });
         }
     },
 

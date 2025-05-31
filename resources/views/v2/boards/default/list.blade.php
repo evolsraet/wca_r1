@@ -19,11 +19,13 @@
                 총 <span x-text="pagination.total || 0"></span>개의 게시글
             </small>
         </div>
-        @if(auth()->user()?->hasPermissionTo($board->write_permission ?? 'act.login'))
-            <a href="{{ route('board.form', $board->id) }}" class="btn btn-primary">
-                <i class="mdi mdi-pencil me-1"></i>글쓰기
-            </a>
-        @endif
+        <div class="d-flex gap-2">
+            @if(auth()->user()?->hasPermissionTo($board->write_permission ?? 'act.login'))
+                <a href="{{ route('board.form', $board->id) }}" class="btn btn-primary">
+                    <i class="mdi mdi-pencil me-1"></i>글쓰기
+                </a>
+            @endif
+        </div>
     </div>
 
     <!-- 검색 및 필터 영역 -->

@@ -1,9 +1,17 @@
 @extends('v2.layouts.app')
 
 @section('content')
+<script>
+    window.boardConfig = {
+        boardId: '{{ $board->id }}',
+        boardName: '{{ $board->name ?? $board->id }}',
+        articleId: '{{ $articleId }}'
+    };
+</script>
+
 <div class="board-form board-skin-{{ $board->skin }}"
      x-data="articleForm"
-     x-init="init('{{ $board->id }}', {{ $articleId ?? 'null' }})">
+     x-init="init('{{ $board->id }}', '{{ $articleId }}')">
 
     <!-- 폼 헤더 -->
     <div class="form-header mb-4">
@@ -93,14 +101,13 @@
             @endif
 
             <!-- 비밀글 설정 -->
-            @if($board->use_secret)
+            @if($board->use_secret == 1)
                 <div class="mb-3">
                     <div class="form-check">
                         <input type="checkbox"
                                x-model="form.article.is_secret"
                                class="form-check-input"
-                               id="is_secret"
-                               value="1">
+                               id="is_secret">
                         <label class="form-check-label" for="is_secret">
                             <i class="mdi mdi-lock me-1"></i>비밀글로 설정
                         </label>
@@ -119,9 +126,9 @@
 
             <!-- 액션 버튼 -->
             <div class="form-actions d-flex justify-content-between">
-                <a href="{{ route('board.list', $board->id) }}" class="btn btn-outline-secondary">
+                <button type="button" @click="goToList()" class="btn btn-outline-secondary">
                     <i class="mdi mdi-arrow-left me-1"></i>취소
-                </a>
+                </button>
 
                 <div>
                     <button type="button"

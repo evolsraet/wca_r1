@@ -5,8 +5,14 @@
     window.boardConfig = {
         boardId: '{{ $board->id }}',
         boardName: '{{ $board->name ?? $board->id }}',
-        articleId: '{{ $articleId }}'
+        articleId: '{{ $articleId }}',
+        writePermission: '{{ $board->write_permission }}',
+        permissions: {
+            write: {{ auth()->user()?->hasPermissionTo($board->write_permission ?? 'act.login') ? 'true' : 'false' }},
+            admin: {{ auth()->user()?->hasPermissionTo('act.admin') ? 'true' : 'false' }}
+        }
     };
+    window.user = {!! auth()->user() ? auth()->user()->toJson() : 'null' !!};
 </script>
 
 <div class="board-view board-skin-{{ $board->skin }}"
@@ -130,6 +136,7 @@
 .article-content {
     line-height: 1.8;
     word-break: break-word;
+    white-space: pre-line;
 }
 
 .article-content img {
