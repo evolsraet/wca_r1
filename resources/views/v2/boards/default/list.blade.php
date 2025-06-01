@@ -35,10 +35,10 @@
                 <div class="col-md-4">
                     <x-forms.select
                         name="category"
-                        model="filters.category"
+                        model="filters.where.category"
                         :options="collect(json_decode($board->categories))->mapWithKeys(fn($cat) => [$cat => $cat])->toArray()"
                         placeholder="전체 카테고리"
-                        @change="onCategoryChange()"
+                        @change="onWhereFilterChange()"
                         no-margin
                         :errors="null"
                     />
@@ -47,6 +47,13 @@
             @else
                 <div class="col-12">
             @endif
+                    {{--
+                    <input type="number"
+                        x-model="search_hit_min"
+                        @input="filters.where.hit = '>:' + $event.target.value"
+                        placeholder="최소 조회수">
+                     --}}
+
                     <div class="input-group">
                         <input type="text"
                                x-model="filters.search_text"
