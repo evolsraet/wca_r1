@@ -1,6 +1,9 @@
 @extends('v2.layouts.app')
 @section('title', '메인 페이지')
 @section('content')
+@php
+    $container = false;
+@endphp
 
 <div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="7000" data-bs-pause="false">
   <div class="carousel-inner">

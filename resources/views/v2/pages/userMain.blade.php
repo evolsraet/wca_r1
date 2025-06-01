@@ -3,6 +3,7 @@
 @section('content')
 @php
   $user = Auth::user();
+  $container = false;
 @endphp
 
 {{-- 상단 메인 배너 --}}

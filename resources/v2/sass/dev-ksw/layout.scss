@@ -176,6 +176,7 @@ $primary: map-get($theme-colors, "primary");
         display: flex;
         justify-content: flex-end;
         align-items: center;
+        background-color: $white;
     }
 
     .isUser {

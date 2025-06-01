@@ -2,12 +2,12 @@
 <div class="car-wrapper" x-data="myListings">
     <div class="car-header">
         <h5>내 매물관리</h5>
-        <a href="#" class="car-all-link">전체보기 &gt;</a>
+        <a href="{{ route('auction.list') }}" class="car-all-link">전체보기 &gt;</a>
     </div>
 
     <ul class="car-list">
         <template x-for="car in cars" :key="car.id">
-            <li class="car-item">
+            <a :href="'/v2/auction/' + car.hashid" class="car-item">
                 <div class="car-thumb">
                     <img :src="car.car_thumbnail" alt="car.number">
                 </div>
@@ -17,7 +17,7 @@
                 :class="$store.auctionStatus.get(car.status).class"
                 x-text="$store.auctionStatus.get(car.status).label"
                 ></div>
-            </li>
+            </a>
         </template>
     </ul>
 
