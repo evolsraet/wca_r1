@@ -116,7 +116,7 @@
     </div>
 
     <!-- 에러 상태 -->
-    <div x-show="!loading && !article" class="text-center py-5">
+    <div x-show="!loading && !article" class="text-center py-5" x-cloak>
         <div class="text-muted mb-3">
             <i class="mdi mdi-alert-circle-outline" style="font-size: 3rem;"></i>
         </div>

@@ -59,7 +59,7 @@
     <!-- 댓글 작성 폼 -->
     <div class="comment-form-container mb-4"
         :class="{ 'loading': loading }"
-        x-show="1"
+        x-show="window.user?.id"
         >
         <div class="card">
             <div class="card-body">
@@ -110,7 +110,6 @@
     <div class="comments-list" x-show="comments.length > 0">
         <template x-for="comment in comments" :key="comment.id">
             <div class="comment-item" :class="{ 'loading': loading && (editingCommentId === comment.id || deletingCommentId === comment.id) }">
-
                 <!-- 댓글 내용 -->
                 <div class="card mb-3">
                     <div class="card-body">
@@ -138,12 +137,12 @@
                                     <!-- 댓글 액션 버튼 -->
                                     <div class="d-flex align-items-center gap-2">
                                         <button class="btn btn-link btn-sm text-muted"
-                                                x-show="comment.user_id==window.user.id||{{ $is_admin }}"
+                                                x-show="comment.user_id==window.user?.id||{{ $is_admin }}"
                                                 @click.prevent="editComment(comment)">
                                             <i class="mdi mdi-pencil"></i> 수정
                                         </button>
                                         <button class="btn btn-link btn-sm text-danger"
-                                                x-show="comment.user_id==window.user.id||{{ $is_admin }}"
+                                                x-show="comment.user_id==window.user?.id||{{ $is_admin }}"
                                                 @click.prevent="deleteComment(comment.id)">
                                             <i class="mdi mdi-delete"></i> 삭제
                                         </button>
