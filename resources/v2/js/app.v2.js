@@ -12,6 +12,7 @@ import { api } from './util/axios.js';
 import { address } from './util/address.js';
 import { fileUpload } from './util/fileUpload.js';
 import { modal } from './util/modal.js';
+import whereBuilder from './util/whereBuilder.js';
 
 
     console.log('Initializing Alpine...');
@@ -34,6 +35,7 @@ import { modal } from './util/modal.js';
     // Alpine 등록
     Alpine.store('api', api);
     Alpine.store('address', address);
+    Alpine.store('whereBuilder', whereBuilder);
     Alpine.data('fileUpload', fileUpload);
 
     // 컴포넌트 등록 여부를 추적

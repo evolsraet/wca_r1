@@ -43,17 +43,21 @@
                         :errors="null"
                     />
                 </div>
+                {{--
+                <!-- whereBuilder 스토어 사용 예시 -->
+                <div class="col-md-3" x-data="{ hitMin: '' }">
+                    <input type="number"
+                           x-model="hitMin"
+                           @input="filters.where.hit = '>:' + $event.target.value"
+                           class="form-control"
+                           placeholder="최소 조회수">
+                </div>
+                 --}}
+
                 <div class="col-md-8">
             @else
                 <div class="col-12">
             @endif
-                    {{--
-                    <input type="number"
-                        x-model="search_hit_min"
-                        @input="filters.where.hit = '>:' + $event.target.value"
-                        placeholder="최소 조회수">
-                     --}}
-
                     <div class="input-group">
                         <input type="text"
                                x-model="filters.search_text"

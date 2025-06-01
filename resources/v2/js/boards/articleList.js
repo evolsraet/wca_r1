@@ -129,126 +129,6 @@ export default () => ({
         return defaults[key] || '';
     },
 
-    // API where 절 자동 생성 함수 - API 스펙 준수
-    buildWhereClause() {
-        const whereClauses = [];
-
-        Object.entries(this.filters.where).forEach(([key, value]) => {
-            // null, undefined 체크
-            if (value == null) return;
-
-            const stringValue = String(value).trim();
-            if (stringValue === '') return;
-
-            // _null 값 처리 (null 비교)
-            if (stringValue === '_null') {
-                whereClauses.push(`articles.${key}:_null`);
-                return;
-            }
-
-            // 비교 연산자 포함된 값 처리
-            // 예: ">:10", "<:5", "like:검색어", "whereIn:1,2,3"
-            if (stringValue.includes(':') && this.isOperatorValue(stringValue)) {
-                whereClauses.push(`articles.${key}:${stringValue}`);
-            } else {
-                // 단순 등호 비교
-                whereClauses.push(`articles.${key}:${stringValue}`);
-            }
-        });
-
-        // '|'로 구분하여 반환 (API 스펙: 여러 조건을 '|'로 구분)
-        return whereClauses.join('|');
-    },
-
-    // 비교 연산자가 포함된 값인지 확인하는 유틸리티
-    isOperatorValue(value) {
-        const operators = ['>', '<', '>=', '<=', 'like', 'whereIn', 'orWhere'];
-        const firstPart = value.split(':')[0];
-        return operators.includes(firstPart);
-    },
-
-    // where 절 조건 추가 헬퍼 메소드들
-    addWhereCondition(key, operator, value) {
-        if (operator === 'null') {
-            this.filters.where[key] = '_null';
-        } else {
-            this.filters.where[key] = `${operator}:${value}`;
-        }
-    },
-
-    // 편의 메소드들
-    addWhereLike(key, value) {
-        this.addWhereCondition(key, 'like', value);
-    },
-
-    addWhereIn(key, values) {
-        this.addWhereCondition(key, 'whereIn', Array.isArray(values) ? values.join(',') : values);
-    },
-
-    addWhereGreaterThan(key, value) {
-        this.addWhereCondition(key, '>', value);
-    },
-
-    addWhereLessThan(key, value) {
-        this.addWhereCondition(key, '<', value);
-    },
-
-    addWhereNull(key) {
-        this.addWhereCondition(key, 'null', null);
-    },
-
-    // 범위 검색 헬퍼 메소드들 (중복 조건 방지)
-    setWhereRange(baseKey, minValue, maxValue) {
-        // 기존 범위 관련 키들 정리
-        const keysToRemove = Object.keys(this.filters.where).filter(key =>
-            key.startsWith(baseKey)
-        );
-        keysToRemove.forEach(key => {
-            delete this.filters.where[key];
-        });
-
-        // 새로운 범위 조건 설정
-        if (minValue !== null && minValue !== '' && minValue !== undefined) {
-            this.filters.where[`${baseKey}_min`] = `>=:${minValue}`;
-        }
-        if (maxValue !== null && maxValue !== '' && maxValue !== undefined) {
-            this.filters.where[`${baseKey}_max`] = `<=:${maxValue}`;
-        }
-    },
-
-    // 단일 범위 조건 설정 (min 또는 max만)
-    setWhereMin(key, value) {
-        // 기존 min 조건 제거
-        delete this.filters.where[`${key}_min`];
-        delete this.filters.where[key];
-
-        if (value !== null && value !== '' && value !== undefined) {
-            this.filters.where[key] = `>=:${value}`;
-        }
-    },
-
-    setWhereMax(key, value) {
-        // 기존 max 조건 제거
-        delete this.filters.where[`${key}_max`];
-        delete this.filters.where[key];
-
-        if (value !== null && value !== '' && value !== undefined) {
-            this.filters.where[key] = `<=:${value}`;
-        }
-    },
-
-    // 복합 조건 설정 (여러 조건을 한번에)
-    setWhereConditions(conditions) {
-        Object.entries(conditions).forEach(([key, value]) => {
-            if (value === null || value === '' || value === undefined) {
-                delete this.filters.where[key];
-            } else {
-                this.filters.where[key] = value;
-            }
-        });
-        this.onWhereFilterChange();
-    },
-
     // 게시글 목록 로드
     async loadArticles() {
         this.loading = true;
@@ -284,8 +164,8 @@ export default () => ({
             order_direction: this.order_direction
         };
 
-        // where 절 자동 생성
-        const whereClause = this.buildWhereClause();
+        // where 절 직접 생성
+        const whereClause = this.$store.whereBuilder.build(this.filters.where, 'articles');
         if (whereClause) {
             params.where = whereClause;
         }
