@@ -174,3 +174,142 @@ $primary: map-get($theme-colors, "primary");
       }
     }
 }
+
+.step-progress-box {
+  background-color: $white;
+
+  .pc-step-bar {
+    .step-item {
+      position: relative;
+      z-index: 1;
+
+      .step-badge {
+        display: inline-block;
+        padding: 0.25rem 0.75rem;
+        background-color: #fceaea;
+        color: #c0392b;
+        border-radius: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+      }
+
+      .step-dot {
+        width: 12px;
+        height: 12px;
+        background-color: #ddd;
+        border-radius: 50%;
+        border: 2px solid #ddd;
+      }
+
+      .step-label {
+        font-size: 0.875rem;
+        color: #aaa;
+      }
+
+      &.active {
+        .step-badge {
+          background-color: #fdecec;
+          color: $primary;
+        }
+        .step-dot {
+          background-color: $primary;
+          border-color: $primary;
+        }
+        .step-label {
+          color: $primary;
+          font-weight: bold;
+        }
+      }
+    }
+
+    .step-line {
+      height: 4px;
+      background-color: #ddd;
+      z-index: 0;
+      transform: translateY(-50%);
+    }
+  }
+
+  .mobile-step-badges {
+    .step-badge-mobile {
+      background-color: #fceaea;
+      color: #c0392b;
+      border-radius: 0.5rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      padding: 0.2rem 0.4rem;
+    }
+
+    .step-badge-mobile.active {
+      background-color: #fdecec;
+      color: #e74c3c;
+    }
+  }
+}
+
+
+.carousel-thumbnails .thumb-img {
+  width: 70px;
+  height: 50px;
+  object-fit: cover;
+  cursor: pointer;
+  opacity: 0.7;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  border-radius: 4px;
+}
+
+.carousel-thumbnails .thumb-img:hover,
+.carousel-thumbnails .thumb-img.active,
+.carousel-thumbnails .thumb-img[aria-current="true"] {
+  opacity: 1;
+  border-color: $primary;
+}
+
+@media (max-width: 576px) {
+  .carousel-thumbnails {
+    justify-content: start;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 0.5rem;
+  }
+  .carousel-thumbnails .thumb-img {
+    flex: 0 0 auto;
+    width: 60px;
+    height: 45px;
+  }
+}
+
+
+.vehicle-title-box {
+  .vehicle-title h4 {
+    font-size: 1.25rem;
+  }
+
+  .badge {
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+  }
+}
+
+
+.vehicle-info {
+  h5 {
+    font-size: 1.1rem;
+    font-weight: 700;
+  }
+
+  .row-cols-3 .col:nth-child(3n-2) {
+    color: #999;
+  }
+
+  .row-cols-2 .col:nth-child(odd) {
+    color: #999;
+  }
+
+  .fw-semibold {
+    font-weight: 600;
+  }
+}

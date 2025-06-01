@@ -2,6 +2,10 @@
 
 @section('content')
 
+@php
+    $container = false;
+@endphp
+
 @include('components.layouts.categoryTab')
 
 <div class="container mt-5">
