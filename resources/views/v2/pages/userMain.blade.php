@@ -50,7 +50,7 @@
   <div class="row mb-5" style="{{ $user?->hasRole('dealer') ? '' : 'display: none;' }}">
     <div class="col-md-6">
 
-      <a href="#" class="card border-0 shadow-sm" @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `개인정보처리방침`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})">
+      <a href="#" class="card border-0 shadow-sm text-decoration-none" @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `개인정보처리방침`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})">
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">
@@ -64,7 +64,7 @@
         </div>
       </a>
 
-      <a href="#" class="card border-0 mt-3 shadow-sm">
+      <a href="#" class="card border-0 mt-3 shadow-sm text-decoration-none">
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">
@@ -81,7 +81,7 @@
     </div>
     <div class="col-md-6">
 
-      <a href="#" class="card border-0 shadow-sm">
+      <a href="#" class="card border-0 shadow-sm text-decoration-none">
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">
@@ -95,7 +95,7 @@
         </div>
       </a>
 
-      <a href="#" class="card border-0 mt-3 shadow-sm">
+      <a href="#" class="card border-0 mt-3 shadow-sm text-decoration-none">
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">

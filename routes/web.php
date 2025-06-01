@@ -97,9 +97,15 @@ Route::prefix('v2')->group(function () {
         ]);
     })->where('doc', '[A-Za-z0-9\-_]+')->name('docs.show');
 
-    Route::get('/auction', function () {
-        return view('v2.pages.auction.auctionList');
-    })->name('auction.list');
+    Route::prefix('auction')->group(function () {
+        Route::get('/', function () {
+            return view('v2.pages.auction.auctionList');
+        })->name('auction.list');
+    
+        Route::get('/{id}', function ($id) {
+            return view('v2.pages.auction.auctionDetail', ['id' => $id]);
+        })->name('auction.detail');
+    });
 
     Route::post('login', [AuthenticatedSessionController::class, 'login']);
     Route::post('logout', [AuthenticatedSessionController::class, 'logout']);

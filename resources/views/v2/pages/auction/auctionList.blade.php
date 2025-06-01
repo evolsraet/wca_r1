@@ -3,10 +3,10 @@
 
 @include('components.layouts.categoryTab')
 
-<div class="container mt-4">
+<div class="container mt-5">
 
     <div class="row" x-data="auctionList">
-    <div class="col-12">
+    <div class="col-12 mb-5">
     @include('components.layouts.searchBar')
         <div class="auction-list row mt-5">
             <template x-if="form.lists && form.lists.length > 0">

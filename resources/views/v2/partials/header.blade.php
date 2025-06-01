@@ -52,7 +52,7 @@
       <ul class="navbar-nav">
         @auth
         <li class="nav-item dropdown" x-data="{ dropdown: false }">
-            <a class="btn btn-danger dropdown-toggle user-dropdown-btn" href="#" id="userDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false" @click="dropdown = !dropdown">
+            <a class="btn btn-primary dropdown-toggle user-dropdown-btn" href="#" id="userDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false" @click="dropdown = !dropdown">
               {{ Auth::user()->name }} 님
             </a>
             <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" :class="{ 'show': dropdown }" aria-labelledby="userDropdown1" style="z-index: 2000;">

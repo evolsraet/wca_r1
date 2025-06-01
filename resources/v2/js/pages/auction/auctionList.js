@@ -12,7 +12,6 @@ export default function() {
         loading: false,
 
         init() {
-            console.log('auction list');
             this.getAuctionList();
         },
         async getAuctionList() {
