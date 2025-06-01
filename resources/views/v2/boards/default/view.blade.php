@@ -128,37 +128,4 @@
     </div>
 </div>
 
-<style>
-.article-content {
-    line-height: 1.8;
-    word-break: break-word;
-    white-space: pre-line;
-}
-
-.article-content img {
-    max-width: 100%;
-    height: auto;
-}
-
-.article-content pre {
-    background-color: #f8f9fa;
-    padding: 1rem;
-    border-radius: 0.375rem;
-    overflow-x: auto;
-}
-
-.list-group-item-action:hover {
-    background-color: rgba(var(--bs-primary-rgb), 0.05);
-}
-
-@media (max-width: 767.98px) {
-    .btn-group .btn {
-        padding: 0.25rem 0.5rem;
-    }
-
-    .btn-group .btn .d-none {
-        display: none !important;
-    }
-}
-</style>
 @endsection

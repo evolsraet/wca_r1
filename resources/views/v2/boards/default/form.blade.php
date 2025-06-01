@@ -119,6 +119,7 @@
         </form>
     </div>
 
+    <div class="mt-4">
     {{-- 댓글 --}}
     <x-comments
     commentable-type="Article"
