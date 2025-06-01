@@ -1,48 +1,31 @@
 @php
-  $user = Auth::user();
-  $menus = [];
+  $prefix = 'v2';
 
-  // 네비게이션 메뉴
   if (Auth::check()) {
-    if ($user->hasRole('user')) {
-      $menus = [
-        ['key' => 'mycar', 'label' => '내차조회', 'url' => url('/v2/mycar'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => ''],
-        ['key' => 'auction', 'label' => '내 매물관리', 'url' => url('/v2/auction'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => ''],
-        ['key' => 'reviews', 'label' => '이용후기', 'url' => url('/v2/reviews'), 'icon' => asset('images/rating.png'), 'desc' => ''],
-        ['key' => 'name-transfer', 'label' => '명의이전서류', 'url' => url('/v2/name-transfer'), 'icon' => asset('images/document.png'), 'desc' => ''],
-        ['key' => 'notice', 'label' => '공지사항', 'url' => url('/v2/board/notice'), 'icon' => asset('images/Icon-dash.png'), 'desc' => ''],
-        ['key' => 'introduce', 'label' => '서비스소개', 'url' => url('/v2/introduce'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => ''],
-      ];
-    } elseif ($user->hasRole('dealer')) {
-      $menus = [
-        ['key' => 'auction', 'label' => '입찰하기', 'url' => url('/v2/auction'), 'icon' => asset('images/Icon-tag.png'), 'desc' => ''],
-        ['key' => 'notice', 'label' => '공지사항', 'url' => url('/v2/board/notice'), 'icon' => asset('images/Icon-dash.png'), 'desc' => ''],
-        ['key' => 'claim', 'label' => '클레임', 'url' => url('/v2/claim'), 'icon' => asset('images/document.png'), 'desc' => ''],
-        ['key' => 'introduce', 'label' => '서비스소개', 'url' => url('/v2/introduce'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => '위카란?'],
-      ];
-    }
+    $role = Auth::user()->hasRole('dealer') ? 'dealer' : 'user';
   } else {
-    $menus = [
-      ['key' => 'mycar', 'label' => '내차조회', 'url' => url('/v2/mycar'), 'icon' => asset('images/Icon-awesome-car-side-Black.png'), 'desc' => '내 차량 조회'],
-      ['key' => 'reviews', 'label' => '이용후기', 'url' => url('/v2/reviews'), 'icon' => asset('images/rating.png'), 'desc' => '다양한 판매 후기'],
-      ['key' => 'introduce', 'label' => '서비스소개', 'url' => url('/v2/introduce'), 'icon' => asset('images/Icon-md-bulb.png'), 'desc' => '위카란?'],
-    ];
+    $role = 'guest';
   }
+
+  $roleMenus = config('auction.menus.' . $role, []);
+  $commonMenus = config('auction.menus.common', []);
+
+  $menus = array_merge($roleMenus, $commonMenus)
 @endphp
 {{-- 기본 네비게이션 --}}
-<nav class="navbar navbar-expand-lg sticky-top header-navbar {{ $user?->hasRole('dealer') ? 'dealer-header' : 'default-header' }}">
+<nav class="navbar navbar-expand-lg sticky-top header-navbar {{ $role === 'dealer' ? 'dealer-header' : 'default-header' }}">
   <div class="container-fluid">
     <a class="navbar-brand logo-text" href="{{ route('home') }}">wecarlogo</a>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        @foreach ($menus as $menu)
+        @foreach ($menus as $key => $menu)
           @php
-            $isActive = request()->is("v2/{$menu['key']}*");
+            $isActive = request()->is($prefix . '/' . $key . '*');
           @endphp
 
           <li class="nav-item">
-            <a class="nav-link {{ $isActive ? 'active' : '' }}" href="{{ $menu['url'] }}">
+            <a class="nav-link {{ $isActive ? 'active' : '' }}" href="{{ url('v2' . $menu['url']) }}">
               {{ $menu['label'] }}
             </a>
           </li>
@@ -52,7 +35,7 @@
       <ul class="navbar-nav">
         @auth
         <li class="nav-item dropdown" x-data="{ dropdown: false }">
-            <a class="btn btn-danger dropdown-toggle user-dropdown-btn" href="#" id="userDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false" @click="dropdown = !dropdown">
+            <a class="btn btn-primary dropdown-toggle user-dropdown-btn" href="#" id="userDropdown1" role="button" data-bs-toggle="dropdown" aria-expanded="false" @click="dropdown = !dropdown">
               {{ Auth::user()->name }} 님
             </a>
             <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" :class="{ 'show': dropdown }" aria-labelledby="userDropdown1" style="z-index: 2000;">
@@ -77,14 +60,14 @@
     </div>
 
     <a class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDark" aria-controls="offcanvasDark">
-      <img src="{{ $user?->hasRole('dealer') ? asset('images/toggle-nav-wh.png') : asset('images/toggle-nav-black.png') }}" alt="메뉴" class="toggle-nav-img">
+      <img src="{{ $role === 'dealer' ? asset('images/toggle-nav-wh.png') : asset('images/toggle-nav-black.png') }}" alt="메뉴" class="toggle-nav-img">
     </a>
   </div>
 </nav>
 
 {{-- 모바일 메뉴 --}}
 <div class="offcanvas offcanvas-end text-bg-dark mobile-menu" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
-  <div class="offcanvas-header {{ $user ? 'isUser' : '' }}">
+  <div class="offcanvas-header {{ $role === 'dealer' ? 'isUser' : '' }}">
     <div class="offcanvas-close-btn">
       <button type="button" class="btn-close btn-close offcanvas-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
@@ -134,7 +117,7 @@
       <ul class="offcanvas-menu">
         @foreach ($menus as $menu)
           <li>
-            <a href="{{ $menu['url'] }}" class="menu-link">
+            <a href="{{ url($prefix . $menu['url']) }}" class="menu-link">
               @if (!empty($menu['icon']))
                 <div class="menu-icon">
                   <img src="{{ $menu['icon'] }}" alt="{{ $menu['label'] }} 아이콘" />

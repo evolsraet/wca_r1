@@ -1,5 +1,5 @@
 <div class="col-md-4 mb-4">
-    <a href="#" class="auction-item">
+    <a :href="'{{ route('auction.detail', '') }}' + '/' + auction.hashid" class="auction-item">
     <div class="auction-item-thumb">
         <img :src="auction.car_thumbnail" alt="차량이미지" />
         <span class="auction-item-badge" x-show="auction.status" x-text="auction.status"></span>

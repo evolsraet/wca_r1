@@ -1,20 +1,14 @@
 @extends('v2.layouts.app')
 @section('title', '메인 페이지')
 @section('content')
-{{-- 유저 메인 배너변수 --}}
 @php
   $user = Auth::user();
-  $banners = [
-    ['image' => asset('images/main_banner02.png')],
-    ['image' => asset('images/main_p2.png')],
-    ['image' => asset('images/main_p3.png')]
-  ];
 @endphp
 
 {{-- 상단 메인 배너 --}}
 <div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000" data-bs-pause="false">
   <div class="user-main-carousel-inner">
-  @foreach ($banners as $banner)
+  @foreach (config('auction.mainBanner') as $banner)
     <div class="carousel-item {{ $loop->first ? 'active' : '' }}">
       <div class="carousel-user-bg" style="background-image: url('{{ $banner['image'] }}');">
         {{-- 유저 메인 배너 캡션 --}}
@@ -32,7 +26,7 @@
     </div>
   @endforeach
     <div class="carousel-indicators">
-      @foreach ($banners as $banner)
+      @foreach (config('auction.mainBanner') as $banner)
         <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ $loop->index }}" class="{{ $loop->first ? 'active' : '' }}" aria-current="true" aria-label="Slide {{ $loop->index + 1 }}"></button>
       @endforeach
     </div>
@@ -50,7 +44,7 @@
   <div class="row mb-5" style="{{ $user?->hasRole('dealer') ? '' : 'display: none;' }}">
     <div class="col-md-6">
 
-      <a href="#" class="card border-0 shadow-sm" @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `개인정보처리방침`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})">
+      <a href="#" class="card border-0 shadow-sm text-decoration-none" @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `개인정보처리방침`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})">
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">
@@ -64,7 +58,7 @@
         </div>
       </a>
 
-      <a href="#" class="card border-0 mt-3 shadow-sm">
+      <a href="#" class="card border-0 mt-3 shadow-sm text-decoration-none">
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">
@@ -81,7 +75,7 @@
     </div>
     <div class="col-md-6">
 
-      <a href="#" class="card border-0 shadow-sm">
+      <a href="#" class="card border-0 shadow-sm text-decoration-none">
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">
@@ -95,7 +89,7 @@
         </div>
       </a>
 
-      <a href="#" class="card border-0 mt-3 shadow-sm">
+      <a href="#" class="card border-0 mt-3 shadow-sm text-decoration-none">
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">

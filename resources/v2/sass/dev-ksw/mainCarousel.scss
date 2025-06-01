@@ -1,4 +1,6 @@
 // 메인 캐러셀 스타일
+$primary: map-get($theme-colors, "primary");
+
 #mainCarousel {
     position: relative;
 
@@ -153,7 +155,7 @@
           display: inline-flex;
           align-items: center;
           padding: 10px 28px;
-          background-color: map-get($theme-colors, "primary");
+          background-color: $primary;
           color: $white;
           font-weight: 700;
           font-size: 16px;
@@ -162,7 +164,7 @@
           transition: 0.3s ease;
       
           &:hover {
-            background-color: map-get($theme-colors, "primary");
+            background-color: $primary;
           }
         }
       }
