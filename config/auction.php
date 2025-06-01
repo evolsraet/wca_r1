@@ -20,9 +20,9 @@ return [
         ],
     ],
     'mainBanner' => [
-        ['image' => asset('images/main_banner02.png')],
-        ['image' => asset('images/main_p2.png')],
-        ['image' => asset('images/main_p3.png')],
+        ['image' => 'images/main_banner02.png'],
+        ['image' => 'images/main_p2.png'],
+        ['image' => 'images/main_p3.png'],
     ],
     'menus' => [
         'common' => [
