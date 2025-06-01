@@ -14,17 +14,8 @@
                 <div class="car-number" x-text="car.car_no"></div>
                 <div
                 class="badge car-status text-white"
-                :class="{
-                    'text-bg-danger': car.status === 'cancel',
-                    'text-bg-secondary': car.status === 'done',
-                    'text-bg-primary': car.status === 'chosen',
-                    'text-bg-warning': car.status === 'wait',
-                    'text-bg-info': car.status === 'ing',
-                    'text-bg-light': car.status === 'diag',
-                    'text-bg-primary': car.status === 'dlvr',
-                    'text-bg-success': car.status === 'ask'
-                }"
-                x-text="status[car.status]"
+                :class="$store.auctionStatus.get(car.status).class"
+                x-text="$store.auctionStatus.get(car.status).label"
                 ></div>
             </li>
         </template>

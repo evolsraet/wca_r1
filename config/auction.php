@@ -29,13 +29,13 @@ return [
             'introduce' => [
                 'label' => '서비스소개',
                 'url' => '/introduce',
-                'icon' => 'images/Icon-md-bulb.png',
+                'icon' => '/images/Icon-md-bulb.png',
                 'desc' => '위카란?',
             ],
-            'notice' => [
+            'board' => [
                 'label' => '공지사항',
                 'url' => '/board/notice',
-                'icon' => 'images/Icon-dash.png',
+                'icon' => '/images/Icon-dash.png',
                 'desc' => '',
             ],
         ],
@@ -43,25 +43,25 @@ return [
             'mycar' => [
                 'label' => '내차조회',
                 'url' => '/mycar',
-                'icon' => 'images/Icon-awesome-car-side-Black.png',
+                'icon' => '/images/Icon-awesome-car-side-Black.png',
                 'desc' => '',
             ],
             'auction' => [
                 'label' => '내 매물관리',
                 'url' => '/auction',
-                'icon' => 'images/Icon-md-bulb.png',
+                'icon' => '/images/Icon-md-bulb.png',
                 'desc' => '',
             ],
             'reviews' => [
                 'label' => '이용후기',
                 'url' => '/reviews',
-                'icon' => 'images/rating.png',
+                'icon' => '/images/rating.png',
                 'desc' => '',
             ],
             'name-transfer' => [
                 'label' => '명의이전서류',
                 'url' => '/name-transfer',
-                'icon' => 'images/document.png',
+                'icon' => '/images/document.png',
                 'desc' => '',
             ],
         ],
@@ -69,13 +69,13 @@ return [
             'auction' => [
                 'label' => '입찰하기',
                 'url' => '/auction',
-                'icon' => 'images/Icon-tag.png',
+                'icon' => '/images/Icon-tag.png',
                 'desc' => '',
             ],
             'claim' => [
                 'label' => '클레임',
                 'url' => '/claim',
-                'icon' => 'images/document.png',
+                'icon' => '/images/document.png',
                 'desc' => '',
             ],
         ],
@@ -83,13 +83,13 @@ return [
             'mycar' => [
                 'label' => '내차조회',
                 'url' => '/mycar',
-                'icon' => 'images/Icon-awesome-car-side-Black.png',
+                'icon' => '/images/Icon-awesome-car-side-Black.png',
                 'desc' => '내 차량 조회',
             ],
             'reviews' => [
                 'label' => '이용후기',
                 'url' => '/reviews',
-                'icon' => 'images/rating.png',
+                'icon' => '/images/rating.png',
                 'desc' => '다양한 판매 후기',
             ],
         ],

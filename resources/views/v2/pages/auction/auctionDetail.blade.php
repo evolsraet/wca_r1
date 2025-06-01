@@ -7,7 +7,7 @@
         rightClass="col-lg-5"
         leftContainerClass=""
         rightContainerClass=""
-        :initialRightPanelOpen="false">
+        :initialRightPanelOpen="true">
 
         <x-slot:leftContent>
             <p>이 부분은 좌측 패널의 내용입니다11. PC에서는 <code>leftClass</code> (예: col-lg-7)에 정의된 너비를 가집니다.</p>

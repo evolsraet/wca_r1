@@ -13,6 +13,7 @@ import { address } from './util/address.js';
 import { fileUpload } from './util/fileUpload.js';
 import { modal } from './util/modal.js';
 import whereBuilder from './util/whereBuilder.js';
+import auctionStatus from './util/auctionStatus.js';
 
 
     console.log('Initializing Alpine...');
@@ -37,6 +38,7 @@ import whereBuilder from './util/whereBuilder.js';
     Alpine.store('address', address);
     Alpine.store('whereBuilder', whereBuilder);
     Alpine.data('fileUpload', fileUpload);
+    Alpine.store('auctionStatus', auctionStatus);
 
     // 컴포넌트 등록 여부를 추적
     const registeredComponents = new Set();
