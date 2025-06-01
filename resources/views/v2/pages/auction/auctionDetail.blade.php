@@ -42,8 +42,24 @@
             </div>
 
 
+            <div class="text-center bg-gray-300 py-5 px-3 rounded position-relative" style="background-color: #f8f9fa; display: none;">
+                {{-- 상태 뱃지 --}}
+                <div class="badge bg-secondary position-absolute top-0 start-0 m-3">
+                    신청완료
+                </div>
+
+                {{-- 썸네일 이미지 (빈 썸네일 아이콘) --}}
+                <div class="my-4">
+                    <img src="{{ asset('images/diag.png') }}" alt="진단 대기" style="width: 120px; opacity: 0.4;">
+                </div>
+
+                {{-- 텍스트 안내 --}}
+                <p class="text-muted fs-5 mb-0">{{ config('app.name') }} 이 진단대기 상태에요</p>
+            </div>
+
+
             {{-- 경매 차량 이미지 --}}
-            <div class="carousel-wrapper mb-3">
+            <div class="auction-thumbnail carousel-wrapper mb-3" style="">
                 <div id="customCarousel" class="carousel slide" data-bs-ride="carousel">
                     <div class="carousel-inner">
                         <div class="carousel-item active">
@@ -82,9 +98,9 @@
             </div>
 
 
-            <div class="vehicle-title-box d-flex justify-content-between align-items-start flex-wrap mb-3">
+            <div class="vehicle-title-box d-flex justify-content-between align-items-start flex-wrap mb-3 mt-3">
                 {{-- 차량명 + 번호 --}}
-                <div class="vehicle-title">
+                <div class="vehicle-title mt-2">
                     <h4 class="fw-bold mb-2">DS3 SA 디젤 <span class="text-secondary">(68거1375)</span></h4>
                 </div>
 
@@ -155,27 +171,22 @@
                 </div>
             </div>
 
-
-
-            <p>이 부분은 좌측 패널의 내용입니다11. PC에서는 <code>leftClass</code> (예: col-lg-7)에 정의된 너비를 가집니다.</p>
-            <p>모바일에서는 이 영역이 주 컨텐츠로 표시됩니다.</p>
             
         </x-slot:leftContent>
 
         <x-slot:rightContent>
-            <div class="card shadow-sm">
-                <p>이 부분은 우측 패널의 내용입니다.</p>
-                <p>PC에서는 <code>rightClass</code> (예: col-lg-5)에 정의된 너비로 항상 표시됩니다.</p>
-                <p>모바일에서는 하단의 "더 보기" 버튼을 통해 이 영역을 슬라이드 업/다운하여 토글할 수 있습니다.</p>
-                @for ($i = 1; $i <= 15; $i++)
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h5 class="card-title">우측 아이템 {{ $i }}</h5>
-                            <p class="card-text">스크롤 테스트를 위한 더미 컨텐츠입니다. 우측 패널의 내용이 길어질 경우 이 영역이 스크롤됩니다.</p>
-                        </div>
-                    </div>
-                @endfor
+
+            <div class="bg-white rounded shadow-sm p-4 text-center custom-shadow">
+                {{-- 상단 타이틀 영역 --}}
+                <div class="bg-light py-3 mb-4" style="background-color: #f8f9fa;">
+                    <span class="fs-5">매물 신청 완료</span>
+                </div>
+
+                {{-- 본문 안내 메시지 --}}
+                <p class="mb-2 text-dark fw-semibold">해당 매물 신청이 완료 되었습니다.</p>
+                <p class="mb-0 text-muted small">※ 경매진행까지 약간의 검토 시간이 소요됩니다.</p>
             </div>
+
         </x-slot:rightContent>
 
     </x-layouts.split>

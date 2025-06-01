@@ -248,37 +248,45 @@ $primary: map-get($theme-colors, "primary");
 }
 
 
-.carousel-thumbnails .thumb-img {
-  width: 70px;
-  height: 50px;
-  object-fit: cover;
-  cursor: pointer;
-  opacity: 0.7;
-  border: 2px solid transparent;
-  transition: all 0.3s ease;
-  border-radius: 4px;
-}
+.auction-thumbnail {
 
-.carousel-thumbnails .thumb-img:hover,
-.carousel-thumbnails .thumb-img.active,
-.carousel-thumbnails .thumb-img[aria-current="true"] {
-  opacity: 1;
-  border-color: $primary;
-}
-
-@media (max-width: 576px) {
-  .carousel-thumbnails {
-    justify-content: start;
-    overflow-x: auto;
-    white-space: nowrap;
-    -webkit-overflow-scrolling: touch;
-    padding: 0 0.5rem;
+  .carousel-inner {
+    max-height: 450px;
   }
+  
   .carousel-thumbnails .thumb-img {
-    flex: 0 0 auto;
-    width: 60px;
-    height: 45px;
+    width: 70px;
+    height: 50px;
+    object-fit: cover;
+    cursor: pointer;
+    opacity: 0.7;
+    border: 2px solid transparent;
+    transition: all 0.3s ease;
+    border-radius: 4px;
   }
+  
+  .carousel-thumbnails .thumb-img:hover,
+  .carousel-thumbnails .thumb-img.active,
+  .carousel-thumbnails .thumb-img[aria-current="true"] {
+    opacity: 1;
+    border-color: $primary;
+  }
+  
+  @media (max-width: 576px) {
+    .carousel-thumbnails {
+      justify-content: start;
+      overflow-x: auto;
+      white-space: nowrap;
+      -webkit-overflow-scrolling: touch;
+      padding: 0 0.5rem;
+    }
+    .carousel-thumbnails .thumb-img {
+      flex: 0 0 auto;
+      width: 60px;
+      height: 45px;
+    }
+  }
+  
 }
 
 
@@ -312,4 +320,9 @@ $primary: map-get($theme-colors, "primary");
   .fw-semibold {
     font-weight: 600;
   }
+}
+
+
+.custom-shadow {
+  box-shadow: 2rem rgba(0, 0, 0, 0.25) !important;
 }

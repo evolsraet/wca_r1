@@ -1,6 +1,10 @@
 @extends('v2.layouts.app')
 @section('content')
 
+@php
+    $container = false;
+@endphp
+
 <div class="pb-5 intro">
 
     <div class="section section01" data-animate="animate__fadeIn">

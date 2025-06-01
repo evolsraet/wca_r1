@@ -13,6 +13,13 @@ export default function () {
     loading: false,
 
     init() {
+      const params = new URLSearchParams(window.location.search);
+      const page = parseInt(params.get('page')) || 1;
+      const search = params.get('search_text') || '';
+
+      this.form.page = page;
+      this.form.search_text = search;
+
       this.getAuctionList();
     },
 
@@ -28,9 +35,10 @@ export default function () {
 
         this.form.lists = Array.isArray(response.data?.data) ? response.data.data : [];
 
-        // meta 에서 페이지 정보 업데이트
         const meta = response.data.meta;
         this.form.totalPages = meta?.last_page || 1;
+
+        this.updateUrlParams();
 
       } catch (err) {
         console.error('경매 리스트 불러오기 실패:', err);
@@ -42,7 +50,7 @@ export default function () {
     changePage(page) {
       if (page < 1 || page > this.form.totalPages || page === this.form.page) return;
       this.form.page = page;
-      this.getAuctionList(); // 반드시 호출!
+      this.getAuctionList();
 
       window.scrollTo({
         top: 0,
@@ -51,8 +59,15 @@ export default function () {
     },
 
     handleSearch() {
-        this.form.page = 1;
-        this.getAuctionList();
-    }
+      this.form.page = 1;
+      this.getAuctionList();
+    },
+
+    updateUrlParams() {
+      const url = new URL(window.location.href);
+      url.searchParams.set('page', this.form.page);
+      url.searchParams.set('search_text', this.form.search_text);
+      history.replaceState({}, '', url);
+    },
   };
 }
