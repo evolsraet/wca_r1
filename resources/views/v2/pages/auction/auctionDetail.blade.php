@@ -4,6 +4,21 @@
 @php
     $id = Hashids::decode(request()->route('id'));
     $auction = \App\Models\Auction::find($id);
+
+    /*
+    'cancel' => '취소',
+    'done'   => '경매완료',
+    'chosen' => '선택완료',
+    'wait'   => '선택대기',
+    'ing'    => '경매진행',
+    'diag'   => '진단대기',
+    'dlvr'   => '탁송중',
+    'ask'    => '신청완료',
+    */
+    // $isUser = auth()->user()->hasRole('user');
+    $isUser = 'user';
+    $status = 'ask';
+
 @endphp
 
 <div class="container pt-4" x-data="auctionDetail()">
@@ -47,6 +62,7 @@
             </div>
 
 
+            @if($isUser == 'user' && $status == 'ask')
             <div class="text-center bg-gray-300 py-5 px-3 rounded position-relative" style="background-color: #f8f9fa;">
                 {{-- 상태 뱃지 --}}
                 <div class="badge bg-secondary position-absolute top-0 start-0 m-3">
@@ -61,8 +77,9 @@
                 {{-- 텍스트 안내 --}}
                 <p class="text-muted fs-5 mb-0">{{ config('app.name') }} 이 진단대기 상태에요</p>
             </div>
+            @endif
 
-
+            @if($isUser == 'user' && $status !== 'ask')
             {{-- 경매 차량 이미지 --}}
             <div class="auction-thumbnail carousel-wrapper mb-3" style="">
                 <div id="customCarousel" class="carousel slide" data-bs-ride="carousel">
@@ -101,6 +118,7 @@
                     <img src="https://diag-dev.wecarmobility.co.kr//uploads/storage2/diag/18571/8330c9ed1953c998aed974898a0e967f.jpg" class="thumb-img" data-bs-target="#customCarousel" data-bs-slide-to="3" aria-label="Slide 4">
                 </div>
             </div>
+            @endif
 
 
             <div class="vehicle-title-box d-flex justify-content-between align-items-start flex-wrap mb-3 mt-3">
