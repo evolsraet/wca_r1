@@ -4,7 +4,6 @@ export default () => ({
     boardId: null,
     loading: false,
     articles: [],
-    initialized: false,
     pagination: {
         current_page: 1,
         last_page: 1,
@@ -31,16 +30,9 @@ export default () => ({
 
     // Alpine 컴포넌트 초기화 시 자동 실행
     init() {
-        console.log('List initialized');
-
         // window.boardConfig에서 boardId 가져오기
         const boardId = window.boardConfig?.boardId;
         console.log('boardId from window.boardConfig:', boardId);
-
-        if (this.initialized) {
-            console.log('Already initialized, skipping...');
-            return;
-        }
 
         if (!boardId) {
             console.error('boardId is required');
@@ -49,9 +41,6 @@ export default () => ({
         }
 
         this.boardId = boardId;
-        this.initialized = true;
-
-        console.log('Proceeding with initialization for boardId:', boardId);
 
         // URL 파라미터에서 초기 필터값 설정
         this.$store.common.loadFiltersFromUrl(this.filters, this.$store.whereBuilder, {
