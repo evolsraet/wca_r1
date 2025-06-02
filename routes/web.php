@@ -33,7 +33,7 @@ Route::get('/', function () {
     if (app()->environment('production')) {
         return redirect('/v1');
     }
-    return redirect('/v2');
+    return redirect('/v1');
 });
 
 Route::get('/v1', function () {
