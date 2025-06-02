@@ -91,7 +91,7 @@
                                 <th width="70" class="text-center">
                                     <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 sortable-btn"
                                             @click="sort('id')" :class="{ 'text-primary fw-bold': isSorted('id') }">
-                                        번호 <i :class="`mdi ${$store.common.getSortIcon('id', order_column, order_direction)}`"></i>
+                                        번호 <i :class="`mdi ${$store.common.getSortIcon('id', filters.order_column, filters.order_direction)}`"></i>
                                     </button>
                                 </th>
                                 @if(!empty($board->categories))
@@ -100,25 +100,25 @@
                                 <th>
                                     <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 sortable-btn"
                                             @click="sort('title')" :class="{ 'text-primary fw-bold': isSorted('title') }">
-                                        제목 <i :class="`mdi ${$store.common.getSortIcon('title', order_column, order_direction)}`"></i>
+                                        제목 <i :class="`mdi ${$store.common.getSortIcon('title', filters.order_column, filters.order_direction)}`"></i>
                                     </button>
                                 </th>
                                 <th width="100" class="text-center">
                                     <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 sortable-btn"
                                             @click="sort('user_id')" :class="{ 'text-primary fw-bold': isSorted('user_id') }">
-                                        작성자 <i :class="`mdi ${$store.common.getSortIcon('user_id', order_column, order_direction)}`"></i>
+                                        작성자 <i :class="`mdi ${$store.common.getSortIcon('user_id', filters.order_column, filters.order_direction)}`"></i>
                                     </button>
                                 </th>
                                 <th width="120" class="text-center">
                                     <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 sortable-btn"
                                             @click="sort('created_at')" :class="{ 'text-primary fw-bold': isSorted('created_at') }">
-                                        작성일 <i :class="`mdi ${$store.common.getSortIcon('created_at', order_column, order_direction)}`"></i>
+                                        작성일 <i :class="`mdi ${$store.common.getSortIcon('created_at', filters.order_column, filters.order_direction)}`"></i>
                                     </button>
                                 </th>
                                 <th width="70" class="text-center">
                                     <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 sortable-btn"
                                             @click="sort('hit')" :class="{ 'text-primary fw-bold': isSorted('hit') }">
-                                        조회 <i :class="`mdi ${$store.common.getSortIcon('hit', order_column, order_direction)}`"></i>
+                                        조회 <i :class="`mdi ${$store.common.getSortIcon('hit', filters.order_column, filters.order_direction)}`"></i>
                                     </button>
                                 </th>
                             </tr>
@@ -173,17 +173,17 @@
                 <button @click="sort('created_at')" type="button"
                         class="btn btn-outline-primary btn-sm"
                         :class="{ 'active': isSorted('created_at') }">
-                    <i :class="`mdi ${$store.common.getSortIcon('created_at', order_column, order_direction)} me-1`"></i>작성일
+                    <i :class="`mdi ${$store.common.getSortIcon('created_at', filters.order_column, filters.order_direction)} me-1`"></i>작성일
                 </button>
                 <button @click="sort('hit')" type="button"
                         class="btn btn-outline-primary btn-sm"
                         :class="{ 'active': isSorted('hit') }">
-                    <i :class="`mdi ${$store.common.getSortIcon('hit', order_column, order_direction)} me-1`"></i>조회수
+                    <i :class="`mdi ${$store.common.getSortIcon('hit', filters.order_column, filters.order_direction)} me-1`"></i>조회수
                 </button>
                 <button @click="sort('title')" type="button"
                         class="btn btn-outline-primary btn-sm"
                         :class="{ 'active': isSorted('title') }">
-                    <i :class="`mdi ${$store.common.getSortIcon('title', order_column, order_direction)} me-1`"></i>제목
+                    <i :class="`mdi ${$store.common.getSortIcon('title', filters.order_column, filters.order_direction)} me-1`"></i>제목
                 </button>
             </div>
 
@@ -278,30 +278,4 @@
     </div>
 </div>
 
-<style>
-.sortable-btn {
-    color: inherit !important;
-    font-size: 0.875rem;
-}
-
-.sortable-btn:hover {
-    color: var(--bs-primary) !important;
-}
-
-.table tbody tr {
-    cursor: pointer;
-}
-
-.table tbody tr:hover {
-    background-color: rgba(var(--bs-primary-rgb), 0.05);
-}
-
-.card {
-    transition: box-shadow 0.15s ease-in-out;
-}
-
-.card:hover {
-    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
-}
-</style>
 @endsection

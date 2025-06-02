@@ -23,12 +23,11 @@ export default () => ({
         // 일반 필터들
         search_text: '',
         page: 1,
-        paginate: 10
+        paginate: 10,
+        // 정렬 파라미터도 필터로 포함
+        order_column: 'id',
+        order_direction: 'desc'
     },
-
-    // 정렬 상태
-    order_column: 'id',
-    order_direction: 'desc',
 
     // Alpine 컴포넌트 초기화 시 자동 실행
     init() {
@@ -55,80 +54,23 @@ export default () => ({
         console.log('Proceeding with initialization for boardId:', boardId);
 
         // URL 파라미터에서 초기 필터값 설정
-        this.loadFiltersFromUrl();
+        this.$store.common.loadFiltersFromUrl(this.filters, this.$store.whereBuilder, {
+            search_text: '',
+            page: 1,
+            paginate: 10,
+            order_column: 'id',
+            order_direction: 'desc'
+        });
 
         // 게시글 목록 로드
         this.loadArticles();
 
         // 페이지 가시성 변경 시 새로고침 (뒤로 가기 등)
-        this.setupPageVisibilityHandler();
-    },
-
-    // 페이지 가시성 변경 감지 설정
-    setupPageVisibilityHandler() {
-        // 페이지가 다시 보여질 때 목록 새로고침
-        document.addEventListener('visibilitychange', () => {
-            if (!document.hidden && this.initialized) {
-                console.log('Page became visible, refreshing articles...');
+        this.$store.common.setupPageVisibilityHandler(() => {
+            if (this.initialized) {
                 this.loadArticles();
             }
         });
-
-        // 브라우저의 뒤로/앞으로 가기 감지
-        window.addEventListener('pageshow', (event) => {
-            if (event.persisted && this.initialized) {
-                console.log('Page restored from cache, refreshing articles...');
-                this.loadArticles();
-            }
-        });
-    },
-
-    // URL 파라미터를 안전하게 파싱하는 유틸리티 함수
-    parseUrlParam(urlParams, key, defaultValue = '') {
-        const value = urlParams.get(key);
-        if (value === null || value === undefined) return defaultValue;
-
-        // 빈 문자열 체크
-        const trimmedValue = value.trim();
-        if (trimmedValue === '') return defaultValue;
-
-        // 숫자 변환 시도
-        const numValue = Number(trimmedValue);
-        return !isNaN(numValue) ? numValue : trimmedValue;
-    },
-
-    // URL에서 필터값 로드 - 통합된 버전
-    loadFiltersFromUrl() {
-        const urlParams = new URLSearchParams(window.location.search);
-
-        // where 절 파라미터 처리
-        const whereParam = urlParams.get('where');
-        if (whereParam) {
-            // where 파라미터를 파싱하여 filters.where 객체로 변환
-            const parsedWhere = this.$store.whereBuilder.parse(whereParam);
-            this.filters.where = { ...this.filters.where, ...parsedWhere };
-        }
-
-        // 일반 필터들 처리 (where 제외)
-        Object.entries(this.filters).forEach(([key, value]) => {
-            if (key !== 'where') {
-                this.filters[key] = this.parseUrlParam(urlParams, key, this.getDefaultFilterValue(key));
-            }
-        });
-
-        // 정렬 파라미터 로드
-        this.order_column = this.parseUrlParam(urlParams, 'sort', 'id');
-        this.order_direction = this.parseUrlParam(urlParams, 'direction', 'desc');
-    },
-
-    // 필터의 기본값 반환 유틸리티
-    getDefaultFilterValue(key) {
-        const defaults = {
-            search_text: '',
-            page: 1,
-            paginate: 10
-        };
-        return defaults[key] || '';
     },
 
     // 게시글 목록 로드
@@ -136,7 +78,16 @@ export default () => ({
         this.loading = true;
 
         try {
-            const params = this.buildApiParams();
+            // where 절 생성
+            const whereClause = this.$store.whereBuilder.build(this.filters.where, 'articles');
+            const filters = {
+                ...this.filters,
+                where: whereClause
+            };
+
+            const params = this.$store.common.buildApiParams(filters, {
+                with: 'user'
+            });
             const response = await this.$store.api.get(`/api/board/${this.boardId}/articles`, params);
 
             if (response.data.status === 'ok') {
@@ -146,7 +97,7 @@ export default () => ({
                 this.pagination.next = response.data.links?.next;
 
                 // URL 업데이트
-                this.updateUrl();
+                this.$store.common.updateUrl(filters);
             }
         } catch (error) {
             console.error('게시글 로드 실패:', error);
@@ -156,81 +107,12 @@ export default () => ({
         }
     },
 
-    // API 파라미터 구성 함수
-    buildApiParams() {
-        const params = {
-            page: this.filters.page,
-            paginate: this.filters.paginate,
-            with: 'user',
-            order_column: this.order_column,
-            order_direction: this.order_direction
-        };
-
-        // where 절 직접 생성
-        const whereClause = this.$store.whereBuilder.build(this.filters.where, 'articles');
-        console.log('whereClause:', whereClause);
-        if (whereClause) {
-            params.where = whereClause;
-        }
-
-        // 검색어 필터
-        if (this.filters.search_text?.trim()) {
-            params.search_text = this.filters.search_text;
-        }
-
-        return params;
-    },
-
     // 페이지 로드
     async loadPage(page) {
         if (page < 1 || page > this.pagination.last_page) return;
 
         this.filters.page = page;
         await this.loadArticles();
-    },
-
-    // URL 파라미터 값이 기본값인지 확인하는 유틸리티
-    shouldIncludeInUrl(key, value) {
-        // null, undefined 체크
-        if (value == null) return false;
-
-        const defaultConditions = {
-            page: value > 1,
-            paginate: value !== 10,
-            search_text: value && typeof value === 'string' && value.trim() !== ''
-        };
-
-        // 기본 조건이 있으면 사용, 없으면 일반적인 빈 값 체크
-        if (key in defaultConditions) {
-            return defaultConditions[key];
-        }
-
-        // 일반적인 값 체크 - 안전한 문자열 변환
-        const stringValue = String(value).trim();
-        return stringValue !== '';
-    },
-
-    // URL 업데이트 - 리팩토링된 버전
-    updateUrl() {
-        const params = new URLSearchParams();
-
-        // where 절 생성 및 추가
-        const whereClause = this.$store.whereBuilder.build(this.filters.where, 'articles');
-        if (whereClause) {
-            params.set('where', whereClause);
-        }
-
-        // 일반 필터들 추가 (where 제외)
-        Object.entries(this.filters)
-            .filter(([key, value]) => key !== 'where' && this.shouldIncludeInUrl(key, value))
-            .forEach(([key, value]) => params.set(key, value));
-
-        // 정렬 파라미터 추가 (기본값이 아닐 경우만)
-        if (this.order_column !== 'id') params.set('order_column', this.order_column);
-        if (this.order_direction !== 'desc') params.set('order_direction', this.order_direction);
-
-        const url = params.toString() ? `?${params.toString()}` : window.location.pathname;
-        window.history.replaceState({}, '', url);
     },
 
     // 페이지네이션용 페이지 번호 배열 생성
@@ -262,32 +144,16 @@ export default () => ({
     // 검색 초기화
     resetSearch() {
         window.location.href = window.location.pathname;
-        // 필터 제거
-        // this.loadArticles();
     },
 
-    // 정렬 메소드
+    // 정렬 메소드 (common.js 사용)
     sort(column) {
-        console.log('Sorting by column:', column);
-
-        // 같은 컬럼을 클릭하면 방향 토글, 다른 컬럼이면 desc로 시작
-        if (this.order_column === column) {
-            this.order_direction = this.order_direction === 'asc' ? 'desc' : 'asc';
-        } else {
-            this.order_column = column;
-            this.order_direction = 'desc';
-        }
-
-        // 정렬 시 첫 페이지로 이동
-        this.filters.page = 1;
-
-        // 목록 다시 로드
-        this.loadArticles();
+        this.$store.common.sort(column, this.filters, () => this.loadArticles());
     },
 
-    // 정렬 상태 확인 메소드
+    // 정렬 상태 확인 메소드 (common.js 사용)
     isSorted(column) {
-        return this.order_column === column;
+        return this.$store.common.isSorted(column, this.filters.order_column);
     },
 
     // 게시글 순번 계산
@@ -295,17 +161,17 @@ export default () => ({
         const currentStart = (this.pagination.current_page - 1) * this.pagination.per_page;
 
         // 기본 정렬(id desc) 또는 desc 정렬일 때: 최신 글이 1번
-        if (this.order_column === 'id' && this.order_direction === 'desc') {
+        if (this.filters.order_column === 'id' && this.filters.order_direction === 'desc') {
             return this.pagination.total - (currentStart + index);
         }
         // id 오름차순 정렬일 때: 가장 오래된 글이 1번
-        else if (this.order_column === 'id' && this.order_direction === 'asc') {
+        else if (this.filters.order_column === 'id' && this.filters.order_direction === 'asc') {
             return currentStart + index + 1;
         }
         // 다른 컬럼으로 정렬할 때: 현재 검색 결과에서의 순번
         else {
-            if (this.order_direction === 'desc') {
-        return this.pagination.total - (currentStart + index);
+            if (this.filters.order_direction === 'desc') {
+                return this.pagination.total - (currentStart + index);
             } else {
                 return currentStart + index + 1;
             }

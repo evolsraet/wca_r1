@@ -174,11 +174,163 @@ export default {
         window.location.reload();
     },
 
+    // 페이지 가시성 변경 감지 설정
+    setupPageVisibilityHandler(callback) {
+        if (typeof callback !== 'function') {
+            console.error('setupPageVisibilityHandler: callback must be a function');
+            return;
+        }
+
+        // 페이지가 다시 보여질 때 콜백 실행
+        document.addEventListener('visibilitychange', () => {
+            if (!document.hidden) {
+                console.log('Page became visible, executing callback...');
+                callback();
+            }
+        });
+
+        // 브라우저의 뒤로/앞으로 가기 감지
+        window.addEventListener('pageshow', (event) => {
+            if (event.persisted) {
+                console.log('Page restored from cache, executing callback...');
+                callback();
+            }
+        });
+    },
+
+    // 정렬 메소드
+    sort(column, filters, loadCallback) {
+        if (!filters || typeof loadCallback !== 'function') {
+            console.error('sort: filters and loadCallback are required');
+            return;
+        }
+
+        console.log('Sorting by column:', column);
+
+        // 같은 컬럼을 클릭하면 방향 토글, 다른 컬럼이면 desc로 시작
+        if (filters.order_column === column) {
+            filters.order_direction = filters.order_direction === 'asc' ? 'desc' : 'asc';
+        } else {
+            filters.order_column = column;
+            filters.order_direction = 'desc';
+        }
+
+        // 정렬 시 첫 페이지로 이동
+        filters.page = 1;
+
+        // 목록 다시 로드
+        loadCallback();
+    },
+
+    // 정렬 상태 확인 메소드
+    isSorted(column, currentColumn) {
+        return currentColumn === column;
+    },
+
     // 정렬 방향 아이콘 가져오기
     getSortIcon(column, currentColumn, currentDirection) {
         if (column !== currentColumn) {
             return 'mdi-sort'; // 기본 정렬 아이콘
         }
         return currentDirection === 'asc' ? 'mdi-sort-ascending' : 'mdi-sort-descending';
+    },
+
+    // URL 파라미터를 안전하게 파싱하는 유틸리티 함수
+    parseUrlParam(urlParams, key, defaultValue = '') {
+        const value = urlParams.get(key);
+        if (value === null || value === undefined) return defaultValue;
+
+        // 빈 문자열 체크
+        const trimmedValue = value.trim();
+        if (trimmedValue === '') return defaultValue;
+
+        // 숫자 변환 시도
+        const numValue = Number(trimmedValue);
+        return !isNaN(numValue) ? numValue : trimmedValue;
+    },
+
+    // URL 파라미터 값이 기본값인지 확인하는 유틸리티
+    shouldIncludeInUrl(key, value) {
+        // null, undefined 체크
+        if (value == null) return false;
+
+        const defaultConditions = {
+            page: value > 1,
+            paginate: value !== 10,
+            search_text: value && typeof value === 'string' && value.trim() !== '',
+            order_column: value !== 'id',
+            order_direction: value !== 'desc'
+        };
+
+        // 기본 조건이 있으면 사용, 없으면 일반적인 빈 값 체크
+        if (key in defaultConditions) {
+            return defaultConditions[key];
+        }
+
+        // 일반적인 값 체크 - 안전한 문자열 변환
+        const stringValue = String(value).trim();
+        return stringValue !== '';
+    },
+
+    // URL 업데이트 - 범용 버전
+    updateUrl(filters) {
+        const params = new URLSearchParams();
+
+        // where 절 추가
+        if (filters.where) {
+            params.set('where', filters.where);
+        }
+
+        // 일반 필터들 추가 (where 제외)
+        Object.entries(filters)
+            .filter(([key, value]) => key !== 'where' && this.shouldIncludeInUrl(key, value))
+            .forEach(([key, value]) => params.set(key, value));
+
+        const url = params.toString() ? `?${params.toString()}` : window.location.pathname;
+        window.history.replaceState({}, '', url);
+    },
+
+    // API 파라미터 구성 함수 - 범용 버전
+    buildApiParams(filters, additionalParams = {}) {
+        const params = {
+            page: filters.page || 1,
+            paginate: filters.paginate || 10,
+            order_column: filters.order_column || 'id',
+            order_direction: filters.order_direction || 'desc',
+            ...additionalParams
+        };
+
+        // where 절 추가
+        if (filters.where) {
+            params.where = filters.where;
+        }
+
+        // 검색어 필터
+        if (filters.search_text?.trim()) {
+            params.search_text = filters.search_text;
+        }
+
+        return params;
+    },
+
+    // URL에서 필터값 로드 - 범용 버전
+    loadFiltersFromUrl(filters, whereBuilder, defaultFilters = {}) {
+        const urlParams = new URLSearchParams(window.location.search);
+
+        // where 절 파라미터 처리
+        if (whereBuilder) {
+            const whereParam = urlParams.get('where');
+            if (whereParam) {
+                const parsedWhere = whereBuilder.parse(whereParam);
+                filters.where = { ...filters.where, ...parsedWhere };
+            }
+        }
+
+        // 일반 필터들 처리 (where 제외)
+        Object.entries(filters).forEach(([key, value]) => {
+            if (key !== 'where') {
+                filters[key] = this.parseUrlParam(urlParams, key, defaultFilters[key] || '');
+            }
+        });
     }
 };
