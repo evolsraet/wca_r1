@@ -46,6 +46,14 @@ Route::post('login', [AuthenticatedSessionController::class, 'login']);
 // Route::post('register', [AuthenticatedSessionController::class, 'register']);
 Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
+Route::get('/files/download/{uuid}', function ($uuid) {
+    $file = \Spatie\MediaLibrary\MediaCollections\Models\Media::where('uuid', $uuid)->first();
+    if (!$file) {
+        return abort(404, '파일을 찾을 수 없습니다.');
+    }
+    // dd($file->file_name);
+    return response()->download($file->getPath(), );
+})->name('files.download');
 
 // v2 prefix
 Route::prefix('v2')->group(function () {
@@ -101,7 +109,7 @@ Route::prefix('v2')->group(function () {
         Route::get('/', function () {
             return view('v2.pages.auction.auctionList');
         })->name('auction.list');
-    
+
         Route::get('/{id}', function ($id) {
             return view('v2.pages.auction.auctionDetail', ['id' => $id]);
         })->name('auction.detail');

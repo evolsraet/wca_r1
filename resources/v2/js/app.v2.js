@@ -14,7 +14,7 @@ import { fileUpload } from './util/fileUpload.js';
 import { modal } from './util/modal.js';
 import whereBuilder from './util/whereBuilder.js';
 import auctionStatus from './util/auctionStatus.js';
-
+import common from './util/common.js';
 
     console.log('Initializing Alpine...');
 
@@ -23,8 +23,10 @@ import auctionStatus from './util/auctionStatus.js';
         console.log('Alpine instance exists but not initialized, resetting...');
     }
 
+    // sweetAlert2 설정
     Alpine.store('swal', Swal);
 
+    // toastr 설정
     toastr.options = {
         closeButton: true,
         progressBar: true,
@@ -33,12 +35,15 @@ import auctionStatus from './util/auctionStatus.js';
     };
     Alpine.store('toastr', toastr);
 
-    // Alpine 등록
+    // 유틸리티 stores 등록
     Alpine.store('api', api);
     Alpine.store('address', address);
     Alpine.store('whereBuilder', whereBuilder);
-    Alpine.data('fileUpload', fileUpload);
     Alpine.store('auctionStatus', auctionStatus);
+    Alpine.store('common', common);
+
+    // 기타 등록
+    Alpine.data('fileUpload', fileUpload);
 
     // 컴포넌트 등록 여부를 추적
     const registeredComponents = new Set();

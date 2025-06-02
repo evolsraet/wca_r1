@@ -38,19 +38,19 @@
                         model="filters.where.category"
                         :options="collect(json_decode($board->categories))->mapWithKeys(fn($cat) => [$cat => $cat])->toArray()"
                         placeholder="전체 카테고리"
-                        @change="onWhereFilterChange()"
+                        @change="loadPage(1)"
                         no-margin
                         :errors="null"
                     />
                 </div>
                 <!-- whereBuilder 스토어 사용 예시 -->
-                <!-- <div class="col-md-3" x-data="{ hitMin: '' }">
+                <div class="col-md-3" x-data="{ hitMin: '' }">
                     <input type="number"
                            x-model="hitMin"
                            @input="filters.where.hit = '>:' + $event.target.value"
                            class="form-control"
                            placeholder="최소 조회수">
-                </div> -->
+                </div>
 
                 <div class="col-md-8">
             @else
@@ -59,10 +59,10 @@
                     <div class="input-group">
                         <input type="text"
                                x-model="filters.search_text"
-                               @keyup.enter="search()"
+                               @keyup.enter="loadPage(1)"
                                class="form-control"
                                placeholder="제목, 내용을 검색하세요">
-                        <button @click="search()" class="btn btn-primary" type="button">
+                        <button @click="loadPage(1)" class="btn btn-primary" type="button">
                             <i class="mdi mdi-magnify"></i>
                             <span class="d-none d-sm-inline ms-1">검색</span>
                         </button>
@@ -76,12 +76,7 @@
     </div>
 
     <!-- 로딩 상태 -->
-    <div x-show="loading" class="text-center py-4">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-        <p class="text-muted mt-2 mb-0">로딩 중...</p>
-    </div>
+    <x-loading />
 
     <!-- 게시글 목록 -->
     <div x-show="!loading">
@@ -96,7 +91,7 @@
                                 <th width="70" class="text-center">
                                     <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 sortable-btn"
                                             @click="sort('id')" :class="{ 'text-primary fw-bold': isSorted('id') }">
-                                        번호 <i :class="`mdi ${getSortIcon('id')}`"></i>
+                                        번호 <i :class="`mdi ${$store.common.getSortIcon('id', order_column, order_direction)}`"></i>
                                     </button>
                                 </th>
                                 @if(!empty($board->categories))
@@ -105,25 +100,25 @@
                                 <th>
                                     <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 sortable-btn"
                                             @click="sort('title')" :class="{ 'text-primary fw-bold': isSorted('title') }">
-                                        제목 <i :class="`mdi ${getSortIcon('title')}`"></i>
+                                        제목 <i :class="`mdi ${$store.common.getSortIcon('title', order_column, order_direction)}`"></i>
                                     </button>
                                 </th>
                                 <th width="100" class="text-center">
                                     <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 sortable-btn"
                                             @click="sort('user_id')" :class="{ 'text-primary fw-bold': isSorted('user_id') }">
-                                        작성자 <i :class="`mdi ${getSortIcon('user_id')}`"></i>
+                                        작성자 <i :class="`mdi ${$store.common.getSortIcon('user_id', order_column, order_direction)}`"></i>
                                     </button>
                                 </th>
                                 <th width="120" class="text-center">
                                     <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 sortable-btn"
                                             @click="sort('created_at')" :class="{ 'text-primary fw-bold': isSorted('created_at') }">
-                                        작성일 <i :class="`mdi ${getSortIcon('created_at')}`"></i>
+                                        작성일 <i :class="`mdi ${$store.common.getSortIcon('created_at', order_column, order_direction)}`"></i>
                                     </button>
                                 </th>
                                 <th width="70" class="text-center">
                                     <button type="button" class="btn btn-sm btn-link text-decoration-none p-0 sortable-btn"
                                             @click="sort('hit')" :class="{ 'text-primary fw-bold': isSorted('hit') }">
-                                        조회 <i :class="`mdi ${getSortIcon('hit')}`"></i>
+                                        조회 <i :class="`mdi ${$store.common.getSortIcon('hit', order_column, order_direction)}`"></i>
                                     </button>
                                 </th>
                             </tr>
@@ -158,7 +153,7 @@
                                         <small class="text-muted" x-text="article.user?.name || '익명'"></small>
                                     </td>
                                     <td class="text-center">
-                                        <small class="text-muted" x-text="formatDate(article.created_at)"></small>
+                                        <small class="text-muted" x-text="$store.common.formatDate(article.created_at)"></small>
                                     </td>
                                     <td class="text-center">
                                         <small class="text-muted" x-text="article.hit || 0"></small>
@@ -178,17 +173,17 @@
                 <button @click="sort('created_at')" type="button"
                         class="btn btn-outline-primary btn-sm"
                         :class="{ 'active': isSorted('created_at') }">
-                    <i :class="`mdi ${getSortIcon('created_at')} me-1`"></i>작성일
+                    <i :class="`mdi ${$store.common.getSortIcon('created_at', order_column, order_direction)} me-1`"></i>작성일
                 </button>
                 <button @click="sort('hit')" type="button"
                         class="btn btn-outline-primary btn-sm"
                         :class="{ 'active': isSorted('hit') }">
-                    <i :class="`mdi ${getSortIcon('hit')} me-1`"></i>조회수
+                    <i :class="`mdi ${$store.common.getSortIcon('hit', order_column, order_direction)} me-1`"></i>조회수
                 </button>
                 <button @click="sort('title')" type="button"
                         class="btn btn-outline-primary btn-sm"
                         :class="{ 'active': isSorted('title') }">
-                    <i :class="`mdi ${getSortIcon('title')} me-1`"></i>제목
+                    <i :class="`mdi ${$store.common.getSortIcon('title', order_column, order_direction)} me-1`"></i>제목
                 </button>
             </div>
 
@@ -203,7 +198,7 @@
                                       x-text="article.category"
                                       class="badge bg-primary bg-opacity-25 text-primary me-2"></span>
                             </div>
-                            <small class="text-muted" x-text="formatDate(article.created_at)"></small>
+                            <small class="text-muted" x-text="$store.common.formatDate(article.created_at)"></small>
                         </div>
 
                         <h6 class="mb-2">

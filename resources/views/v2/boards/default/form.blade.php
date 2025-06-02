@@ -35,10 +35,7 @@ if ($article) {
     </div>
 
     <!-- 로딩 상태 -->
-    <div x-show="loading" class="text-center py-5">
-        <i class="mdi mdi-loading mdi-spin fs-2"></i>
-        <p class="mt-2">로딩 중...</p>
-    </div>
+    <x-loading />
 
     <!-- 폼 -->
     <div x-show="!loading">

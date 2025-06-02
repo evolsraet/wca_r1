@@ -21,12 +21,7 @@
      x-init="setup('{{ $board->id }}', '{{ $articleId }}')">
 
     <!-- 로딩 상태 -->
-    <div x-show="loading" class="text-center py-5">
-        <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
-        </div>
-        <p class="text-muted mt-2 mb-0">게시글을 불러오는 중...</p>
-    </div>
+    <x-loading />
 
     <!-- 게시글 내용 -->
     <div x-show="!loading && article" x-cloak>
@@ -53,7 +48,7 @@
                             </div>
                             <div class="col-md-6 text-md-end">
                                 <i class="mdi mdi-calendar me-1"></i>
-                                <span x-text="formatDate(article && article.created_at)"></span>
+                                <span x-text="$store.common.formatDate(article && article.created_at)"></span>
                                 <span class="ms-3">
                                     <i class="mdi mdi-eye me-1"></i>
                                     <span x-text="(article && article.hit) || 0"></span>
@@ -96,12 +91,11 @@
             </div>
 
             <!-- 첨부파일 -->
-            <div x-show="article?.board_attach?.length > 0" class="card-footer bg-light">
+            <div x-show="article?.files?.board_attach?.length > 0" class="card-footer bg-light">
                 <x-forms.fileList
                     label="첨부파일"
-                    data-path="article.board_attach"
+                    data-path="article.files.board_attach"
                     show-download="true"
-                    download-action="downloadFile"
                 />
             </div>
         </div>

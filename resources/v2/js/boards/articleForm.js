@@ -41,7 +41,7 @@ export default () => ({
         // 필수 파라미터 검증
         if (!this.boardId) {
             console.error('boardId가 없습니다:', { boardId: this.boardId });
-            this.$store.toastr.error('게시판 정보가 올바르지 않습니다.');
+            this.$store.common.showError('게시판 정보가 올바르지 않습니다.');
             return;
         }
 
@@ -81,11 +81,11 @@ export default () => ({
                 this.files = article.files || [];
                 // console.log('article.files', this.files.board_attach);
             } else {
-                this.$store.toastr.error('게시글을 불러올 수 없습니다.');
+                this.$store.common.showError('게시글을 불러올 수 없습니다.');
             }
         } catch (error) {
             console.error('게시글 로드 실패:', error);
-            this.$store.toastr.error('게시글을 불러오는데 실패했습니다.');
+            this.$store.common.showError('게시글을 불러오는데 실패했습니다.');
         } finally {
             this.loading = false;
         }
@@ -122,9 +122,9 @@ export default () => ({
                 window.location.href = `/v2/board/${this.boardId}`;
             } else {
                 if (response.data.errors) {
-                    this.handleErrors(response.data.errors);
+                    // this.handleErrors(response.data.errors);
                 } else {
-                    this.$store.toastr.error(response.data.message || '저장에 실패했습니다.');
+                    this.$store.common.showError(response.data.message || '저장에 실패했습니다.');
                 }
             }
         } catch (error) {
@@ -133,9 +133,9 @@ export default () => ({
             if (error.response?.data?.errors) {
                 this.handleErrors(error.response.data.errors);
             } else if (error.response?.data?.message) {
-                this.$store.toastr.error(error.response.data.message);
+                this.$store.common.showError(error.response.data.message);
             } else {
-                this.$store.toastr.error('저장 중 오류가 발생했습니다.');
+                this.$store.common.showError('저장 중 오류가 발생했습니다.');
             }
         } finally {
             this.submitting = false;
@@ -155,29 +155,4 @@ export default () => ({
             window.location.href = boardListPath;
         }
     },
-
-    // 에러 처리
-    handleErrors(errors) {
-        this.errors = {};
-
-        if (typeof errors === 'object' && errors !== null) {
-            // Laravel validation errors 형태 처리
-            Object.keys(errors).forEach(field => {
-                if (Array.isArray(errors[field])) {
-                    this.errors[field] = errors[field][0];
-                } else {
-                    this.errors[field] = errors[field];
-                }
-            });
-        }
-    },
-
-    // 유틸리티 메소드들
-    showSuccess(message) {
-        this.$store.toastr.success(message);
-    },
-
-    showError(message) {
-        this.$store.toastr.error(message);
-    }
 });

@@ -27,7 +27,7 @@ export default function() {
             // 필수 파라미터 검증
             if (!this.boardId || !this.articleId) {
                 console.error('boardId 또는 articleId가 없습니다:', { boardId: this.boardId, articleId: this.articleId });
-                this.showError('게시판 또는 게시글 정보가 올바르지 않습니다.');
+                this.$store.common.showError('게시판 또는 게시글 정보가 올바르지 않습니다.');
                 return;
             }
 
@@ -52,10 +52,10 @@ export default function() {
                 if (response.data.status === 'ok') {
                     this.article = response.data.data;
                 } else {
-                    this.showError('게시글을 불러올 수 없습니다.');
+                    this.$store.common.showError('게시글을 불러올 수 없습니다.');
                 }
             } catch (error) {
-                this.showError('게시글을 불러오는데 실패했습니다.');
+                this.$store.common.showError('게시글을 불러오는데 실패했습니다.');
             } finally {
                 this.loading = false;
             }
@@ -63,7 +63,7 @@ export default function() {
 
         // 게시글 삭제
         async deleteArticle() {
-            const confirmed = await this.$store.board.confirm(
+            const confirmed = await this.$store.common.confirm(
                 '게시글 삭제',
                 '정말로 이 게시글을 삭제하시겠습니까? 삭제된 게시글은 복구할 수 없습니다.'
             );
@@ -74,17 +74,17 @@ export default function() {
                 const response = await this.$store.api.delete(`/api/board/${this.boardId}/articles/${this.articleId}`);
 
                 if (response.data.status === 'ok') {
-                    this.showSuccess('게시글이 삭제되었습니다.');
+                    this.$store.common.showSuccess('게시글이 삭제되었습니다.');
                     // 삭제 성공 후 강제 새로고침으로 목록 이동
                     setTimeout(() => {
                         this.goToListWithRefresh();
                     }, 1000);
                 } else {
-                    this.showError(response.data.message || '게시글 삭제에 실패했습니다.');
+                    this.$store.common.showError(response.data.message || '게시글 삭제에 실패했습니다.');
                 }
             } catch (error) {
                 console.error('게시글 삭제 실패:', error);
-                this.showError('게시글 삭제에 실패했습니다.');
+                this.$store.common.showError('게시글 삭제에 실패했습니다.');
             }
         },
 
@@ -174,36 +174,8 @@ export default function() {
             return canDelete;
         },
 
-        // 유틸리티 메소드들
-        formatDate(dateString) {
-            return this.$store.board.formatDate(dateString);
-        },
-
-        formatFileSize(bytes) {
-            return this.$store.board.formatFileSize(bytes);
-        },
-
-        // 게시글 내용 포맷팅 (줄넘김 처리)
-        formatContent(content) {
-            if (!content) return '';
-
-            // 기본적인 XSS 방지를 위해 스크립트 태그 제거
-            let formatted = content.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '');
-
-            // 줄넘김 문자를 <br> 태그로 변환 (이미 HTML이 포함된 경우를 고려)
-            if (!formatted.includes('<br>') && !formatted.includes('<p>')) {
-                formatted = formatted.replace(/\n/g, '<br>');
-            }
-
-            return formatted;
-        },
-
-        showSuccess(message) {
-            this.$store.board.showSuccess(message);
-        },
-
         showError(message) {
-            this.$store.board.showError(message);
+            this.$store.common.showError(message);
         }
     };
 }

@@ -45,7 +45,7 @@ export default () => ({
 
         if (!boardId) {
             console.error('boardId is required');
-            this.showError('게시판 ID가 없습니다.');
+            this.$store.common.showError('게시판 ID가 없습니다.');
             return;
         }
 
@@ -101,15 +101,17 @@ export default () => ({
     loadFiltersFromUrl() {
         const urlParams = new URLSearchParams(window.location.search);
 
-        // this.filters 전체를 한번에 순회하여 처리
+        // where 절 파라미터 처리
+        const whereParam = urlParams.get('where');
+        if (whereParam) {
+            // where 파라미터를 파싱하여 filters.where 객체로 변환
+            const parsedWhere = this.$store.whereBuilder.parse(whereParam);
+            this.filters.where = { ...this.filters.where, ...parsedWhere };
+        }
+
+        // 일반 필터들 처리 (where 제외)
         Object.entries(this.filters).forEach(([key, value]) => {
-            if (key === 'where') {
-                // where 절 필터들 처리
-                Object.keys(value).forEach(whereKey => {
-                    this.filters.where[whereKey] = this.parseUrlParam(urlParams, whereKey, '');
-                });
-            } else {
-                // 일반 필터들 처리
+            if (key !== 'where') {
                 this.filters[key] = this.parseUrlParam(urlParams, key, this.getDefaultFilterValue(key));
             }
         });
@@ -148,7 +150,7 @@ export default () => ({
             }
         } catch (error) {
             console.error('게시글 로드 실패:', error);
-            this.showError('게시글을 불러오는데 실패했습니다.');
+            this.$store.common.showError('게시글을 불러오는데 실패했습니다.');
         } finally {
             this.loading = false;
         }
@@ -166,6 +168,7 @@ export default () => ({
 
         // where 절 직접 생성
         const whereClause = this.$store.whereBuilder.build(this.filters.where, 'articles');
+        console.log('whereClause:', whereClause);
         if (whereClause) {
             params.where = whereClause;
         }
@@ -183,24 +186,6 @@ export default () => ({
         if (page < 1 || page > this.pagination.last_page) return;
 
         this.filters.page = page;
-        await this.loadArticles();
-    },
-
-    // 검색 실행
-    async search() {
-        this.filters.page = 1; // 검색시 첫 페이지로
-        await this.loadArticles();
-    },
-
-    // 카테고리 변경 (where 절 필터 변경 시 호출)
-    async onCategoryChange() {
-        console.log('Category changed to:', this.filters.where.category);
-        await this.onWhereFilterChange();
-    },
-
-    // where 절 필터 변경 시 공통 처리 함수
-    async onWhereFilterChange() {
-        this.filters.page = 1;
         await this.loadArticles();
     },
 
@@ -229,12 +214,13 @@ export default () => ({
     updateUrl() {
         const params = new URLSearchParams();
 
-        // where 절 필터들 추가
-        Object.entries(this.filters.where)
-            .filter(([key, value]) => this.shouldIncludeInUrl(key, value))
-            .forEach(([key, value]) => params.set(key, value));
+        // where 절 생성 및 추가
+        const whereClause = this.$store.whereBuilder.build(this.filters.where, 'articles');
+        if (whereClause) {
+            params.set('where', whereClause);
+        }
 
-        // 일반 필터들 추가
+        // 일반 필터들 추가 (where 제외)
         Object.entries(this.filters)
             .filter(([key, value]) => key !== 'where' && this.shouldIncludeInUrl(key, value))
             .forEach(([key, value]) => params.set(key, value));
@@ -266,21 +252,6 @@ export default () => ({
         }
 
         return pages;
-    },
-
-    // 날짜 포맷팅 (board 스토어 메소드 사용)
-    formatDate(dateString) {
-        return this.$store.board.formatDate(dateString);
-    },
-
-    // 성공 메시지 표시 (board 스토어 메소드 사용)
-    showSuccess(message) {
-        this.$store.board.showSuccess(message);
-    },
-
-    // 에러 메시지 표시 (board 스토어 메소드 사용)
-    showError(message) {
-        this.$store.board.showError(message);
     },
 
     // 새로고침
@@ -317,14 +288,6 @@ export default () => ({
     // 정렬 상태 확인 메소드
     isSorted(column) {
         return this.order_column === column;
-    },
-
-    // 정렬 방향 아이콘 가져오기
-    getSortIcon(column) {
-        if (!this.isSorted(column)) {
-            return 'mdi-sort'; // 기본 정렬 아이콘
-        }
-        return this.order_direction === 'asc' ? 'mdi-sort-ascending' : 'mdi-sort-descending';
     },
 
     // 게시글 순번 계산

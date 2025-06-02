@@ -29,6 +29,39 @@ export default {
         return whereClauses.join('|');
     },
 
+    // where 절 문자열을 객체로 파싱
+    parse(whereString, modelName = 'articles') {
+        const result = {};
+
+        if (!whereString || typeof whereString !== 'string') {
+            return result;
+        }
+
+        // '|'로 구분된 where 절들을 분리
+        const whereClauses = whereString.split('|');
+
+        whereClauses.forEach(clause => {
+            const trimmedClause = clause.trim();
+            if (!trimmedClause) return;
+
+            // ':'로 컬럼과 값을 분리
+            const colonIndex = trimmedClause.indexOf(':');
+            if (colonIndex === -1) return;
+
+            const column = trimmedClause.substring(0, colonIndex).trim();
+            const value = trimmedClause.substring(colonIndex + 1).trim();
+
+            // 모델명 제거하여 필드명만 추출 (예: articles.category -> category)
+            const fieldName = column.includes('.') ? column.split('.').pop() : column;
+
+            if (fieldName) {
+                result[fieldName] = value;
+            }
+        });
+
+        return result;
+    },
+
     // 비교 연산자 확인
     isOperator(value) {
         const operators = ['>', '<', '>=', '<=', 'like', 'whereIn', 'orWhere'];

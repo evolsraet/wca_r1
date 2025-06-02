@@ -36,6 +36,7 @@
     </main>
 
     @include('v2.partials.footer')
-
+    {{-- 히든 아이프레임 --}}
+    <iframe id="hidden-iframe" name="hidden-iframe" style="display: none;"></iframe>
 </body>
 </html>

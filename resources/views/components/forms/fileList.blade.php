@@ -2,7 +2,7 @@
     'label' => '첨부파일',
     'dataPath' => 'files',
     'showDownload' => true,
-    'downloadAction' => 'downloadFile'
+    // 'downloadAction' => 'downloadFile'
 ])
 
 @php
@@ -24,17 +24,18 @@
                     <i class="mdi mdi-file me-2 text-muted"></i>
                     <span x-text="file.original_name || file.file_name || file.name || 'Unknown'"
                           class="text-truncate" style="max-width: 200px;"></span>
-                    <small x-show="file.file_size"
-                           x-text="formatFileSize(file.file_size)"
+                    <small x-show="file.size"
+                           x-text="$store.common.formatFileSize(file.size)"
                            class="text-muted ms-2"></small>
                 </div>
 
                 @if($showDownload)
-                    <button @click="{{ $downloadAction }}(file)"
+                    <a :href="`/files/download/${file.uuid}`"
+                            target="hidden-iframe"
                             class="btn btn-sm btn-outline-primary">
                         <i class="mdi mdi-download"></i>
                         <span class="d-none d-sm-inline ms-1">다운로드</span>
-                    </button>
+                    </a>
                 @endif
             </div>
         </template>
