@@ -1,4 +1,4 @@
-import { Modal } from 'bootstrap';
+import { Modal, Collapse } from 'bootstrap';
 
 // offcanvas backdrop 관리를 위한 전역 변수
 let isOffcanvasOpen = false;
@@ -16,6 +16,36 @@ document.addEventListener('hidden.bs.offcanvas', () => {
     // backdrop 제거
     const backdrops = document.querySelectorAll('.offcanvas-backdrop');
     backdrops.forEach(backdrop => backdrop.remove());
+});
+
+// 아코디언 버튼 클릭 이벤트
+document.querySelectorAll('.accordion-button').forEach(button => {
+    const targetSelector = button.dataset.bsTarget;
+    const target = document.querySelector(targetSelector);
+  
+    // Collapse 인스턴스 수동 생성
+    let instance = Collapse.getInstance(target);
+    if (!instance) {
+      instance = new Collapse(target, { toggle: false });
+    }
+  
+    // 버튼 클릭 시 toggle
+    button.addEventListener('click', () => {
+      const isOpen = target.classList.contains('show');
+      isOpen ? instance.hide() : instance.show();
+    });
+  
+    // 상태 UI 동기화: 열렸을 때
+    target.addEventListener('shown.bs.collapse', () => {
+      button.classList.remove('collapsed');
+      button.setAttribute('aria-expanded', 'true');
+    });
+  
+    // 상태 UI 동기화: 닫혔을 때
+    target.addEventListener('hidden.bs.collapse', () => {
+      button.classList.add('collapsed');
+      button.setAttribute('aria-expanded', 'false');
+    });
 });
 
 export const modal = {

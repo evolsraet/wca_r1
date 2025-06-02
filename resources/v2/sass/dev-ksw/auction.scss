@@ -326,3 +326,35 @@ $primary: map-get($theme-colors, "primary");
 .custom-shadow {
   box-shadow: 2rem rgba(0, 0, 0, 0.25) !important;
 }
+
+
+
+
+.auction-price-box {
+  background-color: #fff;
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .btn.bid-toggle-btn {
+    font-weight: 600;
+    font-size: 1rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+  }
+
+  .text-muted {
+    font-size: 0.85rem;
+  }
+
+  .text-danger {
+    color: #dc3545 !important;
+  }
+
+  .text-primary {
+    color: #0d6efd !important;
+  }
+}

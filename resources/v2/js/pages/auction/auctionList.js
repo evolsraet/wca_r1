@@ -10,6 +10,7 @@ export default function () {
       totalPages: 1,
       search_text: '',
     },
+    errors: {},
     loading: false,
 
     init() {
