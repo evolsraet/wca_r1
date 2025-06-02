@@ -122,7 +122,7 @@ export default () => ({
                 window.location.href = `/v2/board/${this.boardId}`;
             } else {
                 if (response.data.errors) {
-                    // this.handleErrors(response.data.errors);
+                    this.errors = response.data.errors;
                 } else {
                     this.$store.common.showError(response.data.message || '저장에 실패했습니다.');
                 }
@@ -131,7 +131,7 @@ export default () => ({
             console.error('폼 제출 실패:', error);
 
             if (error.response?.data?.errors) {
-                this.handleErrors(error.response.data.errors);
+                this.errors = error.response.data.errors;
             } else if (error.response?.data?.message) {
                 this.$store.common.showError(error.response.data.message);
             } else {

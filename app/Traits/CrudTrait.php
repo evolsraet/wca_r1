@@ -52,7 +52,7 @@ trait CrudTrait
     // 선처리 훅
     protected function beforeProcess($method, $request, $data = null, $id = null)
     {
-        // 컨트롤러에서 이 메소드�� 오버라이드하여 사용할 수 있습니다.
+        // 컨트롤러에서 이 메소드를 오버라이드하여 사용할 수 있습니다.
     }
 
     // 중간처리 훅
@@ -414,16 +414,15 @@ trait CrudTrait
 
             // 상위 객체 데이터를 먼저 처리합니다.
             foreach ((array)$data as $key => $value) {
-                // if (!is_array($value)) { // 배열이 아닌 경우 직접 할당
                 $item->$key = $value;
-                // }
             }
 
-            $this->middleProcess(__FUNCTION__, $data, $item);
-            $item->save(); // 상위 객체 저장
+            $middleProcessResult = $this->middleProcess(__FUNCTION__, $data, $item);
+            if ($middleProcessResult) {
+                return $middleProcessResult;
+            }
 
-            // print_r($item->toArray());
-            // die();
+            $item->save(); // 상위 객체 저장
 
             // 하위 객체를 동적으로 처리합니다.
             foreach ((array) $data as $relationName => $relationData) {

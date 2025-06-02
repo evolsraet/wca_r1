@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Resources\ArticleResource;
 use App\Jobs\ClaimJob;
 use App\Models\User;
+use Illuminate\Support\Facades\Validator;
 
 class ArticleService
 {
@@ -155,8 +156,11 @@ class ArticleService
                     $validateCondition['category'] = 'required|string';
                 }
 
-                $validatedData = validator((array) $request, $validateCondition)
-                    ->validate();
+                // 유효성 검사 실패 시
+                $validator = Validator::make($request, (array) $validateCondition);
+                if ($validator->fails()) {
+                    return response()->api(null, '입력값을 확인하세요.', 'fail', 422, ['errors' => ['article' => $validator->errors()]]);
+                }
 
                 // 로그인
                 if (!auth()->check()) {

@@ -24,6 +24,7 @@ if ($article) {
         articleId: '{{ $articleId }}'
     };
 </script>
+
 <div class="board-form board-skin-{{ $board->skin }}"
      x-data="articleForm()"
      x-init="setup('{{ $board->id }}', '{{ $articleId }}')">
@@ -66,7 +67,7 @@ if ($article) {
                 name="article.title"
                 label="제목"
                 placeholder="제목을 입력하세요"
-                required
+                {{-- required --}}
                 :errors="true"
             />
 
@@ -76,7 +77,7 @@ if ($article) {
                 label="내용"
                 rows="15"
                 placeholder="내용을 입력하세요"
-                required
+                {{-- required --}}
                 :errors="true"
             />
 
@@ -91,15 +92,6 @@ if ($article) {
                     :existingFiles="$existingFiles"
                 />
             @endif
-
-            <!-- 에러 메시지 -->
-            <div x-show="errors && Object.keys(errors).length > 0" class="alert alert-danger mb-3">
-                <ul class="mb-0">
-                    <template x-for="(error, field) in errors" :key="field">
-                        <li x-text="error"></li>
-                    </template>
-                </ul>
-            </div>
 
             <!-- 액션 버튼 -->
             <div class="form-actions d-flex justify-content-between">
