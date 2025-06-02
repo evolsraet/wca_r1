@@ -58,9 +58,9 @@ return [
                 'icon' => '/images/rating.png',
                 'desc' => '',
             ],
-            'name-transfer' => [
+            'docs/vehicleOwnershipTransfer' => [
                 'label' => '명의이전서류',
-                'url' => '/name-transfer',
+                'url' => '/docs/vehicleOwnershipTransfer',
                 'icon' => '/images/document.png',
                 'desc' => '',
             ],

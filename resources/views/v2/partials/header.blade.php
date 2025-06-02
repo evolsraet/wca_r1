@@ -39,7 +39,7 @@
               {{ Auth::user()->name }} 님
             </a>
             <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" :class="{ 'show': dropdown }" aria-labelledby="userDropdown1" style="z-index: 2000;">
-              <li><a class="dropdown-item" href="#">내 정보 수정</a></li>
+              <li><a class="dropdown-item" href="{{ route('modify') }}">내 정보 수정</a></li>
               <li>
                 <form method="POST" action="{{ route('logout') }}">
                   @csrf
