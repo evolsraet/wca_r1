@@ -41,7 +41,7 @@ export default () => ({
         // 필수 파라미터 검증
         if (!this.boardId) {
             console.error('boardId가 없습니다:', { boardId: this.boardId });
-            this.showError('게시판 정보가 올바르지 않습니다.');
+            this.$store.toastr.error('게시판 정보가 올바르지 않습니다.');
             return;
         }
 
@@ -81,11 +81,11 @@ export default () => ({
                 this.files = article.files || [];
                 // console.log('article.files', this.files.board_attach);
             } else {
-                this.showError('게시글을 불러올 수 없습니다.');
+                this.$store.toastr.error('게시글을 불러올 수 없습니다.');
             }
         } catch (error) {
             console.error('게시글 로드 실패:', error);
-            this.showError('게시글을 불러오는데 실패했습니다.');
+            this.$store.toastr.error('게시글을 불러오는데 실패했습니다.');
         } finally {
             this.loading = false;
         }
@@ -113,11 +113,7 @@ export default () => ({
 
             const method = this.isEdit ? 'put' : 'post';
 
-            const response = await this.$store.api[method](url, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
+            const response = await this.$store.api[method](url, formData);
 
             if (response.data.status === 'ok') {
                 // this.showSuccess(this.isEdit ? '게시글이 수정되었습니다.' : '게시글이 등록되었습니다.');
@@ -128,7 +124,7 @@ export default () => ({
                 if (response.data.errors) {
                     this.handleErrors(response.data.errors);
                 } else {
-                    this.showError(response.data.message || '저장에 실패했습니다.');
+                    this.$store.toastr.error(response.data.message || '저장에 실패했습니다.');
                 }
             }
         } catch (error) {
@@ -137,9 +133,9 @@ export default () => ({
             if (error.response?.data?.errors) {
                 this.handleErrors(error.response.data.errors);
             } else if (error.response?.data?.message) {
-                this.showError(error.response.data.message);
+                this.$store.toastr.error(error.response.data.message);
             } else {
-                this.showError('저장 중 오류가 발생했습니다.');
+                this.$store.toastr.error('저장 중 오류가 발생했습니다.');
             }
         } finally {
             this.submitting = false;
@@ -178,10 +174,10 @@ export default () => ({
 
     // 유틸리티 메소드들
     showSuccess(message) {
-        this.$store.board.showSuccess(message);
+        this.$store.toastr.success(message);
     },
 
     showError(message) {
-        this.$store.board.showError(message);
+        this.$store.toastr.error(message);
     }
 });

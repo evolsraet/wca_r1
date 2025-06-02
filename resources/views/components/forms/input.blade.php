@@ -36,6 +36,7 @@
         placeholder="{{ $placeholder }}"
         @if($errors)
         :class="{ 'is-invalid': errors?.{{ str_replace('.', '?.', $name) }}?.length > 0 }"
+
         @endif
         {{ $attributes }}
     >

@@ -1,5 +1,21 @@
 @extends('v2.layouts.app')
 
+@php
+$article = \App\Models\Article::select('id')->where('id', $articleId)->with('media')->first();
+if ($article) {
+    $existingFiles = $article->media->map(function ($file) {
+        return [
+            'uuid' => $file->uuid,
+            'file_name' => $file->file_name,
+            'original_url' => $file->original_url,
+            'collection_name' => $file->collection_name,
+        ];
+    });
+} else {
+    $existingFiles = [];
+}
+@endphp
+
 @section('content')
 <script>
     window.boardConfig = {
@@ -8,7 +24,6 @@
         articleId: '{{ $articleId }}'
     };
 </script>
-
 <div class="board-form board-skin-{{ $board->skin }}"
      x-data="articleForm()"
      x-init="setup('{{ $board->id }}', '{{ $articleId }}')">
@@ -70,17 +85,6 @@
 
             <!-- 첨부파일 -->
             @if(auth()->user()?->hasPermissionTo($board->attach_permission ?? 'act.admin'))
-            @php
-                $article = \App\Models\Article::select('id')->where('id', $articleId)->with('media')->first();
-                $existingFiles = $article->media->map(function ($file) {
-                    return [
-                        'uuid' => $file->uuid,
-                        'file_name' => $file->file_name,
-                        'original_url' => $file->original_url,
-                        'collection_name' => $file->collection_name,
-                    ];
-                });
-            @endphp
                 <x-forms.fileUpload
                     label="첨부파일"
                     name="board_attach[]"
@@ -119,11 +123,15 @@
         </form>
     </div>
 
+    @if($article)
     <div class="mt-4">
-    {{-- 댓글 --}}
-    <x-comments
-    commentable-type="Article"
-    commentable-id="{{ $articleId }}"
-    title="댓글" />
+        {{-- 댓글 --}}
+        <x-comments
+        commentable-type="Article"
+        commentable-id="{{ $articleId }}"
+        title="댓글" />
+    </div>
+    @endif
+
 </div>
 @endsection
