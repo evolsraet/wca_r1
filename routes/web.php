@@ -16,7 +16,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Board\BoardController;
+use App\Http\Controllers\BoardController;
 
 /*
 |--------------------------------------------------------------------------
@@ -33,7 +33,7 @@ Route::get('/', function () {
     if (app()->environment('production')) {
         return redirect('/v1');
     }
-    return redirect('/v1');
+    return redirect('/v2');
 });
 
 Route::get('/v1', function () {
