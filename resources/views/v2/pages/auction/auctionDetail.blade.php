@@ -3,7 +3,12 @@
 
 @php
     $id = Hashids::decode(request()->route('id'));
-    $auction = \App\Models\Auction::find($id);
+    $auction = \App\Models\Auction::where('id', $id)->first();
+    
+
+    // echo '<pre>';
+    // print_r($auction->status);
+    // echo '</pre>';
 
     /*
     'cancel' => '취소',
@@ -16,13 +21,11 @@
     'ask'    => '신청완료',
     */
     // get 파라미터로 데이터 변경 
-    $status = request()->get('status') ? request()->get('status') : 'ask';
+    $status = request()->get('status') ? request()->get('status') : $auction->status;
     $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
     $chose = request()->get('chose') ? request()->get('chose') : 0;
 
-    // echo '<pre>';
-    // print_r($auction);
-    // echo '</pre>';
+    
 
 @endphp
 
@@ -55,7 +58,7 @@
                 <x-auctions.auctionOptions />
 
                {{-- 상세 정보 --}}
-                <x-auctions.auctionDetailInfo />
+                <x-auctions.auctionDatailInfo />
             @endif
             
         </x-slot:leftContent>

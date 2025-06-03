@@ -32,7 +32,7 @@ return [
                 'icon' => '/images/Icon-md-bulb.png',
                 'desc' => '위카란?',
             ],
-            'board' => [
+            'board/notice' => [
                 'label' => '공지사항',
                 'url' => '/board/notice',
                 'icon' => '/images/Icon-dash.png',
@@ -72,9 +72,9 @@ return [
                 'icon' => '/images/Icon-tag.png',
                 'desc' => '',
             ],
-            'claim' => [
+            'board/claim' => [
                 'label' => '클레임',
-                'url' => '/claim',
+                'url' => '/board/claim',
                 'icon' => '/images/document.png',
                 'desc' => '',
             ],

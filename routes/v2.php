@@ -7,7 +7,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BoardController;
-
+use Vinkla\Hashids\Facades\Hashids;
 
 // v2 Routes
 Route::get('/', function () {
