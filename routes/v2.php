@@ -71,7 +71,7 @@ Route::post('login', [AuthenticatedSessionController::class, 'login']);
 Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
 Route::get('/sell', function () {
-    return view('v2.pages.sell');
+    return view('v2.pages.sell.index');
 })->name('sell');
 
 Route::get('/style-guide', function () {

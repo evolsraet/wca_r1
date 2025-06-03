@@ -2,7 +2,8 @@
 @section('content')
 
 @php
-    $id = Hashids::decode(request()->route('id'));
+    $hashid = request()->route('id');
+    $id = Hashids::decode($hashid);
     $auction = \App\Models\Auction::where('id', $id)->first();
     
 
@@ -147,7 +148,7 @@
 
             @if($isUser == 'user' && $status == 'done')
                 {{-- 거래 완료 --}}
-                <x-auctions.auctionDone title="거래는 어떠셨나요?" message="거래 후기를 남겨주세요." button1="후기 남기기" button1Link="#" button2="명의이전 서류 확인" button2Link="#" />
+                <x-auctions.auctionDone title="거래는 어떠셨나요?" message="거래 후기를 남겨주세요." button1="후기 남기기" button1Link="/v2/board/review/form?id={{ $hashid }}" button2="명의이전 서류 확인" button2Link="#" />
 
             @endif
 
@@ -203,7 +204,7 @@
 
             @if($isUser == 'dealer' && ($status == 'done'))
                 {{-- 거래 완료 --}}
-                <x-auctions.AuctionDone title="낙찰 완료" message="차량에 문제가 있으신가요?" button1="클레인 신청" button1Link="#" button2="경락 확인서" button2Link="#" />
+                <x-auctions.AuctionDone title="낙찰 완료" message="차량에 문제가 있으신가요?" button1="클레인 신청" button1Link="/v2/board/claim/form?id={{ $hashid }}" button2="경락 확인서" button2Link="#" />
             @endif
 
 

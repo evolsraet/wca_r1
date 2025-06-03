@@ -8,7 +8,7 @@
     };
 </script>
 
-<div class="board-list board-skin-{{ $board->skin }}" x-data="articleList()">
+<div class="board-list board-skin-{{ $board->skin }} mt-5" x-data="articleList()">
 
     <!-- 게시판 헤더 -->
     <div class="d-flex justify-content-between align-items-center mb-4">

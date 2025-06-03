@@ -40,9 +40,9 @@ return [
             ],
         ],
         'user' => [
-            'mycar' => [
+            'sell' => [
                 'label' => '내차조회',
-                'url' => '/mycar',
+                'url' => '/sell',
                 'icon' => '/images/Icon-awesome-car-side-Black.png',
                 'desc' => '',
             ],
@@ -80,9 +80,9 @@ return [
             ],
         ],
         'guest' => [
-            'mycar' => [
+            'sell' => [
                 'label' => '내차조회',
-                'url' => '/mycar',
+                'url' => '/sell',
                 'icon' => '/images/Icon-awesome-car-side-Black.png',
                 'desc' => '내 차량 조회',
             ],

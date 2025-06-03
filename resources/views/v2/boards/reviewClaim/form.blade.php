@@ -33,10 +33,12 @@ if($articleId) {
     $bid = \App\Models\Bid::where('auction_id', $auction->id)->first();
     $dealerId = $bid->user_id;
 } else {
+    if($id) {
     $auction = \App\Models\Auction::where('id', $id)->first();
     $bid = \App\Models\Bid::where('auction_id', $auction->id)->first();
-    $dealerId = $bid->user_id;
+    $dealerId = $bid?->user_id ?? 0;
     $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
+    }
 }
 
 switch($board->id) {
