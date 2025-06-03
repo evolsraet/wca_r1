@@ -52,9 +52,9 @@ return [
                 'icon' => '/images/Icon-md-bulb.png',
                 'desc' => '',
             ],
-            'reviews' => [
+            'board/review' => [
                 'label' => '이용후기',
-                'url' => '/reviews',
+                'url' => '/board/review',
                 'icon' => '/images/rating.png',
                 'desc' => '',
             ],
@@ -86,9 +86,9 @@ return [
                 'icon' => '/images/Icon-awesome-car-side-Black.png',
                 'desc' => '내 차량 조회',
             ],
-            'reviews' => [
+            'board/review' => [
                 'label' => '이용후기',
-                'url' => '/reviews',
+                'url' => '/board/review',
                 'icon' => '/images/rating.png',
                 'desc' => '다양한 판매 후기',
             ],

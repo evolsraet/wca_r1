@@ -143,7 +143,6 @@ $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
                             rating: {{ $initialRating }},
                             labels: ['별로예요', '괜찮아요', '좋아요', '만족해요', '최고예요!']
                         }">
-                            <h5 class="fw-bold mb-3">거래는 어떠셨나요?</h5>
 
                             <div class="d-flex justify-content-center gap-3">
                                 <template x-for="i in 5">
