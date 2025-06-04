@@ -1,6 +1,6 @@
 // 게시판 기본(default) 스킨 전용 스타일
 
-.board-skin-default {
+.board-skin-basic {
     // ========== 공통 스타일 ==========
 
     // 정렬 가능한 테이블 헤더
@@ -142,7 +142,7 @@
 
 
 
-.board-skin-reviewClaim.board-list {
+.board-skin-basic.board-list {
     table {
         border: none;
         border-collapse: collapse; // 테두리 중첩 제거

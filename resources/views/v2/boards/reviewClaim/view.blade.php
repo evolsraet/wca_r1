@@ -35,7 +35,7 @@ $isUser = auth()?->user()?->hasRole('user') ? 'user' : 'dealer';
     <!-- 게시글 내용 -->
     <div x-show="!loading && article" x-cloak>
 
-    <div class="container pt-4">
+    <div class="container pt-4 form-custom">
         <x-layouts.split
             leftClass="col-lg-7"
             rightClass="col-lg-5"
@@ -49,34 +49,31 @@ $isUser = auth()?->user()?->hasRole('user') ? 'user' : 'dealer';
                 <div class="card-header bg-light">
                     <div class="d-flex justify-content-between align-items-start">
                         <div class="flex-grow-1">
-                            <h4 class="mb-2 fw-bold">
+                            <h4 class="review-title fw-bold">
                                 <span x-show="article && article.is_secret" class="text-warning me-2">
                                     <i class="mdi mdi-lock"></i>
                                 </span>
                                 <span x-text="article && article.title"></span>
                             </h4>
 
-                            <div class="row text-muted small">
-                                <div class="col-md-6">
-                                    <span x-show="article && article.category"
-                                        class="badge bg-primary bg-opacity-25 text-primary me-2"
-                                        x-text="article && article.category"></span>
+                            <div class="review-meta text-muted small d-flex flex-wrap align-items-center gap-3 mt-2 mb-2">
+                                <div>
                                     <i class="mdi mdi-account me-1"></i>
                                     <span x-text="(article && article.user && article.user.name) || '익명'"></span>
                                 </div>
-                                <div class="col-md-6 text-md-end">
+                                <div>
                                     <i class="mdi mdi-calendar me-1"></i>
                                     <span x-text="$store.common.formatDate(article && article.created_at)"></span>
-                                    <span class="ms-3">
-                                        <i class="mdi mdi-eye me-1"></i>
-                                        <span x-text="(article && article.hit) || 0"></span>
-                                    </span>
+                                </div>
+                                <div>
+                                    <i class="mdi mdi-eye me-1"></i>
+                                    <span x-text="(article && article.hit) || 0"></span>
                                 </div>
                             </div>
                         </div>
 
                         <!-- 액션 버튼 -->
-                        <div class="ms-3">
+                        <div class="btn-group-wrapper ms-3">
                             <div class="btn-group" role="group">
                                 <button @click="goToList()" class="btn btn-outline-secondary btn-sm">
                                     <i class="mdi mdi-format-list-bulleted me-1"></i>
@@ -85,7 +82,7 @@ $isUser = auth()?->user()?->hasRole('user') ? 'user' : 'dealer';
 
                                 <template x-if="canEdit()">
                                     <a :href="`/v2/board/{{ $board->id }}/form/${article && article.id}`"
-                                    class="btn btn-outline-primary btn-sm">
+                                    class="btn btn-outline-danger btn-sm btn-soft-red">
                                         <i class="mdi mdi-pencil me-1"></i>
                                         <span class="d-none d-sm-inline">수정</span>
                                     </a>
@@ -93,7 +90,7 @@ $isUser = auth()?->user()?->hasRole('user') ? 'user' : 'dealer';
 
                                 <template x-if="canDelete()">
                                     <button @click="deleteArticle()"
-                                            class="btn btn-outline-danger btn-sm">
+                                            class="btn btn-outline-danger btn-sm btn-soft-red">
                                         <i class="mdi mdi-delete me-1"></i>
                                         <span class="d-none d-sm-inline">삭제</span>
                                     </button>
@@ -104,21 +101,10 @@ $isUser = auth()?->user()?->hasRole('user') ? 'user' : 'dealer';
                 </div>
 
                 @if($auction?->status)
-                <div class="accordion custom-accordion mb-3" id="carInfo">
-                    <div class="accordion-item">
-                        <h2 class="accordion-header">
-                            <button class="accordion-button" type="button"  data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                            차량정보
-                            </button>
-                        </h2>
-                        <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
-                            <div class="accordion-body">
-                            <x-auctions.auctionThumbnail :status="$auction->status" :auction="$auction" :isUser="$isUser" />
-                            <x-auctions.auctionCarInfo :status="$auction->status" :auction="$auction" />
-                            </div>
-                        </div>
+                    <div class="mb-3">
+                        <x-auctions.auctionThumbnail :status="$auction->status" :auction="$auction" :isUser="$isUser" />
+                        <x-auctions.auctionCarInfo :status="$auction->status" :auction="$auction" />
                     </div>
-                </div>
                 @endif
 
             </x-slot:leftContent>

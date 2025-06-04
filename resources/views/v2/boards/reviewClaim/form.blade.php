@@ -31,7 +31,7 @@ if($articleId) {
     $auction = \App\Models\Auction::where('id', $articleData->extra1)->first();
     $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
     $bid = \App\Models\Bid::where('auction_id', $auction->id)->first();
-    $dealerId = $bid->user_id;
+    $dealerId = $bid?->user_id ?? 0;
 } else {
     if($id) {
     $auction = \App\Models\Auction::where('id', $id)->first();
@@ -47,7 +47,7 @@ switch($board->id) {
         break;
 
     case 'review':
-        $articleTitle = '리뷰';
+        $articleTitle = '이용후기';
         break;
     default:
         $articleTitle = '게시판';
@@ -77,7 +77,7 @@ switch($board->id) {
     <x-loading />
 
 
-    <div class="container pt-4">
+    <div class="container pt-4 form-custom">
         <x-layouts.split
             leftClass="col-lg-7"
             rightClass="col-lg-5"
@@ -90,27 +90,14 @@ switch($board->id) {
 
                 <!-- 폼 헤더 -->
                 <div class="form-header mb-4">
-                    <h2 x-text="isEdit ? '{{ $articleTitle }} 수정' : '{{ $articleTitle }} 작성'"></h2>
+                    <h4 class="fw-bold" x-text="isEdit ? '{{ $articleTitle }} 수정' : '{{ $articleTitle }} 작성'"></h4>
                     <p class="text-muted" style="display: none;">{{ $board->name ?? $board->id }}</p>
                 </div>
 
                 @if($articleId || $id)
                 <div>
-                    <div class="accordion custom-accordion mb-3" id="carInfo">
-                        <div class="accordion-item">
-                            <h2 class="accordion-header">
-                                <button class="accordion-button" type="button"  data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
-                                차량정보
-                                </button>
-                            </h2>
-                            <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show">
-                                <div class="accordion-body">
-                                <x-auctions.auctionThumbnail :status="$auction->status" :auction="$auction" :isUser="$isUser" />
-                                <x-auctions.auctionCarInfo :status="$auction->status" :auction="$auction" />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+                    <x-auctions.auctionThumbnail :status="$auction->status" :auction="$auction" :isUser="$isUser" />
+                    <x-auctions.auctionCarInfo :status="$auction->status" :auction="$auction" />
                 </div>
                 @endif
 
@@ -187,7 +174,7 @@ switch($board->id) {
                         <x-forms.input
                             type="text"
                             name="article.title"
-                            label="제목"
+                            label=""
                             placeholder="제목을 입력하세요"
                             {{-- required --}}
                             :errors="true"
@@ -196,7 +183,7 @@ switch($board->id) {
                         <!-- 내용 -->
                         <x-forms.textarea
                             name="article.content"
-                            label="내용"
+                            label=""
                             rows="15"
                             placeholder="내용을 입력하세요"
                             {{-- required --}}
@@ -217,17 +204,17 @@ switch($board->id) {
 
                         <!-- 액션 버튼 -->
                         <div class="form-actions d-flex justify-content-between">
-                            <button type="button" @click="goToList()" class="btn btn-outline-secondary">
+                            {{-- <button type="button" @click="goToList()" class="btn btn-outline-secondary">
                                 <i class="mdi mdi-arrow-left me-1"></i>취소
-                            </button>
+                            </button> --}}
 
                             <button type="submit"
-                                    class="btn btn-primary"
+                                    class="btn btn-primary rounded-pill w-100 border-0"
                                     :disabled="submitting">
                                 <span x-show="submitting">
                                     <i class="mdi mdi-loading mdi-spin me-1"></i>
                                 </span>
-                                <i x-show="!submitting" class="mdi mdi-content-save me-1"></i>
+                                {{-- <i x-show="!submitting" class="mdi mdi-content-save me-1"></i> --}}
                                 <span x-text="isEdit ? '수정' : '등록'"></span>
                             </button>
                         </div>

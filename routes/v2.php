@@ -70,9 +70,21 @@ Route::prefix('auction')->group(function () {
 Route::post('login', [AuthenticatedSessionController::class, 'login']);
 Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
-Route::get('/sell', function () {
-    return view('v2.pages.sell.index');
-})->name('sell');
+
+Route::prefix('sell')->group(function () {
+
+    Route::get('/', function () {
+        return view('v2.pages.sell.index');
+    })->name('sell');
+
+    Route::post('/result', function () {
+        return view('v2.pages.sell.result');
+    })->name('sell.result');
+
+    Route::post('/apply', function () {
+        return view('v2.pages.sell.apply');
+    })->name('sell.apply');
+});
 
 Route::get('/style-guide', function () {
     return view('v2.pages.styleGuide');

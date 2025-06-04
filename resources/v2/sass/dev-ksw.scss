@@ -4,6 +4,7 @@
 @import "dev-ksw/docsContainer"; // 이용약관 & 개인정보 처리방침 스타일
 @import "dev-ksw/latests"; // 최근 등록 상품 스타일
 @import "dev-ksw/auction"; // 경매페이지 스타일
+@import "dev-ksw/sell"; // 판매페이지 스타일
 
 $primary: map-get($theme-colors, "primary");
 $secondary: map-get($theme-colors, "secondary");
@@ -43,7 +44,6 @@ $dark: map-get($theme-colors, "dark");
     border-color: $gray-400 !important;
     transition: border-color 0.2s ease;
     border-width: 1px !important;
-    padding: 0.7rem !important;
     border-radius: 0.3rem !important;
 
         &:focus {

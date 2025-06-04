@@ -57,24 +57,26 @@
                                         @submit.prevent="submit">
                                         <!-- 이메일 -->
                                         <div class="mb-3">
-                                            <label for="email" class="form-label">이메일</label>
+                                            {{-- <label for="email" class="form-label">이메일</label> --}}
                                             <input type="email"
                                                 class="form-control"
                                                 id="email"
                                                 x-model="form.email"
                                                 :class="{ 'is-invalid': errors.email }"
+                                                placeholder="이메일을 입력하세요"
                                                 required>
                                             <div class="invalid-feedback" x-text="errors.email"></div>
                                         </div>
 
                                         <!-- 비밀번호 -->
                                         <div class="mb-3">
-                                            <label for="password" class="form-label">비밀번호</label>
+                                            {{-- <label for="password" class="form-label">비밀번호</label> --}}
                                             <input type="password"
                                                 class="form-control"
                                                 id="password"
                                                 x-model="form.password"
                                                 :class="{ 'is-invalid': errors.password }"
+                                                placeholder="비밀번호를 입력하세요"
                                                 required>
                                             <div class="invalid-feedback" x-text="errors.password"></div>
                                         </div>
