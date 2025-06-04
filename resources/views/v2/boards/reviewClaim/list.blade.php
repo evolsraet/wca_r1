@@ -1,6 +1,22 @@
 @extends('v2.layouts.app')
 
 @section('content')
+
+@php
+
+    switch($board->id) {
+        case 'review':
+            $boardTitle = '이용후기';
+            break;
+        case 'claim':
+            $boardTitle = '클레임';
+            break;
+        default:
+            $boardTitle = $board->name ?? $board->id;
+            break;
+    }
+
+@endphp
 <script>
     window.boardConfig = {
         boardId: '{{ $board->id }}',
@@ -8,12 +24,12 @@
     };
 </script>
 
-<div class="board-list board-skin-{{ $board->skin }} mt-5" x-data="articleList()">
+<div class="board-list board-skin-{{ $board->skin }} testbox mt-5" x-data="articleList()">
 
     <!-- 게시판 헤더 -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h4 class="mb-1 fw-bold">{{ $board->name ?? $board->id }}</h4>
+            <h4 class="mb-1 fw-bold">{{ $boardTitle }}</h4>
             <small class="text-muted">
                 <i class="mdi mdi-file-document-outline me-1"></i>
                 총 <span x-text="pagination.total || 0"></span>개의 게시글
@@ -21,7 +37,7 @@
         </div>
         <div class="d-flex gap-2">
             @if(auth()->user()?->hasPermissionTo($board->write_permission ?? 'act.login'))
-                <a href="{{ route('board.form', $board->id) }}" class="btn btn-primary">
+                <a href="{{ route('board.form', $board->id) }}" class="btn btn-outline-primary rounded-pill">
                     <i class="mdi mdi-pencil me-1"></i>글쓰기
                 </a>
             @endif
@@ -29,10 +45,10 @@
     </div>
 
     <!-- 검색 및 필터 영역 -->
-    <div class="bg-light rounded mb-4">
-        <div class="row g-3">
+    <div class="bg-light rounded mb-4 form-custom">
+        <div class="row g-3 d-flex justify-content-end">
             @if(!empty($board->categories))
-                <div class="col-md-4">
+                <div class="col-md-2" >
                     <x-forms.select
                         name="category"
                         model="filters.where.category"
@@ -44,7 +60,7 @@
                     />
                 </div>
                 <!-- whereBuilder 스토어 사용 예시 -->
-                <div class="col-md-3" x-data="{ hitMin: '' }">
+                <div class="col-md-2" x-data="{ hitMin: '' }">
                     <input type="number"
                            x-model="hitMin"
                            @input="filters.where.hit = '>:' + $event.target.value"
@@ -52,25 +68,23 @@
                            placeholder="최소 조회수">
                 </div>
 
-                <div class="col-md-8">
+                <div class="col-md-8 d-flex justify-content-end">
             @else
-                <div class="col-12">
+                <div class="col-12 d-flex justify-content-end">
             @endif
-                    <div class="input-group">
-                        <input type="text"
-                               x-model="filters.search_text"
-                               @keyup.enter="loadPage(1)"
-                               class="form-control"
-                               placeholder="제목, 내용을 검색하세요">
-                        <button @click="loadPage(1)" class="btn btn-primary" type="button">
+
+                    <div class="rounded-search d-flex align-items-center px-3 gap-2">
+                        <input type="text" class="form-control border-0 bg-transparent shadow-none" placeholder="제목, 내용을 검색하세요" x-model="filters.search_text" @keyup.enter="loadPage(1)">
+                        
+                        <button @click="loadPage(1)" class="btn btn-icon text-dark">
                             <i class="mdi mdi-magnify"></i>
-                            <span class="d-none d-sm-inline ms-1">검색</span>
                         </button>
-                        <button @click="resetSearch()" class="btn btn-outline-secondary" type="button">
+                    
+                        <button @click="resetSearch()" class="btn btn-icon text-muted">
                             <i class="mdi mdi-refresh"></i>
-                            <span class="d-none d-sm-inline ms-1">초기화</span>
                         </button>
                     </div>
+                    
                 </div>
         </div>
     </div>
@@ -83,7 +97,7 @@
 
         <!-- 데스크톱용 테이블 (md 이상) -->
         <div class="d-none d-md-block">
-            <div class="card">
+            <div class="">
                 <div class="table-responsive">
                     <table class="table table-hover mb-0">
                         <thead class="table-light">
@@ -271,7 +285,7 @@
     </div>
 
     <!-- 페이지 정보 -->
-    <div x-show="!loading && pagination.last_page > 1" class="text-center mt-2">
+    <div x-show="!loading && pagination.last_page > 1" class="text-center mt-2 hidden">
         <small class="text-muted">
             <span x-text="pagination.current_page"></span> / <span x-text="pagination.last_page"></span> 페이지
         </small>

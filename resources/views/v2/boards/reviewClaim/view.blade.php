@@ -6,7 +6,7 @@
 $articleData = \App\Models\Article::select( 'extra1', 'extra2')->where('id', $articleId)->first();
 //dd($articleData->extra1);
 $auction = \App\Models\Auction::where('id', $articleData->extra1)->first();
-$isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
+$isUser = auth()?->user()?->hasRole('user') ? 'user' : 'dealer';
 @endphp
 
 <script>

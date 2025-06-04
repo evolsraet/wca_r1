@@ -139,3 +139,153 @@
         }
     }
 }
+
+
+
+.board-skin-reviewClaim.board-list {
+    table {
+        border: none;
+        border-collapse: collapse; // 테두리 중첩 제거
+        // background-color: #fff;
+
+        thead th {
+            background-color: #f9f9f9;
+            border: none; // 테이블 헤더 테두리 제거
+            padding: 1rem 0.80rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: $gray-600;
+        }
+
+        thead th button {
+            color: #333;
+        }
+
+        tbody td {
+            padding: 1rem;
+            border: none; // 모든 셀 테두리 제거
+            border-bottom: 1px solid #eee; // 하단선만 유지
+            font-size: 0.9rem;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: rgba(0, 0, 0, 0.02) !important; // 훨씬 연한 회색
+        }
+
+        a.text-dark {
+            color: #333;
+            text-decoration: none;
+            transition: all 0.2s ease;
+
+            &:hover {
+                color: var(--bs-primary);
+                text-decoration: underline;
+            }
+        }
+
+        .text-muted {
+            font-size: 0.8rem;
+            color: #888 !important;
+        }
+    }
+
+    .pagination .page-item .page-link {
+        color: #333;
+        border: none;
+        background: transparent;
+        box-shadow: none;
+        outline: none;
+        width: 40px;
+        height: 40px;
+        padding: 0;
+        line-height: 40px;
+        text-align: center;
+        font-weight: 500;
+        font-size: 1rem;
+
+        &:hover {
+            background-color: #fff;
+        }
+
+        &:focus {
+            box-shadow: none;
+        }
+    }
+
+    .pagination .page-item.active .page-link {
+        background-color: var(--bs-primary);
+        color: #fff;
+        border-radius: 50%; // 완전한 원
+    }
+
+    .page-item {
+        border-radius: 50%; // 완전한 원
+        &:hover {
+            background-color: #fff;
+        }
+    }
+
+    .hidden {
+        display: none;
+    }
+
+
+
+    .rounded-search {
+        background-color: #f5f5f5;
+        border-radius: 999px;
+        height: 48px;
+        padding: 0 1rem;
+        width: 100%;
+        max-width: 360px;
+    
+        input {
+            background: transparent;
+            border: none;
+            flex: 1;
+            font-size: 1rem;
+            color: #333;
+    
+            &:focus {
+                outline: none;
+                box-shadow: none;
+            }
+    
+            &::placeholder {
+                color: #888;
+            }
+        }
+    
+        .btn-icon {
+            background: none;
+            border: none;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transition: background-color 0.2s ease;
+    
+            &:hover {
+                background-color: rgba(0, 0, 0, 0.05);
+            }
+    
+            &:focus {
+                box-shadow: none;
+                outline: none;
+            }
+    
+            i {
+                pointer-events: none;
+            }
+        }
+    }
+}
+
+.board-skin-reviewClaim.board-list table tbody tr:hover {
+    background-color: var(--bs-gray-100) !important;
+}

@@ -73,8 +73,8 @@
                     <!-- 약관 -->
                     <div class="mt-3">
                         <small class="text-muted">
-                            <a href="#" class="link-text">개인정보 처리방침</a> |
-                            <a href="#" class="link-text">이용약관</a>
+                            <a href="#" class="text-decoration-none link-text" @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `개인정보처리방침`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})">개인정보 처리방침</a> |
+                            <a href="#" class="text-decoration-none link-text" @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/terms?raw=1`, {title: `이용약관`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})">이용약관</a>
                         </small>
                     </div>
                 </form>
