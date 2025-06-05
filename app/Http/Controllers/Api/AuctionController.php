@@ -632,7 +632,8 @@ class AuctionController extends Controller
 
     public function getCarHistoryCrash(Request $request)
     {
-        $testCarNumber = '08오5060';
+        $testCarNumber = $request->input('car_no');
+        // $testCarNumber = '08오5060';
         $carHistoryService = new CarHistoryService();
         // $result = $carHistoryService->getCarHistoryCrash($request->input('car_no'));
         $result = $carHistoryService->getCarHistoryCrash($testCarNumber);
