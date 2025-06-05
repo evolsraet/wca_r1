@@ -141,3 +141,6 @@ Route::prefix('board/{boardId}')->name('board.')->group(function () {
     Route::get('/form/{articleId?}', [BoardController::class, 'form'])->name('form');
 });
 
+Route::get('/carhistory', function () {
+    return view('v2.pages.carhistory');
+})->name('carhistory');
