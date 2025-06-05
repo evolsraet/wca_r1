@@ -1,50 +1,67 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <title>차량 이력 조회</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        body { background-color: #f8f9fa; }
-        .card { max-width: 700px; margin: 50px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 1rem; }
-        .card-header { background-color: #0d6efd; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem; }
-    </style>
+  <meta charset="UTF-8">
+  <title>차량 이력 조회</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f8f9fa; }
+    .card { max-width: 700px; margin: 50px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 1rem; }
+    .card-header { background-color: #0d6efd; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem; }
+  </style>
 </head>
 <body>
 <div class="container">
-    <div class="card">
-        <div class="card-header text-center py-3">
-            <h4 class="mb-0">차량 이력 조회</h4>
-        </div>
-        <div class="card-body">
-            <div class="mb-3">
-                <label for="carNo" class="form-label">차량번호</label>
-                <input type="text" class="form-control" id="carNo" placeholder="예: 08오5060">
-            </div>
-            <div class="mb-3">
-                <label for="apiType" class="form-label">조회 종류</label>
-                <select class="form-select" id="apiType" onchange="fetchCarHistory()">
-                    <option value="carHistory" selected>기본 이력 조회</option>
-                    <option value="carHistoryCrash">사고 이력 조회</option>
-                </select>
-            </div>
-            <div class="d-grid">
-                <button class="btn btn-primary" onclick="fetchCarHistory()">조회하기</button>
-            </div>
-            <div class="mt-5" id="resultArea" style="display: none;">
-                <h5 class="mb-3">요약 정보</h5>
-                <table class="table table-bordered table-striped" id="resultTable">
-                    <thead class="table-light">
-                        <tr><th>항목</th><th>값</th></tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
-            </div>
-        </div>
+  <div class="card">
+    <div class="card-header text-center py-3">
+      <h4 class="mb-0">차량 이력 조회</h4>
     </div>
+    <div class="card-body">
+      <div class="mb-3">
+        <label for="carNo" class="form-label">차량번호</label>
+        <input type="text" class="form-control" id="carNo" placeholder="예: 08오5060">
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label d-block">조회 종류</label>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="apiType" id="history" value="carHistory" checked onchange="fetchCarHistory()">
+          <label class="form-check-label" for="history">기본 이력 조회</label>
+        </div>
+        <div class="form-check form-check-inline">
+          <input class="form-check-input" type="radio" name="apiType" id="crash" value="carHistoryCrash" onchange="fetchCarHistory()">
+          <label class="form-check-label" for="crash">사고 이력 조회</label>
+        </div>
+      </div>
+
+      <div class="d-grid">
+        <button class="btn btn-primary" onclick="fetchCarHistory()">조회하기</button>
+      </div>
+
+      <div class="mt-5" id="resultArea" style="display: none;">
+        <h5 class="mb-3">요약 정보</h5>
+        <table class="table table-bordered table-striped" id="resultTable">
+          <thead class="table-light">
+            <tr><th>항목</th><th>값</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
+
 <script>
-const codeMap = { r000: "결과코드", r001: "조회일자", r002: "차량번호", r003: "기준일자", r004: "차량연식", r005: "차명", r101: "제조사, 제조국", r102: "차종", r103: "용도", r104: "배기량", r105: "최초보험가입일", r106: "사용연료", r107: "차체형상", r108: "차량옵션", r109: "색상", r111: "제조사(영문)", r112: "세부모델", r301: "관용이력", r302: "영업용(일반)이력", r303: "영업용(대여)이력", r401: "자차피해사고횟수", r402: "자차피해보험금합", r403: "타차가해사고횟수", r404: "타차가해보험금합", r405: "일반전손사고건수", r406_01: "일반전손사고일자", r407: "침수전/분손사고건수", r408_01: "침수전/분손사고일자", r409: "도난전손사고건수", r410_01: "도난전손사고일자", r501: "사고건수", r510: "자차미가입기간횟수", r511_01: "미가입기간", r701: "차량가격(범위)", r601: "주행거리정보유무" };
+const codeMap = {
+  r000: "결과코드", r001: "조회일자", r002: "차량번호", r003: "기준일자", r004: "차량연식", r005: "차명",
+  r101: "제조사, 제조국", r102: "차종", r103: "용도", r104: "배기량", r105: "최초보험가입일", r106: "사용연료",
+  r107: "차체형상", r108: "차량옵션", r109: "색상", r111: "제조사(영문)", r112: "세부모델", r301: "관용이력",
+  r302: "영업용(일반)이력", r303: "영업용(대여)이력", r401: "자차피해사고횟수", r402: "자차피해보험금합",
+  r403: "타차가해사고횟수", r404: "타차가해보험금합", r405: "일반전손사고건수", r406_01: "일반전손사고일자",
+  r407: "침수전/분손사고건수", r408_01: "침수전/분손사고일자", r409: "도난전손사고건수",
+  r410_01: "도난전손사고일자", r501: "사고건수", r510: "자차미가입기간횟수", r511_01: "미가입기간",
+  r701: "차량가격(범위)", r601: "주행거리정보유무"
+};
 
 const subTableConfigs = {
   r202: { title: '차량번호 변경이력', columns: { 'r202-02': '변경일자', 'r202-01': '구분', 'r202-03': '변경차량번호', 'r202-05': '차종', 'r202-04': '용도' } },
@@ -56,10 +73,9 @@ const subTableConfigs = {
 
 function fetchCarHistory() {
   const carNo = document.getElementById('carNo').value;
-  const apiType = document.getElementById('apiType').value;
+  const apiType = document.querySelector('input[name="apiType"]:checked').value;
   const resultArea = document.getElementById('resultArea');
 
-  // 🔁 초기화
   resultArea.innerHTML = `
     <h5 class="mb-3">요약 정보</h5>
     <table class="table table-bordered table-striped" id="resultTable">
