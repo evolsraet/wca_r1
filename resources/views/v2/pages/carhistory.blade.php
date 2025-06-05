@@ -14,7 +14,7 @@
 <div class="container">
     <div class="card">
         <div class="card-header text-center py-3">
-            <h4 class="mb-0">🚗 차량 이력 조회</h4>
+            <h4 class="mb-0">차량 이력 조회</h4>
         </div>
         <div class="card-body">
             <div class="mb-3">
