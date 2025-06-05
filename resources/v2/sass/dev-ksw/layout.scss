@@ -5,12 +5,12 @@ $primary: map-get($theme-colors, "primary");
     background-color: $white !important;
     font-family: $font-family-sans-serif;
     border-bottom: 1px solid $gray-200;
-    padding: 0.7rem 0;
+    padding: 0.3rem 0;
 
     .navbar-brand {
         padding: 0;
         background-image: url('/public/images/busan_wecar_logo.png');
-        background-size: 120px;
+        background-size: 100px;
         background-repeat: no-repeat;
         background-position: left;
         width: 120px;
@@ -21,7 +21,7 @@ $primary: map-get($theme-colors, "primary");
     }
 
     @media (max-width: 768px) {
-        padding: 0.2rem 0 !important;
+        padding: 0.1rem 0 !important;
         .navbar-brand {
             background-size: 100px;
         }
@@ -146,7 +146,7 @@ $primary: map-get($theme-colors, "primary");
 
     .navbar-brand {
         background-image: url('/public/images/busan_wecar_logo_white.png');
-        background-size: 120px;
+        background-size: 100px;
     }
 
     .nav-link {
@@ -182,6 +182,13 @@ $primary: map-get($theme-colors, "primary");
         justify-content: flex-end;
         align-items: center;
         background-color: $white;
+        padding: 0.75rem 0.5rem;
+    }
+
+    @media (max-width: 768px) {
+        .offcanvas-header {
+            padding: 0.65rem 0;
+        }
     }
 
     .isUser {
@@ -189,9 +196,14 @@ $primary: map-get($theme-colors, "primary");
     }
 
     .offcanvas-close-btn {
-        margin-top: 6px !important;
-        margin-right: 4px !important;
         justify-content: flex-end;
+
+        button {
+            font-size: 24px;
+            color: $gray-500;
+            border: none;
+            background-color: transparent;
+        }
     }
 
     .user-login-box {

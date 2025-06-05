@@ -68,34 +68,39 @@
 
 {{-- 모바일 메뉴 --}}
 <div class="offcanvas offcanvas-end text-bg-dark mobile-menu" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
-  <div class="offcanvas-header {{ $role === 'dealer' ? 'isUser' : '' }} {{ $role != 'guest' ? 'd-flex justify-content-between' : '' }}">
-    @auth
-    <div class="user-login-box">
-        <div class="user-login-box-text">
-            <div x-data="{ open: false }" class="user-dropdown-wrapper">
-              <a class="user-login-box-text-title"
-                href="#"
-                @click.prevent="open = !open">
-                {{ Auth::user()->name }} 님 <i class="mdi mdi-cog-outline gear-icon"></i>
-              </a>
-
-              <ul class="dropdown-menu user-dropdown-menu"
-                  :class="{ 'show': open }">
-                <li><a class="dropdown-item" href="#">내 정보 수정</a></li>
-                <li>
-                  <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button class="dropdown-item" type="submit">로그아웃</button>
-                  </form>
-                </li>
-              </ul>
+  <div class="offcanvas-header {{ $role === 'dealer' ? 'isUser' : '' }}">
+    <div class="row col-12">
+      <div class="col-9">
+        @auth
+        <div class="user-login-box">
+            <div class="user-login-box-text">
+                <div x-data="{ open: false }" class="user-dropdown-wrapper">
+                  <a class="user-login-box-text-title"
+                    href="#"
+                    @click.prevent="open = !open">
+                    {{ Auth::user()->name }} 님 <i class="mdi mdi-cog-outline gear-icon"></i>
+                  </a>
+    
+                  <ul class="dropdown-menu user-dropdown-menu"
+                      :class="{ 'show': open }">
+                    <li><a class="dropdown-item" href="#">내 정보 수정</a></li>
+                    <li>
+                      <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button class="dropdown-item" type="submit">로그아웃</button>
+                      </form>
+                    </li>
+                  </ul>
+                </div>
             </div>
         </div>
-    </div>
-    @endauth
-
-    <div class="offcanvas-close-btn">
-      <button type="button" class="btn-close btn-close offcanvas-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        @endauth
+      </div>
+      <div class="col-3">
+        <div class="offcanvas-close-btn">
+          <button type="button" class="mdi mdi-close offcanvas-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+      </div>
     </div>
 
   </div>

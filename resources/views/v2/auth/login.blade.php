@@ -16,7 +16,7 @@
       </div>
     </div>
   
-    <div style="position: absolute; top: 62px; left: 0; width: 100%; z-index: 1;">
+    <div style="position: absolute; top: 49px; left: 0; width: 100%; z-index: 1;">
       <div class="container">
         <x-layouts.split
             leftClass="col-lg-7"
