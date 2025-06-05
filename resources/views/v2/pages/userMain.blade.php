@@ -40,12 +40,14 @@
 </div>
 
 {{-- 메인 컨텐츠 --}}
-<div class="container mt-5 mb-5">
+<div class="container mt-5 mb-5" x-data="{}">
 
   <div class="row mb-5" style="{{ $user?->hasRole('dealer') ? '' : 'display: none;' }}">
     <div class="col-md-6">
 
-      <a href="#" class="card border-0 shadow-sm text-decoration-none" @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `개인정보처리방침`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})">
+      <a href="#" 
+         class="card border-0 shadow-sm text-decoration-none" 
+         @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/usageGuide?raw=1`, {title: `이용가이드`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})">
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">
@@ -59,7 +61,10 @@
         </div>
       </a>
 
-      <a href="#" class="card border-0 mt-3 shadow-sm text-decoration-none">
+      <a href="#" 
+         class="card border-0 mt-3 shadow-sm text-decoration-none"
+         @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/claimPolicy?raw=1`, {title: `진단오류 보상`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})"
+      >
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">
@@ -76,7 +81,10 @@
     </div>
     <div class="col-md-6">
 
-      <a href="#" class="card border-0 shadow-sm text-decoration-none">
+      <a href="#" 
+         class="card border-0 shadow-sm text-decoration-none"
+         @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/usageFee?raw=1`, {title: `수수료 안내`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})"
+      >
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">
@@ -90,7 +98,10 @@
         </div>
       </a>
 
-      <a href="#" class="card border-0 mt-3 shadow-sm text-decoration-none">
+      <a href="#" 
+         class="card border-0 mt-3 shadow-sm text-decoration-none"
+         @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/penaltyGuide?raw=1`, {title: `패널티 부과`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})"
+      >
         <div class="card-body p-4">
           <div class="row">
             <div class="col-md-9">

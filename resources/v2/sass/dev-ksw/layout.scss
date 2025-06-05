@@ -73,6 +73,11 @@ $primary: map-get($theme-colors, "primary");
     .btn-outline-primary i {
         margin-right: 0.4rem;
     }
+
+    .navbar-toggle-btn i {
+        color: $secondary;
+        font-size: 30px !important;
+    }
 }
 
 /* 헤더 로그인 버튼 */
@@ -184,8 +189,8 @@ $primary: map-get($theme-colors, "primary");
     }
 
     .offcanvas-close-btn {
-        margin-top: 10px !important;
-        margin-right: 10px !important;
+        margin-top: 6px !important;
+        margin-right: 4px !important;
         justify-content: flex-end;
     }
 

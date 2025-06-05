@@ -18,7 +18,7 @@
             <strong>탁송지 미등록 매물</strong>
             <div class="text-muted small mt-1">낙찰된 매물중 탁송지 미등록 매물입니다</div>
         </div>
-        <a href="#" class="notice-link text-danger fw-bold">탁송운영 안내</a>
+        <a href="#" class="notice-link text-danger fw-bold" @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/deliveryGuide?raw=1`, {title: `탁송운영 안내`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})">탁송운영 안내</a>
     </div>
 
     @if (empty($unassignedCars))

@@ -59,19 +59,16 @@
       </ul>
     </div>
 
-    <a class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDark" aria-controls="offcanvasDark">
-      <img src="{{ $role === 'dealer' ? asset('images/toggle-nav-wh.png') : asset('images/toggle-nav-black.png') }}" alt="메뉴" class="toggle-nav-img">
+    <a class="navbar-toggler navbar-toggle-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDark" aria-controls="offcanvasDark">
+      <i class="mdi mdi-menu"></i>
+      {{-- <img src="{{ $role === 'dealer' ? asset('images/toggle-nav-wh.png') : asset('images/toggle-nav-black.png') }}" alt="메뉴" class="toggle-nav-img"> --}}
     </a>
   </div>
 </nav>
 
 {{-- 모바일 메뉴 --}}
 <div class="offcanvas offcanvas-end text-bg-dark mobile-menu" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
-  <div class="offcanvas-header {{ $role === 'dealer' ? 'isUser' : '' }}">
-    <div class="offcanvas-close-btn">
-      <button type="button" class="btn-close btn-close offcanvas-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-
+  <div class="offcanvas-header {{ $role === 'dealer' ? 'isUser' : '' }} {{ $role != 'guest' ? 'd-flex justify-content-between' : '' }}">
     @auth
     <div class="user-login-box">
         <div class="user-login-box-text">
@@ -96,6 +93,10 @@
         </div>
     </div>
     @endauth
+
+    <div class="offcanvas-close-btn">
+      <button type="button" class="btn-close btn-close offcanvas-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
 
   </div>
   <div class="offcanvas-content-wrapper">
