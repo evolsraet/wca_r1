@@ -23,7 +23,7 @@
             </div>
             <div class="mb-3">
                 <label for="apiType" class="form-label">조회 종류</label>
-                <select class="form-select" id="apiType">
+                <select class="form-select" id="apiType" onchange="fetchCarHistory()">
                     <option value="carHistory" selected>기본 이력 조회</option>
                     <option value="carHistoryCrash">사고 이력 조회</option>
                 </select>
@@ -57,10 +57,9 @@ const subTableConfigs = {
 function fetchCarHistory() {
   const carNo = document.getElementById('carNo').value;
   const apiType = document.getElementById('apiType').value;
-  const resultTable = document.getElementById('resultTable').querySelector('tbody');
   const resultArea = document.getElementById('resultArea');
 
-  // 🔁 이전 결과 초기화
+  // 🔁 초기화
   resultArea.innerHTML = `
     <h5 class="mb-3">요약 정보</h5>
     <table class="table table-bordered table-striped" id="resultTable">
@@ -72,7 +71,7 @@ function fetchCarHistory() {
   `;
   resultArea.style.display = 'none';
 
-  if (!carNo.trim()) return alert('차량번호를 입력해주세요.');
+  if (!carNo.trim()) return;
 
   const endpoint = `https://dev.wecar.auction/api/${apiType}?car_no=${encodeURIComponent(carNo)}`;
 
