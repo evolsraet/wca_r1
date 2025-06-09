@@ -41,6 +41,12 @@ echo '</pre>';
         :initialRightPanelOpen="true">
 
         <x-slot:leftContent>
+
+        <pre>
+            asset(): {{ asset('build/v2/assets/app.css') }}
+            host: {{ request()->getHost() }}
+            app_url: {{ config('app.url') }}
+        </pre>
         
         <div class="vehicle-info-card mb-4">
             <div class="card-body">

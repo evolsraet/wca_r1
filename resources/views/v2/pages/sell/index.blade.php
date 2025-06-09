@@ -47,7 +47,13 @@
                   <source src="../images/video/mainvideo02.mp4" type="video/mp4">
                 </video>
 
-                <form method="GET" action="{{ route('sell.result') }}" class="mt-5">
+                <pre>
+                  asset(): {{ asset('build/v2/assets/app.css') }}
+                  host: {{ request()->getHost() }}
+                  app_url: {{ config('app.url') }}
+              </pre>
+
+                <form method="POST" action="{{ route('sell.result') }}" class="mt-5">
                     @csrf
 
                     <!-- 소유자 질문 -->

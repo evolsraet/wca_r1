@@ -83,7 +83,7 @@ Route::prefix('sell')->group(function () {
     })->name('sell');
 
     // Route::post('/result', [AuctionController::class, 'showCarInfoView'])->name('sell.result');
-    Route::get('/result', function (Request $request) {
+    Route::post('/result', function (Request $request) {
         $carInfo = app(AuctionController::class)->showCarInfoView($request);
 
         return view('v2.pages.sell.result', [
