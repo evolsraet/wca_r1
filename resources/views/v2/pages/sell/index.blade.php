@@ -43,7 +43,7 @@
               
               <div class="check-car-box text-center p-4 rounded bg-white mx-auto" style="max-width: 100%;">
 
-                <video autoplay="" loop="" playsinline="" preload="auto" style="width: 85%;">
+                <video autoplay="" loop="" playsinline="" preload="auto" class="d-none d-sm-block" style="width: 85%;">
                   <source src="../images/video/mainvideo02.mp4" type="video/mp4">
                 </video>
 
@@ -67,8 +67,8 @@
 
                     <!-- 버튼들 -->
                     <div class="d-grid gap-2">
-                        <button type="submit" class="btn btn-primary border-0" style="font-size: 16px;">내 차 조회</button>
-                        <a href="{{ route('login') }}" class="btn btn-outline-danger" style="font-size: 16px;">로그인</a>
+                        <button type="submit" class="btn btn-primary border-0">내 차 조회</button>
+                        <a href="{{ route('login') }}" class="btn btn-outline-danger">로그인</a>
                     </div>
 
                     <!-- 약관 -->

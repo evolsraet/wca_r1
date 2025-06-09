@@ -42,7 +42,7 @@
                 <div class="container bg-white form-custom" style="height: 100vh;">
                     <div class="row justify-content-center">
 
-                        <video autoplay="" loop="" playsinline="" preload="auto" style="width: 85%;">
+                        <video autoplay="" loop="" playsinline="" preload="auto" class="d-none d-sm-block" style="width: 85%;">
                             <source src="../images/video/mainvideo02.mp4" type="video/mp4">
                         </video>
 
@@ -113,7 +113,7 @@
                                         <!-- 로그인 버튼 -->
                                         <div class="d-grid">
                                             <button type="submit"
-                                                    class="btn btn-primary border-0 btn-lg fs-6"
+                                                    class="btn btn-primary border-0 fs-6"
                                                     :disabled="loading">
                                                 <span x-show="loading" class="spinner-border spinner-border-sm me-2"></span>
                                                 로그인
