@@ -12,6 +12,7 @@ export default function () {
                 page: '1',
                 paginate: 2
             });
+            console.log(response.data.data);
             this.cars = response.data.data;
         }
     };

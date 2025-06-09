@@ -9,7 +9,20 @@
         <template x-for="car in cars" :key="car.id">
             <a :href="'/v2/auction/' + car.hashid" class="car-item">
                 <div class="car-thumb">
-                    <img :src="car.car_thumbnail" alt="car.number">
+                    <img
+                    :src="(() => {
+                        if ((car.car_thumbnails) && car.car_thumbnails.length > 0) {
+                            return car.car_thumbnails[0];
+                        }else{
+                            if(car.car_thumbnail){
+                                return car.car_thumbnail;
+                            }else{
+                                return '/images/car_example.png';
+                            }
+                        }
+                    })()"
+                    :alt="car.number"
+                    />
                 </div>
                 <div class="car-number" x-text="car.car_no"></div>
                 <div

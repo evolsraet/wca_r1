@@ -1,7 +1,20 @@
 <div class="col-md-4 mb-4">
     <a :href="'{{ route('auction.detail', '') }}' + '/' + auction.hashid" class="auction-item">
     <div class="auction-item-thumb">
-        <img :src="auction.car_thumbnail" alt="차량이미지" />
+        <img
+        :src="(() => {
+            if ((auction.car_thumbnails) && auction.car_thumbnails.length > 0) {
+                return auction.car_thumbnails[0];
+            }else{
+                if(auction.car_thumbnail){
+                    return auction.car_thumbnail;
+                }else{
+                    return '/images/car_example.png';
+                }
+            }
+        })()"
+        :alt="차량이미지"
+        />
         <span class="auction-item-badge text-white" :class="$store.auctionStatus.get(auction.status).class" x-show="auction.status" x-text="$store.auctionStatus.get(auction.status).label"></span>
     </div>
     <div class="auction-item-body">
