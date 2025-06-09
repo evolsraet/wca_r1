@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BoardController;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Api\AuctionController;
+use App\Services\CarInfoService;
 use Illuminate\Support\Facades\Cache;
 
 // v2 Routes
@@ -79,48 +80,27 @@ Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
 Route::prefix('sell')->group(function () {
 
-    Route::get('/', function () {
-        $user = Auth::user();
+    Route::get('/', function (CarInfoService $carInfoService) {
+        $carInfo = $carInfoService->getCachedCarInfoForUser();
 
-        if ($user) {
-            $userCacheKey = "carInfo.user.{$user->id}";
-    
-            if (Cache::has($userCacheKey)) {
-                $queryInfo = Cache::get($userCacheKey); // ['owner' => '이름', 'no' => '차량번호']
-    
-                // 실제 차량 캐시 키
-                $carInfoCacheKey = "carInfo." . $queryInfo['owner'] . $queryInfo['no'];
-    
-                if (Cache::has($carInfoCacheKey)) {
-                    $carInfo = Cache::get($carInfoCacheKey);
-    
-                    // carInfo 값이 유효하면 result로 넘김
-                    if (!empty($carInfo['owner']) && !empty($carInfo['no'])) {
-                        return view('v2.pages.sell.result', [
-                            'owner' => $carInfo['owner'],
-                            'no' => $carInfo['no'],
-                            '_token' => csrf_token(),
-                            'carInfo' => $carInfo
-                        ]);
-                    }
-                }
-            }
+        if ($carInfo) {
+            return view('v2.pages.sell.result', [
+                'owner' => $carInfo['owner'],
+                'no' => $carInfo['no'],
+                '_token' => csrf_token(),
+                'carInfo' => $carInfo
+            ]);
         }
 
         return view('v2.pages.sell.index');
     })->name('sell');
 
-    // Route::post('/result', [AuctionController::class, 'showCarInfoView'])->name('sell.result');
-    Route::post('/result', function (Request $request) {
-
+    Route::post('/result', function (Request $request, CarInfoService $carInfoService) {
         if (Auth::check()) {
-            $user = Auth::user();
-        
-            // 유저가 최근 조회한 owner/no 저장 (리다이렉트용)
-            Cache::put("carInfo.user.{$user->id}", [
-                'owner' => $request->input('owner'),
-                'no' => $request->input('no'),
-            ], now()->addDays(config('days.car_info_cache_ttl')));
+            $carInfoService->storeUserQueryHistory(
+                $request->input('owner'),
+                $request->input('no')
+            );
         }
 
         $carInfo = app(AuctionController::class)->showCarInfoView($request);
@@ -128,15 +108,11 @@ Route::prefix('sell')->group(function () {
         if (!is_array($carInfo) && Auth::check()) {
             return redirect()->route('sell');
         }
-        
-        return view('v2.pages.sell.result', [
-            'carInfo' => $carInfo
-        ]);
+
+        return view('v2.pages.sell.result', ['carInfo' => $carInfo]);
     })->name('sell.result');
 
-    Route::post('/apply', function () {
-        return view('v2.pages.sell.apply');
-    })->name('sell.apply');
+    Route::post('/apply', fn () => view('v2.pages.sell.apply'))->name('sell.apply');
 });
 
 Route::get('/style-guide', function () {
