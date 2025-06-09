@@ -13,7 +13,7 @@
                 }
             }
         })()"
-        :alt="차량이미지"
+        alt="차량이미지"
         />
         <span class="auction-item-badge text-white" :class="$store.auctionStatus.get(auction.status).class" x-show="auction.status" x-text="$store.auctionStatus.get(auction.status).label"></span>
     </div>

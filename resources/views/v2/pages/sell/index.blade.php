@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <div style="position: absolute; top: 49px; left: 0; width: 100%; z-index: 1;">
+  <div style="position: absolute; top: 49px; left: 0; width: 100%; z-index: 1;" x-data="index()">
     <div class="container">
       <x-layouts.split
           leftClass="col-lg-8"
@@ -39,7 +39,7 @@
           </x-slot:leftContent>
 
           <x-slot:rightContent style="box-shadow: none !important;">
-            <div class="container bg-white form-custom" style="height: 100vh;">
+            <div class="container bg-white" style="height: 100vh;">
               
               <div class="check-car-box text-center p-4 rounded bg-white mx-auto" style="max-width: 100%;">
 
@@ -47,7 +47,7 @@
                   <source src="../images/video/mainvideo02.mp4" type="video/mp4">
                 </video>
 
-                <form method="POST" action="{{ route('sell.result') }}" class="mt-5">
+                <form method="POST" action="{{ route('sell.result') }}" class="mt-5 form-custom">
                     @csrf
 
                     <!-- 소유자 질문 -->

@@ -207,5 +207,11 @@ export const modal = {
                 modal.hide();
             }
         }
+    },
+
+    emitResult(result) {
+        if (typeof window.modalOptions?.onResult === 'function') {
+            window.modalOptions.onResult(result);
+        }
     }
 };

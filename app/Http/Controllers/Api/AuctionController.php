@@ -143,6 +143,12 @@ class AuctionController extends Controller
             $message = '갱신은 하루 1회만 가능합니다.';
         }
 
+        // 강제 갱신 (테스트)
+        // if ($request->input('forceRefresh')) {
+        //     Cache::forget($cacheKey);
+        //     Cache::put($cacheKey . "forceRefresh", 'true', now()->endOfDay()); // 실제처럼 기록도 남기고
+        // }
+
         $niceDnrResult = $NiceDNRService->getNiceDnr($request->input('owner'), $request->input('no'), config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
 
         if(isset($niceDnrResult['count']) && $niceDnrResult['count'] == 0){
@@ -154,7 +160,7 @@ class AuctionController extends Controller
         }
 
         // 캐시 없을 경우, 한달동안 저장
-        $resource = Cache::remember($cacheKey, now()->addDays(30), function () use ($request) {
+        $resource = Cache::remember($cacheKey, now()->addDays(config('days.car_info_cache_ttl')), function () use ($request) {
 
             // $auctionService = new AuctionService();
             // $niceDnrResult = $auctionService->getNiceDnr($request->input('owner'), $request->input('no'));
@@ -225,7 +231,7 @@ class AuctionController extends Controller
             return redirect()->back()->with('error', $result['message'] ?? '조회 실패');
         }
     
-        $carInfo = $result['data'];
+        $carInfo = $result['data'] ?? null;
 
         if(!$result['data']){
             return redirect()->back()->with('error', $result['message'] ?? '조회 실패');
@@ -260,6 +266,15 @@ class AuctionController extends Controller
         // 사용 개월 수 및 사용 연수
         $monthsUsed = max(0, ($currentYear - $regYear) * 12 + ($currentMonth - $regMonth));
         $yearsUsed = intdiv($monthsUsed, 12); // 잔가율 계산용 연수 (소수점 버림)
+
+        // 추가 입력값
+        $accident = $request->query('accident', '완전 무사고');
+        $keyCount = $request->query('keyCount', 0);
+        $wheelScratch = $request->query('wheelScratch', 0);
+        $tireStatusReplaced = $request->query('tireStatusReplaced', 0);
+        $viewPaint = $request->query('viewPaint', 0);
+        $viewChange = $request->query('viewChange', 0);
+        $viewBreak = $request->query('viewBreak', 0);
 
         // 잔가율 테이블 (국산)
         $residualRatesDomestic = [
@@ -301,7 +316,64 @@ class AuctionController extends Controller
         // 예상 가격 계산 (엑셀 방식: 기준가 + 감가조정)
         $estimatedPrice = max(0, $basePrice + $adjustment);
 
+
+        // 
+
+
+        // 사고이력
+        if($accident){
+            switch($accident){
+                case '교환':
+                    $estimatedPrice -= 500000; // 50만원
+                    break;
+                case '판금 사고':
+                    $estimatedPrice -= 150000; // 15만원
+                    break;
+                case '전손이력':
+                    $estimatedPrice *= 0.5; // 50% 감가
+                    break;
+            }
+        }
+
+        // 키갯수
+        if($keyCount >= 2){
+            $estimatedPrice -= 300000; // 30만원
+        }
+
+        // 휠스크래치
+        if($wheelScratch > 0){
+            $estimatedPrice -= 150000; // 15만원
+        }
+
+        // 타이어
+        // if($tireStatusNormal > 0){
+        //     $estimatedPrice -= 150000;
+        // }
+
+        // 타이어 교체
+        if($tireStatusReplaced > 0){
+            $estimatedPrice -= 300000; // 30만원
+        }
+
+        // 외부 손상
+        if($viewPaint > 0){
+            $estimatedPrice -= 100000; // 10만원
+        }
+
+        // 외부 교체
+        if($viewChange > 0){
+            $estimatedPrice -= 300000; // 30만원
+        }
+
+        // 외부 부분 손상
+        if($viewBreak > 0){
+            $estimatedPrice -= 100000; // 10만원
+        }
+
+
+
         return response()->json([
+            'status' => 'ok',
             'regYear' => $regYear,
             'regMonth' => $regMonth,
             'currentYear' => $currentYear,
@@ -314,7 +386,7 @@ class AuctionController extends Controller
             'basePrice' => $basePrice,
             'adjustment' => round($adjustment),
             'estimatedPrice' => round($estimatedPrice),
-            'estimatedPriceInTenThousandWon' => round($estimatedPrice / 10000, 1),
+            'estimatedPriceInTenThousandWon' => round($estimatedPrice / 10000),
             '한글결과' => [
                 '등록년도' => $regYear,
                 '등록월' => $regMonth,
@@ -328,7 +400,7 @@ class AuctionController extends Controller
                 '기준가격' => $basePrice,
                 '감가조정' => round($adjustment),
                 '예상금액' => round($estimatedPrice),
-                '예상금액(만원)' => round($estimatedPrice / 10000, 1)
+                '예상금액(만원)' => round($estimatedPrice / 10000)
             ]
         ]);
 

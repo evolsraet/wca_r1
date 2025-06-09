@@ -78,6 +78,7 @@ export default function () {
                     'file_auction_company_license'
                 ];
 
+                // 본인인증 확인 무조건 확인필요 
                 if(!window.resIndividualBusinessYN){
                     Alpine.store('swal').fire({
                         title: '본인인증 필요',
@@ -88,6 +89,7 @@ export default function () {
                     return;
                 }
 
+                // 파일첨부시 required 확인 안되어 수동으로 체크
                 if(!this.form.auction.file_auction_car_license){
                     Alpine.store('swal').fire({
                         title: '자동차등록증 업로드 필요',
@@ -101,7 +103,7 @@ export default function () {
                 appendFilesToFormData(formData, fileFields, this.$el);
 
                 if( this.form.isUpdate ) {
-                    const response = await this.$store.api.put('/api/auctions/' + this.form.auction.id, formData);
+                    const response = await api.put('/api/auctions/' + this.form.auction.id, formData);
                     Alpine.store('swal').fire({
                         title: '수정 완료',
                         text: response.data.message,
@@ -113,7 +115,7 @@ export default function () {
                         }
                     });
                 } else {
-                    const response = await this.$store.api.post('/api/auctions', formData);
+                    const response = await api.post('/api/auctions', formData);
                     Alpine.store('swal').fire({
                         title: '경매 등록 완료',
                         text: response.data.message,

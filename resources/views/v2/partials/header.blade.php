@@ -41,10 +41,7 @@
             <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" :class="{ 'show': dropdown }" aria-labelledby="userDropdown1" style="z-index: 2000;">
               <li><a class="dropdown-item" href="{{ route('modify') }}">내 정보 수정</a></li>
               <li>
-                <form method="POST" action="{{ route('logout') }}">
-                  @csrf
-                  <button class="dropdown-item" type="submit">로그아웃</button>
-                </form>
+                <button class="dropdown-item btn-logout" type="button">로그아웃</button>
               </li>
             </ul>
           </li>
@@ -84,10 +81,7 @@
                       :class="{ 'show': open }">
                     <li><a class="dropdown-item" href="#">내 정보 수정</a></li>
                     <li>
-                      <form method="POST" action="{{ route('logout') }}">
-                        @csrf
-                        <button class="dropdown-item" type="submit">로그아웃</button>
-                      </form>
+                      <button class="dropdown-item btn-logout" type="button">로그아웃</button>
                     </li>
                   </ul>
                 </div>
@@ -145,3 +139,24 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.querySelector('.btn-logout').addEventListener('click', function() {
+
+    localStorage.removeItem('carInfo');
+    localStorage.removeItem('estimatedPrice');
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = '{{ route('logout') }}';
+
+    const csrf = document.createElement('input');
+    csrf.type = 'hidden';
+    csrf.name = '_token';
+    csrf.value = document.querySelector('meta[name="csrf-token"]').content;
+    form.appendChild(csrf);
+
+    document.body.appendChild(form);
+    form.submit();
+  });
+</script>

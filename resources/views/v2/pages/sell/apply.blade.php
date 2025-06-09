@@ -49,7 +49,7 @@ $user_phone = $user->phone;
                                         flex="true"
                                     />
 
-                                <button type="button" id="ownerAuthBtn" class="btn btn-secondary fs-6" :disabled="checkBusiness" style="width: 120px; height: 38px;">
+                                <button type="button" id="ownerAuthBtn" class="btn btn-secondary fs-6 border-0" :disabled="checkBusiness" style="width: 120px; height: 38px;">
                                     본인인증
                                 </button>
                             </div>
@@ -273,7 +273,7 @@ $user_phone = $user->phone;
             title: '본인인증',
             showFooter: false,
             onResult: (result) => {
-                console.log('result?', result);
+                // console.log('result?', result);
 
                 if(result.resIndividualBusinessYN === 'Y'){
                     document.getElementById('ownerAuthBtn').disabled = true;
