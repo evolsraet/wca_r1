@@ -2,7 +2,7 @@
 @section('title', '메인 페이지')
 @section('content')
 @php
-
+// dd($carInfo);
     // 변환된 구조
     $data = [
         'owner_name' => $carInfo['owner'] ?? null,
@@ -116,7 +116,7 @@
             <div class="bg-light rounded mb-3">
                 <div class="d-flex justify-content-between sell-box p-2">
                     <span class="text-muted fw-bold">현재 시세 <small>(소매가)</small></span>
-                    <span class="fw-bold text-danger fs-5">{{ number_format(substr($carInfo['priceNow'], 0, -4)) }} 만원</span>
+                    <span class="fw-bold text-danger fs-5"> 만원</span>
                 </div>
                 <div class="text-end small text-muted">※ NICE D&R 제공</div>
             </div>
@@ -124,7 +124,7 @@
             <div class="bg-light rounded mb-3">
                 <div class="d-flex justify-content-between sell-box p-2">
                     <span class="text-muted fw-bold">현재 시세 <small>(도매가)</small></span>
-                    <span class="fw-bold text-danger fs-5">{{ number_format(substr($carInfo['priceNowWhole'], 0, -4)) }} 만원</span>
+                    <span class="fw-bold text-danger fs-5"> 만원</span>
                 </div>
                 <div class="text-end small text-muted">※ 오토허브셀카 제공</div>
             </div>

@@ -82,7 +82,14 @@ Route::prefix('sell')->group(function () {
         return view('v2.pages.sell.index');
     })->name('sell');
 
-    Route::post('/result', [AuctionController::class, 'showCarInfoView'])->name('sell.result');
+    // Route::post('/result', [AuctionController::class, 'showCarInfoView'])->name('sell.result');
+    Route::post('/result', function (Request $request) {
+        $carInfo = app(AuctionController::class)->showCarInfoView($request);
+
+        return view('v2.pages.sell.result', [
+            'carInfo' => $carInfo
+        ]);
+    })->name('sell.result');
 
     Route::post('/apply', function () {
         return view('v2.pages.sell.apply');
