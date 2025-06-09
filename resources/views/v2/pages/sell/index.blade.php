@@ -47,7 +47,7 @@
                   <source src="../images/video/mainvideo02.mp4" type="video/mp4">
                 </video>
 
-                <form method="POST" action="{{ route('sell.result') }}" class="mt-5">
+                <form method="GET" action="{{ route('sell.result') }}" class="mt-5">
                     @csrf
 
                     <!-- 소유자 질문 -->
