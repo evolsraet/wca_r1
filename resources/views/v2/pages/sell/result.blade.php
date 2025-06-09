@@ -2,6 +2,11 @@
 @section('title', '메인 페이지')
 @section('content')
 @php
+
+echo '<pre>';
+print_r($carInfo);
+echo '</pre>';
+
 // dd($carInfo);
     // 변환된 구조
     $data = [
