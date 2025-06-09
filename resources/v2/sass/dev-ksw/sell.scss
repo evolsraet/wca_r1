@@ -9,13 +9,11 @@
             margin-bottom: 0.75rem;
 
             .info-label {
-                color: #999 !important;
-                font-size: 0.875rem;
+                color: $gray-500;
             }
     
             .info-value {
                 font-weight: 500;
-                font-size: 1rem;
             }
     
             .col-6 {
@@ -38,7 +36,7 @@
 }
 
 .estimate-info-box {
-    background-color: #fff;
+    background-color: $white;
     border-radius: 1rem;
     box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.03);
 
@@ -49,4 +47,20 @@
     .btn {
         font-size: 1rem;
     }
+}
+
+.file-upload-btn-wrap button.btn {
+    width: 100% !important;
+    background-color: $gray-100 !important;
+    border:0px !important;
+
+    &:hover {
+        background-color: $gray-200 !important;
+    }
+
+}
+
+.file-upload-btn-wrap .d-flex > * {
+    flex-grow: 1 !important;
+    width: 100% !important;
 }

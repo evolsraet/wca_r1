@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BoardController;
 use Vinkla\Hashids\Facades\Hashids;
+use App\Http\Controllers\Api\AuctionController;
 
 // v2 Routes
 Route::get('/', function () {
@@ -57,6 +58,10 @@ Route::get('/docs/{doc}', function ($doc) {
     ]);
 })->where('doc', '[A-Za-z0-9\-_]+')->name('docs.show');
 
+Route::get('/components/modals/{modal}', function ($modal) {
+    return view("components.modals.{$modal}");
+});
+
 Route::prefix('auction')->group(function () {
     Route::get('/', function () {
         return view('v2.pages.auction.auctionList');
@@ -77,9 +82,7 @@ Route::prefix('sell')->group(function () {
         return view('v2.pages.sell.index');
     })->name('sell');
 
-    Route::post('/result', function () {
-        return view('v2.pages.sell.result');
-    })->name('sell.result');
+    Route::post('/result', [AuctionController::class, 'showCarInfoView'])->name('sell.result');
 
     Route::post('/apply', function () {
         return view('v2.pages.sell.apply');

@@ -3,9 +3,31 @@
 @section('content')
 @php
 
+    // 변환된 구조
+    $data = [
+        'owner_name' => $carInfo['owner'] ?? null,
+        'car_no' => $carInfo['no'] ?? null,
+        'car_maker' => $carInfo['maker'] ?? null,
+        'car_model' => $carInfo['model'] ?? null,
+        'car_model_sub' => $carInfo['modelSub'] ?? null,
+        'car_grade' => $carInfo['grade'] ?? null,
+        'car_grade_sub' => $carInfo['gradeSub'] ?? null,
+        'car_year' => $carInfo['year'] ?? null,
+        'car_first_reg_date' => $carInfo['firstRegDate'] ?? null,
+        'car_mission' => $carInfo['mission'] ?? null,
+        'car_fuel' => $carInfo['fuel'] ?? null,
+        'car_price_now' => $carInfo['priceNow'] ?? null,
+        'car_price_now_whole' => $carInfo['priceNowWhole'] ?? null,
+        'car_thumbnail' => $carInfo['thumbnail'] ?? null,
+        'car_km' => $carInfo['km'] ?? null,
+        'car_status' => '1', // 고정값
+    ];
+
+    $isLogin = auth()->user();
+
 @endphp
 
-<div class="container form-custom p-6 mt-5 mb-4" style="max-width: 1100px;">
+<div class="container sell-container form-custom p-6 mt-5 mb-4" style="max-width: 1000px;" x-data=[]>
     <x-layouts.split
         leftClass="col-lg-6"
         rightClass="col-lg-6"
@@ -23,58 +45,61 @@
                 <div class="row g-2 vehicle-info-list">
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">차량번호</div>
-                        <div class="col-8 info-value">24너8437</div>
+                        <div class="col-8 info-value">{{ $carInfo['car_no'] ?? '' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">최초등록일</div>
-                        <div class="col-8 info-value">2011-02-18</div>
+                        <div class="col-8 info-value">{{ $data['car_first_reg_date'] ?? '' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">미션</div>
-                        <div class="col-8 info-value">오토</div>
+                        <div class="col-8 info-value">{{ $data['car_mission'] ?? '' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">제조사</div>
-                        <div class="col-8 info-value">기아</div>
+                        <div class="col-8 info-value">{{ $data['car_maker'] ?? '' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">년식</div>
-                        <div class="col-8 info-value">2011</div>
+                        <div class="col-8 info-value">{{ $data['car_year'] ?? '' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">용도변경이력</div>
-                        <div class="col-8 info-value">없음</div>
+                        <div class="col-8 info-value">{{ $carInfo['resUseHistYn'] ?? '' }}</div> {{-- 이건 아직 데이터 변환 안 했으므로 유지 --}}
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">모델</div>
-                        <div class="col-8 info-value">스포티지 R</div>
+                        <div class="col-8 info-value">{{ $data['car_model'] ?? '' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">배기량</div>
-                        <div class="col-8 info-value">1995 cc</div>
+                        <div class="col-8 info-value">{{ $carInfo['engineSize'] ?? '' }}</div> {{-- 이 항목도 변환되지 않았으면 유지 --}}
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">튜닝이력</div>
-                        <div class="col-8 info-value">21 회</div>
+                        <div class="col-8 info-value">{{ $data['tuning'] ?? '' }} 회</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">등급</div>
-                        <div class="col-8 info-value">TLX 최고급형</div>
+                        <div class="col-8 info-value">{{ $data['car_grade'] ?? '' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">연료</div>
-                        <div class="col-8 info-value">디젤</div>
+                        <div class="col-8 info-value">{{ $data['car_fuel'] ?? '' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">세부모델</div>
-                        <div class="col-8 info-value">SL53BA-S</div>
+                        <div class="col-8 info-value">{{ $data['car_model_sub'] ?? '' }}</div>
                     </div>
                 </div>
         
                 <div class="mt-4 text-center">
-                    <button type="button" class="btn btn-outline-primary px-4 w-100">
+                    <a href="#" 
+                            class="btn btn-outline-primary px-4 w-100"
+                            @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/usageNotice?raw=1`, {title: `차량출품 조건 및 유의사항`, size: `modal-md`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})"
+                            >
                         차량출품 조건 및 유의사항
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>
@@ -91,7 +116,7 @@
             <div class="bg-light rounded mb-3">
                 <div class="d-flex justify-content-between sell-box p-2">
                     <span class="text-muted fw-bold">현재 시세 <small>(소매가)</small></span>
-                    <span class="fw-bold text-danger fs-5">747 만원</span>
+                    <span class="fw-bold text-danger fs-5">{{ number_format(substr($carInfo['priceNow'], 0, -4)) }} 만원</span>
                 </div>
                 <div class="text-end small text-muted">※ NICE D&R 제공</div>
             </div>
@@ -99,7 +124,7 @@
             <div class="bg-light rounded mb-3">
                 <div class="d-flex justify-content-between sell-box p-2">
                     <span class="text-muted fw-bold">현재 시세 <small>(도매가)</small></span>
-                    <span class="fw-bold text-danger fs-5">741 만원</span>
+                    <span class="fw-bold text-danger fs-5">{{ number_format(substr($carInfo['priceNowWhole'], 0, -4)) }} 만원</span>
                 </div>
                 <div class="text-end small text-muted">※ 오토허브셀카 제공</div>
             </div>
@@ -121,23 +146,15 @@
             </div>
         
             <div class="row">
-                <div class="col-6">
-                    <button class="btn btn-outline-primary w-100 py-2 rounded-pill fw-semibold">
+                <div class="{{ $isLogin ? 'col-6' : 'col-12' }}">
+                    <a href="#" class="btn btn-outline-primary w-100 py-2 fs-6" id="openCurrentPriceModal">
                         현재 예상 가격
-                    </button>
+                    </a>
                 </div>
-                <div class="col-6">
-                    {{-- <button 
-                    class="btn btn-danger w-100 py-2 rounded-pill fw-semibold border-0" 
-                    @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/pages/sell/auction-apply`, {title: `경매 신청하기`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})"
-                    >
-                        경매 신청하기
-                    </button> --}}
-
+                <div class="{{ $isLogin ? 'col-6' : 'col-12' }}" @if(!$isLogin) style="display: none;" @endif>
                     <button 
                     class="btn btn-danger w-100 py-2 rounded-pill fw-semibold border-0" 
-                    data-bs-toggle="modal"
-                    data-bs-target="#auctionApplyModal"
+                    id="openAuctionModal"
                     >
                         경매 신청하기
                     </button>
@@ -150,28 +167,30 @@
     </x-layouts.split>
 </div>
 
+<script>
 
+window.carInfo = @json($data);
 
-<!-- Scrollable modal -->
-<div class="modal fade" id="auctionApplyModal">
-    <div class="modal-dialog modal-dialog-scrollable">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h5 class="modal-title">경매 신청하기</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-            <p>경매 신청하기</p>
-        </div>
-        <div class="modal-footer">
-            <form action="{{ route('sell.apply') }}" method="post">
-                @csrf
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-                <button type="submit" class="btn btn-primary">경매 신청하기</button>
-            </form>
-        </div>
-    </div>
-    </div>
-</div>
+document.getElementById('openCurrentPriceModal').addEventListener('click', () => {
+    Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/currentPrice', {
+        id: 'currentPrice',
+        title: '내 차, 예상가격을 확인합니다',
+        showFooter: false,
+        data: {
+            carInfo: window.carInfo
+        }
+    });
+});
+
+// 경매 신청 모달
+document.getElementById('openAuctionModal').addEventListener('click', () => {
+    Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/auctionProcessSteps', {
+        id: 'auctionProcessSteps',
+        title: '경매 신청하기',
+        showFooter: false
+    });
+});
+
+</script>
 
 @endsection

@@ -61,14 +61,13 @@
 
     <a class="navbar-toggler navbar-toggle-btn" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasDark" aria-controls="offcanvasDark">
       <i class="mdi mdi-menu"></i>
-      {{-- <img src="{{ $role === 'dealer' ? asset('images/toggle-nav-wh.png') : asset('images/toggle-nav-black.png') }}" alt="메뉴" class="toggle-nav-img"> --}}
     </a>
   </div>
 </nav>
 
 {{-- 모바일 메뉴 --}}
 <div class="offcanvas offcanvas-end text-bg-dark mobile-menu" tabindex="-1" id="offcanvasDark" aria-labelledby="offcanvasDarkLabel">
-  <div class="offcanvas-header {{ $role === 'dealer' ? 'isUser' : '' }}">
+  <div class="offcanvas-header">
     <div class="row col-12">
       <div class="col-9">
         @auth

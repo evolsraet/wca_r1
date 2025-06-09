@@ -39,7 +39,7 @@
                     console.error('주소 검색 오류:', error);
                 }
             }"
-        ><i class="mdi mdi-pin"></i></button>
+        ><i class="mdi mdi-map-marker-outline"></i></button>
     </div>
 
     <div id="{{ $postCodeId }}" class="mb-2"></div>

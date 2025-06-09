@@ -33,6 +33,15 @@ $dark: map-get($theme-colors, "dark");
     }
 }
 
+button {
+  &:focus {
+    box-shadow: none !important;
+    outline: none !important;
+    border-width: 0px !important;
+    border-color: transparent !important; // 포커스 시 색만 살짝 진하게
+  }
+}
+
 /* 입력 필드 */
 .form-custom {
     input,
@@ -117,6 +126,7 @@ $dark: map-get($theme-colors, "dark");
     .unit-label {
       position: absolute;
       right: 1rem;
+      top: 2.3rem;
       color: $gray-800;
       font-weight: 500;
       font-size: 1rem;

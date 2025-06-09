@@ -108,7 +108,7 @@ export const modal = {
                 { text: '확인', class: 'btn-primary', id: 'modalConfirmBtn' }
             ],
             onConfirm = null,
-            onClose = null
+            onClose = null,
         } = options;
 
         // 기존 모달 제거
@@ -174,15 +174,27 @@ export const modal = {
     // URL을 통해 HTML을 가져와 모달 표시
     async showHtmlFromUrl(url, options = {}) {
         try {
-            const response = await fetch(url);
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            const html = await response.text();
-            this.showHtml(html, options);
+          const response = await fetch(url);
+          if (!response.ok) throw new Error(`HTTP error ${response.status}`);
+          const html = await response.text();
+    
+          window.modalOptions = {
+            data: options.data || {},
+            onResult: typeof options.onResult === 'function' ? options.onResult : () => {}
+          };
+    
+          this.showHtml(html, options);
+    
+          const shouldInitAlpine = options.initAlpine !== false;
+          if (shouldInitAlpine && typeof Alpine !== 'undefined') {
+            setTimeout(() => {
+              const modalBody = document.querySelector('.modal-body');
+              if (modalBody) Alpine.initTree(modalBody);
+            }, 0);
+          }
         } catch (error) {
-            console.error('Error loading modal content:', error);
-            this.showHtml('<div class="alert alert-danger">내용을 불러오는데 실패했습니다.</div>', options);
+          console.error('Error loading modal:', error);
+          this.showHtml('<div class="alert alert-danger">내용을 불러오는데 실패했습니다.</div>', options);
         }
     },
 

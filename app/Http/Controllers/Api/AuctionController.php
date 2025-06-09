@@ -206,6 +206,35 @@ class AuctionController extends Controller
     }
 
 
+    public function showCarInfoView(Request $request)
+    {
+        $request->validate([
+            'owner' => 'required',
+            'no' => 'required',
+        ]);
+    
+        // 내부 API 호출
+        $apiRequest = Request::create('/api/auctions/carInfo', 'POST', [
+            'owner' => $request->input('owner'),
+            'no' => $request->input('no'),
+        ]);
+        $response = app()->handle($apiRequest);
+        $result = json_decode($response->getContent(), true);
+    
+        if ($response->getStatusCode() !== 200) {
+            return redirect()->back()->with('error', $result['message'] ?? '조회 실패');
+        }
+    
+        $carInfo = $result['data'];
+
+        if(!$result['data']){
+            return redirect()->back()->with('error', $result['message'] ?? '조회 실패');
+        }
+    
+        return view('v2.pages.sell.result', compact('carInfo'));
+    }
+
+
     public function getNiceDnr(Request $request)
     {
         $NiceDNRService = new NiceDNRService();

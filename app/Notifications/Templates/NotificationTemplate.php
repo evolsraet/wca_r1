@@ -536,9 +536,9 @@ class NotificationTemplate
 
                 $message =
                 '경매 등록신청이 완료 되었습니다. \n'
-                .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
-                .'ㅁ 소유주 : '.$data->owner_name.' \n'
-                .'ㅁ 차량번호 : '.$data->car_no.' \n'
+                .'ㅁ 차량 : '.$data['car_maker'].' '.$data['car_model'].' '.$data['car_model_sub'].' \n'
+                .'ㅁ 소유주 : '.$data['owner_name'].' \n'
+                .'ㅁ 차량번호 : '.$data['car_no'].' \n'
                 .config('app.name')."에 평가사들이 유선전화 드리고 진단요청일에 방문할 예정 입니다. \n";
 
                 // $link = [
@@ -555,9 +555,9 @@ class NotificationTemplate
 
                 $message =
                 '경매 등록신청이 완료 되었습니다. \n'
-                .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
-                .'ㅁ 소유주 : '.$data->owner_name.' \n'
-                .'ㅁ 차량번호 : '.$data->car_no.' \n';
+                .'ㅁ 차량 : '.$data['car_maker'].' '.$data['car_model'].' '.$data['car_model_sub'].' \n'
+                .'ㅁ 소유주 : '.$data['owner_name'].' \n'
+                .'ㅁ 차량번호 : '.$data['car_no'].' \n';
 
                 // $link = [
                 //     "url" => url('/auction/'.$data->hashid),

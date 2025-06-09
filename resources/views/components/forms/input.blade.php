@@ -8,10 +8,11 @@
     'class' => '',
     'errors' => null,
     'model' => null,
-    'noMargin' => false
+    'noMargin' => false,
+    'flex' => false
 ])
 
-<div class="{{ $noMargin ? '' : 'mb-3' }}">
+<div class="{{ $noMargin ? '' : 'mb-3' }} {{ $flex ? 'flex-grow-1 me-2' : '' }}">
     @if($label)
         <label for="{{ $name }}" class="form-label">
             @if($required)

@@ -38,7 +38,7 @@ class AuctionStartJob implements ShouldQueue
     public function handle(): void
     {
 
-        $data = json_decode($this->data);
+        // $data = json_decode($this->data);
 
 
         if($this->isUser){
@@ -50,7 +50,7 @@ class AuctionStartJob implements ShouldQueue
         }
 
 
-        $notificationTemplate = NotificationTemplate::getTemplate($type, $data, ['mail']);
+        $notificationTemplate = NotificationTemplate::getTemplate($type, $this->data, ['mail']);
         $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
 
     }
