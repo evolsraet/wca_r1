@@ -528,3 +528,18 @@ $primary: map-get($theme-colors, "primary");
       max-height: 80px;
     }
 }
+
+.rightContentResponsive {
+    height: 100vh;
+
+    @media (max-width: 768px) {
+        height: auto;
+
+        .rightContentInner {
+            padding: 0px !important;
+            margin: 0px !important;
+        }
+
+    }
+
+}

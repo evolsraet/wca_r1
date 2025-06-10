@@ -27,27 +27,27 @@
   
             <x-slot:leftContent>
               <div class="flex-grow-1" style="height: 100vh;">
-              <div id="mainCarousel" class="">
-                <div class="carousel-inner">
-                  <div class="carousel-item active" style="top:30%;">
-                    <x-carousels.carousel />
-                  </div>
+                <div id="mainCarousel" class="">
+                    <div class="carousel-inner">
+                    <div class="carousel-item active" style="top:30%;">
+                        <x-carousels.carousel />
+                    </div>
+                    </div>
                 </div>
-              </div>
               </div>
             </x-slot:leftContent>
 
 
             <x-slot:rightContent>
-                <div class="container bg-white form-custom" style="height: 100vh;">
+                <div class="container bg-white form-custom rightContentResponsive">
                     <div class="row justify-content-center">
 
-                        <video autoplay="" loop="" playsinline="" preload="auto" class="d-none d-sm-block" style="width: 85%;">
+                        <video autoplay="" loop="" playsinline="" preload="auto" class="d-none d-sm-block mb-4 mt-4" style="width: 90%;">
                             <source src="../images/video/mainvideo02.mp4" type="video/mp4">
                         </video>
 
                         <div class="col-md-12">
-                            <div class="mt-5 p-4">
+                            <div class="mt-5 p-4 rightContentInner">
                                 <div class="card-header">
                                     <div class="mb-3">이미 {{ config('app.name') }} 회원 이신가요?</div>
                                 </div>
