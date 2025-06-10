@@ -23,10 +23,10 @@
         <div class="auction-item-desc" x-text="auction.car_model + ' ' + auction.car_grade"></div>
         <div class="auction-item-tags">
         <template x-if="auction.is_accident">
-            <span class="tag tag-blue opacity-75">무사고</span>
+            <span class="tag border border-black text-black bg-transparent">무사고</span>
         </template>
         <template x-if="auction.is_biz">
-            <span class="tag tag-red opacity-75">법인/사업자</span>
+            <span class="tag border border-danger text-danger bg-transparent">법인/사업자</span>
         </template>
         </div>
     </div>
