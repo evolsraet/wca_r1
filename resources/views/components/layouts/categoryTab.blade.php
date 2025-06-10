@@ -1,4 +1,7 @@
-<div class="category-tab" x-data="{ current: 'all' }">
+<div class="category-tab" x-data="{ current: 'all', counts: {
+        all: {{ $counts['all'] ?? 0 }},
+        sold: {{ $counts['sold'] ?? 0 }}
+    } }">
 <div class="container">
   <ul class="tab-list">
     <li>
