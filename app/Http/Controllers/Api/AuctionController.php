@@ -30,7 +30,8 @@ use App\Models\Bid;
 use App\Jobs\AuctionDoneJob;
 use App\Http\Resources\AuctionResource;
 use Illuminate\Support\Str;
-
+use App\Libraries\SeedEncryptor;
+use App\Libraries\SeedCipher;
 
 class AuctionController extends Controller
 {
@@ -966,5 +967,77 @@ class AuctionController extends Controller
         return response()->api($result);
     }
 
+    public function testCarHistory(Request $request)
+    {
+        
+        echo '<pre>';
+        print_r(openssl_get_cipher_methods());
+        echo '</pre>';
+
+        exit;
+
+        // SeedCipher 인스턴스를 직접 생성합니다.
+        // 키와 IV는 SeedCipher 생성자 내부에서 config() 헬퍼를 통해 로드됩니다.
+        try {
+            $seedCipher = new SeedCipher();
+        } catch (\Exception $e) {
+            Log::error("SeedCipher 초기화 오류: " . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => '암호화 라이브러리 초기화 중 오류가 발생했습니다: ' . $e->getMessage(),
+            ], 500);
+        }
+
+        $sType = "1";
+        $carnum = "21두4916";
+        $memberID = "test01";
+
+        try {
+            $enc_sType = $seedCipher->encrypt($sType);
+            $enc_carnum = $seedCipher->encrypt($carnum);
+            $enc_memberID = $seedCipher->encrypt($memberID);
+
+            Log::info("테스트 sType: " . $sType);
+            Log::info("테스트 carnum: " . $carnum);
+            Log::info("테스트 memberID: " . $memberID);
+            Log::info("테스트 enc_sType: " . $enc_sType);
+            Log::info("테스트 enc_carnum: " . $enc_carnum);
+            Log::info("테스트 enc_memberID: " . $enc_memberID);
+
+            $dec_sType = $seedCipher->decrypt($enc_sType);
+            $dec_carnum = $seedCipher->decrypt($enc_carnum);
+            $dec_memberID = $seedCipher->decrypt($enc_memberID);
+
+            Log::info("테스트 dec_sType: " . $dec_sType);
+            Log::info("테스트 dec_carnum: " . $dec_carnum);
+            Log::info("테스트 dec_memberID: " . $dec_memberID);
+
+            return response()->json([
+                'status' => 'success',
+                'original' => [
+                    'sType' => $sType,
+                    'carnum' => $carnum,
+                    'memberID' => $memberID,
+                ],
+                'encrypted' => [
+                    'sType' => $enc_sType,
+                    'carnum' => $enc_carnum,
+                    'memberID' => $enc_memberID,
+                ],
+                'decrypted' => [
+                    'sType' => $dec_sType,
+                    'carnum' => $dec_carnum,
+                    'memberID' => $dec_memberID,
+                ],
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error("암복호화 중 오류 발생: " . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => '암복호화 처리 중 오류가 발생했습니다: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
 
 }

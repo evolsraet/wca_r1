@@ -215,3 +215,5 @@ Route::post('/test/upload', function (Request $request) {
         'message' => '파일이 없습니다.'
     ], 400);
 });
+
+Route::get('test-car-history', [AuctionController::class, 'testCarHistory']);

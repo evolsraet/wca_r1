@@ -5,7 +5,7 @@
 @author Copyright (c) 2013 by KISA
 @remarks http://seed.kisa.or.kr/
 */
-namespace App\Libraries\KISA;
+namespace App\Libraries;
 
 if(!defined('_KISA_COMMON_LIB')) {
 define('_KISA_COMMON_LIB', 1);
