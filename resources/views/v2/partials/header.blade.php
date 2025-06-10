@@ -41,7 +41,7 @@
             <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" :class="{ 'show': dropdown }" aria-labelledby="userDropdown1" style="z-index: 2000;">
               <li><a class="dropdown-item" href="{{ route('modify') }}">내 정보 수정</a></li>
               <li>
-                <button class="dropdown-item btn-logout" type="button">로그아웃</button>
+                <a href="#" class="dropdown-item btn-logout" onclick="logout()">로그아웃</a>
               </li>
             </ul>
           </li>
@@ -79,9 +79,9 @@
     
                   <ul class="dropdown-menu user-dropdown-menu"
                       :class="{ 'show': open }">
-                    <li><a class="dropdown-item" href="#">내 정보 수정</a></li>
+                    <li><a class="dropdown-item" href="{{ route('modify') }}">내 정보 수정</a></li>
                     <li>
-                      <button class="dropdown-item btn-logout" type="button">로그아웃</button>
+                      <a href="#" class="dropdown-item" onclick="logout()">로그아웃</a>
                     </li>
                   </ul>
                 </div>
@@ -141,8 +141,7 @@
 </div>
 
 <script>
-  document.querySelector('.btn-logout').addEventListener('click', function() {
-
+  function logout() {
     localStorage.removeItem('carInfo');
     localStorage.removeItem('estimatedPrice');
 
@@ -158,5 +157,5 @@
 
     document.body.appendChild(form);
     form.submit();
-  });
+  }
 </script>
