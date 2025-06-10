@@ -89,17 +89,6 @@ export default function () {
                     return;
                 }
 
-                // 파일첨부시 required 확인 안되어 수동으로 체크
-                if(!this.form.auction.file_auction_car_license){
-                    Alpine.store('swal').fire({
-                        title: '자동차등록증 업로드 필요',
-                        text: '자동차등록증을 업로드해주세요.',
-                        icon: 'error',
-                        confirmButtonText: '확인'
-                    });
-                    return;
-                }
-
                 appendFilesToFormData(formData, fileFields, this.$el);
 
                 if( this.form.isUpdate ) {

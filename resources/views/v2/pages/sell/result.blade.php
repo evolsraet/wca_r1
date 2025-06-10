@@ -2,32 +2,6 @@
 @section('title', '메인 페이지')
 @section('content')
 @php
-
-    // dd($carInfo);
-
-    // 변환된 구조
-    $data = [
-        'owner_name' => $carInfo['owner'] ?? null,
-        'car_no' => $carInfo['no'] ?? null,
-        'car_maker' => $carInfo['maker'] ?? null,
-        'car_model' => $carInfo['model'] ?? null,
-        'car_model_sub' => $carInfo['modelSub'] ?? null,
-        'car_grade' => $carInfo['grade'] ?? null,
-        'car_grade_sub' => $carInfo['gradeSub'] ?? null,
-        'car_year' => $carInfo['year'] ?? null,
-        'car_first_reg_date' => $carInfo['firstRegDate'] ?? null,
-        'car_mission' => $carInfo['mission'] ?? null,
-        'car_fuel' => $carInfo['fuel'] ?? null,
-        'car_price_now' => $carInfo['priceNow'] ?? null,
-        'car_price_now_whole' => $carInfo['priceNowWhole'] ?? null,
-        'car_thumbnail' => $carInfo['thumbnail'] ?? null,
-        'car_km' => $carInfo['km'] ?? null,
-        'resUseHistYn' => $carInfo['resUseHistYn'] ?? null,
-        'engineSize' => $carInfo['engineSize'] ?? null,
-        'tuning' => $carInfo['tuning'] ?? null,
-        'car_status' => '1', // 고정값
-    ];
-
     $isLogin = auth()->user();
 @endphp
 
@@ -49,23 +23,23 @@
                 <div class="row g-2 vehicle-info-list">
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">차량번호</div>
-                        <div class="col-8 info-value">{{ $carInfo['no'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $carInfo['car_no'] ?? '-' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">최초등록일</div>
-                        <div class="col-8 info-value">{{ $carInfo['firstRegDate'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $carInfo['car_first_reg_date'] ?? '-' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">미션</div>
-                        <div class="col-8 info-value">{{ $carInfo['mission'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $carInfo['car_mission'] ?? '-' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">제조사</div>
-                        <div class="col-8 info-value">{{ $carInfo['maker'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $carInfo['car_maker'] ?? '-' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">년식</div>
-                        <div class="col-8 info-value">{{ $carInfo['year'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $carInfo['car_year'] ?? '-' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">용도변경이력</div>
@@ -73,7 +47,7 @@
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">모델</div>
-                        <div class="col-8 info-value">{{ $carInfo['model'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $carInfo['car_model'] ?? '-' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">배기량</div>
@@ -85,15 +59,15 @@
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">등급</div>
-                        <div class="col-8 info-value">{{ $carInfo['grade'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $carInfo['car_grade'] ?? '-' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">연료</div>
-                        <div class="col-8 info-value">{{ $carInfo['fuel'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $carInfo['car_fuel'] ?? '-' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">세부모델</div>
-                        <div class="col-8 info-value">{{ $carInfo['modelSub'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $carInfo['car_model_sub'] ?? '-' }}</div>
                     </div>
                 </div>
         
@@ -183,7 +157,7 @@
 
 <script>
 
-window.carInfo = @json($data);
+window.carInfo = @json($carInfo);
 
 document.getElementById('openCurrentPriceModal').addEventListener('click', () => {
 

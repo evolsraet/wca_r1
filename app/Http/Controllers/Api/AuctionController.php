@@ -194,7 +194,23 @@ class AuctionController extends Controller
                 'tuning' => count($niceDnrResult['carParts']['outB0001']['list'][0]['resContentsList']),
                 'resUseHistYn' => $niceDnrResult['carParts']['outB0001']['list'][0]['resUseHistYn'] === 'Y' ? '사용' : '없음',
                 'initialPrice' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['price'],
-                'engineType' => $niceDnrResult['carSise']['info']['carinfo']['engineType']
+                'engineType' => $niceDnrResult['carSise']['info']['carinfo']['engineType'],
+
+                'owner_name' => $request->input('owner'),
+                'car_no' => $request->input('no'),
+                'car_maker' => $niceDnrResult['carSise']['info']['carinfo']['makerNm'],
+                'car_model' => $niceDnrResult['carSise']['info']['carinfo']['modelNm'],
+                'car_model_sub' => $niceDnrResult['carSise']['info']['carinfo']['formNm'],
+                'car_grade' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['gradeNm'],
+                'car_grade_sub' => '-',
+                'car_year' => $niceDnrResult['carSise']['info']['carinfo']['prye'],
+                'car_first_reg_date' => Carbon::parse($niceDnrResult['carParts']['outB0001']['list'][0]['resFirstDate'])->format('Y-m-d'),
+                'car_mission' => $niceDnrResult['carSise']['info']['carinfo']['gearBox'],
+                'car_fuel' => $niceDnrResult['carSise']['info']['carinfo']['fuel'],
+                'car_price_now' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['trvlDstncPriceList'][0]['trvlDstncPrice'],
+                'car_price_now_whole' => $CarmerceService->getCarmerceResult($niceDnrResult['carInfo']),
+                'car_thumbnail' => $niceDnrResult['carSise']['info']['carinfo']['classModelImg'],
+                'car_km' => $niceDnrResult['carParts']['outB0001']['list'][0]['resValidDistance'],
             ];
 
             Log::info('[차량정보 확인] / 경매 ID : ' . $result['no'], [
