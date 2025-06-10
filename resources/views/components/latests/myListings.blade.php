@@ -35,7 +35,7 @@
     </ul>
 
     <div class="car-add-box">
-        <a href="#" class="btn btn-dark w-100">
+        <a href="{{ route('sell') }}" class="btn btn-dark w-100">
             새 차량 등록하기 <span class="plus-icon">+</span>
         </a>
     </div>

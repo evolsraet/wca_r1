@@ -43,7 +43,7 @@
         </div>
 
         <div class="unassigned-action">
-            <a href="#" class="btn-unassigned-go">입찰하러 가기</a>
+            <a href="{{ route('auction.list') }}" class="btn-unassigned-go">입찰하러 가기</a>
         </div>
     @endif
 </div>

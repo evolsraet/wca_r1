@@ -9,12 +9,12 @@
 <div class="review-wrapper">
     <div class="review-header">
         <h5>나의 이용후기</h5>
-        <a href="#" class="review-all-link">전체보기 &gt;</a>
+        <a href="{{ route('board.list', ['boardId' => 'review']) }}" class="review-all-link">전체보기 &gt;</a>
     </div>
 
     @if (empty($reviews))
         <div class="review-empty-box">
-            <a href="#" class="btn btn-dark">이용후기 등록 하기</a>
+            <a href="{{ route('board.list', ['boardId' => 'review']) }}" class="btn btn-dark">이용후기 등록 하기</a>
             <p class="text-muted mt-3">내 차 판매 후, 이용후기를 작성해보세요.</p>
         </div>
     @else
