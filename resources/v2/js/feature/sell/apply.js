@@ -60,6 +60,9 @@ export default function () {
             console.log('form.auction 초기화 결과:', this.form.auction);
             window.apply = this;
 
+            this.dateTimeCheck('auction.diag_first_at'); // 차량 검사 예정일 (2일후 부터 선택 가능)
+            this.dateTimeCheck('auction.diag_second_at');
+
         },
         async submit() {
             this.loading = true;
@@ -134,6 +137,18 @@ export default function () {
         },
         checkBusiness() {
             console.log(window.resIndividualBusinessYN);
+        },
+        dateTimeCheck(el) {
+            const input = document.getElementById(el);
+            const now = new Date();
+
+            const minDate = new Date(now);
+            minDate.setDate(minDate.getDate() + 3);
+            minDate.setHours(0, 0, 0, 0); // 자정부터 허용
+            minDate.setMinutes(minDate.getMinutes() - minDate.getTimezoneOffset()); // 로컬 타임존 보정
+
+            // 설정
+            input.min = minDate.toISOString().slice(0, 16);
         }
     };
 }

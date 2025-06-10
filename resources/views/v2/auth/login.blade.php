@@ -57,7 +57,6 @@
                                         @submit.prevent="submit">
                                         <!-- 이메일 -->
                                         <div class="mb-3">
-                                            {{-- <label for="email" class="form-label">이메일</label> --}}
                                             <input type="email"
                                                 class="form-control"
                                                 id="email"
@@ -70,7 +69,6 @@
 
                                         <!-- 비밀번호 -->
                                         <div class="mb-3">
-                                            {{-- <label for="password" class="form-label">비밀번호</label> --}}
                                             <input type="password"
                                                 class="form-control"
                                                 id="password"
