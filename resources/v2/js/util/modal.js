@@ -1,4 +1,4 @@
-import { Modal, Collapse } from 'bootstrap';
+import { Modal, Collapse, Tooltip } from 'bootstrap';
 
 // offcanvas backdrop 관리를 위한 전역 변수
 let isOffcanvasOpen = false;
@@ -16,6 +16,11 @@ document.addEventListener('hidden.bs.offcanvas', () => {
     // backdrop 제거
     const backdrops = document.querySelectorAll('.offcanvas-backdrop');
     backdrops.forEach(backdrop => backdrop.remove());
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    tooltipTriggerList.forEach(el => new Tooltip(el));
 });
 
 // 아코디언 버튼 클릭 이벤트

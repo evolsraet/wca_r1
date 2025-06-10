@@ -271,6 +271,7 @@ $user_phone = $user->phone;
         Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/ownerAuthModal', {
             id: 'ownerAuthModal',
             title: '본인인증',
+            size: 'custom-size',
             showFooter: false,
             onResult: (result) => {
                 // console.log('result?', result);

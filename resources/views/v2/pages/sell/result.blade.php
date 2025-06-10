@@ -122,7 +122,7 @@
         
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <span class="fw-semibold">차량 정보가 다르신가요?</span>
-                <a href="#" class="text-danger fw-semibold small" @click="refreshCarInfo">
+                <a href="#" class="text-danger fw-semibold small" @click="refreshCarInfo" data-bs-toggle="tooltip" data-bs-placement="top" title="일 1회 갱신 가능합니다, 갱신한 정보는 1주간 보관됩니다">
                     정보갱신하기 <i class="mdi mdi-refresh"></i>
                 </a>
             </div>
