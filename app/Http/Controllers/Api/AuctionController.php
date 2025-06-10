@@ -969,13 +969,6 @@ class AuctionController extends Controller
 
     public function testCarHistory(Request $request)
     {
-        
-        echo '<pre>';
-        print_r(openssl_get_cipher_methods());
-        echo '</pre>';
-
-        exit;
-
         // SeedCipher 인스턴스를 직접 생성합니다.
         // 키와 IV는 SeedCipher 생성자 내부에서 config() 헬퍼를 통해 로드됩니다.
         try {
