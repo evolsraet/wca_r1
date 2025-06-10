@@ -27,7 +27,7 @@
           :initialRightPanelOpen="true">
 
           <x-slot:leftContent>
-            <div class="flex-grow-1" style="height: 100vh;">
+            <div class="flex-grow-1 leftContentResponsive">
             <div id="mainCarousel" class="">
               <div class="carousel-inner">
                 <div class="carousel-item active" style="top:30%;">

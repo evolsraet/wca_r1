@@ -529,6 +529,19 @@ $primary: map-get($theme-colors, "primary");
     }
 }
 
+.leftContentResponsive {
+    height: 100vh;
+
+    @media (max-width: 768px) {
+        
+        #mainCarousel {
+            position: absolute;
+            top: 20% !important;
+        }
+    }
+
+}
+
 .rightContentResponsive {
     height: 100vh;
 
