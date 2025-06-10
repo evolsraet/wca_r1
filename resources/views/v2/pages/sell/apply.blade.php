@@ -198,12 +198,12 @@ $user_phone = $user->phone;
                             <div class="mb-4 mt-4">
                                 <h5 class="fw-bold">첨부파일</h5>
 
-                                <div class="file-upload-btn-wrap">
+                                <div class="mb-4">
                                 <x-forms.fileUpload
                                     label="자동차등록증"
                                     name="file_auction_car_license"
                                     :errors="true"
-                                    :preview="true"
+                                    :preview="false"
                                 />
                                 </div>
 
@@ -212,11 +212,11 @@ $user_phone = $user->phone;
                                     <button type="button" class="btn btn-success text-white fs-6 border-0" id="delegationFormBtn">위임장 양식</button>
                                 </div>
 
-                                <div class="file-upload-btn-wrap mt-4">
+                                <div class="mt-4">
                                 <x-forms.fileUpload
                                     name="file_auction_proxy"
                                     :errors="true"
-                                    :preview="true"
+                                    :preview="false"
                                 />
                                 </div>
                             </div>
