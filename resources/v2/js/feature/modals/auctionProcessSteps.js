@@ -35,6 +35,16 @@ export default function () {
             // 폼 삽입 후 전송
             document.body.appendChild(form);
             form.submit();
+        },
+        showTooltip() {
+            console.log('showTooltip');
+
+            Alpine.store('modal').showHtmlFromUrl('/v2/components/modals/auctionProcessStepsTooltip', {
+                id: 'auctionProcessStepsTooltip',
+                title: '탁송 및 대금',
+                size: 'custom-size',
+                showFooter: false
+            });
         }
     };
 }

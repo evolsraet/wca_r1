@@ -199,7 +199,7 @@ document.getElementById('openCurrentPriceModal').addEventListener('click', () =>
 document.getElementById('openAuctionModal').addEventListener('click', () => {
     Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/auctionProcessSteps', {
         id: 'auctionProcessSteps',
-        title: '경매 신청하기',
+        title: '경매 진행 순서 안내',
         showFooter: false
     });
 });
