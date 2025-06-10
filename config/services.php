@@ -66,6 +66,7 @@ return [
         'encrypt_key' => ConfigService::safeEnv('CARHISTORY_ENCRYPT_KEY', 'carHistory config encrypt_key'),
         'member_id' => ConfigService::safeEnv('CARHISTORY_MEMBER_ID', 'carHistory config member_id'),
         'api_url' => ConfigService::safeEnv('CARHISTORY_API_URL', 'carHistory config api_url'),
+        'encrypt_iv' => ConfigService::safeEnv('CARHISTORY_ENCRYPT_IV', 'carHistory config encrypt_iv'),
     ],
 
     // 코드에프 API

@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
 use Carbon\Carbon;
 use App\Models\NiceCarHistory;
+use App\Libraries\SeedEncryptor;
+
 class CarHistoryService
 {
     public function getCarHistory(string $carNumber)
@@ -53,6 +55,8 @@ class CarHistoryService
             'stdDate'     => Carbon::now()->format('Ymd'),
             'rType'       => 'J',
         ];
+
+        // dd($payload);
 
         Log::info("[카히스토리] API 요청 준비 완료", [
             'name'=> '카히스토리 API 요청 준비 완료',
@@ -107,21 +111,35 @@ class CarHistoryService
         return null;
     }
 
+
     private function seedEncrypt(string $plainText): string
     {
-        $key = config('services.carHistory.encrypt_key');
-
-        // 16바이트 단위 패딩 (null padding)
-        $padded = str_pad($plainText, 16, "\0");
-
-        // SEED 알고리즘이 openssl에 등록된 경우 사용 가능
+        $key = hex2bin(config('services.carHistory.encrypt_key'));
+        $iv = config('services.carHistory.encrypt_iv');
+    
+        // 길이 확인 로그
+        if (strlen($key) !== 16) {
+            throw new \Exception('암호화 키는 16바이트여야 합니다.');
+        }
+    
+        if (strlen($iv) !== 16) {
+            throw new \Exception('IV는 16바이트여야 합니다.');
+        }
+    
+        $padded = str_pad($plainText, 16 * ceil(strlen($plainText) / 16), "\0");
+    
         $cipherText = openssl_encrypt(
             $padded,
-            'seed-ecb',
+            'seed-cbc',
             $key,
-            OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING
+            OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
+            $iv
         );
-
+    
+        if ($cipherText === false) {
+            throw new \Exception('SEED 암호화 실패');
+        }
+    
         return base64_encode($cipherText);
     }
 
@@ -131,7 +149,11 @@ class CarHistoryService
 
         // $carHistory = NiceCarHistory::where('car_no', $carNumber)->first();
 
-        $carHistory['data'] = json_decode(file_get_contents(storage_path('mock/car_history_sample.json')), true);
+        // $carHistory['data'] = json_decode(file_get_contents(storage_path('mock/car_history_sample.json')), true);
+
+        $carHistory = $this->getCarHistory($carNumber);
+
+        // dd($carHistory);
 
         // dd($carHistory);
 
@@ -144,7 +166,7 @@ class CarHistoryService
             ]);
 
 
-            $data = $carHistory['data'];
+            $data = $carHistory;
 
             // dd($data);
 

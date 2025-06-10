@@ -98,6 +98,7 @@ function fetchCarHistory() {
       const tableBody = resultArea.querySelector('#resultTable tbody');
       tableBody.innerHTML = '';
       if (apiType === 'carHistoryCrash') {
+        console.log('crash',data);
         renderCrashData(data, resultArea);
       } else {
         for (const key in data) {
@@ -145,6 +146,7 @@ function renderCrashData(data, container) {
   const crashTypes = { self: '자차 피해 사고', other: '타차 가해 사고' };
   for (const type in crashTypes) {
     const records = data[type];
+    console.log(records);
     if (!Array.isArray(records)) continue;
     const section = document.createElement('div');
     section.classList.add('mt-5');
