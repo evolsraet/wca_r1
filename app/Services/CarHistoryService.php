@@ -83,6 +83,7 @@ class CarHistoryService
                 Session::put($sessionKey . '_fetched_at', now());
 
                 // 데이터베이스에 저장 
+                // TODO: 접속기기, IP정보 추가
                 NiceCarHistory::create([
                     'car_no' => $carNumber,
                     'first_regdate' => $data['r105'],
