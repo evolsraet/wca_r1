@@ -2,7 +2,7 @@
 $user = auth()->user();
 @endphp
 
-<div class="container auth-modal form-custom" x-data="ownerAuthModal()">
+<div class="container auth-modal" x-data="ownerAuthModal()">
     <!-- 1단계: 고지사항 -->
     <div class="form-group" x-show="step === 1">
       <h5 class="fw-bold mb-3">개인사업자등록상태 조회 고지사항</h5>
@@ -40,15 +40,15 @@ $user = auth()->user();
         <label class="form-label"><span class="text-danger">*</span> 통신사</label><br>
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="radio" name="telecom" value="0" x-model="telecom">
-          <label class="form-check-label">SKT</label>
+          <label class="form-check-label">SKT (알뜰폰)</label>
         </div>
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="radio" name="telecom" value="1" x-model="telecom">
-          <label class="form-check-label">KT</label>
+          <label class="form-check-label">KT (알뜰폰)</label>
         </div>
         <div class="form-check form-check-inline">
           <input class="form-check-input" type="radio" name="telecom" value="2" x-model="telecom">
-          <label class="form-check-label">LGU+</label>
+          <label class="form-check-label">LGU+ (알뜰폰)</label>
         </div>
       </div>
   

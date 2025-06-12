@@ -17,7 +17,7 @@
     </div>
   </div>
 
-  <div style="position: absolute; top: 49px; left: 0; width: 100%; z-index: 1;" x-data="index()">
+  <div style="position: absolute; top: 39px; left: 0; width: 100%; z-index: 1;" x-data="index()">
     <div class="container">
       <x-layouts.split
           leftClass="col-lg-8"
@@ -39,11 +39,11 @@
           </x-slot:leftContent>
 
           <x-slot:rightContent>
-            <div class="container bg-white form-custom rightContentResponsive">
+            <div class="container bg-white rightContentResponsive">
               
               <div class="row justify-content-center">
 
-                <video autoplay="" loop="" playsinline="" preload="auto" class="d-none d-sm-block mb-4 mt-4" style="width: 90%;">
+                <video autoplay="" loop="" muted="" playsinline="" preload="auto" class="d-none d-sm-block mb-4 mt-4" style="width: 90%;">
                   <source src="../images/video/mainvideo02.mp4" type="video/mp4">
                 </video>
 

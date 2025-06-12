@@ -15,7 +15,13 @@
 {{-- 기본 네비게이션 --}}
 <nav class="navbar navbar-expand-lg sticky-top header-navbar {{ $role === 'dealer' ? 'dealer-header' : 'default-header' }}">
   <div class="container-fluid">
-    <a class="navbar-brand logo-text" href="{{ route('home') }}">wecarlogo</a>
+    <a class="navbar-brand logo-text" href="{{ route('home') }}">
+      @if ($role === 'dealer')
+        <img src="{{ asset('images/busan_wecar_logo_white.png') }}" alt="weCar 로고" />
+      @else
+        <img src="{{ asset('images/busan_wecar_logo.png') }}" alt="weCar 로고" />
+      @endif
+    </a>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">

@@ -55,15 +55,29 @@
                 <div class="split-right-content-box">
                     <header class="split-right-header d-lg-none" @click="isOpen = !isOpen" style="cursor:pointer;">
                         <template x-if="isOpen">
-                            <i class="bi bi-chevron-down me-2"></i>
+                            <span class="mdi mdi-chevron-down fs-2"></span>
                         </template>
                         <template x-if="!isOpen">
-                            <i class="bi bi-chevron-up me-2"></i>
+                            <span class="mdi mdi-chevron-up fs-2"></span>
                         </template>
-                        <span>상세보기</span>
                     </header>
-                    <div class="split-right-content-inner {{ $rightContainerClass }}">
+                    <div class="split-right-content-inner {{ $rightContainerClass }} position-relative"
+                        x-ref="scrollArea"
+                        x-init="() => {
+                            const el = $refs.scrollArea;
+                            hasScroll = el.scrollHeight > el.clientHeight;
+                            new ResizeObserver(() => {
+                                hasScroll = el.scrollHeight > el.clientHeight;
+                            }).observe(el);
+                        }">
                         {{ $rightContent }}
+
+                        {{-- 화면스크롤기능 --}}
+                        <span class="position-fixed top-50 end-0 translate-middle-y"
+                            x-show="hasScroll"
+                            x-transition.opacity>
+                            <span class="mdi mdi-unfold-more-horizontal fs-2"></span>
+                        </span>
                     </div>
                 </div>
             </div>

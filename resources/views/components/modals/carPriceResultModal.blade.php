@@ -1,4 +1,4 @@
-<div class="form-custom text-center" x-data="carPriceResultModal">    
+<div class="text-center" x-data="carPriceResultModal">    
     <div class="bg-light rounded py-3 px-4 d-inline-block mb-3">
         <span class="fs-5 fw-bold text-dark me-2" x-text="estimatedPriceInTenThousandWon"></span>
         <span class="fs-5 fw-bold text-danger">만원</span>

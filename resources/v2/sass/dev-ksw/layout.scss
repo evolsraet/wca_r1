@@ -9,15 +9,13 @@ $primary: map-get($theme-colors, "primary");
 
     .navbar-brand {
         padding: 0;
-        background-image: url('/public/images/busan_wecar_logo.png');
-        background-size: 100px;
-        background-repeat: no-repeat;
-        background-position: left;
-        width: 120px;
-        height: 55px;
-        text-indent: -9999px;
-        overflow: hidden;
-        white-space: nowrap;
+        width: 100px;
+        height: 45px;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
     }
 
     @media (max-width: 768px) {
@@ -42,7 +40,7 @@ $primary: map-get($theme-colors, "primary");
     .navbar-nav .nav-link {
         position: relative;
         margin: 0 0.6rem;
-        padding-bottom: 0.4rem;
+        // padding-bottom: 0.4rem;
 
         &::after {
             content: "";
@@ -145,8 +143,13 @@ $primary: map-get($theme-colors, "primary");
     border-bottom: 0px;
 
     .navbar-brand {
-        background-image: url('/public/images/busan_wecar_logo_white.png');
-        background-size: 100px;
+        width: 100px;
+        height: 45px;
+        img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
     }
 
     .nav-link {
@@ -556,3 +559,64 @@ $primary: map-get($theme-colors, "primary");
     }
 
 }
+
+.form-check.rounded-check {
+    background-color: $gray-100; // 연한 회색 배경
+    border-radius: 2rem; // pill 형태
+    padding: 0.75rem 2.4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    transition: all 0.2s ease-in-out;
+  
+    .form-check-input {
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid $gray-300;
+      border-radius: 50%;
+      position: relative;
+      background-color: $white;
+      transition: all 0.2s;
+
+      &:focus,
+        &:focus-visible {
+        outline: none;
+        box-shadow: none;
+        }
+  
+      &:checked {
+        background-color: $primary;
+        border-color: $primary;
+  
+        &::after {
+          color: $white;
+          font-size: 0.75rem;
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -60%);
+        }
+      }
+    }
+  
+    .form-check-label {
+      font-weight: 500;
+      font-size: 0.95rem;
+      color: $gray-700;
+      flex: 1;
+      margin-left: 0.5rem;
+
+      a {
+        color: $black;
+        font-weight: 800;
+        text-decoration: none;
+
+        &:hover {
+          color: $primary;
+          text-decoration: underline;
+        }
+      }
+
+    }
+  }

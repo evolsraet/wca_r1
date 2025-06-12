@@ -17,6 +17,7 @@ export default function () {
             this.carInfo = JSON.parse(localStorage.getItem('carInfo'));
             this.estimatedPriceInTenThousandWon = JSON.parse(localStorage.getItem('estimatedPrice'))?.value;
 
+            this.openUsageNotice();
         },
         async getResult() {
             console.log(this.carInfo);
@@ -76,6 +77,68 @@ export default function () {
                     confirmButtonText: '확인'
                 });
             }
+        },
+        openCurrentPriceModal() {
+            const estimatedPrice = localStorage.getItem('estimatedPrice');
+
+            if (estimatedPrice) {
+                const estimatedPriceData = JSON.parse(estimatedPrice);
+                
+                console.log('estimatedPriceData.value', estimatedPriceData.value);
+        
+                Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/carPriceResultModal', {
+                    id: 'carPriceResultModal',
+                    title: '예상 가격 측정',
+                    showFooter: false,
+                    data: {
+                        estimatedPriceInTenThousandWon: estimatedPriceData.value,
+                        carNo: estimatedPriceData.carNo
+                    }
+                });
+        
+                return;
+            }
+        
+            Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/currentPrice', {
+                id: 'currentPrice',
+                title: '내 차, 예상가격을 확인합니다',
+                showFooter: false,
+                data: {
+                    carInfo: window.carInfo
+                },
+                onResult: (result) => {
+                    console.log('result?', result);
+                }
+            });
+        },
+        openAuctionModal() {
+            if (!isLogin) {
+
+                Alpine.store('swal').fire({
+                    title: '로그인 필요',
+                    text: '로그인을 하면 경매 신청이 가능합니다.',
+                    icon: 'warning',
+                    confirmButtonText: '확인'
+                }).then(() => {
+                    window.location.href = '/v2/login';
+                }).catch(() => {
+                    window.location.href = '/v2/login';
+                });
+
+                return;
+            }
+            Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/auctionProcessSteps', {
+                id: 'auctionProcessSteps',
+                title: '경매 진행 순서 안내',
+                showFooter: false
+            });
+        },
+        openUsageNotice() {
+            Alpine.store(`modal`).showHtmlFromUrl('/v2/docs/usageNotice?raw=1', {
+                id: 'usageNotice',
+                title: '차량출품 조건 및 유의사항',
+                showFooter: false
+            });
         }
     };
 }

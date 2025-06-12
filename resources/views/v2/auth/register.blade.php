@@ -111,6 +111,7 @@
                             <x-forms.checkbox
                                 name="isDealer"
                                 :errors="false"
+                                wrapperClass="rounded-check"
                                 label="혹시 딜러이신가요? 네,딜러에요!"
                             />
                             @endif
@@ -273,6 +274,7 @@
                                         name="dealer.isCheckDealer1"
                                         :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `' . $privacy['title'] . '`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>' . $privacy['title'] . '</a>에 동의합니다.'"
                                         required
+                                        wrapperClass="rounded-check"
                                         :errors="true"
                                     />
 
@@ -280,6 +282,7 @@
                                         name="dealer.isCheckDealer2"
                                         :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `주민등록번호(법인등록번호) 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>주민등록번호(법인등록번호) 수집 동의</a>에 동의합니다.'"
                                         required
+                                        wrapperClass="rounded-check"
                                         :errors="true"
                                     />
 
@@ -287,6 +290,7 @@
                                         name="dealer.isCheckDealer3"
                                         :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `자동차관리사업등록번호 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>자동차관리사업등록번호 수집 동의</a>에 동의합니다.'"
                                         required
+                                        wrapperClass="rounded-check"
                                         :errors="true"
                                     />
 
@@ -294,6 +298,7 @@
                                         name="dealer.isCheckDealer4"
                                         :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `사업자정보 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>사업자정보 수집 동의</a>에 동의합니다.'"
                                         required
+                                        wrapperClass="rounded-check"
                                         :errors="true"
                                     />
                                     @endif
@@ -306,6 +311,7 @@
                             name="user.isCheckPrivacy"
                             :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `개인정보처리방침`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>개인정보처리방침</a>에 동의합니다.'"
                             required
+                            wrapperClass="rounded-check"
                             :errors="true"
                         />
                         @endif

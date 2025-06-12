@@ -25,7 +25,7 @@ if ($article) {
     };
 </script>
 
-<div class="board-form board-skin-{{ $board->skin }} mt-4 form-custom"
+<div class="board-form board-skin-{{ $board->skin }} mt-4"
      x-data="articleForm()"
      x-init="setup('{{ $board->id }}', '{{ $articleId }}')">
 

@@ -51,7 +51,6 @@ Route::get('/docs/{doc}', function ($doc) {
 
     // 쿼리 파라미터가 ?raw=1 인 경우 원본 HTML 출력
     if (request()->query('raw') === '1') {
-        $html = preg_replace('/<h1[^>]*>.*?<\/h1>/s', '', $html);
         return response($html)->header('Content-Type', 'text/html');
     }
 

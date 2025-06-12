@@ -4,10 +4,11 @@
     'required' => false,
     'class' => '',
     'errors' => null,
+    'wrapperClass' => '',
 ])
 
 <div class="mb-3">
-    <div class="form-check">
+    <div class="form-check {{ $wrapperClass }}">
         <input
             type="checkbox"
             class="form-check-input {{ $class }}"

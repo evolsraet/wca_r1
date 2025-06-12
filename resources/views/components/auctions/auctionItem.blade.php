@@ -18,7 +18,7 @@
         <span class="auction-item-badge text-white" :class="$store.auctionStatus.get(auction.status).class" x-show="auction.status" x-text="$store.auctionStatus.get(auction.status).label"></span>
     </div>
     <div class="auction-item-body">
-        <div class="auction-item-title" x-text="auction.car_maker + ' ' + auction.car_model + ' ' + auction.car_grade_sub + ' ' + auction.car_fuel"></div>
+        <div class="auction-item-title" x-text="auction.car_maker + ' ' + auction.car_model + ' ' + auction.car_grade_sub + ' ' + auction.car_fuel + ' (' + auction.car_no + ')'"></div>
         <div class="auction-item-sub" x-text="auction.car_year + '년 | ' + auction.car_km + 'km'"></div>
         <div class="auction-item-desc" x-text="auction.car_model + ' ' + auction.car_grade"></div>
         <div class="auction-item-tags">

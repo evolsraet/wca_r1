@@ -7,7 +7,7 @@ $user = auth()->user();
 $user_phone = $user->phone;
 @endphp
     
-<div class="container py-5 form-custom">
+<div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-5">
             <div class="">
@@ -38,7 +38,7 @@ $user_phone = $user->phone;
                                 소유자
                             </label>
 
-                            <div class="input-group d-flex">
+                            <div class="input-group">
                                 <x-forms.input type="text"
                                         id="owner_name"
                                         class="form-control"
@@ -49,7 +49,7 @@ $user_phone = $user->phone;
                                         flex="true"
                                     />
 
-                                <button type="button" id="ownerAuthBtn" class="btn btn-secondary fs-6 border-0" :disabled="checkBusiness" style="width: 120px; height: 38px;">
+                                <button type="button" id="ownerAuthBtn" class="btn btn-secondary fs-6 border-0" :disabled="checkBusiness" style="height: 38px;">
                                     본인인증
                                 </button>
                             </div>
@@ -228,6 +228,7 @@ $user_phone = $user->phone;
                                     name="auction.is_business_owner"
                                     label="법인 / 사업자차량"
                                     value="1"
+                                    wrapperClass="rounded-check"
                                     :errors="true"
                                 />
 

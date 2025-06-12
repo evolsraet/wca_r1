@@ -45,7 +45,7 @@
     </div>
 
     <!-- 검색 및 필터 영역 -->
-    <div class="bg-light rounded mb-4 form-custom">
+    <div class="bg-light rounded mb-4">
         <div class="row g-3 d-flex justify-content-end">
             @if(!empty($board->categories))
                 <div class="col-md-2" >

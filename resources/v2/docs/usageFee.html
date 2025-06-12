@@ -1,67 +1,80 @@
-<div style="padding: 20px; font-family: sans-serif; line-height: 1.6; font-size: 14px;">
-    <h5 style="font-size: 16px; margin-bottom: 5px;">위카옥션은 간단한 정보제공 수수료 체계를 가지고 있습니다.</h5>
-    <h3 style="font-size: 20px; font-weight: bold; margin-bottom: 30px;">정보제공 수수료 안내</h3>
+
+<div class="container py-4 small lh-lg">
+    <h5 class="h6 mb-1">위카옥션은 간단한 정보제공 수수료 체계를 가지고 있습니다.</h5>
+    <h3 class="h4 fw-bold mb-4">정보제공 수수료 안내</h3>
   
     <!-- 진행 절차 -->
-    <div style="display: flex; align-items: center; justify-content: space-around; flex-wrap: wrap; margin-bottom: 40px;">
-      <div style="text-align: center;">
-        <div style="width: 80px; height: 80px; border-radius: 50%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
-          <img src="../../images/bid.png" alt="경매 낙찰" style="height: 40px;">
+    <div class="d-flex flex-wrap justify-content-around align-items-center gap-4 mb-5">
+      <div class="text-center">
+        <div class="rounded-circle border d-flex align-items-center justify-content-center mx-auto mb-2 size-80">
+          <img src="../../images/bid.png" alt="경매 낙찰" class="img-fluid h-40">
         </div>
         <p>경매 낙찰</p>
       </div>
-      <div style="font-size: 24px;">➤</div>
-      <div style="text-align: center;">
-        <div style="width: 80px; height: 80px; border-radius: 50%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
-          <img src="../../images/hand.png" alt="대금 에스크로 입금" style="height: 40px;">
+      <div class="fs-4">➤</div>
+      <div class="text-center">
+        <div class="rounded-circle border d-flex align-items-center justify-content-center mx-auto mb-2 size-80">
+          <img src="../../images/hand.png" alt="대금 에스크로 입금" class="img-fluid h-40">
         </div>
         <p>대금 에스크로 입금</p>
       </div>
-      <div style="font-size: 24px;">➤</div>
-      <div style="text-align: center;">
-        <div style="width: 80px; height: 80px; border-radius: 50%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
-          <img src="../../images/Iconcare.png" alt="탁송 및 도착" style="height: 40px;">
+      <div class="fs-4">➤</div>
+      <div class="text-center">
+        <div class="rounded-circle border d-flex align-items-center justify-content-center mx-auto mb-2 size-80">
+          <img src="../../images/Iconcare.png" alt="탁송 및 도착" class="img-fluid h-40">
         </div>
         <p>탁송 및 도착</p>
       </div>
-      <div style="font-size: 24px;">➤</div>
-      <div style="text-align: center;">
-        <div style="width: 80px; height: 80px; border-radius: 50%; border: 1px solid #ccc; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px;">
-          <img src="../../images/hand02.png" alt="수수료 입금" style="height: 40px;">
+      <div class="fs-4">➤</div>
+      <div class="text-center">
+        <div class="rounded-circle border d-flex align-items-center justify-content-center mx-auto mb-2 size-80">
+          <img src="../../images/hand02.png" alt="수수료 입금" class="img-fluid h-40">
         </div>
         <p>수수료 입금</p>
       </div>
     </div>
   
     <!-- 수수료 테이블 -->
-    <table style="width: 100%; border-collapse: collapse; text-align: center;">
-      <thead>
-        <tr style="background: #f9f9f9;">
-          <th style="padding: 12px; border: 1px solid #ccc;">금액</th>
-          <th style="padding: 12px; border: 1px solid #ccc;">수수료 <span style="color: #e74c3c;">(부과세 포함)</span></th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td style="padding: 12px; border: 1px solid #ccc;">100만원 이하</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">14만원</td>
-        </tr>
-        <tr>
-          <td style="padding: 12px; border: 1px solid #ccc;">500만원 이하</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">25만원</td>
-        </tr>
-        <tr>
-          <td style="padding: 12px; border: 1px solid #ccc;">1000만원 이하</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">30만원</td>
-        </tr>
-        <tr>
-          <td style="padding: 12px; border: 1px solid #ccc;">3000만원 이하</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">35만원</td>
-        </tr>
-        <tr>
-          <td style="padding: 12px; border: 1px solid #ccc;">3000만원 이상</td>
-          <td style="padding: 12px; border: 1px solid #ccc;">40만원</td>
-        </tr>
-      </tbody>
-    </table>
+    <div class="table-responsive">
+      <table class="table table-bordered text-center align-middle">
+        <thead>
+          <tr class="table-light">
+            <th>금액</th>
+            <th>수수료 <span class="text-danger fw-bold">(부과세 포함)</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>100만원 이하</td>
+            <td>14만원</td>
+          </tr>
+          <tr>
+            <td>500만원 이하</td>
+            <td>25만원</td>
+          </tr>
+          <tr>
+            <td>1000만원 이하</td>
+            <td>30만원</td>
+          </tr>
+          <tr>
+            <td>3000만원 이하</td>
+            <td>35만원</td>
+          </tr>
+          <tr>
+            <td>3000만원 이상</td>
+            <td>40만원</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
+
+  <style>
+    .size-80 {
+      width: 80px;
+      height: 80px;
+    }
+    .h-40 {
+      height: 40px;
+    }
+  </style>

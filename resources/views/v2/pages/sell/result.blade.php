@@ -5,7 +5,7 @@
     $isLogin = auth()->user();
 @endphp
 
-<div class="container sell-container form-custom p-6 mt-5 mb-4" style="max-width: 1000px;" x-data="result">
+<div class="container sell-container p-6 mt-5 mb-4" style="max-width: 1000px;" x-data="result">
     <x-layouts.split
         leftClass="col-lg-6"
         rightClass="col-lg-6"
@@ -74,7 +74,7 @@
                 <div class="mt-4 text-center">
                     <a href="#" 
                         class="btn btn-outline-primary px-4 w-100"
-                        @click.prevent="Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/usageNotice?raw=1`, {title: `차량출품 조건 및 유의사항`, size: `modal-md`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})"
+                        @click.prevent="openUsageNotice"
                         >
                         차량출품 조건 및 유의사항
                     </a>
@@ -90,9 +90,9 @@
         <div class="estimate-info-box mb-4">
 
             <div class="bg-light rounded mb-3">
-                <div class="d-flex justify-content-between sell-box p-2">
+                <div class="d-flex justify-content-between sell-box p-2"  @click="openCurrentPriceModal">
                     <span class="text-muted fw-bold">예상 가격</span>
-                    <span class="fw-bold text-danger fs-5"> <span x-text="estimatedPriceInTenThousandWon" id="estimatedPriceInTenThousandWon"></span> 만원</span>
+                    <span class="fw-bold text-danger fs-5"> <span x-text="estimatedPriceInTenThousandWon" id="estimatedPriceInTenThousandWon"></span></span>
                 </div>
             </div>
 
@@ -134,15 +134,15 @@
             </div>
         
             <div class="row">
-                <div class="{{ $isLogin ? 'col-6' : 'col-12' }}">
-                    <a href="#" class="btn btn-outline-primary w-100 py-2 fs-6" id="openCurrentPriceModal">
-                        현재 예상 가격
+                <div class="col-6">
+                    <a href="#" class="btn btn-outline-primary w-100 py-2 fs-6" @click="openCurrentPriceModal">
+                        예상 가격 측정
                     </a>
                 </div>
-                <div class="{{ $isLogin ? 'col-6' : 'col-12' }}" @if(!$isLogin) style="display: none;" @endif>
+                <div class="col-6">
                     <button 
-                    class="btn btn-danger w-100 py-2 rounded-pill fw-semibold border-0" 
-                    id="openAuctionModal"
+                    class="btn btn-danger w-100 py-2 fw-semibold border-0" 
+                    @click="openAuctionModal"
                     >
                         경매 신청하기
                     </button>
@@ -156,54 +156,8 @@
 </div>
 
 <script>
-
+const isLogin = '{{ $isLogin }}';
 window.carInfo = @json($carInfo);
-
-document.getElementById('openCurrentPriceModal').addEventListener('click', () => {
-
-    const estimatedPrice = localStorage.getItem('estimatedPrice');
-
-    if (estimatedPrice) {
-        const estimatedPriceData = JSON.parse(estimatedPrice);
-        
-        console.log('estimatedPriceData.value', estimatedPriceData.value);
-
-        Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/carPriceResultModal', {
-            id: 'carPriceResultModal',
-            title: '예상 가격',
-            showFooter: false,
-            data: {
-                estimatedPriceInTenThousandWon: estimatedPriceData.value,
-                carNo: estimatedPriceData.carNo
-            }
-        });
-
-        return;
-    }
-
-    Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/currentPrice', {
-        id: 'currentPrice',
-        title: '내 차, 예상가격을 확인합니다',
-        showFooter: false,
-        data: {
-            carInfo: window.carInfo
-        },
-        onResult: (result) => {
-            console.log('result?', result);
-        }
-    });
-    
-});
-
-// 경매 신청 모달
-document.getElementById('openAuctionModal').addEventListener('click', () => {
-    Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/auctionProcessSteps', {
-        id: 'auctionProcessSteps',
-        title: '경매 진행 순서 안내',
-        showFooter: false
-    });
-});
-
 </script>
 
 @endsection

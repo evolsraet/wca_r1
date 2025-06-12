@@ -77,7 +77,7 @@ switch($board->id) {
     <x-loading />
 
 
-    <div class="container pt-4 form-custom">
+    <div class="container pt-4">
         <x-layouts.split
             leftClass="col-lg-7"
             rightClass="col-lg-5"

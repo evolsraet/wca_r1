@@ -1,4 +1,4 @@
-<div class="form-custom" x-data="currentPrice">
+<div x-data="currentPrice">
   <p class="text-muted">보다 정확한 가격 산정을 위해 아래 사항을 확인해 주세요.</p>
 
   <!-- 주행거리 -->

@@ -35,7 +35,7 @@ $isUser = auth()?->user()?->hasRole('user') ? 'user' : 'dealer';
     <!-- 게시글 내용 -->
     <div x-show="!loading && article" x-cloak>
 
-    <div class="container pt-4 form-custom">
+    <div class="container pt-4">
         <x-layouts.split
             leftClass="col-lg-7"
             rightClass="col-lg-5"

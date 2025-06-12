@@ -16,7 +16,7 @@
       </div>
     </div>
   
-    <div style="position: absolute; top: 49px; left: 0; width: 100%; z-index: 1;">
+    <div style="position: absolute; top: 39px; left: 0; width: 100%; z-index: 1;">
       <div class="container">
         <x-layouts.split
             leftClass="col-lg-8"
@@ -39,10 +39,10 @@
 
 
             <x-slot:rightContent>
-                <div class="container bg-white form-custom rightContentResponsive">
+                <div class="container bg-white rightContentResponsive">
                     <div class="row justify-content-center">
 
-                        <video autoplay="" loop="" playsinline="" preload="auto" class="d-none d-sm-block mb-4 mt-4" style="width: 90%;">
+                        <video autoplay="" loop="" muted="" playsinline="" preload="auto" class="d-none d-sm-block mb-4 mt-4" style="width: 90%;">
                             <source src="../images/video/mainvideo02.mp4" type="video/mp4">
                         </video>
 
@@ -92,17 +92,17 @@
                                         
                                             <div class="d-flex justify-content-center gap-3">
                                                 <!-- Google 로그인 -->
-                                                <a href="#" class="btn btn-outline-secondary rounded-circle p-3 d-flex align-items-center justify-content-center" style="width:45px; height:45px;">
+                                                <a href="javascript:alert('준비중입니다.')" class="btn btn-outline-secondary rounded-circle p-3 d-flex align-items-center justify-content-center" style="width:45px; height:45px;">
                                                     <img src="{{ asset('images/google_ico.png') }}" alt="Google" style="width:45px; height:45px;">
                                                 </a>
                                         
                                                 <!-- Naver 로그인 -->
-                                                <a href="#" class="btn btn-outline-success rounded-circle p-3 d-flex align-items-center justify-content-center" style="width:45px; height:45px;">
+                                                <a href="/auth/naver/redirect" class="btn btn-outline-success rounded-circle p-3 d-flex align-items-center justify-content-center" style="width:45px; height:45px;">
                                                     <img src="{{ asset('images/naver_ico.png') }}" alt="Naver" style="width:45px; height:45px;">
                                                 </a>
                                         
                                                 <!-- Kakao 로그인 -->
-                                                <a href="#" class="btn btn-warning rounded-circle p-3 d-flex align-items-center justify-content-center" style="width:45px; height:45px;">
+                                                <a href="/auth/kakao/redirect" class="btn btn-warning rounded-circle p-3 d-flex align-items-center justify-content-center" style="width:45px; height:45px;">
                                                     <img src="{{ asset('images/kakao_ico.png') }}" alt="Kakao" style="width:45px; height:45px;">
                                                 </a>
                                             </div>

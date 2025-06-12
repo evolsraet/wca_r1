@@ -16,7 +16,7 @@
 
 </script>
 
-<div class="board-view board-skin-{{ $board->skin }} mt-4 form-custom"
+<div class="board-view board-skin-{{ $board->skin }} mt-4"
      x-data="articleView"
      x-init="setup('{{ $board->id }}', '{{ $articleId }}')">
 
