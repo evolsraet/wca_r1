@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Notifications\Templates;
-use App\Helpers\FormatHelper;
+use App\Helpers\Wca;
 use Carbon\Carbon;
 use App\Http\Controllers\Api\PaymentController;
 use App\Models\User;
@@ -118,7 +118,7 @@ class NotificationTemplate
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
                 .'ㅁ 딜러 : '.$dealer->company.' '.$dealer->name.' \n'
-                .'ㅁ 입찰가 : '.FormatHelper::formatPriceToMan(number_format($data->price)).' \n'
+                .'ㅁ 입찰가 : '.Wca::formatPriceToWon(number_format($data->price)).' \n'
                 .'';
 
                 $link = [
@@ -255,7 +255,7 @@ class NotificationTemplate
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
-                .'ㅁ 입찰가 : '.FormatHelper::formatPriceToMan(number_format($data->final_price));
+                .'ㅁ 입찰가 : '.Wca::formatPriceToWon(number_format($data->final_price));
 
                 $link = [
                     "url" => url('/auction/'.$data->hashid),
@@ -375,7 +375,7 @@ class NotificationTemplate
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
-                .'ㅁ 입찰가 : '.FormatHelper::formatPriceToMan(number_format($data->final_price)).' \n';
+                .'ㅁ 입찰가 : '.Wca::formatPriceToWon(number_format($data->final_price)).' \n';
 
                 $link = [
                     "url" => url('/auction/'.$data->hashid),
@@ -420,7 +420,7 @@ class NotificationTemplate
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
-                ."ㅁ 입찰가 : ".FormatHelper::formatPriceToMan(number_format($data->final_price))." \n"
+                ."ㅁ 입찰가 : ".Wca::formatPriceToWon(number_format($data->final_price))." \n"
                 ."ㅁ 계좌번호 : ".$data->bank." ".$data->account." \n"
                 ."ㅁ 입금기일 : ".$formattedTime." \n"
                 ."❖ 사이트에서 [경락 확인서]를 확인하실 수 있어요!"
@@ -443,7 +443,7 @@ class NotificationTemplate
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
-                ."ㅁ 낙찰가 : ".FormatHelper::formatPriceToMan(number_format($data->final_price))." \n";
+                ."ㅁ 낙찰가 : ".Wca::formatPriceToWon(number_format($data->final_price))." \n";
 
                 $link = [
                     "url" => url('/view-do/'.$data->hashid),
@@ -476,7 +476,7 @@ class NotificationTemplate
 
                 $title = '차량명의이전서류가 등록됐습니다.';
 
-                $total_fee = FormatHelper::formatPriceToMan(number_format(num: 15)); // 임시금액
+                $total_fee = Wca::formatPriceToWon(number_format(num: 15)); // 임시금액
                 // TODO: 수수료관련 - 실제 필드 금액으로 수정
 
                 $message =
@@ -673,7 +673,7 @@ class NotificationTemplate
                 .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
-                ."ㅁ 입찰가 : ".FormatHelper::formatPriceToMan(number_format($data->final_price))." \n"
+                ."ㅁ 입찰가 : ".Wca::formatPriceToWon(number_format($data->final_price))." \n"
                 ."ㅁ 계좌번호 : ".$data->bank." ".$data->account." \n"
                 ."ㅁ 입금기일 : ".$data->taksong_wish_at." \n";
 
@@ -731,7 +731,7 @@ class NotificationTemplate
                 $title = $data->car_no.' 차량 탁송이 완료되었습니다.';
 
                 // 수수료 계산방법 내용 필요함
-                $total_fee = FormatHelper::formatPriceToMan(number_format(15)); // 임시금액
+                $total_fee = Wca::formatPriceToWon(number_format(15)); // 임시금액
 
                 $message =
                 $data->car_no." 차량 탁송이 완료되었습니다. \n"

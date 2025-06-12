@@ -25,7 +25,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\Api\DiagController;
 use App\Http\Controllers\Api\OwnershipController;
 use App\Http\Controllers\Api\WebhookController;
-use App\Helpers\NetworkHelper;
+use App\Helpers\Wca;
 
 // Route::post('forgetPassword', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
 // Route::post('resetPassword', [ResetPasswordController::class, 'reset'])->name('password.reset');
@@ -185,7 +185,7 @@ Route::get('/test-network-alert', function () {
 
         throw new \Exception('Connection timed out: Failed to connect to api.example.com');
     } catch (\Exception $e) {
-        NetworkHelper::alertIfNetworkError($e, [
+        Wca::alertIfNetworkError($e, [
             'source' => [
                 'title' => '진단API / 진단대기중 상태확인',
                 'url' => 'http://localhost:8000/test-network-alert',

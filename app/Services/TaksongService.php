@@ -12,7 +12,7 @@ use App\Models\TaksongStatusTemp;
 use App\Jobs\TaksongNameChangeJob;
 use App\Jobs\AuctionCancelJob;
 use App\Models\Dealer;
-use App\Helpers\NetworkHelper;
+use App\Helpers\Wca;
 
 class TaksongService
 {
@@ -118,7 +118,7 @@ class TaksongService
         } catch (Exception $e) {
 
             // 네트워크 오류 알림 추가
-            NetworkHelper::alertIfNetworkError($e, [
+            Wca::alertIfNetworkError($e, [
                 'source' => [
                     'title' => '탁송API / 탁송신청 요청',
                     'url' => $this->taksongApiUrl,

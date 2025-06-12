@@ -13,7 +13,7 @@ use Illuminate\Validation\Factory as ValidationFactory;
 use App\Notifications\Channels\AligoChannel;
 use App\Services\AligoService;
 use Illuminate\Support\Facades\URL;
-use App\Helpers\FormatHelper;
+use App\Helpers\Wca;
 use App\Services\PriceService;
 use App\Services\ApiRequestService;
 

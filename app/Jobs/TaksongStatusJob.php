@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Services\ApiRequestService;
 use App\Services\TaksongService;
 use App\Models\ApiErrorLog;
-use App\Helpers\NetworkHelper;
+use App\Helpers\Wca;
 use Exception;
 
 class TaksongStatusJob implements ShouldQueue
@@ -68,7 +68,7 @@ class TaksongStatusJob implements ShouldQueue
         } catch (Exception $e) {
 
             // 네트워크 오류 알림 추가
-            NetworkHelper::alertIfNetworkError($e, [
+            Wca::alertIfNetworkError($e, [
                 'source' => [
                     'title' => '탁송API / 탁송상태 확인',
                     'url' => $this->endPoint,

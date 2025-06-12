@@ -16,7 +16,7 @@ use App\Notifications\JobSuccessNotification;
 use Carbon\Carbon;
 use Exception;
 use App\Models\Auction;
-use App\Helpers\NetworkHelper;
+use App\Helpers\Wca;
 
 class TaksongAddJob implements ShouldQueue
 {
@@ -123,7 +123,7 @@ class TaksongAddJob implements ShouldQueue
 
         } catch (Exception $e) {
 
-            NetworkHelper::alertIfNetworkError($e, [
+            Wca::alertIfNetworkError($e, [
                 'source' => [
                     'title' => '탁송API / 탁송신청 요청',
                     'url' => $this->endPoint,

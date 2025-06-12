@@ -10,7 +10,7 @@ use App\Services\ApiRequestService;
 use App\Services\NiceDNRService;
 use App\Jobs\AuctionDoneJob;
 use App\Jobs\TaksongNameChangeJob;
-use App\Helpers\NetworkHelper;
+use App\Helpers\Wca;
 use Exception;
 
 class OwnershipService

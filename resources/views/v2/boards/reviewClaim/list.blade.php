@@ -2,21 +2,6 @@
 
 @section('content')
 
-@php
-
-    switch($board->id) {
-        case 'review':
-            $boardTitle = '이용후기';
-            break;
-        case 'claim':
-            $boardTitle = '클레임';
-            break;
-        default:
-            $boardTitle = $board->name ?? $board->id;
-            break;
-    }
-
-@endphp
 <script>
     window.boardConfig = {
         boardId: '{{ $board->id }}',
@@ -29,7 +14,7 @@
     <!-- 게시판 헤더 -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h4 class="mb-1 fw-bold">{{ $boardTitle }}</h4>
+            <h4 class="mb-1 fw-bold">{{ Wca::board_menu_label($board->id) }}</h4>
             <small class="text-muted">
                 <i class="mdi mdi-file-document-outline me-1"></i>
                 총 <span x-text="pagination.total || 0"></span>개의 게시글

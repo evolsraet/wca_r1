@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 use App\Jobs\AuctionBidStatusJob;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\DiagInfo;
-use App\Helpers\NetworkHelper;
+use App\Helpers\Wca;
 use App\Models\AuctionLog;
 use App\Models\ApiErrorLog;
 
@@ -215,7 +215,7 @@ class DiagService
         } catch (\Exception $e) {
 
             // 네트워크 오류 알림 추가
-            NetworkHelper::alertIfNetworkError($e, [
+            Wca::alertIfNetworkError($e, [
                 'source' => [
                     'title' => '진단API / 진단데이터 확인',
                     'url' => $this->diagApiUrl,

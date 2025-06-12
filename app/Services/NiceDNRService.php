@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Cache;
 use App\Models\NiceDNRData;
 use Illuminate\Support\Facades\Log;
 use App\Services\ApiRequestService;
-use App\Helpers\NetworkHelper;
+use App\Helpers\Wca;
 use Carbon\Carbon;
 
 class NiceDNRService
@@ -118,7 +118,7 @@ class NiceDNRService
 
         } catch (\Exception $e) {
 
-            NetworkHelper::alertIfNetworkError($e, [
+            Wca::alertIfNetworkError($e, [
                 'source' => [
                     'title' => 'NICE D&R API / 호출',
                     'url' => config('niceDnr.NICE_DNR_API_URL'),

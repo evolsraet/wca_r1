@@ -4,7 +4,7 @@ namespace App\Services;
 
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
-use App\Helpers\NetworkHelper;
+use App\Helpers\Wca;
 use Carbon\Carbon;
 
 class NiceApiService
@@ -101,7 +101,7 @@ class NiceApiService
         if ($response->failed()) {
             #TODO: api 연결안될경우 운영자에게 알림 추가
 
-            NetworkHelper::alertIfNetworkError(new \Exception($response->body()), [
+            Wca::alertIfNetworkError(new \Exception($response->body()), [
                 'source' => [
                     'title' => 'NICE API / 호출',
                     'url' => "https://svc.niceapi.co.kr:22001/{$apiPath}",

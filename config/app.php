@@ -222,6 +222,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
+        'Wca' => App\Helpers\Wca::class,
     ])->toArray(),
 
 ];

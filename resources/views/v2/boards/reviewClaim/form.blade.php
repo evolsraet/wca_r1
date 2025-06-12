@@ -41,17 +41,7 @@ if($articleId) {
     }
 }
 
-switch($board->id) {
-    case 'claim':
-        $articleTitle = '클레임';
-        break;
-
-    case 'review':
-        $articleTitle = '이용후기';
-        break;
-    default:
-        $articleTitle = '게시판';
-}
+$articleTitle = Wca::board_menu_label($board->id);
 
 @endphp
 

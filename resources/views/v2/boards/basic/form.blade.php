@@ -14,6 +14,9 @@ if ($article) {
 } else {
     $existingFiles = [];
 }
+
+$boardTitle = Wca::board_menu_label($board->id);
+
 @endphp
 
 @section('content')
@@ -31,7 +34,7 @@ if ($article) {
 
     <!-- 폼 헤더 -->
     <div class="form-header mb-4">
-        <h2 x-text="isEdit ? '게시글 수정' : '게시글 작성'"></h2>
+        <h2 x-text="isEdit ? '{{ $boardTitle }} 수정' : '{{ $boardTitle }} 작성'"></h2>
         <p class="text-muted">{{ $board->name ?? $board->id }}</p>
     </div>
 

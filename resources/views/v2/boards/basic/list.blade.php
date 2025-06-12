@@ -3,20 +3,9 @@
 @section('content')
 
 @php
-
-    switch($board->id) {
-        case 'review':
-            $boardTitle = '이용후기';
-            break;
-        case 'claim':
-            $boardTitle = '클레임';
-            break;
-        default:
-            $boardTitle = $board->name ?? $board->id;
-            break;
-    }
-
+$boardTitle = Wca::board_menu_label($board->id);
 @endphp
+
 <script>
     window.boardConfig = {
         boardId: '{{ $board->id }}',
