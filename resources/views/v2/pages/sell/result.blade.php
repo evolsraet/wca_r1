@@ -90,9 +90,14 @@
         <div class="estimate-info-box mb-4">
 
             <div class="bg-light rounded mb-3">
-                <div class="d-flex justify-content-between sell-box p-2"  @click="openCurrentPriceModal">
+                <div class="d-flex justify-content-between sell-box p-2 estimate-price-box"  @click="openCurrentPriceModal">
                     <span class="text-muted fw-bold">예상 가격</span>
-                    <span class="fw-bold text-danger fs-5"> <span x-text="estimatedPriceInTenThousandWon" id="estimatedPriceInTenThousandWon"></span></span>
+                    <span class="fw-bold text-danger fs-5" id="estimate-price" x-show="estimatedPriceInTenThousandWon"> 
+                        <span x-text="estimatedPriceInTenThousandWon ? estimatedPriceInTenThousandWon + ' 만원' : ''" id="estimatedPriceInTenThousandWon"></span>
+                    </span>
+                    <span class="text-muted" id="estimate-price-text" x-show="!estimatedPriceInTenThousandWon">
+                        예상 가격을 확인해보세요
+                    </span>
                 </div>
             </div>
 

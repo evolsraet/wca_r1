@@ -8,6 +8,8 @@ if(request()->query('id')) {
     $id = 0;
 }
 
+$hashid = Hashids::encode($id);
+
 $article = \App\Models\Article::select('id', 'extra2')->where('id', $articleId)->with('media')->first();
 if ($article) {
     $existingFiles = $article->media->map(function ($file) {
@@ -43,6 +45,8 @@ if($articleId) {
 
 $articleTitle = Wca::board_menu_label($board->id);
 
+$isWriteable = Wca::isReviewClaimWriteable(auth()->user()->id, $id, $board->id);
+
 @endphp
 
 @section('content')
@@ -53,6 +57,24 @@ $articleTitle = Wca::board_menu_label($board->id);
         articleId: '{{ $articleId }}',
         extra1: '{{ $articleData->extra1 ?? $id }}'
     };
+
+    const isWriteable = {!! json_encode($isWriteable) !!};
+    console.log('isWriteable', isWriteable);
+
+    document.addEventListener('alpine:init', () => {
+    if (isWriteable.status === false) {
+        Alpine.store('swal').fire({
+            title: '작성 가능 여부 확인',
+            text: isWriteable.message,
+            icon: 'info',
+            confirmButtonText: '확인'
+        }).then(() => {
+            history.back();
+        });
+    }
+    });
+
+    window.hashid = '{{ $hashid }}';
 </script>
 
 <div class="board-form board-skin-{{ $board->skin }}"

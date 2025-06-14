@@ -130,3 +130,23 @@
         top: 9%;
     }
 }
+
+.estimate-price-box {
+    cursor: pointer;
+    border: 2px solid $gray-300;
+
+    &:hover {
+        background-color: $gray-200;
+    }
+}
+
+@keyframes blink-border {
+    0%   { border: 2px solid $primary; }
+    50%  { border: 2px solid transparent; }
+    100% { border: 2px solid $primary; }
+}
+
+.blink-highlight {
+    animation: blink-border 1s ease-in-out 2;
+    border-radius: 8px;
+}

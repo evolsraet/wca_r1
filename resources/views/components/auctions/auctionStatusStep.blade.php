@@ -1,7 +1,7 @@
 @php
     $status = $status ?? 'ask';
 @endphp
-<div class="step-progress-box border border-danger rounded p-3 mb-3">
+<div class="step-progress-box border border-gray-300 rounded p-3 mb-3">
     {{-- PC 레이아웃 --}}
     <div class="d-none d-md-flex justify-content-between align-items-center position-relative pc-step-bar">
         @php

@@ -4,7 +4,14 @@
 @php
     $container = false;
     $isLogin = Auth::check();
+
+    // 회원기준 차량조회 정보 리스트
+    $userCarInfo = Wca::getCachedCarInfoForUser();
 @endphp
+
+<script>
+  window.userCarInfo = @json($userCarInfo);
+</script>
 
 <div id="mainCarousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="7000" data-bs-pause="false">
   <div class="carousel-inner">

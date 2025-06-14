@@ -35,6 +35,9 @@ export default function () {
         });
 
         this.form.lists = Array.isArray(response.data?.data) ? response.data.data : [];
+        this.form.lists.forEach(item => {
+          item.car_km = Number(item.car_km).toLocaleString('ko-KR');
+        });
 
         const meta = response.data.meta;
         this.form.totalPages = meta?.last_page || 1;

@@ -2,10 +2,6 @@ import Alpine from 'alpinejs';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import 'animate.css';
 
-// photoswipe 
-import PhotoSwipeLightbox from 'photoswipe/lightbox';
-import 'photoswipe/style.css';
-
 
 // sweetalert 전역 설정
 import Swal from 'sweetalert2';

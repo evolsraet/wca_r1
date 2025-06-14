@@ -18,6 +18,15 @@ export default function () {
             this.estimatedPriceInTenThousandWon = JSON.parse(localStorage.getItem('estimatedPrice'))?.value;
 
             this.openUsageNotice();
+
+
+            const el = document.querySelector('.estimate-price-box'); // 해당 엘리먼트 선택자
+            el.classList.add('blink-highlight');
+
+            setTimeout(() => {
+                el.classList.remove('blink-highlight');
+            }, 5000);
+
         },
         async getResult() {
             console.log(this.carInfo);

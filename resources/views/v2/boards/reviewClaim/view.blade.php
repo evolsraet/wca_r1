@@ -7,6 +7,7 @@ $articleData = \App\Models\Article::select( 'extra1', 'extra2')->where('id', $ar
 //dd($articleData->extra1);
 $auction = \App\Models\Auction::where('id', $articleData->extra1)->first();
 $isUser = auth()?->user()?->hasRole('user') ? 'user' : 'dealer';
+$hashid = Hashids::encode($auction->id);
 @endphp
 
 <script>
@@ -21,7 +22,7 @@ $isUser = auth()?->user()?->hasRole('user') ? 'user' : 'dealer';
         }
     };
     window.user = {!! auth()->user() ? auth()->user()->toJson() : 'null' !!};
-
+    window.hashid = '{{ $hashid }}';
 </script>
 
 <div class="board-view board-skin-{{ $board->skin }}"

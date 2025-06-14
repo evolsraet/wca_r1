@@ -223,7 +223,8 @@ $primary: map-get($theme-colors, "primary");
     }
 
     .step-line {
-      height: 4px;
+      margin-top: 3px;
+      height: 2px;
       background-color: #ddd;
       z-index: 0;
       transform: translateY(-50%);
@@ -544,15 +545,15 @@ $primary: map-get($theme-colors, "primary");
     color: $gray-700;
 
     .option-icon {
-      width: 36px;
-      height: 36px;
+      width: 33px;
+      height: 33px;
       margin: 0 auto;
       background-color: transparent;
       // 이미지 삽입 위치
     }
 
     .option-label {
-      font-size: 0.76rem;
+      font-size: 0.7rem;
       line-height: 1.4;
     }
 

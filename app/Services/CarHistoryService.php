@@ -78,7 +78,8 @@ class CarHistoryService
                     'response' => $data
                 ]);
 
-                // 세션에 저장
+                // 세션에 저장 
+                // TODO: 캐시 저장기간 7일 
                 Session::put($sessionKey, $data);
                 Session::put($sessionKey . '_fetched_at', now());
 

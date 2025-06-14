@@ -19,15 +19,20 @@ export default function () {
                 timestamp: Date.now()
             }));
 
-            document.getElementById('estimatedPriceInTenThousandWon').textContent = this.estimatedPriceInTenThousandWon;
+            document.getElementById('estimate-price').style.display = 'block';
+            document.getElementById('estimate-price-text').style.display = 'none';
+            document.getElementById('estimatedPriceInTenThousandWon').textContent = this.estimatedPriceInTenThousandWon + ' 만원';
             
             Alpine.store(`modal`).close('carPriceResultModal');
         },
         reset() {
-            window.modalOptions.data.estimatedPriceInTenThousandWon = 0;
+            window.modalOptions.data.estimatedPriceInTenThousandWon = '';
 
             localStorage.removeItem('estimatedPrice');
-            document.getElementById('estimatedPriceInTenThousandWon').textContent = 0;
+            document.getElementById('estimatedPriceInTenThousandWon').textContent = '';
+
+            document.getElementById('estimate-price').style.display = 'none';
+            document.getElementById('estimate-price-text').style.display = 'block';
 
             Alpine.store(`modal`).close('carPriceResultModal');
             

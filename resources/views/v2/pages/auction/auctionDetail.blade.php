@@ -8,7 +8,7 @@
     
 
     // echo '<pre>';
-    // print_r($auction->status);
+    // print_r($auction);
     // echo '</pre>';
 
     /*
@@ -19,6 +19,7 @@
     'ing'    => '경매진행',
     'diag'   => '진단대기',
     'dlvr'   => '탁송중',
+    'dlvr_done'   => '탁송완료',
     'ask'    => '신청완료',
     */
     // get 파라미터로 데이터 변경 
@@ -29,6 +30,11 @@
     
 
 @endphp
+
+<script>
+    window.hashid = '{{ $hashid }}';
+    window.carNumber = '{{ $auction->car_no }}';
+</script>
 
 <div class="container pt-4" x-data="auctionDetail()">
     <x-layouts.split
@@ -72,6 +78,11 @@
             @if($isUser && ($status == 'ask'))
             {{-- 매물 신청 완료 --}}
             <x-auctions.auctionInfoBox title="매물 신청 완료" message="해당 매물 신청이 완료 되었습니다." subMessage="※ 경매진행까지 약간의 검토 시간이 소요됩니다." />
+            @endif
+
+            @if($isUser && ($status == 'diag'))
+            {{-- 진단 대기 --}}
+            <x-auctions.auctionInfoBox title="진단 대기" message="진단 대기 중입니다." subMessage="※ 진단 대기 중입니다." />
             @endif
 
             @if($isUser && ($status == 'cancel'))

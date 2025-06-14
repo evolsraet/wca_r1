@@ -2,11 +2,19 @@
 
 @section('content')
 
+@php
+    $lists = Wca::isReviewClaimLists(auth()->user()->id, $board->id);
+@endphp
+
 <script>
     window.boardConfig = {
         boardId: '{{ $board->id }}',
         boardName: '{{ $board->name ?? $board->id }}'
     };
+
+    const lists = {!! json_encode($lists) !!};
+    console.log('lists', lists);
+
 </script>
 
 <div class="board-list board-skin-{{ $board->skin }} testbox mt-4" x-data="articleList()">
@@ -22,9 +30,19 @@
         </div>
         <div class="d-flex gap-2">
             @if(auth()->user()?->hasPermissionTo($board->write_permission ?? 'act.login'))
-                <a href="{{ route('board.form', $board->id) }}" class="btn btn-outline-primary rounded-pill">
+                {{-- <a href="{{ route('board.form', $board->id) }}" class="btn btn-outline-primary rounded-pill">
                     <i class="mdi mdi-pencil me-1"></i>글쓰기
-                </a>
+                </a> --}}
+                <button class="btn btn-outline-primary rounded-pill" 
+                @click="Alpine.store('modal').showHtmlFromUrl('/v2/components/modals/carInfoModalContent', {
+                    id: 'carInfoModalContent',
+                    title: '차량 정보',
+                    showFooter: false,
+                    data: { cars: lists.data }
+                })"
+                >
+                    <i class="mdi mdi-car-info me-1"></i>등록하기
+                </button>
             @endif
         </div>
     </div>

@@ -80,17 +80,6 @@ Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 Route::prefix('sell')->group(function () {
 
     Route::get('/', function (CarInfoService $carInfoService) {
-        $carInfo = $carInfoService->getCachedCarInfoForUser();
-
-        if ($carInfo) {
-            return view('v2.pages.sell.result', [
-                'owner' => $carInfo['owner'],
-                'no' => $carInfo['no'],
-                '_token' => csrf_token(),
-                'carInfo' => $carInfo
-            ]);
-        }
-
         return view('v2.pages.sell.index');
     })->name('sell');
 
@@ -103,10 +92,6 @@ Route::prefix('sell')->group(function () {
         }
 
         $carInfo = app(AuctionController::class)->showCarInfoView($request);
-
-        if (!is_array($carInfo) && Auth::check()) {
-            return redirect()->route('sell');
-        }
 
         return view('v2.pages.sell.result', ['carInfo' => $carInfo]);
     })->name('sell.result');
