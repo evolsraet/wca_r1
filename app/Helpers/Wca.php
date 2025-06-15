@@ -15,6 +15,7 @@ use App\Models\Auction;
 use App\Models\Bid;
 use App\Models\User;
 use Vinkla\Hashids\Facades\Hashids;
+use Illuminate\Http\JsonResponse;
 
 class Wca
 {
@@ -206,6 +207,19 @@ class Wca
                 'message' => $e->getMessage()
             ];
         }
+    }
+
+    public static function auctionStatus()
+    {
+        $auction = new Auction();
+
+        $status = $auction->enums['status'] ?? [];
+        $classMap = $auction->enums['classMap'] ?? [];
+
+        return json_encode([
+            'status' => $status,
+            'classMap' => $classMap,
+        ]);
     }
 }
 

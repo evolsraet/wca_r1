@@ -212,6 +212,7 @@ class AuctionController extends Controller
                 'car_price_now_whole' => $CarmerceService->getCarmerceResult($niceDnrResult['carInfo']),
                 'car_thumbnail' => $niceDnrResult['carSise']['info']['carinfo']['classModelImg'],
                 'car_km' => $niceDnrResult['carParts']['outB0001']['list'][0]['resValidDistance'],
+                'car_engine_type' => $niceDnrResult['carSise']['info']['carinfo']['engineType'],
             ];
 
             Log::info('[차량정보 확인] / 경매 ID : ' . $result['no'], [

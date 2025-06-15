@@ -1,25 +1,9 @@
 const auctionStatus = {
-    labelMap: {
-      cancel: '취소',
-      done: '경매완료',
-      chosen: '선택완료',
-      wait: '선택대기',
-      ing: '경매진행',
-      diag: '진단대기',
-      dlvr: '탁송중',
-      ask: '신청완료',
-    },
+
+    stepOrder: ['ask', 'diag', 'ing', 'wait', 'chosen', 'dlvr', 'dlvr_done', 'done'],
   
-    classMap: {
-      cancel: 'text-bg-danger',
-      done: 'text-bg-secondary',
-      chosen: 'text-bg-chosen',
-      wait: 'text-bg-warning',
-      ing: 'text-bg-info',
-      diag: 'text-bg-dark',
-      dlvr: 'text-bg-dlvr',
-      ask: 'text-bg-success',
-    },
+    labelMap: window.auctionStatus.status,
+    classMap: window.auctionStatus.classMap,
   
     get(status) {
       return {

@@ -94,7 +94,19 @@ class Auction extends Model implements HasMedia
             'ing'    => '경매진행',
             'diag'   => '진단대기',
             'dlvr'   => '탁송중',
+            'dlvr_done' => '탁송완료',
             'ask'    => '신청완료',
+        ],
+        'classMap' => [
+            'cancel' => 'text-bg-danger',
+            'done' => 'text-bg-secondary',
+            'chosen' => 'text-bg-chosen',
+            'wait' => 'text-bg-warning',
+            'ing' => 'text-bg-info',
+            'diag' => 'text-bg-dark',
+            'dlvr' => 'text-bg-dlvr',
+            'dlvr_done' => 'text-bg-dlvr',
+            'ask' => 'text-bg-success',
         ],
     ];
 

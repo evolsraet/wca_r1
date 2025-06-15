@@ -10,8 +10,16 @@
   $roleMenus = config('auction.menus.' . $role, []);
   $commonMenus = config('auction.menus.common', []);
 
-  $menus = array_merge($roleMenus, $commonMenus)
+  $menus = array_merge($roleMenus, $commonMenus);
+
+  $auctionStatus = Wca::auctionStatus();
 @endphp
+
+<script>
+  // auction Model 에 있는 경매상태 데이터를 가져옴
+  window.auctionStatus = {!! $auctionStatus !!};
+</script>
+
 {{-- 기본 네비게이션 --}}
 <nav class="navbar navbar-expand-lg sticky-top header-navbar {{ $role === 'dealer' ? 'dealer-header' : 'default-header' }}">
   <div class="container-fluid">

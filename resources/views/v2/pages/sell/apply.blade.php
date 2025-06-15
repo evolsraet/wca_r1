@@ -32,6 +32,7 @@ $user_phone = $user->phone;
                             <x-forms.input type="hidden" name="auction.car_first_reg_date" value="{{ $carInfo['car_first_reg_date'] ?? '' }}" required :errors="true" />
                             <x-forms.input type="hidden" name="auction.car_mission" value="{{ $carInfo['car_mission'] ?? '' }}" required :errors="true" />
                             <x-forms.input type="hidden" name="auction.car_fuel" value="{{ $carInfo['car_fuel'] ?? '' }}" required :errors="true" />
+                            <x-forms.input type="hidden" name="auction.car_engine_type" value="{{ $carInfo['car_engine_type'] ?? '' }}" required :errors="true" />
 
                             <label for="owner_name" class="form-label">
                                 <span class="text-danger">*</span>

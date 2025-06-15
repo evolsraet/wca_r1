@@ -185,11 +185,11 @@ $primary: map-get($theme-colors, "primary");
 
       .step-badge {
         display: inline-block;
-        padding: 0.25rem 0.75rem;
+        padding: 0.1rem 0.75rem;
         background-color: #fceaea;
-        color: #c0392b;
+        color: $primary;
         border-radius: 0.5rem;
-        font-size: 0.8rem;
+        font-size: 0.7rem;
         font-weight: 600;
       }
 
@@ -223,7 +223,7 @@ $primary: map-get($theme-colors, "primary");
     }
 
     .step-line {
-      margin-top: 3px;
+      margin-top: 1px;
       height: 2px;
       background-color: #ddd;
       z-index: 0;
@@ -234,7 +234,7 @@ $primary: map-get($theme-colors, "primary");
   .mobile-step-badges {
     .step-badge-mobile {
       background-color: #fceaea;
-      color: #c0392b;
+      color: $gray-600;
       border-radius: 0.5rem;
       font-size: 0.85rem;
       font-weight: 600;
@@ -243,7 +243,7 @@ $primary: map-get($theme-colors, "primary");
 
     .step-badge-mobile.active {
       background-color: #fdecec;
-      color: #e74c3c;
+      color: $primary;
     }
   }
 }
@@ -252,7 +252,11 @@ $primary: map-get($theme-colors, "primary");
 .auction-thumbnail {
 
   .carousel-inner {
-    max-height: 450px;
+    border-radius: 12px;
+    aspect-ratio: 16 / 10.5;
+    width: 100%;
+    overflow: hidden;
+    
   }
   
   .carousel-thumbnails .thumb-img {
@@ -272,20 +276,42 @@ $primary: map-get($theme-colors, "primary");
     opacity: 1;
     border-color: $primary;
   }
+
+
+  .carousel-thumbnails {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 0.5rem;
   
-  @media (max-width: 576px) {
-    .carousel-thumbnails {
-      justify-content: start;
-      overflow-x: auto;
-      white-space: nowrap;
-      -webkit-overflow-scrolling: touch;
-      padding: 0 0.5rem;
+    .thumb-img {
+      cursor: pointer;
+      border: 2px solid transparent;
+      border-radius: 6px;
+      transition: all 0.2s ease-in-out;
+  
+      // 기본 6개 정렬
+      width: calc(100% / 8 - 0.5rem); 
+      height: auto;
+      object-fit: cover;
+  
+      &:hover {
+        border-color: $primary; // red highlight
+      }
     }
-    .carousel-thumbnails .thumb-img {
-      flex: 0 0 auto;
-      width: 60px;
-      height: 45px;
+  
+    // 반응형 대응
+    @media (max-width: 992px) { // md
+      .thumb-img {
+        width: calc(100% / 4 - 0.5rem);
+      }
+
+      .thumb-img:nth-child(n + 6) {
+        display: none;
+      }
+
     }
+  
   }
   
 }
@@ -315,7 +341,7 @@ $primary: map-get($theme-colors, "primary");
   }
 
   .row-cols-2 .col:nth-child(odd) {
-    color: #999;
+    color: $gray-500;
   }
 
   .fw-semibold {
@@ -600,3 +626,10 @@ $primary: map-get($theme-colors, "primary");
     background-color: $gray-100;
   }
 }
+
+#customCarousel {
+  cursor: pointer;
+}
+
+
+

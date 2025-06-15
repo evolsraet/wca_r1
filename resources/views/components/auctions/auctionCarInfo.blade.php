@@ -1,8 +1,8 @@
 <div x-data="auctionCarInfo">
-<div class="vehicle-title-box d-flex justify-content-between align-items-start flex-wrap mb-3 mt-3">
+<div class="vehicle-title-box mb-3 mt-4">
     {{-- 차량명 + 번호 --}}
-    <div class="vehicle-title mt-2">
-        <h4 class="fw-bold mb-2">{{ $auction->car_maker }} {{ $auction->car_model }} {{ $auction->car_grade }} {{ $auction->car_fuel }} <span class="text-secondary">({{ $auction->car_no }})</span></h4>
+    <div class="vehicle-title mt-3">
+        <h3 class="fw-bold mb-2">{{ $auction->car_maker }} {{ $auction->car_model }} {{ $auction->car_grade }} {{ $auction->car_fuel }} ({{ $auction->car_no }})</h3>
     </div>
 
     {{-- 조회수, 관심, 입찰 --}}
@@ -24,7 +24,7 @@
     <h5 class="fw-bold mb-4">차량 정보</h5>
 
     
-    <div class="row row-cols-4 gy-3 text-muted">
+    <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 gy-3 text-muted">
         <div class="col">차량번호</div>
         <div class="col text-dark fw-semibold">
             <span class="text-secondary" x-text="auction?.car_no ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
@@ -62,7 +62,7 @@
 
         <div class="col">용도변경</div>
         <div class="col text-dark fw-semibold">
-            <span class="text-secondary" x-text="auction?.car_use_change ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
+            <span class="text-secondary" x-text="diag?.data?.diag_history_use ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
         </div>
 
         <div class="col">모델</div>
@@ -72,7 +72,7 @@
 
         <div class="col">배기량</div>
         <div class="col text-dark fw-semibold">
-            <span class="text-secondary" x-text="auction?.car_cc ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
+            <span class="text-secondary" x-text="diag?.data?.diag_displacement ? diag.data.diag_displacement + ' cc' : '-'" :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
         </div>
 
         <div class="col">연료</div>
@@ -86,17 +86,17 @@
     <div class="row row-cols-2 gy-3 text-muted">
         <div class="col">차대번호</div>
         <div class="col text-dark fw-semibold" colspan="2">
-            <span class="text-secondary" x-text="auction?.car_no ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
+            <span class="text-secondary" x-text="diag?.data?.diag_car_id ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
         </div>
 
         <div class="col">세부모델</div>
         <div class="col text-dark fw-semibold">
-            <span class="text-secondary" x-text="auction?.car_grade ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
+            <span class="text-secondary" x-text="diag?.data?.diag_submodel ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
         </div>
 
         <div class="col">세부등급</div>
         <div class="col text-dark fw-semibold">
-            <span class="text-secondary" x-text="auction?.car_grade_sub ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
+            <span class="text-secondary" x-text="diag?.data?.diag_subgrade ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
         </div>
     </div>
 

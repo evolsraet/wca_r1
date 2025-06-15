@@ -40,7 +40,7 @@ $primary: map-get($theme-colors, "primary");
     .navbar-nav .nav-link {
         position: relative;
         margin: 0 0.6rem;
-        // padding-bottom: 0.4rem;
+        padding: 10px;
 
         &::after {
             content: "";
