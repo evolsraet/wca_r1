@@ -1,7 +1,7 @@
-export default function () {
+export default function (statusDate='ask') {
     return {
         steps: Alpine.store('auctionStatus').stepOrder,
-        status: window.auction?.status ?? 'ask',
+        status: statusDate ?? 'ask',
     
         getCurrentStep() {
           return this.steps.indexOf(this.status);

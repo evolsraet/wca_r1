@@ -22,11 +22,11 @@
     'dlvr_done'   => '탁송완료',
     'ask'    => '신청완료',
     */
-    // get 파라미터로 데이터 변경 
+    // get 파라미터로 데이터 변경 (화면보기 위한 테스트용 변수)
     $status = request()->get('status') ? request()->get('status') : $auction->status;
-    $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
     $chose = request()->get('chose') ? request()->get('chose') : 0;
 
+    $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
     
 
 @endphp
@@ -51,8 +51,8 @@
             {{-- 상태 바 --}}
             <x-auctions.auctionStatusStep :status="$status" />
 
-            {{-- 썸네일 --}}
-            <x-auctions.auctionThumbnail :status="$status" :auction="$auction" :isUser="$isUser" />
+            {{-- 썸네일 (auction 데이터를 사용 하기위해 include 방식 사용) --}}
+            @include('components.auctions.auctionThumbnail', ['status' => $status, 'auction' => $auction, 'isUser' => $isUser])
 
             {{-- 차량 정보 --}}
             @if($isUser)

@@ -7,10 +7,12 @@ export default function () {
   return {
     car_thumbnail: null,
     showStepStatus: true,
-    isLiked: false,
     init() {
       let lightbox;
       let photoSwipeImages = [];
+
+      const auction = Alpine?.store('shared')?.auctionData;
+      console.log('auctionData', auction);
 
       this.car_thumbnail = window.car_thumbnail;
 
@@ -57,19 +59,5 @@ export default function () {
       localStorage.setItem('showStepStatus', this.showStepStatus);
 
     },
-    toggleLike() {
-
-      this.isLiked = !this.isLiked;
-
-      Alpine.store('swal').fire({
-          title: this.isLiked ? '좋아요' : '좋아요 취소',
-          text: this.isLiked
-              ? '좋아요를 눌렀습니다.'
-              : '좋아요를 취소했습니다.',
-          icon: this.isLiked ? 'success' : 'info',
-          confirmButtonText: '확인',
-      });
-
-    }
   };
 }

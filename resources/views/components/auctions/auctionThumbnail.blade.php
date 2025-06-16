@@ -1,5 +1,8 @@
 @php
     $auction = $auction ?? null;
+    $user = auth()->user();
+    $hashid = request()->route('id');
+    $id = Hashids::decode($hashid);
 @endphp
 
 <script>
@@ -15,9 +18,12 @@
     }
 
     window.car_thumbnail = car_thumbnail;
+    window.user = `{!! $user !!}`;
+    window.id = `{!! $id[0] ?? 0 !!}`;
 </script>
 
-<div x-data="auctionThumbnail">
+<div x-data='auctionThumbnail()'>
+
 
 @if($isUser && ($status == 'ask' || $status == 'diag'))
     <div class="text-center bg-gray-300 py-5 px-3 rounded position-relative" style="background-color: #f8f9fa;">
@@ -42,7 +48,14 @@
 
         {{-- 경매상태 뱃지 --}}
         <div class="position-absolute top-0 start-0 m-3 z-2" status-toggle-btn @click="hideStatusStep()">
-            <span class="auction-item-badge text-white p-2 rounded-pill" 
+
+            @if($status === 'ing')
+            <div>
+            @include('components.auctions.auctionCountdown')
+            </div>
+            @else
+            <div>
+            <span class="auction-item-badge text-white p-2 rounded-3" 
                     id="auction-status-badge" 
                     data-bs-toggle="tooltip" 
                     data-bs-placement="top" 
@@ -50,20 +63,14 @@
                     :class="$store.auctionStatus.get('{{ $status }}').class" 
                     x-text="$store.auctionStatus.get('{{ $status }}').label">
             </span>
+            </div>
+            @endif
         </div>
 
         {{-- 좋아요 기능 --}}
         <div class="position-absolute top-0 end-0 z-2">
-            <button class="btn text-white fs-2" 
-                    id="like-btn" 
-                    @click="toggleLike"
-                    data-bs-toggle="tooltip" 
-                    data-bs-placement="top" 
-                    :class="isLiked ? 'text-danger' : 'text-white'" 
-                    title="상품을 좋아요에 등록합니다." 
-            >
-                <i class="mdi mdi-heart border-1" :class="{'text-danger': isLiked}"></i>
-            </button>
+            {{-- 이 위치에 좋아요 기능 컴포넌트 추가 --}}
+            @include('components.auctions.auctionLikeButton')
         </div>
 
         <div id="customCarousel" class="carousel slide" data-bs-ride="carousel">

@@ -1,6 +1,6 @@
 <div class="col-md-4 mb-4">
     <a :href="'{{ route('auction.detail', '') }}' + '/' + auction.hashid" class="auction-item">
-    <div class="auction-item-thumb">
+    <div class="auction-item-thumb position-relative">
         <img
         :src="(() => {
             if ((auction.car_thumbnails) && auction.car_thumbnails.length > 0) {
@@ -15,7 +15,10 @@
         })()"
         alt="차량이미지"
         />
-        <span class="auction-item-badge text-white" :class="$store.auctionStatus.get(auction.status).class" x-show="auction.status" x-text="$store.auctionStatus.get(auction.status).label"></span>
+        <div class="position-absolute top-0 start-0 z-2 p-2" x-show="auction.status === 'ing'">
+            <x-auctions.auctionCountdown />
+        </div>
+        <span class="auction-item-badge text-white" x-show="auction.status !== 'ing'" :class="$store.auctionStatus.get(auction.status).class" x-show="auction.status" x-text="$store.auctionStatus.get(auction.status).label"></span>
     </div>
     <div class="auction-item-body">
         <div class="auction-item-title" x-text="auction.car_maker + ' ' + auction.car_model + ' ' + auction.car_grade_sub + ' ' + auction.car_fuel + ' (' + auction.car_no + ')'"></div>

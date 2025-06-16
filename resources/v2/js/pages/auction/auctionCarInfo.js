@@ -5,7 +5,15 @@ export default function () {
         auction: null,
         diag: null,
         init() {
-            console.log('auctionDetail');
+
+            const auction = Alpine.store('details')?.auctionData;
+            console.log('auction?? details', auction);
+            
+            // this.$watch(() => Alpine.store('shared').auctionData, (response) => {
+            //     // console.log('response', response);
+            // });
+            
+            // console.log('auctionDetail');
             this.getAuction();
             this.getDiag();
         },
@@ -28,16 +36,14 @@ export default function () {
         async getDiag() {
             const carNumber = window.carNumber;
             const response = await api.get(`/api/diagRequest?diag_car_no=${carNumber}`);
-            console.log('diag', response);
+            // console.log('diag', response);
 
             if(response.data.data.status === 'ask' || response.data.data.status === 'diag' || status === 'ask' || status === 'diag') {
                 this.diag = null;
             }else{
                 this.diag = response.data.data;
             
-                Alpine.store('shared', {
-                diag: this.diag,
-                });
+                Alpine.store('shared', {diag: this.diag});
             }
 
               

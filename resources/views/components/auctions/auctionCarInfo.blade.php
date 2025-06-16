@@ -25,6 +25,12 @@
 
     
     <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 gy-3 text-muted">
+
+        <div class="col">차대번호</div>
+        <div class="col text-dark fw-semibold">
+            <span class="text-secondary" x-text="diag?.data?.diag_car_id ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
+        </div>
+
         <div class="col">차량번호</div>
         <div class="col text-dark fw-semibold">
             <span class="text-secondary" x-text="auction?.car_no ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
@@ -84,11 +90,6 @@
     <hr class="my-4">
 
     <div class="row row-cols-2 gy-3 text-muted">
-        <div class="col">차대번호</div>
-        <div class="col text-dark fw-semibold" colspan="2">
-            <span class="text-secondary" x-text="diag?.data?.diag_car_id ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
-        </div>
-
         <div class="col">세부모델</div>
         <div class="col text-dark fw-semibold">
             <span class="text-secondary" x-text="diag?.data?.diag_submodel ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
