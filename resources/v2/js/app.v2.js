@@ -17,6 +17,9 @@ import whereBuilder from './util/whereBuilder.js';
 import auctionStatus from './util/auctionStatus.js';
 import common from './util/common.js';
 import { likesStore } from './util/likesStore.js';
+import { setupCountdownListener } from './util/auctionCountdown.js';
+import { setupLikeListeners } from './util/setupLikeListeners.js';
+
 
     console.log('Initializing Alpine...');
 
@@ -84,6 +87,17 @@ import { likesStore } from './util/likesStore.js';
             registeredComponents.add(name);
         }
     });
+
+    // 경매시간 카운트
+    setupCountdownListener();
+
+    Alpine.store('likeState', {
+        isLiked: false,
+        likeId: null,
+    });
+
+    // 좋아요 추가 삭제
+    setupLikeListeners();
 
     Alpine.store('modal', modal);
 

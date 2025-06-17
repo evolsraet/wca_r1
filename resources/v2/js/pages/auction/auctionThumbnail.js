@@ -11,9 +11,6 @@ export default function () {
       let lightbox;
       let photoSwipeImages = [];
 
-      const auction = Alpine?.store('shared')?.auctionData;
-      console.log('auctionData', auction);
-
       this.car_thumbnail = window.car_thumbnail;
 
       if(this.car_thumbnail){  

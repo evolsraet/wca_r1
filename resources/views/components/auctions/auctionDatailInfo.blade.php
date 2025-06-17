@@ -1,4 +1,4 @@
-<div class="accordion custom-accordion mb-3 mt-5" id="accordionPanelsStayOpenExample" x-data="auctionDatailInfo()">
+<div class="accordion custom-accordion mb-3 mt-5" id="accordionPanelsStayOpenExample" x-init="init(isHistory = false)">
     <div class="accordion-item">
       <h2 class="accordion-header">
         <button class="accordion-button collapsed" type="button"  data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
@@ -7,7 +7,7 @@
       </h2>
       <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse">
         <div class="accordion-body">
-          <div x-html="baseOption"></div>
+          <div x-html="diag?.data?.diag_base_option"></div>
         </div>
       </div>
     </div>
@@ -19,7 +19,7 @@
       </h2>
       <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
         <div class="accordion-body">
-          <div x-text="addOption"></div>
+          <div x-text="diag?.data?.diag_add_option ?? '내용이 없습니다.'"></div>
         </div>
       </div>
     </div>

@@ -23,11 +23,38 @@ $hashid = Hashids::encode($auction->id);
     };
     window.user = {!! auth()->user() ? auth()->user()->toJson() : 'null' !!};
     window.hashid = '{{ $hashid }}';
+
+    // 경매 API 호출
+    fetch(`/api/auctions/${window.hashid}?with=bids,reviews,likes&paginate=12`)
+    .then(res => res.json())
+    .then(response => {
+        //console.log('auction', response);
+        window.auction = response.data;
+    });
+
+    // 진단 API 호출
+    fetch(`/api/diagRequest?diag_car_no={{ $auction->car_no }}`)
+    .then(res => res.json())
+    .then(response => {
+        //console.log('diag', response);
+        window.diag = response.data;
+    });
+
 </script>
 
 <div class="board-view board-skin-{{ $board->skin }}"
      x-data="articleView"
      x-init="setup('{{ $board->id }}', '{{ $articleId }}')">
+
+     <div x-data="{auction: null, diag: null}" x-init="
+     (async () => {
+        const auctionRes = await fetch(`/api/auctions/${window.hashid}?with=bids,reviews,likes&paginate=12`).then(r => r.json());
+        const diagRes = await fetch(`/api/diagRequest?diag_car_no={{ $auction->car_no }}`).then(r => r.json());
+
+        auction = auctionRes?.data ?? null;
+        diag = diagRes?.data ?? null;
+      })();
+     ">
 
     <!-- 로딩 상태 -->
     <x-loading />
@@ -188,6 +215,8 @@ $hashid = Hashids::encode($auction->id);
             <i class="mdi mdi-format-list-bulleted me-1"></i>목록으로
         </button>
     </div>
+    </div>
 </div>
+
 
 @endsection

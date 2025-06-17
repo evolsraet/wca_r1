@@ -1,4 +1,4 @@
-<div x-data="auctionCarInfo">
+<div>
 <div class="vehicle-title-box mb-3 mt-4">
     {{-- 차량명 + 번호 --}}
     <div class="vehicle-title mt-3">
@@ -13,9 +13,14 @@
     </div>
 
     {{-- 상태 뱃지 --}}
-    <div class="mt-2">
-        <span class="badge bg-light text-primary border border-primary-subtle px-3 py-1">무사고</span>
-    </div>
+    {{-- <div class="mt-2">
+        <template x-if="auction.is_accident">
+            <span class="tag border border-black text-black bg-transparent p-1 rounded-1">무사고</span>
+        </template>
+        <template x-if="auction.is_biz">
+            <span class="tag border border-danger text-danger bg-transparent p-1 rounded-1">법인/사업자</span>
+        </template>
+    </div> --}}
 </div>
 
 
@@ -24,7 +29,7 @@
     <h5 class="fw-bold mb-4">차량 정보</h5>
 
     
-    <div class="row row-cols-2 row-cols-md-4 row-cols-lg-6 gy-3 text-muted">
+    <div class="row row-cols-2 row-cols-md-4 gy-3 text-muted">
 
         <div class="col">차대번호</div>
         <div class="col text-dark fw-semibold">
@@ -38,7 +43,8 @@
 
         <div class="col">최초등록일</div>
         <div class="col text-dark fw-semibold">
-            <span class="text-secondary" x-text="auction?.car_first_reg_date ?? '-' " :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
+            <span class="text-secondary" x-text="auction?.car_first_reg_date ? new Date(auction.car_first_reg_date).toISOString().slice(0, 10) : '-'"
+             :style="{ display: auction?.status == 'ask' || auction?.status == 'diag' ? 'none' : 'block' }"></span>
         </div>
 
         <div class="col">주행거리</div>

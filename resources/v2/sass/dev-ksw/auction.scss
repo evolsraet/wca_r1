@@ -342,7 +342,7 @@ $primary: map-get($theme-colors, "primary");
 
   .row-cols-2 .col:nth-child(odd) {
     color: $gray-500;
-    width: 100px;
+    // width: 100px;
   }
 
   .fw-semibold {

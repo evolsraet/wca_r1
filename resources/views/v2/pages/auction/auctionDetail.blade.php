@@ -5,13 +5,9 @@
     $hashid = request()->route('id');
     $id = Hashids::decode($hashid);
     $auction = \App\Models\Auction::where('id', $id)->first();
-    
-
-    // echo '<pre>';
-    // print_r($auction);
-    // echo '</pre>';
 
     /*
+    상태확인용 
     'cancel' => '취소',
     'done'   => '경매완료',
     'chosen' => '선택완료',
@@ -27,8 +23,6 @@
     $chose = request()->get('chose') ? request()->get('chose') : 0;
 
     $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
-    
-
 @endphp
 
 <script>
@@ -52,7 +46,7 @@
             <x-auctions.auctionStatusStep :status="$status" />
 
             {{-- 썸네일 (auction 데이터를 사용 하기위해 include 방식 사용) --}}
-            @include('components.auctions.auctionThumbnail', ['status' => $status, 'auction' => $auction, 'isUser' => $isUser])
+            <x-auctions.auctionThumbnail :status="$status" :auction="$auction" :isUser="$isUser" />
 
             {{-- 차량 정보 --}}
             @if($isUser)

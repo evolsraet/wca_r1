@@ -332,5 +332,11 @@ export default {
                 filters[key] = this.parseUrlParam(urlParams, key, defaultFilters[key] || '');
             }
         });
+    },
+
+    // 만원 단위로 포맷팅
+    formatPriceToMan(price) {
+        if (!price || isNaN(price)) return '-';
+        return (Math.floor(price / 10000)).toLocaleString();
     }
 };
