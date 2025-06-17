@@ -1,5 +1,3 @@
-import { api } from '../../util/axios';
-
 export default function () {
     return {
         estimatedPriceInTenThousandWon: 0,
@@ -36,7 +34,8 @@ export default function () {
             const no = this.carInfo.car_no;
         
             try {
-                const response = await api.post('/api/auctions/carInfo', {
+                
+                const response = await Alpine.store('api').post('/api/auctions/carInfo', {
                     owner: owner,
                     no: no,
                     forceRefresh: true

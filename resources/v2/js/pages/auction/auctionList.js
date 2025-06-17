@@ -1,5 +1,3 @@
-import { api } from '../../util/axios.js';
-
 export default function () {
   return {
     form: {
@@ -27,7 +25,7 @@ export default function () {
     async getAuctionList() {
       this.loading = true;
       try {
-        const response = await api.get('/api/auctions', {
+        const response = await Alpine.store('api').get('/api/auctions', {
           with: this.form.with,
           page: this.form.page,
           paginate: this.form.paginate,

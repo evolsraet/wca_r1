@@ -1,5 +1,3 @@
-import { api } from '../../util/axios.js';
-import { Alpine } from 'alpinejs';
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
 import 'photoswipe/style.css';
 

@@ -14,12 +14,9 @@ import { address } from './util/address.js';
 import { fileUpload } from './util/fileUpload.js';
 import { modal } from './util/modal.js';
 import whereBuilder from './util/whereBuilder.js';
-import auctionStatus from './util/auctionStatus.js';
+import auctionStatus from './util/auctions.js';
 import common from './util/common.js';
-import { likesStore } from './util/likesStore.js';
-import { setupCountdownListener } from './util/auctionCountdown.js';
-import { setupLikeListeners } from './util/setupLikeListeners.js';
-
+import { likesStore } from './util/likes.js';
 
     console.log('Initializing Alpine...');
 
@@ -88,8 +85,6 @@ import { setupLikeListeners } from './util/setupLikeListeners.js';
         }
     });
 
-    // 경매시간 카운트
-    setupCountdownListener();
 
     Alpine.store('likeState', {
         isLiked: false,
@@ -97,7 +92,7 @@ import { setupLikeListeners } from './util/setupLikeListeners.js';
     });
 
     // 좋아요 추가 삭제
-    setupLikeListeners();
+    // likeListeners();
 
     Alpine.store('modal', modal);
 

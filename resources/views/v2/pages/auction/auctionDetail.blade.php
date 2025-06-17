@@ -6,22 +6,8 @@
     $id = Hashids::decode($hashid);
     $auction = \App\Models\Auction::where('id', $id)->first();
 
-    /*
-    상태확인용 
-    'cancel' => '취소',
-    'done'   => '경매완료',
-    'chosen' => '선택완료',
-    'wait'   => '선택대기',
-    'ing'    => '경매진행',
-    'diag'   => '진단대기',
-    'dlvr'   => '탁송중',
-    'dlvr_done'   => '탁송완료',
-    'ask'    => '신청완료',
-    */
-    // get 파라미터로 데이터 변경 (화면보기 위한 테스트용 변수)
     $status = request()->get('status') ? request()->get('status') : $auction->status;
     $chose = request()->get('chose') ? request()->get('chose') : 0;
-
     $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
 @endphp
 
@@ -41,181 +27,99 @@
 
         {{-- 왼쪽 컨텐츠 --}}
         <x-slot:leftContent>
-
-            {{-- 상태 바 --}}
             <x-auctions.auctionStatusStep :status="$status" />
-
-            {{-- 썸네일 (auction 데이터를 사용 하기위해 include 방식 사용) --}}
             <x-auctions.auctionThumbnail :status="$status" :auction="$auction" :isUser="$isUser" />
 
-            {{-- 차량 정보 --}}
             @if($isUser)
-            <x-auctions.auctionCarInfo :status="$status" :auction="$auction" />
+                <x-auctions.auctionCarInfo :status="$status" :auction="$auction" />
             @endif
 
-            {{-- 상세 정보 --}}
             @if($isUser && ($status !== 'ask' && $status !== 'diag'))
-
-                {{-- 옵션 정보 --}}
                 <x-auctions.auctionOptions />
-
-               {{-- 상세 정보 --}}
                 <x-auctions.auctionDatailInfo />
             @endif
-            
         </x-slot:leftContent>
-
 
         {{-- 오른쪽 컨텐츠 --}}
         <x-slot:rightContent>
+            @switch(true)
+                @case($isUser == 'user' && $status == 'ask')
+                    <x-auctions.auctionInfo title="매물 신청 완료" message="해당 매물 신청이 완료 되었습니다." subMessage="※ 경매진행까지 약간의 검토 시간이 소요됩니다." />
+                    @break
 
-            {{-- 유저화면 --}}
-            @if($isUser && ($status == 'ask'))
-            {{-- 매물 신청 완료 --}}
-            <x-auctions.auctionInfoBox title="매물 신청 완료" message="해당 매물 신청이 완료 되었습니다." subMessage="※ 경매진행까지 약간의 검토 시간이 소요됩니다." />
-            @endif
+                @case($isUser == 'user' && $status == 'diag')
+                    <x-auctions.auctionInfo title="진단 대기" message="진단 대기 중입니다." subMessage="※ 진단 대기 중입니다." />
+                    @break
 
-            @if($isUser && ($status == 'diag'))
-            {{-- 진단 대기 --}}
-            <x-auctions.auctionInfoBox title="진단 대기" message="진단 대기 중입니다." subMessage="※ 진단 대기 중입니다." />
-            @endif
+                @case($isUser == 'user' && $status == 'cancel')
+                    <x-auctions.auctionInfo title="경매취소" message="해당 매물의 경매가 취소 되었습니다." subMessage="" />
+                    @break
 
-            @if($isUser && ($status == 'cancel'))
-            {{-- 경매 취소 --}}
-            <x-auctions.auctionInfoBox title="경매취소" message="해당 매물의 경매가 취소 되었습니다." subMessage="" />
-            @endif
+                @case($isUser == 'user' && ($status == 'ing' && $chose == 0))
+                    <x-auctions.auctionInfo title="경매 진행중" message="입찰한 딜러가 있으면 즉시 선택이 가능합니다" subMessage="" />
+                    @break
 
-            @if($isUser == 'user' && ($status == 'ing' && $chose == 0))
-            {{-- 경매 진행중 --}}
-            <x-auctions.auctionInfoBox title="경매 진행중" message="입찰한 딜러가 있으면 즉시 선택이 가능합니다" subMessage="" />
-            @endif
+                @case($isUser == 'user' && (($status == 'ing' && $chose) || $status == 'wait'))
+                    <x-auctions.activeAuctionDealers />
+                    @break
 
-            @if($isUser == 'user' && (($status == 'ing' && $chose) || $status == 'wait'))
-            {{-- 경매 진행중 --}}
-                <x-auctions.activeAuctionDealers />
-            @endif
+                @case($isUser == 'user' && $status == 'chosen')
+                    <x-auctions.taksongProgress />
+                    <x-auctions.taksongInfo />
+                    <x-auctions.taksongStatus />
+                    <x-auctions.taksongPreparation />
+                    <x-auctions.taksongBuyerInfo />
+                    <x-auctions.taksongFaq />
+                    <x-auctions.taksongUserGuide />
+                    @break
 
+                @case($isUser == 'user' && $status == 'dlvr')
+                    <x-auctions.taksongInfo />
+                    <x-auctions.taksongStatus />
+                    <x-auctions.taksongPreparation />
+                    <x-auctions.taksongBuyerInfo />
+                    <x-auctions.taksongFaq />
+                    @break
 
-            @if($isUser == 'user' && ($status == 'chosen'))
+                @case($isUser == 'user' && $status == 'dlvr_done')
+                    <x-auctions.taksongBuyerInfo />
+                    <x-auctions.taksongFaq />
+                    @break
 
-                {{-- 탁송 진행 박스 --}}
-                <x-auctions.taksongProgress />
+                @case($isUser == 'user' && $status == 'done')
+                    <x-auctions.auctionDone title="거래는 어떠셨나요?" message="거래 후기를 남겨주세요." button1="후기 남기기" button1Link="/v2/board/review/form?id={{ $hashid }}" button2="명의이전 서류 확인" button2Link="#" />
+                    @break
 
-                {{-- 탁송 정보 박스 --}}
-                <x-auctions.deliveryInfoBox />
+                @case($isUser == 'dealer' && ($status == 'ing' && $chose == 0))
+                    <x-auctions.auctionDealerIng />
+                    @break
 
-                {{-- 탁송 상태 박스 --}}
-                <x-auctions.deliveryStatusBox />
+                @case($isUser == 'dealer' && (($status == 'ing' && $chose) || $status == 'wait'))
+                    <x-auctions.auctionDealerWait />
+                    @break
 
-                {{-- 선택완료 박스 --}}
-                <x-auctions.deliveryAccordion />
+                @case($isUser == 'dealer' && $status == 'chosen')
+                    <x-auctions.taksongProgress />
+                    <x-auctions.taksongConfirm />
+                    <x-auctions.taksongInfo />
+                    <x-auctions.taksongAddress />
+                    @break
 
-                {{-- 매수자 정보 박스 --}}
-                <x-auctions.deliveryBuyer />
+                @case($isUser == 'dealer' && $status == 'dlvr')
+                    <x-auctions.taksongConfirm />
+                    <x-auctions.taksongInfo />
+                    <x-auctions.taksongStatus />
+                    @break
 
-                {{-- 자주묻는 질문 박스 --}}
-                <x-auctions.deliveryFaq />
+                @case($isUser == 'dealer' && $status == 'dlvr_done')
+                    <x-auctions.nameChange />
+                    @break
 
-                {{-- 탁송 서비스 이용고객안내 박스 --}}
-                <x-auctions.auctionServiceInfo />
-
-            @endif
-
-
-            @if($isUser == 'user' && ($status == 'dlvr'))
-
-                {{-- 탁송 정보 박스 --}}
-                <x-auctions.deliveryInfoBox />
-
-                {{-- 탁송 상태 박스 --}}
-                <x-auctions.deliveryStatusBox />
-
-                {{-- 선택완료 박스 --}}
-                <x-auctions.deliveryAccordion />
-
-                {{-- 매수자 정보 박스 --}}
-                <x-auctions.deliveryBuyer />
-
-                {{-- 자주묻는 질문 박스 --}}
-                <x-auctions.deliveryFaq />
-            @endif
-
-
-            @if($isUser == 'user' && ($status == 'dlvr_done'))
-
-                {{-- 매수자 정보 박스 --}}
-                <x-auctions.deliveryBuyer />
-
-                {{-- 자주묻는 질문 박스 --}}
-                <x-auctions.deliveryFaq />
-
-            @endif
-
-
-            @if($isUser == 'user' && $status == 'done')
-                {{-- 거래 완료 --}}
-                <x-auctions.auctionDone title="거래는 어떠셨나요?" message="거래 후기를 남겨주세요." button1="후기 남기기" button1Link="/v2/board/review/form?id={{ $hashid }}" button2="명의이전 서류 확인" button2Link="#" />
-
-            @endif
-
-            {{-- 딜러화면 --}}
-
-            @if($isUser == 'dealer' && ($status == 'ing' && $chose == 0))
-                {{-- 입찰 박스 --}}
-                <x-auctions.auctionDealerIng />
-            @endif
-
-            @if($isUser == 'dealer' && (($status == 'ing' && $chose) || $status == 'wait'))
-                {{-- 입찰 박스 --}}
-                <x-auctions.auctionDealerWait />
-            @endif
-
-
-            @if($isUser == 'dealer' && ($status == 'chosen'))
-                {{-- 탁송 진행 박스 --}}
-                <x-auctions.taksongProgress />
-
-                {{-- 경락 확인서 박스 --}}
-                <x-auctions.deliveryConfirm />
-
-                {{-- 탁송 정보 박스 --}}
-                <x-auctions.deliveryInfoBox />
-
-                {{-- 탁송 주소지 박스 --}}
-                <x-auctions.deliveryTacsong />
-            @endif  
-
-
-
-            @if($isUser == 'dealer' && ($status == 'dlvr'))
-
-                {{-- 경락 확인서 박스 --}}
-                <x-auctions.deliveryConfirm />
-
-                {{-- 탁송 정보 박스 --}}
-                <x-auctions.deliveryInfoBox />
-
-                {{-- 탁송 상태 박스 --}}
-                <x-auctions.deliveryStatusBox />
-
-
-            @endif
-
-
-            @if($isUser == 'dealer' && ($status == 'dlvr_done'))
-                {{-- 명의이전 서류 박스 --}}
-                <x-auctions.nameChange />
-            @endif
-
-
-            @if($isUser == 'dealer' && ($status == 'done'))
-                {{-- 거래 완료 --}}
-                <x-auctions.AuctionDone title="낙찰 완료" message="차량에 문제가 있으신가요?" button1="클레인 신청" button1Link="/v2/board/claim/form?id={{ $hashid }}" button2="경락 확인서" button2Link="#" />
-            @endif
-
-
+                @case($isUser == 'dealer' && $status == 'done')
+                    <x-auctions.AuctionDone title="낙찰 완료" message="차량에 문제가 있으신가요?" button1="클레인 신청" button1Link="/v2/board/claim/form?id={{ $hashid }}" button2="경락 확인서" button2Link="#" />
+                    @break
+            @endswitch
         </x-slot:rightContent>
-
     </x-layouts.split>
 </div>
 
