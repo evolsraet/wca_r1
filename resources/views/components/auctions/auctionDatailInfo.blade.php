@@ -1,4 +1,4 @@
-<div class="accordion custom-accordion mb-3 mt-5" id="accordionPanelsStayOpenExample" x-init="init(isHistory = false)">
+<div class="accordion custom-accordion mb-3 mt-5 animate__animated animate__fadeIn" id="accordionPanelsStayOpenExample" x-init="init(isHistory = false)">
     <div class="accordion-item">
       <h2 class="accordion-header">
         <button class="accordion-button collapsed" type="button"  data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">

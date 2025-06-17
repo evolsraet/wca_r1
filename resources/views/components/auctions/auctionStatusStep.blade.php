@@ -2,7 +2,7 @@
     $status = $status ?? 'ask';
 @endphp
 
-<div id="step-progress-box" class="step-progress-box border border-gray-200 shadow-sm rounded p-2 mb-3" x-data="auctionStatusStep('{{ $status }}')">
+<div id="step-progress-box" class="step-progress-box border border-gray-200 shadow-sm rounded p-2 mb-3 animate__animated animate__fadeIn" x-data="auctionStatusStep('{{ $status }}')">
   {{-- PC 버전 --}}
   <div class="d-none d-md-flex justify-content-between align-items-center position-relative pc-step-bar">
     <template x-for="(stepKey, index) in steps" :key="index">

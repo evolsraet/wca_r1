@@ -17,7 +17,7 @@
     window.status = '{{ $status }}';
 </script>
 
-<div class="pt-3" x-data="auctionDetail()">
+<div class="pt-3 gap-lg-3" x-data="auctionDetail">
     <x-layouts.split
         leftClass="col-lg-7"
         rightClass="col-lg-5"

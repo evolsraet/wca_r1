@@ -25,7 +25,7 @@
 
 
 {{-- 차량 정보 --}}
-<div class="vehicle-info border-bottom pb-4">
+<div class="vehicle-info border-bottom pb-4 animate__animated animate__fadeIn">
     <h5 class="fw-bold mb-4">차량 정보</h5>
 
     

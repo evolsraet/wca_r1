@@ -3,7 +3,7 @@
 @section('content')
 
 @php
-    $lists = Wca::isReviewClaimLists(auth()->user()->id, $board->id);
+    $lists = Wca::isReviewClaimLists(auth()->user()?->id, $board->id);
 @endphp
 
 <script>

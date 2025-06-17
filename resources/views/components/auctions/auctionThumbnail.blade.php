@@ -13,13 +13,13 @@
     $final_at = $auction->final_at;
     
     // likes 테이블에서 user_id 와 likeable_id 가 일치하는 데이터 조회
-    $like = \App\Models\Like::where('user_id', $user->id)->where('likeable_id', $id)->first();
+    $like = \App\Models\Like::where('user_id', $user?->id)->where('likeable_id', $id)->first();
     $isLiked = $like ? true : false;
 
     $auctionId = $id;
     $userId = $user?->id;
     $likeId = $like?->id;
-    $isUserRole = auth()->user()->hasRole('user') ? 'user' : 'dealer';
+    $isUserRole = auth()->user()?->hasRole('user') ? 'user' : 'dealer';
 @endphp
 
 <script>
@@ -35,10 +35,6 @@
     }
 
     window.car_thumbnail = car_thumbnail;
-    window.user = `{!! $user !!}`;
-    window.id = `{!! $id ?? 0 !!}`;
-    window.likeId = `{!! $like->id ?? null !!}`;
-    window.isLiked = `{!! $isLiked ?? false !!}`;
 
 </script>
 
@@ -46,7 +42,7 @@
 
 
 @if($isUser && ($status == 'ask' || $status == 'diag'))
-    <div class="text-center bg-gray-300 py-5 px-3 rounded position-relative" style="background-color: #f8f9fa;">
+    <div class="text-center bg-gray-300 py-5 px-3 rounded position-relative animate__animated animate__fadeIn" style="background-color: #f8f9fa;">
         {{-- 상태 뱃지 --}}
         <div class="badge bg-secondary position-absolute top-0 start-0 m-3">
             신청완료
@@ -64,7 +60,7 @@
 
 @if($isUser && ($status !== 'ask' && $status !== 'diag'))
     {{-- 경매 차량 이미지 --}}
-    <div class="auction-thumbnail carousel-wrapper mb-3 position-relative" style="">
+    <div class="auction-thumbnail carousel-wrapper mb-3 position-relative animate__animated animate__fadeIn" style="">
 
         {{-- 경매상태 뱃지 --}}
         <div class="position-absolute top-0 start-0 m-3 z-2" status-toggle-btn @click="hideStatusStep()">

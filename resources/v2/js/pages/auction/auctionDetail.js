@@ -39,12 +39,13 @@ export default function () {
         const hashid = window.hashid;
         const carNumber = window.carNumber;
 
-        // API 호출
+        // 경매정보 조회
         const auctionRes = await Alpine.store('api').get('/api/auctions/' + hashid, {
           with: 'bids,reviews,likes',
           paginate: '12',
         });
 
+        // 진단정보 조회
         const diagRes = await Alpine.store('api').get(`/api/diagRequest?diag_car_no=${carNumber}`);
 
         // 로컬 상태 반영

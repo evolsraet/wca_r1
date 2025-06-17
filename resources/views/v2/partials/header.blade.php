@@ -1,6 +1,7 @@
+@include('v2.partials.common')
+
 @php
   $prefix = 'v2';
-
   if (Auth::check()) {
     $role = Auth::user()->hasRole('dealer') ? 'dealer' : 'user';
   } else {
@@ -11,14 +12,7 @@
   $commonMenus = config('auction.menus.common', []);
 
   $menus = array_merge($roleMenus, $commonMenus);
-
-  $auctionStatus = Wca::auctionStatus();
 @endphp
-
-<script>
-  // auction Model 에 있는 경매상태 데이터를 가져옴
-  window.auctionStatus = {!! $auctionStatus !!};
-</script>
 
 {{-- 기본 네비게이션 --}}
 <nav class="navbar navbar-expand-lg sticky-top header-navbar {{ $role === 'dealer' ? 'dealer-header' : 'default-header' }}">
@@ -154,22 +148,3 @@
   </div>
 </div>
 
-<script>
-  function logout() {
-    localStorage.removeItem('carInfo');
-    localStorage.removeItem('estimatedPrice');
-
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = '{{ route('logout') }}';
-
-    const csrf = document.createElement('input');
-    csrf.type = 'hidden';
-    csrf.name = '_token';
-    csrf.value = document.querySelector('meta[name="csrf-token"]').content;
-    form.appendChild(csrf);
-
-    document.body.appendChild(form);
-    form.submit();
-  }
-</script>

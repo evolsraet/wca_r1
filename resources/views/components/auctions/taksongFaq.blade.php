@@ -2,7 +2,7 @@
     <div class="fw-bold fs-5">자주묻는 질문</div>
 
 
-    <div class="accordion mt-3" id="faq-accordion">
+    <div class="accordion custom-accordion mt-3" id="faq-accordion">
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button"  data-bs-target="#faq-accordion-item-1" aria-expanded="true" aria-controls="faq-accordion-item-1">

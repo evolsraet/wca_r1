@@ -1,4 +1,4 @@
-<div class="option-icons-box mb-3 mt-3">
+<div class="option-icons-box mb-3 mt-3 animate__animated animate__fadeIn">
   <h5 class="fw-bold mb-4">옵션정보</h5>
 
   <div class="row row-cols-4 row-cols-sm-4 row-cols-md-6 g-3">

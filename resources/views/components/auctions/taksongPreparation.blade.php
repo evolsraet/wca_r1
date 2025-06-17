@@ -1,7 +1,7 @@
 <div class="py-4 border-bottom p-2">
     <div class="fw-bold mb-3 fs-5">탁송 전, 준비해 주세요</div>
 
-    <div class="accordion" id="delivery-accordion">
+    <div class="accordion custom-accordion" id="delivery-accordion">
         <div class="accordion-item">
           <h2 class="accordion-header">
             <button class="accordion-button collapsed" type="button"  data-bs-target="#delivery-accordion-item-1" aria-expanded="true" aria-controls="delivery-accordion-item-1">
