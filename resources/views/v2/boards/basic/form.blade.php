@@ -15,7 +15,7 @@ if ($article) {
     $existingFiles = [];
 }
 
-$boardTitle = Wca::board_menu_label($board->id);
+$boardTitle = Wca::board_menu($board->id);
 
 @endphp
 
@@ -34,7 +34,7 @@ $boardTitle = Wca::board_menu_label($board->id);
 
     <!-- 폼 헤더 -->
     <div class="form-header mb-4">
-        <h2 x-text="isEdit ? '{{ $boardTitle }} 수정' : '{{ $boardTitle }} 작성'"></h2>
+        <h2 x-text="isEdit ? '{{ $boardTitle['label'] }} 수정' : '{{ $boardTitle['label'] }} 작성'"></h2>
         <p class="text-muted">{{ $board->name ?? $board->id }}</p>
     </div>
 

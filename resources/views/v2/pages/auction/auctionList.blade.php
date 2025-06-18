@@ -28,7 +28,13 @@
       <div class="auction-list row mt-5">
         <template x-if="form.lists && form.lists.length > 0">
           <template x-for="auction in form.lists" :key="auction.id">
-            @include('components.auctions.auctionItem')
+
+            <div class="col-md-4 mb-4">
+              <a :href="`auction/${auction.hashid}`" class="auction-item" >
+            <x-auctions.auctionItem />
+              </a>
+            </div>
+
           </template>
         </template>
 

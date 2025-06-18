@@ -68,15 +68,24 @@ class Wca
         }
     }
 
-    public static function board_menu_label($boardIdOrUrl): ?string
+    public static function board_menu($boardId)
     {
-        $targetUrl = str_starts_with($boardIdOrUrl, '/')
-            ? $boardIdOrUrl
-            : '/board/' . $boardIdOrUrl;
+        $targetUrl = str_starts_with($boardId, '/') 
+            ? $boardId 
+            : '/board/' . $boardId;
 
-        return collect(config('auction.menus'))
-            ->flatMap(fn($group) => $group)
-            ->firstWhere('url', $targetUrl)['label'] ?? null;
+        if (!$boardId) {
+            return null;
+        }
+
+        $menus = collect(config('auction.menus'))->flatMap(fn($group) => $group);
+        $matched = $menus->firstWhere('url', $targetUrl);
+
+        if (!$matched) {
+            return null;
+        }
+
+        return $matched;
     }
 
     // 회원기준 carInfo 캐시 조회

@@ -7,6 +7,7 @@ use App\Models\Comment;
 use App\Http\Resources\BidResource;
 use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
+use App\Models\Auction;
 
 class ArticleResource extends JsonResource
 {
@@ -38,6 +39,12 @@ class ArticleResource extends JsonResource
             if (isset($this->resource->$field)) {
                 $parentArray[$field] = $this->$field->toDatetimeString();
             }
+        }
+
+        // extra1 에 값이 있을 경우 auction_id 와 매칭 해서 데이터 추가 
+        if (isset($this->resource->extra1)) {
+            $auction = Auction::find($this->resource->extra1);
+            $addArray['auction'] = $auction;
         }
 
         $this->withFiles($parentArray, $addArray);

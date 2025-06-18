@@ -43,7 +43,7 @@ if($articleId) {
     }
 }
 
-$articleTitle = Wca::board_menu_label($board->id);
+$articleTitle = Wca::board_menu($board->id);
 
 $isWriteable = Wca::isReviewClaimWriteable(auth()->user()->id, $id, $board->id);
 
