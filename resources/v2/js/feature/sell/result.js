@@ -98,7 +98,8 @@ export default function () {
                     id: 'carPriceResultModal',
                     title: '예상 가격 측정',
                     showFooter: false,
-                    data: {
+                }, {
+                    content: {
                         estimatedPriceInTenThousandWon: estimatedPriceData.value,
                         carNo: estimatedPriceData.carNo
                     }
@@ -111,7 +112,8 @@ export default function () {
                 id: 'currentPrice',
                 title: '내 차, 예상가격을 확인합니다',
                 showFooter: false,
-                data: {
+            }, {
+                content: {
                     carInfo: window.carInfo
                 },
                 onResult: (result) => {

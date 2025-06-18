@@ -1,12 +1,12 @@
 import { api } from './axios.js';
 
 // 좋아요 기능
-export const likesStore = {
+export const like = {
   likesData: [],
   pagination: {},
   validationErrors: {},
   like: {
-    likeable_type: 'App\\Models\\Auction',
+    likeable_type: 'auction',
     user_id: '',
     likeable_id: '',
   },
@@ -112,7 +112,7 @@ export const likeListeners = () => {
     initState(auctionId, likeId, isInitiallyLiked);
 
     const state = window.likeStates[auctionId];
-    const store = Alpine.store('likesStore');
+    const store = Alpine.store('like');
     const swal = Alpine.store('swal');
 
     if (!state.isLiked) {

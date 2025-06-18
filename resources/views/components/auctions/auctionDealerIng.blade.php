@@ -22,9 +22,8 @@
             title: '입찰하기',
             size: 'modal-dialog-centered',
             showFooter: false,
-            data: {
-                auction: auction
-            }
+        }, {
+            content: auction
         });"
         >
             입찰하기

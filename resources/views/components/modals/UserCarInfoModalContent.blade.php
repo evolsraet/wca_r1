@@ -2,7 +2,7 @@
     $lastDay = config('days.car_info_cache_ttl');
 @endphp
 
-<div x-data="UserCarInfoModalContent()">
+<div x-data="userCarInfoModalContent()">
     <p>조회된 차량정보는 {{ $lastDay }}일 동안 보관됩니다.</p>
     <div class="list-group">
         <template x-for="car in cars" :key="car.no">

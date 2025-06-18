@@ -59,7 +59,7 @@ export default function () {
             if (accountInput) accountInput.focus();
         },
         showTab(tabId) {
-            console.log(tabId);
+            // console.log(tabId);
             this.selectedTab = tabId;
         }
     };

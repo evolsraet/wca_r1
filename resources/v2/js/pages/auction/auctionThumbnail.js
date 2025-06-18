@@ -9,15 +9,22 @@ export default function () {
       let lightbox;
       let photoSwipeImages = [];
 
-      this.car_thumbnail = window.car_thumbnail;
+      try {
+          this.car_thumbnail = typeof window.car_thumbnail === 'string' 
+              ? JSON.parse(window.car_thumbnail)
+              : window.car_thumbnail;
+      } catch (e) {
+          this.car_thumbnail = [window.car_thumbnail];
+      }
 
-      if(this.car_thumbnail){  
-    
-        photoSwipeImages = window.car_thumbnail.map(file => ({
-          src: file,
-          w: 800,
-          h: 600
-        }));
+      if(this.car_thumbnail?.length) {
+          photoSwipeImages = this.car_thumbnail
+              .filter(Boolean)
+              .map(file => ({
+                  src: file,
+                  w: 800,
+                  h: 600
+              }));
       }
 
       lightbox = new PhotoSwipeLightbox({

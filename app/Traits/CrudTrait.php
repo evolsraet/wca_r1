@@ -672,6 +672,7 @@ trait CrudTrait
         return null;
     }
 
+    // string 을 모델형식으로 변환
     protected function typeToModel($type)
     {
         if( Str::contains($type, "\\") ) {

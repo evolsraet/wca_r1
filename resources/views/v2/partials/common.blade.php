@@ -1,9 +1,14 @@
 @php
   $auctionStatus = Wca::auctionStatus();
+  $user = auth()->user();
+  $userId = $user?->id;
+  $userRole = $user?->hasRole('user') ? 'user' : 'dealer';
 @endphp
 
 <script>
   window.auctionStatus = {!! $auctionStatus !!};
+  window.userId = {!! $userId !!};
+  window.userRole = "{!! $userRole !!}";
 
   function logout() {
     localStorage.removeItem('carInfo');

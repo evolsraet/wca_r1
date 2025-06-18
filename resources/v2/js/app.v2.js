@@ -16,7 +16,7 @@ import { modal } from './util/modal.js';
 import whereBuilder from './util/whereBuilder.js';
 import auctionStatus from './util/auctions.js';
 import common from './util/common.js';
-import { likesStore } from './util/likes.js';
+import { like } from './util/likes.js';
 
     console.log('Initializing Alpine...');
 
@@ -43,7 +43,7 @@ import { likesStore } from './util/likes.js';
     Alpine.store('whereBuilder', whereBuilder);
     Alpine.store('auctionStatus', auctionStatus);
     Alpine.store('common', common);
-    Alpine.store('likesStore', likesStore);
+    Alpine.store('like', like);
 
     // 기타 등록
     Alpine.data('fileUpload', fileUpload);

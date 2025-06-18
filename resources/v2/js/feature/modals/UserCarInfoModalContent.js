@@ -2,10 +2,10 @@ export default function () {
     return {
         cars: window.userCarInfo,
         init() {
-            console.log('UserCarInfoModalContent init');
+            console.log('userCarInfoModalContent init');
         },
         closeModal() {
-            Alpine.store(`modal`).close('UserCarInfoModalContent');
+            Alpine.store(`modal`).close('userCarInfoModalContent');
 
             document.querySelector('input[name="owner"]').focus();
         },
@@ -36,7 +36,7 @@ export default function () {
             });
             }
 
-            Alpine.store('modal').close('UserCarInfoModalContent');
+            Alpine.store('modal').close('userCarInfoModalContent');
 
             // 폼 삽입 후 전송
             document.body.appendChild(form);

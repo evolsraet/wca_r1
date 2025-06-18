@@ -1,4 +1,3 @@
-import { api } from '../../util/axios';
 import { appendFormData, appendFilesToFormData, setupFileUploadListeners } from '../../util/fileUpload';
 
 export default function () {
@@ -95,7 +94,7 @@ export default function () {
                 appendFilesToFormData(formData, fileFields, this.$el);
 
                 if( this.form.isUpdate ) {
-                    const response = await api.put('/api/auctions/' + this.form.auction.id, formData);
+                    const response = await Alpine.store('api').put('/api/auctions/' + this.form.auction.id, formData);
                     Alpine.store('swal').fire({
                         title: '수정 완료',
                         text: response.data.message,
@@ -107,7 +106,7 @@ export default function () {
                         }
                     });
                 } else {
-                    const response = await api.post('/api/auctions', formData);
+                    const response = await Alpine.store('api').post('/api/auctions', formData);
                     Alpine.store('swal').fire({
                         title: '경매 등록 완료',
                         text: response.data.message,

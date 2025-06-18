@@ -17,7 +17,10 @@ export default function () {
             'viewBreak' : 0
         },
         init() {
-            const data = window.modalOptions.data;
+            const data = window.modalData.content;
+
+            console.log('currentPrice init');
+            console.log(data);
 
             this.carInfo.km = data.carInfo.car_km;
             this.carInfo.firstRegDate = data.carInfo.car_first_reg_date;
@@ -61,7 +64,7 @@ export default function () {
         },
         
         async clickCheckPrice() {
-            const data = window.modalOptions.data;
+            const data = window.modalData.content;
             await this.getCarInfo();
             
             Alpine.store(`modal`).close('currentPrice');
@@ -73,7 +76,8 @@ export default function () {
                 id: 'carPriceResultModal',
                 title: '예상 가격',
                 showFooter: false,
-                data: {
+            }, {
+                content: {
                     estimatedPriceInTenThousandWon: this.carInfo.estimatedPriceInTenThousandWon,
                     carNo: data.carInfo.car_no
                 }

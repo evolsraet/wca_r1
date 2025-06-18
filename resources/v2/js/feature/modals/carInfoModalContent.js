@@ -3,7 +3,7 @@ export default function () {
         cars: [],
         init() {
             console.log('CarInfoModalContent');
-            const data = window.modalOptions.data;
+            const data = window.modalData.content;
             // console.log('window.cars', data.cars);
 
             this.cars = JSON.parse(JSON.stringify(data.cars));

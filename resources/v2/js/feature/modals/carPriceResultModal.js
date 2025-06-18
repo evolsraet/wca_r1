@@ -2,20 +2,20 @@ export default function () {
     return {
         estimatedPriceInTenThousandWon: 0,
         init() {
-            const data = window.modalOptions.data;
+            const data = window.modalData.content;
             console.log(data);
 
             this.estimatedPriceInTenThousandWon = data.estimatedPriceInTenThousandWon;
         },
         submit() {
 
-            window.modalOptions?.onResult?.({
+            window.modalData?.onResult?.({
                 estimatedPriceInTenThousandWon: this.estimatedPriceInTenThousandWon
             });
             
             localStorage.setItem('estimatedPrice', JSON.stringify({
                 value: this.estimatedPriceInTenThousandWon,
-                carNo: window.modalOptions.data.carNo,
+                carNo: window.modalData.content.carNo,
                 timestamp: Date.now()
             }));
 
@@ -26,7 +26,7 @@ export default function () {
             Alpine.store(`modal`).close('carPriceResultModal');
         },
         reset() {
-            window.modalOptions.data.estimatedPriceInTenThousandWon = '';
+            window.modalData.content.estimatedPriceInTenThousandWon = '';
 
             localStorage.removeItem('estimatedPrice');
             document.getElementById('estimatedPriceInTenThousandWon').textContent = '';
@@ -40,7 +40,8 @@ export default function () {
                 id: 'currentPrice',
                 title: '내 차, 예상가격을 확인합니다',
                 showFooter: false,
-                data: {
+            }, {
+                content: {
                     carInfo: window.carInfo
                 },
                 onResult: (result) => {

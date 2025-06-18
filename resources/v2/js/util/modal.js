@@ -177,18 +177,18 @@ export const modal = {
     },
 
     // URL을 통해 HTML을 가져와 모달 표시
-    async showHtmlFromUrl(url, options = {}) {
+    async showHtmlFromUrl(url, options = {}, data = {}) {
         try {
           const response = await fetch(url);
           if (!response.ok) throw new Error(`HTTP error ${response.status}`);
           const html = await response.text();
     
-          window.modalOptions = {
-            data: options.data || {},
-            onResult: typeof options.onResult === 'function' ? options.onResult : () => {}
+          window.modalData = {
+            content: data.content || {},
+            result: typeof data.result === 'function' ? data.result : () => {}
           };
     
-          this.showHtml(html, options);
+          this.showHtml(html, options, data);
     
           const shouldInitAlpine = options.initAlpine !== false;
           if (shouldInitAlpine && typeof Alpine !== 'undefined') {
@@ -215,8 +215,8 @@ export const modal = {
     },
 
     emitResult(result) {
-        if (typeof window.modalOptions?.onResult === 'function') {
-            window.modalOptions.onResult(result);
+        if (typeof window.modalData?.result === 'function') {
+            window.modalData.result(result);
         }
     }
 };

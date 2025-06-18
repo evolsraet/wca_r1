@@ -15,7 +15,7 @@ export default function () {
         },
 
         init() {
-            const data = window.modalOptions.data;
+            const data = window.modalData.content;
             console.log(data);
 
             this.data.carNumber = data.carInfo.car_no;

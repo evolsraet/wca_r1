@@ -8,8 +8,8 @@ export default function () {
             }
         },
         getUserCarInfoModal() {
-            Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/UserCarInfoModalContent', {
-                id: 'UserCarInfoModalContent',
+            Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/userCarInfoModalContent', {
+                id: 'userCarInfoModalContent',
                 title: '차량 정보 조회',
                 size: 'modal-dialog-centered',
                 showFooter: false,

@@ -7,7 +7,7 @@
     $auction = \App\Models\Auction::where('id', $id)->first();
 
     $status = request()->get('status') ? request()->get('status') : $auction->status;
-    $chose = request()->get('chose') ? request()->get('chose') : 0;
+    $choose = request()->get('choose') ? request()->get('choose') : 0;
     $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
 @endphp
 
@@ -55,11 +55,11 @@
                     <x-auctions.auctionInfo title="경매취소" message="해당 매물의 경매가 취소 되었습니다." subMessage="" />
                     @break
 
-                @case($isUser == 'user' && ($status == 'ing' && $chose == 0))
+                @case($isUser == 'user' && ($status == 'ing' && $choose == 0))
                     <x-auctions.auctionInfo title="경매 진행중" message="입찰한 딜러가 있으면 즉시 선택이 가능합니다" subMessage="" />
                     @break
 
-                @case($isUser == 'user' && (($status == 'ing' && $chose) || $status == 'wait'))
+                @case($isUser == 'user' && (($status == 'ing' && $choose) || $status == 'wait'))
                     <x-auctions.activeAuctionDealers />
                     @break
 
@@ -90,11 +90,11 @@
                     <x-auctions.auctionDone title="거래는 어떠셨나요?" message="거래 후기를 남겨주세요." button1="후기 남기기" button1Link="/v2/board/review/form?id={{ $hashid }}" button2="명의이전 서류 확인" button2Link="#" />
                     @break
 
-                @case($isUser == 'dealer' && ($status == 'ing' && $chose == 0))
+                @case($isUser == 'dealer' && ($status == 'ing' && $choose == 0))
                     <x-auctions.auctionDealerIng />
                     @break
 
-                @case($isUser == 'dealer' && (($status == 'ing' && $chose) || $status == 'wait'))
+                @case($isUser == 'dealer' && (($status == 'ing' && $choose) || $status == 'wait'))
                     <x-auctions.auctionDealerWait />
                     @break
 

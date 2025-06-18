@@ -1,4 +1,4 @@
-<div class="text-center">
+<div class="text-center" x-data="auctionDealerIngModalSuccess">
   <!-- 입찰 금액 표시 -->
   <div class="bg-light py-3 mb-3 rounded">
     <div class="text-muted small mb-1">나의 입찰 금액</div>

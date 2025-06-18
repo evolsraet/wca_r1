@@ -1,6 +1,3 @@
-@php
-    $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
-@endphp
 <div class="col-md-4 mb-4">
     <a :href="'{{ route('auction.detail', '') }}' + '/' + auction.hashid" class="auction-item">
     <div class="auction-item-thumb position-relative">
@@ -18,31 +15,11 @@
         })()"
         alt="차량이미지"
         />
-        <div class="position-absolute top-0 start-0 z-2 p-2" x-show="auction.status === 'ing'">
 
-            <div 
-            class="bg-danger text-white rounded-3 px-2 py-1 fs-7 d-inline-flex align-items-center gap-1"
-            x-init="window.dispatchEvent(new CustomEvent('start-countdown', { detail: { finalAt: auction.final_at } }))"
-            >
-                <i class="mdi mdi-clock-outline"></i>
-                <span data-timer>--:--:--</span>
-            </div>
+        <x-auctions.auctionStatusBadges />
 
-        </div>
+        <x-auctions.auctionLikeButton />
 
-        @if($isUser === 'dealer')
-        <div class="position-absolute top-0 end-0 z-3">
-            <button
-                class="btn fs-2 text-white"
-                data-auction-id="4"
-                onclick="dispatchLikeEvent(this)"
-                >
-                <i class="mdi mdi-heart" :class="auction.likes?.[0]?.id ? 'text-danger' : 'text-white'"></i>
-            </button>
-        </div>
-        @endif
-
-        <span class="auction-item-badge text-white" x-show="auction.status !== 'ing'" :class="$store.auctionStatus.get(auction.status).class" x-show="auction.status" x-text="$store.auctionStatus.get(auction.status).label"></span>
     </div>
     <div class="auction-item-body">
         <div class="auction-item-title" x-text="auction.car_maker + ' ' + auction.car_model + ' ' + auction.car_grade_sub + ' ' + auction.car_fuel + ' (' + auction.car_no + ')'"></div>

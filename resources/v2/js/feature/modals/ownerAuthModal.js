@@ -1,6 +1,6 @@
 export default function () {
     return {
-      test: '', // 테스트 모드 여부
+      test: 'test', // 테스트 모드 여부
       step: 1,
       agreed: false,
       selectedAuth: null,
@@ -104,7 +104,7 @@ export default function () {
 
             this.setData = formData;
 
-            //if(!this.test === 'test'){
+            if(!this.test === 'test'){
                 await this.$store.api.post('/api/check-business', formData)
                 .then(result => {
                     const resultData = result.rawData.data.data;
@@ -122,15 +122,15 @@ export default function () {
                     console.log(error);
                     this.step = 5;
                 });
-            // }else{
-            //     this.step = 4;
-            //     this.authResultData = {
-            //         jti: '1234567890',
-            //         twoWayTimestamp: '2025-01-01 12:00:00',
-            //         jobIndex: 1,
-            //         threadIndex: 1
-            //     };
-            // }
+            }else{
+                this.step = 4;
+                this.authResultData = {
+                    jti: '1234567890',
+                    twoWayTimestamp: '2025-01-01 12:00:00',
+                    jobIndex: 1,
+                    threadIndex: 1
+                };
+            }
 
         }
       },
@@ -165,7 +165,7 @@ export default function () {
                 if(businessStatus.resIndividualBusinessYN){
 
                     window.resIndividualBusinessYN = 'Y';
-                    window.modalOptions?.onResult?.({
+                    window.modalData?.onResult?.({
                         resIndividualBusinessYN: 'Y'
                     });
 
@@ -179,7 +179,7 @@ export default function () {
 
                 }else{
                     window.resIndividualBusinessYN = 'N';
-                    window.modalOptions?.onResult?.({
+                    window.modalData?.onResult?.({
                         resIndividualBusinessYN: 'N'
                     });
 
@@ -194,7 +194,7 @@ export default function () {
             })
             .catch(error => {
                 window.resIndividualBusinessYN = 'N';
-                window.modalOptions?.onResult?.({
+                window.modalData?.onResult?.({
                     resIndividualBusinessYN: 'N'
                 });
                 
@@ -206,7 +206,7 @@ export default function () {
             });
         }else{
             window.resIndividualBusinessYN = 'Y';
-            window.modalOptions?.onResult?.({
+            window.modalData?.onResult?.({
                 resIndividualBusinessYN: 'Y'
             });
 
