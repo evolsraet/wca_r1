@@ -7,7 +7,7 @@
 
 <script>
   window.auctionStatus = {!! $auctionStatus !!};
-  window.userId = {!! $userId !!};
+  window.userId = '{!! $userId !!}';
   window.userRole = "{!! $userRole !!}";
 
   function logout() {

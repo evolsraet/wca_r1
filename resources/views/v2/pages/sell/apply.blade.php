@@ -275,6 +275,7 @@ $user_phone = $user->phone;
             title: '본인인증',
             size: 'custom-size',
             showFooter: false,
+        },{
             onResult: (result) => {
                 // console.log('result?', result);
 
@@ -284,7 +285,8 @@ $user_phone = $user->phone;
                     document.getElementById('ownerAuthBtn').disabled = false;
                 }
             }
-        });
+        }
+    );
     });
 
     // 위임장 모달
@@ -294,7 +296,8 @@ $user_phone = $user->phone;
             title: '위임장 양식',
             size: 'modal-lg',
             showFooter: false,
-            data: {
+        },{
+            content: {
                 carInfo: window.carInfo,
                 user: window.user,
                 user_phone: window.user_phone,

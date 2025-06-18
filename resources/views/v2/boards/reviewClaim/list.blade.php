@@ -38,7 +38,10 @@
                     id: 'carInfoModalContent',
                     title: '차량 정보',
                     showFooter: false,
-                    data: { cars: lists.data }
+                },{
+                    content: {
+                        cars: lists.data
+                    }
                 })"
                 >
                     <i class="mdi mdi-car-info me-1"></i>등록하기
