@@ -2,7 +2,7 @@ import { api } from '../../util/axios';
 
 export default function () {
     return {
-        cars: [],
+        auction: [],
         init() {
             this.getMyListings();
         },
@@ -12,7 +12,7 @@ export default function () {
                 page: '1',
                 paginate: 2
             });
-            this.cars = response.data.data;
+            this.auction = response.data.data;
         }
     };
 }

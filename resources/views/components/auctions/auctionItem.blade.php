@@ -16,7 +16,9 @@
         alt="차량이미지"
         />
 
-        <x-auctions.auctionStatusBadges />
+        <div class="position-absolute top-0 start-0 m-1 z-2" >
+            <x-auctions.auctionStatusBadges />
+        </div>
 
         <x-auctions.auctionLikeButton />
 

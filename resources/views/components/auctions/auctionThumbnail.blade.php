@@ -25,7 +25,9 @@
         <div class="auction-thumbnail carousel-wrapper mb-3 position-relative animate__animated animate__fadeIn" style="">
 
             {{-- 경매상태 뱃지 --}}
-            <x-auctions.auctionStatusBadges />
+            <div class="position-absolute top-0 start-0 m-3 z-2" >
+                <x-auctions.auctionStatusBadges />
+            </div>
 
             <x-auctions.auctionLikeButton />
 

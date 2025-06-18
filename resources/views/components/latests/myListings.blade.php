@@ -6,30 +6,28 @@
     </div>
 
     <ul class="car-list">
-        <template x-for="car in cars" :key="car.id">
-            <a :href="'/v2/auction/' + car.hashid" class="car-item">
+        <template x-for="auction in auction" :key="auction.id">
+            <a :href="'/v2/auction/' + auction.hashid" class="car-item">
                 <div class="car-thumb">
                     <img
                     :src="(() => {
-                        if ((car.car_thumbnails) && car.car_thumbnails.length > 0) {
-                            return car.car_thumbnails[0];
+                        if ((auction.car_thumbnails) && auction.car_thumbnails.length > 0) {
+                            return auction.car_thumbnails[0];
                         }else{
-                            if(car.car_thumbnail){
-                                return car.car_thumbnail;
+                            if(auction.car_thumbnail){
+                                return auction.car_thumbnail;
                             }else{
                                 return '/images/car_example.png';
                             }
                         }
                     })()"
-                    :alt="car.number"
+                    :alt="auction.number"
                     />
                 </div>
-                <div class="car-number" x-text="car.car_no"></div>
-                <div
-                class="badge car-status text-white"
-                :class="$store.auctionStatus.get(car.status).class"
-                x-text="$store.auctionStatus.get(car.status).label"
-                ></div>
+                <div class="car-number" x-text="auction.car_no"></div>
+
+                {{-- <span x-text="auction.final_at"></span> --}}
+                <x-auctions.auctionStatusBadges :onlyStatus="true" />
             </a>
         </template>
     </ul>
