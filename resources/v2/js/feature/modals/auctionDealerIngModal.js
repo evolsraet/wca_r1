@@ -94,7 +94,8 @@ export default function () {
                 showFooter: false,
             }, {
                 content: {
-                    bidAmount: this.bidAmount
+                    bidAmount: this.bidAmount,
+                    auction: data
                 }
             });
 

@@ -1,7 +1,7 @@
 import { likeListeners } from '../../util/likes.js';
+import useBid from '../../util/bids.js';
 
 likeListeners();
-
 
 export default function () {
   return {

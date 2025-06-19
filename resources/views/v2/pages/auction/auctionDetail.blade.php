@@ -9,12 +9,14 @@
     $status = request()->get('status') ? request()->get('status') : $auction->status;
     $choose = request()->get('choose') ? request()->get('choose') : 0;
     $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
+    $userId = auth()->user()->id;
 @endphp
 
 <script>
     window.hashid = '{{ $hashid }}';
     window.carNumber = '{{ $auction->car_no }}';
     window.status = '{{ $status }}';
+    window.userId = '{{ $userId }}';
 </script>
 
 <div class="pt-3 gap-lg-3" x-data="auctionDetail">
