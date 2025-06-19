@@ -84,6 +84,13 @@ return [
                 'desc' => '',
                 'listStyle' => 'basicList',
             ],
+            'board/review' => [
+                'label' => '이용후기',
+                'url' => '/board/review',
+                'icon' => '/images/rating.png',
+                'desc' => '',
+                'listStyle' => 'galleryList',
+            ],
         ],
         'guest' => [
             'sell' => [

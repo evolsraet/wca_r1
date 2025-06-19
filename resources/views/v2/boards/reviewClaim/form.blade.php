@@ -5,7 +5,7 @@ if(request()->query('id')) {
     $id = Hashids::decode(request()->query('id'));
     $id = $id[0] ?? 0;
 } else {
-    $id = 0;
+    $id = request()->query('id');
 }
 
 $hashid = Hashids::encode($id);
@@ -44,6 +44,7 @@ if($articleId) {
 }
 
 $articleTitle = Wca::board_menu($board->id);
+
 
 $isWriteable = Wca::isReviewClaimWriteable(auth()->user()->id, $id, $board->id);
 
@@ -102,7 +103,7 @@ $isWriteable = Wca::isReviewClaimWriteable(auth()->user()->id, $id, $board->id);
 
                 <!-- 폼 헤더 -->
                 <div class="form-header mb-4">
-                    <h4 class="fw-bold" x-text="isEdit ? '{{ $articleTitle }} 수정' : '{{ $articleTitle }} 작성'"></h4>
+                    <h4 class="fw-bold" x-text="isEdit ? '{{ $articleTitle['label'] }} 수정' : '{{ $articleTitle['label'] }} 작성'"></h4>
                     <p class="text-muted" style="display: none;">{{ $board->name ?? $board->id }}</p>
                 </div>
 
@@ -142,8 +143,13 @@ $isWriteable = Wca::isReviewClaimWriteable(auth()->user()->id, $id, $board->id);
                             />
                         @endif
 
+                        <div x-text="article.extra2"></div>
+
                         @if($board->id == 'review')
-                        <div class="mb-4 text-center" x-data="{
+
+                        <x-boards.reviewStar :dealerId="$dealerId" :initialRating="$initialRating" />
+
+                        {{-- <div class="mb-4 text-center" x-data="{
                             dealerId: '{{ $dealerId ?? 0 }}',
                             rating: {{ $initialRating ?? 0 }},
                             labels: ['별로예요', '괜찮아요', '좋아요', '만족해요', '최고예요!'],
@@ -170,7 +176,7 @@ $isWriteable = Wca::isReviewClaimWriteable(auth()->user()->id, $id, $board->id);
                                 <div class="mt-2 text-danger fw-bold" x-text="rating + '점'"></div>
                             </template>
                             <input type="hidden" name="article.extra2" value="">
-                        </div>
+                        </div> --}}
                         @endif
 
                         <x-forms.input

@@ -31,7 +31,7 @@
 
             <div class="col-md-4 mb-4">
               <a :href="`auction/${auction.hashid}`" class="auction-item" >
-            <x-auctions.auctionItem />
+                <x-auctions.auctionItem />
               </a>
             </div>
 

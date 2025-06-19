@@ -148,31 +148,9 @@ $hashid = Hashids::encode($auction->id);
                     <!-- 게시글 본문 -->
                     <div class="card-body">
                         @if($board->id == 'review')
-                        @php
-                            $reviewData = json_decode($articleData->extra2 ?? '{}');
-                            $initialRating = $reviewData->rating ?? 0;
-                        @endphp
 
-                        <div class="mb-4 text-center" x-data="{
-                            rating: {{ $initialRating }},
-                            labels: ['별로예요', '괜찮아요', '좋아요', '만족해요', '최고예요!']
-                        }">
+                            <x-boards.reviewStar :check="false" :isTitle="false" />
 
-                            <div class="d-flex justify-content-center gap-3">
-                                <template x-for="i in 5">
-                                    <div class="text-center">
-                                        <svg :class="rating >= i ? 'text-danger' : 'text-secondary'" xmlns="http://www.w3.org/2000/svg" width="40" height="40" fill="currentColor" class="bi bi-star-fill" viewBox="0 0 16 16">
-                                            <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.32-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.63.283.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
-                                        </svg>
-                                        <div class="mt-1 text-sm" x-text="labels[i - 1]"></div>
-                                    </div>
-                                </template>
-                            </div>
-
-                            <template x-if="rating > 0">
-                                <div class="mt-2 text-danger fw-bold" x-text="rating + '점'"></div>
-                            </template>
-                        </div>
                         @endif
                         <div class="article-content" x-html="(article && article.content) || ''"></div>
                     </div>

@@ -99,7 +99,7 @@
     <x-loading />
 
     <!-- 게시글 목록 -->
-    @include('v2.boards._shared.index', ['board' => $board])
+    @include('v2.boards._shared.index', ['boardId' => $board->id])
 
     <!-- 페이지네이션 -->
     <div x-show="!loading && pagination.last_page > 1" class="d-flex justify-content-center mt-4">

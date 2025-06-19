@@ -3,8 +3,15 @@
     <div class="row">
         <template x-for="(article, index) in articles" :key="article.id">
         <div class="col-md-3 mb-4">
-            <a :href="`/v2/board/{{ $board->id }}/view/${article.id}`" class="auction-item">
-                <x-auctions.auctionItem />
+            <a :href="`/v2/board/{{ $board->id }}/view/${article.id}`" class="auction-item" 
+                x-data="(() => {
+                    const src = article.auction;
+                    return {
+                        auction: src,
+                    };
+                })()"
+                >
+                <x-auctions.auctionItem :boardId="$board->id" :isReviewStar="true" />
             </a>
         </div>
         </template>
