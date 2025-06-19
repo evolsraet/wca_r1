@@ -32,6 +32,8 @@ export default function () {
           search_text: this.form.search_text,
         });
 
+        console.log('response', response);
+
         this.form.lists = Array.isArray(response.data?.data) ? response.data.data : [];
         this.form.lists.forEach(item => {
           item.car_km = Number(item.car_km).toLocaleString('ko-KR');

@@ -157,3 +157,23 @@ Route::prefix('board/{boardId}')->name('board.')->group(function () {
 Route::get('/carhistory', function () {
     return view('v2.pages.carhistory');
 })->name('carhistory');
+
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/', function () {
+        return view('v2.admin.index');
+    })->name('index');
+
+    Route::get('/auction', function () {
+        return view('v2.admin.auction.list');
+    })->name('auction.list');
+
+    Route::get('/auction/view/{id}', function ($id) {
+        return view('v2.admin.auction.view');
+    })->name('auction.view');
+
+    Route::get('/auction/form/{id?}', function ($id = null) {
+        return view('v2.admin.auction.form');
+    })->name('auction.form');
+
+});

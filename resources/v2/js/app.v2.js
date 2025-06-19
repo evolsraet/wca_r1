@@ -85,6 +85,15 @@ import { like } from './util/likes.js';
         }
     });
 
+    const adminComponents = import.meta.glob('./admin/**/*.js', { eager: true });
+    Object.entries(adminComponents).forEach(([path, module]) => {
+        const name = path.split('/').pop().replace('.js', '');
+        if (!registeredComponents.has(name)) {
+            Alpine.data(name, module.default);
+            registeredComponents.add(name);
+        }
+    });
+
 
     Alpine.store('likeState', {
         isLiked: false,

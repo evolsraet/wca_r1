@@ -4,9 +4,9 @@ const auctionStatus = {
     // 경매상태바 순서지정
     stepOrder: ['ask', 'diag', 'ing', 'wait', 'chosen', 'dlvr', 'dlvr_done', 'done'],
     // 경매상태바 라벨지정
-    labelMap: window.auctionStatus.status,
+    labelMap: window.auctionStatus?.status,
     // 경매상태바 클래스지정 (색상)
-    classMap: window.auctionStatus.classMap,
+    classMap: window.auctionStatus?.classMap,
 
     get(status) {
       return {
