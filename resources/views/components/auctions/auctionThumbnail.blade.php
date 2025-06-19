@@ -53,7 +53,7 @@
                 {{-- 썸네일 하단 표시 --}}
                 <div 
                     class="carousel-thumbnails w-100 mt-2"
-                    x-show="car_thumbnail.length >= 1"
+                    x-show="car_thumbnail.length > 1"
                 >
                     <template x-for="(img, index) in car_thumbnail.slice(0, 8)" :key="index">
                         <img 
