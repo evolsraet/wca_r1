@@ -9,12 +9,16 @@ export default function () {
             this.bidAmount = data.bidAmount;
 
         },
-        // submit() {
-        //     console.log('submit');
+        submit() {
+            console.log('submit');
 
-        //     // this.bidAmount;
-        //     console.log(this.bidAmount);
+            // this.bidAmount;
+            console.log(this.bidAmount);
 
-        // }
+            
+
+            Alpine.store('modal').close('auctionDealerIngModalSuccess');
+
+        }
     }
 }

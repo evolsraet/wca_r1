@@ -3,7 +3,9 @@
 @section('content')
 
 @php
-    $lists = Wca::isReviewClaimLists(auth()->user()?->id, $board->id);
+    use App\Helpers\Board;
+    // 작성가능한 차량리스트
+    $auctionList = Board::getWriteableAuctionList(auth()->user()?->id, $board->id);
 @endphp
 
 <script>
@@ -12,8 +14,8 @@
         boardName: '{{ $board->name ?? $board->id }}'
     };
 
-    const lists = {!! json_encode($lists) !!};
-    console.log('lists', lists);
+    const auctionList = {!! json_encode($auctionList) !!};
+    console.log('작성가능한 차량리스트', auctionList);
 
 </script>
 
@@ -22,7 +24,7 @@
     <!-- 게시판 헤더 -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h4 class="mb-1 fw-bold">{{ Wca::board_menu($board->id)['label'] }}</h4>
+            <h4 class="mb-1 fw-bold">{{ $board->name }}</h4>
             <small class="text-muted">
                 <i class="mdi mdi-file-document-outline me-1"></i>
                 총 <span x-text="pagination.total || 0"></span>개의 게시글
@@ -40,9 +42,11 @@
                     showFooter: false,
                 },{
                     content: {
-                        cars: lists.data
+                        cars: auctionList.data
                     }
                 })"
+
+                :disabled="loading"
                 >
                     <i class="mdi mdi-car-info me-1"></i>등록하기
                 </button>
@@ -99,7 +103,12 @@
     <x-loading />
 
     <!-- 게시글 목록 -->
-    @include('v2.boards._shared.index', ['boardId' => $board->id])
+    @if($board->id == 'review')
+        @include('v2.boards._share.list.galleryList')
+    @else
+        @include('v2.boards._share.list.basicList')
+    @endif 
+
 
     <!-- 페이지네이션 -->
     <div x-show="!loading && pagination.last_page > 1" class="d-flex justify-content-center mt-4">

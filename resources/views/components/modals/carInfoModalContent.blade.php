@@ -1,6 +1,6 @@
 <div x-data="carInfoModalContent">
     <template x-for="car in cars" :key="car.id">
-        <div class="border rounded p-3 mb-3 d-flex align-items-start" @click="goToWrite(car.hashId)">
+        <div class="border rounded p-3 mb-3 d-flex align-items-start cursor-pointer" @click="goToWrite(car.hashId)">
             <div class="me-3">
                 <img
                     :src="car.car_thumbnail || 'https://via.placeholder.com/100x70?text=Car'"
@@ -16,4 +16,10 @@
             </div>
         </div>
     </template>
+
+    <div class="text-center mt-3" x-show="cars.length === 0">
+        <p>작성 가능한 차량이 없습니다.</p>
+        <button class="btn btn-primary" @click="closeModal">닫기</button>
+    </div>
+
 </div>

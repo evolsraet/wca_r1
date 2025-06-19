@@ -9,9 +9,9 @@
         <div class="input-group">
         <span class="input-group-text text-muted">₩</span>
         <input type="number" x-model="bidAmount" class="form-control fs-6 text-end" placeholder="입찰 금액 입력" />
-        <span class="input-group-text text-danger">원</span>
+        <span class="input-group-text text-danger">만원</span>
         </div>
-        <div class="form-text text-end text-muted mt-1">평균 <strong>555</strong>원</div>
+        <div class="form-text text-end text-muted mt-1">평균 <strong>0</strong>원</div>
     </div>
 
     <button type="button" class="btn btn-danger w-100 py-2 fs-6 rounded mt-4"

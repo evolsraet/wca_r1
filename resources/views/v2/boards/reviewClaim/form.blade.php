@@ -1,6 +1,8 @@
 @extends('v2.layouts.app')
 
 @php
+use App\Helpers\Board;
+
 if(request()->query('id')) {
     $id = Hashids::decode(request()->query('id'));
     $id = $id[0] ?? 0;
@@ -43,10 +45,7 @@ if($articleId) {
     }
 }
 
-$articleTitle = Wca::board_menu($board->id);
-
-
-$isWriteable = Wca::isReviewClaimWriteable(auth()->user()->id, $id, $board->id);
+// $isWriteable = Board::isReviewClaimWriteable(auth()->user()->id, $id, $board->id);
 
 @endphp
 
@@ -59,14 +58,15 @@ $isWriteable = Wca::isReviewClaimWriteable(auth()->user()->id, $id, $board->id);
         extra1: '{{ $articleData->extra1 ?? $id }}'
     };
 
-    const isWriteable = {!! json_encode($isWriteable) !!};
-    console.log('isWriteable', isWriteable);
+    const writeCheck = "{{ $status }}";
+
+    console.log('writeCheck', writeCheck);
 
     document.addEventListener('alpine:init', () => {
-    if (isWriteable.status === false) {
+    if (!writeCheck) {
         Alpine.store('swal').fire({
             title: '작성 가능 여부 확인',
-            text: isWriteable.message,
+            text: '{{ $message }}',
             icon: 'info',
             confirmButtonText: '확인'
         }).then(() => {
@@ -103,7 +103,7 @@ $isWriteable = Wca::isReviewClaimWriteable(auth()->user()->id, $id, $board->id);
 
                 <!-- 폼 헤더 -->
                 <div class="form-header mb-4">
-                    <h4 class="fw-bold" x-text="isEdit ? '{{ $articleTitle['label'] }} 수정' : '{{ $articleTitle['label'] }} 작성'"></h4>
+                    <h4 class="fw-bold" x-text="isEdit ? '{{ $board->name }} 수정' : '{{ $board->name }} 작성'"></h4>
                     <p class="text-muted" style="display: none;">{{ $board->name ?? $board->id }}</p>
                 </div>
 

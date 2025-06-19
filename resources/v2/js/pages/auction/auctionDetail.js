@@ -52,8 +52,8 @@ export default function () {
         this.auction = auctionRes?.data?.data;
         this.diag = diagRes?.data?.data;
 
-        console.log('auction data:', this.auction);
-        console.log('diag data:', this.diag);
+        // console.log('auction data:', this.auction);
+        // console.log('diag data:', this.diag);
       } catch (err) {
         console.error('API 호출 실패:', err);
       }

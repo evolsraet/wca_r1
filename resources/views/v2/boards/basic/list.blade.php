@@ -2,10 +2,6 @@
 
 @section('content')
 
-@php
-$boardTitle = Wca::board_menu($board->id);
-@endphp
-
 <script>
     window.boardConfig = {
         boardId: '{{ $board->id }}',
@@ -18,7 +14,7 @@ $boardTitle = Wca::board_menu($board->id);
     <!-- 게시판 헤더 -->
     <div class="d-flex justify-content-between align-items-center mb-4">
         <div>
-            <h4 class="mb-1 fw-bold">{{ $boardTitle['label'] }}</h4>
+            <h4 class="mb-1 fw-bold">{{ $board->name }}</h4>
             <small class="text-muted">
                 <i class="mdi mdi-file-document-outline me-1"></i>
                 총 <span x-text="pagination.total || 0"></span>개의 게시글

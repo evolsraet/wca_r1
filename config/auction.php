@@ -61,7 +61,6 @@ return [
                 'url' => '/board/review',
                 'icon' => '/images/rating.png',
                 'desc' => '',
-                'listStyle' => 'galleryList',
             ],
             'docs/vehicleOwnershipTransfer' => [
                 'label' => '명의이전서류',
@@ -82,14 +81,12 @@ return [
                 'url' => '/board/claim',
                 'icon' => '/images/document.png',
                 'desc' => '',
-                'listStyle' => 'basicList',
             ],
             'board/review' => [
                 'label' => '이용후기',
                 'url' => '/board/review',
                 'icon' => '/images/rating.png',
                 'desc' => '',
-                'listStyle' => 'galleryList',
             ],
         ],
         'guest' => [
@@ -104,7 +101,6 @@ return [
                 'url' => '/board/review',
                 'icon' => '/images/rating.png',
                 'desc' => '다양한 판매 후기',
-                'listStyle' => 'galleryList',
             ],
         ],
     ],

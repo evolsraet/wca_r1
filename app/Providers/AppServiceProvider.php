@@ -14,6 +14,7 @@ use App\Notifications\Channels\AligoChannel;
 use App\Services\AligoService;
 use Illuminate\Support\Facades\URL;
 use App\Helpers\Wca;
+use App\Helpers\Board;
 use App\Services\PriceService;
 use App\Services\ApiRequestService;
 

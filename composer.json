@@ -47,7 +47,8 @@
             "Database\\Seeders\\": "database/seeders/"
         },
         "files": [
-            "app/Helpers/Wca.php"
+            "app/Helpers/Wca.php",
+            "app/Helpers/Board.php"
         ]
     },
     "autoload-dev": {

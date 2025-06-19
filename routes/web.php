@@ -56,7 +56,7 @@ Route::get('/files/download/{uuid}', function ($uuid) {
 })->name('files.download');
 
 // v2 prefix
-Route::prefix('v2')->group(base_path('routes/v2.php'));
+Route::prefix('v2')->group(base_path('routes/web.v2.php'));
 
 // 엑셀파일 다운로드
 Route::get('excelDown/{resource}', function ($resource) {

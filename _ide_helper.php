@@ -22198,6 +22198,8 @@ namespace  {
             class View extends \Illuminate\Support\Facades\View {}
             class Vite extends \Illuminate\Support\Facades\Vite {}
             class Wca extends \App\Helpers\Wca {}
+            class Board extends \App\Helpers\Board {}
+
             class Image extends \Intervention\Image\Facades\Image {}
             class Octane extends \Laravel\Octane\Facades\Octane {}
             class Socialite extends \Laravel\Socialite\Facades\Socialite {}
