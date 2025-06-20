@@ -7,7 +7,12 @@
       </h2>
       <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse">
         <div class="accordion-body">
-          <div x-html="diag?.data?.diag_base_option"></div>
+          <div x-show="diag?.data?.diag_base_option">
+            <div x-html="diag?.data?.diag_base_option"></div>
+          </div>
+          <div x-show="!diag?.data?.diag_base_option">
+            내용이 없습니다.
+          </div>
         </div>
       </div>
     </div>
@@ -19,7 +24,12 @@
       </h2>
       <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse">
         <div class="accordion-body">
-          <div x-text="diag?.data?.diag_add_option ?? '내용이 없습니다.'"></div>
+          <div x-show="diag?.data?.diag_add_option">
+            <div x-text="diag?.data?.diag_add_option"></div>
+          </div>
+          <div x-show="!diag?.data?.diag_add_option">
+            내용이 없습니다.
+          </div>
         </div>
       </div>
     </div>

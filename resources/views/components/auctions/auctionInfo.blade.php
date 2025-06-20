@@ -12,4 +12,7 @@
     {{-- 본문 안내 메시지 --}}
     <p class="mb-2 text-dark fw-semibold">{{ $message }}</p>
     <p class="mb-0 text-muted small">{{ $subMessage }}</p>
+
+    <x-auctions.auctionDocsButton />
+
 </div>

@@ -264,7 +264,7 @@
                                     @php
                                         $privacy = [
                                             'title' => '온라인자동차경매장 규약',
-                                            'content' => file_get_contents(resource_path('v2/docs/privacy.html')),
+                                            'content' => file_get_contents(resource_path('v2/docs/auctionTermsAndPolicy.html')),
                                         ];
                                     @endphp
 
@@ -272,7 +272,7 @@
                                     <!-- 약관 동의 -->
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer1"
-                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `' . $privacy['title'] . '`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>' . $privacy['title'] . '</a>에 동의합니다.'"
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/auctionTermsAndPolicy?raw=1`, {title: `' . $privacy['title'] . '`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>' . $privacy['title'] . '</a>에 동의합니다.'"
                                         required
                                         wrapperClass="rounded-check"
                                         :errors="true"
@@ -280,7 +280,7 @@
 
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer2"
-                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `주민등록번호(법인등록번호) 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>주민등록번호(법인등록번호) 수집 동의</a>에 동의합니다.'"
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/residentRegistrationNumberConsent?raw=1`, {title: `주민등록번호(법인등록번호) 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>주민등록번호(법인등록번호) 수집 동의</a>에 동의합니다.'"
                                         required
                                         wrapperClass="rounded-check"
                                         :errors="true"
@@ -288,7 +288,7 @@
 
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer3"
-                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `자동차관리사업등록번호 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>자동차관리사업등록번호 수집 동의</a>에 동의합니다.'"
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/carManagementRegistrationConsent?raw=1`, {title: `자동차관리사업등록번호 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>자동차관리사업등록번호 수집 동의</a>에 동의합니다.'"
                                         required
                                         wrapperClass="rounded-check"
                                         :errors="true"
@@ -296,7 +296,7 @@
 
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer4"
-                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `사업자정보 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>사업자정보 수집 동의</a>에 동의합니다.'"
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/businessInformationConsent?raw=1`, {title: `사업자정보 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>사업자정보 수집 동의</a>에 동의합니다.'"
                                         required
                                         wrapperClass="rounded-check"
                                         :errors="true"

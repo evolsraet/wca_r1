@@ -19,8 +19,22 @@
         </a>
     </div>
     <div>
+        @if($button2 == '경락 확인서')
+        <a href="#" class="btn btn-outline-primary w-100 py-2 fw-semibold" type="button"
+        @click="
+            Alpine.store(`modal`).showHtmlFromUrl(`/v2/components/modals/auctionConfirmationDoc`, 
+            {title: `경락 확인서`, size: `modal-xl modal-dialog-centered`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]},
+            {
+                content: {}
+            }
+        )"
+        >
+            {{ $button2 }}
+        </a>
+        @else
         <a href="{{ $button2Link }}" class="btn btn-outline-primary w-100 py-2 fw-semibold" type="button">
             {{ $button2 }}
         </a>
+        @endif
     </div>
 </div>

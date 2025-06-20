@@ -1,4 +1,7 @@
-// v2/js/util/useBidStore.js
+import whereBuilder from './whereBuilder.js';
+import Alpine from 'alpinejs';
+Alpine.store('whereBuilder', whereBuilder);
+
 export default function useBidStore() {
     return {
         bidsData: [],
@@ -37,34 +40,34 @@ export default function useBidStore() {
                 }
             }
 
-            return request.callback(result => {
+            return request.then(result => {
                 this.bidsData = result.data;
                 this.bidPagination = result.rawData.data.meta;
                 return result;
-            }).get();
+            });
         },
 
         async getMyBids(page = 1, isSelect = false, isMyBid = false, status = 'all') {
             let request = Alpine.store('api').get('/api/bids', {
-                with: ['auction'],
+                with: 'auction',
                 page: page
             });
 
-            if (isSelect) {
-                const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
-                request.whereOr('auction.status', statusFilter);
-            }
+            // if (isSelect) {
+            //     const statusFilter = status === 'all' ? 'dlvr,chosen' : status;
+            //     request.whereOr('auction.status', statusFilter);
+            // }
 
             if (isMyBid) {
                 request.whereOr('auction.status', 'ing,wait');
             }
 
-            return request.callback(result => result).get();
+            return request.then(result => result);
         },
 
         async getMyBidsAll() {
             let request = Alpine.store('api').get('/api/bids');
-            return request.callback(result => result).get();
+            return request.then(result => result);
         },
 
         async getscsBids(page = 1, status = 'all', search_title = '', bidIdStringList = '') {
@@ -79,7 +82,7 @@ export default function useBidStore() {
                 ]
             }).whereOr('auctions.status', statusFilter);
 
-            return request.callback(result => result).get();
+            return request.then(result => result);
         },
 
         async getHomeBids(mainIsOk = false) {
@@ -92,17 +95,17 @@ export default function useBidStore() {
                 request.whereOr('auction.status', 'ing,wait');
             }
 
-            return request.callback(result => {
+            return request.then(result => {
                 this.bidsData = result.data;
                 return result.data;
-            }).get();
+            });
         },
 
         async getBidById(id) {
             return Alpine.store('api').get(`/api/bids/${id}`, {
                 with: ['auction']
-            }).callback(result => {
-                if (result.isSuccess) {
+            }).then(result => {
+                if (result.statusText === 'OK') {
                     return result.data;
                 } else {
                     Alpine.store('swal').fire({
@@ -112,7 +115,7 @@ export default function useBidStore() {
                         confirmButtonText: '확인'
                     });
                 }
-            }).get();
+            });
         },
 
         async submitBid(auctionId, bidAmount, userId) {
@@ -126,10 +129,13 @@ export default function useBidStore() {
                     auction_id: auctionId,
                     price: bidAmount
                 }
-            }).callback(result => {
+            }).then(result => {
                 this.isLoading = false;
 
-                if (result.isSuccess) {
+                console.log('result', result.data);
+                console.log('result.statusText', result.statusText);
+
+                if (result.statusText === 'OK') {
                     return {
                         success: true,
                         bidId: result.data.id,
@@ -144,21 +150,21 @@ export default function useBidStore() {
                     }
                     return { success: false, message };
                 }
-            }).post();
+            });
         },
 
         async cancelBid(bidId) {
-            return Alpine.store('api').delete(`/api/bids/${bidId}`).callback(result => {
-                return { success: result.isSuccess };
-            }).delete();
+            return Alpine.store('api').delete(`/api/bids/${bidId}`).then(result => {
+                return { success: result.statusText === 'OK' };
+            });
         },
 
         async getBidsByUserId(userId) {
             return Alpine.store('api').get('/api/bids', {
                 where: [`bids.user_id:${userId}`],
                 pageLimit: 10000
-            }).callback(result => {
-                if (result.isSuccess) {
+            }).then(result => {
+                if (result.statusText === 'OK') {
                     return result.data;
                 } else {
                     Alpine.store('swal').fire({
@@ -168,7 +174,7 @@ export default function useBidStore() {
                         confirmButtonText: '확인'
                     });
                 }
-            }).get();
+            });
         },
 
         get bidsCountByUser() {

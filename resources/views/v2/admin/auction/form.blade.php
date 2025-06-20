@@ -24,8 +24,8 @@
 
 <div x-data="auctionDetail">
 <div class="mb-4">
-    <h4 class="fw-bold">차량 상세 정보</h4>
-    <p class="text-muted">입찰 및 등록 정보 확인</p>
+    <h4 class="fw-bold">매물 상세 정보</h4>
+    <p class="text-muted">매물의 상세 정보를 확인할 수 있습니다.</p>
 </div>
 
 <div class="row g-4">

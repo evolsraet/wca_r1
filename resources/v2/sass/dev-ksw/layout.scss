@@ -624,3 +624,21 @@ $primary: map-get($theme-colors, "primary");
   .cursor-pointer {
     cursor: pointer;
   }
+
+.table-style1 {
+    .table td,
+    .table th {
+        border-left: none !important;
+        border-right: none !important;
+        padding: 1.1rem 0px !important;
+    }
+}
+
+
+.over-softgray {
+    transition: background-color 0.3s ease;
+
+    &:hover {
+        background-color: $gray-200 !important; /* 부트스트랩의 light-gray와 유사 */
+    }
+}

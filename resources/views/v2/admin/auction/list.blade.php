@@ -3,7 +3,7 @@
 @section('title', '관리자 대시보드')
 
 @section('content')
-<div class="container" x-data="auctionList()">
+<div class="container table-style1" x-data="auctionList()">
 
     <div class="d-flex justify-content-between mb-3">
         <div>
@@ -49,7 +49,9 @@
                 <td x-text="auction.final_at ?? '-'"></td>
                 <td x-text="auction.bids.length ?? 0"></td>
                 <td x-text="auction.max_bid_amount ?? 0"></td>
-                <td><span class="badge bg-success" x-text="auction.status"></span></td>
+                <td>
+                    <x-auctions.auctionStatusBadges />
+                </td>
                 <td><a :href="`/v2/admin/auction/form/${auction.hashid}`" class="text-primary">수정</a></td>
             </tr>
             </template>

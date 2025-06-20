@@ -14,7 +14,7 @@
         @foreach($steps as $index => $step)
             <div class="step-item flex-fill position-relative">
                 <div class="step-circle {{ $index + 1 <= $currentStep ? 'active' : '' }}"></div>
-                <div class="step-line {{ $index + 1 < $currentStep ? 'active' : '' }}"></div>
+                <div class="step-line"></div>
                 <div class="step-label text-muted small mt-2">
                     <div class="fw-bold">STEP0{{ $index + 1 }}</div>
                     <div class="{{ $index + 1 <= $currentStep ? 'text-dark' : 'text-secondary' }}">

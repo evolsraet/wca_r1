@@ -118,7 +118,7 @@
                     @break
 
                 @case($isUser == 'dealer' && $status == 'done')
-                    <x-auctions.AuctionDone title="낙찰 완료" message="차량에 문제가 있으신가요?" button1="클레인 신청" button1Link="/v2/board/claim/form?id={{ $hashid }}" button2="경락 확인서" button2Link="#" />
+                    <x-auctions.AuctionDone title="낙찰 완료" message="차량에 문제가 있으신가요?" button1="클레임 신청" button1Link="/v2/board/claim/form?id={{ $hashid }}" button2="경락 확인서" button2Link="#" />
                     @break
             @endswitch
         </x-slot:rightContent>

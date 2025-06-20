@@ -96,6 +96,6 @@
       </div>
     </div>
 
-    <button type="button" class="btn btn-primary w-100 mt-4" id="auctionApplyBtn" @click="submit()">확인</button>
+    <button type="button" class="btn btn-primary w-100 mt-4" x-show="!buttonActive" id="auctionApplyBtn" @click="submit()">확인</button>
     
   </div>

@@ -1,7 +1,10 @@
 export default function () {
     return {
+        buttonActive : null,
         init() {
             // console.log('auctionProcessSteps');
+            // console.log(window.modalData.content.view);
+            this.buttonActive = window.modalData.content.view;
         },
         submit() {
             console.log('submit');

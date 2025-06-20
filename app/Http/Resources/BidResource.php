@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class BidResource extends JsonResource
 {
@@ -55,7 +56,15 @@ class BidResource extends JsonResource
         }
 
         // 리뷰 갯수 확인하여 사용자 점수 표시 
-        $averageStar = \App\Models\Review::where('dealer_id', $parentArray['user_id'])->avg('star');
+        // $averageStar = \App\Models\Review::where('dealer_id', $parentArray['user_id'])->avg('star');
+
+        $averageStar = DB::table('articles')
+            ->where('board_id', 'review')
+            ->whereRaw("JSON_EXTRACT(extra2, '$.dealer_id') = ?", [$parentArray['user_id']])
+            ->whereRaw("JSON_EXTRACT(extra2, '$.rating') IS NOT NULL")
+            ->selectRaw("AVG(CAST(JSON_UNQUOTE(JSON_EXTRACT(extra2, '$.rating')) AS DECIMAL(3,1))) as avg_rating")
+            ->value('avg_rating');
+            
         if($averageStar){
             $averageStar = min($averageStar, 5);
             $averageStar = round($averageStar, 1);

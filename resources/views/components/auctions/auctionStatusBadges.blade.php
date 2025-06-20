@@ -5,9 +5,9 @@
         <span 
             class="auction-item-badge text-white p-2 rounded-3" 
             id="auction-status-badge" 
-            data-bs-toggle="tooltip" 
+            {{-- data-bs-toggle="tooltip" 
             data-bs-placement="top" 
-            title="클릭하면 경매상태바 를 숨깁니다." 
+            title="클릭하면 경매상태바 를 숨깁니다."  --}}
             :class="$store.auctionStatus.get(auction?.status).class" 
             x-text="$store.auctionStatus.get(auction?.status).label"
         >
@@ -34,9 +34,9 @@
             <span 
                 class="auction-item-badge text-white rounded-3 p-2" 
                 id="auction-status-badge" 
-                data-bs-toggle="tooltip" 
+                {{-- data-bs-toggle="tooltip" 
                 data-bs-placement="top" 
-                title="클릭하면 경매상태바 를 숨깁니다." 
+                title="클릭하면 경매상태바 를 숨깁니다."  --}}
                 :class="$store.auctionStatus.get(auction?.status).class" 
                 x-text="$store.auctionStatus.get(auction?.status).label"
             >

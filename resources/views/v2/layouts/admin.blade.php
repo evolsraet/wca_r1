@@ -18,6 +18,7 @@
     </style>
 </head>
 <body class="bg-light">
+    @include('v2.partials.common')
 
     <!-- 모바일용 사이드바 오프캔버스 -->
     <div class="offcanvas offcanvas-start" tabindex="-1" id="adminSidebar">
@@ -36,7 +37,7 @@
         </aside>
 
         <div class="flex-grow-1">
-            @include('v2.partials.admin.header')
+            {{-- @include('v2.partials.admin.header') --}}
 
             <main class="p-4">
                 @yield('content')

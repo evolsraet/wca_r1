@@ -119,9 +119,9 @@ class Auction extends Model implements HasMedia
     {
         // return $this->hasMany(Bid::class);
         if (auth()->user()->hasRole('dealer')) {
-            return $this->hasMany(Bid::class)->where('user_id', auth()->user()->id);
+            return $this->hasMany(Bid::class)->with(['user.media'])->where('user_id', auth()->user()->id);
         } else {
-            return $this->hasMany(Bid::class);
+            return $this->hasMany(Bid::class)->with(['user.media']);
         }
     }
 

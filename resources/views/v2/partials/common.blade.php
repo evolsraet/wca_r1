@@ -2,7 +2,7 @@
   $auctionStatus = Wca::auctionStatus();
   $user = auth()->user();
   $userId = $user?->id;
-  $userRole = $user?->hasRole('user') ? 'user' : 'dealer';
+  $userRole = $user?->hasRole('dealer') ? 'dealer' : 'user';
 @endphp
 
 <script>

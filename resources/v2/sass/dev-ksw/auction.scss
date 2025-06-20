@@ -435,10 +435,10 @@ $primary: map-get($theme-colors, "primary");
       .step-line {
         position: absolute;
         top: 7px;
-        left: 50%;
+        left: 90%;
         height: 2px;
-        width: 70%;
-        background-color: $gray-300;
+        width: 40%;
+        background-color: $gray-200;
         z-index: 1;
         transform: translateX(-50%);
       }

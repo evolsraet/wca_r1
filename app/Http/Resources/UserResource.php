@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use App\Http\Resources\DealerResource;
 use App\Http\Resources\Traits\WithTrait;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\DB;
 
 class UserResource extends JsonResource
 {
@@ -52,12 +53,20 @@ class UserResource extends JsonResource
             }
         }
 
-        $averageStar = \App\Models\Review::where('dealer_id', $this->resource->id)->avg('star');
-        if($averageStar){
+        // 별점
+        $averageStar = DB::table('articles')
+            ->where('board_id', 'review')
+            ->whereRaw("JSON_EXTRACT(extra2, '$.dealer_id') = ?", [$this->resource->id])
+            ->whereRaw("JSON_EXTRACT(extra2, '$.rating') IS NOT NULL")
+            ->selectRaw("AVG(CAST(JSON_UNQUOTE(JSON_EXTRACT(extra2, '$.rating')) AS DECIMAL(3,1))) as avg_rating")
+            ->value('avg_rating');
+
+        if ($averageStar) {
             $averageStar = min($averageStar, 5);
             $averageStar = round($averageStar, 1);
         }
-        $parentArray['points'] = $averageStar ? $averageStar : 0;
+
+        $parentArray['points'] = $averageStar ?? 0;
 
         return array_merge($parentArray, $additionalArray);
 

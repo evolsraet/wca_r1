@@ -18,7 +18,7 @@
   {{-- 모바일 버전 --}}
   <div class="d-flex d-md-none flex-wrap justify-content-center gap-2 mobile-step-badges">
     <template x-for="(stepKey, index) in steps" :key="index">
-      <div class="step-badge-mobile" :class="{ 'active': isActive(stepKey) }" x-text="'STEP' + (index + 1)" :title="getLabel(stepKey)"></div>
+      <div class="step-badge-mobile" :class="{ 'active': isActive(stepKey) }" x-text="'STEP' + (index + 1)" :title="getLabel(stepKey)" data-bs-toggle="tooltip" data-bs-placement="bottom" :data-bs-title="getLabel(stepKey)"></div>
     </template>
   </div>
 </div>

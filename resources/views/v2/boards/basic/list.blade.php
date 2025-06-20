@@ -7,6 +7,7 @@
         boardId: '{{ $board->id }}',
         boardName: '{{ $board->name ?? $board->id }}'
     };
+
 </script>
 
 <div class="board-list board-skin-{{ $board->skin }} testbox mt-4" x-data="articleList()">
@@ -28,6 +29,9 @@
             @endif
         </div>
     </div>
+
+    <!-- 해더 배너 영역 -->
+    <x-boards.banner :style="1"/>
 
     <!-- 검색 및 필터 영역 -->
     <div class="bg-light rounded mb-4">
