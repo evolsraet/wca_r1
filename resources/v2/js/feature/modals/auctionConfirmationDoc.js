@@ -1,7 +1,16 @@
 export default function () {
     return {
+        auction: {},
+        diag: {},
         init() {
+            this.auction = window.modalData.content.auction;
+            this.diag = window.modalData.content.diag;
+
+            console.log('window.modalData', window.modalData);
+
             console.log('auctionConfirmationDoc init');
+            console.log('auctionConfirmationDoc detailInfo', this.auction);
+            console.log('auctionConfirmationDoc diag', this.diag);
         },
         printDoc() {
             console.log('printDoc');

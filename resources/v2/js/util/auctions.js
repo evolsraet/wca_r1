@@ -1,6 +1,39 @@
 
+// 경매 카운트다운
+window.addEventListener('start-countdown', (e) => {
+  const { finalAt } = e.detail;
+  if (!finalAt) return;
+
+  const target = document.querySelector('[data-timer]');
+  if (!target) return;
+
+  let intervalId;
+
+  const update = () => {
+  const now = new Date();
+  const end = new Date(finalAt);
+  const diff = end - now;
+
+  if (diff <= 0) {
+      target.textContent = '00:00:00';
+      clearInterval(intervalId);
+      return;
+  }
+
+  const h = String(Math.floor(diff / 1000 / 60 / 60)).padStart(2, '0');
+  const m = String(Math.floor(diff / 1000 / 60) % 60).padStart(2, '0');
+  const s = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+
+  target.textContent = `${h}:${m}:${s}`;
+  };
+
+  update(); // 최초 실행
+  intervalId = setInterval(update, 100);
+});
+
+
 // 경매상태 확인
-const auctionStatus = {
+export const auctionStatus = {
     // 경매상태바 순서지정
     stepOrder: ['ask', 'diag', 'ing', 'wait', 'chosen', 'dlvr', 'dlvr_done', 'done'],
     // 경매상태바 라벨지정
@@ -15,37 +48,235 @@ const auctionStatus = {
       };
     }
 };  
-export default auctionStatus;
 
 
-// 경매 카운트다운
-window.addEventListener('start-countdown', (e) => {
-    const { finalAt } = e.detail;
-    if (!finalAt) return;
+export const auctionEvent = {
 
-    const target = document.querySelector('[data-timer]');
-    if (!target) return;
+  // 경매 재시작
+  reauction: async (auctionId) => {
 
-    let intervalId;
+    await Alpine.store('api').put(`/api/auctions/${auctionId}`, {
+        mode: 'reauction'
+    }).then(res => {
+        console.log('res', res);
 
-    const update = () => {
-    const now = new Date();
-    const end = new Date(finalAt);
-    const diff = end - now;
+        if(res.statusText == 'OK') {
 
-    if (diff <= 0) {
-        target.textContent = '00:00:00';
-        clearInterval(intervalId);
-        return;
+          Alpine.store('swal').fire({
+              title: '경매 재시작 성공',
+              text: res.message,
+              icon: 'success',
+              confirmButtonText: '확인'
+          });
+
+          setTimeout(() => {
+              window.location.reload();
+          }, 1000);
+          
+          return res;
+        }
+
+        if(res.isError) {
+            Alpine.store('swal').fire({
+                title: '경매 재시작 실패',
+                text: res.message,
+                icon: 'error',
+                confirmButtonText: '확인'
+            });
+        }
+
+    });
+  },
+  // 경매 상태 업데이트
+  updateAuctionStatus: async (auctionId, status) => {
+    await Alpine.store('api').put(`/api/auctions/${auctionId}`, {
+      auction: {
+        status: status
+      }
+    }).then(res => {
+        console.log('res', res);
+
+        if(res.statusText == 'OK') {
+            Alpine.store('swal').fire({
+                title: '경매 상태 업데이트 성공',
+                text: res.message,
+                icon: 'success',
+                confirmButtonText: '확인'
+            });
+
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+
+            return res;
+        }
+
+        if(res.isError) {
+            Alpine.store('swal').fire({
+                title: '경매 상태 업데이트 실패',
+                text: res.message,
+                icon: 'error',
+                confirmButtonText: '확인'
+            });
+            return res;
+        }
+
+    });
+  },
+
+  // 내용 업데이트 
+  updateAuction: async (auctionId, data) => { 
+
+    await Alpine.store('api').put(`/api/auctions/${auctionId}`, data).then(res => {
+      console.log('res', res);
+
+      if(res.statusText == 'OK') {
+        Alpine.store('swal').fire({
+          title: '업데이트 성공',
+          text: res.message,
+          icon: 'success',
+          confirmButtonText: '확인'
+        });
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+
+        return res;
+      }
+    });
+
+  },
+
+  updateAuctionAdmin: async (auctionId, auction) => {
+
+    const auctionForm = {
+      auction: {
+        bank : auction.bank,
+        account : auction.account,
+        car_no: auction.car_no,
+        owner_name: auction.owner_name,
+        bank: auction.bank,
+        account: auction.account,
+        memo: auction.memo,
+        region:auction.region,
+        addr_post: auction.addr_post,
+        status : auction.status,
+        addr1: auction.addr1,
+        addr2: auction.addr2,
+        success_fee: auction.success_fee,
+        diag_fee: auction.diag_fee,
+        diag_first_at: auction.diag_first_at,
+        diag_second_at: auction.diag_second_at,
+        total_fee: auction.total_fee,
+        hope_price: auction.hope_price,
+        final_price: auction.final_price,
+        is_biz: auction.isBizChecked,
+        dest_addr_post: auction.dest_addr_post,
+        dest_addr1: auction.dest_addr1,
+        dest_addr2: auction.dest_addr2,
+      }
     }
 
-    const h = String(Math.floor(diff / 1000 / 60 / 60)).padStart(2, '0');
-    const m = String(Math.floor(diff / 1000 / 60) % 60).padStart(2, '0');
-    const s = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+    if(auction.choice_at){
+      auctionForm.auction.choice_at = auction.choice_at;
+    }
 
-    target.textContent = `${h}:${m}:${s}`;
-    };
+    if(auction.done_at){
+      auctionForm.auction.done_at = auction.done_at;
+    }
 
-    update(); // 최초 실행
-    intervalId = setInterval(update, 100);
-});
+    if(auction.taksong_wish_at){
+      auctionForm.auction.taksong_wish_at = auction.taksong_wish_at;
+    }
+
+    const formData = new FormData();
+
+    if(auction.status == 'diag'){
+        auctionForm.auction.status = 'ask';
+
+        auctionForm.mode = 'diag';
+        formData.append('mode', auctionForm.mode);
+    }
+
+    formData.append('auction', JSON.stringify(auctionForm.auction));
+    if(auction.file_auction_proxy){
+        formData.append('file_auction_proxy', auction.file_auction_proxy);
+    }
+    if(auction.file_auction_owner){
+        formData.append('file_auction_owner', auction.file_auction_owner);
+    }
+    if(auction.file_auction_car_license){
+        formData.append('file_auction_car_license', auction.file_auction_car_license);
+    }
+
+    await Alpine.store('api').put(`/api/auctions/${auctionId}`, formData).then(res => {
+      console.log('res', res);
+
+      if(res.statusText == 'OK') {
+        Alpine.store('swal').fire({
+          title: '업데이트 성공',
+          text: res.message,
+          icon: 'success',
+          confirmButtonText: '확인'
+        });
+
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+
+        return res;
+      }
+
+      if(res.isError) {
+        Alpine.store('swal').fire({
+          title: '업데이트 실패',
+          text: res.message,
+          icon: 'error',
+          confirmButtonText: '확인'
+        });
+        return res;
+      }
+
+    });
+
+
+  },
+
+  // 명의이전 서류 첨부
+  nameChangeFileUpload: async (auctionId, file) => {
+
+    console.log('file', file);
+    console.log('auctionId', auctionId);
+
+    const formData = new FormData();
+    formData.append('nameChange_file', file);
+
+    await Alpine.store('api').post(`/api/auctions/${auctionId}/name-change-file-upload`, formData).then(res => {
+      console.log('res', res);
+
+      if(res.statusText == 'OK') {
+        Alpine.store('swal').fire({
+          title: '첨부 성공',
+          text: res.message,
+          icon: 'success',
+          confirmButtonText: '확인'
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+
+      if(res.isError) {
+        Alpine.store('swal').fire({
+          title: '첨부 실패',
+          text: res.message,
+          icon: 'error',
+          confirmButtonText: '확인'
+        });
+      }
+
+      return res;
+    });
+  }
+
+};  

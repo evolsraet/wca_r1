@@ -2,14 +2,20 @@
 @section('content')
 
 @php
-    $hashid = request()->route('id');
-    $id = Hashids::decode($hashid);
-    $auction = \App\Models\Auction::where('id', $id)->first();
+  $hashid = request()->route('id');
+  if ($hashid) {
+      $id = Hashids::decode($hashid);
+      $auction = \App\Models\Auction::where('id', $id)->first();
+  } else {
+      $auction = null;
+  }
 
-    $status = request()->get('status') ? request()->get('status') : $auction->status;
-    $choose = request()->get('choose') ? request()->get('choose') : 0;
-    $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
-    $userId = auth()->user()->id;
+  $status = request()->get('status') ? request()->get('status') : ($auction ? $auction->status : null);
+  $choose = request()->get('choose') ? request()->get('choose') : 0;
+
+  $user = auth()->user();
+  $isUser = $user && $user->hasRole('user') ? 'user' : 'dealer';
+  $userId = $user ? $user->id : null;
 @endphp
 
 <script>
@@ -98,6 +104,10 @@
 
                 @case($isUser == 'dealer' && (($status == 'ing' && $choose) || $status == 'wait'))
                     <x-auctions.auctionDealerWait />
+                    @break
+
+                @case($isUser == 'dealer' && $status == 'cancel')
+                    <x-auctions.auctionInfo title="경매취소" message="해당 매물의 경매가 취소 되었습니다." subMessage="" />
                     @break
 
                 @case($isUser == 'dealer' && $status == 'chosen')

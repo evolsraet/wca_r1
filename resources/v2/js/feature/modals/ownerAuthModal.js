@@ -1,6 +1,6 @@
 export default function () {
     return {
-      test: 'test', // 테스트 모드 여부
+      test: '', // 테스트 모드 여부
       step: 1,
       agreed: false,
       selectedAuth: null,

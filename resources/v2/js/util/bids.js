@@ -59,7 +59,7 @@ export default function useBidStore() {
             // }
 
             if (isMyBid) {
-                request.whereOr('auction.status', 'ing,wait');
+                //request.whereOr('auction.status', 'ing,wait');
             }
 
             return request.then(result => result);

@@ -39,6 +39,10 @@ export default function () {
                         confirmButtonText: '확인'
                     });
 
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+
                 } else {
                     Alpine.store('swal').fire({
                         title: '오류가 발생하였습니다.',

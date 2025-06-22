@@ -81,15 +81,15 @@ export default function () {
                 ];
 
                 // 본인인증 확인 무조건 확인필요 
-                if(!window.resIndividualBusinessYN){
-                    Alpine.store('swal').fire({
-                        title: '본인인증 필요',
-                        text: '본인인증을 해주세요.',
-                        icon: 'error',
-                        confirmButtonText: '확인'
-                    });
-                    return;
-                }
+                // if(!window.resIndividualBusinessYN){
+                //     Alpine.store('swal').fire({
+                //         title: '본인인증 필요',
+                //         text: '본인인증을 해주세요.',
+                //         icon: 'error',
+                //         confirmButtonText: '확인'
+                //     });
+                //     return;
+                // }
 
                 appendFilesToFormData(formData, fileFields, this.$el);
 

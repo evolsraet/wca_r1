@@ -1,8 +1,13 @@
 @php
   $auctionStatus = Wca::auctionStatus();
   $user = auth()->user();
-  $userId = $user?->id;
-  $userRole = $user?->hasRole('dealer') ? 'dealer' : 'user';
+  if($user){
+    $userId = $user?->id;
+    $userRole = $user?->hasRole('dealer') ? 'dealer' : 'user';
+  }else{
+    $userId = null;
+    $userRole = null;
+  }
 @endphp
 
 <script>

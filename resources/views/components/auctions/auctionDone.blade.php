@@ -25,7 +25,10 @@
             Alpine.store(`modal`).showHtmlFromUrl(`/v2/components/modals/auctionConfirmationDoc`, 
             {title: `경락 확인서`, size: `modal-xl modal-dialog-centered`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]},
             {
-                content: {}
+                content: {
+                    auction: auction,
+                    diag: diag
+                }
             }
         )"
         >

@@ -362,7 +362,7 @@ class AuctionService
         if ($auction->is_deposit == 'totalDeposit') {
             AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
             AuctionTotalDepositJob::dispatch($bid->user_id, $auction, 'dealer');
-            AuctionTotalDepositJob::dispatch(config('services.taksong_admin'), $auction, 'taksong');
+            AuctionTotalDepositJob::dispatch(config('services.taksong_admin.admin_id'), $auction, 'taksong');
         } 
         else if ($auction->is_deposit == 'totalAfterFee') {
             // AuctionTotalAfterFeeJob::dispatch($bid->user_id, $auction);
@@ -421,7 +421,7 @@ class AuctionService
 
                 AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
                 AuctionTotalDepositJob::dispatch($bid->user_id, $auction, 'dealer');
-                AuctionTotalDepositJob::dispatch(config('services.taksong_admin'), $auction, 'taksong');
+                AuctionTotalDepositJob::dispatch(config('services.taksong_admin.admin_id'), $auction, 'taksong');
             }else{
                 AuctionCohosenJob::dispatch($bid->user_id, $auction->id, 'dealer');
             }

@@ -262,6 +262,7 @@ class TaksongService
         if($isCheck){
             $updateData = [
                 'is_taksong' => 'done',
+                'status' => 'dlvr_done',
                 'done_at' => now()
             ];
             Auction::where('car_no', $carNo)->update($updateData);

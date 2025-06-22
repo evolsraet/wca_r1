@@ -11,7 +11,10 @@
             </h2>
             <div id="faq-accordion-item-1" class="accordion-collapse collapse">
                 <div class="accordion-body">
-                    <strong>This is the first item’s accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It’s also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.
+                    아닙니다.<br/>
+                    전자 발급 서류는 사용할 수 없습니다.<br/>
+                    자동차 매도용은 <span class="tc-red">주민센터 방문</span>하여 발급받은 원본만 가능합니다.<br/>
+                    주민센터 직원분에게 매수자 인적사항을 보여주시고, 그대로 기재 후 발급 받아주세요.
                 </div>
             </div>
         </div>

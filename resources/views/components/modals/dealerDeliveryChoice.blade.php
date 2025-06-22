@@ -28,24 +28,80 @@
 
     {{-- 안내 문구 --}}
     <div class="fw-bold mb-2">원하는 탁송일을 선택해 주세요</div>
-    <div class="mb-2">6월</div>
+    <div class="mb-2"> <span x-text="currentMonthText" class="fw-bold fs-6 mb-2"></span></div>
     <div class="text-muted small mb-3">
         ※탁송일은 익일 9시 이후부터 3일 이내로 탁송이 가능해요.
     </div>
 
     {{-- 날짜 선택 영역 --}}
-    <div class="d-flex justify-content-between flex-wrap">
-        @foreach (['2(월)', '3(화)', '4(수)', '5(목)', '6(금)', '7(토)'] as $date)
-            <button class="btn btn-outline-secondary mb-2" style="width: 40px; height: 40px;">
-                {{ explode('(', $date)[0] }}
-            </button>
-        @endforeach
+    <div class="mb-3">
+        <h5>
+            <span class="text-danger">*</span>
+            탁송일 선택
+        </h5>
+        <div class="d-flex gap-3 overflow-auto">
+          <template x-for="(day, index) in days" :key="index">
+            <div class="text-center">
+              <div class="small text-muted" x-text="day.label"></div>
+              <button
+                type="button"
+                class="btn btn-outline-primary mt-1"
+                :class="{ 'active': selectedDay === index }"
+                @click="selectDay(index)"
+                x-text="day.date.getDate()"
+              ></button>
+              <div class="text-danger mt-1 small" x-show="day.isHoliday">휴일입니다</div>
+            </div>
+          </template>
+        </div>
+      </div>
+    
+      <template x-if="selectedDay !== null">
+        <div class="mb-4">
+          <h6>오전</h6>
+          <div class="d-flex flex-wrap gap-2">
+            <template x-for="time in morningTimes" :key="time">
+              <button
+                type="button"
+                class="btn btn-sm"
+                :class="{
+                  'btn-outline-secondary': !isDisabled(time) && selectedTime !== time,
+                  'btn-primary': selectedTime === time,
+                  'btn-secondary disabled': isDisabled(time)
+                }"
+                @click="selectTime(time)"
+                x-text="time"
+              ></button>
+            </template>
+          </div>
+    
+          <h6 class="mt-3">오후</h6>
+          <div class="d-flex flex-wrap gap-2">
+            <template x-for="time in afternoonTimes" :key="time">
+              <button
+                type="button"
+                class="btn btn-sm"
+                :class="{
+                  'btn-outline-secondary': !isDisabled(time) && selectedTime !== time,
+                  'btn-primary': selectedTime === time,
+                  'btn-secondary disabled': isDisabled(time)
+                }"
+                @click="selectTime(time)"
+                x-text="time"
+              ></button>
+            </template>
+          </div>
+        </div>
+    </template>
+
+    <div class="alert alert-info mt-4" x-show="selectedDay !== null && selectedTime">
+        탁송일시: <strong x-text="formatSelectedDate() + ' ' + selectedTime"></strong>
     </div>
 
     <hr class="my-4">
 
-    <label>
-        <h5 class="fw-bold">
+    <label class="mb-2">
+        <h5>
             <span class="text-danger">*</span>
             입금계좌
         </h5>
@@ -69,7 +125,7 @@
     <hr class="my-4">
     {{-- 탁송주소 입력 --}}
     <label>
-        <h5 class="fw-bold">
+        <h5>
             <span class="text-danger">*</span>
             탁송주소
         </h5>
@@ -87,30 +143,24 @@
     <hr class="my-4">
 
     <label>
-        <h5 class="fw-bold">
+        <h5>
             <span class="text-danger">*</span>
             매도용 인감증명서
         </h5>
     </label>
-    <div class="accordion custom-accordion mb-3 animate__animated animate__fadeIn" id="accordionPanelsStayOpenExample1" x-init="init(isHistory = false)">
-        <div class="accordion-item">
-          <h2 class="accordion-header">
-            <button class="accordion-button collapsed" type="button"  data-bs-target="#1" aria-expanded="false" aria-controls="panelsStayOpen-collapseOne">
-              이전에 필요한 서류 안내(사업자 또는 법인)
-            </button>
-          </h2>
-          <div id="panelsStayOpen-coll1apseOne" class="accordion-collapse collapse">
-            <div class="accordion-body">
-              내용
-            </div>
-          </div>
-        </div>
+    
+    <div class="mt-2">
+      <button 
+        type="button" 
+        class="btn btn-outline-secondary w-100"
+        @click='openDocModal(data?.user?.dealer?.biz_check)'
+        >매도용 인감증명서 안내</button>
     </div>
 
     <hr class="my-4">
 
     <label>
-        <h5 class="fw-bold">
+        <h5>
             <span class="text-danger">*</span>
             고객 연락처
         </h5>
@@ -130,9 +180,9 @@
         :errors="true"
     />
 
-    <div class="d-flex justify-content-between">
-        <button class="btn btn-outline-secondary w-50 me-2">취소</button>
-        <button class="btn btn-danger w-50">확인</button>
+    <div class="d-flex justify-content-between mt-4">
+        <button type="button" class="btn btn-outline-secondary w-50 me-2" @click="closeModal()">취소</button>
+        <button type="submit" class="btn btn-danger w-50">확인</button>
     </div>
 
     </form>

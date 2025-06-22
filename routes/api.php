@@ -160,6 +160,11 @@ Route::get('ownership/check-test', [OwnershipController::class, 'checkOwnershipB
 // 탁송 웹훅
 Route::post('taksong/status_change', [WebhookController::class, 'statusChange']);
 
+Route::post('/status_change', function (Request $request) {
+    Log::info('웹훅 수신됨', $request->all());
+    return response()->json(['message' => 'ok']);
+});
+
 // 롤백 처리
 Route::post('auctions/rollback/', [AuctionController::class, 'rollbackAuction']);
 
@@ -217,3 +222,5 @@ Route::post('/test/upload', function (Request $request) {
 });
 
 Route::get('test-car-history', [AuctionController::class, 'testCarHistory']);
+
+Route::get('test-bid-count', [AuctionController::class, 'testBidCount']);

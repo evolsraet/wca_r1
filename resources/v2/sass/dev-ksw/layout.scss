@@ -642,3 +642,7 @@ $primary: map-get($theme-colors, "primary");
         background-color: $gray-200 !important; /* 부트스트랩의 light-gray와 유사 */
     }
 }
+
+hr {
+    border-color: $gray-500;
+}

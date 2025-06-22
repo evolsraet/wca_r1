@@ -14,7 +14,7 @@ import { address } from './util/address.js';
 import { fileUpload } from './util/fileUpload.js';
 import { modal } from './util/modal.js';
 import whereBuilder from './util/whereBuilder.js';
-import auctionStatus from './util/auctions.js';
+import { auctionStatus, auctionEvent } from './util/auctions.js';
 import common from './util/common.js';
 import { like } from './util/likes.js';
 
@@ -42,6 +42,7 @@ import { like } from './util/likes.js';
     Alpine.store('address', address);
     Alpine.store('whereBuilder', whereBuilder);
     Alpine.store('auctionStatus', auctionStatus);
+    Alpine.store('auctionEvent', auctionEvent);
     Alpine.store('common', common);
     Alpine.store('like', like);
 
@@ -50,16 +51,6 @@ import { like } from './util/likes.js';
 
     // 컴포넌트 등록 여부를 추적
     const registeredComponents = new Set();
-
-    // 컴포넌트 feature 자동 등록 (하위 폴더 포함)
-    const components = import.meta.glob('./feature/**/*.js', { eager: true });
-    Object.entries(components).forEach(([path, module]) => {
-        const name = path.split('/').pop().replace('.js', '');
-        if (!registeredComponents.has(name)) {
-            Alpine.data(name, module.default);
-            registeredComponents.add(name);
-        }
-    });
 
     const pages = import.meta.glob('./pages/**/*.js', { eager: true });
     Object.entries(pages).forEach(([path, module]) => {
@@ -93,6 +84,18 @@ import { like } from './util/likes.js';
             registeredComponents.add(name);
         }
     });
+
+    // 컴포넌트 feature 자동 등록 (하위 폴더 포함)
+    const components = import.meta.glob('./feature/**/*.js', { eager: true });
+    Object.entries(components).forEach(([path, module]) => {
+        const name = path.split('/').pop().replace('.js', '');
+        if (!registeredComponents.has(name)) {
+            Alpine.data(name, module.default);
+            registeredComponents.add(name);
+        }
+    });
+
+    
 
 
     Alpine.store('likeState', {

@@ -41,6 +41,35 @@
 
     {{-- 차량 기본 정보 --}}
     <div class="col-md-6">
+
+        <div class="d-flex justify-content-start gap-2 mb-3">
+            <button class="btn btn-primary btn-sm" @click="updateAuctionIsDeposit(auction.id, 'totalDeposit')">차량대금 입금처리</button>
+            <button class="btn btn-primary btn-sm" @click="updateAuctionIsDeposit(auction.id, 'totalAfterFee')">수수료 입금처리</button>
+        </div>
+
+        <div class="d-flex justify-content-start gap-2 mb-3">
+            <div x-data="{ status: auction.status }" class="d-flex gap-2 align-items-center mb-3">
+                <select class="form-select form-select-sm" x-model="status">
+                    <option value="">상태 선택</option>
+                    <option value="ask">신청완료</option>
+                    <option value="diag">진단대기</option>
+                    <option value="ing">경매진행</option>
+                    <option value="wait">선택대기</option>
+                    <option value="chosen">선택완료</option>
+                    <option value="dlvr">탁송중</option>
+                    <option value="dlvr_done">탁송완료</option>
+                    <option value="done">경매완료</option>
+                    <option value="cancel">경매취소</option>
+                </select>
+            
+                <button class="btn btn-sm btn-primary"
+                    :disabled="!status"
+                    @click="updateAuctionAdmin(auction.id, {'status': status})">
+                    적용
+                </button>
+            </div>
+        </div>
+
         <div class="card p-3">
             <h5 class="mb-3">기본 정보</h5>
             <dl class="row">

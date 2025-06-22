@@ -32,6 +32,7 @@ use App\Http\Resources\AuctionResource;
 use Illuminate\Support\Str;
 use App\Libraries\SeedEncryptor;
 use App\Libraries\SeedCipher;
+use App\Helpers\Wca;
 
 class AuctionController extends Controller
 {
@@ -826,11 +827,11 @@ class AuctionController extends Controller
             if($media){
                 $auctionId = $auction->id;
                 // 파일업로드가 완료 되었으면, 유저에게 알림 전송
-                // $fileUploadJob = TaksongNameChangeFileUploadJob::dispatch($auction->user_id, $auctionId); // 고객
+                $fileUploadJob = TaksongNameChangeFileUploadJob::dispatch($auction->user_id, $auctionId); // 고객
 
 
                 $dealer = Bid::find($auction->bid_id);
-                // AuctionDoneJob::dispatch($dealer->user_id, $auction->id, 'dealer');
+                AuctionDoneJob::dispatch($dealer->user_id, $auction->id, 'dealer');
                 Log::info('[명의이전] 파일업로드 완료 / 경매번호 : '.$auction->hash_id, [
                     'name'=> '명의이전 파일 업로드 완료',
                     'path'=> __FILE__,
@@ -840,6 +841,7 @@ class AuctionController extends Controller
                 ]);
 
                 $auction->has_uploaded_name_change_file = true;
+                $auction->status = 'done';
                 $auction->save();
 
                 // TODO:관리자 에게 알림 추가
@@ -1032,6 +1034,14 @@ class AuctionController extends Controller
                 'message' => '암복호화 처리 중 오류가 발생했습니다: ' . $e->getMessage(),
             ], 500);
         }
+    }
+
+
+    public function testBidCount()
+    {
+        $userId = 4;
+        $result = Wca::bidCount($userId);
+        return response()->api($result);
     }
 
 }
