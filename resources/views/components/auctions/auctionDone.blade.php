@@ -34,7 +34,22 @@
         >
             {{ $button2 }}
         </a>
+        @elseif($button2 == '명의이전 서류 확인')
+        <a href="#" class="btn btn-outline-primary w-100 py-2 fw-semibold" type="button"
+        @click="
+            Alpine.store(`modal`).showHtmlFromUrl(`/v2/components/modals/diagResultDoc`, 
+            {title: `명의이전 서류 확인`, size: `modal-xl modal-dialog-centered`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]},
+            {
+                content: {
+                    pdfUrl: auction?.files?.file_auction_name_change[0]?.original_url,
+                }
+            })
+        "
+        >
+            {{ $button2 }}
+        </a>
         @else
+
         <a href="{{ $button2Link }}" class="btn btn-outline-primary w-100 py-2 fw-semibold" type="button">
             {{ $button2 }}
         </a>
