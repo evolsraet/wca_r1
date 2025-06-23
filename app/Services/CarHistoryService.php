@@ -47,12 +47,8 @@ class CarHistoryService
 
         // 파라미터 준비
         $payload = [
-            'joinCode'    => config('services.carHistory.join_code'),
-            'sType'       => '1', // PC 요청
-            'memberID'    => config('services.carHistory.member_id'),
-            'carnum'      => $carNumber,
-            'carNumType'  => '0',
-            'stdDate'     => Carbon::now()->format('Ymd'),
+            'car_no'      => $carNumber,
+            'api_key'     => config('services.carHistory.encrypt_key'), 
             'rType'       => 'J',
         ];
 
@@ -66,7 +62,9 @@ class CarHistoryService
         ]);
 
         try {
-            $response = Http::asForm()->timeout(15)->post(config('services.carHistory.api_url'), $payload);
+            $response = Http::withBody(
+                http_build_query($payload), 'application/x-www-form-urlencoded'
+            )->timeout(15)->post(config('services.carHistory.api_url'));
 
             if ($response->successful()) {
                 $data = $response->json();
@@ -75,20 +73,20 @@ class CarHistoryService
                     'name'=> '카히스토리 응답 수신 성공',
                     'path'=> __FILE__,
                     'line'=> __LINE__,
-                    'response' => $data
+                    'response' => $data['data']
                 ]);
 
                 // 세션에 저장 
                 // TODO: 캐시 저장기간 7일 
-                Session::put($sessionKey, $data);
+                Session::put($sessionKey, $data['data']);
                 Session::put($sessionKey . '_fetched_at', now());
 
                 // 데이터베이스에 저장 
                 // TODO: 접속기기, IP정보 추가
                 NiceCarHistory::create([
                     'car_no' => $carNumber,
-                    'first_regdate' => $data['r105'],
-                    'data' => $data
+                    'first_regdate' => $data['data']['r105'],
+                    'data' => $data['data']
                 ]);
 
                 return $data;

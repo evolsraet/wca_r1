@@ -5,14 +5,22 @@
 @section('content')
 
 @php
-    $hashid = request()->route('id');
-    $id = Hashids::decode($hashid);
-    $auction = \App\Models\Auction::where('id', $id)->first();
 
-    $status = request()->get('status') ? request()->get('status') : $auction->status;
-    $choose = request()->get('choose') ? request()->get('choose') : 0;
-    $isUser = auth()->user()->hasRole('user') ? 'user' : 'dealer';
-    $userId = auth()->user()->id;
+  $hashid = request()->route('id');
+  if ($hashid) {
+      $id = Hashids::decode($hashid);
+      $auction = \App\Models\Auction::where('id', $id)->first();
+  } else {
+      $auction = null;
+  }
+
+  $status = request()->get('status') ? request()->get('status') : ($auction ? $auction->status : null);
+  $choose = request()->get('choose') ? request()->get('choose') : 0;
+
+  $user = auth()->user();
+  $isUser = $user && $user->hasRole('user') ? 'user' : 'dealer';
+  $userId = $user ? $user->id : null;
+
 @endphp
 
 <script>
@@ -62,7 +70,7 @@
                     <option value="cancel">경매취소</option>
                 </select>
             
-                <button class="btn btn-sm btn-primary"
+                <button class="btn btn-sm btn-outline-primary px-3 w-100 white-space-nowrap"
                     :disabled="!status"
                     @click="updateAuctionAdmin(auction.id, {'status': status})">
                     적용

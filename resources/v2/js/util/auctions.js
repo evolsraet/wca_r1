@@ -10,25 +10,35 @@ window.addEventListener('start-countdown', (e) => {
   let intervalId;
 
   const update = () => {
-  const now = new Date();
-  const end = new Date(finalAt);
-  const diff = end - now;
+    const now = new Date();
+    const end = new Date(finalAt);
+    const diff = end - now;
 
-  if (diff <= 0) {
+    if (diff <= 0) {
       target.textContent = '00:00:00';
       clearInterval(intervalId);
       return;
-  }
+    }
 
-  const h = String(Math.floor(diff / 1000 / 60 / 60)).padStart(2, '0');
-  const m = String(Math.floor(diff / 1000 / 60) % 60).padStart(2, '0');
-  const s = String(Math.floor(diff / 1000) % 60).padStart(2, '0');
+    const totalSeconds = Math.floor(diff / 1000);
+    const days = Math.floor(totalSeconds / (60 * 60 * 24));
+    const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+    const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+    const seconds = totalSeconds % 60;
 
-  target.textContent = `${h}:${m}:${s}`;
+    const h = String(hours).padStart(2, '0');
+    const m = String(minutes).padStart(2, '0');
+    const s = String(seconds).padStart(2, '0');
+
+    if (days > 0) {
+      target.textContent = `${days}일 ${h}:${m}:${s}`;
+    } else {
+      target.textContent = `${h}:${m}:${s}`;
+    }
   };
 
   update(); // 최초 실행
-  intervalId = setInterval(update, 100);
+  intervalId = setInterval(update, 1000); // 1초 간격 권장
 });
 
 
