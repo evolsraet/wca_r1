@@ -5,7 +5,7 @@
                 <div class="fw-bold fs-5">탁송 주소지</div>
                 <div class="text-muted small">※ 현 주소지로 탁송이 진행 됩니다.</div>
             </div>
-            <button class="btn btn-outline-danger btn-sm address-edit-btn">
+            <button class="btn btn-outline-danger btn-sm address-edit-btn" @click="openAddressBookModal">
                 주소지 변경
             </button>
         </div>
@@ -25,11 +25,7 @@
             <button class="btn btn-danger w-100 py-2 fw-semibold delivery-confirm-btn border-0" :disabled="!auction?.taksong_wish_at" type="button" @click="submit">
                 탁송하기
             </button>
-        </div>
-
-        <div x-data="addressbookModal()">
-            <div></div>
-        </div>
+        </div>        
         
     </div>
 </div>

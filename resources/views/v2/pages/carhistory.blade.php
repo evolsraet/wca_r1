@@ -399,7 +399,7 @@ async function fetchCarHistory() {
     }
     
     const json = await response.json();
-    const data = json.data.data;
+    const data = json.data;
 
     if (apiType === CONSTANTS.API_ENDPOINTS.CAR_HISTORY_CRASH) {
       UIRenderer.renderCrashData(data, resultArea);

@@ -64,6 +64,19 @@ export default function () {
                 }
             });
 
+        },
+
+        openAddressBookModal() {
+            console.log('openAddressBookModal');
+
+            Alpine.store(`modal`).showHtmlFromUrl(`/v2/components/modals/addressBook`, 
+            { id: 'addressBookModal', title: `주소록`, size: `modal-lg modal-dialog-centered`, showFooter: false},
+            {
+                // content: {
+                //     auction: this.auction,
+                // }
+            });
+
         }
     }
 }
