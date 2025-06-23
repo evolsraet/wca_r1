@@ -1,5 +1,5 @@
 <div x-data="addressBook()">
-    <div class="list-group">
+    <div class="list-group border rounded" style="max-height: 400px; overflow-y: auto;">
         <template x-for="address in list" :key="address.id">
             <div class="list-group-item list-group-item-action">
                 <div class="d-flex justify-content-between align-items-start flex-md-row flex-column">
@@ -18,15 +18,29 @@
                 </div>
             </div>
         </template>
-
-        <div>
-            {{-- page nation  --}}
-            {{-- <div class="d-flex justify-content-center">
-                <button class="btn btn-outline-primary btn-sm" @click="prevPage">이전</button>
-                <button class="btn btn-outline-primary btn-sm" @click="nextPage">다음</button>
-            </div> --}}
-        </div>
         
+    </div>
+
+    <div>
+        <div class="d-flex justify-content-between align-items-center mt-3">
+            <button 
+                class="btn btn-outline-secondary btn-sm"
+                :disabled="page === 1"
+                @click="prevPage"
+            >
+                이전
+            </button>
+        
+            <span class="text-muted small" x-text="`페이지 ${page} / ${lastPage}`"></span>
+        
+            <button 
+                class="btn btn-outline-secondary btn-sm"
+                :disabled="page === lastPage"
+                @click="nextPage"
+            >
+                다음
+            </button>
+        </div>
     </div>
 
     <button class="btn btn-primary mt-3 w-100" @click="addAddress">추가하기</button>

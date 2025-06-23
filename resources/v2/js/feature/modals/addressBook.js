@@ -5,7 +5,7 @@ Alpine.store('addressbook', addressbook);
 export default function () {
     return {
         page: 1,
-        perPage: 10,
+        lastPage: 1,
         total: 0,
         list: [],
 
@@ -15,10 +15,25 @@ export default function () {
             this.getContacts();
         },
 
-        getContacts() {
-            Alpine.store('addressbook').getContacts().then(res => {
-                console.log('addressbook list',res);
+        prevPage() {
+            if (this.page > 1) {
+                this.getContacts(this.page - 1);
+            }
+        },
+        nextPage() {
+            if (this.page < this.lastPage) {
+                this.getContacts(this.page + 1);
+            }
+        },
+
+        getContacts(page = 1) {
+            this.page = page;
+            Alpine.store('addressbook').getContacts(page).then(res => {
+                console.log('addressbook list', res);
                 this.list = res.data;
+                this.total = res.meta.total;
+                this.lastPage = res.meta.last_page;
+                this.page = res.meta.current_page;
             });
         },
         
@@ -71,6 +86,16 @@ export default function () {
 
         selectAddress(address) {
             console.log('selectAddress',address);
+
+
+            // 부모 컴포넌트로 이벤트 전달
+            window.dispatchEvent(new CustomEvent('addressBookSelect', {
+                detail: {
+                    address: address
+                }
+            }));
+
+            
             Alpine.store('modal').close('addressBookModal');
             // Alpine.store('modal').emit('addressBookSelect', address);
         },

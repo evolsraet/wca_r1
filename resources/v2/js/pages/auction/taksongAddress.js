@@ -22,6 +22,16 @@ export default function () {
                 clearInterval(check);
               }
             }, 50);
+
+            window.addEventListener('addressBookSelect', (e) => {
+                const { address } = e.detail;
+            
+                this.addr_post = address.addr_post;
+                this.addr1 = address.addr1;
+                this.addr2 = address.addr2;
+            
+                console.log('주소록에서 선택된 주소:', address);
+            });
         },
 
         submit() {
@@ -70,12 +80,7 @@ export default function () {
             console.log('openAddressBookModal');
 
             Alpine.store(`modal`).showHtmlFromUrl(`/v2/components/modals/addressBook`, 
-            { id: 'addressBookModal', title: `주소록`, size: `modal-lg modal-dialog-centered`, showFooter: false},
-            {
-                // content: {
-                //     auction: this.auction,
-                // }
-            });
+            { id: 'addressBookModal', title: `주소록`, size: `modal-lg modal-dialog-centered`, showFooter: false});
 
         }
     }
