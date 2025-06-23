@@ -26,5 +26,10 @@
                 탁송하기
             </button>
         </div>
+
+        <div x-data="addressbookModal()">
+            <div></div>
+        </div>
+        
     </div>
 </div>

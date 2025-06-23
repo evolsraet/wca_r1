@@ -15,7 +15,9 @@ class CarHistoryService
     {
         $sessionKey = 'car_history_' . $carNumber;
 
-        // 세션에서 먼저 확인
+        $ip =  request()->ip();
+        $userAgent = request()->header('User-Agent');
+
         if (Session::has($sessionKey)) {
             Log::info("[카히스토리] 캐시된 데이터 사용 - 차량번호: {$carNumber}", [
                 'name'=> '카히스토리 캐시된 데이터 사용',
@@ -83,10 +85,22 @@ class CarHistoryService
 
                 // 데이터베이스에 저장 
                 // TODO: 접속기기, IP정보 추가
+                $userAgent = request()->header('User-Agent') ?? 'unknown';
+                $device = $this->detectDeviceType($userAgent);
+
+                $ip = request()->header('X-Forwarded-For') 
+                    ? trim(explode(',', request()->header('X-Forwarded-For'))[0]) 
+                    : request()->ip();
+
                 NiceCarHistory::create([
                     'car_no' => $carNumber,
-                    'first_regdate' => $data['data']['r105'],
-                    'data' => $data['data']
+                    'first_regdate' => $data['data']['r105'] ?? null,
+                    'data' => $data['data'],
+                    'ip' => $ip,
+                    'device' => $device, // mobile / tablet / desktop
+                    'user_id' => auth()->user()->id ?? null,
+                    'user_agent' => $userAgent,
+                    'response_status' => $response->status(),
                 ]);
 
                 return $data;
@@ -112,36 +126,52 @@ class CarHistoryService
     }
 
 
-    private function seedEncrypt(string $plainText): string
+    public function detectDeviceType(string $userAgent): string
     {
-        $key = hex2bin(config('services.carHistory.encrypt_key'));
-        $iv = config('services.carHistory.encrypt_iv');
-    
-        // 길이 확인 로그
-        if (strlen($key) !== 16) {
-            throw new \Exception('암호화 키는 16바이트여야 합니다.');
+        $userAgent = strtolower($userAgent);
+
+        if (preg_match('/mobile|android|iphone|ipod|opera mini|blackberry|webos/', $userAgent)) {
+            return 'mobile';
         }
-    
-        if (strlen($iv) !== 16) {
-            throw new \Exception('IV는 16바이트여야 합니다.');
+
+        if (preg_match('/ipad|tablet/', $userAgent)) {
+            return 'tablet';
         }
-    
-        $padded = str_pad($plainText, 16 * ceil(strlen($plainText) / 16), "\0");
-    
-        $cipherText = openssl_encrypt(
-            $padded,
-            'seed-cbc',
-            $key,
-            OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
-            $iv
-        );
-    
-        if ($cipherText === false) {
-            throw new \Exception('SEED 암호화 실패');
-        }
-    
-        return base64_encode($cipherText);
+
+        return 'desktop';
     }
+
+
+    // private function seedEncrypt(string $plainText): string
+    // {
+    //     $key = hex2bin(config('services.carHistory.encrypt_key'));
+    //     $iv = config('services.carHistory.encrypt_iv');
+    
+    //     // 길이 확인 로그
+    //     if (strlen($key) !== 16) {
+    //         throw new \Exception('암호화 키는 16바이트여야 합니다.');
+    //     }
+    
+    //     if (strlen($iv) !== 16) {
+    //         throw new \Exception('IV는 16바이트여야 합니다.');
+    //     }
+    
+    //     $padded = str_pad($plainText, 16 * ceil(strlen($plainText) / 16), "\0");
+    
+    //     $cipherText = openssl_encrypt(
+    //         $padded,
+    //         'seed-cbc',
+    //         $key,
+    //         OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
+    //         $iv
+    //     );
+    
+    //     if ($cipherText === false) {
+    //         throw new \Exception('SEED 암호화 실패');
+    //     }
+    
+    //     return base64_encode($cipherText);
+    // }
 
 
     public function getCarHistoryCrash($carNumber)

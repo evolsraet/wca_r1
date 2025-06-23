@@ -14,7 +14,12 @@ class NiceCarHistory extends Model
     protected $fillable = [
         'car_no',
         'first_regdate',
-        'data'
+        'data',
+        'ip',
+        'device',
+        'user_id',
+        'user_agent',
+        'response_status'
     ];
 
     protected $casts = [

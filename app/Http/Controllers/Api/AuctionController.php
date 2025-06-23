@@ -760,6 +760,15 @@ class AuctionController extends Controller
         return response()->api($result);
     }
 
+    public function clearCarHistorySession()
+    {
+        echo 'clearCarHistorySession';
+        $carHistoryService = new CarHistoryService();
+        $result = $carHistoryService->clearAllCarHistorySessions();
+        return response()->api($result);
+    }
+
+
     public function getCarHistoryMock()
     {
         $data = json_decode(file_get_contents(storage_path('mock/car_history_sample.json')), true);

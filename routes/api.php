@@ -126,6 +126,7 @@ Route::get('diagnostic-check', [DiagController::class, 'diagnosticCheck']);
 Route::get('carHistory', [AuctionController::class, 'getCarHistory']);
 Route::get('carHistoryMock', [AuctionController::class, 'getCarHistoryMock']);
 Route::get('carHistoryCrash', [AuctionController::class, 'getCarHistoryCrash']);
+Route::get('clearCarHistorySession', [AuctionController::class, 'clearCarHistorySession']);
 
 Route::get('getNiceDnr', [AuctionController::class, 'getNiceDnr']);
 Route::get('getNiceDnrHistory', [AuctionController::class, 'getNiceDnrHistory']);
