@@ -24,6 +24,16 @@
         <span class="tab-count" x-text="counts.sold ?? 0"></span>
       </button>
     </li>
+
+    <li>
+      <a
+        href="{{ route('auction.registerform') }}"
+        class="tab-btn"
+      >
+        공매등록
+      </a>
+    </li>
+
     <!-- 추가 탭 필요시 여기에 계속 작성 -->
   </ul>
 </div>

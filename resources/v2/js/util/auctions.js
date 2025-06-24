@@ -1,4 +1,3 @@
-
 // 경매 카운트다운
 window.addEventListener('start-countdown', (e) => {
   const { finalAt } = e.detail;
@@ -158,6 +157,48 @@ export const auctionEvent = {
 
   },
 
+  createAuction: async (auction) => {
+    try {
+      const res = await Alpine.store('api').post(`/api/auctions`, auction);
+      console.log('res', res);
+
+      if(res.statusText == 'OK') {  
+        // Alpine.store('swal').fire({
+        //   title: '등록 성공',
+        //   text: res.message,
+        //   icon: 'success',
+        //   confirmButtonText: '확인'
+        // });
+
+        return res;
+      }
+
+      if(res.isError) {
+        // Alpine.store('swal').fire({
+        //   title: '등록 실패',
+        //   text: res.message,
+        //   icon: 'error',
+        //   confirmButtonText: '확인'
+        // });
+        // return res;
+      }
+      
+      return res;
+    } catch (error) {
+      // console.error('경매 등록 오류:', error);
+      // Alpine.store('swal').fire({
+      //   title: '등록 실패',
+      //   text: '경매 등록 중 오류가 발생했습니다.',
+      //   icon: 'error',
+      //   confirmButtonText: '확인'
+      // });
+      // return {
+      //   isError: true,
+      //   message: '경매 등록 중 오류가 발생했습니다.'
+      // };
+    }
+  },
+
   updateAuctionAdmin: async (auctionId, auction) => {
 
     const auctionForm = {
@@ -287,6 +328,28 @@ export const auctionEvent = {
 
       return res;
     });
+  },
+
+  checkAuctionEntryPublic: async (file) => {
+
+    console.log('공매 엑셀 파일 확인',file);
+
+    const formData = new FormData();
+    if(file){
+        formData.append('file', file);
+    }
+
+    try {
+      const res = await Alpine.store('api').post(`/api/auctions/entryPublic`, formData);
+      console.log('res', res);
+      return res;
+    } catch (error) {
+      console.error('엑셀 파일 검증 오류:', error);
+      return {
+        isError: true,
+        message: '엑셀 파일 검증 중 오류가 발생했습니다.'
+      };
+    }
   }
 
 };  

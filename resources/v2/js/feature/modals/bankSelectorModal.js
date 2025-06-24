@@ -53,6 +53,12 @@ export default function () {
                 label.innerText = '선택된 은행: ' + bankName;
             }
 
+            console.log('bankSelect ? ', bankName);
+
+            window.modalData?.result?.({
+                bank: bankName
+            });
+
             Alpine.store('modal').close('bankSelectorModal');
 
             const accountInput = document.getElementById('auction.account');

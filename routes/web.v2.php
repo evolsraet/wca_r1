@@ -73,6 +73,11 @@ Route::prefix('auction')->group(function () {
     })->name('auction.detail');
 });
 
+Route::get('auctionform', function () {
+    return view('v2.pages.auction.auctionRegisterForm');
+})->name('auction.registerform');
+
+
 Route::post('login', [AuthenticatedSessionController::class, 'login']);
 Route::post('logout', [AuthenticatedSessionController::class, 'logout']);
 
