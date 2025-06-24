@@ -57,7 +57,13 @@ class Kernel extends ConsoleKernel
             //     }
             // }
 
-            $auction = Auction::whereIn('status', ['chosen','dlvr'])->whereNotNull('is_taksong')->where('is_taksong', '!=', 'done')->get();
+            $auction = Auction::whereIn('status', ['chosen', 'dlvr'])
+            ->where(function ($query) {
+                $query->whereNotNull('is_taksong')
+                      ->where('is_taksong', '!=', 'done')
+                      ->orWhereNotNull('taksong_id');
+            })
+            ->get();
             if($auction){
                 foreach($auction as $auctionStatus){
                     TaksongStatusJob::dispatch($auctionStatus->taksong_id);

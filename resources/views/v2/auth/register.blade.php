@@ -29,14 +29,41 @@
         $isUpdate = true;
         $form['isUpdate'] = true;
     }
+
+    $container = false;
+
 @endphp
 
 @section('content')
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
+<div class="py-5">
+
+    <div x-text="window.userId">
+    </div>
+
+    <div class="position-fixed top-0 left-0 w-100 h-100" x-show="!window.userId">
+        <div class="d-none d-md-flex flex-column align-items-start justify-content-center text-start" style="height: 800px;">
+            <div class="mb-4 px-5">
+                <h4 class="fw-bold text-secondary mb-2">내 차 판매에</h4>
+                <h4 class="fw-bold">
+                    <span class="text-danger">28%</span>
+                    <span class="text-secondary"> 정도 가까워지는 중...</span>
+                </h4>
+            </div>
+        
+            <div class="position-relative">
+
+                <video width="60%" autoplay="" loop="" muted="" playsinline="" preload="auto">
+                    <source src="{{ asset('images/video/register_vi.mp4') }}" type="video/mp4">
+                </video>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center position-relative">
+        <div class="col-md-4 col-12">
+            <div class="card shadow rounded-4 no-shadow-mobile">
                 {{-- <div class="card-header">
                     @if ($isUpdate)
                         회원정보 수정
@@ -45,7 +72,7 @@
                     @endif
                 </div> --}}
 
-                <div class="card-body"
+                <div class="card-body p-4"
                     x-data="register"
                     x-init="init({{ json_encode($form) }})"
                     >
@@ -58,7 +85,7 @@
 
                         <!-- 기본 정보 -->
                         <div class="mb-4">
-                            <h5 class="text-primary">기본 정보</h5>
+                            <h5 class="">기본 정보</h5>
 
                             <x-forms.input
                                 type="text"

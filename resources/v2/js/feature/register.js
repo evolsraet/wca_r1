@@ -4,11 +4,11 @@ export default function() {
     return {
         form: {
             user: {
-                name: '1',
-                email: 'a@b.com111111',
-                phone: '2222222222222',
-                password: '123123123',
-                password_confirmation: '123123123',
+                name: '',
+                email: '',
+                phone: '',
+                password: '',
+                password_confirmation: '',
                 // socialLogin: false,
                 // role 체크시 dealer 로
             },

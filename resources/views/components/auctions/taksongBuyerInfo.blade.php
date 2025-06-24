@@ -15,8 +15,17 @@
             ></div>
         <div class="col-3">주소</div>
         <div class="col-9 text-dark fw-semibold" 
-            x-text="(auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr1 && auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr2) ? (auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr1 + ' ' + auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr2) : '미정'"
+            x-text="
+                auction?.dest_addr_post 
+                    ? auction.dest_addr_post + ' ' + auction.dest_addr1 + ' ' + auction.dest_addr2 
+                    : (
+                        (auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr1 
+                        && auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr2)
+                            ? auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr1 + ' ' + auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr2
+                            : '미정'
+                    )
+            "
             @click="openAddressBookModal"
-            ></div>
+        ></div>
     </div>
 </div>

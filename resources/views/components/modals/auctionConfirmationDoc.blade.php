@@ -99,7 +99,17 @@
             <tr>
               <td class="p-2">주소</td>
               <td class="p-2" colspan="3">
-                <span x-text="('(' + auction?.win_bid?.user?.dealer?.company_post + ') ' + auction?.win_bid?.user?.dealer?.company_addr1 + ' ' + auction?.win_bid?.user?.dealer?.company_addr2)"></span>
+                <span 
+                x-text="
+                auction?.dest_addr_post 
+                    ? auction.dest_addr_post + ' ' + auction.dest_addr1 + ' ' + auction.dest_addr2 
+                    : (
+                        (auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr1 
+                        && auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr2)
+                            ? auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr1 + ' ' + auction?.bids?.find(bid => bid.id === auction.bid_id)?.user?.dealer?.company_addr2
+                            : '미정'
+                    )
+            "></span>
               </td>
             </tr>
           </table>
