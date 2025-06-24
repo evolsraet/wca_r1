@@ -1,13 +1,14 @@
-@extends('layouts.app')
+@extends('v2.layouts.app')
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
+    <div class="row justify-content-center py-5">
         <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Confirm Password') }}</div>
+            <div class="card shadow rounded-4 no-shadow-mobile">
 
                 <div class="card-body">
+                    <h5 class="fw-bold mb-4">{{ __('Confirm Password') }}</h5>
+
                     {{ __('Please confirm your password before continuing.') }}
 
                     <form method="POST" action="{{ route('password.confirm') }}">
@@ -29,7 +30,7 @@
 
                         <div class="row mb-0">
                             <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
+                                <button type="submit" class="btn btn-primary border-0">
                                     {{ __('Confirm Password') }}
                                 </button>
 

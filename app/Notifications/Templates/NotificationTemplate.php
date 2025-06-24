@@ -96,10 +96,10 @@ class NotificationTemplate
                 '귀하의 계정에 대한 비밀번호 재설정 요청이 접수되었기 때문에 이 이메일을 보내드립니다. \n'
                 .'만약 비밀번호 재설정을 요청하지 않았다면 이 이메일을 무시하세요. \n'
                 .'\n'
-                .'비밀번호 재설정 링크 : '.url('/resetPasswordLogin/'.$data);
+                .'비밀번호 재설정 링크 : '.url('/v2/reset-password/'.$data);
 
                 $link = [
-                    "url" => url('/resetPasswordLogin/'.$data),
+                    "url" => url('/v2/reset-password/'.$data),
                     "text" => '바로가기'
                 ];
 

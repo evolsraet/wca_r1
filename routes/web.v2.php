@@ -115,14 +115,14 @@ Route::middleware('guest')->group(function () {
 
     // 비밀번호 재설정 라우트
     Route::get('/forgot-password', function () {
-        return view('v2.auth.forgot-password');
+        return view('v2.auth.passwords.email');
     })->name('password.request');
 
     Route::post('/forgot-password', [ForgotPasswordController::class, 'sendResetLinkEmail'])
         ->name('password.email');
 
     Route::get('/reset-password/{token}', function ($token) {
-        return view('v2.auth.reset-password', ['token' => $token]);
+        return view('v2.auth.passwords.reset', ['token' => $token]);
     })->name('password.reset');
 
     Route::post('/reset-password', [ResetPasswordController::class, 'reset'])

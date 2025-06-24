@@ -36,13 +36,11 @@
 
 @section('content')
 
-<div class="py-5">
-
-    <div x-text="window.userId">
-    </div>
+<div class="py-5" x-data="register"
+x-init="init({{ json_encode($form) }})">
 
     <div class="position-fixed top-0 left-0 w-100 h-100" x-show="!window.userId">
-        <div class="d-none d-md-flex flex-column align-items-start justify-content-center text-start" style="height: 800px;">
+        <div class="d-none d-md-flex flex-column align-items-start justify-content-center text-start" style="height: 100vh;">
             <div class="mb-4 px-5">
                 <h4 class="fw-bold text-secondary mb-2">내 차 판매에</h4>
                 <h4 class="fw-bold">
@@ -53,7 +51,7 @@
         
             <div class="position-relative">
 
-                <video width="60%" autoplay="" loop="" muted="" playsinline="" preload="auto">
+                <video width="80%" autoplay="" loop="" muted="" playsinline="" preload="auto">
                     <source src="{{ asset('images/video/register_vi.mp4') }}" type="video/mp4">
                 </video>
 
@@ -72,10 +70,7 @@
                     @endif
                 </div> --}}
 
-                <div class="card-body p-4"
-                    x-data="register"
-                    x-init="init({{ json_encode($form) }})"
-                    >
+                <div class="card-body p-4">
 
                     <form @submit.prevent="submit">
 
@@ -85,7 +80,7 @@
 
                         <!-- 기본 정보 -->
                         <div class="mb-4">
-                            <h5 class="">기본 정보</h5>
+                            <h5 class="fw-bold mb-4">회원정보를 입력해주세요</h5>
 
                             <x-forms.input
                                 type="text"
@@ -299,7 +294,7 @@
                                     <!-- 약관 동의 -->
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer1"
-                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/auctionTermsAndPolicy?raw=1`, {title: `' . $privacy['title'] . '`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>' . $privacy['title'] . '</a>에 동의합니다.'"
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/auctionTermsAndPolicy?raw=1`, {title: `' . $privacy['title'] . '`, size: ``, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>' . $privacy['title'] . '</a>에 동의합니다.'"
                                         required
                                         wrapperClass="rounded-check"
                                         :errors="true"
@@ -307,7 +302,7 @@
 
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer2"
-                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/residentRegistrationNumberConsent?raw=1`, {title: `주민등록번호(법인등록번호) 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>주민등록번호(법인등록번호) 수집 동의</a>에 동의합니다.'"
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/residentRegistrationNumberConsent?raw=1`, {title: `주민등록번호(법인등록번호) 수집 동의`, size: ``, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>주민등록번호(법인등록번호) 수집 동의</a>에 동의합니다.'"
                                         required
                                         wrapperClass="rounded-check"
                                         :errors="true"
@@ -315,7 +310,7 @@
 
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer3"
-                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/carManagementRegistrationConsent?raw=1`, {title: `자동차관리사업등록번호 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>자동차관리사업등록번호 수집 동의</a>에 동의합니다.'"
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/carManagementRegistrationConsent?raw=1`, {title: `자동차관리사업등록번호 수집 동의`, size: ``, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>자동차관리사업등록번호 수집 동의</a>에 동의합니다.'"
                                         required
                                         wrapperClass="rounded-check"
                                         :errors="true"
@@ -323,7 +318,7 @@
 
                                     <x-forms.checkbox
                                         name="dealer.isCheckDealer4"
-                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/businessInformationConsent?raw=1`, {title: `사업자정보 수집 동의`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>사업자정보 수집 동의</a>에 동의합니다.'"
+                                        :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/businessInformationConsent?raw=1`, {title: `사업자정보 수집 동의`, size: ``, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>사업자정보 수집 동의</a>에 동의합니다.'"
                                         required
                                         wrapperClass="rounded-check"
                                         :errors="true"
@@ -336,7 +331,7 @@
                         @if (!$isUpdate)
                         <x-forms.checkbox
                             name="user.isCheckPrivacy"
-                            :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `개인정보처리방침`, size: `modal-lg`, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>개인정보처리방침</a>에 동의합니다.'"
+                            :label="'<a href=\'#\' @click.prevent=\'Alpine.store(`modal`).showHtmlFromUrl(`/v2/docs/privacy?raw=1`, {title: `개인정보처리방침`, size: ``, footerButtons: [{text: `닫기`, class: `btn-secondary`, dismiss: true}]})\'>개인정보처리방침</a>에 동의합니다.'"
                             required
                             wrapperClass="rounded-check"
                             :errors="true"
