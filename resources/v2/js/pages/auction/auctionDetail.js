@@ -60,7 +60,7 @@ export default function () {
         });
         this.auction = res?.data?.data;
         window.auction = this.auction;
-        console.log('auction data:', this.auction);
+        // console.log('auction data:', this.auction);
       } catch (err) {
         if (err.response && err.response.status === 401) {
           window.location.href = '/v2/login';
@@ -78,7 +78,7 @@ export default function () {
         const res = await Alpine.store('api').get(`/api/diagRequest?diag_car_no=${carNumber}`);
         this.diag = res?.data?.data;
         window.diag = this.diag;
-        console.log('diag data:', this.diag);
+        // console.log('diag data:', this.diag);
       } catch (err) {
         console.error('진단정보 API 호출 에러:', err);
         throw err;
@@ -101,20 +101,20 @@ export default function () {
     },
 
     testFunction() {
-      console.log('testFunction');
+      // console.log('testFunction');
     },
 
     updateAuctionIsDeposit(id, IsDeposit) {
       
       // console.log('updateAuctionIsDeposit data', data);
-      console.log('updateAuctionIsDeposit id', id);
+      // console.log('updateAuctionIsDeposit id', id);
 
       Alpine.store('auctionEvent').updateAuction(id, {
         auction: {
           is_deposit: IsDeposit
         },
       }).then(() => {
-        console.log('updateAuctionIsDeposit res');
+        // console.log('updateAuctionIsDeposit res');
       }).catch(() => {
         console.log('updateAuctionIsDeposit err');
       });
@@ -123,11 +123,11 @@ export default function () {
 
     updateAuctionAdmin(id, auction) {
 
-      console.log('updateAuctionStatus id', id);
-      console.log('updateAuctionStatus auction', auction);
+      // console.log('updateAuctionStatus id', id);
+      // console.log('updateAuctionStatus auction', auction);
 
       Alpine.store('auctionEvent').updateAuctionAdmin(id, auction).then(() => {
-        console.log('updateAuctionStatus res');
+        // console.log('updateAuctionStatus res');
       }).catch(() => {
         console.log('updateAuctionStatus err');
       });

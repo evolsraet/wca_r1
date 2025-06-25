@@ -10,10 +10,6 @@ export default function auctionDetailInfo() {
       console.log('auctionDetailInfo');
 
       this.initWithWatch();
-
-      console.log('this.auction', this.auction);
-    //   console.log('this.diag', this.diag);
-
     },
 
     initWithWatch() {
@@ -29,18 +25,13 @@ export default function auctionDetailInfo() {
 
     getNiceDnrHistory() {
 
-      console.log('this.auction', this.auction);
-      
-
       Alpine.store('auctionEvent').getNiceDnrHistory(this.auction.owner_name, this.auction.car_no).then(res => {
-        console.log('getNiceDnrHistory res', res);
         this.niceDnrHistory = res.data.data;
       });
     },
 
     getCarHistoryCrash() {
       Alpine.store('auctionEvent').getCarHistoryCrash(this.auction.car_no).then(res => {
-        console.log('getCarHistoryCrash res', res);
         this.carHistoryCrash = res.data.data;
       });
     }

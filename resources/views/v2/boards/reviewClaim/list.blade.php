@@ -15,7 +15,7 @@
     };
 
     const auctionList = {!! json_encode($auctionList) !!};
-    console.log('작성가능한 차량리스트', auctionList);
+    // console.log('작성가능한 차량리스트', auctionList);
 
 </script>
 
