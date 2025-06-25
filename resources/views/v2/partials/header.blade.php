@@ -47,6 +47,9 @@
               {{ Auth::user()->name }} 님
             </a>
             <ul class="dropdown-menu dropdown-menu-end user-dropdown-menu" :class="{ 'show': dropdown }" aria-labelledby="userDropdown1" style="z-index: 2000;">
+              @if (Auth::user()->hasRole('dealer')) 
+              <li><a class="dropdown-item" href="{{ route('dealer-my') }}">마이페이지</a></li>
+              @endif
               <li><a class="dropdown-item" href="{{ route('modify') }}">내 정보 수정</a></li>
               <li>
                 <a href="#" class="dropdown-item btn-logout" onclick="logout()">로그아웃</a>
@@ -87,6 +90,9 @@
     
                   <ul class="dropdown-menu user-dropdown-menu"
                       :class="{ 'show': open }">
+                      @if (Auth::user()->hasRole('dealer')) 
+                      <li><a class="dropdown-item" href="{{ route('dealer-my') }}">마이페이지</a></li>
+                      @endif
                     <li><a class="dropdown-item" href="{{ route('modify') }}">내 정보 수정</a></li>
                     <li>
                       <a href="#" class="dropdown-item" onclick="logout()">로그아웃</a>

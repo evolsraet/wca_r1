@@ -57,7 +57,7 @@
 
         <div class="d-flex justify-content-start gap-2 mb-3">
             <div x-data="{ status: auction.status }" class="d-flex gap-2 align-items-center mb-3">
-                <select class="form-select form-select-sm" x-model="status">
+                <select class="form-select form-select-sm" x-model="status" style="width: 100px;">
                     <option value="">상태 선택</option>
                     <option value="ask">신청완료</option>
                     <option value="diag">진단대기</option>
@@ -101,20 +101,6 @@
 
                 <dt class="col-sm-4">변속기</dt>
                 <dd class="col-sm-8">오토</dd>
-            </dl>
-        </div>
-
-        <div class="card p-3 mt-3">
-            <h5 class="mb-3">입찰 정보</h5>
-            <dl class="row">
-                <dt class="col-sm-2">입찰건수</dt>
-                <dd class="col-sm-10">3건</dd>
-
-                <dt class="col-sm-2">최고 입찰가</dt>
-                <dd class="col-sm-10">5,550,000원</dd>
-
-                <dt class="col-sm-2">상태</dt>
-                <dd class="col-sm-10"><span class="badge bg-success">탁송중</span></dd>
             </dl>
         </div>
 

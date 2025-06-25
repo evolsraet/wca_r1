@@ -138,6 +138,10 @@ Route::get('modify', function () {
     return view('v2.auth.register');
 })->name('modify');
 
+Route::get('dealer-my', function () {
+    return view('v2.auth.dealerMy');
+})->name('dealer-my');
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
