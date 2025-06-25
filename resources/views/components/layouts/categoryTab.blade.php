@@ -25,7 +25,7 @@
       </button>
     </li>
 
-    <li>
+    <li x-show="window.userRole === 'user'">
       <a
         href="{{ route('auction.registerform') }}"
         class="tab-btn"

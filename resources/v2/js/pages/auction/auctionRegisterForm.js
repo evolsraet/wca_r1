@@ -19,6 +19,18 @@ export default function () {
         init() {
             console.log('auctionRegisterForm');
             
+            if(window.userRole !== 'user') {
+                Alpine.store('swal').fire({
+                    title: '공매 등록 권한이 없습니다.',
+                    icon: 'error',
+                    confirmButtonText: '확인'
+                });
+
+                setTimeout(() => {
+                    window.location.href = '/v2/auction';
+                }, 1000);
+            }
+
             // 파일 업로드 이벤트 리스너 설정
             this.fileListeners = setupFileUploadListeners(this.form, this.$el);
         },

@@ -1,10 +1,15 @@
 // 경매 카운트다운
 window.addEventListener('start-countdown', (e) => {
   const { finalAt } = e.detail;
-  if (!finalAt) return;
-
-  const target = document.querySelector('[data-timer]');
-  if (!target) return;
+  const targets = document.querySelectorAll('[data-timer]');
+  if (!finalAt) {
+    // finalAt이 없으면 타이머 내용 비우기
+    targets.forEach(target => {
+      target.textContent = '';
+    });
+    return;
+  }
+  if (!targets.length) return;
 
   let intervalId;
 
@@ -13,31 +18,31 @@ window.addEventListener('start-countdown', (e) => {
     const end = new Date(finalAt);
     const diff = end - now;
 
+    let text;
     if (diff <= 0) {
-      target.textContent = '00:00:00';
+      text = '00:00:00';
       clearInterval(intervalId);
-      return;
-    }
-
-    const totalSeconds = Math.floor(diff / 1000);
-    const days = Math.floor(totalSeconds / (60 * 60 * 24));
-    const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
-    const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
-    const seconds = totalSeconds % 60;
-
-    const h = String(hours).padStart(2, '0');
-    const m = String(minutes).padStart(2, '0');
-    const s = String(seconds).padStart(2, '0');
-
-    if (days > 0) {
-      target.textContent = `${days}일 ${h}:${m}:${s}`;
     } else {
-      target.textContent = `${h}:${m}:${s}`;
+      const totalSeconds = Math.floor(diff / 1000);
+      const days = Math.floor(totalSeconds / (60 * 60 * 24));
+      const hours = Math.floor((totalSeconds % (60 * 60 * 24)) / (60 * 60));
+      const minutes = Math.floor((totalSeconds % (60 * 60)) / 60);
+      const seconds = totalSeconds % 60;
+
+      const h = String(hours).padStart(2, '0');
+      const m = String(minutes).padStart(2, '0');
+      const s = String(seconds).padStart(2, '0');
+
+      text = days > 0 ? `${days}일 ${h}:${m}:${s}` : `${h}:${m}:${s}`;
     }
+
+    targets.forEach(target => {
+      target.textContent = text;
+    });
   };
 
-  update(); // 최초 실행
-  intervalId = setInterval(update, 1000); // 1초 간격 권장
+  update();
+  intervalId = setInterval(update, 1000);
 });
 
 
@@ -348,6 +353,38 @@ export const auctionEvent = {
       return {
         isError: true,
         message: '엑셀 파일 검증 중 오류가 발생했습니다.'
+      };
+    }
+  },
+
+  getNiceDnrHistory: async (ownerNm, vhrNo) => {
+
+    try {
+      const res = await Alpine.store('api').get(`/api/getNiceDnrHistory`, {
+        owner: ownerNm,
+        no: vhrNo
+      });
+      return res;
+    } catch (error) {
+      console.error('NICE D&R 이력 조회 오류:', error);
+      return {
+        isError: true,
+        message: 'NICE D&R 이력 조회 중 오류가 발생했습니다.'
+      };
+    }
+  },
+
+  getCarHistoryCrash: async (carNumber) => {
+    try {
+      const res = await Alpine.store('api').get(`/api/carHistoryCrash`, {
+        car_no: carNumber
+      });
+      return res;
+    } catch (error) {
+      console.error('차량 사고 이력 조회 오류:', error);
+      return {
+        isError: true,
+        message: '차량 사고 이력 조회 중 오류가 발생했습니다.'
       };
     }
   }

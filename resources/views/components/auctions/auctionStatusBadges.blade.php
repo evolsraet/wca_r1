@@ -13,8 +13,9 @@
         >
         </span>
     @else
-        <div x-show="auction?.status === 'ing'">
+        <div x-show="auction?.status === 'ing' && auction?.final_at">
             {{-- 카운트다운 표시 --}}
+
             <span
                 class="auction-item-badge bg-danger text-white rounded-3 px-2 py-1 fs-7 d-inline-flex align-items-center gap-1"
                 x-init="
@@ -29,7 +30,7 @@
                 <span data-timer>--:--:--</span>
             </span>
         </div>
-        <div x-show="auction?.status !== 'ing'">
+        <div x-show="auction?.status !== 'ing' || (auction?.status === 'ing' && !auction?.final_at)">
             {{-- 경매상태 뱃지 --}}
             <span 
                 class="auction-item-badge text-white rounded-3 p-2" 
