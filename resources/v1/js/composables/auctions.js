@@ -22,7 +22,7 @@ export default function useAuctions() {
     const carInfoForm = reactive({
         owner: "",
         no: "",
-        forceRefresh: "" 
+        forceRefresh: ""
     });
     const { wicac , wica, loadingSpinner } = cmmn();
 
@@ -82,7 +82,7 @@ export default function useAuctions() {
         } else{
             request = request.page(`${page}`)
         }
-    
+
         return request.callback(function(result) {
             auctionsData.value = result.data;
             pagination.value = result.rawData.data.meta;
@@ -99,7 +99,7 @@ export default function useAuctions() {
             .pageLimit(12)
         if(userId != null){
             request = request.whereOr('likes.user_id',`${userId}`);
-        } 
+        }
         if(status != 'all'){
             request = request.whereOr('auctions.status',`${status}`)
         }
@@ -118,7 +118,7 @@ export default function useAuctions() {
         }
 
         if(isReviews){
-    
+
             wicac.conn()
             //.log() //로그 출력
             .url(`/api/auctions`) //호출 URL
@@ -129,7 +129,7 @@ export default function useAuctions() {
             .search(search_text)
             .with([
                 'reviews'
-            ]) 
+            ])
             .doesnthave([
                 'reviews',
             ])
@@ -142,17 +142,17 @@ export default function useAuctions() {
                 // loadingSpinner(false);
 
             })
-    
+
             .get();
-            
+
         } else {
-    
+
             return wicac.conn()
             //.log() //로그 출력
             .url(`/api/auctions`) //호출 URL
             .with(['bids','likes'])
             .search(search_text)
-            .where(apiList) 
+            .where(apiList)
             .pageLimit(12)
             .page(`${page}`) //페이지 0 또는 주석 처리시 기능 안함
             .callback(function(result) {
@@ -167,11 +167,11 @@ export default function useAuctions() {
             })
             //.log()
             .get();
-    
+
         }
     };
 
-//관리자페이지 - 입금관리 dlvr상태 리스트 가져오기 
+//관리자페이지 - 입금관리 dlvr상태 리스트 가져오기
 const adminGetDepositAuctions = async(
     page = 1,
     column = '',
@@ -191,7 +191,7 @@ const adminGetDepositAuctions = async(
     .callback(function(result) {
         auctionsData.value = result.data;
         pagination.value = result.rawData.data.meta;
-        
+
         return result.data;
     })
     .get();
@@ -205,7 +205,7 @@ const getStatusAuctionsCnt = async(
     if(status != 'all'){
         apiList.push(`auctions.status:${status}`)
     }
-    
+
     return wicac.conn()
     .url(`/api/auctions`)
     .where(apiList)
@@ -214,10 +214,10 @@ const getStatusAuctionsCnt = async(
     })
     .get();
 }
-    
+
 // 경매 ID를 이용해 경매 상세 정보를 가져오는 함수
 const getAuctionById = async (id) => {
-    
+
     return wicac.conn()
     //.log() //로그 출력
     .url(`/api/auctions/${id}`) //호출 URL
@@ -236,14 +236,14 @@ const getAuctionById = async (id) => {
             auction.value.dealer = data.dealer;
             auction.value.user = auctionUserData;
         } else {
-            auction.value.dealer_name = null; 
-        } 
+            auction.value.dealer_name = null;
+        }
         return result;
     })
     .get();
 
 };
-// 상태를 
+// 상태를
 const statusMap = {
     ask: "신청완료",
     diag: "진단대기",
@@ -260,7 +260,7 @@ const getStatusLabel = (status) => {
     return statusMap[status] || status;
 };
 
-// carinfo detail 정보를 가져오고 스토리지 저장 
+// carinfo detail 정보를 가져오고 스토리지 저장
 const submitCarInfo = async () => {
     if (processing.value) return;  // 이미 처리중이면 다시 처리하지 않음
     loadingSpinner(true);
@@ -276,7 +276,7 @@ const submitCarInfo = async () => {
     .callback(function(result) {
         if(result.isError){
             loadingSpinner(false);
-            validationErrors.value = result.rawData.response.data.errors;         
+            validationErrors.value = result.rawData.response.data.errors;
             return result;
         }else{
             loadingSpinner(false);
@@ -286,7 +286,7 @@ const submitCarInfo = async () => {
     })
     .post();
 
-    
+
 };
 
 const refreshCarInfo = async () => {
@@ -309,11 +309,11 @@ const refreshCarInfo = async () => {
     .callback(function (result) {
         if(result.isError){
             validationErrors.value = result.rawData.response.data.errors;
-            throw new Error;          
+            throw new Error;
         } else {
             console.log(result);
             localStorage.setItem('carDetails', JSON.stringify(result.data));
-            console.log("Updated carDetails:", result.data);  
+            console.log("Updated carDetails:", result.data);
             const lastRefreshTimes = JSON.parse(localStorage.getItem('lastRefreshTimes')) || {};
             lastRefreshTimes[`${carDetails.owner}-${carDetails.no}`] = new Date().toISOString();
             localStorage.setItem('lastRefreshTimes', JSON.stringify(lastRefreshTimes));
@@ -326,10 +326,10 @@ const refreshCarInfo = async () => {
 
 
 const AuctionCarInfo = async (carInfoForm) => {
-    if (processing.value) return;  
+    if (processing.value) return;
     processing.value = true;
     validationErrors.value = {};
-  
+
     return await wicac.conn()
     .url(`/api/auctions/carInfo`)
     .param(carInfoForm)
@@ -337,7 +337,7 @@ const AuctionCarInfo = async (carInfoForm) => {
         if(result.isError){
             processing.value = false;
             validationErrors.value = result.rawData.response.data.errors;
-            throw new Error;          
+            throw new Error;
         } else {
             processing.value = false;
             return result;
@@ -346,7 +346,7 @@ const AuctionCarInfo = async (carInfoForm) => {
     .post();
 
   };
-  
+
 
   const createAuction = async (auctionData) => {
     if (processing.value) return;
@@ -391,7 +391,7 @@ const AuctionCarInfo = async (carInfoForm) => {
         }
     }
 
-    
+
     const formData = new FormData();
     formData.append('auction', JSON.stringify(payload.auction));
     if(auctionData.auction.file_auction_proxy){
@@ -405,10 +405,10 @@ const AuctionCarInfo = async (carInfoForm) => {
     if(auctionData.auction.file_auction_company_license){
         formData.append('file_auction_company_license', auctionData.auction.file_auction_company_license);
     }
-    
+
     return wicac.conn()
     .url(`/api/auctions`)
-    .param(formData) 
+    .param(formData)
     .multipart()
     .callback(function (result) {
         if(result.isError){
@@ -416,7 +416,7 @@ const AuctionCarInfo = async (carInfoForm) => {
             //fileUserOwnerDeleteById(userData.id);
             processing.value = false;
             loadingSpinner(false);
-            throw new Error;          
+            throw new Error;
         } else {
             processing.value = false;
             loadingSpinner(false);
@@ -429,7 +429,7 @@ const AuctionCarInfo = async (carInfoForm) => {
         }
     })
     .post();
-    
+
 
     /*
     return wicac.conn()
@@ -440,7 +440,7 @@ const AuctionCarInfo = async (carInfoForm) => {
             validationErrors.value = result.rawData.response.data.errors;
             //fileUserOwnerDeleteById(userData.id);
             processing.value = false;
-            throw new Error;          
+            throw new Error;
         } else {
             wica.ntcn(swal)
             .title('')
@@ -473,7 +473,7 @@ const AuctionReauction = async (id, data) => {
     }
 
     wicac.conn()
-    .url(`/api/auctions/${id}`) 
+    .url(`/api/auctions/${id}`)
     .param(requestData)
     .callback(function(result) {
         console.log('wicac.conn callback ' , result);
@@ -492,7 +492,7 @@ const AuctionReauction = async (id, data) => {
         isLoading.value = false;
     })
     .put();
-    
+
 };
 //수정
 const updateAuction = async (id,auction) => {
@@ -544,7 +544,7 @@ const updateAuction = async (id,auction) => {
         auctionForm.mode = 'diag';
         formData.append('mode', auctionForm.mode);
     }
-    
+
 
     formData.append('auction', JSON.stringify(auctionForm.auction));
     if(auction.file_auction_proxy){
@@ -557,7 +557,7 @@ const updateAuction = async (id,auction) => {
         formData.append('file_auction_car_license', auction.file_auction_car_license);
     }
 
-    
+
     wica.ntcn(swal)
     .title('변경하시겠습니까?') // 알림 제목
     .icon('Q') //E:error , W:warning , I:info , Q:question
@@ -601,8 +601,8 @@ const updateAuction = async (id,auction) => {
             .post();
         }
     }).confirm();
-    
-    
+
+
     /*
     wica.ntcn(swal)
     .title('변경하시겠습니까?') // 알림 제목
@@ -655,7 +655,7 @@ const chosenDealer = async (id, data) => {
     };
 
     wicac.conn()
-        .url(`/api/auctions/${id}`) 
+        .url(`/api/auctions/${id}`)
         .param(requestData)
         .callback(function(result) {
             console.log('wicac.conn callback ' , result);
@@ -676,11 +676,11 @@ const chosenDealer = async (id, data) => {
         .put();
 
 };
-    
-// 상태 업데이트 
+
+// 상태 업데이트
 const updateAuctionStatus = async (id, status) => {
     if (isLoading.value) return;
-    
+
     loadingSpinner(true);
     isLoading.value = true;
     validationErrors.value = {};
@@ -699,7 +699,7 @@ const updateAuctionStatus = async (id, status) => {
     };
     return wicac.conn()
     .url(`/api/auctions/${id}`)
-    .param(data) 
+    .param(data)
     .callback(function(result) {
         /*
         if(result.isSuccess){
@@ -719,18 +719,18 @@ const updateAuctionStatus = async (id, status) => {
     //     console.log(result.msg);
     //    }
 
-    
+
        loadingSpinner(false);
        return result;
     })
     .put();
-    
+
 };
 
 
 const updateAuctionIsDeposit = async (id, IsDeposit) => {
     if (isLoading.value) return;
-    
+
     isLoading.value = true;
     validationErrors.value = {};
 
@@ -741,7 +741,7 @@ const updateAuctionIsDeposit = async (id, IsDeposit) => {
     };
     return wicac.conn()
     .url(`/api/auctions/${id}`)
-    .param(data) 
+    .param(data)
     .callback(function(result) {
         /*
         if(result.isSuccess){
@@ -760,7 +760,7 @@ const updateAuctionIsDeposit = async (id, IsDeposit) => {
        return isResult;
     })
     .put();
-    
+
 };
 
  const updateAuctionPrice = async (auctionId, amount) => {
@@ -789,7 +789,7 @@ const updateAuctionIsDeposit = async (id, IsDeposit) => {
                 .callback(function(result) {
                     //console.log(result);
             }).alert('관리자에게 문의해주세요.');
-            throw new Error;          
+            throw new Error;
         } else {
             processing.value = false;
             return result;
@@ -822,7 +822,7 @@ const deleteAuction = async (id,urlPath) => {
                                 router.push({name: 'deposit.index'})
                             } else{
                                 router.push({name: 'admin.index'})
-                            }              
+                            }
                         }
                     })
                     .alert('삭제되었습니다.');
@@ -912,7 +912,7 @@ const getIngAuctions = async (bidsNumList,page) => {
 const getReview = async (userId, page = 1) => {
     return wicac.conn()
     .url(`/api/reviews`)
-    .whereOr('reviews.user_id',`${userId}`) 
+    .whereOr('reviews.user_id',`${userId}`)
     .page(`${page}`)
     .pageLimit(12)
     .callback(function(result) {
@@ -932,7 +932,7 @@ const setTacksong = async (id, data) => {
         .url(`/api/auctions/${id}`)
         .param(data)
         .put();
-  
+
       if (result2.isSuccess) {
         console.log('Auction request sent successfully:', result2);
         loadingSpinner(false);
@@ -942,7 +942,7 @@ const setTacksong = async (id, data) => {
         wica.ntcn(swal)
           .title('오류가 발생하였습니다.')
           .useHtmlText()
-          .icon('E') 
+          .icon('E')
           .alert('관리자에게 문의해주세요.');
         loadingSpinner(false);
       }
@@ -981,7 +981,7 @@ const setdestddress = async (id,addrInfo) => {
                     .callback(function(result3) {
                         if (result3.isOk) {
                             location.reload();
-                        }  
+                        }
                     })
                     .alert('현 주소지로 탁송신청이 되었습니다.');
                 }else{
@@ -1026,13 +1026,13 @@ const getBidsAuction = async (page = 1 , status = "all") => {
             request.whereOr('auctions.status',`${status}`);
         }
     }
-    
+
     return request.callback(function(result) {
         bidsDataAuction.value = result.data;
         bidPaginationAuction.value = result.rawData.data.meta;
         return result;
     }).get();
-    
+
 };
 
 const getAuctionsWithBids = async (page = 1 , status = "all", userId = '', search_text='',bidsIdString = '') => {
@@ -1044,7 +1044,7 @@ const getAuctionsWithBids = async (page = 1 , status = "all", userId = '', searc
         .url(`api/auctions?where=bids.user_id:${userId}&where=auctions.bid_id:whereIn:${bidsIdString}
             _and_auctions.status:chosen_and_auctions.dest_addr_post:_null&with=bids,likes
             &search_text=${search_text}&page=${page}`)
-        
+
         return request.callback(function(result) {
             return result;
         }).get();
@@ -1063,18 +1063,18 @@ const getAuctionsWithBids = async (page = 1 , status = "all", userId = '', searc
                 request.whereOr('auctions.status',`${status}`);
             }
         }
-        
+
         return request.callback(function(result) {
             return result;
         }).get();
     }
 
 
-   
-    
+
+
 };
 
-// 예상가 계산 
+// 예상가 계산
 const checkExpectedPrice = async (data) => {
     return wicac.conn()
         .url(`/api/auctions/checkExpectedPrice`)
@@ -1085,7 +1085,7 @@ const checkExpectedPrice = async (data) => {
         .post();
 };
 
-// 현재 진행중인 경매 갯수 
+// 현재 진행중인 경매 갯수
 const allIngCount = async () => {
     return wicac.conn()
         .url(`/api/auctions/allIngCount`)
@@ -1130,37 +1130,37 @@ const isAccident = (id) => {
       case 'region':
         msg = '지역번호를 선택해 주세요.';
       break;
-  
+
       case 'addrPost':
         msg = '우편번호를 입력해 주세요.';
       break;
-  
+
       case 'addrdt':
         msg = '상세주소를 입력해 주세요.';
       break;
-  
+
       case 'bank':
         msg = '은행을 선택해 주세요.';
       break;
-  
+
       case 'account':
         msg = '계좌번호를 입력해 주세요.';
       break;
-  
+
       case 'diagFirstAt':
         msg = '진단희망일1을 입력해 주세요.';
       break;
-  
+
       case 'diagSecondAt':
         msg = '진단희망일2을 입력해 주세요.';
       break;
-  
+
       case 'fileAuctionCarLicense':
         msg = '자동차등록증을 첨부해 주세요.';
       break;
-      
+
     }
-  
+
     if(!idValue){
       wica.ntcn(swal)
       .icon('W')
@@ -1171,7 +1171,7 @@ const isAccident = (id) => {
       .alert(msg);
       return;
     }
-  
+
   }
 
   // 공매 엑셀 파일 확인
@@ -1199,7 +1199,7 @@ const isAccident = (id) => {
     return wicac.conn()
     .url(`/api/getNiceDnrHistory`)
     .param({
-        "owner":ownerNm, 
+        "owner":ownerNm,
         "no":vhrNo
     })
     .callback(function (result) {
@@ -1285,7 +1285,7 @@ const isAccident = (id) => {
   }
 
   const diagnostic = async (carNumber) => {
-    
+
     loadingSpinner(true);
 
     return wicac.conn()
@@ -1299,7 +1299,7 @@ const isAccident = (id) => {
     .get();
   }
 
-  // 명의이전 확인하기 
+  // 명의이전 확인하기
   const checkNameChangeDealer = async (auctionId) => {
     return wicac.conn()
     .url(`/api/ownership/manual-notify/${auctionId}`)
@@ -1310,7 +1310,7 @@ const isAccident = (id) => {
   }
 
 
-  // 명의이전 신청확인 
+  // 명의이전 신청확인
   const checkNameChangeStatus = async (auctionId) => {
     return wicac.conn()
     .url(`/api/ownership/check/${auctionId}`)
@@ -1387,5 +1387,5 @@ const isAccident = (id) => {
         getReview,
         rollbackAuction
     };
-    
+
 }
