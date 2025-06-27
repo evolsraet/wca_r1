@@ -237,7 +237,7 @@ class AuctionController extends Controller
             'owner' => 'required',
             'no' => 'required',
         ]);
-    
+
         // 내부 API 호출
         $apiRequest = Request::create('/api/auctions/carInfo', 'POST', [
             'owner' => $request->input('owner'),
@@ -245,17 +245,17 @@ class AuctionController extends Controller
         ]);
         $response = app()->handle($apiRequest);
         $result = json_decode($response->getContent(), true);
-    
+
         if ($response->getStatusCode() !== 200) {
             return redirect()->back()->with('error', $result['message'] ?? '조회 실패');
         }
-    
+
         $carInfo = $result['data'] ?? null;
 
         if(!$result['data']){
             return redirect()->back()->with('error', $result['message'] ?? '조회 실패');
         }
-    
+
         return view('v2.pages.sell.result', compact('carInfo'));
     }
 
@@ -336,7 +336,7 @@ class AuctionController extends Controller
         $estimatedPrice = max(0, $basePrice + $adjustment);
 
 
-        // 
+        //
 
 
         // 사고이력
@@ -618,17 +618,6 @@ class AuctionController extends Controller
         } else {
             return response()->json(['success' => false, 'message' => '파일이 전송되지 않았습니다.'], 400);
         }
-    }
-
-    public function showByUniqueNumber($unique_number)
-    {
-        $auction = Auction::where('unique_number', $unique_number)->first();
-
-        if (!$auction) {
-            return response()->json(['message' => '경매를 찾을 수 없습니다.'], 404);
-        }
-
-        return response()->json($auction);
     }
 
     public function entryPublic(Request $request)

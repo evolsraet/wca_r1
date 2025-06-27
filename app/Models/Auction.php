@@ -150,8 +150,8 @@ class Auction extends Model implements HasMedia
         }
         else if($this->taksong_wish_at && $this->vehicle_payment_id){
             $addArray['status_chosen'] = 'dealer_pay';
-        }   
-        
+        }
+
         return $addArray['status_chosen'];
     }
 
@@ -184,13 +184,6 @@ class Auction extends Model implements HasMedia
     {
         parent::boot();
 
-        static::creating(function ($auction) {
-            $auction->unique_number = self::generateUniqueNumber();
-
-            
-
-        });
-
         static::saved(function ($auction) {
 
             // 업데이트 시 로그 생성
@@ -204,30 +197,10 @@ class Auction extends Model implements HasMedia
 
         });
     }
-
-    private static function generateUniqueNumber()
-    {
-        $maxNumber = 9999;
-        $minNumber = 1000;
-
-        // do {
-        //     $number = rand($minNumber, $maxNumber);
-        //     if (self::where('unique_number', $number)->exists()) {
-        //         // 모든 숫자가 사용된 경우, 범위를 확장
-        //         $minNumber = $maxNumber + 1;
-        //         $maxNumber = $minNumber * 10 - 1;
-        //     }
-        // } while (self::where('unique_number', $number)->exists());
-
-        $number = rand($minNumber, $maxNumber);
-
-        return $number;
-    }
-
     // 해시된 ID 속성 추가
     public function getHashidAttribute()
     {
         return Hashids::encode($this->id);
     }
-    
+
 }

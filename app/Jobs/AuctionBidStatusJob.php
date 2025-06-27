@@ -27,7 +27,7 @@ class AuctionBidStatusJob implements ShouldQueue
     protected $user; // 사용자 아이디
     protected $status; // 상태
     protected $auction; // 경매 아이디
-    protected $result; // 딜러 아이디 
+    protected $result; // 딜러 아이디
     protected $price; // 입찰가격
     public function __construct($user, $status, $auction, $result, $price)
     {
@@ -48,7 +48,7 @@ class AuctionBidStatusJob implements ShouldQueue
 
         if($this->status == 'ask'){
 
-            // 딜러정보 
+            // 딜러정보
             $dealer = User::find($this->result);
 
             $data2 = [
@@ -56,7 +56,6 @@ class AuctionBidStatusJob implements ShouldQueue
                 'data' => $this->auction,
                 'status3' => $dealer['dealer']['company'].' - '.$dealer['dealer']['name'],
                 'status4' => $this->price,
-                // 'link' => $baseUrl.'/auction/'.$this->auction->unique_number
                 'link' => $baseUrl.'/auction/'.$this->auction->hashid
             ];
 
@@ -91,10 +90,10 @@ class AuctionBidStatusJob implements ShouldQueue
 
         } else if($this->status == 'delete'){
 
-            // 딜러정보 
+            // 딜러정보
             $dealer = User::find($this->result);
             $this->auction['dealer'] = $dealer;
-            
+
             $notificationTemplate = NotificationTemplate::getTemplate('AuctionBidStatusJobDelete', $this->auction, ['mail']);
             $this->user->notify(new AuctionsNotification($this->user, $notificationTemplate, ['mail'])); // 메일 전송
 
