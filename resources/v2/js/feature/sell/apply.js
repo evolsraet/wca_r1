@@ -46,7 +46,7 @@ export default function () {
             if (typeof initialData === 'object' && initialData !== null && Object.keys(initialData).length > 0) {
                 Object.assign(this.form, initialData);
             }
-        
+
             // 2. window.carInfo 있으면 form.auction에 매핑
             if (window.carInfo && typeof window.carInfo === 'object') {
                 Object.entries(window.carInfo).forEach(([key, value]) => {
@@ -55,7 +55,7 @@ export default function () {
                     }
                 });
             }
-        
+
             console.log('form.auction 초기화 결과:', this.form.auction);
             window.apply = this;
 
@@ -80,7 +80,7 @@ export default function () {
                     'file_auction_company_license'
                 ];
 
-                // 본인인증 확인 무조건 확인필요 
+                // 본인인증 확인 무조건 확인필요
                 // if(!window.resIndividualBusinessYN){
                 //     Alpine.store('swal').fire({
                 //         title: '본인인증 필요',
@@ -113,9 +113,6 @@ export default function () {
                         icon: 'success',
                         confirmButtonText: '확인'
                     }).then((result) => {
-
-                        console.log(response);
-
                         if (result.isConfirmed) {
                             window.location.href = '/v2/auction/'+response.data.data.hashid;
                         }

@@ -214,7 +214,7 @@ class AuctionService
     }
 
     // ===== 각 세부 처리 함수들 =====
-    // 딜러 탁송정보 입력 
+    // 딜러 탁송정보 입력
     private function processDealerInfo($auction)
     {
         $allowedFields = ['dest_addr_post', 'dest_addr1', 'dest_addr2'];
@@ -363,7 +363,7 @@ class AuctionService
             AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
             AuctionTotalDepositJob::dispatch($bid->user_id, $auction, 'dealer');
             AuctionTotalDepositJob::dispatch(config('services.taksong_admin.admin_id'), $auction, 'taksong');
-        } 
+        }
         else if ($auction->fee_payment_id) {
             // AuctionTotalAfterFeeJob::dispatch($bid->user_id, $auction);
 
@@ -407,7 +407,7 @@ class AuctionService
                 if (empty($auction->diag_check_at)) {
                     throw new \Exception('진단이 완료되지 않았습니다.', 500);
                 }
-    
+
                 if (empty($auction->bid_id)) {
                     throw new \Exception('입찰자가 없습니다.', 500);
                 }
@@ -419,7 +419,7 @@ class AuctionService
                 $bid->status = $auction->status;
                 $bid->save();
 
-                // 입금이 되었을때 알림 
+                // 입금이 되었을때 알림
                 // AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
                 AuctionTotalDepositJob::dispatch($bid->user_id, $auction, 'dealer');
                 AuctionTotalDepositJob::dispatch(config('services.taksong_admin.admin_id'), $auction, 'taksong');
@@ -493,7 +493,7 @@ class AuctionService
         $auth = config('carmerceApi.CARMERCE_API_AUTH');
         $password = config('carmerceApi.CARMERCE_API_PASSWORD');
 
-        // 시세확인 인증 
+        // 시세확인 인증
         $curl = curl_init();
 
         curl_setopt_array($curl, array(
@@ -521,7 +521,7 @@ class AuctionService
         curl_close($curl);
 
         return $result;
-    }   
+    }
 
     // 카머스 시세확인 API
     public function getCarmercePrice($accessToken, $currentData)
@@ -568,13 +568,13 @@ class AuctionService
             'currentData' => $currentData
         ]);
 
-        
+
         curl_close($curl);
         return $result;
     }
 
 
-    private function calculateCheckKey($chkSec, $businessNumber) 
+    private function calculateCheckKey($chkSec, $businessNumber)
     {
         if (!is_numeric($businessNumber) || $businessNumber == 0) {
             return 0; // 또는 다른 기본값
@@ -660,10 +660,10 @@ class AuctionService
 
 
 
-    // 경매 완료 수수료 처리 확인 
+    // 경매 완료 수수료 처리 확인
     public function auctionAfterFeeDone()
     {
-        $auction = Auction::where('status', 'done')->where('vehicle_payment_id', '!=', null)->get(); 
+        $auction = Auction::where('status', 'done')->where('vehicle_payment_id', '!=', null)->get();
         foreach($auction as $bid){
             if(isset($bid->bid_id)){
                 $bids = Bid::find($bid->bid_id);
@@ -674,7 +674,7 @@ class AuctionService
 
     public function auctionTotalDepositMiss()
     {
-        // 탁송 상태 확인 이 부분도 제거 필요 
+        // 탁송 상태 확인 이 부분도 제거 필요
         // $taksongStatusTemp = TaksongStatusTemp::where('chk_status', 'ask')->get();
 
         $auctions = Auction::where('status', 'dlvr')->where('taksong_status', 'ask')->get();
@@ -687,7 +687,7 @@ class AuctionService
                     $auction = Auction::find($bid->auction_id);
                     $bids = Bid::find($auction->bid_id);
                     $user = User::find($bids->user_id);
-                    
+
                     // 고정된 이벤트 시간
                     $eventTime = Carbon::parse($auction->taksong_wish_at);
 
@@ -725,7 +725,7 @@ class AuctionService
         ]);
 
         foreach($auctions as $auction){
-            // 현재시간 final_at 시간 비교해서 현재 시간이 더 클 경우 상태 변경 
+            // 현재시간 final_at 시간 비교해서 현재 시간이 더 클 경우 상태 변경
             $auction->status = 'wait';
             $auction->choice_at = Carbon::now()->addDays(config('days.choice_day'));
             $auction->save();
@@ -744,7 +744,7 @@ class AuctionService
     }
 
 
-    // 경매만료시 선택대기 2일동안 아무 내용 없으면 자동으로 취소 처리 
+    // 경매만료시 선택대기 2일동안 아무 내용 없으면 자동으로 취소 처리
     public function auctionCancel()
     {
         $auction = Auction::where('status', 'wait')->whereNull('bid_id')->get();
@@ -752,7 +752,7 @@ class AuctionService
             if($auction->choice_at){
                 if(Carbon::now() > $auction->choice_at){
                     $auction->status = 'cancel';
-                    $auction->save();   
+                    $auction->save();
 
                     // 알림 보내기
                     AuctionBidStatusJob::dispatch($auction->user_id, 'cancel', $auction->id, '','');
@@ -767,7 +767,7 @@ class AuctionService
     {
         $clientId = config('services.niceAuth.NICE_CLIENT_ID');
         $clientSecret = config('services.niceAuth.NICE_CLIENT_SECRET');
-        
+
         // Base64 인코딩
         $authorization = base64_encode($clientId . ':' . $clientSecret);
 
@@ -809,7 +809,7 @@ class AuctionService
         // 상태변경 이력 조회
         $auctionLog = AuctionLog::where('auction_id', $autcion_id)->orderBy('id', 'desc')->skip(1)->first();
         //$auctionLogFirst = AuctionLog::where('auction_id', $autcion_id)->orderBy('id', 'desc')->first();
-       
+
         // 상태 변경
         $auctionChanges = Auction::where('id', $autcion_id)->first();
         $auctionChanges->status = $auctionLog->status;

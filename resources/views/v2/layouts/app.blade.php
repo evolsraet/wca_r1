@@ -29,7 +29,7 @@
         @if(isset($container) && $container === false)
             @yield('content')
         @else
-            <div class="container">
+            <div class="container py-5">
                 @yield('content')
             </div>
         @endif

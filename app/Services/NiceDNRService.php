@@ -56,7 +56,7 @@ class NiceDNRService
         if ($dbData) {
             // DB 데이터를 캐시에 저장
             Cache::put($cacheKey, $dbData->data, 60 * 60 * 24 * 30);
-            
+
             return $dbData->data;
         }
 
@@ -145,7 +145,7 @@ class NiceDNRService
 
 
     // 체크키 계산
-    private function calculateCheckKey($chkSec, $businessNumber) 
+    private function calculateCheckKey($chkSec, $businessNumber)
     {
         if (!is_numeric($businessNumber) || $businessNumber == 0) {
             return 0; // 또는 다른 기본값
@@ -196,5 +196,5 @@ class NiceDNRService
         // return $dbData;
     }
 
-    
+
 }

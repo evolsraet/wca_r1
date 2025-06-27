@@ -19,13 +19,13 @@ class CarHistoryService
         $userAgent = request()->header('User-Agent');
 
         if (Session::has($sessionKey)) {
-            Log::info("[카히스토리] 캐시된 데이터 사용 - 차량번호: {$carNumber}", [
-                'name'=> '카히스토리 캐시된 데이터 사용',
+            Log::info("[카히스토리] 세션 데이터 사용 - 차량번호: {$carNumber}", [
+                'name'=> '카히스토리 세션 데이터 사용',
                 'path'=> __FILE__,
                 'line'=> __LINE__,
                 'carNumber' => $carNumber
             ]);
-            
+
             $data = Session::get($sessionKey);
             $data['is_session'] = true;
 
@@ -50,7 +50,7 @@ class CarHistoryService
         // 파라미터 준비
         $payload = [
             'car_no'      => $carNumber,
-            'api_key'     => config('services.carHistory.encrypt_key'), 
+            'api_key'     => config('services.carHistory.encrypt_key'),
             'rType'       => 'J',
         ];
 
@@ -78,19 +78,20 @@ class CarHistoryService
                     'response' => $data['data']
                 ]);
 
-                // 세션에 저장 
-                // TODO: 캐시 저장기간 7일 
+                // 세션에 저장
                 Session::put($sessionKey, $data['data']);
-                Session::put($sessionKey . '_fetched_at', now());
+                Session::put($sessionKey . '_fetched_at', now(), 60 * 24 * 7); // 7일(10080분) 동안 세션 유지
 
-                // 데이터베이스에 저장 
-                // TODO: 접속기기, IP정보 추가
+                // 데이터베이스에 저장
                 $userAgent = request()->header('User-Agent') ?? 'unknown';
                 $device = $this->detectDeviceType($userAgent);
 
-                $ip = request()->header('X-Forwarded-For') 
-                    ? trim(explode(',', request()->header('X-Forwarded-For'))[0]) 
+                $ip = request()->header('X-Forwarded-For')
+                    ? trim(explode(',', request()->header('X-Forwarded-For'))[0])
                     : request()->ip();
+
+                // TODO: 데이터 에러시 저장 x 에러
+                // if( !isset($data['data']['r502']) ) {
 
                 NiceCarHistory::create([
                     'car_no' => $carNumber,
@@ -146,18 +147,18 @@ class CarHistoryService
     // {
     //     $key = hex2bin(config('services.carHistory.encrypt_key'));
     //     $iv = config('services.carHistory.encrypt_iv');
-    
+
     //     // 길이 확인 로그
     //     if (strlen($key) !== 16) {
     //         throw new \Exception('암호화 키는 16바이트여야 합니다.');
     //     }
-    
+
     //     if (strlen($iv) !== 16) {
     //         throw new \Exception('IV는 16바이트여야 합니다.');
     //     }
-    
+
     //     $padded = str_pad($plainText, 16 * ceil(strlen($plainText) / 16), "\0");
-    
+
     //     $cipherText = openssl_encrypt(
     //         $padded,
     //         'seed-cbc',
@@ -165,11 +166,11 @@ class CarHistoryService
     //         OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING,
     //         $iv
     //     );
-    
+
     //     if ($cipherText === false) {
     //         throw new \Exception('SEED 암호화 실패');
     //     }
-    
+
     //     return base64_encode($cipherText);
     // }
 
@@ -198,10 +199,16 @@ class CarHistoryService
 
             $data = $carHistory;
 
+            if( !isset($data['r502']) ) {
+                throw new \Exception('카히스토리 조회 오류', 401);
+            }
+
             // dd($data);
 
-            // data > r502 for / r502-01 가 1,2 면 내차피해 리스트, 3 이면 타차피해 리스트 
+            // data > r502 for / r502-01 가 1,2 면 내차피해 리스트, 3 이면 타차피해 리스트
             $r502 = $data['r502'];
+
+
             $crashList = [];
             foreach ($r502 as $key => $value) {
                 // 내차피해
@@ -234,7 +241,7 @@ class CarHistoryService
 
                     $crashList['other'][] = $value_array; // 타차피해 리스트
                     $crashList['other_length'] = count($crashList['other']);
-                } 
+                }
 
             }
 

@@ -3,8 +3,9 @@ export default function () {
         estimatedPriceInTenThousandWon: 0,
         carInfo: {},
         error: null,
+        loading: false,
         init() {
-            
+
             if(localStorage.getItem('carInfo') === null){
                 localStorage.setItem('carInfo', JSON.stringify({
                     ...window.carInfo,
@@ -32,17 +33,17 @@ export default function () {
         async refreshCarInfo() {
             const owner = this.carInfo.owner_name;
             const no = this.carInfo.car_no;
-        
+
             try {
-                
+                this.loading = true;
                 const response = await Alpine.store('api').post('/api/auctions/carInfo', {
                     owner: owner,
                     no: no,
                     forceRefresh: true
                 });
-        
+
                 const result = response.data;
-        
+
                 if (result.status === 'is_not_count') {
                     Alpine.store('swal').fire({
                         title: '차량 정보 갱신 실패',
@@ -52,7 +53,7 @@ export default function () {
                     });
                     return;
                 }
-        
+
                 // 캐시 갱신 제한 메시지 처리 (message 존재 시)
                 if (result.message === '갱신은 하루 1회만 가능합니다.') {
                     Alpine.store('swal').fire({
@@ -63,27 +64,29 @@ export default function () {
                     });
                     return;
                 }
-        
+
                 Alpine.store('swal').fire({
                     title: '차량 정보 갱신 성공',
                     text: '차량 정보가 갱신되었습니다.',
                     icon: 'success',
                     timer: 2000
                 });
-        
+
                 setTimeout(() => {
                     location.reload();
                 }, 2000);
-        
+
             } catch (error) {
                 console.error('갱신 중 오류', error);
-        
+
                 Alpine.store('swal').fire({
                     title: '차량 정보 갱신 실패',
                     text: error.response?.data?.message || '서버 오류 또는 제한된 요청입니다.',
                     icon: 'error',
                     confirmButtonText: '확인'
                 });
+            } finally {
+                this.loading = false;
             }
         },
         openCurrentPriceModal() {
@@ -91,9 +94,9 @@ export default function () {
 
             if (estimatedPrice) {
                 const estimatedPriceData = JSON.parse(estimatedPrice);
-                
+
                 console.log('estimatedPriceData.value', estimatedPriceData.value);
-        
+
                 Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/carPriceResultModal', {
                     id: 'carPriceResultModal',
                     title: '예상 가격 측정',
@@ -104,10 +107,10 @@ export default function () {
                         carNo: estimatedPriceData.carNo
                     }
                 });
-        
+
                 return;
             }
-        
+
             Alpine.store(`modal`).showHtmlFromUrl('/v2/components/modals/currentPrice', {
                 id: 'currentPrice',
                 title: '내 차, 예상가격을 확인합니다',

@@ -8,9 +8,14 @@
 
 @include('components.layouts.categoryTab')
 
+
 <div class="container mt-5">
   <div class="row" x-data="auctionList" x-init="init()">
-    <div class="col-12 mb-5">
+
+    <!-- 로딩 상태 -->
+    <x-loading />
+
+    <div class="col-12 mb-5" x-show="!loading">
 
       {{-- 검색바 --}}
       <div class="search-bar">
