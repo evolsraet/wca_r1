@@ -44,7 +44,12 @@ class AuctionCohosenJob implements ShouldQueue
 
         if($auction->bid_id){
 
-            $notificationTemplate = NotificationTemplate::getTemplate('AuctionCohosenJobDealer', $auction, ['mail']);
+            if($this->mode == 'user'){
+                $notificationTemplate = NotificationTemplate::getTemplate('AuctionCohosenJobUser', $auction, ['mail']);
+            }else{
+                $notificationTemplate = NotificationTemplate::getTemplate('AuctionCohosenJobDealer', $auction, ['mail']);
+            }
+
             $user = User::find($this->user);
             $user->notify(new AuctionsNotification($user, $notificationTemplate, ['mail'])); // 메일 전송
 

@@ -1,5 +1,6 @@
 <div x-data="taksongAddress()" x-init="initWithWatch()">
-    <div class="delivery-address-box py-4 p-2" id="taksongAddress" x-show="auction?.bids?.find(bid => bid.id === auction.bid_id) && !auction?.is_taksong">
+    {{-- TODO: 0625 - !auction?.is_taksong 상태확인 다시할것--}}
+    <div class="delivery-address-box py-4 p-2" id="taksongAddress" x-show="auction?.status_chosen == 'dealer'">
         <div class="d-flex justify-content-between align-items-start mb-3">
             <div>
                 <div class="fw-bold fs-5">탁송 주소지</div>
@@ -22,7 +23,7 @@
         </div>
 
         <div class="pt-2">
-            <button class="btn btn-danger w-100 py-2 fw-semibold delivery-confirm-btn border-0" :disabled="!auction?.taksong_wish_at" type="button" @click="submit">
+            <button class="btn btn-danger w-100 py-2 fw-semibold delivery-confirm-btn border-0" :disabled="auction?.taksong_status" type="button" @click="submit">
                 탁송하기
             </button>
         </div>        

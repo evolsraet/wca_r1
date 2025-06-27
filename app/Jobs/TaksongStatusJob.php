@@ -19,7 +19,7 @@ class TaksongStatusJob implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    protected $response;
+    protected $response; // taksong id
     protected $endPoint;
 
     public function __construct($response)

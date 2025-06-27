@@ -28,6 +28,7 @@ class BusinessController extends Controller
         //     'startDate' => '20250327',
         //     'usePurposes' => '사업자여부',
         // ];
+        // TODO: 인증 관련 인증여부, 주민번호 정보를 세션에 담아두고 데이터 조회 해서 처리 해야함
 
         $data = $request->all();
 

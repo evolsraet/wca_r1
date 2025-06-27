@@ -13,6 +13,7 @@ use App\Jobs\TaksongNameChangeJob;
 use App\Jobs\AuctionCancelJob;
 use App\Models\Dealer;
 use App\Helpers\Wca;
+use App\Jobs\AuctionTotalDepositJob;
 
 class TaksongService
 {
@@ -149,39 +150,102 @@ class TaksongService
 
     public function processStatus(array $data): void
     {
+        // TODO: 0625 - carNo 대신 auction_id 로 변경 
         $status = $data['chk_status'] ?? null;
         $carNo = $data['chk_car_no'] ?? null;
         $chk_id = $data['chk_id'] ?? null;
 
-        if(!$carNo){
-            $auction = Auction::where('taksong_id', $chk_id)->firstOrFail();
-            $carNo = $auction->car_no;
-        }
-
         try {
-            $auction = Auction::where('car_no', $carNo)->firstOrFail();
+            $auction = Auction::where('taksong_id', $chk_id)->firstOrFail();
             $bid = Bid::find($auction->bid_id);
-            $user_id = $auction->user_id;
-            $bid_user_id = $bid?->user_id;
-            $auction_id = $auction->id;
 
             $modifyData = [
-                'auction_id' => $auction_id,
-                'user_id' => $user_id,
-                'bid_user_id' => $bid_user_id
+                'auction_id' => $auction->id,
+                'user_id' => $auction->user_id,
+                'bid_user_id' => $bid?->user_id
             ];
 
             // 아이템 딜리버리 상태로 변경 
-            $this->updateAuctionStatus($auction_id);
+            $updateData = [
+                'taksong_courier_fee' => $data['chk_courier_fee'] ?? null,
+                'taksong_courier_name' => $data['chk_courier_name'] ?? null,
+                'taksong_courier_mobile' => $data['chk_courier_mobile'] ?? null,
+                'taksong_departure_address' => $data['chk_departure_address'] ?? null,
+                'taksong_departure_mobile' => $data['chk_departure_mobile'] ?? null,
+                'taksong_dest_address' => $data['chk_dest_address'] ?? null,
+                'taksong_dest_mobile' => $data['chk_dest_mobile'] ?? null,
+                'taksong_departure_at' => $data['chk_departure_at'] ?? null,
+                'taksong_dest_at' => $data['chk_dest_at'] ?? null,
+                'taksong_status' => null
+            ];
 
             // 탁송 상태 처리
-            match($status) {
-                'start'  => $this->handleStart($carNo, $data),
-                'ing'    => $this->handleInProgress($carNo, $data),
-                'done'   => $this->handleDone($carNo, $auction, $bid, $status, $modifyData),
-                'cancel' => $this->handleCancel($carNo, $modifyData),
-                // default  => Log::warning("[탁송 상태] {$carNo} / 알 수 없는 상태", ['status' => $status, 'car_no' => $carNo]),
-            };
+            switch($status){
+
+
+
+                case 'ask':
+                    $updateData['taksong_status'] = 'ask';
+
+                    if($auction->status != 'dlvr'){
+                        // TODO: 고객에게 차량대금 송금 (애스크로 / 알림) 추가
+                        AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
+
+                        // auction 에서 dlvr 상태로 변경
+                        $auction->status = 'dlvr';
+                        $auction->save();
+                    }
+
+                    break;
+
+                case 'start':
+                    $updateData['taksong_status'] = 'start';
+                    break;
+                case 'ing':
+                    $updateData['taksong_status'] = 'ing';
+                    break;
+                case 'done': 
+
+                    Log::info("[탁송 상태] {$carNo} / 탁송 상태 처리 완료 확인", [
+                        'name'=> '탁송 상태 처리 완료 확인',
+                        'path'=> __FILE__,
+                        'line'=> __LINE__,
+                        'status' => $status,
+                        'car_no' => $carNo
+                    ]);
+            
+                    $isCheck = Auction::where('taksong_id', $chk_id)->where('status', 'dlvr')->first();
+                    if($isCheck){
+                        $updateData = [
+                            'taksong_status' => 'done',
+                            'status' => 'dlvr_done',
+                            'done_at' => now()
+                        ];
+            
+                        // 명의이전 등록 관련 메시지 전달 
+                        if($modifyData['user_id']){
+                            TaksongNameChangeJob::dispatch($modifyData['user_id'], $modifyData['auction_id'], 'user');
+                        }
+                        if($modifyData['bid_user_id']){
+                            TaksongNameChangeJob::dispatch($modifyData['bid_user_id'], $modifyData['auction_id'], 'dealer');
+                        }
+            
+                    }
+
+                    break;
+                case 'cancel':
+                    Auction::where('taksong_id', $chk_id)->update(['status' => 'cancel']);
+
+                    // 취소 메시지 전달
+                    AuctionCancelJob::dispatch($modifyData['user_id'], $modifyData['auction_id']);
+                    AuctionCancelJob::dispatch($modifyData['bid_user_id'], $modifyData['auction_id']);
+
+                    break;
+            }
+
+
+            Auction::where('taksong_id', $chk_id)->update($updateData);            
+
     
             Log::info("[탁송 상태] {$carNo} / 상태 처리 완료", [
                 'name'=> '탁송 상태 처리 완료',
@@ -202,92 +266,6 @@ class TaksongService
                 'trace' => $e->getTraceAsString(),
             ]);
         }
-    }
-
-
-    // 아이템 딜리버리 상태로 변경 
-    private function updateAuctionStatus($auction_id){
-        Auction::where('id', $auction_id)->update(['status' => 'dlvr']);
-    }
-
-    // 탁송 시작 상태 처리
-    private function handleStart(string $carNo, $data)
-    {
-
-        $updateData = [
-            'taksong_courier_fee' => $data['chk_courier_fee'] ?? null,
-            'taksong_courier_name' => $data['chk_courier_name'] ?? null,
-            'taksong_courier_mobile' => $data['chk_courier_mobile'] ?? null,
-            'taksong_departure_address' => $data['chk_departure_address'] ?? null,
-            'taksong_departure_mobile' => $data['chk_departure_mobile'] ?? null,
-            'taksong_dest_address' => $data['chk_dest_address'] ?? null,
-            'taksong_dest_mobile' => $data['chk_dest_mobile'] ?? null,
-            'taksong_departure_at' => $data['chk_departure_at'] ?? null,
-            'taksong_dest_at' => $data['chk_dest_at'] ?? null,
-            'is_taksong' => 'start'
-        ];
-
-        Auction::where('car_no', $carNo)->update($updateData);
-    }
-
-    // 탁송 진행중 상태 처리
-    private function handleInProgress(string $carNo, $data){
-        $updateData = [
-            'taksong_courier_fee' => $data['chk_courier_fee'] ?? null,
-            'taksong_courier_name' => $data['chk_courier_name'] ?? null,
-            'taksong_courier_mobile' => $data['chk_courier_mobile'] ?? null,
-            'taksong_departure_address' => $data['chk_departure_address'] ?? null,
-            'taksong_departure_mobile' => $data['chk_departure_mobile'] ?? null,
-            'taksong_dest_address' => $data['chk_dest_address'] ?? null,
-            'taksong_dest_mobile' => $data['chk_dest_mobile'] ?? null,
-            'taksong_departure_at' => $data['chk_departure_at'] ?? null,
-            'taksong_dest_at' => $data['chk_dest_at'] ?? null,
-            'is_taksong' => 'ing'
-        ];
-
-        Auction::where('car_no', $carNo)->update($updateData);
-    }
-
-    // 탁송 완료 상태 처리
-    private function handleDone(string $carNo, $auction, $bid, $status, $modifyData){
-        Log::info("[탁송 상태] {$carNo} / 탁송 상태 처리 완료 확인", [
-            'name'=> '탁송 상태 처리 완료 확인',
-            'path'=> __FILE__,
-            'line'=> __LINE__,
-            'status' => $status,
-            'car_no' => $carNo
-        ]);
-
-        $isCheck = Auction::where('car_no', $carNo)->where('status', 'dlvr')->first();
-        if($isCheck){
-            $updateData = [
-                'is_taksong' => 'done',
-                'status' => 'dlvr_done',
-                'done_at' => now()
-            ];
-            Auction::where('car_no', $carNo)->update($updateData);
-
-            // 명의이전 등록 관련 메시지 전달 
-            
-            if($modifyData['user_id']){
-                TaksongNameChangeJob::dispatch($modifyData['user_id'], $modifyData['auction_id'], 'user');
-            }
-            if($modifyData['bid_user_id']){
-                TaksongNameChangeJob::dispatch($modifyData['bid_user_id'], $modifyData['auction_id'], 'dealer');
-            }
-
-        }
-    }
-
-    // 탁송 취소 상태 처리
-    private function handleCancel(string $carNo, $modifyData){
-
-
-        Auction::where('car_no', $carNo)->update(['status' => 'cancel']);
-
-        // 취소 메시지 전달
-        AuctionCancelJob::dispatch($modifyData['user_id'], $modifyData['auction_id']);
-        AuctionCancelJob::dispatch($modifyData['bid_user_id'], $modifyData['auction_id']);
     }
 
 }

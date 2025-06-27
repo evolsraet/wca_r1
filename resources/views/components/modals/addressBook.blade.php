@@ -18,6 +18,13 @@
                 </div>
             </div>
         </template>
+
+        <div x-show="list.length === 0">
+            <div class="text-center py-5">
+                <p>주소록이 없습니다.</p>
+            </div>
+        </div>
+
         
     </div>
 

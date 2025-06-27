@@ -141,6 +141,20 @@ class Auction extends Model implements HasMedia
         return $this->hasMany(Review::class);
     }
 
+    public function getStatusChosenAttribute()
+    {
+        $addArray['status_chosen'] = 'user';
+
+        if($this->taksong_wish_at && !$this->vehicle_payment_id){
+            $addArray['status_chosen'] = 'dealer';
+        }
+        else if($this->taksong_wish_at && $this->vehicle_payment_id){
+            $addArray['status_chosen'] = 'dealer_pay';
+        }   
+        
+        return $addArray['status_chosen'];
+    }
+
 
     // 파일
     public function registerMediaCollections(): void

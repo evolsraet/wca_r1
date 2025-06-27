@@ -1,4 +1,4 @@
-<div class="delivery-progress-box py-4" x-data="taksongProgress(auction)">
+<div class="delivery-progress-box py-4" x-data="taksongProgress()" x-init="initWithWatch()">
     <div class="mb-3 fw-bold fs-5">탁송전 진행상황</div>
 
     <div class="d-flex justify-content-between align-items-center text-center progress-steps flex-wrap">

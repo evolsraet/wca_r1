@@ -25,11 +25,11 @@ class NameChangeService
         return $auction;
     }
 
-    // 명의이전 완료된 매물 중 파일 업로드 되지 않은 매물 찾아서 상태 변경
+    // 명의이전 완료된 매물 중 파일 업로드 있는 매물 찾아서 상태 변경
     public function changeAuctionStatusAll()
     {
         $auction = Auction::where('status', 'dlvr')
-                          ->where('is_taksong', 'done')
+                          ->where('taksong_status', 'done')
                           ->get();
         
         foreach($auction as $item){
@@ -78,9 +78,9 @@ class NameChangeService
     // 명의변경 완료된 경매 중 파일이 업로드된 경매만 처리
     public function processCompletedNameChangeAuctions()
     {
-        // 1. status가 dlvr 이고 is_taksong이 done인 경매 조회
+        // 1. status가 dlvr 이고 taksong_status이 done인 경매 조회
         $auctions = Auction::where('status', 'dlvr')
-                          ->where('is_taksong', 'done')
+                          ->where('taksong_status', 'done')
                           ->where('has_uploaded_name_change_file', true)
                           ->get();
 

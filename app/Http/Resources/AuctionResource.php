@@ -155,6 +155,18 @@ class AuctionResource extends JsonResource
         $addArray['review_id'] = $review_id ? $review_id->id : null;
 
 
+        // TODO:status_chosen 
+        // 판매자 탁송정보 : user
+        // 구매자 탁송정보 : dealer
+        // 구매자 입금완료 : dealer_pay
+
+        // 유저가 탁송정보를 입력하기 전까지 유저가 탁송정보를 입력하면 taksong_wish_at 에 값이 들어옴 
+        // 딜러가 차량대금 입금하기 전까지 탁송신청 안됨, 입금하면 vehicle_payment_id 에 값이 들어옴 
+
+        $addArray['status_chosen'] = $auction->status_chosen;
+
+
+
         $this->withFiles($parentArray, $addArray);
 
         // 날짜 필드를 Y-m-d 포맷으로 변환 (맨 마지막)

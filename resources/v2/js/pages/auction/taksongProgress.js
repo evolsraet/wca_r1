@@ -1,4 +1,4 @@
-export default function () {
+export default function (auction) {
     return {
       currentStep: 1,
       steps: [
@@ -8,7 +8,33 @@ export default function () {
       ],
       init() {
         console.log('taksongProgress init');
+
+        // console.log('taksongProgress auction', auction);
+
+        // this.watchAuction();
+
+        // console.log('taksongProgress currentStep', this.currentStep);
+
       },
+      initWithWatch() {
+        const check = setInterval(() => {
+          if (window.auction && window.auction.id) {
+            if(window.auction.status_chosen == 'user'){
+              this.currentStep = 1;
+            }
+            else if(window.auction.status_chosen == 'dealer'){
+              this.currentStep = 2;
+            }
+            else if(window.auction.status_chosen == 'dealer_pay'){
+              this.currentStep = 3;
+            }
+
+            clearInterval(check);
+          }
+        }, 50);
+
+      },
+
       getStepClass(index) {
         return index + 1 <= this.currentStep ? 'active' : '';
       },

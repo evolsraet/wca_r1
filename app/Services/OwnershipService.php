@@ -32,7 +32,7 @@ class OwnershipService
             $bid = Bid::find($auction->bid_id);
 
             // 탁송이 완료되지 않으면 스킵
-            if ($auction->is_taksong !== 'done') {
+            if ($auction->taksong_status !== 'done') {
                 $message = '탁송 상태가 완료되지 않았습니다.';
                 if ($isManual) throw new Exception($message);
                 Log::info('[탁송 상태] 명의이전 확인 오류', [
@@ -219,7 +219,7 @@ class OwnershipService
         // 명의이전 완료 후 2일 경과 시 운영자에게 알림 발송
         $auctions = Auction::
                         where('status', 'dlvr')
-                        ->where('is_taksong', 'done')   
+                        ->where('taksong_status', 'done')   
                         ->whereNull('has_uploaded_name_change_file')
                         ->get();
 

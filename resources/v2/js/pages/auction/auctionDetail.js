@@ -60,7 +60,7 @@ export default function () {
         });
         this.auction = res?.data?.data;
         window.auction = this.auction;
-        // console.log('auction data:', this.auction);
+        console.log('auction data:', this.auction);
       } catch (err) {
         if (err.response && err.response.status === 401) {
           window.location.href = '/v2/login';
@@ -105,15 +105,24 @@ export default function () {
     },
 
     updateAuctionIsDeposit(id, IsDeposit) {
-      
-      // console.log('updateAuctionIsDeposit data', data);
-      // console.log('updateAuctionIsDeposit id', id);
 
-      Alpine.store('auctionEvent').updateAuction(id, {
+      let sendData = {
         auction: {
-          is_deposit: IsDeposit
+          vehicle_payment_id: null,
+          fee_payment_id: null
         },
-      }).then(() => {
+      }
+
+      switch(IsDeposit){
+        case 'totalDeposit':
+          sendData.auction.vehicle_payment_id = '1';
+          break;
+        case 'totalAfterFee':
+          sendData.auction.fee_payment_id = '1';
+          break;
+      }
+
+      Alpine.store('auctionEvent').updateAuction(id, sendData).then(() => {
         // console.log('updateAuctionIsDeposit res');
       }).catch(() => {
         console.log('updateAuctionIsDeposit err');

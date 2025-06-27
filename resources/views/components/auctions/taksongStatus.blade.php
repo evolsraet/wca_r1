@@ -3,7 +3,7 @@
 
     <dl class="row mb-0">
         <dt class="col-3 text-secondary">상태:</dt>
-        <dd class="col-9 text-danger fw-bold" x-text="auction?.is_taksong === 'ask' ? '대기중' : auction?.is_taksong === 'start' ? '배차' : auction?.is_taksong === 'ing' ? '탁송중' : auction?.is_taksong === 'done' ? '탁송완료' : '미정'"></dd>
+        <dd class="col-9 text-danger fw-bold" x-text="auction?.taksong_status === 'ask' ? '대기중' : auction?.taksong_status === 'start' ? '배차' : auction?.taksong_status === 'ing' ? '탁송중' : auction?.taksong_status === 'done' ? '탁송완료' : '미정'"></dd>
 
         <dt class="col-3 text-secondary">탁송기사:</dt>
         <dd class="col-9" x-text="auction?.taksong_courier_name ?? '미정'"></dd>

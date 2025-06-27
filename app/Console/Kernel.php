@@ -57,16 +57,26 @@ class Kernel extends ConsoleKernel
             //     }
             // }
 
-            $auction = Auction::whereIn('status', ['chosen', 'dlvr'])
-            ->where(function ($query) {
-                $query->whereNotNull('is_taksong')
-                      ->where('is_taksong', '!=', 'done')
-                      ->orWhereNotNull('taksong_id');
-            })
-            ->get();
-            if($auction){
-                foreach($auction as $auctionStatus){
-                    TaksongStatusJob::dispatch($auctionStatus->taksong_id);
+            // $auctions = Auction::whereIn('status', ['dlvr'])
+            //     ->whereNotNull('taksong_id')
+            //     ->whereNotNull('taksong_status')
+            //     ->where('taksong_status', '!=', 'done')
+            //     ->get();`
+
+            /*
+            SELECT * FROM auctions WHERE status in ('chosen', 'dlvr')
+            AND taksong_id IS NOT NULL
+            AND taksong_status NOT IN ('cancel', 'done')
+            */
+            $taksongStatusQuery = Auction::whereIn('status', ['chosen', 'dlvr'])
+                ->whereNotNull('taksong_id')
+                ->whereNotNull('vehicle_payment_id')
+                ->whereNotIn('taksong_status', ['cancel', 'done'])
+                ->get();
+            
+            if($taksongStatusQuery){
+                foreach($taksongStatusQuery as $auction){
+                    TaksongStatusJob::dispatch($auction->taksong_id);
                 }
             }
 

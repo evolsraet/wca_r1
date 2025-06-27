@@ -4,12 +4,16 @@
     'addr1Name' => '',
     'addr2Name' => '',
     'postCodeId' => '',
-    'errors' => null
+    'errors' => null,
+    'required' => false,
 ])
 
 <div class="mb-3">
     @if($label)
         <label class="form-label">
+            @if($required)
+                <span class="text-danger">*</span>
+            @endif
             {{ $label }}
         </label>
     @endif

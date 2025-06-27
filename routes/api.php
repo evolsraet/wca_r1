@@ -148,7 +148,7 @@ Route::get('name-change-status-all', [AuctionController::class, 'nameChangeStatu
 
 Route::get('test-auctions-notification', [AuctionController::class, 'testAuctionsNotification']);
 
-Route::get('test-taksong-service', [AuctionController::class, 'testTaksongService']);
+// Route::get('test-taksong-service', [AuctionController::class, 'testTaksongService']);
 
 // Route::get('diagnostic-check', [AuctionController::class, 'diagnosticCheck']);
 

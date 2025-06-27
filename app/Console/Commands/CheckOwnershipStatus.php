@@ -21,7 +21,7 @@ class CheckOwnershipStatus extends Command
     public function handle(): int
     {
         $auctions = Auction::where('status', 'dlvr')
-            ->where('is_taksong', 'done')
+            ->where('taksong_status', 'done')
             ->where('has_uploaded_name_change_file', 1)
             ->whereNotNull('done_at')
             ->get();

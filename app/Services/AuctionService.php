@@ -160,7 +160,7 @@ class AuctionService
 
         if ($auction->status == 'dlvr') {
 
-            if (empty($auction->is_taksong)) {
+            if (empty($auction->taksong_status)) {
                 throw new \Exception('탁송 여부가 선택되지 않았습니다.', 500);
             }
 
@@ -180,12 +180,12 @@ class AuctionService
                 throw new \Exception('진단이 완료되지 않았습니다.', 500);
             }
 
-            if (empty($auction->is_taksong)) {
+            if (empty($auction->taksong_status)) {
                 throw new \Exception('탁송 여부가 선택되지 않았습니다.', 500);
             }
 
 
-            if($auction->is_taksong == 'done'){
+            if($auction->taksong_status == 'done'){
                 $this->notifyDone($auction, $bid);
             }else{
                 throw new \Exception('탁송 상태가 완료되지 않았습니다.', 500);
@@ -214,7 +214,7 @@ class AuctionService
     }
 
     // ===== 각 세부 처리 함수들 =====
-
+    // 딜러 탁송정보 입력 
     private function processDealerInfo($auction)
     {
         $allowedFields = ['dest_addr_post', 'dest_addr1', 'dest_addr2'];
@@ -359,16 +359,16 @@ class AuctionService
 
     private function notifyDlvr($auction, $bid)
     {
-        if ($auction->is_deposit == 'totalDeposit') {
+        if ($auction->vehicle_payment_id) {
             AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
             AuctionTotalDepositJob::dispatch($bid->user_id, $auction, 'dealer');
             AuctionTotalDepositJob::dispatch(config('services.taksong_admin.admin_id'), $auction, 'taksong');
         } 
-        else if ($auction->is_deposit == 'totalAfterFee') {
+        else if ($auction->fee_payment_id) {
             // AuctionTotalAfterFeeJob::dispatch($bid->user_id, $auction);
 
-            $auction->status = 'done';
-            $auction->save();
+            // $auction->status = 'done';
+            // $auction->save();
 
             $bid = Bid::find($auction->bid_id);
             $bid->status = $auction->status;
@@ -402,7 +402,7 @@ class AuctionService
             // AuctionCohosenJob::dispatch($bid->user_id, $auction->id, 'dealer');
             // AuctionTotalDepositJob::dispatch($bid->user_id, $auction, 'dealer');
 
-            if ($auction->is_deposit == 'totalDeposit') {
+            if ($auction->vehicle_payment_id) {
 
                 if (empty($auction->diag_check_at)) {
                     throw new \Exception('진단이 완료되지 않았습니다.', 500);
@@ -412,17 +412,20 @@ class AuctionService
                     throw new \Exception('입찰자가 없습니다.', 500);
                 }
 
-                $auction->status = 'dlvr';
-                $auction->save();
+                // $auction->status = 'dlvr';
+                // $auction->save();
 
                 $bid = Bid::find($auction->bid_id);
                 $bid->status = $auction->status;
                 $bid->save();
 
-                AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
+                // 입금이 되었을때 알림 
+                // AuctionTotalDepositJob::dispatch($auction->user_id, $auction, 'user');
                 AuctionTotalDepositJob::dispatch($bid->user_id, $auction, 'dealer');
                 AuctionTotalDepositJob::dispatch(config('services.taksong_admin.admin_id'), $auction, 'taksong');
             }else{
+                // 입금이 되지 않았을때 알림
+                AuctionCohosenJob::dispatch($auction->user_id, $auction->id, 'user');
                 AuctionCohosenJob::dispatch($bid->user_id, $auction->id, 'dealer');
             }
         }
@@ -660,7 +663,7 @@ class AuctionService
     // 경매 완료 수수료 처리 확인 
     public function auctionAfterFeeDone()
     {
-        $auction = Auction::where('status', 'done')->where('is_deposit', 'totalDeposit')->get(); 
+        $auction = Auction::where('status', 'done')->where('vehicle_payment_id', '!=', null)->get(); 
         foreach($auction as $bid){
             if(isset($bid->bid_id)){
                 $bids = Bid::find($bid->bid_id);
@@ -674,7 +677,7 @@ class AuctionService
         // 탁송 상태 확인 이 부분도 제거 필요 
         // $taksongStatusTemp = TaksongStatusTemp::where('chk_status', 'ask')->get();
 
-        $auctions = Auction::where('status', 'dlvr')->where('is_taksong', 'ask')->get();
+        $auctions = Auction::where('status', 'dlvr')->where('taksong_status', 'ask')->get();
 
         if($auctions){
 

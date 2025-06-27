@@ -9,7 +9,8 @@
     'errors' => null,
     'model' => null,
     'noMargin' => false,
-    'flex' => false
+    'flex' => false,
+    'autocomplete' => 'on'
 ])
 
 <div class="{{ $noMargin ? '' : 'mb-3' }} {{ $flex ? 'flex-grow-1' : '' }}">
@@ -27,6 +28,8 @@
         class="form-control {{ $class }}"
         id="{{ $name }}"
         name="{{ $name }}"
+        autocomplete="{{ $autocomplete }}"
+        
         @if($model)
             x-model="{{ $model }}"
         @else

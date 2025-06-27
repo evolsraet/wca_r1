@@ -47,7 +47,7 @@
           </div>
 
           <div x-show="isHistory">
-          <div class="my-4">
+          <div>
             {{-- 이력 정보 --}}
             <div class="bg-gray-100 p-2 rounded mb-4">
               <p><strong>용도 변경이력</strong>
@@ -122,12 +122,12 @@
             </table>
           
             {{-- 메모 및 의견 --}}
-            <div class="row mb-4">
-              <div class="col-md-12">
+            <div class="row">
+              <div class="col-md-12 mb-4">
                 <label class="form-label fw-bold">판매자 메모</label>
                 <textarea class="form-control" rows="2" readonly x-text="auction?.memo ?? '판매자 메모사항이 없습니다.'"></textarea>
               </div>
-              <div class="col-md-12">
+              <div class="col-md-12 mb-4">
                 <label class="form-label fw-bold">평가자 의견</label>
                 <textarea class="form-control" rows="2" readonly x-text="diag?.data?.diag_opinion ?? '판매자 메모사항이 없습니다.'"></textarea>
               </div>

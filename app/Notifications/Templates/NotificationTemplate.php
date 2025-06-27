@@ -245,6 +245,24 @@ class NotificationTemplate
 
                 break;
 
+            case 'AuctionCohosenJobUser':
+                    $title = '탁송정보를 입력했습니다';
+    
+                    $message =
+                    '탁송정보를 입력했습니다. \n'
+                    .'ㅁ 차량 : '.$data->car_maker.' '.$data->car_model.' '.$data->car_model_sub.' \n'
+                    .'ㅁ 소유주 : '.$data->owner_name.' \n'
+                    .'ㅁ 차량번호 : '.$data->car_no.' \n'
+                    .'ㅁ 입찰가 : '.Wca::formatPriceToWon(number_format($data->final_price));
+    
+                    $link = [
+                        "url" => url('/auction/'.$data->hashid),
+                        "text" => '바로가기'
+                    ];
+    
+                    break;
+
+
             // 딜러님의 입찰이 선택되었습니다.
             case 'AuctionCohosenJobDealer':
                 $title = '판매자가 탁송정보를 입력했습니다.';
@@ -412,6 +430,22 @@ class NotificationTemplate
                 $randomSuffix = substr(str_shuffle('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'), 0, 3);
                 $bidCode = $randomPrefix.$data->bid_id.$randomSuffix;
 
+
+                $moid = $randomPrefix . $data->id . $randomSuffix; // 앞에8자리 랜덤 + bid_id + 뒤에 랜덤 3자리 조합
+                $VbankExpDate = date('Ymd', strtotime('+1 day'));
+                $VbankExpTime = date('His');
+
+                // $data->final_price = '500';
+
+                $paymentData = array(
+                    'VbankAccountName'=>$data->owner_name,
+                    'VbankExpDate'=>$VbankExpDate,
+                    'VbankExpTime'=>$VbankExpTime,
+                    'Amt'=>$data->final_price, // $auction->final_price
+                    'Moid'=>$moid);
+
+                $account = (new PaymentController())->checkOverPayment($paymentData);
+
                 $title = '차량대금을 입금해주세요.';
 
                 $message =
@@ -421,15 +455,15 @@ class NotificationTemplate
                 .'ㅁ 소유주 : '.$data->owner_name.' \n'
                 .'ㅁ 차량번호 : '.$data->car_no.' \n'
                 ."ㅁ 입찰가 : ".Wca::formatPriceToWon(number_format($data->final_price))." \n"
-                ."ㅁ 계좌번호 : ".$data->bank." ".$data->account." \n"
+                ."ㅁ 계좌번호 : 국민은행 ".$account['data']['VbankNum']." \n"
                 ."ㅁ 입금기일 : ".$formattedTime." \n"
                 ."❖ 사이트에서 [경락 확인서]를 확인하실 수 있어요!"
                 ;
 
-                $link = [
-                    "url" => url('/api/payment?code='.$bidCode),
-                    "text" => '결재하기'
-                ];
+                // $link = [
+                //     "url" => url('/api/payment?code='.$bidCode),
+                //     "text" => '결재하기'
+                // ];
 
                 break;
 
