@@ -31,12 +31,14 @@ class Auction extends Model implements HasMedia
 
     public $guarded = [];
 
-    // protected $dates = [
-    //     'final_at',
-    //     'choice_at',
-    //     'done_at',
-    //     'diag_check_at',
-    // ];
+    protected $dates = [
+        'final_at',
+        'choice_at',
+        'done_at',
+        'diag_check_at',
+        'auction_start_at',
+        'auction_end_at',
+    ];
 
     protected $casts = [
         'final_at' => 'datetime',

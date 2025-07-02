@@ -16,7 +16,7 @@ return new class extends Migration
 
             Schema::table('auctions', function (Blueprint $table) {
                 // LONGTEXT로 변경 (주의: requires doctrine/dbal 패키지)
-                $table->longText('car_thumbnail')->change();
+                                $table->longText('car_thumbnail')->default('')->change();
             });
         });
     }

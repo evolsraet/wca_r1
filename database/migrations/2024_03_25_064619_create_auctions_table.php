@@ -11,6 +11,7 @@ class CreateAuctionsTable extends Migration
         Schema::create('auctions', function (Blueprint $table) {
             $table->id();
             $table->integer('unique_number')->unique();
+            
             $table->boolean('auction_type')->comment('경매 타입');
             $table->foreignId('user_id')->constrained()->onDelete('cascade')->onUpdate('cascade');
             $table->string('owner_name')->comment('소유자명');
@@ -62,6 +63,9 @@ class CreateAuctionsTable extends Migration
             $table->timestamp('choice_at')->nullable()->comment('선택일');
             $table->timestamp('taksong_wish_at')->nullable()->comment('탁송희망일');
             $table->timestamp('done_at')->nullable()->comment('완료일');
+
+
+            
 
             // 탁송 정보 
             $table->string('taksong_courier_fee')->nullable()->comment('탁송요금');
