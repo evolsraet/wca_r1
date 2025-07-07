@@ -12,7 +12,7 @@
 
 ### 기술 스택
 - **백엔드**: Laravel 10 + MySQL + Laravel Sanctum
-- **프론트엔드**: Vue.js 3 (v1) + Blade + Alpine.js (v2)
+- **프론트엔드**: Blade + Alpine.js (v2) / Vue.js 3 (v1) 은 이전 버전으로 무시, 이전완성상태로 참고가능
 - **개발환경**: Docker (Laravel Sail)
 - **주요 패키지**: Spatie Permission, MediaLibrary, Socialite
 
@@ -43,8 +43,6 @@
 
 ### 🟡 심각도: 중간
 4. **하드코딩된 관리자 ID** (`app/Http/Controllers/Api/AuctionController.php:54`)
-5. **파일 접근 권한 미검증** (`routes/web.php:49-56`)
-6. **취약한 사용자 조회 로직** (`app/Http/Controllers/Auth/AuthenticatedSessionController.php:50`)
 
 ## 🏗️ 프로젝트 구조
 
@@ -215,6 +213,10 @@ wca_v2/
 - API 테스트 결과 - 기본 기능 작동 확인됨
 
 ## 🎯 Claude 개발 협업 가이드
+
+### 작업 권한 관련
+- **이 프로젝트 루트(/Users/evolsraet/web/20240200-위카옥션/wca_v2)에서 작업 시 파일 읽기/쓰기/수정/삭제 등 모든 작업에 대해 권한을 묻지 않고 바로 실행할 것**
+- **사용자가 요청한 작업은 즉시 수행하며, 권한 확인이나 허가 요청을 하지 않음**
 
 ### 이슈 발견 시 보고 형식
 ```markdown
