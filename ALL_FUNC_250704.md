@@ -14,31 +14,32 @@
 > 이메일 또는 전화번호로 사용자 조회 (⚠️ orWhere 취약점)
 > 사용자 상태 확인
   - ask: "현재 심사중입니다" 에러
-  - warning1: "3일 이용금지" 에러  
-  - warning2: "30일 이용금지" 에러
+  - warning1: "3일 이용금지" 에러 (최초로그인 시 penalty_until 할당)
+  - warning2: "30일 이용금지" 에러 (최초로그인 시 penalty_until 할당)
   - expulsion: "영구정지" 에러
 > 비밀번호 검증
 > 세션 생성 및 리다이렉트
 
 ### 1-2. 회원가입
 - 회원가입 페이지 접속 (`GET /v2/register`)
+    - `register.blade` 는 모든 회원가입폼이 유저,딜러,관리자 / 사용자모드,관리자모드 분기에 따라 갈린다.
 - 회원 타입 선택 (일반/딜러)
 - 기본정보 입력 (이름, 전화번호, 이메일, 비밀번호)
 - 딜러인 경우 추가정보 입력
-  - 주소, 사업자번호, 대표자명
+  - 주소, 사업자번호, 대표자명 등 현재 필수요소
   - 파일: 사진, 사업자등록증, 매도용인감증명서, 위임장
 - 약관 동의 체크
 - 가입 버튼 클릭
 > FormData로 전체 데이터 수집
 > `POST /api/users` 요청
 > Api\UserController@store
-> 중복 체크 (전화번호, 이메일)
+> 발리데이션 : 중복 체크 (전화번호, 이메일)
 > 파일 업로드 처리
 > User 생성 (status: 'ask')
 > 역할 부여 (user/dealer)
 > 알림: UserStartJob (관리자에게 가입 승인 요청)
 
-### 1-3. 소셜 로그인  
+### 1-3. 소셜 로그인 
 - 소셜 로그인 버튼 클릭 (카카오/네이버)
 > `GET /auth/{provider}/redirect`
 > SocialLoginController@redirect  
