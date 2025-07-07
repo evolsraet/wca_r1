@@ -12,7 +12,7 @@
 
 ### 기술 스택
 - **백엔드**: Laravel 10 + MySQL + Laravel Sanctum
-- **프론트엔드**: Blade + Alpine.js (v2) / Vue.js 3 (v1) 은 이전 버전으로 무시, 이전완성상태로 참고가능
+- **프론트엔드**: Blade + Alpine.js (v2), Bootstrap 5.3 (sass) / Vue.js 3 (v1) 은 이전 버전으로 무시, 이전완성상태로 참고가능
 - **개발환경**: Docker (Laravel Sail)
 - **주요 패키지**: Spatie Permission, MediaLibrary, Socialite
 
