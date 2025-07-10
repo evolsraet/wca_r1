@@ -22,6 +22,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// User routes
+Route::post('/users', [App\Http\Controllers\Api\UserController::class, 'store']);
+Route::post('/users/reset-password-link', [App\Http\Controllers\Api\UserController::class, 'resetPasswordLink']);
+
 Route::post('/create-test-user-and-token', function (Request $request) {
     $request->validate([
         'name' => 'required|string|max:255',
@@ -98,3 +102,13 @@ Route::post('/bids', function (Request $request) {
     // For testing, we'll just return success
     return response()->json(['message' => '입찰 성공'], 201);
 })->middleware('auth:sanctum');
+
+// Auction routes
+Route::post('/auctions/car-info', [App\Http\Controllers\Api\AuctionController::class, 'carInfo']);
+Route::post('/auctions/check-expected-price', [App\Http\Controllers\Api\AuctionController::class, 'checkExpectedPrice']);
+
+// Article routes
+Route::post('/articles', [App\Http\Controllers\Api\ArticleController::class, 'store']);
+
+// Comment routes
+Route::post('/comments', [App\Http\Controllers\Api\CommentController::class, 'store']);

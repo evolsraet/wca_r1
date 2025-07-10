@@ -42,56 +42,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-/**
- * 테스트용 일반 사용자 생성
- */
-function createUser(array $attributes = []): \App\Models\User
+function something()
 {
-    return test()->createTestUser($attributes);
-}
-
-/**
- * 테스트용 딜러 생성
- */
-function createDealer(array $attributes = []): \App\Models\User
-{
-    return test()->createTestDealer($attributes);
-}
-
-/**
- * 테스트용 관리자 생성
- */
-function createAdmin(array $attributes = []): \App\Models\User
-{
-    return test()->createTestAdmin($attributes);
-}
-
-/**
- * 사용자로 로그인
- */
-function actingAsUser(array $attributes = []): \App\Models\User
-{
-    $user = createUser($attributes);
-    test()->actingAs($user);
-    return $user;
-}
-
-/**
- * 딜러로 로그인
- */
-function actingAsDealer(array $attributes = []): \App\Models\User
-{
-    $dealer = createDealer($attributes);
-    test()->actingAs($dealer);
-    return $dealer;
-}
-
-/**
- * 관리자로 로그인
- */
-function actingAsAdmin(array $attributes = []): \App\Models\User
-{
-    $admin = createAdmin($attributes);
-    test()->actingAs($admin);
-    return $admin;
+    // ..
 }
