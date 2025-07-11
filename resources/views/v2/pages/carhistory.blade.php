@@ -12,17 +12,17 @@
     body { background-color: #f8f9fa; }
     .card { max-width: 700px; margin: 50px auto; box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 1rem; }
     .card-header { background-color: #0d6efd; color: white; border-top-left-radius: 1rem; border-top-right-radius: 1rem; }
-    
+
     /* 모바일 반응형 스타일 */
     @media (max-width: 768px) {
-      .card { 
-        margin: 20px auto; 
-        max-width: 95%; 
-        border-radius: 0.5rem; 
+      .card {
+        margin: 20px auto;
+        max-width: 95%;
+        border-radius: 0.5rem;
       }
-      .card-header { 
-        border-top-left-radius: 0.5rem; 
-        border-top-right-radius: 0.5rem; 
+      .card-header {
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
       }
       .table-responsive {
         font-size: 0.875rem;
@@ -50,7 +50,8 @@
     <div class="card-body">
       <div class="mb-3">
         <label for="carNo" class="form-label">차량번호</label>
-        <input type="text" class="form-control" id="carNo" placeholder="예: 08오5060">
+        {{-- <input type="text" class="form-control" id="carNo" placeholder="예: 08오5060"> --}}
+        <input type="hidden" class="form-control" id="carNo" value="<?=$_GET['car_no']?>" placeholder="예: 08오5060">
       </div>
 
       <div class="mb-3">
@@ -96,7 +97,7 @@ const CONSTANTS = {
   MAPPINGS: {
     USAGE: {
       '1': '관용',
-      '2': '자가용', 
+      '2': '자가용',
       '3': '영업용',
       '4': '택시'
     },
@@ -133,54 +134,54 @@ const CODE_MAP = {
 
 // 서브 테이블 설정
 const SUB_TABLE_CONFIGS = {
-  r202: { 
-    title: '차량번호 변경이력', 
-    columns: { 
-      'r202-02': '변경일자', 
-      'r202-01': '구분', 
-      'r202-03': '변경차량번호', 
-      'r202-05': '차종', 
-      'r202-04': '용도' 
-    } 
+  r202: {
+    title: '차량번호 변경이력',
+    columns: {
+      'r202-02': '변경일자',
+      'r202-01': '구분',
+      'r202-03': '변경차량번호',
+      'r202-05': '차종',
+      'r202-04': '용도'
+    }
   },
-  r205: { 
-    title: '소유자 변경이력', 
-    columns: { 
-      'r205-02': '변경일자', 
-      'r205-01': '구분', 
-      'r202-05': '차종', 
-      'r202-04': '용도' 
-    } 
+  r205: {
+    title: '소유자 변경이력',
+    columns: {
+      'r205-02': '변경일자',
+      'r205-01': '구분',
+      'r202-05': '차종',
+      'r202-04': '용도'
+    }
   },
-  r203: { 
-    title: '최초등록 정보', 
-    columns: { 
-      'r203': '등록일자', 
-      'r202-01': '구분', 
-      'r202-03': '차량번호', 
-      'r202-05': '차종', 
-      'r202-04': '용도' 
-    } 
+  r203: {
+    title: '최초등록 정보',
+    columns: {
+      'r203': '등록일자',
+      'r202-01': '구분',
+      'r202-03': '차량번호',
+      'r202-05': '차종',
+      'r202-04': '용도'
+    }
   },
-  r502: { 
-    title: '사고 이력', 
-    columns: { 
-      'r502-01': '사고구분', 
-      'r502-02': '사고일자', 
-      'r502-03': '보험금', 
-      'r502-06': '부품', 
-      'r502-07': '공임', 
-      'r502-08': '도장', 
-      'r502-15': '수리비' 
-    } 
+  r502: {
+    title: '사고 이력',
+    columns: {
+      'r502-01': '사고구분',
+      'r502-02': '사고일자',
+      'r502-03': '보험금',
+      'r502-06': '부품',
+      'r502-07': '공임',
+      'r502-08': '도장',
+      'r502-15': '수리비'
+    }
   },
-  r602: { 
-    title: '주행거리 이력', 
-    columns: { 
-      'r602-01': '수집일', 
-      'r602-03': '주행거리', 
-      'r602-02': '제공처' 
-    } 
+  r602: {
+    title: '주행거리 이력',
+    columns: {
+      'r602-01': '수집일',
+      'r602-03': '주행거리',
+      'r602-02': '제공처'
+    }
   }
 };
 
@@ -209,71 +210,71 @@ const Utils = {
 class DataProcessor {
   static processMainData(data) {
     const processedData = {};
-    
+
     for (const [key, value] of Object.entries(data)) {
       if (typeof value === 'object') continue;
-      
+
       let processedValue = value;
-      
+
       // 날짜 형식 변환
       if (CONSTANTS.DATE_FIELDS.includes(key)) {
         processedValue = Utils.formatDate(value);
       }
-      
+
       // 통화 형식 변환
       if (CONSTANTS.CURRENCY_FIELDS.includes(key)) {
         processedValue = Utils.formatCurrency(value);
       }
-      
+
       // 용도 매핑
       if (key === 'r103') {
         processedValue = Utils.getMappedValue(value, 'USAGE');
       }
-      
+
       // 차종 매핑
       if (key === 'r102') {
         processedValue = Utils.getMappedValue(value, 'VEHICLE_TYPE');
       }
-      
+
       processedData[key] = processedValue;
     }
-    
+
     return processedData;
   }
 
   static processSubTableData(row, columnKey) {
     let value = row[columnKey] ?? '';
-    
+
     // 날짜 형식 변환
     if (CONSTANTS.DATE_FIELDS.includes(columnKey)) {
       value = Utils.formatDate(value);
     }
-    
+
     // 통화 형식 변환
     if (CONSTANTS.CURRENCY_FIELDS.includes(columnKey)) {
       value = Utils.formatCurrency(value);
     }
-    
+
     // 변경 구분 매핑
     if (columnKey === 'r202-01' || columnKey === 'r205-01') {
       value = Utils.getMappedValue(value, 'CHANGE_TYPE');
     }
-    
+
     // 차종 매핑
     if (columnKey === 'r202-05') {
       value = Utils.getMappedValue(value, 'VEHICLE_TYPE');
     }
-    
+
     // 용도 매핑
     if (columnKey === 'r202-04') {
       value = Utils.getMappedValue(value, 'USAGE');
     }
-    
+
     // 사고 구분 매핑
     if (columnKey === 'r502-01') {
       value = Utils.getMappedValue(value, 'ACCIDENT_TYPE');
     }
-    
+
     return value;
   }
 }
@@ -304,14 +305,14 @@ class UIRenderer {
   static renderMainTable(data, resultArea) {
     const tableBody = resultArea.querySelector('#resultTable tbody');
     tableBody.innerHTML = '';
-    
+
     const processedData = DataProcessor.processMainData(data);
-    
+
     for (const [key, value] of Object.entries(processedData)) {
       const label = Utils.getCodeLabel(key);
       tableBody.innerHTML += `<tr><td><strong>${label}</strong></td><td>${value}</td></tr>`;
     }
-    
+
     resultArea.style.display = 'block';
   }
 
@@ -319,18 +320,18 @@ class UIRenderer {
     Object.entries(SUB_TABLE_CONFIGS).forEach(([key, config]) => {
       const items = data[key];
       if (!Array.isArray(items) || items.length === 0) return;
-      
+
       const section = document.createElement('div');
       section.classList.add('mt-5');
-      
+
       let tableHTML = `<h5 class="mb-3">${config.title}</h5><div class="table-responsive"><table class="table table-bordered"><thead><tr>`;
-      
+
       // 헤더 생성
       for (const col in config.columns) {
         tableHTML += `<th>${config.columns[col]}</th>`;
       }
       tableHTML += `</tr></thead><tbody>`;
-      
+
       // 데이터 행 생성
       items.forEach(row => {
         tableHTML += `<tr>`;
@@ -340,7 +341,7 @@ class UIRenderer {
         }
         tableHTML += `</tr>`;
       });
-      
+
       tableHTML += `</tbody></table></div>`;
       section.innerHTML = tableHTML;
       resultArea.appendChild(section);
@@ -350,26 +351,26 @@ class UIRenderer {
   static renderCrashData(data, container) {
     container.innerHTML = '';
     container.style.display = 'block';
-    
-    const crashTypes = { 
-      self: '자차 피해 사고', 
-      other: '타차 가해 사고' 
+
+    const crashTypes = {
+      self: '자차 피해 사고',
+      other: '타차 가해 사고'
     };
-    
+
     for (const [type, title] of Object.entries(crashTypes)) {
       const records = data[type];
       if (!Array.isArray(records) || records.length === 0) continue;
-      
+
       const section = document.createElement('div');
       section.classList.add('mt-5');
-      
+
       let tableHTML = `<h5 class="mb-3">${title}</h5>`;
       tableHTML += `<div class="table-responsive"><table class="table table-bordered"><thead><tr><th>사고일자</th><th>부품</th><th>공임</th><th>도장</th><th>총 수리비</th></tr></thead><tbody>`;
-      
+
       records.forEach(row => {
         tableHTML += `<tr><td>${row.crashDate}</td><td>${row.part}</td><td>${row.labor}</td><td>${row.paint}</td><td>${row.cost}</td></tr>`;
       });
-      
+
       tableHTML += `</tbody></table></div>`;
       section.innerHTML = tableHTML;
       container.appendChild(section);
@@ -393,11 +394,11 @@ async function fetchCarHistory() {
   try {
     const endpoint = `/api/${apiType}?car_no=${encodeURIComponent(carNo)}`;
     const response = await fetch(endpoint);
-    
+
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
     }
-    
+
     const json = await response.json();
     const data = json.data;
 

@@ -13,7 +13,7 @@
 
 uses(
     Tests\TestCase::class,
-    Illuminate\Foundation\Testing\RefreshDatabase::class,
+    // RefreshDatabase 제거 - TestCase에서 DatabaseTransactions 사용
 )->in('Feature');
 
 /*
@@ -47,7 +47,13 @@ expect()->extend('toBeOne', function () {
  */
 function createUser(array $attributes = []): \App\Models\User
 {
-    return test()->createTestUser($attributes);
+    $user = \App\Models\User::factory()->create(array_merge([
+        'status' => 'ok',
+    ], $attributes));
+    
+    $user->assignRole('user');
+    
+    return $user;
 }
 
 /**
@@ -55,7 +61,15 @@ function createUser(array $attributes = []): \App\Models\User
  */
 function createDealer(array $attributes = []): \App\Models\User
 {
-    return test()->createTestDealer($attributes);
+    $user = \App\Models\User::factory()->create(array_merge([
+        'status' => 'ok',
+        'company_name' => '테스트 자동차',
+        'business_number' => '123-45-67890',
+    ], $attributes));
+    
+    $user->assignRole('dealer');
+    
+    return $user;
 }
 
 /**
@@ -63,7 +77,13 @@ function createDealer(array $attributes = []): \App\Models\User
  */
 function createAdmin(array $attributes = []): \App\Models\User
 {
-    return test()->createTestAdmin($attributes);
+    $user = \App\Models\User::factory()->create(array_merge([
+        'status' => 'ok',
+    ], $attributes));
+    
+    $user->assignRole('admin');
+    
+    return $user;
 }
 
 /**
