@@ -48,11 +48,11 @@
       <h4 class="mb-0">차량 이력 조회</h4>
     </div>
     <div class="card-body">
-      <div class="mb-3">
+      {{-- <div class="mb-3">
         <label for="carNo" class="form-label">차량번호</label>
-        {{-- <input type="text" class="form-control" id="carNo" placeholder="예: 08오5060"> --}}
-        <input type="hidden" class="form-control" id="carNo" value="<?=$_GET['car_no']?>" placeholder="예: 08오5060">
-      </div>
+        <input type="text" class="form-control" id="carNo" placeholder="예: 08오5060">
+      </div> --}}
+      <input type="hidden" class="form-control" id="carNo" value="<?=$_GET['car_no']?>" placeholder="예: 08오5060">
 
       <div class="mb-3">
         <label class="form-label d-block">조회 종류</label>
