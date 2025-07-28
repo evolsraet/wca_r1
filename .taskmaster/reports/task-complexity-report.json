@@ -1,0 +1,93 @@
+{
+	"meta": {
+		"generatedAt": "2025-07-14T06:13:33.872Z",
+		"tasksAnalyzed": 10,
+		"totalTasks": 10,
+		"analysisCount": 10,
+		"thresholdScore": 5,
+		"projectName": "Taskmaster",
+		"usedResearch": true
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 11,
+			"taskTitle": "Mass Assignment 취약점 긴급 수정",
+			"complexityScore": 4,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "User 모델의 보안 취약점 수정을 위해 다음으로 세분화: 1) User.php의 fillable 속성 정의, 2) 다른 모델들의 mass assignment 검토, 3) 컨트롤러의 입력 필드 검증, 4) 권한 관련 필드 보호 강화, 5) 보안 테스트 작성",
+			"reasoning": "보안 취약점 수정은 중요하지만 Laravel의 표준 패턴을 따르면 복잡도가 높지 않음. 여러 모델과 컨트롤러에서 일관성 있게 적용해야 하므로 체계적 접근 필요"
+		},
+		{
+			"taskId": 12,
+			"taskTitle": "API 키 노출 문제 해결 및 환경변수 정리",
+			"complexityScore": 3,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "API 키 보안 문제 해결을 위해: 1) .env.example 파일의 민감 정보 제거, 2) config/services.php 통합 설정, 3) Git 히스토리의 노출된 키 확인, 4) 새로운 API 키 발급 및 검증 테스트",
+			"reasoning": "파일 수정과 설정 통합은 단순하지만, Git 히스토리 정리와 외부 서비스 키 재발급 등 외부 의존성이 있어 체계적 접근 필요"
+		},
+		{
+			"taskId": 13,
+			"taskTitle": "CSRF 보호 설정 강화 및 인증 취약점 수정",
+			"complexityScore": 5,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "CSRF 및 인증 보안 강화를 위해: 1) CSRF 미들웨어 예외 설정 정리, 2) 로그인 로직의 orWhere 취약점 수정, 3) Sanctum API 보호 강화, 4) 세션 보안 설정, 5) 인증 관련 테스트 작성, 6) 보안 검증 시나리오 테스트",
+			"reasoning": "여러 보안 요소가 연관되어 있고 인증 플로우 전반에 영향을 미치므로 신중한 접근 필요. Laravel의 보안 기능을 올바르게 구성하는 것이 핵심"
+		},
+		{
+			"taskId": 14,
+			"taskTitle": "하드코딩된 값 제거 및 파일 접근 권한 검증",
+			"complexityScore": 6,
+			"recommendedSubtasks": 6,
+			"expansionPrompt": "하드코딩 제거 및 파일 보안 강화를 위해: 1) 하드코딩된 값 식별 및 config 이전, 2) 파일 접근 권한 미들웨어 구현, 3) 미디어 파일 보안 정책 설정, 4) 민감 파일 저장소 분리, 5) 권한 검증 로직 구현, 6) 파일 보안 테스트 작성",
+			"reasoning": "코드 전반의 하드코딩된 값을 찾고 파일 시스템 보안을 구현하는 것은 여러 계층에 걸친 작업. 특히 파일 접근 권한 검증은 보안에 중요한 영향"
+		},
+		{
+			"taskId": 15,
+			"taskTitle": "Queue 시스템 전환 및 비동기 처리 구현",
+			"complexityScore": 7,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "Queue 시스템 전환을 위해: 1) Queue 설정 변경 및 테이블 생성, 2) 기존 Job 클래스 검토 및 개선, 3) 실패 처리 및 재시도 로직 구현, 4) Supervisor 설정 및 프로세스 관리, 5) 모니터링 및 로깅 설정, 6) 성능 테스트, 7) 배포 및 운영 가이드 작성",
+			"reasoning": "동기에서 비동기로의 전환은 시스템 아키텍처에 큰 영향을 미침. 인프라 설정, 모니터링, 장애 처리 등 운영 측면도 고려해야 함"
+		},
+		{
+			"taskId": 16,
+			"taskTitle": "API 응답 표준화 및 에러 처리 개선",
+			"complexityScore": 5,
+			"recommendedSubtasks": 5,
+			"expansionPrompt": "API 표준화를 위해: 1) ApiResponse 헬퍼 클래스 구현, 2) 전역 예외 핸들러 개선, 3) 기존 API 엔드포인트 응답 형식 통일, 4) 유효성 검사 에러 표준화, 5) API 응답 일관성 테스트 작성",
+			"reasoning": "기존 API 엔드포인트들의 응답 형식을 일관되게 수정하는 작업. 많은 컨트롤러를 수정해야 하지만 패턴이 정해지면 반복 작업"
+		},
+		{
+			"taskId": 17,
+			"taskTitle": "경매 상태 관리 시스템 개선 및 알림 기능 보완",
+			"complexityScore": 8,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "경매 상태 관리 개선을 위해: 1) 상태 전이 다이어그램 분석 및 설계, 2) State Machine 패턴 구현, 3) 상태 변경 이벤트 시스템, 4) 알림 템플릿 관리 시스템, 5) 알림 발송 큐 처리, 6) 알림 이력 및 읽음 상태 관리, 7) 실시간 알림 준비, 8) 상태 전이 테스트 작성",
+			"reasoning": "복잡한 비즈니스 로직을 다루며 State Machine 패턴, 이벤트 시스템, 알림 시스템 등 여러 아키텍처 패턴이 결합됨. 경매 핵심 기능이므로 신중한 설계 필요"
+		},
+		{
+			"taskId": 18,
+			"taskTitle": "유효성 검사 규칙 강화 및 데이터 무결성 보장",
+			"complexityScore": 6,
+			"recommendedSubtasks": 7,
+			"expansionPrompt": "유효성 검사 강화를 위해: 1) FormRequest 클래스 체계 구축, 2) 커스텀 Validation Rule 구현, 3) 데이터베이스 제약 조건 마이그레이션, 4) XSS/SQL Injection 방어 강화, 5) 중복 데이터 방지 로직, 6) 파일 업로드 검증 강화, 7) 유효성 검사 테스트 작성",
+			"reasoning": "도메인 특화된 유효성 검사 규칙(차량번호, 사업자번호 등)과 보안 검증이 필요. 데이터베이스 제약 조건과 애플리케이션 레벨 검증의 조화 필요"
+		},
+		{
+			"taskId": 19,
+			"taskTitle": "테스트 코드 작성 및 CI/CD 파이프라인 구축",
+			"complexityScore": 8,
+			"recommendedSubtasks": 8,
+			"expansionPrompt": "테스트 및 CI/CD 구축을 위해: 1) 테스트 전략 수립 및 구조 설계, 2) Unit 테스트 작성 (모델, 서비스), 3) Feature 테스트 작성 (API, 워크플로우), 4) 테스트 데이터 팩토리 구성, 5) GitHub Actions 워크플로우 구성, 6) 코드 커버리지 설정, 7) 자동 배포 스크립트, 8) 롤백 및 모니터링 시스템",
+			"reasoning": "포괄적인 테스트 전략과 자동화 파이프라인 구축은 많은 기술적 요소를 포함. 기존 코드에 대한 테스트 작성과 CI/CD 인프라 구축이 동시에 필요"
+		},
+		{
+			"taskId": 20,
+			"taskTitle": "모니터링 시스템 구축 및 성능 최적화",
+			"complexityScore": 9,
+			"recommendedSubtasks": 9,
+			"expansionPrompt": "모니터링 및 최적화를 위해: 1) Laravel Telescope 설정 및 커스터마이징, 2) Sentry/Bugsnag 에러 추적 설정, 3) 슬로우 쿼리 분석 및 최적화, 4) Redis 캐싱 전략 구현, 5) 이미지 최적화 및 CDN 연동, 6) 대시보드 구축 (Grafana/Kibana), 7) 알림 및 임계치 설정, 8) 부하 테스트 및 성능 벤치마킹, 9) 운영 문서 및 장애 대응 가이드",
+			"reasoning": "모니터링, 성능 최적화, 대시보드 구축은 인프라와 애플리케이션을 모두 아우르는 복합적 작업. 외부 도구 연동과 운영 노하우가 필요한 고난이도 작업"
+		}
+	]
+}

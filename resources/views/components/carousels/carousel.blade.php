@@ -18,4 +18,11 @@
     <a href="{{ route('register', ['isDealer' => true]) }}" class="dealer-link">딜러회원가입</a>
     </div>
 
+    <!-- 공유 버튼 추가 -->
+    <div class="share-section mt-3">
+        <button class="btn btn-outline-light btn-sm" onclick="showShareModal()">
+            <i class="bi bi-share"></i> 공유하기
+        </button>
+    </div>
+
 </div>

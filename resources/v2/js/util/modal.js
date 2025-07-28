@@ -55,6 +55,35 @@ document.querySelectorAll('.accordion-button').forEach(button => {
 
 export const modal = {
     _modal: null,
+    _activeModals: new Map(), // 활성 모달들을 추적
+
+    // 모든 모달과 백드롭 정리
+    _cleanupAllModals() {
+        // 모든 기존 모달 인스턴스 닫기
+        this._activeModals.forEach((modal, id) => {
+            try {
+                modal.hide();
+            } catch (e) {
+                console.warn(`Failed to hide modal ${id}:`, e);
+            }
+        });
+        this._activeModals.clear();
+        
+        // DOM에서 모든 모달 요소 제거
+        const existingModals = document.querySelectorAll('.modal');
+        existingModals.forEach(modal => modal.remove());
+        
+        // 모든 백드롭 제거
+        const backdrops = document.querySelectorAll('.modal-backdrop, .offcanvas-backdrop');
+        backdrops.forEach(backdrop => backdrop.remove());
+        
+        // body 클래스 정리
+        document.body.classList.remove('modal-open', 'offcanvas-open');
+        
+        // body 스타일 리셋
+        document.body.style.overflow = '';
+        document.body.style.paddingRight = '';
+    },
 
     // HTML 템플릿 생성 함수
     _createModalTemplate(id, options = {}) {
@@ -100,7 +129,7 @@ export const modal = {
     },
 
     // 동적 모달 생성 및 표시
-    show(options = {}) {
+    async show(options = {}) {
         const {
             id = 'dynamicModal',
             title = '제목',
@@ -116,11 +145,11 @@ export const modal = {
             onClose = null,
         } = options;
 
-        // 기존 모달 제거
-        const existingModal = document.getElementById(id);
-        if (existingModal) {
-            existingModal.remove();
-        }
+        // 모든 기존 모달 정리
+        this._cleanupAllModals();
+        
+        // 약간의 지연으로 DOM 정리가 완료되도록 함
+        await new Promise(resolve => setTimeout(resolve, 100));
 
         // 새 모달 생성
         const modalHtml = this._createModalTemplate(id, {
@@ -137,9 +166,14 @@ export const modal = {
 
         // 모달 인스턴스 생성
         const modalElement = document.getElementById(id);
-        const modal = new Modal(modalElement, {
-            backdrop: !isOffcanvasOpen
+        const modalInstance = new Modal(modalElement, {
+            backdrop: !isOffcanvasOpen,
+            keyboard: true,
+            focus: true
         });
+
+        // 활성 모달 목록에 추가
+        this._activeModals.set(id, modalInstance);
 
         // 이벤트 리스너 등록
         if (onConfirm) {
@@ -147,30 +181,46 @@ export const modal = {
             if (confirmBtn) {
                 confirmBtn.addEventListener('click', () => {
                     onConfirm();
-                    modal.hide();
+                    modalInstance.hide();
                 });
             }
         }
 
-        if (onClose) {
-            modalElement.addEventListener('hidden.bs.modal', () => {
+        // 모달 닫힘 이벤트 처리
+        modalElement.addEventListener('hidden.bs.modal', () => {
+            // 활성 모달 목록에서 제거
+            this._activeModals.delete(id);
+            
+            // onClose 콜백 실행
+            if (onClose) {
                 onClose();
-                modalElement.remove();
-            });
-        } else {
-            modalElement.addEventListener('hidden.bs.modal', () => {
-                modalElement.remove();
-            });
-        }
+            }
+            
+            // DOM에서 제거
+            modalElement.remove();
+            
+            // 백드롭 정리
+            const remainingBackdrops = document.querySelectorAll('.modal-backdrop');
+            remainingBackdrops.forEach(backdrop => backdrop.remove());
+            
+            // 다른 모달이 없으면 body 상태 정리
+            if (this._activeModals.size === 0) {
+                document.body.classList.remove('modal-open');
+                document.body.style.overflow = '';
+                document.body.style.paddingRight = '';
+            }
+        });
 
         // 모달 표시
-        modal.show();
-        this._modal = modal;
+        modalInstance.show();
+        this._modal = modalInstance;
+        
+        return modalInstance;
     },
 
     // HTML 컨텐츠로 모달 표시
-    showHtml(html, options = {}) {
-        this.show({
+    async showHtml(html, options = {}) {
+        return await this.show({
             ...options,
             content: html
         });
@@ -188,30 +238,35 @@ export const modal = {
             result: typeof data.result === 'function' ? data.result : () => {}
           };
     
-          this.showHtml(html, options, data);
+          const modalInstance = await this.showHtml(html, options);
     
           const shouldInitAlpine = options.initAlpine !== false;
           if (shouldInitAlpine && typeof Alpine !== 'undefined') {
             setTimeout(() => {
               const modalBody = document.querySelector('.modal-body');
               if (modalBody) Alpine.initTree(modalBody);
-            }, 0);
+            }, 100);
           }
+          
+          return modalInstance;
         } catch (error) {
           console.error('Error loading modal:', error);
-          this.showHtml('<div class="alert alert-danger">내용을 불러오는데 실패했습니다.</div>', options);
+          return await this.showHtml('<div class="alert alert-danger">내용을 불러오는데 실패했습니다.</div>', options);
         }
     },
 
     // 모달 닫기
     close(modalId = 'dynamicModal') {
-        const modalElement = document.getElementById(modalId);
-        if (modalElement) {
-            const modal = Modal.getInstance(modalElement);
-            if (modal) {
-                modal.hide();
+        if (modalId) {
+            const modalInstance = this._activeModals.get(modalId);
+            if (modalInstance) {
+                modalInstance.hide();
+                return;
             }
         }
+        
+        // 특정 ID가 없거나 찾지 못한 경우 모든 모달 정리
+        this._cleanupAllModals();
     },
 
     emitResult(result) {

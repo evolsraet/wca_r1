@@ -142,6 +142,11 @@ Route::get('dealer-my', function () {
     return view('v2.auth.dealerMy');
 })->name('dealer-my');
 
+// 공유 모달 컴포넌트 라우트
+Route::get('components/share-modal', function () {
+    return view('components.modals.shareModal');
+});
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();

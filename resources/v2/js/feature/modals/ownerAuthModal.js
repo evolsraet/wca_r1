@@ -13,12 +13,23 @@ export default function () {
       init() {
         this.ownerName = window.carInfo.owner_name;
         this.phoneNo = window.user_phone;
+        
+        // 개발환경 감지
+        this.test = this.isDevelopment() ? 'test' : '';
 
         // 초기화 및 감시
         this.$watch('agreed', (val) => {
           if (val) this.step = 2;
           else this.step = 1;
         });
+      },
+      
+      // 개발환경 확인 함수
+      isDevelopment() {
+        return window.location.hostname === 'localhost' || 
+               window.location.hostname === '127.0.0.1' ||
+               window.location.hostname.includes('local') ||
+               (typeof window.Laravel !== 'undefined' && window.Laravel.env === 'local');
       },
   
       selectAuth(authType) {
@@ -43,6 +54,10 @@ export default function () {
         2: 'LGU+'
       },
       async submit() {
+        // 개발환경에서는 세션 기반 인증 확인
+        if (this.isDevelopment()) {
+          return this.developmentAuth();
+        }
 
         if(!this.telecom) {
 
@@ -218,6 +233,104 @@ export default function () {
                 confirmButtonText: '확인'
             });
         }
+      },
+
+      // 개발환경용 세션 기반 인증
+      async developmentAuth() {
+        console.log('🔧 개발환경 인증 시작');
+        
+        // 세션에서 인증 상태 확인
+        const sessionAuth = sessionStorage.getItem('dev_owner_auth');
+        const sessionTimestamp = sessionStorage.getItem('dev_owner_auth_timestamp');
+        const currentTime = Date.now();
+        
+        // 세션 유효 시간: 30분
+        const sessionValidDuration = 30 * 60 * 1000;
+        
+        // 기존 세션이 있고 유효한 경우
+        if (sessionAuth && sessionTimestamp && 
+            (currentTime - parseInt(sessionTimestamp)) < sessionValidDuration) {
+          
+          console.log('✅ 기존 세션 인증 사용');
+          alert('🔧 개발모드: 기존 세션 인증을 사용합니다.');
+          
+          this.completeDevAuth();
+          return;
+        }
+        
+        // 새로운 세션 인증 필요
+        console.log('🔑 새로운 세션 인증 필요');
+        
+        // 개발용 간단한 확인 로직
+        const devAuthResult = await this.showDevAuthPrompt();
+        
+        if (devAuthResult) {
+          // 세션에 인증 정보 저장
+          sessionStorage.setItem('dev_owner_auth', 'authenticated');
+          sessionStorage.setItem('dev_owner_auth_timestamp', currentTime.toString());
+          sessionStorage.setItem('dev_owner_auth_user', JSON.stringify({
+            name: this.ownerName,
+            phone: this.phoneNo,
+            carNumber: window.carInfo?.car_no || 'DEV-CAR-001'
+          }));
+          
+          this.completeDevAuth();
+        } else {
+          console.log('❌ 개발환경 인증 취소');
+          Alpine.store('swal').fire({
+            title: '개발환경 인증 취소',
+            text: '인증이 취소되었습니다.',
+            icon: 'info',
+            confirmButtonText: '확인'
+          });
+        }
+      },
+      
+      // 개발환경 인증 완료 처리
+      completeDevAuth() {
+        window.resIndividualBusinessYN = 'Y';
+        window.modalData?.onResult?.({
+          resIndividualBusinessYN: 'Y'
+        });
+
+        Alpine.store('modal').close('ownerAuthModal');
+
+        console.log('✅ 개발환경 인증 완료');
+        Alpine.store('swal').fire({
+          title: '🔧 개발모드 인증 성공',
+          text: '세션 기반 인증이 완료되었습니다.',
+          icon: 'success',
+          confirmButtonText: '확인'
+        });
+      },
+      
+      // 개발환경용 인증 프롬프트
+      async showDevAuthPrompt() {
+        return new Promise((resolve) => {
+          Alpine.store('swal').fire({
+            title: '🔧 개발환경 인증',
+            html: `
+              <div class="text-start">
+                <p><strong>세션 기반 개발 인증</strong></p>
+                <ul class="small text-muted">
+                  <li>이름: ${this.ownerName}</li>
+                  <li>전화번호: ${this.phoneNo}</li>
+                  <li>차량번호: ${window.carInfo?.car_no || 'DEV-CAR-001'}</li>
+                  <li>세션 유지시간: 30분</li>
+                </ul>
+                <p class="mt-3">개발환경에서 본인인증을 진행하시겠습니까?</p>
+              </div>
+            `,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: '인증 진행',
+            cancelButtonText: '취소',
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#6c757d'
+          }).then((result) => {
+            resolve(result.isConfirmed);
+          });
+        });
       },
 
       closeModal() {

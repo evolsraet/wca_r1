@@ -40,6 +40,11 @@ class AuthenticatedSessionController extends Controller
      */
     public function login(LoginRequest $request)
     {
+        // 개발환경에서 세션 기반 로그인 처리
+        if (app()->environment('local', 'testing') && $this->isDevelopmentLogin($request)) {
+            return $this->handleDevelopmentLogin($request);
+        }
+
         // return response()->api(json_encode($request));
 
         // return response()->json(['message' => 'fail', 'errors' => [
@@ -148,5 +153,124 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
+    }
+
+    /**
+     * 개발환경 로그인 여부 확인
+     */
+    private function isDevelopmentLogin($request)
+    {
+        // 개발환경에서 세션 기반 인증을 사용하는지 확인
+        // 예: 특정 세션 키가 있거나, 특정 플래그가 있는 경우
+        return $request->has('dev_mode') || 
+               $request->session()->has('dev_auth_enabled') ||
+               $request->header('X-Dev-Mode') === 'true';
+    }
+
+    /**
+     * 개발환경 로그인 처리
+     */
+    private function handleDevelopmentLogin($request)
+    {
+        Log::info('[개발환경 로그인] 세션 기반 인증 시작', [
+            'email' => $request->email,
+            'session_id' => $request->session()->getId(),
+            'ip' => $request->ip()
+        ]);
+
+        // 세션에서 개발 인증 정보 확인
+        $devAuth = $request->session()->get('dev_login_auth');
+        $devAuthTimestamp = $request->session()->get('dev_login_auth_timestamp');
+        $currentTime = time();
+        
+        // 세션 유효 시간: 1시간
+        $sessionValidDuration = 3600;
+
+        // 기존 개발 세션이 유효한 경우
+        if ($devAuth && $devAuthTimestamp && 
+            ($currentTime - $devAuthTimestamp) < $sessionValidDuration) {
+            
+            Log::info('[개발환경 로그인] 기존 세션 사용');
+            
+            // 세션에서 사용자 정보 가져오기
+            $userData = $request->session()->get('dev_user_data');
+            
+            if ($userData && isset($userData['id'])) {
+                $user = User::find($userData['id']);
+                
+                if ($user) {
+                    Auth::login($user);
+                    $request->session()->regenerate();
+                    
+                    $token = $user->createToken($request->userAgent())->plainTextToken;
+                    
+                    Log::info('[개발환경 로그인] 세션 기반 로그인 성공', [
+                        'user_id' => $user->id,
+                        'user_name' => $user->name
+                    ]);
+
+                    if ($request->wantsJson()) {
+                        return response()->api([
+                            'user' => new UserResource($user), 
+                            'token' => $token,
+                            'dev_mode' => true,
+                            'message' => '개발환경 세션 기반 로그인 성공'
+                        ]);
+                    }
+
+                    return redirect()->intended(RouteServiceProvider::HOME);
+                }
+            }
+        }
+
+        // 새로운 개발 세션 생성이 필요한 경우
+        Log::info('[개발환경 로그인] 새로운 세션 인증 필요');
+        
+        // 실제 사용자 확인 (이메일/전화번호로)
+        $user = User::where('email', $request->email)
+                   ->orWhere('phone', $request->email)
+                   ->first();
+
+        if (!$user) {
+            if ($request->wantsJson()) {
+                return response()->json([
+                    'message' => '개발환경: 등록된 회원이 아닙니다.',
+                    'dev_mode' => true
+                ], 404);
+            }
+            
+            return back()->withErrors(['email' => '개발환경: 등록된 회원이 아닙니다.']);
+        }
+
+        // 개발환경에서는 비밀번호 검증을 스킵하고 세션에 인증 정보 저장
+        $request->session()->put('dev_login_auth', true);
+        $request->session()->put('dev_login_auth_timestamp', $currentTime);
+        $request->session()->put('dev_user_data', [
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email
+        ]);
+
+        // 사용자 로그인 처리
+        Auth::login($user);
+        $request->session()->regenerate();
+        
+        $token = $user->createToken($request->userAgent())->plainTextToken;
+
+        Log::info('[개발환경 로그인] 새로운 세션 생성 및 로그인 성공', [
+            'user_id' => $user->id,
+            'user_name' => $user->name
+        ]);
+
+        if ($request->wantsJson()) {
+            return response()->api([
+                'user' => new UserResource($user), 
+                'token' => $token,
+                'dev_mode' => true,
+                'message' => '개발환경 세션 기반 로그인 성공 (새 세션 생성)'
+            ]);
+        }
+
+        return redirect()->intended(RouteServiceProvider::HOME);
     }
 }

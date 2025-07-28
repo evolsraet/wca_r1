@@ -1,0 +1,192 @@
+{
+  "master": {
+    "tasks": [
+      {
+        "id": 21,
+        "title": "보안 취약점 수정 및 단위 테스트",
+        "description": "Mass Assignment, orWhere 로그인, CSRF 예외, 하드코딩된 ID 등 주요 보안 취약점을 수정하고 각각에 대한 단위 테스트를 작성합니다.",
+        "details": "1. User 모델의 $guarded = [] 제거 후 $fillable 배열 정의\n2. AuthenticatedSessionController의 orWhere 취약점 수정 - 이메일과 전화번호를 별도로 검증\n3. VerifyCsrfToken에서 /login, /register 등 과도한 예외 제거\n4. User::find(2) 같은 하드코딩된 ID를 config('app.admin_id') 등으로 변경\n5. .env.example의 실제 API 키들을 더미값으로 교체\n\n의사코드:\n```php\n// User.php\nprotected $fillable = ['name', 'email', 'phone', 'password', 'status', ...];\n\n// AuthenticatedSessionController.php  \nif ($request->has('email')) {\n    $user = User::where('email', $request->email)->first();\n} else {\n    $user = User::where('phone', $request->phone)->first();\n}\n\n// 각 수정사항에 대한 PHPUnit 테스트 작성\n```",
+        "testStrategy": "PHPUnit을 사용하여 각 보안 수정사항에 대한 단위 테스트 작성:\n- Mass Assignment 방어 테스트\n- 로그인 시 SQL Injection 시도 테스트\n- CSRF 토큰 검증 테스트\n- 환경변수 로드 테스트\n- API 키 노출 방지 테스트",
+        "priority": "high",
+        "dependencies": [],
+        "status": "pending",
+        "subtasks": [
+          {
+            "id": 1,
+            "title": "Mass Assignment 취약점 수정 및 테스트",
+            "description": "User 모델의 $guarded = [] 설정을 제거하고 $fillable 배열을 명시적으로 정의하여 Mass Assignment 공격을 방지합니다.",
+            "dependencies": [],
+            "details": "User.php에서 $guarded = [] 제거 후 $fillable = ['name', 'email', 'phone', 'password', 'status', 'type', 'social_type', 'social_id'] 등 허용할 필드만 명시적으로 정의. 다른 모델들도 점검하여 동일한 취약점 수정.",
+            "status": "in-progress",
+            "testStrategy": "PHPUnit으로 Mass Assignment 시도 시 보호되지 않은 필드(예: is_admin, role_id)가 변경되지 않는지 검증. $user->fill()로 악의적 데이터 주입 시도 후 protected 필드가 그대로인지 확인."
+          },
+          {
+            "id": 2,
+            "title": "로그인 orWhere SQL Injection 취약점 수정",
+            "description": "AuthenticatedSessionController의 orWhere 체인으로 인한 SQL Injection 가능성을 제거하고 안전한 조건 분기로 변경합니다.",
+            "dependencies": [],
+            "details": "현재 User::where('email', $input)->orWhere('phone', $input) 구조를 if-else 분기로 변경. 이메일 형식 검증 후 email 필드로만 검색, 전화번호 형식이면 phone 필드로만 검색하도록 수정.",
+            "status": "pending",
+            "testStrategy": "SQL Injection 페이로드(예: ' OR 1=1--)를 로그인 시도하여 차단되는지 확인. 이메일/전화번호 각각의 로그인 경로가 정상 작동하는지 테스트. 잘못된 형식 입력 시 적절한 에러 반환 확인."
+          },
+          {
+            "id": 3,
+            "title": "CSRF 토큰 예외 경로 최소화 및 검증",
+            "description": "VerifyCsrfToken 미들웨어에서 과도한 예외 경로를 제거하고 필수 경로만 남겨 CSRF 공격을 방지합니다.",
+            "dependencies": [
+              1,
+              2
+            ],
+            "details": "현재 /login, /register, /api/* 등이 CSRF 검증에서 제외됨. API 경로는 Sanctum 토큰으로 보호되므로 유지하되, 웹 인증 경로(/login, /register)는 CSRF 보호 활성화. webhook 등 외부 콜백만 예외 처리.",
+            "status": "pending",
+            "testStrategy": "CSRF 토큰 없이 /login, /register POST 요청 시 419 에러 반환 확인. 정상 토큰으로 요청 시 성공 확인. API 경로는 Bearer 토큰으로만 인증되는지 검증."
+          },
+          {
+            "id": 4,
+            "title": "하드코딩된 관리자 ID 환경변수화",
+            "description": "User::find(2) 등 하드코딩된 관리자 ID를 config 설정으로 이동하여 환경별 유연성을 확보합니다.",
+            "dependencies": [
+              3
+            ],
+            "details": "전체 코드베이스에서 User::find(2), user_id === 2 등의 패턴 검색. config/app.php에 'admin_id' => env('ADMIN_USER_ID', 1) 추가. 모든 하드코딩된 ID를 config('app.admin_id')로 교체.",
+            "status": "pending",
+            "testStrategy": "다양한 ADMIN_USER_ID 값으로 환경변수 설정 후 관리자 기능이 정상 작동하는지 확인. 잘못된 ID 설정 시 적절한 에러 처리 확인. 관리자 권한 체크 로직이 환경변수 기반으로 작동하는지 검증."
+          },
+          {
+            "id": 5,
+            "title": ".env.example API 키 더미값 교체 및 문서화",
+            "description": ".env.example 파일의 실제 API 키들을 안전한 더미값으로 교체하고 각 키의 용도를 문서화합니다.",
+            "dependencies": [
+              4
+            ],
+            "details": "NICE_API_KEY, CARMERCE_API_KEY, ALIGO_API_KEY 등 모든 실제 값을 'your-api-key-here' 형태로 교체. 각 키 위에 주석으로 용도와 발급처 명시. README에 API 키 발급 가이드 추가.",
+            "status": "pending",
+            "testStrategy": "더미 .env.example로 새 환경 구성 시 명확한 설정 가이드 제공 확인. 실제 키가 없을 때 적절한 에러 메시지 출력 확인. git에 실제 API 키가 커밋되지 않도록 pre-commit hook 검증."
+          }
+        ]
+      },
+      {
+        "id": 22,
+        "title": "인증 시스템 통합 테스트",
+        "description": "회원가입, 로그인, 소셜로그인, 비밀번호 재설정 등 전체 인증 플로우에 대한 통합 테스트를 작성합니다.",
+        "details": "1. 일반/딜러 회원가입 전체 플로우 테스트\n2. 파일 업로드 포함한 딜러 가입 테스트\n3. 카카오/네이버 소셜로그인 Mock 테스트\n4. 비밀번호 재설정 SMS 발송 및 토큰 검증 테스트\n5. 회원 상태별(ask, warning1/2, expulsion) 로그인 제한 테스트\n\n의사코드:\n```php\n// UserRegistrationTest.php\npublic function test_dealer_registration_with_files() {\n    $response = $this->postJson('/api/users', [\n        'type' => 'dealer',\n        'name' => 'Test Dealer',\n        'files' => [\n            'photo' => UploadedFile::fake()->image('photo.jpg'),\n            'business_license' => UploadedFile::fake()->pdf('license.pdf')\n        ]\n    ]);\n    \n    $this->assertDatabaseHas('users', ['name' => 'Test Dealer']);\n    $this->assertDatabaseHas('media', ['model_type' => 'User']);\n}\n```",
+        "testStrategy": "Laravel의 Feature Test를 활용한 통합 테스트:\n- 전체 회원가입 플로우 테스트 (일반/딜러)\n- 파일 업로드 검증 (MediaLibrary)\n- 소셜로그인 OAuth Mock 처리\n- SMS API Mock 및 토큰 검증\n- 각 회원 상태별 접근 제어 테스트",
+        "priority": "high",
+        "dependencies": [
+          21
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 23,
+        "title": "차량 조회 및 판매 신청 API 테스트",
+        "description": "나이스DNR, 카머스 API 연동과 차량 판매 신청 프로세스 전체에 대한 테스트를 작성합니다.",
+        "details": "1. NiceDNRService Mock 구현 및 차량정보 조회 테스트\n2. CarmerceService Mock 구현 및 시세 조회 테스트\n3. 캐시 동작 검증 (24시간 캐시)\n4. 중복 경매 체크 로직 테스트\n5. 본인인증 세션 관리 테스트\n6. 판매 신청 전체 플로우 테스트\n\n의사코드:\n```php\n// CarInfoApiTest.php\npublic function test_car_info_with_cache() {\n    // Mock 외부 API\n    $this->mock(NiceDNRService::class)\n         ->shouldReceive('getCarInfo')\n         ->once()\n         ->andReturn($mockCarData);\n    \n    // 첫 번째 호출 - API 호출\n    $response1 = $this->postJson('/api/auctions/car-info', $carData);\n    \n    // 두 번째 호출 - 캐시에서 반환\n    $response2 = $this->postJson('/api/auctions/car-info', $carData);\n    \n    // Mock이 한 번만 호출되었는지 검증\n}\n```",
+        "testStrategy": "API Mock과 캐시 검증을 포함한 통합 테스트:\n- 외부 API Mock 처리 (나이스DNR, 카머스)\n- Redis 캐시 동작 검증\n- 세션 기반 본인인증 테스트\n- 파일 업로드 및 경매 생성 검증\n- 알림 Job 큐 동작 확인",
+        "priority": "medium",
+        "dependencies": [
+          22
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 24,
+        "title": "경매 라이프사이클 상태 전이 테스트",
+        "description": "ask → diag → ing → wait → chosen → dlvr → done 전체 경매 상태 전이와 각 상태별 비즈니스 로직을 테스트합니다.",
+        "details": "1. 각 상태 전이 조건 검증 테스트\n2. 상태별 UI/권한 접근 제어 테스트\n3. 경매 종료 스케줄러 동작 테스트\n4. 선택 대기 시간 초과 처리 테스트\n5. 상태 변경 시 알림 발송 검증\n\n의사코드:\n```php\n// AuctionLifecycleTest.php\npublic function test_auction_state_transitions() {\n    $auction = Auction::factory()->create(['status' => 'ask']);\n    \n    // ask → diag\n    $this->actingAs($admin)->patch(\"/api/auctions/{$auction->id}/status\", [\n        'status' => 'diag'\n    ]);\n    \n    $this->assertDatabaseHas('auctions', [\n        'id' => $auction->id,\n        'status' => 'diag'\n    ]);\n    \n    // 알림 Job 확인\n    Queue::assertPushed(AuctionDiagJob::class);\n}\n```",
+        "testStrategy": "상태 머신 전체 경로에 대한 시나리오 테스트:\n- 정상 경로 테스트 (ask → done)\n- 예외 경로 테스트 (취소, 시간 초과)\n- 각 상태별 권한 검증\n- 스케줄러 작업 시뮬레이션\n- Queue Job 발송 검증",
+        "priority": "high",
+        "dependencies": [
+          23
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 25,
+        "title": "입찰 시스템 및 실시간 업데이트 테스트",
+        "description": "딜러의 입찰 프로세스, 최고가 갱신, 동시 입찰 처리 등 입찰 시스템 전체를 테스트합니다.",
+        "details": "1. 딜러 권한 검증 테스트\n2. 최소 입찰가 검증 로직 테스트\n3. 동시 입찰 시 경쟁 조건 테스트\n4. 입찰가 갱신 및 알림 테스트\n5. 입찰 히스토리 추적 테스트\n\n의사코드:\n```php\n// BiddingSystemTest.php\npublic function test_concurrent_bidding() {\n    $auction = Auction::factory()->create(['status' => 'ing']);\n    $dealers = User::factory()->count(5)->dealer()->create();\n    \n    // 동시 입찰 시뮬레이션\n    $responses = collect($dealers)->map(function ($dealer, $index) use ($auction) {\n        return $this->actingAs($dealer)->postJson('/api/bids', [\n            'auction_id' => $auction->id,\n            'price' => 1000000 + ($index * 100000)\n        ]);\n    });\n    \n    // 최고가만 반영되었는지 확인\n    $auction->refresh();\n    $this->assertEquals(1400000, $auction->current_bid_price);\n}\n```",
+        "testStrategy": "동시성과 데이터 정합성을 검증하는 테스트:\n- 트랜잭션 격리 수준 테스트\n- Race condition 시나리오\n- 입찰가 검증 규칙 테스트\n- 알림 발송 정확성 검증\n- 성능 부하 테스트",
+        "priority": "high",
+        "dependencies": [
+          24
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 26,
+        "title": "결제 시스템 통합 테스트",
+        "description": "나이스페이 연동, 가상계좌/신용카드 결제, 웹훅 처리 등 결제 전체 플로우를 테스트합니다.",
+        "details": "1. 나이스페이 API Mock 구현\n2. SHA-256 서명 검증 테스트\n3. 가상계좌 생성 및 만료 처리 테스트\n4. 웹훅 수신 및 처리 테스트\n5. 에스크로 및 수수료 분리 처리 테스트\n\n의사코드:\n```php\n// PaymentSystemTest.php\npublic function test_virtual_account_payment_webhook() {\n    $payment = Payment::factory()->virtualAccount()->create();\n    \n    // 나이스페이 웹훅 시뮬레이션\n    $webhookData = [\n        'tid' => $payment->tid,\n        'amount' => $payment->amount,\n        'status' => 'paid',\n        'signature' => $this->generateSignature($payment)\n    ];\n    \n    $response = $this->postJson('/payment/notify', $webhookData);\n    \n    $this->assertDatabaseHas('auctions_payments', [\n        'tid' => $payment->tid,\n        'status' => 'paid'\n    ]);\n    \n    Queue::assertPushed(AuctionTotalDepositJob::class);\n}\n```",
+        "testStrategy": "외부 PG 연동과 보안을 검증하는 테스트:\n- PG API Mock 처리\n- 서명 검증 알고리즘 테스트\n- 웹훅 재전송 방어 테스트\n- 결제 상태 동기화 검증\n- 환불/취소 프로세스 테스트",
+        "priority": "high",
+        "dependencies": [
+          25
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 27,
+        "title": "알림 시스템 Job 테스트",
+        "description": "25개의 알림 Job에 대한 개별 테스트와 Queue 처리, 재시도 로직을 검증합니다.",
+        "details": "1. 25개 Job 클래스별 단위 테스트\n2. Aligo SMS API Mock 구현\n3. 이메일 발송 테스트 (Mail::fake)\n4. Queue 실패 및 재시도 테스트\n5. 템플릿 렌더링 및 변수 치환 테스트\n\n의사코드:\n```php\n// NotificationJobsTest.php\npublic function test_auction_start_job() {\n    Mail::fake();\n    SMS::fake();\n    \n    $auction = Auction::factory()->create();\n    \n    AuctionStartJob::dispatch($auction);\n    \n    Mail::assertSent(AuctionStartMail::class, function ($mail) use ($auction) {\n        return $mail->hasTo($auction->user->email) &&\n               $mail->subject === '경매 등록이 완료되었습니다';\n    });\n    \n    SMS::assertSent(function ($sms) use ($auction) {\n        return $sms->to === $auction->user->phone &&\n               str_contains($sms->message, $auction->car_no);\n    });\n}\n```",
+        "testStrategy": "Queue 기반 알림 시스템 전체 검증:\n- 각 Job의 handle() 메서드 테스트\n- 외부 API 실패 시나리오\n- 재시도 정책 검증 (3회, 90초)\n- 템플릿 변수 검증\n- 대량 발송 성능 테스트",
+        "priority": "medium",
+        "dependencies": [
+          26
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 28,
+        "title": "게시판 및 파일 관리 테스트",
+        "description": "게시판 CRUD, 리뷰/클레임 작성 권한, 파일 업로드/다운로드 보안을 테스트합니다.",
+        "details": "1. 게시판별 작성 권한 검증 테스트\n2. 리뷰/클레임 14일 제한 테스트\n3. 파일 업로드 및 컨버전 테스트\n4. 파일 다운로드 권한 검증 테스트\n5. XSS/CSRF 방어 테스트\n\n의사코드:\n```php\n// BoardSystemTest.php\npublic function test_review_creation_within_14_days() {\n    $auction = Auction::factory()->create([\n        'status' => 'done',\n        'updated_at' => now()->subDays(10)\n    ]);\n    \n    $response = $this->actingAs($auction->user)\n                     ->postJson('/api/articles', [\n                         'board_id' => 3, // 리뷰 게시판\n                         'auction_id' => $auction->id,\n                         'title' => '리뷰 제목',\n                         'content' => '리뷰 내용'\n                     ]);\n    \n    $response->assertCreated();\n    \n    // 15일 후 테스트\n    Carbon::setTestNow(now()->addDays(15));\n    \n    $response2 = $this->actingAs($auction->user)\n                      ->postJson('/api/articles', [...]);\n    \n    $response2->assertForbidden();\n}\n```",
+        "testStrategy": "파일 보안과 권한을 중심으로 한 테스트:\n- 파일 업로드 사이즈/타입 제한\n- MediaLibrary 컨버전 동작\n- UUID 기반 다운로드 보안\n- XSS 필터링 검증\n- 시간 기반 권한 테스트",
+        "priority": "medium",
+        "dependencies": [
+          27
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 29,
+        "title": "관리자 시스템 및 스케줄러 테스트",
+        "description": "관리자 권한, 배치 작업, 11개 스케줄링 작업의 정확성을 테스트합니다.",
+        "details": "1. Spatie Permission 역할/권한 테스트\n2. 관리자 전용 API 접근 제어 테스트\n3. 11개 스케줄 작업 시뮬레이션 테스트\n4. 엑셀 다운로드 기능 테스트\n5. 대량 데이터 처리 성능 테스트\n\n의사코드:\n```php\n// SchedulerTest.php\npublic function test_auction_auto_cancel_scheduler() {\n    // 선택 마감일이 지난 경매 생성\n    $auction = Auction::factory()->create([\n        'status' => 'wait',\n        'updated_at' => now()->subDays(3)\n    ]);\n    \n    // 스케줄러 실행\n    Artisan::call('auction:cancel');\n    \n    $auction->refresh();\n    $this->assertEquals('cancel', $auction->status);\n    \n    // 알림 발송 확인\n    Queue::assertPushed(AuctionCancelJob::class);\n}\n```",
+        "testStrategy": "시간 기반 작업과 권한을 검증하는 테스트:\n- Carbon::setTestNow()로 시간 조작\n- 스케줄러 커맨드 직접 실행\n- 배치 작업 성능 측정\n- 권한 미들웨어 검증\n- 엑셀 생성 메모리 사용량 테스트",
+        "priority": "medium",
+        "dependencies": [
+          28
+        ],
+        "status": "pending",
+        "subtasks": []
+      },
+      {
+        "id": 30,
+        "title": "E2E 시나리오 및 부하 테스트",
+        "description": "Laravel Dusk를 사용한 전체 거래 플로우 E2E 테스트와 동시 사용자 부하 테스트를 수행합니다.",
+        "details": "1. Dusk 환경 설정 및 브라우저 자동화\n2. 판매자: 차량등록 → 낙찰자선택 → 거래완료\n3. 딜러: 입찰 → 결제 → 탁송 → 명의이전\n4. 다수 딜러 동시 입찰 시나리오\n5. JMeter를 통한 API 부하 테스트\n\n의사코드:\n```php\n// E2EAuctionFlowTest.php\npublic function test_complete_auction_flow() {\n    $this->browse(function ($seller, $dealer) {\n        // 판매자 차량 등록\n        $seller->visit('/v2/sell')\n               ->type('owner_name', '홍길동')\n               ->type('car_no', '12가3456')\n               ->press('조회')\n               ->waitForText('예상가 측정')\n               ->press('판매 신청')\n               ->attach('files[registration]', $testFile)\n               ->press('신청하기');\n        \n        // 관리자 승인 (별도 처리)\n        \n        // 딜러 입찰\n        $dealer->loginAs($dealerUser)\n               ->visit('/v2/auction/1')\n               ->type('bid_price', '5000000')\n               ->press('입찰하기')\n               ->waitForText('입찰이 완료되었습니다');\n    });\n}\n```",
+        "testStrategy": "실제 사용자 시나리오 기반 통합 검증:\n- Selenium WebDriver 브라우저 자동화\n- 전체 거래 플로우 시나리오\n- 예외 상황 처리 (취소, 시간초과)\n- Apache Bench로 동시 접속 테스트\n- 응답시간 및 처리량 측정",
+        "priority": "high",
+        "dependencies": [
+          29
+        ],
+        "status": "pending",
+        "subtasks": []
+      }
+    ],
+    "metadata": {
+      "created": "2025-07-14T05:50:08.640Z",
+      "updated": "2025-07-14T06:56:19.851Z",
+      "description": "Tasks for master context"
+    }
+  }
+}

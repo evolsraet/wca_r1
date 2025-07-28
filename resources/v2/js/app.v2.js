@@ -17,6 +17,7 @@ import whereBuilder from './util/whereBuilder.js';
 import { auctionStatus, auctionEvent } from './util/auctions.js';
 import common from './util/common.js';
 import { like } from './util/likes.js';
+import './util/share.js'; // 공유 기능 전역 함수
 
     console.log('Initializing Alpine...');
 

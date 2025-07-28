@@ -22,6 +22,12 @@
           <a href="/v2/sell" class="btn btn-primary rounded-pill" style="width: 150px;">
             <i class="bi bi-car-front-fill"></i> 내 차 판매하기
           </a>
+          <!-- 공유 버튼 추가 -->
+          <div class="mt-3">
+            <button class="btn btn-outline-primary btn-sm" onclick="showShareModal()">
+              <i class="bi bi-share"></i> 공유하기
+            </button>
+          </div>
         </div>
       </div>
     </div>
