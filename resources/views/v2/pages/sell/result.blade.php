@@ -3,6 +3,7 @@
 @section('content')
 @php
     $isLogin = auth()->user();
+    // routes에서 이미 $carInfo 유효성 검사를 완료했으므로 여기서는 안전하게 사용 가능
 @endphp
 
 <div class="container sell-container p-6 mt-5 mb-4" style="max-width: 1000px;" x-data="result">
@@ -166,7 +167,7 @@
 
 <script>
 const isLogin = '{{ $isLogin }}';
-window.carInfo = @json($carInfo);
+window.carInfo = @json($carInfo ?? []);
 </script>
 
 @endsection

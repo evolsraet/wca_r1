@@ -2,7 +2,7 @@
     $lastDay = config('days.car_info_cache_ttl');
 @endphp
 
-<div x-data="userCarInfoModalContent()">
+<div x-data="userCarInfoModalContent()" x-init="console.log('Blade 템플릿에서 Alpine 컴포넌트 초기화 시작')">
     <p>조회된 차량정보는 {{ $lastDay }}일 동안 보관됩니다.</p>
     <div class="list-group">
         <template x-for="car in cars" :key="car.no">
@@ -16,4 +16,15 @@
     </div>
 
     <button class="btn btn-primary mt-3 w-100" @click="closeModal">새로 조회하기</button>
+    
+    <script>
+        console.log('Blade 스크립트 실행');
+        console.log('window.userCarInfo:', window.userCarInfo);
+        console.log('Alpine:', typeof Alpine !== 'undefined' ? 'loaded' : 'not loaded');
+        
+        // Alpine이 로드되었는지 확인
+        if (typeof Alpine !== 'undefined') {
+            console.log('Alpine 컴포넌트 확인:', typeof Alpine.components?.userCarInfoModalContent);
+        }
+    </script>
 </div>

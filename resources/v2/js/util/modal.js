@@ -242,10 +242,28 @@ export const modal = {
     
           const shouldInitAlpine = options.initAlpine !== false;
           if (shouldInitAlpine && typeof Alpine !== 'undefined') {
+            // Alpine 초기화를 더 안정적으로 처리
             setTimeout(() => {
               const modalBody = document.querySelector('.modal-body');
-              if (modalBody) Alpine.initTree(modalBody);
-            }, 100);
+              if (modalBody) {
+                console.log('Alpine initTree 시작');
+                try {
+                  Alpine.initTree(modalBody);
+                  console.log('Alpine initTree 완료');
+                } catch (error) {
+                  console.error('Alpine initTree 오류:', error);
+                  // 재시도
+                  setTimeout(() => {
+                    try {
+                      Alpine.initTree(modalBody);
+                      console.log('Alpine initTree 재시도 완료');
+                    } catch (retryError) {
+                      console.error('Alpine initTree 재시도 실패:', retryError);
+                    }
+                  }, 200);
+                }
+              }
+            }, 200); // 지연시간을 200ms로 증가
           }
           
           return modalInstance;

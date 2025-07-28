@@ -96,9 +96,31 @@ Route::prefix('sell')->group(function () {
             );
         }
 
-        $carInfo = app(AuctionController::class)->showCarInfoView($request);
+        // Request 유효성 검사
+        $request->validate([
+            'owner' => 'required',
+            'no' => 'required',
+        ]);
 
-        return view('v2.pages.sell.result', ['carInfo' => $carInfo]);
+        // 내부 API 호출
+        $apiRequest = Request::create('/api/auctions/carInfo', 'POST', [
+            'owner' => $request->input('owner'),
+            'no' => $request->input('no'),
+        ]);
+        $response = app()->handle($apiRequest);
+        $result = json_decode($response->getContent(), true);
+
+        if ($response->getStatusCode() !== 200) {
+            return redirect()->back()->with('error', $result['message'] ?? '조회 실패');
+        }
+
+        $carInfo = $result['data'] ?? null;
+
+        if (!$carInfo || !is_array($carInfo)) {
+            return redirect()->back()->with('error', $result['message'] ?? '차량 정보를 가져올 수 없습니다.');
+        }
+
+        return view('v2.pages.sell.result', compact('carInfo'));
     })->name('sell.result');
 
     Route::post('/apply', fn () => view('v2.pages.sell.apply'))->name('sell.apply');
