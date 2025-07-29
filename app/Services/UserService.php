@@ -3,7 +3,6 @@
 namespace App\Services;
 
 use App\Models\Bid;
-// use Spatie\Permission\Models\Role;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\Auction;

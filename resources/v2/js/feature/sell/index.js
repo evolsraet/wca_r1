@@ -1,17 +1,6 @@
 export default function () {
     return {
-        // 폼 데이터
-        form: {
-            owner: '',
-            no: ''
-        },
-        
-        // 에러 상태
-        errors: {},
-        
-        // 로딩 상태
-        isLoading: false,
-        
+        loading: false,
         init() {
             console.log('sell index init');
             console.log('window.userCarInfo:', window.userCarInfo);
@@ -22,56 +11,13 @@ export default function () {
             }
         },
         
-        // 폼 제출 함수
-        async submitForm() {
-            console.log('폼 제출 시작:', this.form);
+        // 폼 제출 처리
+        submitForm(event) {
+            console.log('폼 제출 시작');
+            this.loading = true;
             
-            // 기본 유효성 검사
-            this.errors = {};
-            if (!this.form.owner.trim()) {
-                this.errors.owner = ['소유자를 입력해주세요.'];
-                return;
-            }
-            if (!this.form.no.trim()) {
-                this.errors.no = ['차량번호를 입력해주세요.'];
-                return;
-            }
-            
-            this.isLoading = true;
-            
-            try {
-                // 기존 폼 제출 방식 사용 (CSRF 토큰 포함)
-                const form = document.createElement('form');
-                form.method = 'POST';
-                form.action = '/v2/sell/result';
-                
-                // CSRF 토큰 추가
-                const token = document.querySelector('meta[name="csrf-token"]')?.content;
-                if (token) {
-                    const csrfInput = document.createElement('input');
-                    csrfInput.type = 'hidden';
-                    csrfInput.name = '_token';
-                    csrfInput.value = token;
-                    form.appendChild(csrfInput);
-                }
-                
-                // 폼 데이터 추가
-                Object.entries(this.form).forEach(([key, value]) => {
-                    const input = document.createElement('input');
-                    input.type = 'hidden';
-                    input.name = key;
-                    input.value = value;
-                    form.appendChild(input);
-                });
-                
-                // 폼 제출
-                document.body.appendChild(form);
-                form.submit();
-                
-            } catch (error) {
-                console.error('폼 제출 오류:', error);
-                this.isLoading = false;
-            }
+            // 기본 폼 제출을 계속 진행
+            // loading은 페이지가 이동되기 전까지 true로 유지됨
         },
         
         getUserCarInfoModal() {

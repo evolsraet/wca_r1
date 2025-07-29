@@ -33,6 +33,8 @@ class Kernel extends ConsoleKernel
         $admin = User::where('id', 1)->first();
         Auth::login($admin); // 명시적으로 시스템 유저를 로그인                
 
+        /*
+        TODO: 개발중 임시 해제
 
         $schedule->call(function() {
 
@@ -63,11 +65,10 @@ class Kernel extends ConsoleKernel
             //     ->where('taksong_status', '!=', 'done')
             //     ->get();`
 
-            /*
-            SELECT * FROM auctions WHERE status in ('chosen', 'dlvr')
-            AND taksong_id IS NOT NULL
-            AND taksong_status NOT IN ('cancel', 'done')
-            */
+            // SELECT * FROM auctions WHERE status in ('chosen', 'dlvr')
+            // AND taksong_id IS NOT NULL
+            // AND taksong_status NOT IN ('cancel', 'done')
+
             $taksongStatusQuery = Auction::whereIn('status', ['chosen', 'dlvr'])
                 ->whereNotNull('taksong_id')
                 ->whereNotNull('vehicle_payment_id')
@@ -120,7 +121,7 @@ class Kernel extends ConsoleKernel
         })->dailyAt('09:00');
 
         $schedule->command('ownership:check')->hourly(); // 명의이전 확인 한시간 간격 / hourly
-
+        */
     }
 
     /**

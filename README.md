@@ -17,7 +17,7 @@ git, docker(윈도우 WSL2), 옵션 (php8~, composer)
 #### GIT 다운로드
 
 ```bash
-git clone https://github.com/evolsraet/wcauction_test.git
+git clone https://github.com/evolsraet/wca_r1.git
 ```
 
 ### .env.example -> .env 로 복사

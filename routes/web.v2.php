@@ -88,13 +88,15 @@ Route::prefix('sell')->group(function () {
         return view('v2.pages.sell.index');
     })->name('sell');
 
-    Route::post('/result', function (Request $request, CarInfoService $carInfoService) {
-        if (Auth::check()) {
-            $carInfoService->storeUserQueryHistory(
-                $request->input('owner'),
-                $request->input('no')
-            );
+    Route::any('/result', function (Request $request, CarInfoService $carInfoService) {
+        if( $request->isMethod('get') ) {
+            return view('v2.pages.sell.index');
         }
+        
+        $carInfoService->storeUserQueryHistory(
+            $request->input('owner'),
+            $request->input('no')
+        );
 
         // Request 유효성 검사
         $request->validate([

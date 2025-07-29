@@ -19,6 +19,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\Routing\ResponseFactory;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\Log;
+use App\Services\CarInfoService;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -36,14 +37,15 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      *
      * @param  \App\Http\Requests\Auth\LoginRequest  $request
+     * @param  \App\Services\CarInfoService  $carInfoService
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function login(LoginRequest $request)
+    public function login(LoginRequest $request, CarInfoService $carInfoService)
     {
-        // 개발환경에서 세션 기반 로그인 처리
-        if (app()->environment('local', 'testing') && $this->isDevelopmentLogin($request)) {
-            return $this->handleDevelopmentLogin($request);
-        }
+        // DELME: 개발환경에서 세션 기반 로그인 처리
+        // if (app()->environment('local', 'testing') && $this->isDevelopmentLogin($request)) {
+        //     return $this->handleDevelopmentLogin($request);
+        // }
 
         // return response()->api(json_encode($request));
 
@@ -64,9 +66,22 @@ class AuthenticatedSessionController extends Controller
         if(!$user){
             throw new \Exception('등록된 회원이 아닙니다.');
         }
+
         // 사용자 상태에 따른 로그인 제한 처리
         if ($user->status == 'ask') {
             throw new \Exception('심사중인 회원입니다.');
+        } elseif ($user->status != 'ok' && $user->penalty_until ) {
+            if (now()->lt($user->penalty_until)) {
+                // 패널티 기간이 아직 지나지 않은 경우
+                throw new \Exception('패널티 기간이 종료될 때까지 로그인이 제한됩니다. (' . $user->penalty_until->format('Y-m-d H:i') . '까지)');
+            } else {
+                // 패널티 기간이 지난 경우 패널티 정보 초기화
+                $user->penalty_until = null;
+                $user->status = 'ok';
+                $user->save();
+            }
+        /*
+           TODO: 경고 기능 제외 - 별도 테이블 생성 후 로그 남길것 + 페널티 서비스로 등록 제거 만들것 
         } elseif ($user->status == 'warning1') {
             // 경고1 상태인 경우 3일 동안 로그인 제한
             $penaltyDays = 3;
@@ -94,26 +109,27 @@ class AuthenticatedSessionController extends Controller
         } elseif ($user->status == 'expulsion') {
             // 제명 상태인 경우 영구적으로 로그인 제한
             throw new \Exception('제명 상태로 로그인이 불가능합니다. 관리자에게 문의하세요.');
+        */
         } elseif ($user->status != 'ok') {
             throw new \Exception('정상회원이 아닙니다.');
-        }
-
-        // penalty_until 필드가 있고, 패널티 기간이 설정되어 있는 경우 확인
-        if (Schema::hasColumn('users', 'penalty_until') && $user->penalty_until) {
-            if (now()->lt($user->penalty_until)) {
-                // 패널티 기간이 아직 지나지 않은 경우
-                throw new \Exception('패널티 기간이 종료될 때까지 로그인이 제한됩니다. (' . $user->penalty_until->format('Y-m-d H:i') . '까지)');
-            } else {
-                // 패널티 기간이 지난 경우 패널티 정보 초기화
-                $user->penalty_until = null;
-                $user->save();
-            }
         }
 
         $request->authenticate();
 
         $token = $request->session()->regenerate();
         $token = $request->user()->createToken($request->userAgent())->plainTextToken;
+
+        Log::info('[로그인] 세션 히스토리 마이그레이션 시작', [
+            'user_id' => $request->user()->id,
+            'user_email' => $request->user()->email
+        ]);
+
+        // 로그인 성공 후 세션의 히스토리를 사용자 Cache로 마이그레이션
+        $carInfoService->migrateSessionHistoryToUserCache();
+        
+        Log::info('[로그인] 세션 히스토리 마이그레이션 완료', [
+            'user_id' => $request->user()->id
+        ]);
 
         if ($request->wantsJson()) {
             // return response()->json(['data' => $request->user(), 'token' => $token]);
@@ -158,6 +174,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * 개발환경 로그인 여부 확인
      */
+    // DELME: 개발환경에서 세션 기반 로그인 처리
     private function isDevelopmentLogin($request)
     {
         // 개발환경에서 세션 기반 인증을 사용하는지 확인
@@ -170,6 +187,7 @@ class AuthenticatedSessionController extends Controller
     /**
      * 개발환경 로그인 처리
      */
+    // DELME: 개발환경에서 세션 기반 로그인 처리
     private function handleDevelopmentLogin($request)
     {
         Log::info('[개발환경 로그인] 세션 기반 인증 시작', [

@@ -109,13 +109,13 @@ instance.interceptors.response.use(
                 });
                 return Promise.reject(error);
             }
-        } else if (error.request) {
-            Alpine.store('swal').fire({
-                icon: 'error',
-                title: '네트워크 오류',
-                text: '서버와의 통신에 실패했습니다. 인터넷 연결을 확인해주세요.',
-                confirmButtonText: '확인'
-            });
+        // } else if (error.request) {
+        //     Alpine.store('swal').fire({
+        //         icon: 'error',
+        //         title: '네트워크 오류',
+        //         text: '서버와의 통신에 실패했습니다. 인터넷 연결을 확인해주세요.',
+        //         confirmButtonText: '확인'
+        //     });
         } else {
             Alpine.store('swal').fire({
                 icon: 'error',
@@ -134,7 +134,7 @@ export const api = {
     post: (url, data = {}, config = {}) => instance.post(url, data, config),
     put: (url, data = {}, config = {}) => instance.put(url, data, config),
     patch: (url, data = {}, config = {}) => instance.patch(url, data, config),
-    delete: (url, config = {}) => instance.delete(url, config)
+    delete: (url, data = {}, config = {}) => instance.delete(url, { ...config, data })
 };
 
 export default instance;

@@ -88,17 +88,17 @@ import './util/share.js'; // 공유 기능 전역 함수
 
     // 컴포넌트 feature 자동 등록 (하위 폴더 포함)
     const components = import.meta.glob('./feature/**/*.js', { eager: true });
-    console.log('Feature 컴포넌트들 로딩 중...', Object.keys(components));
+    // console.log('Feature 컴포넌트들 로딩 중...', Object.keys(components));
     Object.entries(components).forEach(([path, module]) => {
         const name = path.split('/').pop().replace('.js', '');
         if (!registeredComponents.has(name)) {
             Alpine.data(name, module.default);
             registeredComponents.add(name);
-            console.log(`Alpine 컴포넌트 등록됨: ${name}`);
+            // console.log(`Alpine 컴포넌트 등록됨: ${name}`);
         }
     });
 
-    console.log('등록된 모든 컴포넌트:', Array.from(registeredComponents));
+    // console.log('등록된 모든 컴포넌트:', Array.from(registeredComponents));
 
 
     Alpine.store('likeState', {

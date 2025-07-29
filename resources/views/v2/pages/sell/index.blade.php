@@ -56,37 +56,30 @@
 
                 <div class="col-md-12">
                   <div class="mt-5 p-4 text-center rightContentInner">
-                    <form @submit.prevent="submitForm">
-                        <!-- 소유자 입력 -->
-                        <x-forms.input 
-                            name="owner"
-                            placeholder="소유자가 누구인가요?"
-                            :required="true"
-                            autofocus
-                            :errors="errors"
-                        />
+                    <form method="POST" action="{{ route('sell.result') }}" @submit="submitForm">
+                        @csrf
+
+                        <!-- 소유자 질문 -->
+                        <div class="mb-3">
+                            <input type="text" name="owner" class="form-control" placeholder="소유자가 누구인가요?" required autofocus>
+                        </div>
 
                         <!-- 차량번호 입력 -->
-                        <x-forms.input 
-                            name="no"
-                            placeholder="차량 번호를 입력해주세요."
-                            :required="true"
-                            :errors="errors"
-                        />
+                        <div class="mb-4">
+                            <input type="text" name="no" class="form-control" placeholder="차량 번호를 입력해주세요." required>
+                        </div>
 
-                        <!-- 로고 -->
+                        <!-- 로고 (이미지 직접 넣을 위치) -->
                         <div class="mb-4">
                             <img src="{{ asset('../images/wecar_.png') }}" alt="Car Logo" class="img-fluid" style="max-height: 80px; opacity: 5;">
                         </div>
 
                         <!-- 버튼들 -->
                         <div class="d-grid gap-2">
-                            <button 
-                                type="submit" 
-                                class="btn btn-primary border-0"
-                                :disabled="isLoading"
-                                x-text="isLoading ? '조회 중...' : '내 차 조회'"
-                            ></button>
+                            <button type="submit" class="btn btn-primary border-0" :disabled="loading">
+                                <span x-show="loading" class="spinner-border spinner-border-sm me-1"></span>
+                                <span x-text="loading ? '조회 중...' : '내 차 조회'"></span>
+                            </button>
                             @if (!Auth::check())
                                 <a href="{{ route('login') }}" class="btn btn-outline-danger">로그인</a>
                             @endif

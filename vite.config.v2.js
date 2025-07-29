@@ -25,7 +25,10 @@ export default defineConfig({
     css: {
         preprocessorOptions: {
             scss: {
-                additionalData: ``
+                additionalData: ``,
+                // Deprecation warning 억제
+                quietDeps: true,
+                silenceDeprecations: ['legacy-js-api', 'import', 'global-builtin', 'color-functions']
             }
         }
     },

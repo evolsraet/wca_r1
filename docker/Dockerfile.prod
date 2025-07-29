@@ -1,0 +1,97 @@
+# ===========================================
+# 위카옥션 운영환경 PHP-FPM Dockerfile
+# ===========================================
+
+FROM php:8.3-fpm-alpine
+
+# 시스템 패키지 및 PHP 확장 설치
+RUN apk add --no-cache \
+    # 기본 패키지
+    curl \
+    zip \
+    unzip \
+    git \
+    supervisor \
+    nginx \
+    # PHP 확장 빌드 의존성
+    $PHPIZE_DEPS \
+    freetype-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libzip-dev \
+    icu-dev \
+    oniguruma-dev \
+    libxml2-dev \
+    libxslt-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) \
+        pdo_mysql \
+        mysqli \
+        gd \
+        zip \
+        intl \
+        mbstring \
+        xml \
+        soap \
+        xsl \
+        opcache \
+        bcmath \
+        pcntl \
+    # Redis 확장 설치
+    && pecl install redis \
+    && docker-php-ext-enable redis \
+    # 임시 파일 정리
+    && apk del $PHPIZE_DEPS \
+    && rm -rf /var/cache/apk/* /tmp/* /var/tmp/*
+
+# Composer 설치
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
+
+# Node.js 및 npm 설치
+RUN apk add --no-cache nodejs npm
+
+# 작업 디렉토리 설정
+WORKDIR /var/www/html
+
+# 비루트 사용자 생성
+ARG WWWUSER=1000
+ARG WWWGROUP=1000
+RUN addgroup -g $WWWGROUP -S sail \
+    && adduser -u $WWWUSER -S sail -G sail
+
+# PHP 설정 복사
+COPY docker/php/php.ini /usr/local/etc/php/conf.d/99-custom.ini
+COPY docker/php/php-fpm.conf /usr/local/etc/php-fpm.d/www.conf
+
+# Supervisor 설정 복사
+COPY docker/supervisor/ /etc/supervisor/conf.d/
+
+# 애플리케이션 파일 복사
+COPY --chown=sail:sail . /var/www/html
+
+# Composer 의존성 설치
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# NPM 의존성 설치 및 빌드
+RUN npm ci --production && npm run build
+
+# 권한 설정
+RUN chown -R sail:sail /var/www/html \
+    && chmod -R 755 /var/www/html \
+    && chmod -R 775 /var/www/html/storage \
+    && chmod -R 775 /var/www/html/bootstrap/cache
+
+# 포트 노출
+EXPOSE 9000
+
+# 헬스체크
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD php-fpm-healthcheck || exit 1
+
+# 시작 스크립트
+COPY docker/start.sh /start.sh
+RUN chmod +x /start.sh
+
+USER sail
+
+ENTRYPOINT ["/start.sh"]

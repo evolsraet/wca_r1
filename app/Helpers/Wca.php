@@ -85,6 +85,45 @@ class Wca
         return $queryInfo;
     }
 
+    public static function deleteCarInfoForUser(string $owner, string $no): ?bool
+    {
+        $user = Auth::user();
+        if (!$user) {
+            return null;
+        }
+
+        $key = "carInfo.user.{$user->id}";
+
+        // 기존 데이터 불러오기 (없으면 빈 배열)
+        $history = Cache::get($key, []);
+        if (empty($history) || !is_array($history)) {
+            return null;
+        }
+
+        // 삭제 대상 찾기 (owner와 no 둘 다 일치하는 항목)
+        $originalCount = count($history);
+        $history = array_filter($history, function($car) use ($owner, $no) {
+            return !(
+                isset($car['owner'], $car['no']) &&
+                $car['owner'] === $owner &&
+                $car['no'] === $no
+            );
+        });
+
+        // 삭제된 항목이 있는지 확인
+        if (count($history) === $originalCount) {
+            return false; // 삭제할 항목이 없었음
+        }
+
+        // 배열 인덱스 재정렬
+        $history = array_values($history);
+
+        // TTL과 함께 캐시에 저장
+        Cache::put($key, $history, now()->addDays(config('days.car_info_cache_ttl')));
+
+        return true;
+    }
+
     public static function auctionStatus()
     {
         $auction = new Auction();

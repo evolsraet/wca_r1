@@ -252,11 +252,42 @@ class AuctionController extends Controller
 
         $carInfo = $result['data'] ?? null;
 
-        if(!$result['data']){
-            return redirect()->back()->with('error', $result['message'] ?? '조회 실패');
+        if (!$carInfo || !is_array($carInfo)) {
+            return redirect()->back()->with('error', $result['message'] ?? '차량 정보를 가져올 수 없습니다.');
         }
 
         return view('v2.pages.sell.result', compact('carInfo'));
+    }
+
+    /**
+     * @lrd:start
+     * # 사용자 차량정보 삭제
+     * 로그인 필요
+     * @lrd:end
+     * @LRDparam owner required
+     * @LRDparam no required
+     */
+    public function deleteUserCarInfo(Request $request)
+    {
+        $request->validate([
+            'owner' => 'required|string',
+            'no' => 'required|string',
+        ]);
+
+        $result = \App\Helpers\Wca::deleteCarInfoForUser(
+            $request->input('owner'),
+            $request->input('no')
+        );
+
+        if ($result === null) {
+            return response()->api([], '로그인이 필요하거나 차량 정보가 없습니다.', 404);
+        }
+
+        if ($result === false) {
+            return response()->api([], '삭제할 차량 정보를 찾을 수 없습니다.', 404);
+        }
+
+        return response()->api([], '차량 정보가 삭제되었습니다.');
     }
 
 
