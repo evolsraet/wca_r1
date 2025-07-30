@@ -30,8 +30,15 @@ class Kernel extends ConsoleKernel
     
     protected function schedule(Schedule $schedule)
     {
-        $admin = User::where('id', 1)->first();
-        Auth::login($admin); // 명시적으로 시스템 유저를 로그인                
+        // // 개발 환경에서는 스케줄러 초기화 스킵
+        // if (app()->environment('local')) {
+        //     return;
+        // }
+        
+        // $admin = User::where('id', 1)->first();
+        // if ($admin) {
+        //     Auth::login($admin); // 명시적으로 시스템 유저를 로그인
+        // }
 
         /*
         TODO: 개발중 임시 해제

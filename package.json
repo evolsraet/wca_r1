@@ -36,6 +36,7 @@
         "laravel-vue-pagination": "^4.1.1",
         "nouislider": "^15.8.1",
         "photoswipe": "^5.4.4",
+        "playwright": "^1.54.1",
         "sweetalert2": "^11.11.1",
         "swiper": "^11.1.15",
         "toastr": "^2.1.4",

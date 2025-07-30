@@ -30,9 +30,6 @@ use App\Http\Controllers\BoardController;
 */
 
 Route::get('/', function () {
-    if (app()->environment('production')) {
-        return redirect('/v1');
-    }
     return redirect('/v2');
 });
 
