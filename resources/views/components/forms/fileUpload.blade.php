@@ -11,6 +11,11 @@
 ])
 
 @php
+    // preview 가 true 면 이미지만 accept
+    if($preview) {
+        $accept = 'image/*';
+    }
+
     $isMultiple = str_ends_with($name, '[]');
     $inputName = $name;
     $errorKey = str_replace('[]', '', $name);

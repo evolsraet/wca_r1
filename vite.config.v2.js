@@ -1,9 +1,13 @@
-import { defineConfig } from 'vite';
+import { defineConfig, loadEnv } from 'vite';
 import laravel from 'laravel-vite-plugin';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
 
-export default defineConfig({
+export default defineConfig(({ mode }) => {
+    // .env 파일에서 환경변수 로드
+    const env = loadEnv(mode, process.cwd(), '');
+    
+    return {
     plugins: [
         laravel({
             input: [
@@ -40,16 +44,30 @@ export default defineConfig({
     },
     server: {
         host: '0.0.0.0', // 모든 네트워크 인터페이스에서 접속 가능
-        port: process.env.VITE_PORT,      // Vite 서버의 포트 (필요에 따라 변경 가능)
+        port: parseInt(env.VITE_PORT) || 5173,      // .env의 VITE_PORT 사용
         hmr: {
-            // host: '192.168.10.185', // 외부 접속용 IP
-            host: process.env.VITE_HOST || 'localhost',
-            port: process.env.VITE_PORT || 5173,      // Vite 서버의 포트 (필요에 따라 변경 가능)
-    },
+            port: parseInt(env.VITE_PORT) || 5173,
+            // Laravel Sail 환경에서는 클라이언트에서 호스트 주소로 접근
+            clientPort: parseInt(env.VITE_PORT) || 5173,
+        },
+        watch: {
+            usePolling: true, // Docker 환경에서 파일 변경 감지를 위해
+        },
     },
     build: {
         outDir: 'public/build/v2',
         manifest: true,
+        rollupOptions: {
+            output: {
+                assetFileNames: (assetInfo) => {
+                    // MDI 폰트 파일들을 루트에 배치
+                    if (assetInfo.name && assetInfo.name.includes('materialdesignicons-webfont')) {
+                        return '[name][extname]';
+                    }
+                    return 'assets/[name]-[hash][extname]';
+                }
+            }
+        }
     },
-    publicDir: 'node_modules/@mdi/font/fonts',
+};
 });
