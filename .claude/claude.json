@@ -3,5 +3,5 @@
   "version": "1.0.0",
   "description": "위카옥션 Laravel 프로젝트",
   "workingDirectory": "/Users/evolsraet/web/20240200-위카옥션/wca_v2",
-  "model": "default"
+  "model": "sonnet"
 }
