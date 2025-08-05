@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name_en')->comment('영문 제조사명')->nullable();
             $table->string('country')->comment('제조국가')->nullable();
             $table->char('import_yn', 1)->comment('국산/수입구분 (국산:N, 수입:Y)')->nullable();
-            $table->string('logo_url')->comment('제조사 로고 이미지')->nullable();
+            $table->string('logo_url', 2000)->comment('제조사 로고 이미지')->nullable();
         });
     }
 

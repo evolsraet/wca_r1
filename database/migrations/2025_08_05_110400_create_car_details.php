@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('generation_name')->comment('세대명')->nullable();
             $table->string('start_date')->comment('출시 년월 (Y.m형식)')->nullable();
             $table->string('end_date')->comment('단종 년월 (Y.m형식)')->nullable();
-            $table->string('image_url')->comment('모델 이미지')->nullable();
+            $table->string('image_url', 2000)->comment('모델 이미지')->nullable();
         });
     }
 

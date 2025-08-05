@@ -27,6 +27,8 @@ class DatabaseSeeder extends Seeder
                 $this->call([
                     // 권한/역할/기본유저 최우선 실행
                     PermissionRoleSeeder::class,
+                    // 차량 DB (기본 데이터)
+                    Common\CarDatabaseSeeder::class,
                     // 개발 환경용 시더
                     Development\UserSeeder::class,
                     Development\DealerSeeder::class,
@@ -45,6 +47,7 @@ class DatabaseSeeder extends Seeder
                 // Production 환경용 최소 시더
                 $this->call([
                     PermissionRoleSeeder::class, // 최우선 실행
+                    Common\CarDatabaseSeeder::class, // 차량 DB (필수 데이터)
                     Production\AdminSeeder::class,
                 ]);
                 break;
