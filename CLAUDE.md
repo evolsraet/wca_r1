@@ -90,6 +90,10 @@ wca_v2/
 # 큐 워커 시작
 ./vendor/bin/sail artisan queue:work
 
+# ERD 생성 (/laravel-erd)
+./vendor/bin/sail artisan erd:generate
+
+
 # 로그 확인
 ./vendor/bin/sail logs
 ```
