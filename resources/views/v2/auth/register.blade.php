@@ -36,11 +36,12 @@
 
 @section('content')
 
-<div class="py-3" x-data="register"
+<div class="py-3 register-page" x-data="register"
 x-init="init({{ json_encode($form) }})">
 
-    <div class="position-fixed top-0 left-0 w-100 h-100" x-show="!window.userId">
-        <div class="d-none d-md-flex flex-column align-items-start justify-content-center text-start" style="height: 100vh;">
+    <!-- 비디오 배경 - 데스크톱에서만 표시 -->
+    <div class="d-none d-lg-block position-fixed top-0 start-0 w-100 h-100" style="z-index: -1;">
+        <div class="d-flex flex-column align-items-start justify-content-center text-start h-100">
             <div class="mb-4 px-5">
                 <h4 class="fw-bold text-secondary mb-2">내 차 판매에</h4>
                 <h4 class="fw-bold">
@@ -50,18 +51,16 @@ x-init="init({{ json_encode($form) }})">
             </div>
         
             <div class="position-relative">
-
-                <video width="80%" autoplay="" loop="" muted="" playsinline="" preload="auto">
+                <video width="80%" autoplay loop muted playsinline preload="auto">
                     <source src="{{ asset('images/video/register_vi.mp4') }}" type="video/mp4">
                 </video>
-
             </div>
         </div>
     </div>
 
-    <div class="container ">
+    <div class="container">
         <div class="row justify-content-center position-relative">
-            <div class="col-md-4 col-12">
+            <div class="col-lg-4 col-md-6 col-12 px-2 px-md-3">
                 <div class="card shadow rounded-4 no-shadow-mobile">
                     {{-- <div class="card-header">
                         @if ($isUpdate)

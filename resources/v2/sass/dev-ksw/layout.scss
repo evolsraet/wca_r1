@@ -653,3 +653,68 @@ hr {
         box-shadow: none !important;
     }
 }
+
+// 회원가입 페이지 반응형 수정
+.register-page {
+    // 모바일에서 상단 여백 줄이기
+    @include media-breakpoint-down(md) {
+        padding-top: 1rem !important;
+        padding-bottom: 2rem !important;
+    }
+    
+    .card {
+        // 모바일에서 카드 여백 조정
+        @include media-breakpoint-down(md) {
+            margin: 0.5rem 0;
+            border-radius: 1rem !important;
+            border: none !important;
+        }
+        
+        // 태블릿에서 카드 최대 너비 제한
+        @include media-breakpoint-between(md, lg) {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .card-body {
+            @include media-breakpoint-down(md) {
+                padding: 1.5rem !important;
+            }
+        }
+    }
+    
+    // 비디오 배경이 있는 경우 콘텐츠 z-index 조정
+    .container {
+        position: relative;
+        z-index: 10;
+        
+        @include media-breakpoint-up(lg) {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+    }
+    
+    // 폼 입력 필드 간격 조정
+    .form-group, .mb-4 {
+        @include media-breakpoint-down(sm) {
+            margin-bottom: 1.5rem !important;
+        }
+    }
+    
+    // 버튼 개선
+    .btn {
+        @include media-breakpoint-down(md) {
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+        }
+    }
+    
+    // 체크박스 반응형 개선
+    .form-check.rounded-check {
+        @include media-breakpoint-down(md) {
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+        }
+    }
+}

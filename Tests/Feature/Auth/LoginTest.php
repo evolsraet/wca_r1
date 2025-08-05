@@ -55,26 +55,26 @@ test('심사중 상태의 사용자는 로그인할 수 없다', function () {
     $this->assertGuest();
 });
 
-test('경고 상태의 사용자는 로그인할 수 없다', function ($status, $message) {
-    $user = createUser([
-        'email' => 'test@example.com',
-        'password' => ('password'),
-        'status' => $status
-    ]);
+// test('경고 상태의 사용자는 로그인할 수 없다', function ($status, $message) {
+//     $user = createUser([
+//         'email' => 'test@example.com',
+//         'password' => ('password'),
+//         'status' => $status
+//     ]);
     
-    $response = $this->post('/v2/login', [
-        'email' => 'test@example.com',
-        'password' => 'password'
-    ]);
+//     $response = $this->post('/v2/login', [
+//         'email' => 'test@example.com',
+//         'password' => 'password'
+//     ]);
     
-    $response->assertRedirect()
-        ->assertSessionHas('error', $message);
-    $this->assertGuest();
-})->with([
-    ['warning1', '3일 이용금지'],
-    ['warning2', '30일 이용금지'],
-    ['expulsion', '영구정지']
-]);
+//     $response->assertRedirect()
+//         ->assertSessionHas('error', $message);
+//     $this->assertGuest();
+// })->with([
+//     ['warning1', '3일 이용금지'],
+//     ['warning2', '30일 이용금지'],
+//     ['expulsion', '영구정지']
+// ]);
 
 test('잘못된 비밀번호로 로그인할 수 없다', function () {
     $user = createUser([

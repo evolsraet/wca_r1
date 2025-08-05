@@ -50,7 +50,7 @@
               
               <div class="row justify-content-center">
 
-                <video autoplay="" loop="" muted="" playsinline="" preload="auto" class="d-none d-sm-block mb-4 mt-4" style="width: 90%;">
+                <video autoplay="" loop="" muted="" playsinline="" preload="auto" class="d-none d-sm-block mb-4 mt-4" style="width: 90%; max-height: 20vh">
                   <source src="../images/video/mainvideo02.mp4" type="video/mp4">
                 </video>
 
