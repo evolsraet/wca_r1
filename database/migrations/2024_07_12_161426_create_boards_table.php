@@ -40,7 +40,7 @@ return new class extends Migration
             'attach_permission' => 'act.admin',
             'comment_permission' => 'act.login',
             'paginate' => 10,
-            'skin' => 'default',
+            'skin' => 'basic',
             'admins' => null,
             'created_at' => now(),
             'updated_at' => now()
@@ -56,7 +56,7 @@ return new class extends Migration
             'attach_permission' => 'act.login',
             'comment_permission' => 'act.login',
             'paginate' => 10,
-            'skin' => 'default',
+            'skin' => 'basic',
             'admins' => null,
             'created_at' => now(),
             'updated_at' => now()
@@ -72,7 +72,23 @@ return new class extends Migration
             'attach_permission' => 'act.dealer',
             'comment_permission' => 'act.dealer',
             'paginate' => 10,
-            'skin' => 'default',
+            'skin' => 'reviewClaim',
+            'admins' => null,
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+
+        DB::table('boards')->insert([
+            'id' => 'review',
+            // 'categories' => json_encode(['접수', '처리중', '처리완료'], JSON_UNESCAPED_UNICODE),
+            'index_permission' => null,
+            'show_permission' => null,
+            'write_permission' => 'act.user',
+            'reply_permission' => 'act.admin',
+            'attach_permission' => 'act.user',
+            'comment_permission' => 'act.dealer',
+            'paginate' => 10,
+            'skin' => 'reviewClaim',
             'admins' => null,
             'created_at' => now(),
             'updated_at' => now()

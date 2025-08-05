@@ -14,7 +14,7 @@ class ArticleFactory extends Factory
     public function definition()
     {
         return [
-            'board_id' => (string) Board::inRandomOrder()->first()->id,
+            'board_id' => (string) Board::inRandomOrder()->whereNotIn('id', ['review'])->first()->id,
             'title' => fake()->realText(10),
             'content' => fake()->realText(),
             'user_id' => User::inRandomOrder()->first()->id,
