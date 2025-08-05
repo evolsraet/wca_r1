@@ -119,7 +119,7 @@ class Auction extends Model implements HasMedia
     public function bids()
     {
         // return $this->hasMany(Bid::class);
-        if (auth()->user()->hasRole('dealer')) {
+        if (auth()->check() && auth()->user()->hasRole('dealer')) {
             return $this->hasMany(Bid::class)->with(['user.media'])->where('user_id', auth()->user()->id);
         } else {
             return $this->hasMany(Bid::class)->with(['user.media']);
@@ -137,9 +137,15 @@ class Auction extends Model implements HasMedia
         return $this->morphMany(Like::class, 'likeable');
     }
 
+    public function articles()
+    {
+        return $this->hasMany(Article::class, 'extra1', 'id');
+    }
+
     public function reviews()
     {
-        return $this->hasMany(Review::class);
+        return $this->hasMany(Article::class, 'extra1', 'id')
+                    ->where('board_id', 'review');
     }
 
     public function getStatusChosenAttribute()

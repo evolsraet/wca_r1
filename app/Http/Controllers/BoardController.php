@@ -65,7 +65,7 @@ class BoardController extends Controller
 
                 $user = User::find($userId);
                 if (!$user) throw new \Exception('유저가 존재하지 않습니다.');
-                if ($user->id === 2) return true;
+                if ($user->hasPermissionTo('act.admin')) return true;
 
                 if ($articleId === null || $articleId === 0) {
                     throw new \Exception('선택된 차량정보가 없습니다.');
@@ -82,7 +82,7 @@ class BoardController extends Controller
                 if ($auction->status !== 'done') throw new \Exception('경매가 종료되지 않았습니다.');
             
                 // 3. 관리자 bypass
-                if ($user->id !== 2) {
+                if ($user->hasPermissionTo('act.admin')) {
                     if ($boardId === 'review') {
                         if ($auction->user_id !== $userId) throw new \Exception('판매유저가 아닙니다.');
                     } elseif ($boardId === 'claim') {
