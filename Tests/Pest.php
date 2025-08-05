@@ -63,11 +63,18 @@ function createDealer(array $attributes = []): \App\Models\User
 {
     $user = \App\Models\User::factory()->create(array_merge([
         'status' => 'ok',
-        'company_name' => '테스트 자동차',
-        'business_number' => '123-45-67890',
     ], $attributes));
     
     $user->assignRole('dealer');
+    
+    // 딜러 정보는 별도 테이블에 저장
+    if (class_exists('\App\Models\Dealer')) {
+        \App\Models\Dealer::factory()->create([
+            'user_id' => $user->id,
+            'company' => '테스트 자동차',
+            'business_registration_number' => '123-45-67890'
+        ]);
+    }
     
     return $user;
 }

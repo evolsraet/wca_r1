@@ -17,8 +17,7 @@ class DatabaseSeeder extends Seeder
         switch (config('app.env')) {
             case 'testing':
                 $this->call([
-                    Common\PermissionSeeder::class,
-                    Common\RoleSeeder::class,
+                    PermissionRoleSeeder::class, // 최우선 실행
                     // 테스트에 필요한 최소 데이터만
                 ]);
                 break;
@@ -26,11 +25,9 @@ class DatabaseSeeder extends Seeder
             case 'local':
             case 'development':
                 $this->call([
-                    // 공통 시더
-                    Common\PermissionSeeder::class,
-                    Common\RoleSeeder::class,
+                    // 권한/역할/기본유저 최우선 실행
+                    PermissionRoleSeeder::class,
                     // 개발 환경용 시더
-                    Development\CreateTestUserSeeder::class,
                     Development\UserSeeder::class,
                     Development\DealerSeeder::class,
                     Development\AuctionSeeder::class,
@@ -47,8 +44,7 @@ class DatabaseSeeder extends Seeder
             case 'staging':
                 // Production 환경용 최소 시더
                 $this->call([
-                    Common\PermissionSeeder::class,
-                    Common\RoleSeeder::class,
+                    PermissionRoleSeeder::class, // 최우선 실행
                     Production\AdminSeeder::class,
                 ]);
                 break;

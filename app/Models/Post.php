@@ -29,7 +29,7 @@ class Post extends Model implements HasMedia
      */
     public function categories()
     {
-        return $this->belongsToMany(Category::class, 'category_post');
+        return $this->belongsToMany(Category::class, 'category_posts');
     }
 
     public function registerMediaCollections(): void

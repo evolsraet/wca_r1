@@ -24,12 +24,11 @@ class Auction extends Model implements HasMedia
     use ModelTrait;
 
 
-    // protected $fillable = [
-    //     'bank',
-    //     'account'
-    // ];
+    protected $fillable = [];
 
-    public $guarded = [];
+    protected $guarded = [
+        'id', 'bid_id', 'created_at', 'updated_at', 'deleted_at'
+    ];
 
     protected $dates = [
         'final_at',

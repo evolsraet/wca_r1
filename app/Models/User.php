@@ -35,14 +35,27 @@ class User extends Authenticatable implements HasMedia
      * @var array<int, string>
      */
     protected $fillable = [
-        // 'name',
-        // 'email',
-        // 'password',
-        // 'status',
-        // 'password_confirmation'
+        'name',
+        'email', 
+        'password',
+        'phone',
+        'status',
+        'email_verified_at',
+        'penalty_until'
     ];
 
-    protected $guarded = [];
+    /**
+     * The attributes that should be guarded from mass assignment.
+     *
+     * @var array<int, string>
+     */
+    protected $guarded = [
+        'id',
+        'remember_token',
+        'created_at',
+        'updated_at',
+        'deleted_at'
+    ];
 
     /**
      * The attributes that should be hidden for serialization.

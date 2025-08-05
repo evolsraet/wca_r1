@@ -13,8 +13,8 @@ return new class extends Migration
     {
         //
         Schema::table('auction_logs', function (Blueprint $table) {
-            $table->dropForeign(['auction_id']);
-            $table->dropForeign(['user_id']);
+            // $table->dropForeign(['auction_id']);
+            // $table->dropForeign(['user_id']);
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
     {
         //
         Schema::table('auction_logs', function (Blueprint $table) {
-            $table->foreign('auction_id')->references('id')->on('auctions');
-            $table->foreign('user_id')->references('id')->on('users');
+            // $table->foreign('auction_id')->references('id')->on('auctions');
+            // $table->foreign('user_id')->references('id')->on('users');
         });
     }
 };

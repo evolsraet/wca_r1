@@ -33,6 +33,7 @@ class DealerFactory extends Factory
             'receive_addr1' => $this->faker->streetAddress, // 받는 사람 주소
             'receive_addr2' => '123123', // 받는 사람 상세주소
             'introduce' => $this->faker->paragraph, // 문장, 여기서는 단락으로 대체
+            'business_registration_number' => $this->faker->numerify('###-##-#####'), // 사업자등록번호
         ];
     }
 }
