@@ -176,6 +176,7 @@ if($articleId) {
                                 <div class="mt-2 text-danger fw-bold" x-text="rating + '점'"></div>
                             </template>
                             <input type="hidden" name="article.extra2" value="">
+                            <input type="hidden" name="article.extra3" value="">
                         </div> --}}
                         @endif
 

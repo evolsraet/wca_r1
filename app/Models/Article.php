@@ -114,4 +114,64 @@ class Article extends Model implements HasMedia
             }
         }
     }
+
+    /**
+     * 모델 이벤트 정의
+     */
+    protected static function booted()
+    {
+        // 리뷰 생성/수정/삭제 시 딜러 평점 자동 업데이트
+        static::saved(function ($article) {
+            if ($article->board_id === 'review' && $article->extra2 && $article->extra3) {
+                static::updateDealerRating($article->extra2);
+            }
+        });
+
+        static::deleted(function ($article) {
+            if ($article->board_id === 'review' && $article->extra2) {
+                static::updateDealerRating($article->extra2);
+            }
+        });
+    }
+
+    /**
+     * 해당 딜러의 평점을 재계산하여 dealers 테이블 업데이트
+     *
+     * @param string $dealerId 딜러 ID
+     */
+    public static function updateDealerRating($dealerId)
+    {
+        // 해당 딜러에 대한 모든 리뷰의 평점 평균 계산
+        $averageRating = static::where('board_id', 'review')
+            ->where('extra2', $dealerId)
+            ->whereNotNull('extra3')
+            ->avg('extra3');
+
+        // 딜러 테이블의 rate 필드 업데이트
+        if ($averageRating !== null) {
+            \DB::table('dealers')
+                ->where('user_id', $dealerId)
+                ->update(['rate' => round($averageRating, 1)]);
+                
+            \Log::info("딜러 평점 업데이트: 딜러 ID {$dealerId}, 평균 평점: " . round($averageRating, 1));
+        }
+    }
+
+    /**
+     * 모든 딜러의 평점을 재계산 (관리 목적)
+     */
+    public static function recalculateAllDealerRatings()
+    {
+        $dealerIds = static::where('board_id', 'review')
+            ->whereNotNull('extra2')
+            ->whereNotNull('extra3')
+            ->distinct()
+            ->pluck('extra2');
+
+        foreach ($dealerIds as $dealerId) {
+            static::updateDealerRating($dealerId);
+        }
+
+        return $dealerIds->count();
+    }
 }

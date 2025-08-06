@@ -17,11 +17,11 @@ class AdminSeeder extends Seeder
         // 초기 관리자 계정 생성
         // 주의: 운영 환경에서는 즉시 비밀번호를 변경해야 함
         $admin = User::firstOrCreate(
-            ['email' => 'admin@wecauction.co.kr'],
+            ['email' => 'it@wecar-m.co.kr'],
             [
                 'name' => '시스템 관리자',
-                'phone' => '01000000000',
-                'password' => Hash::make(env('INITIAL_ADMIN_PASSWORD', 'changeMe123!')),
+                'phone' => '01034258175',
+                'password' => '123123123',
                 'status' => 'ok',
                 'email_verified_at' => now(),
             ]

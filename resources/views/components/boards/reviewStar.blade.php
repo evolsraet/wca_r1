@@ -14,22 +14,29 @@
     init: function() {
 
         if(article) {
-            this.rating = JSON.parse(article.extra2).rating;
-            this.dealerId = JSON.parse(article.extra2).dealer_id;
+            this.rating = parseInt(article.extra3) || 0;
+            this.dealerId = article.extra2 || 0;
         }
 
         $watch('article', value => {
-            this.rating = JSON.parse(value.extra2).rating;
-            this.dealerId = JSON.parse(value.extra2).dealer_id;
+            this.rating = parseInt(value.extra3) || 0;
+            this.dealerId = value.extra2 || 0;
         });
     },
     selectRating(value) {
         if (!this.check) return;
         this.rating = value;
 
-        const input = document.querySelector('input[name=\'article.extra2\']');
-        if (input) {
-            input.value = JSON.stringify({ dealer_id: this.dealerId, rating: this.rating });
+        // extra2에 dealer_id 저장
+        const dealerInput = document.querySelector('input[name=\'article.extra2\']');
+        if (dealerInput) {
+            dealerInput.value = this.dealerId;
+        }
+
+        // extra3에 rating 저장
+        const ratingInput = document.querySelector('input[name=\'article.extra3\']');
+        if (ratingInput) {
+            ratingInput.value = this.rating;
         }
     }
 }">
@@ -52,6 +59,7 @@
     <template x-if="rating > 0">
         <div class="mt-2 text-danger fw-bold" x-text="rating + '점'"></div>
     </template>
-    <input type="hidden" name="article.extra2" value="">
     @endif
+    <input type="hidden" name="article.extra2" value="">
+    <input type="hidden" name="article.extra3" value="">
 </div>

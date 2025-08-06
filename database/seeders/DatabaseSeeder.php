@@ -13,22 +13,25 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
+        // 공용
+
+        // 권한/역할/기본유저 최우선 실행
+        Common\PermissionRoleSeeder::class, // 최우선 실행
+        // 차량 DB (기본 데이터)
+        Common\CarDatabaseSeeder::class,
+        // 기본 시스템 관리자
+        Common\UserAdminSeeder::class,
+
         // APP_ENV 환경변수 기반 시더 실행
         switch (config('app.env')) {
             case 'testing':
-                $this->call([
-                    PermissionRoleSeeder::class, // 최우선 실행
-                    // 테스트에 필요한 최소 데이터만
-                ]);
+                // $this->call([
+                // ]);
                 break;
 
             case 'local':
             case 'development':
                 $this->call([
-                    // 권한/역할/기본유저 최우선 실행
-                    PermissionRoleSeeder::class,
-                    // 차량 DB (기본 데이터)
-                    Common\CarDatabaseSeeder::class,
                     // 개발 환경용 시더
                     Development\UserSeeder::class,
                     Development\DealerSeeder::class,
@@ -45,11 +48,8 @@ class DatabaseSeeder extends Seeder
             case 'production':
             case 'staging':
                 // Production 환경용 최소 시더
-                $this->call([
-                    PermissionRoleSeeder::class, // 최우선 실행
-                    Common\CarDatabaseSeeder::class, // 차량 DB (필수 데이터)
-                    Production\AdminSeeder::class,
-                ]);
+                // $this->call([
+                // ]);
                 break;
 
             default:

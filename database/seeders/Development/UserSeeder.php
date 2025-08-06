@@ -10,6 +10,56 @@ class UserSeeder extends Seeder
 {
     public function run()
     {
+        // 테스트용 유저 생성
+        $users = [];
+
+        // 슈퍼 (시스템)
+        $users['super'] = [
+            'name' => '시스템',
+            'email' => 'super@super.com',
+            'password' => '123123123',
+            'status' => 'ok',
+            'phone' => '010-3425-8175',
+        ];
+
+        // 관리자
+        $users['admin'] = [
+            'name' => '데모관리자',
+            'email' => 'admin@demo.com',
+            'password' => '123123123',
+            'status' => 'ok',
+            'phone' => '010-1111-1111',
+        ];
+
+        // 사용자
+        $users['user'] = [
+            'name' => '데모유저',
+            'email' => 'user@demo.com',
+            'password' => '123123123',
+            'status' => 'ok',
+            'phone' => '010-2222-2222',
+        ];
+
+        // 딜러
+        $users['dealer'] = [
+            'name' => '데모딜러',
+            'email' => 'dealer@demo.com',
+            'password' => '123123123',
+            'status' => 'ok',
+            'phone' => '010-3333-3333',
+        ];
+
+        foreach ($users as $role => $user) {
+            // 중복 방지로 firstOrCreate 사용
+            $created_user = User::firstOrCreate(
+                ['email' => $user['email']], 
+                $user
+            );
+            $created_user->assignRole($role);
+        }
+
+        // ------------------------------------------------------------
+
         // 'user'와 'dealer' 역할이 데이터베이스에 존재하는지 확인하고, 없으면 생성
         $roles = ['user', 'dealer'];
         foreach ($roles as $role) {
@@ -22,7 +72,7 @@ class UserSeeder extends Seeder
             $randomRole = collect(['user', 'dealer'])->random();
             $user->assignRole($randomRole);
         });
-
+        
         // 추가 유저 생성
         $users = [
             [
