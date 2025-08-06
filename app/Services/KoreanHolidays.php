@@ -57,15 +57,17 @@ class KoreanHolidays
             '_type' => 'json',
         ]);
 
+        Log::info('[한국 공휴일] API 연결 : API Response:', [
+            'name'=> '한국 공휴일 API 연결',
+            'path'=> __FILE__,
+            'line'=> __LINE__,
+            'response' => $response,
+            'successful' => $response->successful(),
+            'data' => $response->json()
+        ]);  // 전체 응답을 dump로 출력
+
         if ($response->successful()) {
             $data = $response->json();
-
-            Log::info('[한국 공휴일] API 연결 : API Response:', [
-                'name'=> '한국 공휴일 API 연결',
-                'path'=> __FILE__,
-                'line'=> __LINE__,
-                'data' => $data
-            ]);  // 전체 응답을 dump로 출력
 
             // 응답 구조 확인 및 안전한 접근
             $totalCount = $data['response']['body']['totalCount'];

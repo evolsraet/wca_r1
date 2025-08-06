@@ -13,14 +13,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // 공용
-
-        // 권한/역할/기본유저 최우선 실행
-        Common\PermissionRoleSeeder::class, // 최우선 실행
-        // 차량 DB (기본 데이터)
-        Common\CarDatabaseSeeder::class,
-        // 기본 시스템 관리자
-        Common\UserAdminSeeder::class,
+        // 공용 시더 최우선 실행
+        $this->call([
+            // 권한/역할/기본유저 최우선 실행
+            Common\PermissionRoleSeeder::class, // 최우선 실행
+            // 차량 DB (기본 데이터)
+            Common\CarDatabaseSeeder::class,
+            // 기본 시스템 관리자
+            Common\UserAdminSeeder::class,
+        ]);
 
         // APP_ENV 환경변수 기반 시더 실행
         switch (config('app.env')) {
