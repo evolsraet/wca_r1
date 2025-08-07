@@ -19,10 +19,11 @@ class NiceDNRData extends Model
      *
      * @var array
      */
+    
     protected $fillable = [
-        'ownerNm',
-        'vhrNo',
-        'isCached',
+        'owner_name',
+        'car_no',
+        'is_cached',
         'data'
     ];
 
@@ -33,6 +34,6 @@ class NiceDNRData extends Model
      */
     protected $casts = [
         'data' => 'array',  // JSON 필드를 자동으로 array로 캐스팅
-        'isCached' => 'string'
+        'is_cached' => 'string'
     ];
 }

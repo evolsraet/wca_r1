@@ -30,7 +30,7 @@ class NiceDNRService
     }
 
     // Nice DNR API 호출
-    public function getNiceDnr($ownerNm, $vhrNo, $key)
+    public function getNiceDnr($owner_name, $car_no, $key)
     {
         if($this->endpointKey !== $key) {
             $msg = [
@@ -40,7 +40,7 @@ class NiceDNRService
             return $msg;
         }
 
-        $cacheKey = 'niceDnr_' . $ownerNm . '_' . $vhrNo;
+        $cacheKey = 'niceDnr_' . $owner_name . '_' . $car_no;
 
         // 1. 캐시에서 먼저 확인
         $cachedData = Cache::get($cacheKey);
@@ -49,8 +49,8 @@ class NiceDNRService
         }
 
         // 2. 캐시에 없으면 DB에서 확인
-        $dbData = NiceDNRData::where('ownerNm', $ownerNm)
-            ->where('vhrNo', $vhrNo)
+        $dbData = NiceDNRData::where('owner_name', $owner_name)
+            ->where('car_no', $car_no)
             ->first();
 
         if ($dbData) {
@@ -66,13 +66,13 @@ class NiceDNRService
                 'method' => 'GET',
                 'url' => config('niceDnr.NICE_DNR_API_URL'),
                 'params' => [
-                    'loginId'  => $this->loginId,
-                    'kindOf'   => $this->kindOf,
-                    'apiKey'   => $this->apiKey,
-                    'chkSec'   => $this->chkSec,
-                    'chkKey'   => $this->chkKey,
-                    'ownerNm'  => $ownerNm,
-                    'vhrNo'    => $vhrNo,
+                    'loginId'       => $this->loginId,
+                    'kindOf'        => $this->kindOf,
+                    'apiKey'        => $this->apiKey,
+                    'chkSec'        => $this->chkSec,
+                    'chkKey'        => $this->chkKey,
+                    'owner_name'    => $owner_name,
+                    'car_no'        => $car_no,
                 ],
             ];
 
@@ -103,10 +103,10 @@ class NiceDNRService
 
                 // API 응답 데이터를 DB에 저장
                 NiceDNRData::create([
-                    'ownerNm'  => $ownerNm,
-                    'vhrNo'    => $vhrNo,
-                    'isCached' => 'true',
-                    'data'     => $responseData
+                    'owner_name'  => $owner_name,
+                    'car_no'      => $car_no,
+                    'is_cached'   => 'true',
+                    'data'        => $responseData
                 ]);
 
                 // API 응답 데이터를 캐시에도 저장
@@ -132,8 +132,8 @@ class NiceDNRService
                 'name'=> 'Nice DNR API 호출 실패',
                 'path'=> __FILE__,
                 'line'=> __LINE__,
-                'ownerNm' => $ownerNm,
-                'vhrNo' => $vhrNo
+                'owner_name' => $owner_name,
+                'car_no' => $car_no
             ]);
 
             return [
@@ -154,11 +154,11 @@ class NiceDNRService
     }
 
 
-    public function getNiceDnrHistory($ownerNm, $vhrNo)
+    public function getNiceDnrHistory($owner_name, $car_no)
     {
 
-        $dbData = NiceDNRData::where('ownerNm', $ownerNm)
-            ->where('vhrNo', $vhrNo)
+        $dbData = NiceDNRData::where('owner_name', $owner_name)
+            ->where('car_no', $car_no)
             ->first();
 
         if ($dbData) {

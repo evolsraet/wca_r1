@@ -357,12 +357,12 @@ export const auctionEvent = {
     }
   },
 
-  getNiceDnrHistory: async (ownerNm, vhrNo) => {
+  getNiceDnrHistory: async (owner_name, car_no) => {
 
     try {
       const res = await Alpine.store('api').get(`/api/getNiceDnrHistory`, {
-        owner: ownerNm,
-        no: vhrNo
+        owner: owner_name,
+        no: car_no
       });
       return res;
     } catch (error) {

@@ -1195,12 +1195,12 @@ const isAccident = (id) => {
   }
 
 
-  const getNiceDnrHistory = async (ownerNm, vhrNo) => {
+  const getNiceDnrHistory = async (owner_name, car_no) => {
     return wicac.conn()
     .url(`/api/getNiceDnrHistory`)
     .param({
-        "owner":ownerNm,
-        "no":vhrNo
+        "owner":owner_name,
+        "no":car_no
     })
     .callback(function (result) {
       return result;
