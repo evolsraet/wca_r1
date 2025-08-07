@@ -25,8 +25,14 @@ use App\Jobs\AuctionsTestJob;
 use App\Jobs\TaksongAddJob;
 use App\Services\TaksongService;
 use App\Services\ApiRequestService;
+use App\Services\CarDataMappingService;
 use App\Jobs\AuctionBidStatusJob;
 use App\Models\Bid;
+use App\Models\CarMaker;
+use App\Models\CarModel;
+use App\Models\CarDetail;
+use App\Models\CarBp;
+use App\Models\CarGrade;
 use App\Jobs\AuctionDoneJob;
 use App\Http\Resources\AuctionResource;
 use Illuminate\Support\Str;
@@ -161,6 +167,23 @@ class AuctionController extends Controller
             return response()->api($data, '차량 정보가 없습니다.', 400);
         }
 
+        // 자동차 재원 확인 및 저장
+        $carDataMappingService = new CarDataMappingService();
+        
+        // api 데이터 - 테이블 컬럼 매핑
+        $carMakerData  = $carDataMappingService->buildCarMaker($niceDnrResult);
+        $carModelData  = $carDataMappingService->buildCarModel($niceDnrResult);
+        $carDetailData = $carDataMappingService->buildCarDetail($niceDnrResult);
+        $carBpData     = $carDataMappingService->buildCarBp($niceDnrResult);
+        $carGradeData  = $carDataMappingService->buildCarGrade($niceDnrResult);
+
+        // 자동차 재원 확인 및 저장
+        $carDataMappingService->checkAndSave(CarMaker::class, $carMakerData);
+        $carDataMappingService->checkAndSave(CarModel::class, $carModelData);
+        $carDataMappingService->checkAndSave(CarDetail::class, $carDetailData);
+        $carDataMappingService->checkAndSave(CarBp::class, $carBpData);
+        $carDataMappingService->checkAndSave(CarGrade::class, $carGradeData);
+
         // 캐시 없을 경우, 한달동안 저장
         $resource = Cache::remember($cacheKey, now()->addDays(config('days.car_info_cache_ttl')), function () use ($request) {
 
@@ -219,7 +242,6 @@ class AuctionController extends Controller
             Log::info('[차량정보 확인] / 경매 ID : ' . $result['no'], [
                 'path'=> __FILE__,
                 'line'=> __LINE__,
-                'result' => $result
             ]);
 
             // 임시 데이터 리턴

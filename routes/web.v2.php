@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BoardController;
+use App\Http\Controllers\CarSellController;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Http\Controllers\Api\AuctionController;
 use App\Services\CarInfoService;
@@ -88,42 +89,11 @@ Route::prefix('sell')->group(function () {
         return view('v2.pages.sell.index');
     })->name('sell');
 
-    Route::any('/result', function (Request $request, CarInfoService $carInfoService) {
-        if( $request->isMethod('get') ) {
-            return view('v2.pages.sell.index');
-        }
-        
-        $carInfoService->storeUserQueryHistory(
-            $request->input('owner'),
-            $request->input('no')
-        );
-
-        // Request 유효성 검사
-        $request->validate([
-            'owner' => 'required',
-            'no' => 'required',
-        ]);
-
-        // 내부 API 호출
-        $apiRequest = Request::create('/api/auctions/carInfo', 'POST', [
-            'owner' => $request->input('owner'),
-            'no' => $request->input('no'),
-        ]);
-        $response = app()->handle($apiRequest);
-        $result = json_decode($response->getContent(), true);
-
-        if ($response->getStatusCode() !== 200) {
-            return redirect()->back()->with('error', $result['message'] ?? '조회 실패');
-        }
-
-        $carInfo = $result['data'] ?? null;
-
-        if (!$carInfo || !is_array($carInfo)) {
-            return redirect()->back()->with('error', $result['message'] ?? '차량 정보를 가져올 수 없습니다.');
-        }
-
-        return view('v2.pages.sell.result', compact('carInfo'));
+    Route::get('/result', function () {
+        return view('v2.pages.sell.index');
     })->name('sell.result');
+
+    Route::post('/result', [CarSellController::class, 'result'])->name('sell.result.post');
 
     Route::post('/apply', fn () => view('v2.pages.sell.apply'))->name('sell.apply');
 });
