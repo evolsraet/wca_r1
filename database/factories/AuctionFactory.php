@@ -48,6 +48,12 @@ class AuctionFactory extends Factory
         ];
 
         $result = [
+            "car_maker_id"        => $carMaker->id,
+            "car_model_id"        => $carModel->id,
+            "car_detail_id"       => $carDetail->id,
+            "car_bp_id"           => $carBp->id,
+            "car_grade_id"        => $carGrade->id,
+                        
             'auction_type'        => $this->faker->boolean,
             'user_id'             => $user->id,
             'owner_name'          => $this->faker->name,
