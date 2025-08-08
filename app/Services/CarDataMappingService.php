@@ -2,6 +2,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\DB;
+use App\Helpers\Wca;
 
 class CarDataMappingService
 {
@@ -121,7 +122,7 @@ class CarDataMappingService
             DB::beginTransaction();
 
             // 데이터 구조 정규화 - 항상 2차원 배열로 변환
-            $normalizedData = $this->normalizeDataStructure($data);
+            $normalizedData = Wca::normalizeDataStructure($data);
 
             // 배열의 모든 id를 1차원 배열로 만들어 일괄 조회
             $inputIds = array_column($normalizedData, 'id');
@@ -150,34 +151,26 @@ class CarDataMappingService
         }
     }
 
-    // 데이터 구조 정규화 - 1차원/2차원 혼합 배열을 2차원 배열로 통일 (차량 재원 등록 시 사용)
-    private function normalizeDataStructure(array $data): array 
-    {
-        // 빈 배열 체크
-        if (empty($data)) {
-            return [];
-        }
-
-        // 이미 2차원 배열인지 확인 (첫 번째 요소가 배열인지 체크)
-        $firstElement = reset($data);
-
-        if (is_array($firstElement)) {
-            // 이미 2차원 배열 - 그대로 반환
-            return $data;
-        } else {
-            // 1차원 연관배열 - 2차원 배열로 래핑
-            return [$data];
-        }
-    }
 
     // Nice DNR API 응답 데이터를 auctions 테이블 형식으로 매핑
-    public function buildAuction(array $niceData): array
+    public function buildAuction(array $niceData, ?int $gradeId = null): array
     {
         $carInfo        = $niceData['carSise']['info']['carinfo'];
         $carPartsList   = $niceData['carParts']['outB0001']['list'] ?? [];
         $gradeList      = $carInfo['gradeList'] ?? [];
         $auctionMappings = [];
         
+        // gradeId 파라미터가 제공되면 해당 gradeId의 gradeList만 사용
+        if ($gradeId !== null) {
+            $filteredGradeList = [];
+            foreach ($gradeList as $grade) {
+                if (isset($grade['gradeId']) && intval($grade['gradeId']) === $gradeId) {
+                    $filteredGradeList[] = $grade;
+                }
+            }
+            $gradeList = $filteredGradeList;
+        }
+
         // 기본 차량 정보 매핑 구조 (상단에 한 번만 정의)
         $baseMapping = [
             'car_maker_id'          => $carInfo['makerId'] ?? null,

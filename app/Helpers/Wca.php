@@ -192,5 +192,25 @@ class Wca
             'bidNotDoneList' => $bidNotDoneList,
         ];
     }
+
+    // 데이터 구조 정규화 - 1차원/2차원 혼합 배열을 2차원 배열로 통일
+    public static function normalizeDataStructure(array $data): array 
+    {
+        // 빈 배열 체크
+        if (empty($data)) {
+            return [];
+        }
+
+        // 이미 2차원 배열인지 확인 (첫 번째 요소가 배열인지 체크)
+        $firstElement = reset($data);
+
+        if (is_array($firstElement)) {
+            // 이미 2차원 배열 - 그대로 반환
+            return $data;
+        } else {
+            // 1차원 연관배열 - 2차원 배열로 래핑
+            return [$data];
+        }
+    }
 }
 
