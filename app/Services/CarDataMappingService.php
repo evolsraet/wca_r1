@@ -170,5 +170,134 @@ class CarDataMappingService
         }
     }
 
-    # TODO: Nice API <-> auction 테이블 매핑 함수 추가 (jdh)
+    // Nice DNR API 응답 데이터를 auctions 테이블 형식으로 매핑
+    public function buildAuction(array $niceData): array
+    {
+        $carInfo        = $niceData['carSise']['info']['carinfo'];
+        $carPartsList   = $niceData['carParts']['outB0001']['list'] ?? [];
+        $gradeList      = $carInfo['gradeList'] ?? [];
+        $auctionMappings = [];
+        
+        // 기본 차량 정보 매핑 구조 (상단에 한 번만 정의)
+        $baseMapping = [
+            'car_maker_id'          => $carInfo['makerId'] ?? null,
+            'car_maker'             => $carInfo['makerNm'] ?? null,
+            'car_model_id'          => $carInfo['classModelId'] ?? null,
+            'car_model'             => $carInfo['classModelNm'] ?? null,
+            'car_detail_id'         => $carInfo['modelId'] ?? null,
+            'car_model_sub'         => $carInfo['modelNm'] ?? null,
+            'car_year'              => $carInfo['yearType'] ?? null,
+            'car_mission'           => $carInfo['gearBox'] ?? null,
+            'car_fuel'              => $carInfo['fuel'] ?? null,
+            'car_thumbnail'         => $carInfo['classModelImg'] ?? null,
+            'car_engine_type'       => $carInfo['engineType'] ?? null,
+            // carPart 관련 필드들 기본값
+            'car_first_reg_date'    => null,
+            'car_km'                => null,
+            'owner_name'            => null,
+            'car_no'                => null,
+        ];
+        
+        // carParts 데이터가 있는 경우 각 차량별로 매핑 처리
+        foreach ($carPartsList as $carPart) {
+            // 필요한 필드만 업데이트
+            $currentMapping = $baseMapping;
+            $currentMapping['car_first_reg_date']   = $carPart['resFirstDate'] ?? null;
+            $currentMapping['car_km']               = $carPart['resValidDistance'] ?? null;
+            $currentMapping['owner_name']           = $carPart['ownerNm'] ?? null;
+            $currentMapping['car_no']               = $carPart['vhrNo'] ?? null;
+
+            // gradeList가 있는 경우 각 등급별 데이터 추가
+            if (!empty($gradeList)) {
+                $processedGradeIds = []; // 중복 gradeId 방지
+
+                foreach ($gradeList as $grade) {
+                    $gradeId = $grade['gradeId'] ?? null;
+                    
+                    // 중복 gradeId 건너뛰기
+                    if ($gradeId && !in_array($gradeId, $processedGradeIds)) {
+                        $processedGradeIds[] = $gradeId;
+                        
+                        // 등급별 정보 추가
+                        $gradeMapping = $currentMapping;
+                        $gradeMapping['car_bp_id']      = $grade['bpNo'] ?? null;
+                        $gradeMapping['car_grade']      = $grade['bpNm'] ?? null;
+                        $gradeMapping['car_grade_id']   = $gradeId;
+                        $gradeMapping['car_grade_sub']  = $grade['gradeNm'] ?? null;
+                        
+                        // 주행거리 기반 시세 적용
+                        $currentKm = $currentMapping['car_km']; // 현재 주행거리
+                        $priceList = $grade['trvlDstncPriceList'] ?? [];
+                        
+                        // findPriceByKmRange 실제 주행거리에 맞는 시세 산출
+                        $gradeMapping['car_price_now'] = $this->findPriceByKmRange($currentKm, $priceList);
+                        $auctionMappings[] = $gradeMapping;
+                    }
+                }
+            } else {
+                // gradeList가 없는 경우 기본 정보만 매핑
+                $currentMapping['car_bp_id']       = null;
+                $currentMapping['car_grade']       = null;
+                $currentMapping['car_grade_id']    = null;
+                $currentMapping['car_grade_sub']   = null;
+                $currentMapping['car_price_now']   = null;
+                $auctionMappings[] = $currentMapping;
+            }
+        }
+
+        // carParts 데이터가 없는 경우 기본 차량 정보만 반환
+        if (empty($carPartsList)) {
+            $finalMapping = $baseMapping + [
+                'car_bp_id'     => null,
+                'car_grade'     => null,
+                'car_grade_id'  => null,
+                'car_grade_sub' => null,
+                'car_price_now' => null,
+            ];
+            
+            $auctionMappings[] = $finalMapping;
+        }
+
+        return $auctionMappings;
+    }
+
+    /* 주행거리 범위 산출 함수 (최적화됨)
+        - trvlDstnc는 주행거리 범위를 의미한다.
+        - trvlDstnc는 resValidDistance 값을 기준으로 산출할 수 있다.
+        - trvlDstncPriceList는 trvlDstnc 범위에 따라 시세가 달라진다.
+        - 정렬 없이 O(n) 성능으로 최적값을 직접 찾음
+    */
+    private function findPriceByKmRange($currentKm, array $trvlDstncPriceList): ?string
+    {
+        if (empty($trvlDstncPriceList)) {
+            return null;
+        }
+        
+        $currentKm = intval($currentKm);
+        $bestPrice = null;
+        $bestDistance = PHP_INT_MAX;
+        
+        // 현재 주행거리 이상인 구간 중 가장 작은 값 찾기
+        foreach ($trvlDstncPriceList as $priceInfo) {
+            $rangeKm = intval($priceInfo['trvlDstnc'] ?? 0);
+            if ($rangeKm >= $currentKm && $rangeKm < $bestDistance) {
+                $bestDistance = $rangeKm;
+                $bestPrice = $priceInfo['trvlDstncPrice'] ?? null;
+            }
+        }
+        
+        // 매치되는 구간이 없으면 최대 범위 값 사용
+        if ($bestPrice === null) {
+            $maxDistance = 0;
+            foreach ($trvlDstncPriceList as $priceInfo) {
+                $rangeKm = intval($priceInfo['trvlDstnc'] ?? 0);
+                if ($rangeKm > $maxDistance) {
+                    $maxDistance = $rangeKm;
+                    $bestPrice = $priceInfo['trvlDstncPrice'] ?? null;
+                }
+            }
+        }
+        
+        return $bestPrice;
+    }
 }
