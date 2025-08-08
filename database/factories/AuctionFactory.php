@@ -35,9 +35,9 @@ class AuctionFactory extends Factory
             'car_first_reg_date'  => $this->faker->dateTimeBetween('-10 years', '+1 month'),
             'car_mission'         => $this->faker->randomElement(['자동', '수동']),
             'car_fuel'            => $this->faker->randomElement(['가솔린', '디젤', '하이브리드', '전기']),
-            'car_price_now'       => $this->faker->randomNumber(8),
-            'car_price_now_whole' => $this->faker->randomNumber(8),
-            'car_km'              => $this->faker->randomNumber(6, true),
+            'car_price_now'       => $carPriceNow = $this->faker->numberBetween(1000000, 999999999),
+            'car_price_now_whole' => (int)($carPriceNow * 1.1),
+            'car_km'              => $this->faker->numberBetween(1000, 999999),
             'car_thumbnail'       => $this->faker->randomElement([
                 "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2022%2F05%2Fhyundai-motor-company-sonata-discontinued-01.jpg?q=75&w=800&cbr=1&fit=max",
                 "https://image-cdn.hypb.st/https%3A%2F%2Fkr.hypebeast.com%2Ffiles%2F2021%2F07%2FKia-release-new-sportage-suv-model-design-price-spec-info-twtw.jpg?w=960&cbr=1&q=90&fit=max",
