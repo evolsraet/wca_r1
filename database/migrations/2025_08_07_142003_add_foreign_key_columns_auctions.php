@@ -9,27 +9,20 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('auctions', function (Blueprint $table) {
-            $table->unsignedInteger('car_maker_id')->nullable()->after('diag_second_at')->comment('제조사 코드');
-            
-            $table->unsignedInteger('car_model_id')->nullable()->after('car_maker')->comment('대표 모델 코드');
-            
-            $table->unsignedInteger('car_detail_id')->nullable()->after('car_model')->comment('상세 모델 코드');
-            
-            $table->unsignedInteger('car_bp_id')->nullable()->after('car_model_sub')->comment('제원코드');
-            
-            $table->unsignedInteger('car_grade_id')->nullable()->after('car_bp_id')->comment('등급코드');
+            $table->unsignedInteger('car_maker_id')->after('diag_second_at')->comment('제조사 코드');
+            $table->unsignedInteger('car_model_id')->after('car_maker_id')->comment('대표 모델 코드');
+            $table->unsignedInteger('car_detail_id')->after('car_model_id')->comment('상세 모델 코드');
+            $table->unsignedInteger('car_bp_id')->after('car_detail_id')->comment('제원코드');
+            $table->unsignedInteger('car_grade_id')->after('car_bp_id')->comment('등급코드');
 
-            $table->foreign('car_maker_id')->references('id')->on('car_makers')->onDelete('set null');
-            $table->foreign('car_model_id')->references('id')->on('car_models')->onDelete('set null');
-            $table->foreign('car_detail_id')->references('id')->on('car_details')->onDelete('set null');
-            $table->foreign('car_bp_id')->references('id')->on('car_bps')->onDelete('set null');
-            $table->foreign('car_grade_id')->references('id')->on('car_grades')->onDelete('set null');
+            $table->foreign('car_maker_id')->references('id')->on('car_makers')->cascadeOnDelete();
+            $table->foreign('car_model_id')->references('id')->on('car_models')->cascadeOnDelete();
+            $table->foreign('car_detail_id')->references('id')->on('car_details')->cascadeOnDelete();
+            $table->foreign('car_bp_id')->references('id')->on('car_bps')->cascadeOnDelete();
+            $table->foreign('car_grade_id')->references('id')->on('car_grades')->cascadeOnDelete();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('auctions', function (Blueprint $table) {

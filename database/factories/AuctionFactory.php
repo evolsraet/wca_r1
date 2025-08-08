@@ -3,7 +3,12 @@
 namespace Database\Factories;
 
 use App\Models\Auction;
+use App\Models\CarMaker;
+use App\Models\CarModel;
+use App\Models\CarDetail;
+use App\Models\CarGrade;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use App\Models\CarBp;
 
 class AuctionFactory extends Factory
 {
@@ -13,6 +18,13 @@ class AuctionFactory extends Factory
     {
         $user = \App\Models\User::role('user')->inRandomOrder()->first();
         $status = $this->faker->randomElement(array_keys((new Auction)->enums['status']));
+
+        // 랜덤한 차량 데이터 가져오기
+        $carMaker = CarMaker::inRandomOrder()->first();
+        $carModel = CarModel::where('maker_id', $carMaker->id)->inRandomOrder()->first();
+        $carDetail = CarDetail::where('model_id', $carModel->id)->inRandomOrder()->first();
+        $carBp = CarBp::where('detail_id', $carDetail->id)->inRandomOrder()->first();
+        $carGrade = CarGrade::inRandomOrder()->first();
 
         $tmpCars = [
             [
@@ -151,6 +163,12 @@ class AuctionFactory extends Factory
             'hit' => $this->faker->randomDigit,
             'diag_first_at' => $this->faker->dateTimeBetween('-1 month', '+1 month'),
             'diag_second_at' => $this->faker->dateTimeBetween('-1 month', '+1 month'),
+            // 외래 키 필드들 추가
+            'car_maker_id' => $carMaker->id,
+            'car_model_id' => $carModel->id,
+            'car_detail_id' => $carDetail->id,
+            'car_grade_id' => $carGrade->id,
+            'car_bp_id' => $carBp->id,
             'car_maker' => $car['makerNm'],
             'car_model' => $car['modelNm'],
             'car_model_sub' => $car['subGrade'],
