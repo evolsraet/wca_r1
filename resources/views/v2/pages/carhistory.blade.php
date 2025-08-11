@@ -1,3 +1,16 @@
+@php
+  // dd( request()->header());
+  // 리퍼러에 wecarmobility.co.kr 이 없는 경우 403 에러
+  if (
+    !Str::contains(request()->header('referer'), 'wecarmobility.co.kr') &&
+    !Str::contains(request()->header('host'), 'localhost')
+  ) {
+    header('HTTP/1.1 403 Forbidden');
+    exit('403 Forbidden');
+  }
+
+@endphp
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -52,7 +65,14 @@
         <label for="carNo" class="form-label">차량번호</label>
         <input type="text" class="form-control" id="carNo" placeholder="예: 08오5060">
       </div> --}}
-      <input type="hidden" class="form-control" id="carNo" value="<?=$_GET['car_no']?>" placeholder="예: 08오5060">
+      @if(request()->get('car_no'))
+        <input type="hidden" class="form-control" id="carNo" value="{{request()->get('car_no')}}" placeholder="예: 08오5060">
+      @else
+        <div class="mb-3">
+          <label for="carNo" class="form-label">차량번호</label>
+          <input type="text" class="form-control" id="carNo" placeholder="예: 08오5060">
+        </div>
+      @endif
 
       <div class="mb-3">
         <label class="form-label d-block">조회 종류</label>
