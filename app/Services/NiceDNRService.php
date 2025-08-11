@@ -66,18 +66,20 @@ class NiceDNRService
                 'method' => 'GET',
                 'url' => config('niceDnr.NICE_DNR_API_URL'),
                 'params' => [
-                    'loginId'       => $this->loginId,
-                    'kindOf'        => $this->kindOf,
-                    'apiKey'        => $this->apiKey,
-                    'chkSec'        => $this->chkSec,
-                    'chkKey'        => $this->chkKey,
-                    'owner_name'    => $owner_name,
-                    'car_no'        => $car_no,
+                    'loginId'  => $this->loginId,
+                    'kindOf'   => $this->kindOf,
+                    'apiKey'   => $this->apiKey,
+                    'chkSec'   => $this->chkSec,
+                    'chkKey'   => $this->chkKey,
+                    'ownerNm'  => $owner_name,
+                    'vhrNo'    => $car_no,
                 ],
             ];
 
             $api = new ApiRequestService();
             $response = $api->sendRequest($sendRequest);
+            Log::debug('file : ' . __FILE__ . ' line : ' . __LINE__);
+            Log::debug('response : ' . json_encode($response, JSON_UNESCAPED_UNICODE));
 
             if(!$response){
                 throw new Exception('Connection timed out: Failed to connect to '.config('niceDnr.NICE_DNR_API_URL'), 500);
@@ -103,10 +105,10 @@ class NiceDNRService
 
                 // API 응답 데이터를 DB에 저장
                 NiceDNRData::create([
-                    'owner_name'  => $owner_name,
-                    'car_no'      => $car_no,
-                    'is_cached'   => 'true',
-                    'data'        => $responseData
+                        'owner_name'  => $owner_name,
+                        'car_no'      => $car_no,
+                        'is_cached'   => 'true',
+                        'data'        => $responseData
                 ]);
 
                 // API 응답 데이터를 캐시에도 저장
