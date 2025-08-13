@@ -20,6 +20,13 @@
     {{-- @endphp --}}
     {{-- <script type="module" src="{{ $viteDev }}/resources/v2/js/app.v2.js" defer></script> --}}
 
+    <script>
+        document.addEventListener('alpine:init', () => {
+            @if(session('redirectError'))
+                Alpine.store('common').showError('{{ addslashes(session("redirectError")) }}');
+            @endif
+        });
+    </script>
 </head>
 <body>
 

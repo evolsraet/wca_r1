@@ -56,17 +56,16 @@
 
                 <div class="col-md-12">
                   <div class="mt-5 p-4 text-center rightContentInner">
-                    <form method="POST" action="{{ route('sell.result') }}" @submit="submitForm">
-                        @csrf
+                    <form @submit.prevent="submitForm">
 
                         <!-- 소유자 질문 -->
                         <div class="mb-3">
-                            <input type="text" name="owner" class="form-control" placeholder="소유자가 누구인가요?" required autofocus>
+                            <input type="text" name="owner" x-model="owner" class="form-control" placeholder="소유자가 누구인가요?" required autofocus :disabled="loading">
                         </div>
 
                         <!-- 차량번호 입력 -->
                         <div class="mb-4">
-                            <input type="text" name="no" class="form-control" placeholder="차량 번호를 입력해주세요." required>
+                            <input type="text" name="no" x-model="no" class="form-control" placeholder="차량 번호를 입력해주세요." required :disabled="loading">
                         </div>
 
                         <!-- 로고 (이미지 직접 넣을 위치) -->

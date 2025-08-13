@@ -78,8 +78,6 @@ class NiceDNRService
 
             $api = new ApiRequestService();
             $response = $api->sendRequest($sendRequest);
-            Log::debug('file : ' . __FILE__ . ' line : ' . __LINE__);
-            Log::debug('response : ' . json_encode($response, JSON_UNESCAPED_UNICODE));
 
             if(!$response){
                 throw new Exception('Connection timed out: Failed to connect to '.config('niceDnr.NICE_DNR_API_URL'), 500);
@@ -198,5 +196,21 @@ class NiceDNRService
         // return $dbData;
     }
 
+    // NiceDNRData 테이블에서 카머스 도매 시세 업데이트
+    public function updateCarmercePrice($owner_name, $car_no, $carmerce_price)
+    {
+        NiceDNRData::where('owner_name', $owner_name)
+            ->where('car_no', $car_no)
+            ->update(['carmerce_price' => $carmerce_price]);
+    }
 
+    /*
+        nice_dnr_datas 테이블에서 API 호출 결과 조회
+        owner_name = 소유주, car_no = 차량번호
+        carInfo 배열 형식: ['owner_name' => '소유주', 'car_no' => '차량번호']
+     */
+    public function getNiceDnrData(array $carInfo)
+    {
+        return NiceDnrData::where('owner_name', $carInfo['owner_name'])->where('car_no', $carInfo['car_no'])->first();
+    }
 }

@@ -24,7 +24,8 @@ class NiceDNRData extends Model
         'owner_name',
         'car_no',
         'is_cached',
-        'data'
+        'data',
+        'carmerce_price'
     ];
 
     /**
@@ -34,6 +35,7 @@ class NiceDNRData extends Model
      */
     protected $casts = [
         'data' => 'array',  // JSON 필드를 자동으로 array로 캐스팅
-        'is_cached' => 'string'
+        'is_cached' => 'string',
+        'carmerce_price' => 'integer'
     ];
 }

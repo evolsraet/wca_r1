@@ -18,6 +18,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\Api\DiagController;
 use App\Http\Controllers\Api\OwnershipController;
 use App\Http\Controllers\Api\WebhookController;
+use App\Http\Controllers\CarSellController;
 use App\Helpers\Wca;
 
 // Route::post('forgetPassword', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
@@ -219,3 +220,6 @@ Route::post('/test/upload', function (Request $request) {
 Route::get('test-car-history', [AuctionController::class, 'testCarHistory']);
 
 Route::get('test-bid-count', [AuctionController::class, 'testBidCount']);
+
+Route::post('sell/car-info/lookup', [CarSellController::class, 'lookupCarInfo']);
+Route::post('sell/car-info/grade-selection', [CarSellController::class, 'storeGradeSelection']);

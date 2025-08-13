@@ -93,7 +93,7 @@ Route::prefix('sell')->group(function () {
         return view('v2.pages.sell.index');
     })->name('sell.result');
 
-    Route::post('/result', [CarSellController::class, 'result'])->name('sell.result.post');
+    Route::get('/car_info', [CarSellController::class, 'showResult'])->name('sell.car_info');
 
     Route::post('/apply', fn () => view('v2.pages.sell.apply'))->name('sell.apply');
 });

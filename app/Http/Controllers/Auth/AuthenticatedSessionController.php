@@ -124,8 +124,8 @@ class AuthenticatedSessionController extends Controller
             'user_email' => $request->user()->email
         ]);
 
-        // 로그인 성공 후 세션의 히스토리를 사용자 Cache로 마이그레이션
-        $carInfoService->migrateSessionHistoryToUserCache();
+        // DELME: 로그인 성공 후 세션의 히스토리를 사용자 Cache로 마이그레이션
+        // $carInfoService->migrateSessionHistoryToUserCache();
         
         Log::info('[로그인] 세션 히스토리 마이그레이션 완료', [
             'user_id' => $request->user()->id

@@ -260,7 +260,7 @@ class CarDataMappingService
         - trvlDstncPriceList는 trvlDstnc 범위에 따라 시세가 달라진다.
         - 정렬 없이 O(n) 성능으로 최적값을 직접 찾음
     */
-    private function findPriceByKmRange($currentKm, array $trvlDstncPriceList): ?string
+    public function findPriceByKmRange($currentKm, array $trvlDstncPriceList): ?string
     {
         if (empty($trvlDstncPriceList)) {
             return null;

@@ -34,7 +34,7 @@ class CarmerceService
     }
 
     // 카머스 시세 조회
-    public function getCarmercePrice($accessToken, $currentData)
+    public function getCarmercePrice($accessToken, $carInfo)
     {
         $today = date('Y-m-d');
         $nowYear = date('Y');
@@ -43,12 +43,12 @@ class CarmerceService
             'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $accessToken,
         ])->post(config('carmerceApi.CARMERCE_PRICE_API_URL'), [
-            'startDt' => $currentData['resFirstDate'],
+            'startDt' => $carInfo['resFirstDate'],
             'endDt' => $today,
-            'carName' => $currentData['classModelNm'],
-            'startMakeYear' => $currentData['yearType'],
+            'carName' => $carInfo['classModelNm'],
+            'startMakeYear' => $carInfo['yearType'],
             'endMakeYear' => $nowYear,
-            'startDriveKm' => $currentData['km'],
+            'startDriveKm' => $carInfo['km'],
             'endDriveKm' => '',
         ]);
 
@@ -63,19 +63,14 @@ class CarmerceService
     }   
 
     // 카머스 시세 결과
-    public function getCarmerceResult( $currentData )
+    public function getCarmerceResult( $carInfo )
     {
-
-        $carName = $currentData['classModelNm'];
-        $startMakeYear = $currentData['yearType'];
-        $startDriveKm = $currentData['km'];
-
         $auth = $this->getCarmerceAuth(); // 인증 
 
-        $refreshToken = $auth['refreshToken']; // 리프레시 토큰
+        // $refreshToken = $auth['refreshToken']; // 리프레시 토큰
         $accessToken = $auth['accessToken']; // 액세스 토큰 
 
-        $priceResult = $this->getCarmercePrice($accessToken, $currentData); // 시세확인 
+        $priceResult = $this->getCarmercePrice($accessToken, $carInfo); // 시세확인 
         $result = $priceResult;
 
         // bidAmt 값의 평균 계산
@@ -84,8 +79,8 @@ class CarmerceService
         $roundedPrice = round($averageBidAmt);
 
         // 차량 시세 계산 레인지 두기 (수정필요)
-        $minPrice = $roundedPrice - 1000000;
-        $maxPrice = $roundedPrice + 1000000;
+        // $minPrice = $roundedPrice - 1000000;
+        // $maxPrice = $roundedPrice + 1000000;
 
         return $roundedPrice * 10000;
     }

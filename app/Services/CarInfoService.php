@@ -5,6 +5,7 @@ namespace App\Services;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use App\Models\NiceDnrData;
 
 class CarInfoService
 {
@@ -13,6 +14,8 @@ class CarInfoService
         $user = Auth::user();
 
         if (!$user) return null;
+
+        $this->migrateSessionHistoryToUserCache();
 
         $userCacheKey = "carInfo.user.{$user->id}";
 
@@ -28,7 +31,7 @@ class CarInfoService
         return (!empty($carInfo['owner']) && !empty($carInfo['no'])) ? $carInfo : null;
     }
 
-    public function storeUserQueryHistory(string $owner, string $no): void
+    public function storeUserQueryHistory(string $owner, string $no, string $gradeId = ''): void
     {
         $user = Auth::user();
         
@@ -58,15 +61,17 @@ class CarInfoService
             
             // 중복 제거 (같은 owner & no 조합이 있는지 확인)
             $exists = collect($history)->first(fn($item) =>
-                isset($item['owner'], $item['no']) &&
+                isset($item['owner'], $item['no'], $item['gradeId']) &&
                 $item['owner'] === $owner &&
-                $item['no'] === $no
+                $item['no'] === $no &&
+                $item['gradeId'] === $gradeId
             );
             
             if (!$exists) {
                 $newItem = [
                     'owner' => $owner,
                     'no' => $no,
+                    'gradeId' => $gradeId,
                     'created_at' => now()->toISOString(),
                 ];
                 $history[] = $newItem;
@@ -106,15 +111,17 @@ class CarInfoService
             
             // 중복 제거
             $exists = collect($history)->first(fn($item) =>
-                isset($item['owner'], $item['no']) &&
+                isset($item['owner'], $item['no'], $item['gradeId']) &&
                 $item['owner'] === $owner &&
-                $item['no'] === $no
+                $item['no'] === $no &&
+                $item['gradeId'] === $gradeId
             );
             
             if (!$exists) {
                 $newItem = [
                     'owner' => $owner,
                     'no' => $no,
+                    'gradeId' => $gradeId,
                     'created_at' => now()->toISOString(),
                 ];
                 $history[] = $newItem;

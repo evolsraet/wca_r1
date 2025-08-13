@@ -44,7 +44,7 @@
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">용도변경이력</div>
-                        <div class="col-8 info-value">{{ $carInfo['resUseHistYn'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $extraInfo['use_history_yn'] ?? '-' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">모델</div>
@@ -52,11 +52,11 @@
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">배기량</div>
-                        <div class="col-8 info-value">{{ $carInfo['engineSize'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $extraInfo['engine_size'] ?? '-' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">튜닝이력</div>
-                        <div class="col-8 info-value">{{ $carInfo['tuning'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $extraInfo['tuning'] ?? '-' }}</div>
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">등급</div>
@@ -68,7 +68,7 @@
                     </div>
                     <div class="list-item col-12 row mb-3">
                         <div class="col-4 info-label">세부모델</div>
-                        <div class="col-8 info-value">{{ $carInfo['car_model_sub'] ?? '-' }}</div>
+                        <div class="col-8 info-value">{{ $extraInfo['car_model_sub'] ?? '-' }}</div>
                     </div>
                 </div>
 
@@ -106,7 +106,7 @@
                 <div class="d-flex justify-content-between sell-box p-2">
                     <span class="text-muted fw-bold">현재 시세 <small>(소매가)</small></span>
                     <span class="fw-bold text-danger fs-5">
-                        {{ isset($carInfo['priceNow']) ? number_format($carInfo['priceNow'] / 10000) : '0' }} 만원
+                        {{ isset($carInfo['car_price_now']) ? number_format($carInfo['car_price_now'] / 10000) : '0' }} 만원
                     </span>
                 </div>
                 <div class="text-end small text-muted">※ NICE D&R 제공</div>
@@ -116,14 +116,14 @@
                 <div class="d-flex justify-content-between sell-box p-2">
                     <span class="text-muted fw-bold">현재 시세 <small>(도매가)</small></span>
                     <span class="fw-bold text-danger fs-5">
-                        {{ isset($carInfo['priceNowWhole']) ? number_format($carInfo['priceNowWhole'] / 10000) : '0' }} 만원
+                        {{ isset($extraInfo['price_now_whole']) ? number_format($extraInfo['price_now_whole'] / 10000) : '0' }} 만원
                     </span>
                 </div>
                 <div class="text-end small text-muted">※ 오토허브셀카 제공</div>
             </div>
 
             <p class="small text-muted mt-3 mb-4">
-                ※ 도매 및 소매 시세는 무사고 차량 표준주행거리(1년 15000Km)를 기준으로 제시된 금액입니다.
+                ※ 도매 및 소매 시세는 무사고 차량 표준주행거리(1년 15000Km)를  / 주행거리별 기준으로 제시된 금액입니다.
             </p>
 
             <div class="d-flex justify-content-between align-items-center mb-3">
@@ -168,6 +168,7 @@
 <script>
 const isLogin = '{{ $isLogin }}';
 window.carInfo = @json($carInfo ?? []);
+window.extraInfo = @json($extraInfo ?? []);
 </script>
 
 @endsection

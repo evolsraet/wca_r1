@@ -39,6 +39,7 @@ use Illuminate\Support\Str;
 use App\Libraries\SeedEncryptor;
 use App\Libraries\SeedCipher;
 use App\Helpers\Wca;
+use Illuminate\Support\Facades\DB;
 
 class AuctionController extends Controller
 {
@@ -119,167 +120,127 @@ class AuctionController extends Controller
      * @LRDparam forceRefresh optional
      */
     public function carInfo(Request $request)
-    {
-        $NiceDNRService = new NiceDNRService();
-
-        $request->validate([
-            'owner' => 'required',
-            'no' => 'required',
-        ]);
-
-        $cacheKey = "carInfo." . $request->input('owner') . $request->input('no');
-        $message = null;
-
-        // 경매중인 차량번호 중에 같은 차량번호 있는지 확인
-        if($request->input('owner') && $request->input('no') && $request->input('mode') == 'carInfo'){
-            $auction = Auction::where('car_no', $request->input('no'))->where('status', 'ing')->first();
-            if($auction){
-                $data = [
-                    'status' => 'is_not',
-                    'message' => '경매중인 차량번호입니다.',
-                ];
-                return response()->api($data, '경매중인 차량번호입니다.', 400);
-            }
-        }
-
-        // 캐시 삭제 조건
-        // 강제동기 && 캐시있을때 && 같은 차번 하루1회만
-        if ($request->input('forceRefresh') && Cache::has($cacheKey) && !Cache::has($cacheKey . "forceRefresh")) {
-            Cache::forget($cacheKey);
-            Cache::put($cacheKey . "forceRefresh", 'true', now()->endOfDay());
-        } elseif ($request->input('forceRefresh') && Cache::has($cacheKey . "forceRefresh")) {
-            $message = '갱신은 하루 1회만 가능합니다.';
-        }
-
-        // 강제 갱신 (테스트)
-        // if ($request->input('forceRefresh')) {
-        //     Cache::forget($cacheKey);
-        //     Cache::put($cacheKey . "forceRefresh", 'true', now()->endOfDay()); // 실제처럼 기록도 남기고
-        // }
-
-        $niceDnrResult = $NiceDNRService->getNiceDnr($request->input('owner'), $request->input('no'), config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
-
-        if(isset($niceDnrResult['count']) && $niceDnrResult['count'] == 0){
-            $data = [
-                'status' => 'is_not_count',
-                'message' => '차량 정보가 없습니다.',
-            ];
-            return response()->api($data, '차량 정보가 없습니다.', 400);
-        }
-
-        // 자동차 재원 확인 및 저장
-        $carDataMappingService = new CarDataMappingService();
-        
-        // api 데이터 - 테이블 컬럼 매핑
-        $carMakerData  = $carDataMappingService->buildCarMaker($niceDnrResult);
-        $carModelData  = $carDataMappingService->buildCarModel($niceDnrResult);
-        $carDetailData = $carDataMappingService->buildCarDetail($niceDnrResult);
-        $carBpData     = $carDataMappingService->buildCarBp($niceDnrResult);
-        $carGradeData  = $carDataMappingService->buildCarGrade($niceDnrResult);
-
-        // 자동차 재원 확인 및 저장
-        $carDataMappingService->checkAndSave(CarMaker::class, $carMakerData);
-        $carDataMappingService->checkAndSave(CarModel::class, $carModelData);
-        $carDataMappingService->checkAndSave(CarDetail::class, $carDetailData);
-        $carDataMappingService->checkAndSave(CarBp::class, $carBpData);
-        $carDataMappingService->checkAndSave(CarGrade::class, $carGradeData);
-
-        // 캐시 없을 경우, 한달동안 저장
-        $resource = Cache::remember($cacheKey, now()->addDays(config('days.car_info_cache_ttl')), function () use ($request) {
-
-            // $auctionService = new AuctionService();
-            // $niceDnrResult = $auctionService->getNiceDnr($request->input('owner'), $request->input('no'));
-
-
+    {        
+        try{
             $NiceDNRService = new NiceDNRService();
-            $niceDnrResult = $NiceDNRService->getNiceDnr($request->input('owner'), $request->input('no'), config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
+            DB::beginTransaction();
 
-            $CarmerceService = new CarmerceService();
-
-            $result = [
-                'owner' => $request->input('owner'),
-                'no' => $request->input('no'),
-                'maker' => $niceDnrResult['carSise']['info']['carinfo']['makerNm'],
-                'model' => $niceDnrResult['carSise']['info']['carinfo']['modelNm'],
-                // 'modelSub' => $niceDnrResult['data']['carSize']['info']['subGrade'],
-                // 'grade' => $niceDnrResult['data']['carSize']['info']['grade'],
-                // 'gradeSub' => $niceDnrResult['carSize']['info']['subGrade'],
-                'modelSub' => $niceDnrResult['carSise']['info']['carinfo']['formNm'],
-                'grade' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['gradeNm'],
-                'gradeSub' => '-',
-                'year' => $niceDnrResult['carSise']['info']['carinfo']['prye'],
-                'firstRegDate' => Carbon::parse($niceDnrResult['carParts']['outB0001']['list'][0]['resFirstDate'])->format('Y-m-d'),
-                'engineSize' => $niceDnrResult['carSise']['info']['carinfo']['engineSize'].' cc',
-                'mission' => $niceDnrResult['carSise']['info']['carinfo']['gearBox'],
-                'fuel' => $niceDnrResult['carSise']['info']['carinfo']['fuel'],
-                'priceNow' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['trvlDstncPriceList'][0]['trvlDstncPrice'], // 소매 시세가 (나이스DNR 시세확인 API
-                'priceNowWhole' => $CarmerceService->getCarmerceResult($niceDnrResult['carInfo']), // 도매 시세가 (카머스 시세확인 API)
-                'thumbnail' => $niceDnrResult['carSise']['info']['carinfo']['classModelImg'],
-                'km' => $niceDnrResult['carParts']['outB0001']['list'][0]['resValidDistance'],
-                'tuning' => count($niceDnrResult['carParts']['outB0001']['list'][0]['resContentsList']),
-                'resUseHistYn' => $niceDnrResult['carParts']['outB0001']['list'][0]['resUseHistYn'] === 'Y' ? '사용' : '없음',
-                'initialPrice' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['price'],
-                'engineType' => $niceDnrResult['carSise']['info']['carinfo']['engineType'],
-
-                'owner_name' => $request->input('owner'),
-                'car_no' => $request->input('no'),
-                'car_maker' => $niceDnrResult['carSise']['info']['carinfo']['makerNm'],
-                'car_model' => $niceDnrResult['carSise']['info']['carinfo']['modelNm'],
-                'car_model_sub' => $niceDnrResult['carSise']['info']['carinfo']['formNm'],
-                'car_grade' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['gradeNm'],
-                'car_grade_sub' => '-',
-                'car_year' => $niceDnrResult['carSise']['info']['carinfo']['prye'],
-                'car_first_reg_date' => Carbon::parse($niceDnrResult['carParts']['outB0001']['list'][0]['resFirstDate'])->format('Y-m-d'),
-                'car_mission' => $niceDnrResult['carSise']['info']['carinfo']['gearBox'],
-                'car_fuel' => $niceDnrResult['carSise']['info']['carinfo']['fuel'],
-                'car_price_now' => $niceDnrResult['carSise']['info']['carinfo']['gradeList'][0]['trvlDstncPriceList'][0]['trvlDstncPrice'],
-                'car_price_now_whole' => $CarmerceService->getCarmerceResult($niceDnrResult['carInfo']),
-                'car_thumbnail' => $niceDnrResult['carSise']['info']['carinfo']['classModelImg'],
-                'car_km' => $niceDnrResult['carParts']['outB0001']['list'][0]['resValidDistance'],
-                'car_engine_type' => $niceDnrResult['carSise']['info']['carinfo']['engineType'],
-            ];
-
-            Log::info('[차량정보 확인] / 경매 ID : ' . $result['no'], [
-                'path'=> __FILE__,
-                'line'=> __LINE__,
+            $request->validate([
+                'owner' => 'required',
+                'no'    => 'required',
             ]);
 
-            // 임시 데이터 리턴
-            return $result;
-        });
+            $cacheKey = "carInfo." . $request->input('owner') . $request->input('no');
+            $message = null;
 
+            // 경매중인 차량번호 중에 같은 차량번호 있는지 확인
+            if($request->input('owner') && $request->input('no') && $request->input('mode') == 'carInfo'){
+                $auction = Auction::where('car_no', $request->input('no'))->where('status', 'ing')->first();
+                if($auction){
+                    $data = [
+                        'status' => 'is_not',
+                        'message' => '경매중인 차량번호입니다.',
+                    ];
+                    return response()->api($data, '경매중인 차량번호입니다.', 400);
+                }
+            }
+
+            // 캐시 삭제 조건
+            // 강제동기 && 캐시있을때 && 같은 차번 하루1회만
+            if ($request->input('forceRefresh') && Cache::has($cacheKey) && !Cache::has($cacheKey . "forceRefresh")) {
+                Cache::forget($cacheKey);
+                Cache::put($cacheKey . "forceRefresh", 'true', now()->endOfDay());
+            } elseif ($request->input('forceRefresh') && Cache::has($cacheKey . "forceRefresh")) {
+                $message = '갱신은 하루 1회만 가능합니다.';
+            }
+
+            $niceDnrResult = $NiceDNRService->getNiceDnr($request->input('owner'), $request->input('no'), config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
+
+            // nice_dnr_datas 카머스 도매 시세 조회
+            $niceDnrData = $NiceDNRService->getNiceDnrData([
+                'owner_name' => $request->input('owner'),
+                'car_no'     => $request->input('no'),
+            ]);
+
+            // 참고: 2025년 8월 기준 카머스 조회는 여기서 한 번 이루어짐 -> 추후 여러 곳에서 카머스 조회 시 아래 코드를 Service로 옮기는 것 고려해야 함
+            if( empty($niceDnrData) || empty($niceDnrData->carmerce_price) ) {
+                $CarmerceService    = new CarmerceService();
+                $carmercePrice      = $CarmerceService->getCarmerceResult($niceDnrResult['carInfo']);
+                $NiceDNRService->updateCarmercePrice($request->input('owner'), $request->input('no'), $carmercePrice);
+            } else {
+                $carmercePrice = $niceDnrData->carmerce_price;
+            }
+
+            if(isset($niceDnrResult['count']) && $niceDnrResult['count'] == 0){
+                $data = [
+                    'status'    => 'is_not_count',
+                    'message'   => '차량 정보가 없습니다.',
+                ];
+                return response()->api($data, '차량 정보가 없습니다.', 400);
+            }
+
+            // 자동차 재원 확인 및 저장
+            $carDataMappingService = new CarDataMappingService();
+            
+            // api 데이터 - 테이블 컬럼 매핑
+            $carMakerData  = $carDataMappingService->buildCarMaker($niceDnrResult);
+            $carModelData  = $carDataMappingService->buildCarModel($niceDnrResult);
+            $carDetailData = $carDataMappingService->buildCarDetail($niceDnrResult);
+            $carBpData     = $carDataMappingService->buildCarBp($niceDnrResult);
+            $carGradeData  = $carDataMappingService->buildCarGrade($niceDnrResult);
+
+            // 자동차 재원 확인 및 저장
+            $carDataMappingService->checkAndSave(CarMaker::class, $carMakerData);
+            $carDataMappingService->checkAndSave(CarModel::class, $carModelData);
+            $carDataMappingService->checkAndSave(CarDetail::class, $carDetailData);
+            $carDataMappingService->checkAndSave(CarBp::class, $carBpData);
+            $carDataMappingService->checkAndSave(CarGrade::class, $carGradeData);
+
+            // 캐시 없을 경우, 한달동안 저장
+            $resource = Cache::remember($cacheKey, now()->addDays(config('days.car_info_cache_ttl')), function () use ($request, $carmercePrice, $carDataMappingService) {
+                $NiceDNRService = new NiceDNRService();
+                $niceDnrResult  = $NiceDNRService->getNiceDnr($request->input('owner'), $request->input('no'), config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
+
+                // 매핑 함수를 사용하여 기본 차량 정보 생성 (auction 테이블 스키마 기준)
+                $baseCarInfoList = $carDataMappingService->buildAuction($niceDnrResult);
+                $result['carInfo'] = $baseCarInfoList[0];
+
+                // 등급 선택 시 result['gradeList'] 사용해야 하므로, 등급 필드 제거
+                unset(
+                    $result['carInfo']['car_grade_id'], 
+                    $result['carInfo']['car_grade_sub'], 
+                    $result['carInfo']['car_grade'], 
+                    $result['carInfo']['car_bp_id'],
+                    $result['carInfo']['car_price_now']
+                );
+                
+                // 추가 필드 보완
+                $result['carInfo']['car_engine_size']       = $niceDnrResult['carSise']['info']['carinfo']['engineSize'].' cc';
+                $result['carInfo']['car_price_now_whole']   = $carmercePrice;
+                $result['carInfo']['tuning']                = count($niceDnrResult['carParts']['outB0001']['list'][0]['resContentsList']);
+                $result['carInfo']['use_history_yn']        = $niceDnrResult['carParts']['outB0001']['list'][0]['resUseHistYn'] === 'Y' ? '사용' : '없음';
+
+
+                $result['gradeList'] = $niceDnrResult['carSise']['info']['carinfo']['gradeList'];
+
+                Log::info('[차량정보 확인] / 경매 ID : ' . $result['carInfo']['car_no'], [
+                    'path'=> __FILE__,
+                    'line'=> __LINE__,
+                ]);
+
+                // 임시 데이터 리턴
+                return $result;
+            });
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->api([], $e->getMessage(), 'fail', 400);
+        }
 
         return response()->api($resource, $message);
     }
 
-
-    public function showCarInfoView(Request $request)
-    {
-        $request->validate([
-            'owner' => 'required',
-            'no' => 'required',
-        ]);
-
-        // 내부 API 호출
-        $apiRequest = Request::create('/api/auctions/carInfo', 'POST', [
-            'owner' => $request->input('owner'),
-            'no' => $request->input('no'),
-        ]);
-        $response = app()->handle($apiRequest);
-        $result = json_decode($response->getContent(), true);
-
-        if ($response->getStatusCode() !== 200) {
-            return redirect()->back()->with('error', $result['message'] ?? '조회 실패');
-        }
-
-        $carInfo = $result['data'] ?? null;
-
-        if (!$carInfo || !is_array($carInfo)) {
-            return redirect()->back()->with('error', $result['message'] ?? '차량 정보를 가져올 수 없습니다.');
-        }
-
-        return view('v2.pages.sell.result', compact('carInfo'));
-    }
 
     /**
      * @lrd:start
