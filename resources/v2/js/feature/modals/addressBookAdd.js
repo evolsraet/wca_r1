@@ -1,5 +1,5 @@
 import Alpine from 'alpinejs';
-import { addressbook } from '../../util/addressbook';
+import { addressbook } from '../../util/addressBook';
 Alpine.store('addressbook', addressbook);
 
 export default function () {

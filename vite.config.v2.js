@@ -56,7 +56,7 @@ export default defineConfig(({ mode }) => {
     },
     build: {
         outDir: 'public/build/v2',
-        manifest: true,
+        manifest: 'manifest.json',
         rollupOptions: {
             output: {
                 assetFileNames: (assetInfo) => {
