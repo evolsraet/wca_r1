@@ -35,7 +35,12 @@ export default function () {
                 is_business_owner: '0',
                 is_agree: '',
                 personal_id_number: '',
-                car_engine_type: ''
+                car_engine_type: '',
+                car_maker_id: '',
+                car_model_id: '',
+                car_detail_id: '',
+                car_bp_id: '',
+                car_grade_id: ''
             },
         },
         checkBusiness: false,

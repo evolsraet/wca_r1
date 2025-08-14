@@ -18,7 +18,13 @@ $user_phone = $user->phone;
                         <div class="mb-4 mt-5   ">
 
                             <x-forms.input type="hidden" name="auction.auction_type" value="0" required :errors="true" />
-                            
+
+                            <x-forms.input type="hidden" name="auction.car_maker_id" value="{{ $carInfo['car_maker_id'] }}" required :errors="true" />
+                            <x-forms.input type="hidden" name="auction.car_model_id" value="{{ $carInfo['car_model_id'] ?? '' }}" required :errors="true" />
+                            <x-forms.input type="hidden" name="auction.car_detail_id" value="{{ $carInfo['car_detail_id'] ?? '' }}" required :errors="true" />
+                            <x-forms.input type="hidden" name="auction.car_bp_id" value="{{ $carInfo['car_bp_id'] ?? '' }}" required :errors="true" />
+                            <x-forms.input type="hidden" name="auction.car_grade_id" value="{{ $carInfo['car_grade_id'] ?? '' }}" required :errors="true" />
+
                             <x-forms.input type="hidden" name="auction.car_thumbnail" value="{{ $carInfo['car_thumbnail'] ?? '' }}" required :errors="true" />
                             <x-forms.input type="hidden" name="auction.car_price_now" value="{{ $carInfo['car_price_now'] ?? '' }}" required :errors="true" />
                             <x-forms.input type="hidden" name="auction.car_price_now_whole" value="{{ $carInfo['car_price_now_whole'] ?? '' }}" required :errors="true" />
