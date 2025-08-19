@@ -80,7 +80,7 @@ class NiceDNRService
             $response = $api->sendRequest($sendRequest);
 
             if(!$response){
-                throw new Exception('Connection timed out: Failed to connect to '.config('niceDnr.NICE_DNR_API_URL'), 500);
+                throw new \Exception('Connection timed out: Failed to connect to '.config('niceDnr.NICE_DNR_API_URL'), 500);
             }
 
 

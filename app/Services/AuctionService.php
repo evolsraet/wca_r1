@@ -1059,14 +1059,14 @@ class AuctionService
             
             // Nice DNR 데이터 조회
             $niceDnrResult = $niceDnrService->getNiceDnr($owner, $no, config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
-            
+
             // API 응답 구조에 맞는 유효성 검사
             if (empty($niceDnrResult) || 
                 !isset($niceDnrResult['resultCode']) || 
                 $niceDnrResult['resultCode'] !== '0000' ||
                 !isset($niceDnrResult['carSise']['info']['carinfo']) ||
                 !isset($niceDnrResult['carParts']['outB0001']['list'][0])) {
-                throw new \Exception('차량 정보를 조회할 수 없습니다.');
+                throw new \Exception($niceDnrResult['resultMsg'] ?? '차량 정보를 찾을 수 없습니다.');
             }
             
             // 카머스 시세 조회 및 업데이트
