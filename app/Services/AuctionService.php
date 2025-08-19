@@ -32,10 +32,42 @@ use App\Services\ApiRequestService;
 use Illuminate\Support\Str;
 use Vinkla\Hashids\Facades\Hashids;
 use App\Models\AuctionLog;
+use App\Models\CarMaker;
+use App\Models\CarModel;
+use App\Models\CarDetail;
+use App\Models\CarBp;
+use App\Models\CarGrade;
 
 class AuctionService
 {
     use CrudTrait;
+
+    private $categoryConfig = [
+        'maker' => [
+            'model_class'           => CarModel::class,
+            'table_name'            => 'car_models',
+            'parent_field'          => 'maker_id',
+            'auction_foreign_key'   => 'car_model_id'
+        ],
+        'model' => [
+            'model_class'           => CarDetail::class,
+            'table_name'            => 'car_details',
+            'parent_field'          => 'model_id',
+            'auction_foreign_key'   => 'car_detail_id'
+        ],
+        'detail' => [
+            'model_class'           => CarBp::class,
+            'table_name'            => 'car_bps',
+            'parent_field'          => 'detail_id',
+        'auction_foreign_key'   => 'car_bp_id'
+        ],
+        'bp' => [
+            'model_class'           => CarGrade::class,
+            'table_name'            => 'car_grades',
+            'parent_field'          => 'bp_id',
+            'auction_foreign_key'   => 'car_grade_id'
+        ]
+    ];
 
     public function __construct()
     {
@@ -56,6 +88,10 @@ class AuctionService
     {
         switch ($method) {
             case 'index':
+                // 차량 필터링 조건
+                $this->applyCarFiltering($auction);
+                $this->filterResultsBasedOnRole($auction);
+                break;
             case 'show':
                 $this->filterResultsBasedOnRole($auction);
                 break;
@@ -847,6 +883,145 @@ class AuctionService
             ]);
         }
 
+    }
+
+    // 필터링용 국산/수입차별 제조사 데이터 조회 (내 차량 등록 기준)
+    public function getCarMakersForFilter()
+    {
+        try{
+            // 로그인 상태 확인
+            if (!auth()->check()) {
+                throw new \Exception('로그인이 필요합니다.');
+            }
+
+            // 로그인한 사용자의 등록된 경매 차량 기준으로 제조사별 건수 조회
+            $carMakersData = CarMaker::leftJoin('auctions', function($join) {
+                    $join->on('car_makers.id', '=', 'auctions.car_maker_id')
+                        ->where('auctions.user_id', '=', auth()->user()->id);
+                })
+                ->select('car_makers.id', 'car_makers.name', 'car_makers.import_yn', DB::raw('COUNT(auctions.car_maker_id) as count'))
+                ->groupBy('car_makers.id', 'car_makers.name', 'car_makers.import_yn')
+                ->orderBy('car_makers.import_yn')
+                ->orderBy('car_makers.name')
+                ->get();
+
+            // import_yn 구분에 따라 배열 분리
+            $carMakers = [
+                'N' => [], // 국산차 (import_yn = 'N')
+                'Y' => [], // 수입차 (import_yn = 'Y')
+            ];
+
+            foreach ($carMakersData as $maker) {
+                $carMakers[$maker->import_yn][] = [
+                    'id'    => $maker->id,
+                    'name'  => $maker->name,
+                    'count' => $maker->count
+                ];
+            }
+
+            return $carMakers;
+        } catch (\Exception $e) {
+            throw $e;
+        }
+    }
+
+    /**
+     * 차량 하위 카테고리 쿼리 빌더
+     * 설정을 받아 동적으로 쿼리를 생성하여 중복 코드 제거
+     * 
+     * @param array $config 카테고리 설정 (model_class, table_name, parent_field, auction_foreign_key)
+     * @param int $carSearchValue 상위 카테고리 ID
+     * @param int $userId 사용자 ID
+     * @return array 하위 카테고리 배열 (id, name, count)
+     */
+    private function buildCarSubCategoryQuery($config, $carSearchValue, $userId)
+    {
+        $modelClass     = $config['model_class'];
+        $tableName      = $config['table_name'];
+        $parentField    = $config['parent_field'];
+        $foreignKey     = $config['auction_foreign_key'];
+        
+        return $modelClass::leftJoin('auctions', function($join) use ($tableName, $foreignKey, $userId) {
+                $join->on("{$tableName}.id", '=', "auctions.{$foreignKey}")
+                    ->where('auctions.user_id', '=', $userId);
+            })
+            ->select("{$tableName}.id", "{$tableName}.name", DB::raw("COUNT(auctions.{$foreignKey}) as count"))
+            ->where("{$tableName}.{$parentField}", $carSearchValue)
+            ->groupBy("{$tableName}.id", "{$tableName}.name")
+            ->orderBy("{$tableName}.name")
+            ->orderBy("{$tableName}.id")
+            ->get()
+            ->map(function($item) {
+                return [
+                    'id'    => $item->id,
+                    'name'  => $item->name,
+                    'count' => $item->count
+                ];
+            })
+            ->toArray();
+    }
+
+    /**
+     * 차량 하위 카테고리 조회
+     * 
+     * @param string $carSearchType maker|model|detail|bp
+     * @param int $carSearchValue 선택한 카테고리의 ID
+     * @return array 하위 카테고리 배열 (id, name, count 포함)
+     */
+    public function getCarSubCategory($carSearchType, $carSearchValue)
+    {
+        try {
+            // 로그인 상태 확인
+            if (!auth()->check()) {
+                throw new \Exception('로그인이 필요합니다.');
+            }
+            
+            $userId = auth()->user()->id;
+            
+            // car_filter_type 유효성 검사 및 설정 조회
+            if (!isset($this->categoryConfig[$carSearchType])) {
+                throw new \Exception('차량 하위 카테고리를 조회할 수 없습니다.');
+            }
+            
+            $config = $this->categoryConfig[$carSearchType];
+            $result = $this->buildCarSubCategoryQuery($config, $carSearchValue, $userId);
+            
+            return $result;
+            
+        } catch (\Exception $e) {
+            Log::error('[차량 하위카테고리 조회 오류]', ['msg'=>$e->getMessage()]);
+            throw $e;
+        }
+    }
+
+    /**
+     * 차량 필터링 조건 적용
+     * CrudTrait에서 이동된 로직 (단순 이동, 에러 시 조용히 무시)
+     */
+    private function applyCarFiltering($query)
+    {
+        if (request('car_filter_type') && request('car_filter_value')) {
+            try {
+                $filterType = request('car_filter_type');
+                $filterValue = request('car_filter_value');
+                
+                // 간단한 유효성 검사
+                $allowedTypes = ['maker', 'model', 'detail', 'bp', 'grade'];
+                if (!in_array($filterType, $allowedTypes)) {
+                    return; // 조용히 무시
+                }
+                
+                if (!is_numeric($filterValue) || $filterValue < 1) {
+                    return; // 조용히 무시
+                }
+                
+                $columnName = "car_" . $filterType . "_id";
+                $query->where('auctions.' . $columnName, $filterValue);
+                
+            } catch (\Exception $e) {
+                return;
+            }
+        }
     }
 
 }

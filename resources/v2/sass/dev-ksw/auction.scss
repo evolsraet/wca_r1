@@ -93,10 +93,24 @@ $primary: map-get($theme-colors, "primary");
     align-items: center;
   
     .search-icon {
-      padding-left: 16px;
+      padding-right: 16px;
       font-size: 1.6rem;
       color: $gray-600;
-      margin-right: 8px;
+      margin-left: 8px;
+      order: 2; // 오른쪽 정렬
+      
+      &.clickable {
+        cursor: pointer;
+        transition: color 0.2s ease;
+        
+        &:hover {
+          color: $primary;
+        }
+        
+        &:active {
+          color: darken($primary, 10%);
+        }
+      }
     }
   
     .search-input {
@@ -105,6 +119,9 @@ $primary: map-get($theme-colors, "primary");
       flex-grow: 1;
       font-size: 1rem;
       color: $black;
+      order: 1; // 왼쪽 정렬
+      padding-left: 16px;
+      padding-right: 45px; // 아이콘 공간 확보
   
       &:focus {
         outline: none;
@@ -620,4 +637,439 @@ $primary: map-get($theme-colors, "primary");
 
 .auction-thumbnail-empty {
   background-color: #f8f9fa;
+}
+
+/* 필터 사이드바 스타일 - 통합 스크롤 영역 */
+.sider-content {
+  // 전체 사이드바에 통합 스크롤 적용
+  max-height: calc(100vh - 180px); // 헤더와 여백 고려 [참고] 180 근거 없음
+  overflow-y: auto;
+  overflow-x: hidden; // 가로 스크롤 방지
+  scroll-behavior: smooth; // 부드러운 스크롤
+  
+  // 통합 스크롤바 스타일링
+  &::-webkit-scrollbar {
+    width: 6px;
+  }
+  
+  &::-webkit-scrollbar-track {
+    background: $gray-100;
+    border-radius: 3px;
+  }
+  
+  &::-webkit-scrollbar-thumb {
+    background: $gray-400;
+    border-radius: 3px;
+    
+    &:hover {
+      background: $gray-500;
+    }
+  }
+
+  .sub-side {
+    background: $white;
+    border-radius: 8px;
+    padding: 20px 15px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+    .dropdown-section {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      cursor: pointer;
+      border-bottom: 1px solid $gray-200;
+      
+      &.slide-gray {
+        background-color: $gray-100;
+        padding: 12px 15px;
+        border-radius: 6px;
+        margin: 4px 0;
+        
+        &:hover {
+          background-color: darken($gray-100, 5%);
+        }
+      }
+      
+      h5 {
+        margin: 0;
+        font-size: 1rem;
+        font-weight: 600;
+        color: $gray-800;
+        
+        &.tc-primary {
+          color: $primary;
+        }
+        
+        &.line-heigh-0 {
+          line-height: 1;
+        }
+      }
+      
+      .dropdown-icon {
+        font-size: 1.2rem;
+        color: $gray-600;
+        transition: transform 0.2s ease;
+        
+        i {
+          transition: transform 0.2s ease;
+        }
+      }
+    }
+    
+    .dropdown-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, opacity 0.3s ease;
+      opacity: 0;
+      
+      &.show {
+        max-height: none; // 개별 스크롤 제거, 전체 통합 스크롤 사용
+        overflow: visible; // 개별 overflow 제거
+        opacity: 1;
+        // 개별 스크롤바 스타일링 제거 (통합 스크롤 사용)
+      }
+      
+      .form-check {
+        margin-bottom: 8px;
+        
+        .form-check-input {
+          margin-top: 0.2rem;
+          
+          &:checked {
+            background-color: $primary;
+            border-color: $primary;
+          }
+        }
+        
+        .form-check-label {
+          font-size: 0.9rem;
+          cursor: pointer;
+          
+          &:hover {
+            color: $primary;
+          }
+          
+          .text-secondary {
+            font-size: 0.8rem;
+            color: $gray-500;
+          }
+        }
+      }
+      
+      // 하위 카테고리 스타일 - 통합 스크롤 사용
+      .sub-category {
+        display: none; // JavaScript 로딩 실패 시 안전장치
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        opacity: 0;
+        
+        &.show {
+          display: block; // show 클래스가 있을 때만 표시
+          max-height: none; // 개별 스크롤 제거
+          overflow: visible; // 개별 overflow 제거
+          opacity: 1;
+          // 개별 스크롤바 스타일링 제거 (통합 스크롤 사용)
+        }
+        
+        // 하위 레벨별 들여쓰기 클래스 시스템
+        .form-check {
+          margin-bottom: 6px;
+          
+          .form-check-input {
+            transform: scale(0.9); // 하위 레벨 라디오 버튼 크기 약간 작게
+          }
+          
+          .form-check-label {
+            font-size: 0.85rem;
+            
+            &:hover {
+              color: $primary;
+            }
+            
+            .text-secondary {
+              font-size: 0.75rem;
+            }
+          }
+        }
+        
+        // 더 깊은 하위 카테고리
+        .sub-category {
+          .form-check {
+            .form-check-input {
+              transform: scale(0.8); // 더 깊은 레벨은 더 작게
+            }
+            
+            .form-check-label {
+              font-size: 0.8rem;
+              
+              .text-secondary {
+                font-size: 0.7rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+/* 하위 카테고리 들여쓰기 클래스 (전역 범위) */
+.sub-level-1 {
+  padding-left: 20px !important;
+}
+
+.sub-level-2 {
+  padding-left: 40px !important;
+}
+
+.sub-level-3 {
+  padding-left: 60px !important;
+}
+
+.sub-level-4 {
+  padding-left: 80px !important;
+}
+
+/* 카테고리 타입별 들여쓰기 클래스 */
+.category-maker {
+  margin-left: 0px !important; /* 제조사 - 레벨 0 */
+}
+
+.category-model {
+  margin-left: 20px !important; /* 모델 - 레벨 1 */
+}
+
+.category-detail {
+  margin-left: 40px !important; /* 세부모델 - 레벨 2 */
+}
+
+.category-bp {
+  margin-left: 60px !important; /* 차체형식 - 레벨 3 */
+}
+
+.category-grade {
+  margin-left: 80px !important; /* 등급 - 레벨 4 */
+}
+
+/* 반응형 대응 - 뷰포트 기반 동적 높이 */
+@media (max-width: 767.98px) {
+  
+  /* 모바일 하위 카테고리 들여쓰기 (간격 줄임) */
+  .sub-level-1 {
+    padding-left: 15px !important;
+  }
+  
+  .sub-level-2 {
+    padding-left: 30px !important;
+  }
+  
+  .sub-level-3 {
+    padding-left: 45px !important;
+  }
+  
+  .sub-level-4 {
+    padding-left: 60px !important;
+  }
+  
+  /* 모바일 카테고리 타입별 들여쓰기 클래스 */
+  .category-maker {
+    margin-left: 0px !important; /* 제조사 - 레벨 0 */
+  }
+
+  .category-model {
+    margin-left: 15px !important; /* 모델 - 레벨 1 (모바일 축소) */
+  }
+
+  .category-detail {
+    margin-left: 30px !important; /* 세부모델 - 레벨 2 (모바일 축소) */
+  }
+
+  .category-bp {
+    margin-left: 45px !important; /* 차체형식 - 레벨 3 (모바일 축소) */
+  }
+
+  .category-grade {
+    margin-left: 60px !important; /* 등급 - 레벨 4 (모바일 축소) */
+  }
+  
+  .sider-content {
+    margin-bottom: 20px;
+    // 모바일 뷰포트 기반 동적 높이
+    max-height: calc(100vh - 140px); // 모바일에서 더 많은 공간 활용
+    -webkit-overflow-scrolling: touch; // iOS 터치 스크롤
+    scroll-behavior: smooth; // 부드러운 스크롤
+    overscroll-behavior: contain; // 스크롤 체인 방지
+    
+    // 모바일 통합 스크롤바 스타일링 (더 얇게)
+    &::-webkit-scrollbar {
+      width: 4px;
+    }
+    
+    &::-webkit-scrollbar-track {
+      background: $gray-100;
+      border-radius: 2px;
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $gray-400;
+      border-radius: 2px;
+      
+      &:hover {
+        background: $gray-500;
+      }
+    }
+    
+    .sub-side {
+      padding: 15px;
+      
+      .dropdown-section {
+        padding: 10px 0;
+        
+        h5 {
+          font-size: 0.9rem;
+        }
+        
+        .dropdown-icon {
+          font-size: 1rem;
+        }
+      }
+      
+      .dropdown-content {
+        &.show {
+          max-height: none; // 모바일에서도 개별 스크롤 제거
+          overflow: visible; // 개별 overflow 제거
+          // 모바일 개별 스크롤바 스타일링 제거 (통합 스크롤 사용)
+        }
+        
+        .form-check {
+          margin-bottom: 6px;
+          
+          .form-check-label {
+            font-size: 0.85rem;
+          }
+        }
+      }
+      
+      // 모바일 하위 카테고리 스타일 - 통합 스크롤 사용  
+      .sub-category {
+        display: none; // 모바일에서도 기본 숨김
+        
+        &.show {
+          display: block; // show 클래스가 있을 때만 표시
+          max-height: none; // 모바일에서도 개별 스크롤 제거
+          overflow: visible; // 개별 overflow 제거
+        }
+        
+        .form-check {
+          margin-bottom: 5px;
+          
+          .form-check-input {
+            transform: scale(0.85); // 모바일에서 라디오 버튼 크기 조정
+          }
+          
+          .form-check-label {
+            font-size: 0.8rem;
+            
+            .text-secondary {
+              font-size: 0.7rem;
+            }
+          }
+          
+        }
+        
+        // 더 깊은 하위 카테고리 (모바일)
+        .sub-category {
+          .form-check {
+            .form-check-input {
+              transform: scale(0.75);
+            }
+            
+            .form-check-label {
+              font-size: 0.75rem;
+              
+              .text-secondary {
+                font-size: 0.65rem;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+  
+  /* 모바일에서 필터가 위로 오도록 */
+  .auction-content .row {
+    display: flex;
+    flex-direction: column;
+    
+    .sider-content {
+      order: 1;
+    }
+    
+    .col-md-9 {
+      order: 2;
+    }
+  }
+}
+
+/* 다양한 화면 크기에 따른 뷰포트 최적화 */
+// 태블릿 세로 (768px ~ 991px)
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .sider-content {
+    max-height: calc(100vh - 160px);
+  }
+}
+
+// 대형 화면 (1200px 이상)
+@media (min-width: 1200px) {
+  .sider-content {
+    max-height: calc(100vh - 200px); // 헤더와 여백 더 고려
+  }
+}
+
+// 초소형 화면 (480px 이하)
+@media (max-width: 480px) {
+  .sider-content {
+    max-height: calc(100vh - 120px); // 더 많은 공간 활용
+    
+    .sub-side {
+      padding: 10px; // 여백 더 줄임
+    }
+  }
+}
+
+// 키보드가 올라왔을 때를 고려한 모바일 최적화
+@media (max-width: 767.98px) and (max-height: 500px) {
+  .sider-content {
+    max-height: calc(100vh - 80px); // 키보드 고려하여 더 줄임
+    overscroll-behavior: none; // 오버스크롤 완전 차단
+  }
+}
+
+// 가로모드 모바일 대응
+@media (max-width: 767.98px) and (orientation: landscape) {
+  .sider-content {
+    max-height: calc(100vh - 100px); // 가로모드에서 높이 조정
+  }
+}
+
+// 터치 기기 전용 스크롤 최적화
+@media (pointer: coarse) {
+  .sider-content {
+    // 터치 기기에서 스크롤바 항상 표시 (터치 피드백)
+    &::-webkit-scrollbar {
+      width: 8px; // 터치하기 쉽게 조금 더 크게
+    }
+    
+    &::-webkit-scrollbar-thumb {
+      background: $gray-500; // 더 진한 색으로 인식하기 쉽게
+      border-radius: 4px;
+      
+      &:active {
+        background: $gray-600; // 터치 시 더 진하게
+      }
+    }
+  }
 }
