@@ -37,6 +37,10 @@ use App\Models\CarModel;
 use App\Models\CarDetail;
 use App\Models\CarBp;
 use App\Models\CarGrade;
+use Illuminate\Support\Facades\Cache;
+use App\Services\NiceDNRService;
+use App\Services\CarmerceService;
+use App\Services\CarDataMappingService;
 
 class AuctionService
 {
@@ -1022,6 +1026,182 @@ class AuctionService
                 return;
             }
         }
+    }
+
+    /**
+     * 차량 정보 조회 (AuctionController의 carInfo 메서드에서 분리)
+     * 
+     * @param string $owner 소유자명
+     * @param string $no 차량번호
+     * @param array $options 추가 옵션 (forceRefresh, mode 등)
+     * @return array 차량 정보 배열
+     * @throws \Exception
+     */
+    public function getCarInfo(string $owner, string $no, array $options = []): array
+    {
+        try {
+            DB::beginTransaction();
+            
+            $niceDnrService = new NiceDNRService();
+            $carDataMappingService = new CarDataMappingService();
+            
+            // 캐시 키 생성
+            $cacheKey = "carInfo.{$owner}{$no}";
+            $message = null;
+            
+            // 경매 중인 차량 검증
+            if ($this->isCarInAuction($no, $options['mode'] ?? null)) {
+                throw new \Exception('경매중인 차량번호입니다.');
+            }
+            
+            // 캐시 강제 새로고침 처리
+            $this->handleCacheRefresh($cacheKey, $options);
+            
+            // Nice DNR 데이터 조회
+            $niceDnrResult = $niceDnrService->getNiceDnr($owner, $no, config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
+            
+            // API 응답 구조에 맞는 유효성 검사
+            if (empty($niceDnrResult) || 
+                !isset($niceDnrResult['resultCode']) || 
+                $niceDnrResult['resultCode'] !== '0000' ||
+                !isset($niceDnrResult['carSise']['info']['carinfo']) ||
+                !isset($niceDnrResult['carParts']['outB0001']['list'][0])) {
+                throw new \Exception('차량 정보를 조회할 수 없습니다.');
+            }
+            
+            // 카머스 시세 조회 및 업데이트
+            $carmercePrice = $this->getOrUpdateCarmercePrice($owner, $no, $niceDnrResult);
+            
+            // 자동차 재원 저장
+            $this->saveCarSpecs($carDataMappingService, $niceDnrResult);
+            
+            // 캐시된 결과 반환
+            $result = Cache::remember($cacheKey, now()->addDays(config('days.car_info_cache_ttl')), 
+                function () use ($niceDnrResult, $carmercePrice, $carDataMappingService) {
+                    return $this->buildCarInfoResult($niceDnrResult, $carmercePrice, $carDataMappingService);
+                });
+            
+            DB::commit();
+            
+            Log::info('[차량정보 조회] 성공', [
+                'path' => __FILE__,
+                'line' => __LINE__,
+                'owner' => $owner,
+                'car_no' => $no,
+                'cache_key' => $cacheKey
+            ]);
+            
+            return $result;
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            Log::error('[차량정보 조회] 실패', [
+                'path' => __FILE__,
+                'line' => __LINE__,
+                'owner' => $owner,
+                'car_no' => $no,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            throw $e;
+        }
+    }
+
+    /**
+     * 경매 중인 차량인지 확인
+     */
+    private function isCarInAuction(string $carNo, ?string $mode = null): bool
+    {
+        if ($mode !== 'carInfo') {
+            return false;
+        }
+        
+        return Auction::where('car_no', $carNo)
+            ->where('status', 'ing')
+            ->exists();
+    }
+
+    /**
+     * 캐시 강제 새로고침 처리
+     */
+    private function handleCacheRefresh(string $cacheKey, array $options): void
+    {
+        if (($options['forceRefresh'] ?? false) && Cache::has($cacheKey) && !Cache::has($cacheKey . "forceRefresh")) {
+            Cache::forget($cacheKey);
+            Cache::put($cacheKey . "forceRefresh", 'true', now()->endOfDay());
+        }
+    }
+
+    /**
+     * 카머스 시세 조회 또는 업데이트
+     */
+    private function getOrUpdateCarmercePrice(string $owner, string $no, array $niceDnrResult): ?int
+    {
+        $niceDnrService = new NiceDNRService();
+        $niceDnrData = $niceDnrService->getNiceDnrData([
+            'owner_name' => $owner,
+            'car_no' => $no,
+        ]);
+        
+        if (empty($niceDnrData) || empty($niceDnrData->carmerce_price)) {
+            $carmerceService = new CarmerceService();
+            $carmercePrice = $carmerceService->getCarmerceResult($niceDnrResult['carInfo']);
+            $niceDnrService->updateCarmercePrice($owner, $no, $carmercePrice);
+            return $carmercePrice;
+        }
+        
+        return $niceDnrData->carmerce_price;
+    }
+
+    /**
+     * 자동차 재원 확인 및 저장
+     */
+    private function saveCarSpecs(CarDataMappingService $carDataMappingService, array $niceDnrResult): void
+    {
+        // api 데이터 - 테이블 컬럼 매핑
+        $carMakerData = $carDataMappingService->buildCarMaker($niceDnrResult);
+        $carModelData = $carDataMappingService->buildCarModel($niceDnrResult);
+        $carDetailData = $carDataMappingService->buildCarDetail($niceDnrResult);
+        $carBpData = $carDataMappingService->buildCarBp($niceDnrResult);
+        $carGradeData = $carDataMappingService->buildCarGrade($niceDnrResult);
+
+        // 자동차 재원 확인 및 저장
+        $carDataMappingService->checkAndSave(CarMaker::class, $carMakerData);
+        $carDataMappingService->checkAndSave(CarModel::class, $carModelData);
+        $carDataMappingService->checkAndSave(CarDetail::class, $carDetailData);
+        $carDataMappingService->checkAndSave(CarBp::class, $carBpData);
+        $carDataMappingService->checkAndSave(CarGrade::class, $carGradeData);
+    }
+
+    /**
+     * 차량 정보 결과 구성
+     */
+    private function buildCarInfoResult(array $niceDnrResult, ?int $carmercePrice, CarDataMappingService $carDataMappingService): array
+    {
+        // 매핑 함수를 사용하여 기본 차량 정보 생성 (auction 테이블 스키마 기준)
+        $baseCarInfoList = $carDataMappingService->buildAuction($niceDnrResult);
+        $result['carInfo'] = $baseCarInfoList[0];
+
+        // 등급 선택 시 result['gradeList'] 사용해야 하므로, 등급 필드 제거
+        unset(
+            $result['carInfo']['car_grade_id'], 
+            $result['carInfo']['car_grade_sub'], 
+            $result['carInfo']['car_grade'], 
+            $result['carInfo']['car_bp_id'],
+            $result['carInfo']['car_price_now']
+        );
+        
+        // 추가 필드 보완
+        $result['carInfo']['car_engine_size'] = $niceDnrResult['carSise']['info']['carinfo']['engineSize'] . ' cc';
+        $result['carInfo']['car_price_now_whole'] = $carmercePrice;
+        $result['carInfo']['tuning'] = count($niceDnrResult['carParts']['outB0001']['list'][0]['resContentsList']);
+        $result['carInfo']['use_history_yn'] = $niceDnrResult['carParts']['outB0001']['list'][0]['resUseHistYn'] === 'Y' ? '사용' : '없음';
+
+        $result['gradeList'] = $niceDnrResult['carSise']['info']['carinfo']['gradeList'];
+
+        return $result;
     }
 
 }

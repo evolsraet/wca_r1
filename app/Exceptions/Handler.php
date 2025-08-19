@@ -6,6 +6,10 @@ use Throwable;
 use Illuminate\Support\Arr;
 use Illuminate\Http\Response;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
+use Illuminate\Auth\AuthenticationException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class Handler extends ExceptionHandler
 {
@@ -50,72 +54,75 @@ class Handler extends ExceptionHandler
         });
     }
 
-    // 일관된 JSON 응답을 위한 코드 KMH
+    /**
+     * 유효성 검사 예외에 대한 JSON 응답 처리
+     */
+    protected function invalidJson($request, ValidationException $exception)
+    {
+        return response()->api(
+            null,
+            '입력한 정보에 오류가 있습니다.',
+            'fail',
+            422,
+            ['errors' => $exception->errors()]
+        );
+    }
+
+    /**
+     * API 요청에 대한 일관된 예외 처리
+     */
     public function render($request, Throwable $exception)
     {
-        // API 요청인 경우, 일관된 응답 형식으로 처리
-        if (1 && $request->expectsJson()) {
-            $additional = [];
-
-            // AuthenticationException과 AuthorizationException에 대한 처리
-            if ($exception instanceof \Illuminate\Auth\AuthenticationException) {
-                $code = Response::HTTP_UNAUTHORIZED;
-            } elseif ($exception instanceof \Illuminate\Auth\Access\AuthorizationException) {
-                $code = Response::HTTP_FORBIDDEN;
-            } elseif ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
-                $code = $exception->getStatusCode();
-            } elseif ($exception instanceof \Illuminate\Validation\ValidationException) {
-                $code = Response::HTTP_BAD_REQUEST;
-                // $code = 404;
-            } elseif ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
-                $code = Response::HTTP_NOT_FOUND;
-            } else {
-                $code = method_exists($exception, 'getCode') && is_int($exception->getCode()) && $exception->getCode() > 0
-                    ? $exception->getCode()
-                    : Response::HTTP_INTERNAL_SERVER_ERROR;
+        if ($request->expectsJson()) {
+            // 유효성 검사 예외
+            if ($exception instanceof ValidationException) {
+                return $this->invalidJson($request, $exception);
             }
 
-            // if ($code <= 299)
-            //     $code = 500;
-            $additional['interCode'] = $code;
+            // 인증 예외
+            if ($exception instanceof AuthenticationException) {
+                return response()->api([], '인증이 필요합니다.', 'fail', 401);
+            }
 
-            $additional['getStatusCode'] = method_exists($exception, 'getStatusCode')
-                ? $exception->getStatusCode()
-                : Response::HTTP_INTERNAL_SERVER_ERROR;
+            // 권한 예외
+            if ($exception instanceof AuthorizationException) {
+                return response()->api([], '접근 권한이 없습니다.', 'fail', 403);
+            }
 
-            $additional['getCode'] = method_exists($exception, 'getCode')
-                ? $exception->getCode()
-                : Response::HTTP_INTERNAL_SERVER_ERROR;
+            // 모델 없음 예외
+            if ($exception instanceof ModelNotFoundException) {
+                return response()->api([], '요청한 데이터를 찾을 수 없습니다.', 'fail', 404);
+            }
 
-            $message = $exception->getMessage();
+            // HTTP 예외
+            if ($exception instanceof \Symfony\Component\HttpKernel\Exception\HttpException) {
+                $code = $exception->getStatusCode();
+                $message = $exception->getMessage() ?: '요청을 처리할 수 없습니다.';
+                return response()->api([], $message, 'fail', $code);
+            }
 
-            // 모델을 찾을 수 없는 경우:
-            // if ($exception instanceof \Illuminate\Database\Eloquent\ModelNotFoundException) {
-            //     $message = 'Resource not found';
-            //     $code = Response::HTTP_NOT_FOUND;
-            // }
+            // 일반 예외 처리
+            $message = config('app.debug') ? $exception->getMessage() : '서버에서 오류가 발생했습니다.';
+            $code = method_exists($exception, 'getCode') && $exception->getCode() > 0 
+                ? $exception->getCode() 
+                : 500;
 
-            if (method_exists($exception, 'errors'))
-                $additional['errors'] = $exception->errors();
-
+            // 디버그 정보 추가 (개발 환경에서만)
+            $additional = [];
             if (config('app.debug')) {
                 $additional['debug'] = [
-                    'exception class' => get_class($exception),
+                    'exception' => get_class($exception),
                     'file' => $exception->getFile(),
                     'line' => $exception->getLine(),
-                    'trace' => collect($exception->getTrace())->map(function ($trace) {
-                        return Arr::except($trace, ['args']); // 'args' 제외
-                    })->take(5), // 스택 트레이스의 상위 5개만 포함
+                    'trace' => collect($exception->getTrace())
+                        ->map(fn($trace) => Arr::except($trace, ['args']))
+                        ->take(5)
                 ];
             }
 
-
-            // return response()->json([$code], $code);
-            // 여기서는 모든 예외에 대해 일관된 형식의 응답을 반환합니다.
-            return response()->api(null, $message, 'fail', $code, $additional);
+            return response()->api([], $message, 'fail', $code, $additional);
         }
 
-        // 기본적인 예외 처리
         return parent::render($request, $exception);
     }
 }
