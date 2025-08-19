@@ -107,9 +107,9 @@ class CarDataMappingService
         // 숫자가 1이면 n, 그 외 y
         // 문자열 영어인 경우 소문자로 치환
         if (is_numeric($yn)) {
-            return intval($yn) === 1 ? 'n' : 'y';
+            return intval($yn) === 1 ? 'N' : 'Y';
         }
-        return strtolower($yn);
+        return strtoupper($yn);
     }
     
     // 차량 재원 데이터 존재 여부 확인 및 저장

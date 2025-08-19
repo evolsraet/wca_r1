@@ -16,6 +16,8 @@ use Vinkla\Hashids\Facades\Hashids;
 use Illuminate\Support\Facades\Log;
 use App\Services\AuctionLogService;
 use App\Models\AuctionLog;
+use App\Models\CarMaker;
+use App\Models\CarModel;
 
 class Auction extends Model implements HasMedia
 {
@@ -40,28 +42,33 @@ class Auction extends Model implements HasMedia
     ];
 
     protected $casts = [
-        'final_at' => 'datetime',
-        'choice_at' => 'datetime',
-        'taksong_wish_at' => 'datetime',
-        'done_at' => 'datetime',
-        'diag_check_at' => 'datetime',
-        'diag_first_at' => 'datetime',
-        'diag_second_at' => 'datetime',
-        'car_maker' => 'string',
-        'car_model' => 'string',
-        'car_model_sub' => 'string',
-        'car_grade' => 'string',
-        'car_grade_sub' => 'string',
-        'car_year' => 'string',
-        'car_first_reg_date' => 'datetime',
-        'car_mission' => 'string',
-        'car_fuel' => 'string',
-        'car_price_now' => 'string',
+        'final_at'            => 'datetime',
+        'choice_at'           => 'datetime',
+        'taksong_wish_at'     => 'datetime',
+        'done_at'             => 'datetime',
+        'diag_check_at'       => 'datetime',
+        'diag_first_at'       => 'datetime',
+        'diag_second_at'      => 'datetime',
+        'car_maker'           => 'string',
+        'car_model'           => 'string',
+        'car_model_sub'       => 'string',
+        'car_grade'           => 'string',
+        'car_grade_sub'       => 'string',
+        'car_year'            => 'string',
+        'car_first_reg_date'  => 'datetime',
+        'car_mission'         => 'string',
+        'car_fuel'            => 'string',
+        'car_price_now'       => 'string',
         'car_price_now_whole' => 'string',
-        'car_km' => 'string',
-        'customTel1' => 'string',
-        'customTel2' => 'string',
-        'personal_id_number' => 'string',
+        'car_km'              => 'string',
+        'customTel1'          => 'string',
+        'customTel2'          => 'string',
+        'personal_id_number'  => 'string',
+        'car_maker_id'        => 'integer',
+        'car_model_id'        => 'integer',
+        'car_detail_id'       => 'integer',
+        'car_bp_id'           => 'integer',
+        'car_grade_id'        => 'integer',
     ];
 
     // 업로드 가능한 파일들
@@ -146,6 +153,17 @@ class Auction extends Model implements HasMedia
     {
         return $this->hasMany(Article::class, 'extra1', 'id')
                     ->where('board_id', 'review');
+    }
+
+    // 차량 관련 관계 정의
+    public function carMaker()
+    {
+        return $this->belongsTo(CarMaker::class, 'car_maker_id', 'id');
+    }
+
+    public function carModel()
+    {
+        return $this->belongsTo(CarModel::class, 'car_model_id', 'id');
     }
 
     public function getStatusChosenAttribute()

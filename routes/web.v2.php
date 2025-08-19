@@ -7,9 +7,9 @@ use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\BoardController;
-use App\Http\Controllers\CarSellController;
+use App\Http\Controllers\Web\CarSellWebController;
 use Vinkla\Hashids\Facades\Hashids;
-use App\Http\Controllers\Api\AuctionController;
+use App\Http\Controllers\Web\AuctionWebController;
 use App\Services\CarInfoService;
 use Illuminate\Support\Facades\Cache;
 
@@ -65,9 +65,7 @@ Route::get('/components/modals/{modal}', function ($modal) {
 });
 
 Route::prefix('auction')->group(function () {
-    Route::get('/', function () {
-        return view('v2.pages.auction.auctionList');
-    })->name('auction.list');
+    Route::get('/', [AuctionWebController::class, 'list'])->name('auction.list');
 
     Route::get('/{id}', function ($id) {
         return view('v2.pages.auction.auctionDetail', ['id' => $id]);
@@ -93,7 +91,7 @@ Route::prefix('sell')->group(function () {
         return view('v2.pages.sell.index');
     })->name('sell.result');
 
-    Route::get('/car_info', [CarSellController::class, 'showResult'])->name('sell.car_info');
+    Route::get('/car_info', [CarSellWebController::class, 'showResult'])->name('sell.car_info');
 
     Route::post('/apply', fn () => view('v2.pages.sell.apply'))->name('sell.apply');
 });

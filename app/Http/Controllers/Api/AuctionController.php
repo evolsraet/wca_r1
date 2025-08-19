@@ -40,6 +40,7 @@ use App\Libraries\SeedEncryptor;
 use App\Libraries\SeedCipher;
 use App\Helpers\Wca;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class AuctionController extends Controller
 {
@@ -49,6 +50,33 @@ class AuctionController extends Controller
     {
         $this->service = $service;
     }
+
+    public function getCarSubCategory(Request $request)
+    {
+        try {
+            // 파라미터 검증
+            $validator = Validator::make($request->all(), [
+                'car_filter_type'   => 'required|string|bail|in:maker,model,detail,bp',
+                'car_filter_value'  => 'required|integer|bail|min:1'
+            ]);
+            if ($validator->fails()) {
+                throw new \Exception("차량 하위 카테고리를 조회할 수 없습니다.");
+            }
+            
+            $carSearchType  = $request->input('car_filter_type');
+            $carSearchValue = $request->input('car_filter_value');
+
+            // Service를 통해 하위 카테고리 데이터 조회
+            $carSubCategory = $this->service->getCarSubCategory($carSearchType, $carSearchValue);
+            
+            // dd($carSubCategory);
+            return response()->api($carSubCategory);
+        } catch (\Exception $e) {
+            // dd($e);
+            return response()->api([], $e->getMessage(), 'fail', 400);
+        }
+    }
+
     /**
      * @lrd:start
      * # 가능 파일

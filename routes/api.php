@@ -18,7 +18,7 @@ use App\Http\Controllers\BusinessController;
 use App\Http\Controllers\Api\DiagController;
 use App\Http\Controllers\Api\OwnershipController;
 use App\Http\Controllers\Api\WebhookController;
-use App\Http\Controllers\CarSellController;
+use App\Http\Controllers\Api\CarSellApiController;
 use App\Helpers\Wca;
 
 // Route::post('forgetPassword', [ForgotPasswordController::class, 'sendResetLinkEmail'])->name('forget.password.post');
@@ -43,6 +43,7 @@ Route::apiResource('users', UserController::class)
 // auction
 Route::post('auctions/carInfo', [AuctionController::class, 'carInfo']);
 Route::delete('auctions/carInfo/user', [AuctionController::class, 'deleteUserCarInfo'])->middleware('auth:sanctum');
+Route::get('auctions/car-sub-category', [AuctionController::class, 'getCarSubCategory'])->middleware('auth:sanctum');
 Route::apiResource('auctions', AuctionController::class)
     ->middleware(['auth:sanctum', 'convert.id.to.unique']);
 Route::post('auctions/checkExpectedPrice', [AuctionController::class, 'CheckExpectedPrice']);
@@ -221,5 +222,5 @@ Route::get('test-car-history', [AuctionController::class, 'testCarHistory']);
 
 Route::get('test-bid-count', [AuctionController::class, 'testBidCount']);
 
-Route::post('sell/car-info/lookup', [CarSellController::class, 'lookupCarInfo']);
-Route::post('sell/car-info/grade-selection', [CarSellController::class, 'storeGradeSelection']);
+Route::post('sell/car-info/lookup', [CarSellApiController::class, 'lookupCarInfo']);
+Route::post('sell/car-info/grade-selection', [CarSellApiController::class, 'storeGradeSelection']);
