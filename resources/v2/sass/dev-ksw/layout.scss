@@ -690,7 +690,7 @@ hr {
         
         @include media-breakpoint-up(lg) {
             min-height: 100vh;
-            display: flex;
+            // display: flex; // container 영역 조정 오류 남
             align-items: center;
         }
     }

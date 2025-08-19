@@ -19,7 +19,7 @@
                 </div>
             </div>
         </div>
-
+        {{-- 
         <div class="mb-4">
             <h6 class="fw-bold mb-3">SNS 공유</h6>
             <div class="row g-2">
@@ -49,6 +49,7 @@
                 </div>
             </div>
         </div>
+         --}}
 
         <div class="mb-4">
             <h6 class="fw-bold mb-3">URL 복사</h6>
@@ -63,6 +64,7 @@
             </div>
         </div>
 
+        {{-- 
         <!-- 네이티브 Web Share API 지원 시 -->
         <div x-show="supportsNativeShare" class="mb-3">
             <h6 class="fw-bold mb-3">기기 공유</h6>
@@ -84,6 +86,7 @@
                 </div>
             </div>
         </div>
+         --}}
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>

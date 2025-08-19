@@ -88,26 +88,26 @@ class Auction extends Model implements HasMedia
 
     public $enums = [
         'status' => [
-            'cancel' => '취소',
-            'done'   => '경매완료',
-            'chosen' => '선택완료',
-            'wait'   => '선택대기',
-            'ing'    => '경매진행',
+            'ask'    => '신청완료',
             'diag'   => '진단대기',
+            'ing'    => '경매진행',
+            'wait'   => '선택대기',
+            'chosen' => '선택완료',
             'dlvr'   => '탁송중',
             'dlvr_done' => '탁송완료',
-            'ask'    => '신청완료',
+            'done'   => '경매완료',
+            'cancel' => '취소',
         ],
         'classMap' => [
-            'cancel' => 'text-bg-danger',
-            'done' => 'text-bg-secondary',
-            'chosen' => 'text-bg-chosen',
-            'wait' => 'text-bg-warning',
-            'ing' => 'text-bg-info',
-            'diag' => 'text-bg-dark',
-            'dlvr' => 'text-bg-dlvr',
+            'ask'       => 'text-bg-success',
+            'diag'      => 'text-bg-dark',
+            'ing'       => 'text-bg-info',
+            'wait'      => 'text-bg-warning',
+            'chosen'    => 'text-bg-chosen',
+            'dlvr'      => 'text-bg-dlvr',
             'dlvr_done' => 'text-bg-dlvr',
-            'ask' => 'text-bg-success',
+            'done'      => 'text-bg-secondary',
+            'cancel'    => 'text-bg-danger',
         ],
     ];
 
@@ -187,9 +187,9 @@ class Auction extends Model implements HasMedia
         }
     }
 
-    protected static function boot()
+    protected static function booted()
     {
-        parent::boot();
+        parent::booted();
 
         static::saved(function ($auction) {
 

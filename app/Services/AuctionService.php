@@ -116,10 +116,7 @@ class AuctionService
                 $this->processCancel($auction);
                 break;
 
-            case 'chosen':
-            case 'requested':
-            case 'uploaded':
-            case 'confirmed':
+            default:
                 Log::info("[경매] 상태 업데이트 {$mode} 모드", [
                     'name'=> '경매 상태 업데이트',
                     'path'=> __FILE__,

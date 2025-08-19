@@ -28,7 +28,7 @@ document.querySelectorAll('.accordion-button').forEach(button => {
     const targetSelector = button.dataset.bsTarget;
     const target = document.querySelector(targetSelector);
   
-    // Collapse 인스턴스 수동 생성
+// Collapse 인스턴스 수동 생성
     let instance = Collapse.getInstance(target);
     if (!instance) {
       instance = new Collapse(target, { toggle: false });
@@ -143,10 +143,13 @@ export const modal = {
             ],
             onConfirm = null,
             onClose = null,
+            clear = false,
         } = options;
 
         // 모든 기존 모달 정리
-        this._cleanupAllModals();
+        if(clear) {
+            this._cleanupAllModals();
+        }
         
         // 약간의 지연으로 DOM 정리가 완료되도록 함
         await new Promise(resolve => setTimeout(resolve, 100));

@@ -32,7 +32,7 @@ export default function auctionDetailInfo() {
 
     getCarHistoryCrash() {
       Alpine.store('auctionEvent').getCarHistoryCrash(this.auction.car_no).then(res => {
-        this.carHistoryCrash = res.data.data;
+        this.carHistoryCrash = res.data?.data;
       });
     }
   }

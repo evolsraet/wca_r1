@@ -37,7 +37,7 @@ button {
   &:focus {
     box-shadow: none !important;
     outline: none !important;
-    border-width: 0px !important;
+    // border-width: 0px !important;
     border-color: transparent !important; // 포커스 시 색만 살짝 진하게
   }
 }

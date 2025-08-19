@@ -2,12 +2,15 @@ import { appendFormData, appendFilesToFormData, setupFileUploadListeners } from 
 
 export default function () {
     return {
+        _taksongDay: 3,
         selectedDay: null,
         selectedTime: null,
         days: [],
         morningTimes: ['9:00', '9:30', '10:00', '10:30', '11:00', '11:30'],
         afternoonTimes: ['13:00', '13:30', '14:00', '14:30', '15:00', '15:30', '16:00', '16:30', '17:00', '17:30', '18:00'],
-        taksongEndAt: new Date('2025-06-30T18:00:00'), // 필요시 주입 가능
+        // TODO: isBeyond 에서 체크하지만 하드코딩으로 입력됨. 테스트 용인지 불분명
+        // taksongEndAt: new Date('2025-06-30T18:00:00'), // 필요시 주입 가능
+        taksongEndAt: null, // 필요시 주입 가능
         holidays: window.holidays ?? [],
         selectedDate: null,
         bid: null,
@@ -18,7 +21,6 @@ export default function () {
         },
         errors: {},
         init() {
-
             this.days = [];
             this.data = window.modalData.content.data;
 
@@ -33,7 +35,8 @@ export default function () {
             const weekDays = ['일', '월', '화', '수', '목', '금', '토'];
             const originalBase = new Date(baseDate); // 이거 기준으로 계산
 
-            for (let i = 0; i < 5; i++) {
+            // TODO: 일수 ENV 사용필요
+            for (let i = 0; i < this._taksongDay; i++) {
                 const date = new Date(originalBase); // 항상 원본 기준으로 복사
                 date.setDate(originalBase.getDate() + i); // i일 추가
 
@@ -95,7 +98,10 @@ export default function () {
             return this.selectedDay === 0 && selectedDate < now;
         },
     
+        // 선택한 시간이 탁송 가능 종료 시각(taksongEndAt)을 초과하는지 확인하는 함수
         isBeyondEndTime(time) {
+            if(!this.taksongEndAt) return false;
+
             const [h, m] = time.split(':').map(Number);
             const selectedDate = new Date(this.days[this.selectedDay].date);
             selectedDate.setHours(h, m, 0, 0);
