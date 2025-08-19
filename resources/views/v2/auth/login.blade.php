@@ -20,7 +20,7 @@
       <div class="container">
         <x-layouts.split
             leftClass="col-lg-8"
-            rightClass="col-lg-4"
+            rightClass="col-lg-4 bg-white"
             leftContainerClass=""
             rightContainerClass=""
             :initialRightPanelOpen="true">
@@ -39,7 +39,7 @@
 
 
             <x-slot:rightContent>
-                <div class="container bg-white rightContentResponsive">
+                <div class="conainter rightContentResponsive">
                     <div class="row justify-content-center">
 
                         <video autoplay="" loop="" muted="" playsinline="" preload="auto" class="d-none d-sm-block mb-4 mt-4" style="width: 90%; max-height: 20vh">

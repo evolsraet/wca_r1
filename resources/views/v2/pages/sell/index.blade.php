@@ -28,7 +28,7 @@
     <div class="container">
       <x-layouts.split
           leftClass="col-lg-8"
-          rightClass="col-lg-4"
+          rightClass="col-lg-4 bg-white"
           leftContainerClass=""
           rightContainerClass=""
           :initialRightPanelOpen="true">
