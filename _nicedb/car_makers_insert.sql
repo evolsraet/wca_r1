@@ -96,5 +96,4 @@ INSERT INTO car_makers (id, name, name_en, country, import_yn, logo_url) VALUES 
 INSERT INTO car_makers (id, name, name_en, country, import_yn, logo_url) VALUES (296, '중통(한신)', 'ZHONGTONG', '중국', '2', 'https://zdata.nicednr.co.kr:8181/carFile/20240711/668f7ca8124a7_0.png');
 
 -- car_makers 테이블의 import_yn == '2' 면 'Y', 아니면 'N' 으로 변경
-UPDATE car_makers
-SET import_yn = CASE WHEN import_yn = '2' THEN 'Y' ELSE 'N' END;
+UPDATE car_makers SET import_yn = CASE WHEN import_yn = '2' THEN 'Y' ELSE 'N' END;
