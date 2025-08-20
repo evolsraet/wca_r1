@@ -55,15 +55,11 @@ export default function () {
 
         handleError(response) {
             if (response && response.data) {
-                // 서버에서 보낸 구체적인 에러 메시지 사용
+                // 백엔드에서 온 메시지 그대로 사용 (Nice DNR resultMsg 포함)
                 this.error = response.data.message || '서버에서 오류가 발생했습니다.';
                 
-                // 특정 에러 코드에 따른 사용자 친화적 메시지
-                if (response.status === 400) {
-                    this.error = response.data.message || '입력한 정보를 확인해주세요.';
-                } else if (response.status === 404) {
-                    this.error = '차량 정보를 찾을 수 없습니다.';
-                } else if (response.status >= 500) {
+                // HTTP 상태 코드별 기본 처리만 유지
+                if (response.status >= 500 && !response.data.message) {
                     this.error = '서버에 일시적인 문제가 발생했습니다. 잠시 후 다시 시도해주세요.';
                 }
             } else {

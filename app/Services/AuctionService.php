@@ -1042,12 +1042,10 @@ class AuctionService
         try {
             DB::beginTransaction();
             
-            $niceDnrService = new NiceDNRService();
             $carDataMappingService = new CarDataMappingService();
             
             // 캐시 키 생성
             $cacheKey = "carInfo.{$owner}{$no}";
-            $message = null;
             
             // 경매 중인 차량 검증
             if ($this->isCarInAuction($no, $options['mode'] ?? null)) {
@@ -1057,17 +1055,11 @@ class AuctionService
             // 캐시 강제 새로고침 처리
             $this->handleCacheRefresh($cacheKey, $options);
             
-            // Nice DNR 데이터 조회
-            $niceDnrResult = $niceDnrService->getNiceDnr($owner, $no, config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
+            // Nice DNR 데이터 조회 (로깅 포함)
+            $niceDnrResult = $this->callNiceDnrWithLogging($owner, $no);
 
-            // API 응답 구조에 맞는 유효성 검사
-            if (empty($niceDnrResult) || 
-                !isset($niceDnrResult['resultCode']) || 
-                $niceDnrResult['resultCode'] !== '0000' ||
-                !isset($niceDnrResult['carSise']['info']['carinfo']) ||
-                !isset($niceDnrResult['carParts']['outB0001']['list'][0])) {
-                throw new \Exception($niceDnrResult['resultMsg'] ?? '차량 정보를 찾을 수 없습니다.');
-            }
+            // 응답 유효성 검사 (resultMsg 활용)
+            $this->validateNiceDnrResponse($niceDnrResult);
             
             // 카머스 시세 조회 및 업데이트
             $carmercePrice = $this->getOrUpdateCarmercePrice($owner, $no, $niceDnrResult);
@@ -1103,6 +1095,72 @@ class AuctionService
                 'car_no' => $no,
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
+            ]);
+            
+            throw $e;
+        }
+    }
+
+    /**
+     * Nice DNR API 응답 유효성 검사 및 에러 처리
+     */
+    private function validateNiceDnrResponse(array $niceDnrResult): void
+    {
+        // 1단계: 기본 응답 구조 검증
+        if (empty($niceDnrResult)) {
+            throw new \Exception('차량 정보 서비스에 일시적인 문제가 발생했습니다.');
+        }
+        
+        // 2단계: 결과 코드 검증
+        if (!isset($niceDnrResult['resultCode'])) {
+            throw new \Exception('차량 정보 응답 형식이 올바르지 않습니다.');
+        }
+        
+        // 3단계: 성공 코드가 아닌 경우 API의 resultMsg 그대로 사용
+        if ($niceDnrResult['resultCode'] !== '0000') {
+            $errorMessage = $niceDnrResult['resultMsg'] ?? '차량 정보 조회 중 오류가 발생했습니다.';
+            throw new \Exception($errorMessage);
+        }
+        
+        // 4단계: 필수 데이터 존재 여부 검증
+        if (!isset($niceDnrResult['carSise']['info']['carinfo']) ||
+            !isset($niceDnrResult['carParts']['outB0001']['list'][0])) {
+            throw new \Exception('차량 정보가 불완전합니다. 다시 시도해주세요.');
+        }
+    }
+
+    /**
+     * Nice DNR API 호출 및 에러 로깅
+     */
+    private function callNiceDnrWithLogging(string $owner, string $no): array
+    {
+        $startTime = microtime(true);
+        
+        try {
+            $niceDnrService = new NiceDNRService();
+            $niceDnrResult = $niceDnrService->getNiceDnr($owner, $no, config('niceDnr.NICE_DNR_API_ENDPOINT_KEY'));
+            
+            $responseTime = round((microtime(true) - $startTime) * 1000, 2);
+            
+            // 성공 로깅
+            Log::info('[Nice DNR API] 호출 성공', [
+                'owner' => $owner,
+                'car_no' => $no,
+                'result_code' => $niceDnrResult['resultCode'] ?? 'unknown',
+                'response_time_ms' => $responseTime
+            ]);
+            
+            return $niceDnrResult;
+            
+        } catch (\Exception $e) {
+            $responseTime = round((microtime(true) - $startTime) * 1000, 2);
+            
+            // 에러 로깅
+            Log::error('[Nice DNR API] 호출 실패', [
+                'owner' => $owner,
+                'car_no' => $no,
+                'error' => $e->getMessage(),
+                'response_time_ms' => $responseTime
             ]);
             
             throw $e;
