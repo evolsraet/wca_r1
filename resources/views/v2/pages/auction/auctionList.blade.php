@@ -31,15 +31,15 @@
               <div class="dropdown-content" :class="{ show: dropdownStates.{{$key}} }">
                 @foreach($value as $item)
                   <div class="form-check">
-                    <input class="form-check-input" type="radio" name="car_filter" id="{{$item['id']}}" value="maker_{{$item['id']}}" @click="handleCategorySelection('maker_{{$item['id']}}', $event)" />
+                    <input class="form-check-input" type="radio" name="car_filter" id="{{$item['id']}}" value="maker_{{$item['id']}}" data-has-sub="true" />
                     <label class="form-check-label d-flex justify-content-between" for="{{$item['id']}}">
                       {{$item['name']}} <span class="text-secondary mx-2">{{number_format($item['count'])}}</span>
                     </label>
                   </div>
                   
                   {{-- 하위 카테고리: 동적 생성 --}}
-                  <div class="sub-category" :class="{ show: subCategoryStates?.['maker_{{$item['id']}}'] || false }">
-                    <div x-html="renderSubCategory('maker_{{$item['id']}}')"></div>
+                  <div class="sub-category" data-category-id="maker_{{$item['id']}}">
+                    <div class="sub-category-content" data-parent="maker_{{$item['id']}}"></div>
                   </div>
                 @endforeach
               </div>
