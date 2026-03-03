@@ -74,7 +74,7 @@
       </div> --}}
       @if(request()->post('car_no'))
         <input type="hidden" class="form-control" id="carNo" value="{{request()->post('car_no')}}" placeholder="예: 08오5060">
-        <input type="hidden" class="form-control" id="mb_id" value="{{request()->post('mb_id')}}"
+        <input type="hidden" class="form-control" id="mbId" value="{{request()->post('mb_id')}}"
       @else
         <div class="mb-3">
           <label for="carNo" class="form-label">차량번호</label>
@@ -409,6 +409,7 @@ class UIRenderer {
 // 메인 함수
 async function fetchCarHistory() {
   const carNo = document.getElementById('carNo').value.trim();
+  const mbId = document.getElementById('mbId').value.trim();
   const apiType = document.querySelector('input[name="apiType"]:checked').value;
   const resultArea = document.getElementById('resultArea');
 
@@ -420,7 +421,7 @@ async function fetchCarHistory() {
   UIRenderer.showLoading(resultArea);
 
   try {
-    const endpoint = `/api/${apiType}?car_no=${encodeURIComponent(carNo)}`;
+    const endpoint = `/api/${apiType}?car_no=${encodeURIComponent(carNo)}&mb_id=${encodeURIComponent(mbId)}`;
     const response = await fetch(endpoint);
 
     if (!response.ok) {
