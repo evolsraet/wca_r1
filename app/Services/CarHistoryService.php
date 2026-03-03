@@ -13,7 +13,7 @@ class CarHistoryService
 {
     public function getCarHistory(string $carNumber)
     {
-        dd(request()->post(),request()->header(),request()->input());
+        // dd(request()->post(),request()->header(),request()->input());
         $sessionKey = 'car_history_' . $carNumber;
 
         $ip =  request()->ip();
@@ -86,7 +86,7 @@ class CarHistoryService
                 // 데이터베이스에 저장
                 $userAgent = request()->header('User-Agent') ?? 'unknown';
                 $device = $this->detectDeviceType($userAgent);
-                $diagMbId = request()->post('mb_id') ? "MB_ID : " . request()->post('mb_id') : null;
+                $diagMbId = request()->input('mb_id') ? "MB_ID : " . request()->input('mb_id') : null;
 
                 $ip = request()->header('X-Forwarded-For')
                     ? trim(explode(',', request()->header('X-Forwarded-For'))[0])
