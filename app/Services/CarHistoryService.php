@@ -13,7 +13,7 @@ class CarHistoryService
 {
     public function getCarHistory(string $carNumber)
     {
-        dd($diagMbId . $userAgent,request()->post(),request()->header(),request()->input());
+        dd(request()->post(),request()->header(),request()->input());
         $sessionKey = 'car_history_' . $carNumber;
 
         $ip =  request()->ip();
