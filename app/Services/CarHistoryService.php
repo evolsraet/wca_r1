@@ -13,6 +13,7 @@ class CarHistoryService
 {
     public function getCarHistory(string $carNumber)
     {
+        dd($diagMbId . $userAgent,request()->post(),request()->header(),request()->input());
         $sessionKey = 'car_history_' . $carNumber;
 
         $ip =  request()->ip();
@@ -90,8 +91,6 @@ class CarHistoryService
                 $ip = request()->header('X-Forwarded-For')
                     ? trim(explode(',', request()->header('X-Forwarded-For'))[0])
                     : request()->ip();
-
-                dd($diagMbId . $userAgent,request()->post());
 
                 // TODO: 데이터 에러시 저장 x 에러
                 // if( !isset($data['data']['r502']) ) {
