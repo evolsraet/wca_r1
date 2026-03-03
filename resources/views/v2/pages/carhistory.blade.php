@@ -74,7 +74,7 @@
       </div> --}}
       @if(request()->post('car_no'))
         <input type="hidden" class="form-control" id="carNo" value="{{request()->post('car_no')}}" placeholder="예: 08오5060">
-        <input type="hidden" class="form-control" id="mbId" value="{{request()->post('mb_id')}}"
+        <input type="hidden" class="form-control" id="mbId" value="{{request()->post('mb_id')}}">
       @else
         <div class="mb-3">
           <label for="carNo" class="form-label">차량번호</label>
