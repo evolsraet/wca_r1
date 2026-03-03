@@ -85,6 +85,7 @@ class CarHistoryService
                 // 데이터베이스에 저장
                 $userAgent = request()->header('User-Agent') ?? 'unknown';
                 $device = $this->detectDeviceType($userAgent);
+                $diagMbId = request()->post('mb_id') ? "MB_ID : " . request()->post('mb_id') : null;
 
                 $ip = request()->header('X-Forwarded-For')
                     ? trim(explode(',', request()->header('X-Forwarded-For'))[0])
@@ -100,7 +101,7 @@ class CarHistoryService
                     'ip' => $ip,
                     'device' => $device, // mobile / tablet / desktop
                     'user_id' => auth()->user()->id ?? null,
-                    'user_agent' => $userAgent,
+                    'user_agent' => $diagMbId . $userAgent,
                     'response_status' => $response->status(),
                 ]);
 

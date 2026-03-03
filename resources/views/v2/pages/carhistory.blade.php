@@ -9,6 +9,11 @@
     exit('403 Forbidden');
   }
 
+  if( !request()->post('mb_id') ) {
+    header('HTTP/1.1 403 Forbidden');
+    exit('403 Forbidden');
+  }
+
 @endphp
 
 <!DOCTYPE html>
@@ -65,8 +70,8 @@
         <label for="carNo" class="form-label">차량번호</label>
         <input type="text" class="form-control" id="carNo" placeholder="예: 08오5060">
       </div> --}}
-      @if(request()->get('car_no'))
-        <input type="hidden" class="form-control" id="carNo" value="{{request()->get('car_no')}}" placeholder="예: 08오5060">
+      @if(request()->post('car_no'))
+        <input type="hidden" class="form-control" id="carNo" value="{{request()->post('car_no')}}" placeholder="예: 08오5060">
       @else
         <div class="mb-3">
           <label for="carNo" class="form-label">차량번호</label>
