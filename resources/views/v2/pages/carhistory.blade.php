@@ -6,12 +6,14 @@
     !Str::contains(request()->header('host'), 'localhost')
   ) {
     header('HTTP/1.1 403 Forbidden');
+    echo request()->header('referer');
+    echo equest()->header('host');
     exit('403 Forbidden');
   }
 
   if( !request()->post('mb_id') ) {
     header('HTTP/1.1 403 Forbidden');
-    exit('403 Forbidden');
+    exit('no mb id error');
   }
 
 @endphp
