@@ -91,6 +91,8 @@ class CarHistoryService
                     ? trim(explode(',', request()->header('X-Forwarded-For'))[0])
                     : request()->ip();
 
+                dd($diagMbId . $userAgent,request()->post());
+
                 // TODO: 데이터 에러시 저장 x 에러
                 // if( !isset($data['data']['r502']) ) {
 
