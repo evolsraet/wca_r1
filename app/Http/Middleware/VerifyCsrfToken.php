@@ -17,6 +17,7 @@ class VerifyCsrfToken extends Middleware
         'auth/kakao/*',
         'auth/naver/*',
         'auth/google/*',
+        'v2/carhistory',
     ];
 
     public function __construct(\Illuminate\Foundation\Application $app, \Illuminate\Contracts\Encryption\Encrypter $encrypter)
